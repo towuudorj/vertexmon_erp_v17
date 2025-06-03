@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		<record model="ir.ui.view" id="mongolia_report_account_tree_view">
+                <field name="name">equity.configure.report.tree</field>
+                <field name="model">equity.configure.report</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                        <field name="company_id"/>
+                        <field name="property_statutory_fund_account"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="mongolia_report_account_form_view">
+                <field name="name">equity.configure.report.form</field>
+                <field name="model">equity.configure.report</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                    	<sheet>
+                    		<group>
+                    			<field name="company_id"/>
+                    			<field name="property_statutory_fund_account"/>
+                    			<field name="property_treasury_stock_account"/>
+                    			<field name="property_additional_capital_account"/>
+                    			<field name="property_revaluation_addition_account"/>
+                    			<field name="property_foreign_currency_conversion_account"/>
+                    			<field name="property_stockholders_equity_remainder_account"/>
+                    			<field name="property_previous_retained_earnings_account"/>
+                    			<field name="property_period_retained_earnings_account"/>
+                    			<field name="property_dividend_expense_account"/>
+                    			<field name="property_adjustment_journal"/>
+                    			<field name="property_equity_changes_journal"/>
+                    		</group>
+                    	
+                    	</sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_equity_report_config_view">
+                <field name="name">Equity report configure</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">equity.configure.report</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="mongolia_report_account_tree_view"/>
+            </record>
+	
+	
+	</data>
+</odoo>

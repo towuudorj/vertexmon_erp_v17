@@ -1,0 +1,299 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_asset
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__owner_id
+msgid "Asset owner"
+msgstr "Хөрөнгө эзэмшигч"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__uom_id
+msgid "Uom"
+msgstr "Хэмжих нэгж"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__scrap_date
+msgid "Scrap date"
+msgstr "Хөрөнгө актлах огноо"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__asset_qty
+msgid "Asset qty"
+msgstr "Тоо"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__write_up
+msgid "Write Up"
+msgstr "Капиталжуулсан дүн"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__capital_amount
+msgid "Capital Amount"
+msgstr "Капиталжуулалтын дүн"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__account_id
+msgid "Source Account"
+msgstr "Данс"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__partner_id
+msgid "Associated Partner"
+msgstr "Холбоотой харилцагч"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__note
+#: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_capitalization_new_form
+msgid "Notes"
+msgstr "Тэмдэглэл"
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "Asset Capital"
+msgstr "Хөрөнгө капиталжуулах"
+
+
+#. module: l10n_mn_asset
+#: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_capitalization_new_form
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_asset
+#: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_capitalization_new_form
+msgid "Capitalization"
+msgstr "Капиталжуулах"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset_dep_date
+msgid "Deprecation date"
+msgstr "Элэгдлийн огноо"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__old_amount
+msgid "Current amount"
+msgstr "Одоогийн дүн"
+
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_capitalization
+#: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "Asset capital"
+msgstr "Хөрөнгийн капиталжуулалт"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__writeoff_account
+msgid "Writeoff Account"
+msgstr "Тооцооноос хассан данс"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__writeoff_amount
+msgid "writeoff_amount"
+msgstr "Тооцооноос хассан хэмжээ"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__name
+msgid "name"
+msgstr "Нэр"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__depreciation_amount
+msgid "depreciation_amount"
+msgstr "Элэгдэл дүн"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__writeoff_journal
+msgid "writeoff_journal"
+msgstr "Тооцооноос хассан журнал"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__writeoff_date
+msgid "writeoff_date"
+msgstr "Тооцооноос хассан огноо"
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.account_asset_writeoff_form
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "Write Off"
+msgstr "Данснаас хасах"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__name
+msgid "Reason"
+msgstr "Шалтгаан"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__date
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__writeoff_date
+msgid "Date"
+msgstr "Огноо"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__writeoff_amount
+msgid "Writeoff Amount"
+msgstr "Хаалтын үлдэгдэл"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__depreciation_amount
+msgid "Depreciation Amount"
+msgstr "Хуримтлагдсан элэгдэл"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__writeoff_journal
+msgid "Writeoff Journal"
+msgstr "Журнал"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_writeoff__writeoff_account
+msgid "Writeoff Account"
+msgstr "Данс"
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.account_asset_writeoff_form
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.action_excel_output_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff
+#: model:ir.model,name:l10n_mn_asset.model_account_asset_writeoff
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.account_asset_writeoff_form
+msgid "Asset Writeoff"
+msgstr "Хөрөнгө хасах"
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "Scrap"
+msgstr "Хөрөнгө актлах"
+
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_asset_location_tree_view
+#: model:ir.ui.menu,name:l10n_mn_asset.asset_location_menu
+msgid "Asset location"
+msgstr "Хөрөнгийн байршил"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_asset_location__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_asset_location__name
+msgid "Asset location"
+msgstr "Хөрөнгийн байршил"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__asset_location_id
+msgid "Asset location"
+msgstr "Хөрөнгийн байршил"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__name
+msgid "Name"
+msgstr "Дугаар"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__owner_id
+msgid "Owner"
+msgstr "Эзэмшигч"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__user_id
+msgid "User"
+msgstr "Бүртгэсэн ажилтан"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__date
+msgid "Date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__asset_in_location_id
+msgid "Asset in location"
+msgstr "Хүрэх байршил"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__asset_out_location_id
+msgid "Asset out location"
+msgstr "Гарах байршил"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__quantity
+msgid "Quantity"
+msgstr "Тоо"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__asset_id
+msgid "Asset"
+msgstr "Хөрөнгө"
+
+
+#. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_move_tree_view
+#: model:ir.ui.menu,name:l10n_mn_asset.asset_move_menu
+msgid "Account asset move"
+msgstr "Хөрөнгийн хөдөлгөөн"
+
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.account_asset_move_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.account_asset_move_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields.selection,name:l10n_mn_asset.selection__account_asset_move__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields.selection,name:l10n_mn_asset.selection__account_asset_move__state__cancel
+msgid "Cancel"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields.selection,name:l10n_mn_asset.selection__account_asset_move__state__confirm
+msgid "Confirm"
+msgstr "Батлагдсан"

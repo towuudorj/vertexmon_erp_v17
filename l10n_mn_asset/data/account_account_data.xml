@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+		
+		<record id="mn_asset_account_template" model="account.account">
+		    <field name="name">Asset</field>
+		    <field name="code">1111</field>
+		</record>
+		
+		
+	</data>
+</odoo>

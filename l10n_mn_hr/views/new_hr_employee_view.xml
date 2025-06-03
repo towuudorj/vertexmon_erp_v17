@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="view_employee_new_filter" model="ir.ui.view">
+            <field name="name">hr.employee.search</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
+                    <field name="parent_id" string="Manager"/>
+                    <field name="job_id"/>
+                    <field name="coach_id"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="private_car_plate" />
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
+                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
+                    <separator/>
+                    <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
+                        <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_employee_new_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="replace">
+                <form string="Employee" js_class="hr_employee_form">
+                    <field name="active" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="user_partner_id" invisible="1"/>
+                    <field name="image_128" invisible="1" />
+                    <field name="company_id" invisible="1"/>
+                    <field name="last_activity_time" invisible="1"/>
+                    <field name="last_activity" invisible="1"/>
+                    <field name="work_contact_id" invisible="1"/>
+                    <header>
+                        <button name="%(hr.plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" invisible="not active"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button name="action_create_decree" 
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-file-text">
+                                <div class="o_stat_info">
+                                    <field name="decree_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Decree</span>
+                                </div>
+                            </button>
+                            <button name="action_create_contract" 
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-file">
+                                <div class="o_stat_info">
+                                    <field name="contract_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Contract</span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <field name="avatar_128" invisible="1"/>
+                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
+                            <div class="oe_title mw-75 ps-0 pe-2">
+                                <h1 class="d-flex flex-row align-items-center">
+                                    <div invisible="not user_id" class="me-2">
+                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                    </div>
+                                    <!-- Нэр болон хувийн мэдээлэл-->
+                                    <field name="name" placeholder="Employee's Name"
+                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="last_name" class="oe_edit_only"/>
+                                            <field name="last_name"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="surname" class="oe_edit_only"/>
+                                            <field name="surname"/>
+                                        </div>
+                                    </div>
+                                </h1>
+                                <h2>
+                                    <field name="job_title" placeholder="Job Position" />
+                                </h2>
+                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
+                            </div>
+                            <div class="o_employee_avatar m-0 p-0">
+                                <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="show_hr_icon_display" invisible="1" />
+                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="mobile_phone" widget="phone"/>
+                                <field name="work_phone" widget="phone"/>
+                                <field name="work_email" widget="email"/>
+                                <field name="workplace_environment"/>
+                                <field name="abnormal_id"  invisible="workplace_environment !='abnormal'" />
+                                <field name="disabled_employee"/>
+                                <field name="disability_percentage" invisible="disabled_employee == False"/>
+                                <field name="two_jobs"/>
+                                <field name="company_name" invisible="two_jobs == False"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_country_id" invisible="1"/>
+                                <field name="company_country_code" invisible="1"/>
+                                <field name="department_id"/>
+                                <field name="workplace_id"/>
+                                <field name="job_id"/>
+                                <field name="parent_id" widget="many2one_avatar_user"/>
+                                <field name="coach_id" widget="many2one_avatar_user"/>
+                                <field name="accession_date"/>
+                            </group>
+                        </group>
+                        <field name="employee_properties" columns="2"/>
+                        <notebook>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main" class="flex-grow-1">
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"highlight_first_line": True}'/>
+                                            <field name="work_location_id" context="{'default_address_id': address_id}" />
+                                        </group>
+                                        <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
+                                            <!-- is overridden in other hr related modules -->
+                                        </group>
+                                        <group name="departure" string="Departure" invisible="active">
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                            <field name="departure_description"/>
+                                            <field name="departure_date"/>
+                                        </group>
+                                        <group string="Schedule">
+                                            <field name="resource_calendar_id"/>
+                                            <field name="id" invisible="1"/>
+                                            <field name="tz" required="id"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                                <group>
+                                    <group string="Private Contact">
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format">
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                        </div>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="private_phone" string="Phone"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
+                                        <field name="lang" string="Language"/>
+                                        <label for="km_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="km_home_work" class="o_hr_narrow_field"/>
+                                            <span>Km</span>
+                                        </div>
+                                        <field name="private_car_plate" />
+                                    </group>
+                                     <group string="Emergency" name="emergency">
+                                        <field name="emergency_contact_relation"/>
+                                        <field name="emergency_relation_other" invisible="not show_other_relation" required="show_other_relation"/>
+                                        <field name="show_other_relation" invisible="1"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
+                                    </group>
+                                   
+                                    <group string="Citizenship">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <!-- Нас -->
+                                        <label for="employee_age"/>
+                                            <div class="d-flex align-items-center">
+                                                <field name="employee_age" readonly="1" class="me-2"/>
+                                                <button name="autochange_age" string="Update" icon="fa-arrow-right" 
+                                                        type="object" groups="hr.group_hr_manager"/>
+                                            </div>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
+                                    </group>
+                                    <group name="has_work_permit" string="Work Permit">
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
+                                        <!-- <field name="work_permit_expiration_date"/> -->
+                                        <field name="work_permit_name" invisible="1"/>
+                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
+                                    </group>
+                                    <!--
+                                     <group string="Family Status">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="children"/>
+                                    </group> 
+                                    -->
+                                </group>
+                            </page>
+
+                 
+                    <!-- Боловсролын мэдээлэл -->
+                    <page string="Education Information">
+                        <separator string="Education"/>
+                            <field name="education_id">
+                                <tree editable="bottom">
+                                    <field name="graduate_school" string="Institution"/>
+                                    <field name="where" string="Location"/>
+                                    <field name="starting_year" string="Start Year"/>
+                                    <field name="ending_year" string="End Year"/>
+                                    <field name="occupation" string="Field of Study"/>
+                                    <field name="type_id" string="Degree Type"/>
+                                    <field name="edu_rate" string="Grade"/>
+                                    <field name="edu_percent" string="Percentile"/>
+                                </tree>
+                            </field>
+                        
+                        <separator string="Training Courses"/>
+                        <field name="training_course_id">
+                            <tree editable="bottom">
+                                <field name="where" string="Institution"/>
+                                <field name="when" string="Date"/>
+                                <field name="time" string="Duration"/>
+                                <field name="training_profession" string="Subject"/>
+                            </tree>
+                        </field>
+                    </page>
+                    
+                    <!-- Ажлийн туршлага болон ур чадвар -->
+                    <page string="Employment &amp; Skills">
+                        <separator string="Employment History"/>
+                            <field name="employment_id">
+                                <tree editable="bottom">
+                                    <field name="name" string="Company"/>
+                                    <field name="org_start" string="Start Date"/>
+                                    <field name="org_finish" string="End Date"/>
+                                  <!--  <field name="salary_size" string="Salary"/> -->
+                                    <field name="org_position" string="Position"/>
+                                    <field name="org_reason" string="Reason for Leaving"/>
+                                    <field name="supervisor_name" string="Supervisor"/>
+                                    <field name="supervisor_phone" string="Supervisor Phone"/>
+                                </tree>
+                            </field>
+                        
+                        <separator string="Reason for Vacancy"/>
+                        <field name="employment_description" placeholder="Please explain any gaps in employment"/>
+                        
+                        <separator string="Language Skills"/>
+                        <field name="hr_language_id">
+                            <tree editable="bottom">
+                                <field name="name" string="Language"/>
+                                <field name="lang_speak" string="Speaking"/>
+                                <field name="lang_listen" string="Listening"/>
+                                <field name="lang_translation" string="Translation"/>
+                                <field name="lang_write" string="Writing"/>
+                            </tree>
+                        </field>
+                        
+                        <separator string="Computer Skills"/>
+                        <field name="computer_skill_id">
+                            <tree editable="bottom">
+                                <field name="name" string="Software"/>
+                                <field name="use_skill" string="Proficiency"/>
+                            </tree>
+                        </field>
+                        
+                        <group>
+                            <group>
+                                <field name="other_program" placeholder="List other software you are familiar with"/>
+                            </group>
+                            <group>
+                                <field name="other_use_skill" string="Other Skills"/>
+                            </group>
+                        </group>
+                    </page>
+                    
+                    <!-- Гэр бүлийн мэдээлэл -->
+                    <page string="Family Information">
+                        <separator string="Household Members"/>
+                            <field name="live_people_id">
+                                <tree editable="bottom">
+                                    <field name="who" string="Relationship"/>
+                                    <field name="last_name" string="Last Name"/>
+                                    <field name="first_name" string="First Name"/>
+                                    <field name="age" string="Age"/>
+                                    <field name="position" string="Occupation"/>
+                                    <field name="phone" string="Phone"/>
+                                </tree>
+                            </field>
+
+                    </page>
+                    
+                    <!-- Бусад мэдээлэл -->
+                    <page string="Other Information">
+                        <separator string="References"/>
+                            <field name="notify_people_id">
+                                <tree editable="bottom">
+                                    <field name="last_name" string="Last Name"/>
+                                    <field name="first_name" string="First Name"/>
+                                    <field name="now_profession" string="Profession"/>
+                                    <field name="phone" string="Phone"/>
+                                </tree>
+                            </field>
+                        
+                        <separator string="Hobbies &amp; Interests"/>
+                        <field name="hobby" placeholder="Describe your hobbies and interests..."/>
+
+                        <separator string="Strengths &amp; Development Areas"/>
+                        <field name="advantage_weaknesses_id">
+                            <tree editable="bottom">
+                                <field name="advantage" string="Strengths"/>
+                                <field name="weaknesses" string="Development Areas"/>
+                            </tree>
+                        </field>
+                        
+                        <separator string="Sports &amp; Arts Activities"/>
+                        <field name="art_sport_id">
+                            <tree editable="bottom">
+                                <field name="sk_sport" string="Activity"/>
+                                <field name="sp_time" string="Duration"/>
+                                <field name="is_award" string="Received Award"/>
+                            </tree>
+                        </field>
+                        
+                        <separator string="Awards &amp; Achievements"/>
+                        <field name="hr_award_id">
+                            <tree editable="bottom">
+                                <field name="award_name" string="Award"/>
+                                <field name="award_year" string="Year"/>
+                                <!--<field name="award_where" string="Issuer"/> -->
+                            </tree>
+                        </field>
+                    </page>
+                
+                            <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
+                                <group>
+                                    <group string='Status' name="active_group">
+                                        <field name="employee_type"/>
+                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'default_create_employee_id': id}" widget="many2one_avatar_user"/>
+                                    </group>
+
+                                    <group string='Payroll' name="payroll_group" invisible="1">
+                                    </group>
+                                    <group name="application_group" string="Application Settings" invisible="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user" options="{'post_refresh': 'recipients'}"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="open_view_employee_new_list" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,tree,form,activity,graph,pivot</field>
+            <field name="domain">[]</field>
+            <field name="context">{'chat_icon': True}</field>
+            <field name="view_id" ref="hr.view_employee_tree"/>
+            <field name="search_view_id" ref="view_employee_new_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new employee
+                </p><p>
+                    With just a quick glance on the Odoo employee screen, you
+                    can easily find all the information you need for each person;
+                    contact data, job position, availability, etc.
+                </p>
+            </field>
+        </record>
+
+
+        <record id="hr_employee_my_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="open_view_employee_new_list"/>
+            <field name="view_id" ref="hr.hr_kanban_view_employees"/>
+        </record>
+
+
+        <record id="hr_employee_my_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="open_view_employee_new_list"/>
+            <field name="view_id" ref="hr.view_employee_tree"/>
+        </record>
+
+        <record id="hr_employee_my_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">3</field>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="open_view_employee_new_list"/>
+            <field name="view_id" ref="view_employee_new_form"/>
+        </record>
+
+
+
+        
+    </data>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="reference_register_type_form_view" model="ir.ui.view">
+            <field name="name">reference.register.type.form</field>
+            <field name="model">reference.register.type</field>
+            <field name="arch" type="xml">
+                <form string="Reference Register Type">
+                    <sheet>
+                        <group>
+                            <field name="company"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="reference_register_type_tree_view" model="ir.ui.view">
+            <field name="name">reference.register.type.tree</field>
+            <field name="model">reference.register.type</field>
+            <field name="arch" type="xml">
+                <tree string="Reference Register Types">
+                    <field name="company"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="note"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_reference_register_type" model="ir.actions.act_window">
+            <field name="name">Reference Register Types</field>
+            <field name="res_model">reference.register.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

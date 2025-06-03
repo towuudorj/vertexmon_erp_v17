@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+            <record model="ir.ui.view" id="country_register_tree_view">
+                <field name="name">country.register.tree</field>
+                <field name="model">country.register</field>
+                <field name="arch" type="xml">
+                    <tree string="Country register">
+                        <field name="company_id"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="country_register_form_view">
+                <field name="name">country.register.form</field>
+                <field name="model">country.register</field>
+                <field name="arch" type="xml">
+                    <form string="Country register">
+                        <sheet>
+	                     	<group col="2" colspan="2">
+                                <field name="company_id" />
+	                     		<field name="name"/>
+                                <field name="code"/>
+	                        </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+            
+
+
+            <record model="ir.actions.act_window" id="action_country_register_tree_view">
+                <field name="name">Country register</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">country.register</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="country_register_tree_view"/>
+            </record>
+		
+
+
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		 <record id="account_balance_type_tree_view" model="ir.ui.view">
+			<field name="name">account.balance.type.tree</field>
+			<field name="model">account.balance.type</field>
+			<field name="arch" type="xml">
+				<tree string="tree_string">
+					<field name="company_id"/>
+					<field name="sequence"/>
+					<field name="number"/>
+					<field name="name" />
+					<field name="level"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="account_balance_type_form_view" model="ir.ui.view">
+			<field name="name">account.balance.type.form</field>
+			<field name="model">account.balance.type</field>
+			<field name="priority" eval="8" />
+			<field name="arch" type="xml">
+				<form string="Odoo V11" >
+					<sheet>
+						<group colspan="4" col="2">
+							<field name="company_id"/>
+							<field name="parent_id"/>
+							<field name="sequence"/>
+							<field name="number"/>
+							<field name="name" />
+							<field name="level"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		
+
+
+		<record model="ir.actions.act_window" id="action_account_balance_type_tree_view">
+			<field name="name">Balance report type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.balance.type</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="account_balance_type_tree_view" />
+		</record>
+	
+	
+	</data>
+</odoo>

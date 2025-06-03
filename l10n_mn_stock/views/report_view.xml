@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+		<record id="report_mn_stock_expense" model="ir.actions.report">
+            <field name="name">Зарлагын баримт</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_expense</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_expense</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <record id="report_mn_stock_expense_desc" model="ir.actions.report">
+            <field name="name">Зарлагын баримт /тайлбартай/</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_expense_desc</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_expense_desc</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+		<record id="report_mn_stock_income" model="ir.actions.report">
+            <field name="name">Орлогын баримт</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_income</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_income</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <record id="report_mn_stock_requisition" model="ir.actions.report">
+            <field name="name">Шаардах хуудас</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_requisition_report</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_requisition_report</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        
+        <record id="report_mn_device_handing_act" model="ir.actions.report">
+            <field name="name">Төхөөрөмж хүлээлцэх акц</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.device_handing_act_report</field>
+            <field name="report_file">l10n_mn_stock.mn_device_handing_act</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

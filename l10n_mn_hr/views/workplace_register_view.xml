@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="workplace_register_form_view" model="ir.ui.view">
+            <field name="name">workplace.register.form</field>
+            <field name="model">workplace.register</field>
+            <field name="arch" type="xml">
+                <form string="Workplace Register">
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="name"/>
+                            <field name="eng_name"/>
+                            <field name="code"/>
+                            <field name="job_title"/>
+                            <field name="struct_id"/>
+                            <!--<field name='position_id'/>
+                            <field name="work_category_id"/> -->
+                            <field name="employees_working"/>
+                            <field name="employees_left"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="workplace_register_tree_view" model="ir.ui.view">
+            <field name="name">workplace.register.tree</field>
+            <field name="model">workplace.register</field>
+            <field name="arch" type="xml">
+                <tree string="Workplace Register">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="eng_name"/>
+                    <field name="job_title"/>
+                    <field name="struct_id"/>
+                    <!--<field name='position_id'/> -->
+                    <field name="employees_working"/>
+                    <field name="employees_left"/>
+                   <!-- <field name="work_category_id"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <!--  <menuitem id="menu_workplace_register" name="Workplace Register" parent="menu_hr_root" sequence="90"/>  -->
+
+        <record id="action_workplace_register" model="ir.actions.act_window">
+            <field name="name">Workplace Register</field>
+            <field name="res_model">workplace.register</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

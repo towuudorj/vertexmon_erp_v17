@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		    	<record id="hr_payroll_give_bank_report_view" model="ir.ui.view">
+		            <field name="name">hr.payroll.give.bank.report.wizard</field>
+		            <field name="model">hr.payroll.give.bank.report</field>
+		            <field name="arch" type="xml">
+		               <form string="Hr payroll prepayment">
+		               		<group>
+		               			<field name="company_id"/>
+		               			<field name="start_date"/>
+		               			<field name="end_date"/>
+		               			<field name="bank_id"/>
+		               			<field name="type"/>
+		               			<field name="value"/>
+		               			<field name="check_value"/>
+		               		</group>
+		                     <footer>
+		                       <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+		                       or
+		                       <button string="Cancel" class="oe_link" special="cancel" />
+		                     </footer>
+		               </form>
+		            </field>
+		        </record>
+		
+		        <record id="action_hr_payroll_give_bank_report" model="ir.actions.act_window">
+		            <field name="name">Give bank salary</field>
+		            <field name="res_model">hr.payroll.give.bank.report</field>
+		            <field name="view_mode">form</field>
+		            <field name="view_id" ref="hr_payroll_give_bank_report_view"/>
+		            <field name="target">new</field>
+		        </record>
+		
+	</data>
+</odoo>

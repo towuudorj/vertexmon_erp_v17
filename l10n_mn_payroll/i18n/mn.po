@@ -1,0 +1,1028 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_payroll
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#. module: l10n_mn_payroll
+#. openerp-web
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hr_payroll_prepayment_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.hr_payroll_prepayment_menu
+#: model:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_tree_view
+#, python-format
+msgid "Hr payroll prepayment"
+msgstr "Урьчилгаа цалин"
+
+#. module: l10n_mn_payroll
+#. openerp-web
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hhoat_report_wizard
+#: model:ir.ui.menu,name:l10n_mn_payroll.hhoat_excel_report_menu
+msgid "Hhoat report"
+msgstr "ХХОАТ тайлан"
+
+#. module: l10n_mn_payroll
+#. openerp-web
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hr_hour_record_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.menu_hr_hour_record
+#: model:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_tree_view
+#, python-format
+msgid "Employee hour record"
+msgstr "Ажилтны цагийн бүртгэл"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_work_category_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.work_category_menu
+msgid "Work category"
+msgstr "Ажлын мэргэжлийн ангилал"
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_location_register_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.location_register_menu
+msgid "Location register"
+msgstr "Салбарын бүртгэл"
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_country_register_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.country_register_menu
+msgid "Country register"
+msgstr "Улсын бүртгэл"
+
+
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__name
+msgid "Country"
+msgstr "Улс"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__code
+msgid "Code"
+msgstr "Код"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__name
+msgid "Work category"
+msgstr "Ажил мэргэжлийн ангилалын нэр"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__parent_id
+msgid "Parent category"
+msgstr "Дэд ангилал"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__name
+msgid "Location name"
+msgstr "Байршлын нэр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__name
+msgid "Number"
+msgstr "Дугаарлалт"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__reg_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__reg_user_id
+msgid "Register user"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__shift_days
+msgid "Shift holiday day"
+msgstr "Амралтын хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__working_month
+msgid "Working month"
+msgstr "Ажилласан сар"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__total_working_days
+msgid "Total work days"
+msgstr "Ажиллах ёстой хоног"
+
+ 
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__confirm_user_id
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__average_amount
+msgid "Average amount"
+msgstr "Нэг өдөрт ногдох цалин"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__give_amount
+msgid "Give amount"
+msgstr "Гарт олгох мөнгө"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__total_amount
+msgid "Total amount"
+msgstr "Олговол зохих"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__ndsh_percent
+msgid "Ndsh percent"
+msgstr "НДШ Хувь"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__ndsh_amount
+msgid "Ndsh amount"
+msgstr "НДШ Дүн"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__hhoat_percent
+msgid "Hhoat percent"
+msgstr "ХХОАТ Хувь"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__hhoat_amount
+msgid "Hhoat amount"
+msgstr "ХХОАТ Дүн"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__total_days
+msgid "Total days"
+msgstr "Нийт өдөр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__shift_start_date
+msgid "Shift start date"
+msgstr "Ээлжийн амралт эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__year
+msgid "Year"
+msgstr "Жил"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__month
+msgid "Month"
+msgstr "Сар"
+
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__working_days
+msgid "Working days"
+msgstr "Ажилласан хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__work_days
+msgid "Work days"
+msgstr "Ажиллах ёстой хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__amount
+msgid "Amount"
+msgstr "Бодогдсон цалин"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__name
+msgid "Year"
+msgstr "Жил"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__state
+msgid "State"
+msgstr "Төлөв"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__name
+msgid "Month"
+msgstr "Сар"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__work_day
+msgid "Work day"
+msgstr "Ажиллах өдөр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__department
+msgid "Department"
+msgstr "Хэлтэс"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__work_days
+msgid "Work days"
+msgstr "Ажилласан хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__work_days
+msgid "Work days"
+msgstr "Ажилласан хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__working_days
+msgid "Working days"
+msgstr "Ажиллах ёстой хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__work_time
+msgid "Work time"
+msgstr "Ажилласан цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_res_partner_bank__is_salary_account
+msgid "Is salary account"
+msgstr "Цалингийн данс эсэх"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__name
+msgid "Working time register"
+msgstr "Ажилтны цагийн бүртгэл"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__work_day
+msgid "Work day"
+msgstr "Ажилласан өдөр"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__holiday_day
+msgid "Holiday day"
+msgstr "Амралтын өдөр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_payroll
+msgid "Move type"
+msgstr "Гүйлгээний төрөл"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__working_day_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__working_day_register__state__confirmed
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__shift_holiday_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__shift_holiday_register__state__confirmed
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__payroll_holiday
+msgid "Payroll holiday"
+msgstr "Цалинтай чөлөө"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__unpayroll_holiday
+msgid "Unpayroll holiday"
+msgstr "Цалингүй чөлөө"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__shift_holiday
+msgid "Shift holiday"
+msgstr "Ээлжийн амралтын хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_leave_type__sub_type
+msgid "Sub type"
+msgstr "Чөлөөний дэд төрөл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__sick_holiday
+msgid "Sick holiday"
+msgstr "Өвчний чөлөө"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__official_work
+msgid "Officical work"
+msgstr "Албан ёсны өдөр ажиллах"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__out_work
+msgid "Out work"
+msgstr "Гадуур ажил"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__draft
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_payroll_prepayment__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__confirmed
+msgid "Confirmed"
+msgstr "Зөвшөөрсөн"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__posted
+msgid "Posted"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__done
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_payroll_prepayment__state__confirm
+msgid "Confirm"
+msgstr "Батлагдсан"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__employee_id
+msgid "Employee name"
+msgstr "Ажилтны нэр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__hand_give_amount
+msgid "At hand give"
+msgstr "Гарт олгох дүн"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__position
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__due_day
+msgid "Due day"
+msgstr "Ажиллавал зохих хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__due_time
+msgid "Due time"
+msgstr "Ажиллавал зохих цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__work_day
+msgid "Work day"
+msgstr "Ажилласан хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__work_time
+msgid "Work time"
+msgstr "Ажилласан цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__sick_time
+msgid "Sick time"
+msgstr "Өвчтэй цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__shift_holiday
+msgid "Shift holiday"
+msgstr "Ээлжийн амралтын хоног"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__miss_time
+msgid "Miss time"
+msgstr "Тасалсан цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__night_time
+msgid "Night work time"
+msgstr "Ажилласан цаг /шөнө/"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__free_time1
+msgid "Free time1"
+msgstr "Чөлөөтэй цаг(цалинтай)"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__free_time2
+msgid "Free time2"
+msgstr "Чөлөөтэй цаг(цалингүй)"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__more_time
+msgid "More time"
+msgstr "Илүү цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__more_time1
+msgid "Legal holiday"
+msgstr "Албан ёсны амралтын өдөр ажилласан цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__late_minut
+msgid "late minut"
+msgstr "Хоцорсон минут"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__total_time
+msgid "Total compute time"
+msgstr "Нийт тооцоолсон цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__now_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__name
+msgid "Move value"
+msgstr "Гүйлгээний утга"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__type
+msgid "Move type"
+msgstr "Гүйлгээний төрөл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__dep_id
+msgid "Department"
+msgstr "Хэлтэс"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__create_user
+msgid "Employee"
+msgstr "Үүсгэсэн ажилтан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__percent
+msgid "Prepayment payroll percent"
+msgstr "Цалингийн урьдчилгаа олгох хувь"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__journal_id
+msgid "Journal"
+msgstr "Журнал"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__name
+msgid "Employee name"
+msgstr "Ажилтны нэр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__is_bank
+msgid "Is bank"
+msgstr "Банкаар эсэх"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__prepayment_payroll
+msgid "Prepayment payroll"
+msgstr "Урьдчилгаа цалин"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__other_payment
+msgid "Other payment"
+msgstr "Бусад төлбөр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__other_payment
+msgid "Other payment"
+msgstr "Бусад төлбөр"
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
+msgid "Print"
+msgstr "Хэвлэх"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
+msgid "Work import"
+msgstr "Ажилчид импортлох"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+msgid "Compute"
+msgstr "Тооцоолох"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+msgid "Print"
+msgstr "Хэвлэх"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_hour_record_form_view
+msgid "Hour record"
+msgstr "Ажилтны мэдээлэл татах"
+
+
+
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
+msgid "Advantage Name"
+msgstr "Давуу нэр"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.menu,name:l10n_mn_payroll.root_payroll_ndsh_menu
+msgid "NDSH"
+msgstr "НДШ"
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.menu,name:l10n_mn_payroll.hr_payroll_give_bank_report_menu
+msgid "Give bank salary"
+msgstr "Гарт олгох цалин"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.menu,name:l10n_mn_payroll.hr_attendace_detail_excel_report_menu
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hr_attendace_detail_excel_report
+msgid "Attendance detail report"
+msgstr "Ирцийн дэлгэрэнгүй тайлан"
+
+
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.menu,name:l10n_mn_payroll.root_payroll_report_menu
+msgid "Report"
+msgstr "Тайлан"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hhoat_report_wizard
+#: model:ir.ui.menu,name:l10n_mn_payroll.hhoat_excel_report_menu
+msgid "Hhoat report"
+msgstr "ХХОАТ тайлан"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_payroll_excel_report
+#: model:ir.ui.menu,name:l10n_mn_payroll.payroll_excel_report_menu
+msgid "Payroll report"
+msgstr "Цалингийн тайлан"
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_shift_holiday_register_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.shift_holiday_register_menu
+msgid "Shift holiday register"
+msgstr "Ээлжийн амралтын тооцоолол"
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_working_day_register_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.working_day_register_menu
+msgid "Working day register"
+msgstr "Ажилласан өдөр бүртгэх"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_insurance_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.menu_insurance_type_view
+msgid "Insurance type"
+msgstr "Даатгуулагчийн төрөл"
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.view,arch_db:l10n_mn_payroll.attendance_excel_report_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.hr_attendace_excel_report_menu
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hr_attendace_excel_report
+msgid "Hr attendance report"
+msgstr "Ирцийн тайлан"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.view_hhoat_report_wizard
+msgid "Report export"
+msgstr "Тайлан татах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.view_hhoat_report_wizard
+msgid "Close"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.attendance_excel_report_view
+msgid "Report export"
+msgstr "Тайлан татах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.attendance_excel_report_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.payroll_excel_report_view
+msgid "Report export"
+msgstr "Тайлан татах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.payroll_excel_report_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.ndsh_report_import_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.ndsh_report_import_view
+msgid "Report export"
+msgstr "Тайлан татах"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__department_id
+msgid "Department"
+msgstr "Хэлтэс"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__department_id
+msgid "Department"
+msgstr "Хэлтэс"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__name
+msgid "Name"
+msgstr "Даатгуулагчийн төрөл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__dep_id
+msgid "Department"
+msgstr "Хэлтэс"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_vat_income_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_payroll.vat_income_type_menu
+msgid "VAT Income Type"
+msgstr "Татварын орлогын төрөл"
+
+
+
+#. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_ndsh_report_import
+#: model:ir.ui.menu,name:l10n_mn_payroll.ndsh_report_import_menu
+msgid "Ndsh import report"
+msgstr "НДШ импторт загвар"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__name
+msgid "Name"
+msgstr "Нэр"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__code
+msgid "Code"
+msgstr "Код"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__phone_add
+msgid "Phone add"
+msgstr "Утасны нэмэгдэл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__administration_add
+msgid "Administration add"
+msgstr "Удирдлагын нэмэгдэл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__food_and_vehicle_add
+msgid "Food and vehichle add"
+msgstr "Хоол унааны нэмэгдэл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__long_year_add
+msgid "Long year add"
+msgstr "Удаан жилийн нэмэгдэл"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__health_insurance
+msgid "Health insurance"
+msgstr "Эрүүл мэндийн даатгал"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__accident_insurance
+msgid "Accident insurance"
+msgstr "Гэнэтийн ослын даатгал"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__voucher
+msgid "Voucher"
+msgstr "Ваучер"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__abnormal_add
+msgid "Abnormal add"
+msgstr "Хэвийн бус нөхцөлийн нэмэгдэл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__trial_end_date
+msgid "Trial End Date"
+msgstr "Туршилтын гэрээ дуусах хугацаа"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.hr_contract_cash_inherit_form__type_id
+msgid "Employee Category"
+msgstr "Ажлын цагийн төрөл"
+
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.hr_payslip_run__dep_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: om_hr_payroll
+#: model:ir.ui.menu,name:om_hr_payroll.hr_menu_contract
+msgid "Contracts"
+msgstr "Гэрээнүүд"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__employee_ids
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_employee
+#: model:ir.ui.menu,name:om_hr_payroll.menu_payroll_employee
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Ажилтнууд"
+
+#. module: l10n_mn_payroll
+#: model:ir.ui.menu,name:l10n_mn_payroll.menu_hr_payroll_compute
+msgid "Payroll compute"
+msgstr "Цалингийн тооцоолол"

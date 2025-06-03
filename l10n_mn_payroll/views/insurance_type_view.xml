@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record model="ir.ui.view" id="insurance_type_tree_view">
+                <field name="name">insurance.type.tree</field>
+                <field name="model">insurance.type</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                        <field name="company_id"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="insurance_type_form_view">
+                <field name="name">insurance.type.form</field>
+                <field name="model">insurance.type</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                        <sheet>
+                            <group col="4" colspan="2" >
+                                <field name="company_id" />
+                                <field name="name"/>
+                                <field name="code"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            
+            
+
+            <record model="ir.actions.act_window" id="action_insurance_type_tree_view">
+                <field name="name">Insurance type</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">insurance.type</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="insurance_type_tree_view"/>
+            </record>
+		
+	</data>
+</odoo>

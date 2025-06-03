@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <menuitem id="action_account_supplier_accounts_menu"
+            action="account.action_account_supplier_accounts"
+            name="Account partner bank"
+            sequence="30"
+            parent="account.account_banks_menu"/>
+
+
+        <menuitem id="action_account_account_bank_register_menu"
+            action="action_account_res_bank"
+            name="Bank"
+            sequence="29"
+            parent="account.account_banks_menu"/>
+
+        
+        <menuitem id="bank_statement_line_tree_view_menu"
+            action="action_bank_statement_line_tree_view"
+            name="Account bank statement line"
+            sequence="29"
+            parent="account.menu_finance_entries_accounting_miscellaneous"/>
+        
+
+        <menuitem id="action_account_currency_equalization_menu"
+            action="action_account_currency_equalization"
+            name="Currency rate equalization"
+            sequence="29"
+            parent="account.menu_finance_entries"/>
+
+
+        <menuitem id="account_cash_move_type_menu"
+            action="action_account_cash_move_type_tree_view"
+            name="Account cash move type"
+            sequence="30"
+            parent="account.account_account_menu"/>
+        
+        <menuitem id="partner_type_register_menu"
+            action="action_partner_type_register_tree_view"
+            name="Partner type register"
+            sequence="31"
+            parent="account.account_account_menu"/>
+        
+
+
+        <record model="ir.ui.menu" id="account.root_payment_menu"><!--Account online payments-->
+            <field name="parent_id" ref="base.menu_custom"/><!--settings hide-->
+        </record>
+        
+
+        
+
+
+</odoo>

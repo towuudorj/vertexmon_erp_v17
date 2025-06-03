@@ -1,0 +1,227 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * bi_crm_claim
+# 
+# Translators:
+# Dashnyam. Kh, dash0105@icloud.com
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-03 15:50+0000\n"
+"PO-Revision-Date:  \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: bi_crm_claim
+#: model:ir.ui.view,name:bi_crm_claim.claims_menu
+#: model:ir.actions.act_window,name:bi_crm_claim.crm_claim_view_act1
+msgid "Claims"
+msgstr "Санал хүсэлтүүд"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__partner_id
+msgid "Partner"
+msgstr "Хамтрагч"
+
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__survey_id
+msgid "Survey"
+msgstr "Асуулга"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__survey_link
+msgid "Survey link"
+msgstr "Асуулгын холбоос"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__survey_status
+msgid "Survey Status"
+msgstr "Асуулгын төлөв"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__user_id
+msgid "Responsible"
+msgstr "Хариуцагч"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__date
+msgid "Claim Date"
+msgstr "Санал хүсэлт үүсгэсэн огноо"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__stage_id
+msgid "Stage"
+msgstr "Төлөв"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__date_action_next
+msgid "Next Action Date"
+msgstr "Дараагийн арга хэмжээний огноо"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__action_next
+msgid "Next Action"
+msgstr "Дараагийн арга хэмжээ"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__categ_id
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__date_deadline
+msgid "Deadline"
+msgstr "Эцсийн хугацаа"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__date_closed
+msgid "Closed"
+msgstr "Хаагдсан огноо"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__priority
+msgid "Priorty"
+msgstr "Чухал эсэх"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__team_id
+msgid "Sales Team"
+msgstr "Борлуулалтын баг"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__partner_phone
+msgid "Phone"
+msgstr "Хамтрагчийн утас"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__email_from
+msgid "Email"
+msgstr "Хамтрагчийн имэйл"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__user_fault
+msgid "Trouble Responsible"
+msgstr "Асуудал хариуцагч"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__type_action
+msgid "Action Type"
+msgstr "Арга хэмжээний төрөл"
+
+#. module: bi_crm_claim
+#: selection:crm.claim,type_action:0
+msgid "Preventive Action"
+msgstr "Урьдилан сэргийлэх арга хэмжээ"
+
+#. module: bi_crm_claim
+#: selection:crm.claim,type_action:0
+msgid "Corrective Action"
+msgstr "Залруулах арга хэмжээ"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__create_date
+msgid "Creation Date"
+msgstr "Огноо"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim__write_date
+msgid "Update Date"
+msgstr "Өөрчлөлт хийгдсэн огноо"
+
+#. module: bi_crm_claim
+#: model:ir.actions.act_window,name:bi_crm_claim.crm_claim_categ_action
+msgid "Claim Category"
+msgstr "Санал хүсэлтүүдийн төрөл"
+
+#. module: bi_crm_claim
+#: model:ir.ui.view,name:bi_crm_claim.menu_crm_case_claim-act
+msgid "Categories"
+msgstr "Төрлүүд"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim_category__name
+msgid "Name"
+msgstr "Нэр"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim_category__team_id
+msgid "Sales Team"
+msgstr "Борлуулалтын баг"
+
+#. module: bi_crm_claim
+#: model:ir.ui.view,name:bi_crm_claim.menu_claim_stage_view
+msgid "Stages"
+msgstr "Санал хүсэлтүүдийн үе шатууд"
+
+#. module: bi_crm_claim
+#: model:ir.actions.act_window,name:bi_crm_claim.crm_claim_stage_act
+msgid "Claim Stages"
+msgstr "Санал хүсэлтүүдийн үе шатууд"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim_stage__name
+msgid "Stage Name"
+msgstr "Үе шатын нэр"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim_stage__case_default
+msgid "Common to All Teams"
+msgstr "Бусад багуудтай адил"
+
+#. module: bi_crm_claim
+#: model:ir.model.fields,field_description:bi_crm_claim.field_crm_claim_stage__sequence
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Claim Description"
+msgstr "Санал хүсэлтийн тодорхойлолт"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Follow Up"
+msgstr "Дараагийн шат"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Claim Reporter"
+msgstr "Санал хүсэлт гаргагч"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Responsibilities"
+msgstr "Хариуцлагууд"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Claim/Action Description"
+msgstr "Санал хүсэлтийн тодорхойлолт"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Actions"
+msgstr "Арга хэмжээнүүд"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Dates"
+msgstr "Огноо"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Root Causes"
+msgstr "Үндсэн шалтгаанууд"
+
+#. module: bi_crm_claim
+#: model_terms:ir.ui.view,arch_db:bi_crm_claim.crm_case_claims_form_view1
+msgid "Resolution Actions"
+msgstr "Шийдвэрлэх арга хэмжээнүүд"
+

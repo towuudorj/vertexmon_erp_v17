@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<data>
+		
+		<record id="balance_sheet_excel_view" model="ir.ui.view">
+            <field name="name">Balance sheet excel</field>
+            <field name="model">balance.sheet.excel</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group colspan="4">
+                        <field name="company_id" widget='selection'/>
+                        <field name="target_move" />
+                        <field name="level"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_balance_sheet_excel" model="ir.actions.act_window">
+            <field name="name">Balance sheet excel</field>
+            <field name="res_model">balance.sheet.excel</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="balance_sheet_excel_view"/>
+            <field name="target">new</field>
+        </record>
+    
+	
+	</data>
+
+</odoo>

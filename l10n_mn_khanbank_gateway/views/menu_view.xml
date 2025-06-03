@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    	<menuitem id="khanbank_corporate_gateway_connect" name="Bank Corporate gateway" parent="account.account_account_menu"/>
+
+		<menuitem id="bank_gateway_configure_menu" name="Bank gateway configure" parent="khanbank_corporate_gateway_connect" action="action_bank_gateway_configure_tree_view"/>
+		
+</odoo>

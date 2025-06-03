@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record id="training_order_search_view" model="ir.ui.view">
+	            <field name="name">training.order.search</field>
+	            <field name="model">training.order</field>
+	            <field name="arch" type="xml">
+	                <search string="Training order">
+                    	<field name="name"/>
+						<field name="training_type"/>
+                    	<field name="hr_employee_id"/>
+                    	<field name="department_id"/>
+                    	<field name="company_id"/>
+                    	<field name="create_date"/>
+	                    <group expand="0" string="Group by...">
+	                    	<filter string='Name' name='name' domain="[]" context="{'group_by' : 'name'}"/>
+	                    	<filter string='Sub type' name='training_type' domain="[]" context="{'group_by' : 'training_type'}"/>
+	                    	<filter string='Employee' name='hr_employee_id' domain="[]" context="{'group_by' : 'hr_employee_id'}"/>
+	                    	<filter string='Department' name='department_id' domain="[]" context="{'group_by' : 'department_id'}"/>
+							<filter string="Position" name="position_id" domain="[]" context="{'group_by' : 'position_id'}"/>
+	                    	<filter string='Company' name='company_id' domain="[]" context="{'group_by' : 'company_id'}"/>
+	                    	<filter string='State' name='state' domain="[]" context="{'group_by' : 'state'}"/>
+	                    	<filter string='Create date' name='create_date' domain="[]" context="{'group_by' : 'create_date'}"/>
+	                    </group>
+	                </search>
+	            </field>
+        </record>
+		
+		<record id="training_order_form" model="ir.ui.view">
+		    <field name="name">training.order.form</field>
+		    <field name="model">training.order</field>
+		    <field name="arch" type="xml">
+		        <form string="Training order">
+	        		<header>
+						<button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'send'"/>
+						<button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'cancel'"/>
+						<button name="action_send" string="Send" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+						<button name="action_cancel" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state == 'cancel'"/>
+	        			<field name="state" widget="statusbar"/>
+	        		</header>
+		        	<sheet>
+			            <group>
+							<field name="company_id" />
+							<field name="employee_id" />
+							<field name="training_type" />
+							<field name="name" />
+							<field name="department_id" />
+							<field name="position_id" />
+							<field name="hr_employee_id"  />
+							<field name="note" />
+							
+			            </group>
+		            </sheet>
+					<div class = "oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="training_order_tree" model="ir.ui.view">
+		    <field name="name">training.order.tree</field>
+		    <field name="model">training.order</field>
+		    <field name="arch" type="xml">
+		        <tree string="Training order">
+					<field name="training_type" optional="show"/>
+					<field name="company_id"/>
+					<field name="employee_id"/>
+			        <field name="name"/>
+			        <field name="hr_employee_id"/>
+			        <field name="department_id"/>
+			        <field name="state" optional="show"/>
+		        </tree>
+		    </field>
+		</record>
+        
+   
+
+	
+
+		<record id="action_training_order" model="ir.actions.act_window">
+		    <field name="name">Training order</field>
+		    <field name="res_model">training.order</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+		
+	</data>
+</odoo>

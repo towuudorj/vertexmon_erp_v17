@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="employee_transfer_form_view" model="ir.ui.view">
+        <field name="name">employee.transfer.form</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Employee Transfer">
+                <header>
+                    <button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'cancelled'"/>
+                    <button name="action_to_cancel" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state == 'cancelled'"/>
+                    <button name="action_to_transfer" string="Transfer" type="object" class="oe_highlight" invisible="state == 'cancelled'"/>
+                    <button name="action_create_decree" string="Create Decree" type="object" class="btn-primary" invisible="state == 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,transfered,cancelled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="employee_id"/>
+                        <field name="position_id"/>
+                        <field name="transfer_decree_id"/>
+                        <field name="transfer_type"/>
+                        <field name="from_department_id" invisible = "transfer_type != 'department' and transfer_type != 'both'"/>
+                        <field name="to_department_id" invisible = "transfer_type != 'department' and transfer_type != 'both'"/>
+                        <field name="from_company_id" invisible = "transfer_type != 'company' and transfer_type != 'both'"/>
+                        <field name="to_company_id" invisible = "transfer_type != 'company' and transfer_type != 'both'"/>
+                        <field name="transfer_date"/>
+                        <field name="is_archived"/>
+                        <field name="note" />
+                    </group>
+                </sheet>
+                 <div class="oe_chatter">
+					<field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+					<field name="message_ids" widget="mail_thread"/>
+			    </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="transfer_register_tree_view" model="ir.ui.view">
+        <field name="name">employee.transfer.tree</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Transfer">
+                <field name="employee_id"/>
+                <field name="transfer_type"/>
+                <field name="from_company_id"/>
+                <field name="to_company_id"/>
+                <field name="to_department_id"/>
+                <field name="transfer_date"/>
+                <field name="is_archived"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_employee_transfer" model="ir.actions.act_window">
+        <field name="name">Employee Transfer</field>
+        <field name="res_model">employee.transfer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

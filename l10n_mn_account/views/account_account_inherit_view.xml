@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_account_mn_inherit" model="ir.ui.view">
+            <field name="name">account.account.form.mn</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="currency_id"]' position="after">
+                    <field name="cash_move_type_id"/>
+                </xpath>
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>

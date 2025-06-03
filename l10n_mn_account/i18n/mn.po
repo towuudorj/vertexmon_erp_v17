@@ -1,0 +1,470 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_account
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_journal__is_po_return
+msgid "Is purchase return"
+msgstr "Худалдан авалтын буцаалт"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_journal__is_so_return
+msgid "Is sale return"
+msgstr "Борлуулалтын буцаалт"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_move_line__cash_move_type_id
+msgid "Cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.bank_statement_line_tree_view_menu
+#: model:ir.actions.act_window,name:l10n_mn_account.action_bank_statement_line_tree_view
+msgid "Account bank statement line"
+msgstr "Касс болон харилцахын хуулгын мөр"
+
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.partner_type_register_menu
+#: model:ir.actions.act_window,name:l10n_mn_account.action_partner_type_register_tree_view
+msgid "Partner type register"
+msgstr "Харилцагчийн төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.action_account_supplier_accounts_menu
+msgid "Account partner bank"
+msgstr "Харилцагчийн данс"
+
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.action_account_account_bank_register_menu
+#: model:ir.actions.act_window,name:l10n_mn_account.action_account_res_bank
+msgid "Bank"
+msgstr "Банк"
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.account_cash_move_type_menu
+#: model:ir.actions.act_window,name:l10n_mn_account.action_account_cash_move_type_tree_view
+msgid "Account cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.ui.menu,name:l10n_mn_account.action_account_currency_equalization_menu
+#: model:ir.actions.act_window,name:l10n_mn_account.action_account_currency_equalization
+msgid "Currency rate equalization"
+msgstr "Валютийн ханшийн тэгшитгэл"
+
+
+
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
+msgid "Sales & Purchase"
+msgstr "Борлуулалт & Худалдан авалт"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Invoicing"
+msgstr "Нэхэмжлэл"
+
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.res_company_inherit_form_view
+msgid "Bank account"
+msgstr "Банкны данс"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_currency_equalization
+msgid "Close"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_currency_equalization
+msgid "Do Generate"
+msgstr "Тэгшитгэл хийх"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_account__cash_move_type_id
+msgid "Cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__name
+msgid "Partner type"
+msgstr "Харилцагчийн төрөл"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__partner_group
+msgid "Partner group"
+msgstr "Харилцагчийн бүлэг"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_partner__partner_type
+msgid "Partner type"
+msgstr "Харилцагчийн төрөл"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_partner__is_distributor
+msgid "Is Distributor"
+msgstr "Дистрибутор эсэх"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_partner__group_company_id
+msgid "Parent company"
+msgstr "Толгой компани"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_partner__partner_group
+msgid "Partner group"
+msgstr "Харилцагчийн бүлэг"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__001
+msgid "001 Sales"
+msgstr "001 Борлуулалтын харилцагч ААН, компаниуд"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__002
+msgid "002 Employee"
+msgstr "002 Ажилтан"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__003
+msgid "003 Bank"
+msgstr "003 Банк"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__004
+msgid "004 State"
+msgstr "004 Төрийн харилцагч байгууллагууд"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__005
+msgid "005 Freight"
+msgstr "005 Тээврийн компаниуд"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__006
+msgid "006 Supplier foreign"
+msgstr "006 Нийлүүлэгч байгууллага/Гадаад/"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__007
+msgid "007 Supplier local"
+msgstr "007 Нийлүүлэгч байгууллага/Дотоод/"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__008
+msgid "008 Marketing"
+msgstr "008 Маркетингийн харилцагч"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__009
+msgid "009 Relation"
+msgstr "009 Холбоотой тал"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__010
+msgid "010 Self"
+msgstr "010 Хувь хүмүүс"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__res_partner__partner_group__011
+msgid "011 Contract partner"
+msgstr "011 Гэрээт харилцагч"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__account_journal__type__asset
+msgid "Asset"
+msgstr "Үндсэн хөрөнгө"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__account_journal__type__salary
+msgid "Salary"
+msgstr "Цалин"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__account_journal__type__opening
+msgid "Opening/close"
+msgstr "Нээлт/хаалт"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__partner_type_register__type__sale
+msgid "Sale"
+msgstr "Борлуулалт"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__partner_type_register__type__purchase
+msgid "Purchase"
+msgstr "Худалдан авалт"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__payable_account_id
+msgid "Payable account"
+msgstr "Авлагын данс"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__receivable_account_id
+msgid "Receivable account"
+msgstr "Өглөгийн данс"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_partner_type_register__cash_move_id
+msgid "Cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__reg_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__name
+msgid "Reason"
+msgstr "Гүйлгээний утга"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__journal_id
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__draft
+msgid "Draft Entry"
+msgstr "Ноорог үүсгэх эсэх"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__sequence
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__description
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__name
+msgid "Cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_cash_move_type__group
+msgid "Group"
+msgstr "Бүлэг"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_partner__code
+msgid "Code"
+msgstr "Код"
+
+
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_company__income_currency_exchange_account_id
+msgid "Income currency exchange account"
+msgstr "Валютийн ханшийн тэгшитгэлийн олз"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_res_company__expense_currency_exchange_account_id
+msgid "Expense currency exchange account"
+msgstr "Валютийн ханшийн тэгшитгэлийн гарз"
+
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.res_company_inherit_form_view
+msgid "Currency exchange configure"
+msgstr "Валютийн ханшийн тэгшитгэлийн тохиргоо"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
+msgid "Recipient Bank"
+msgstr "Хүлээн авагчийн банк"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__delivery_date
+#: model:ir.model.fields,field_description:account.field_account_move__delivery_date
+#: model:ir.model.fields,field_description:account.field_account_payment__delivery_date
+msgid "Delivery Date"
+msgstr "Хүргэлтийн огноо"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_move__partner_type_id
+msgid "Partner type"
+msgstr "Харилцагчийн төрөл"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_move__po_ids
+msgid "Purchase orders"
+msgstr "Баримтын дугаар"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
+msgid "Bank Address"
+msgstr "Банкны хаяг"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_currency__currency_unit_label
+msgid "Currency Unit"
+msgstr "Валютийн нэгж"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_currency__currency_subunit_label
+msgid "Currency Subunit"
+msgstr ""
+
+
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Payment terms"
+msgstr "Төлбөрийн нөхцөл"
+
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
+msgid "Reason displayed on Credit Note"
+msgstr "Буцаалтын шалтгаан"
+
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Company Bank Account"
+msgstr "Банкны данс"
+
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Unmark as Sent"
+msgstr "Тэмдэглэхгүй илгээх"
+
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
+msgid "Payment Currency"
+msgstr "Төлбөрийн валют"
+
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Шинжилгээний тархалт"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+msgid "Residual in Currency"
+msgstr "Валютаарх үлдэгдэл"
+
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+msgid "Originator Tax"
+msgstr "Татвар"
+
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_line_filter_mn_inherit
+msgid "Cash move type"
+msgstr "Мөнгөн гүйлгээний төрөл"

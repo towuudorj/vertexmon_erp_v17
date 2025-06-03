@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_cash_move_type_user,account.cash.move.type,model_account_cash_move_type,account.group_account_user,1,1,0,0
+access_account_cash_move_type_manager,account.cash.move.type,model_account_cash_move_type,account.group_account_manager,1,1,1,1
+access_account_currency_equalization_user,account.currency.equalization,model_account_currency_equalization,account.group_account_user,1,1,0,0
+access_account_currency_equalization_manager,account.currency.equalization,model_account_currency_equalization,account.group_account_manager,1,1,1,1
+access_partner_type_register_user,partner.type.register,model_partner_type_register,account.group_account_user,1,1,0,0
+access_partner_type_register_manager,partner.type.register,model_partner_type_register,account.group_account_manager,1,1,1,1

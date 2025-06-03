@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="group_overtime_request" model="res.groups">
+            <field name="name">Илүү цаг ажилтан</field>
+        </record>
+
+        <record id="group_overtime_allow" model="res.groups">
+	        <field name="name">Илүү цаг зөвшөөрөх</field>
+	    </record>
+        
+        <record id="group_overtime_approve" model="res.groups">
+	        <field name="name">Илүү цаг батлах</field>
+        </record>
+
+    </data>
+</odoo>

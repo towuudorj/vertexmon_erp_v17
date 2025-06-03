@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="document_register_type_form_view" model="ir.ui.view">
+            <field name="name">document.register.type.form</field>
+            <field name="model">document.register.type</field>
+            <field name="arch" type="xml">
+                <form string="Document Register Type">
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="reg_user_id"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="document_register_type_tree_view" model="ir.ui.view">
+            <field name="name">document.register.type.tree</field>
+            <field name="model">document.register.type</field>
+            <field name="arch" type="xml">
+                <tree string="Document Register Types">
+                    <field name="company_id"/>
+                    <field name="reg_user_id"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_document_register_type" model="ir.actions.act_window">
+            <field name="name">Document Register Types</field>
+            <field name="res_model">document.register.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_document_register_type_root" name="Configuration" parent="base.menu_custom" sequence="10"/>
+    </data>
+</odoo>

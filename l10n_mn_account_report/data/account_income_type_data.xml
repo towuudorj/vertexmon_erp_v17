@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    	
+    	<!-- Орлогын тайлангийн төрөл -->
+    	<record id="account_income_type_one" model="account.income.type">
+            <field name="name">Борлуулалтын орлого (цэвэр)</field>
+            <field name="sequence">1</field>
+            <field name="seq_type">1</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_two" model="account.income.type">
+            <field name="name">Борлуулалтын өртөг</field>
+            <field name="sequence">2</field>
+            <field name="seq_type">1</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_four" model="account.income.type">
+            <field name="name">Түрээсийн орлого</field>
+            <field name="sequence">4</field>
+            <field name="seq_type">2</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_five" model="account.income.type">
+            <field name="name">Хүүний орлого</field>
+            <field name="sequence">5</field>
+            <field name="seq_type">2</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_income_type_six" model="account.income.type">
+            <field name="name">Ногдол ашгийн орлого</field>
+            <field name="sequence">6</field>
+            <field name="seq_type">2</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_seven" model="account.income.type">
+            <field name="name">Эрхийн шимтгэлийн орлого</field>
+            <field name="sequence">7</field>
+            <field name="seq_type">2</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_eight" model="account.income.type">
+            <field name="name">Бусад орлого</field>
+            <field name="sequence">8</field>
+            <field name="seq_type">2</field>
+            <field name="type">income</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_nine" model="account.income.type">
+            <field name="name">Борлуулалт маркетингийн зардал</field>
+            <field name="sequence">9</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_ten" model="account.income.type">
+            <field name="name">Ерөнхий ба удирдлагын зардал</field>
+            <field name="sequence">10</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_eleven" model="account.income.type">
+            <field name="name">Санхүүгийн зардал</field>
+            <field name="sequence">11</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_twelve" model="account.income.type">
+            <field name="name">Бусад зардал</field>
+            <field name="sequence">12</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_thirteen" model="account.income.type">
+            <field name="name">Гадаад валютын ханшийн зөрүүний олз (гарз)</field>
+            <field name="sequence">13</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_fourtheen" model="account.income.type">
+            <field name="name">Үндсэн хөрөнгө данснаас хассаны олз (гарз)</field>
+            <field name="sequence">14</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_fiftheen" model="account.income.type">
+            <field name="name">Биет бус хөрөнгө данснаас хассаны олз (гарз)</field>
+            <field name="sequence">15</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_sixtheen" model="account.income.type">
+            <field name="name">Хөрөнгө данснаас хассаны олз (гарз)</field>
+            <field name="sequence">16</field>
+            <field name="seq_type">3</field>
+            <field name="type">expense</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_income_type_seventheen" model="account.income.type">
+            <field name="name">Бусад ашиг (алдагдал)</field>
+            <field name="sequence">17</field>
+            <field name="seq_type">3</field>
+            <field name="type">other</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+    
+    
+    	<record id="account_income_type_ninetheen" model="account.income.type">
+            <field name="name">Орлого татварын зардал</field>
+            <field name="sequence">19</field>
+            <field name="seq_type">4</field>
+            <field name="type">tax</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_twenty" model="account.income.type">
+            <field name="name">Хөрөнгийн дахин үнэлгээний нэмэгдлийн зөрүү</field>
+            <field name="sequence">23.1</field>
+            <field name="seq_type">5</field>
+            <field name="type">other</field>
+        </record>
+        
+        <record id="account_income_type_twentyone" model="account.income.type">
+            <field name="name">Гадаад валютын хөрвүүлэлтийн зөрүү</field>
+            <field name="sequence">23.2</field>
+            <field name="seq_type">5</field>
+            <field name="type">other</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_income_type_twentythree" model="account.income.type">
+            <field name="name">Бусад олз (гарз)</field>
+            <field name="sequence">23.3</field>
+            <field name="seq_type">5</field>
+            <field name="type">other</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_income_type_twentyfifth" model="account.income.type">
+            <field name="name">Нэгж хувьцаанд ногдох суурь ашиг (алдагдал)</field>
+            <field name="sequence">25</field>
+            <field name="seq_type">6</field>
+            <field name="type">other</field>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+    </data>
+</odoo>

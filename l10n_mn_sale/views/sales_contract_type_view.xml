@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+            <record model="ir.ui.view" id="sales_contract_type_tree_view">
+                <field name="name">sales.contract.type.tree</field>
+                <field name="model">sales.contract.type</field>
+                <field name="arch" type="xml">
+                    <tree string="Sales contract type">
+                        <field name="company_id" />
+                        <field name="name" />
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="sales_contract_type_form_view">
+                <field name="name">sales.contract.type.form</field>
+                <field name="model">sales.contract.type</field>
+                <field name="arch" type="xml">
+                    <form string="Sales contract type">
+                        <sheet>
+                            <group colspan="4" col="4">
+                                <field name="company_id" />
+                                <field name="name" />
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+            
+
+
+            <record model="ir.actions.act_window" id="action_sales_contract_type_tree_view">
+                <field name="name">Sales contract type</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">sales.contract.type</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="sales_contract_type_tree_view"/>
+            </record>
+
+    </data>
+</odoo>

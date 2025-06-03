@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+			
+        <template id="stock_picking_income_data">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="row">
+                            <p style="text-align:center; font-size: 12px; padding-left:65%;">
+                                <span>Сангийн сайдын 2017 оны 12 дугаар сарын 5 өдрийн 347 тоот тушаалын хавсралт</span>
+                                </p>
+                                </div>
+                                <div class="col-xs-8" style="text-align:center;">
+                                <h4>Орлогын баримт</h4>
+                                <span t-field="o.picking_type_id.name"/>:
+                                <span t-field="o.name"/>
+                                        
+                                </div>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr style="border: 1px solid black;">
+                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Эх баримт</strong></th>
+                                            <th style="width: 30%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нийлүүлэгчийн нэр</strong></th>
+                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Утас</strong></th>
+                                            <th style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Хаяг</strong></th>
+                                            <th  style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;" name="td_sched_date_h"><strong>Төлөвлөсөн огноо</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
+                                                <span t-field="o.origin"/>
+                                            </td>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
+                                                <span t-field="o.partner_id.name"/>
+                                            </td>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
+                                                <span t-field="o.partner_id.phone"/>
+                                            </td>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
+                                                <span t-field="o.partner_id.street"/>
+                                            </td>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;" name="td_sched_date">
+                                                <span t-field="o.scheduled_date"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                                    <table class="width: 100%; table table-condensed" >
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 37%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Бараа</strong></th>
+                                                <th style=" width: 8%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Баркод</strong></th>
+                                                <th style=" width: 5%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Тоо</strong></th>
+                                                <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нэгж үнэ</strong></th>
+                                                <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Нийт үнэ</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="o.state!='done'">
+                                            <t t-if="o.move_ids_without_package">
+                                            <tr t-foreach="o.move_ids_without_package" t-as="move">
+                                                <t t-if="move.product_id.type !='service'">
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td>   
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id.barcode"/></td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                        <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.sale_price"/></td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_subtotal"/></td>
+                                                </t>
+                                            </tr>
+                                            <tr class="border-black">
+                                                    <td  colspan="4" style="padding: 3px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
+                                                    <td style="padding: 3px; border: 1px solid black;  text-align: right;">   <t t-esc="sum([x for x in o.move_ids_without_package.mapped('product_uom_qty')])" /></td>
+                                                </tr>
+                                            </t>
+                                            </t>
+                                            <t t-if="o.state=='done'">
+                                            <t t-if="o.move_line_ids_without_package">
+                                            <tr t-foreach="o.move_line_ids_without_package" t-as="move">
+                                                <t t-if="move.product_id.type !='service'">
+                                                    <t t-if="(o.state != 'partially_available') or (move.reserved_availability &gt; 0)">
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td>   
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id.barcode"/></td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                            <span t-field="move.quantity"/> <span t-field="move.product_uom" groups="product.group_uom"/>
+                                                        </td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.sale_price"/></td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_subtotal"/></td>
+                                                    </t>
+                                                </t>
+                                            </tr>
+                                        <tr class="border-black">
+                                            <td  colspan="4" style="padding: 3px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
+                                            <td style="padding: 3px; border: 1px solid black;  text-align: right;">   <t t-esc="sum([x for x in o.move_line_ids_without_package.mapped('quantity')])" /></td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                                
+                                            
+                            <tr>
+                                <td style="border: 1px solid black; font-size:11px; padding:2px;">Нийт</td>
+                                <td style="border: 1px solid black; padding:2px;"></td>
+
+                                <td style="border: 1px solid black; font-size:11px; padding:2px;"  class="text-right">
+                                    <t t-if="o.state=='done'">
+                                        <span t-esc="sum(line.quantity for line in o.move_line_ids_without_package)" t-options='{"widget": "float", "precision": 2}'/>
+                                    </t>
+                                </td>
+                                <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"></td>
+                                <td style="border: 1px solid black; padding:2px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="font-size:11px; padding:4px;"> Хүлээн авсан :.................................................../................................../
+                    </div>          
+                    <div style="font-size:11px; padding:4px;"> Хүлээлгэн өгсөн :..................................................//
+                    </div>                                                                                                                                              
+                    </div>
+                </t>
+            </t> 
+        </template>
+    
+        <template id="mn_stock_income">
+            <t t-call="web.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <t t-set="lang"/>
+                    <t t-call="l10n_mn_stock.stock_picking_income_data" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

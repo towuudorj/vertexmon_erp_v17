@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+			<record model="ir.ui.view" id="work_category_tree_view">
+                <field name="name">work category tree</field>
+                <field name="model">work.category</field>
+                <field name="arch" type="xml">
+                    <tree string="Hr payroll prepayment">
+                    	<field name="company_id"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="work_category_form_view">
+                <field name="name">Work category form</field>
+                <field name="model">work.category</field>
+                <field name="arch" type="xml">
+                    <form string="Ndd Type">
+                        <sheet>
+                            <group>
+                                <field name="company_id" />
+                                <field name="name" />
+                                <field name="code"/>
+                                <field name="parent_id"/>
+                            </group>
+                        </sheet>
+                       
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_work_category_tree_view">
+                <field name="name">Work category</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">work.category</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="work_category_tree_view"/>
+            </record>
+
+
+
+		
+		
+	</data>
+</odoo>

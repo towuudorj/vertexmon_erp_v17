@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+			<record model="ir.ui.view" id="account_payable_report_form_view">
+                <field name="name">account.payable.report.report.new.form</field>
+                <field name="model">account.payable.report</field>
+                <field name="arch" type="xml">
+                    <form string="Payable report">
+                    	<group>
+                        	<field name="company_id"/>
+                        	<field name="target_move"/>
+                        	<field name="start_date"/>
+                        	<field name="end_date"/>
+                        	<field name="payable_receivable_type"/>
+                        </group>
+                        <footer>
+                            <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel" />
+
+                    	</footer>
+                    </form>
+                </field>
+            </record>
+            
+            
+            
+            <record id="action_account_payable_report_view" model="ir.actions.act_window">
+                <field name="name">Авлагын тайлан</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">account.payable.report</field>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="account_payable_report_form_view"/>
+                <field name="target">new</field>
+            </record>
+	    
+	
+	</data>	
+</odoo>

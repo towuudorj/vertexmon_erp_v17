@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_transfer_register_tree" model="ir.ui.view">
+        <field name="name">transfer.register.form</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Employee Transfer">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="from_company_id"/>
+                        <field name="to_company_id"/>
+                        <field name="transfer_date"/>
+                        <field name="is_archived"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_transfer_register_form" model="ir.ui.view">
+        <field name="name">transfer.register.tree</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Transfer">
+                <field name="employee_id"/>
+                <field name="from_company_id"/>
+                <field name="to_company_id"/>
+                <field name="transfer_date"/>
+                <field name="is_archived"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_transfer_register" model="ir.actions.act_window">
+        <field name="name">Transfer Register</field>
+        <field name="res_model">employee.transfer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

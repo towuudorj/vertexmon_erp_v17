@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	  <record id="view_vat_data_form" model="ir.ui.view">
+            <field name="name">vat.data.form</field>
+            <field name="model">vat.data</field>
+            <field name="arch" type="xml">
+                <form string="Vat data">
+                    <header>
+                        <button name="action_return" string="Vat data return" type="object" />
+                    </header>
+                    <sheet>
+						<group col="4" colspan="4">
+                            <group col="2" colspan="2">
+                                <field name="name" readonly="1"/>
+                                <field name="company_id" readonly="1"/>
+                                <field name="pos_id" readonly="1"/>
+                                <field name="reg_date" readonly="1"/>
+                                <field name="district_code" readonly="1"/>
+                                <field name="merchant_tin" readonly="1"/>
+                                <field name="pos_no" readonly="1"/>
+                                <field name="customer_tin" readonly="1"/>
+                                <field name="customer_no" readonly="1"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <field name="type" readonly="1"/>
+                                <field name="inactive_id" readonly="1"/>
+                                <field name="invoice_id" readonly="1"/>
+                                <field name="report_month" readonly="1"/>
+                                <field name="total_city_tax" readonly="1"/>
+                                <field name="total_vat" readonly="1"/>
+                                <field name="total_amount" readonly="1"/>
+                            </group>
+						</group>
+						<notebook>
+							<page>
+								<field name="line_ids" readonly="1">
+									<tree editable="bottom">
+										<field name="name"/>
+										<field name="barcode"/>
+										<field name="qty"/>
+										<field name="measure_unit"/>
+										<field name="unit_price"/>
+										<field name="total_vat"/>
+										<field name="total_city_tax"/>
+										<field name="total_amount"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vat_data_tree" model="ir.ui.view">
+            <field name="name">vat.data.tree</field>
+            <field name="model">vat.data</field>
+            <field name="arch" type="xml">
+                <tree string="Vat data" create="0" edit="0">
+                	<field name="company_id"/>
+                    <field name="name"/>
+                    <field name="reg_date"/>
+                    <field name="inactive_id"/>
+					<field name="invoice_id"/>
+					<field name="report_month"/>
+					<field name="total_city_tax"/>
+					<field name="total_vat"/>
+					<field name="total_amount"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_vat_data_filter" model="ir.ui.view">
+            <field name="name">vat.data.search</field>
+            <field name="model">vat.data</field>
+            <field name="arch" type="xml">
+               <search string="Vat district">
+                    <field name="name"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_vat_data" model="ir.actions.act_window">
+            <field name="name">Vat receipt data</field>
+            <field name="res_model">vat.data</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_vat_data_filter"/>
+            <field name="help" type="html">
+              <p>
+                Let's create a vat data.
+              </p>
+            </field>
+        </record>
+    	
+    
+    </data>
+ </odoo>

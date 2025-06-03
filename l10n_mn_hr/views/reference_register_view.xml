@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+        <record id="reference_register_form_view" model="ir.ui.view">
+            <field name="name">reference.register.form</field>
+            <field name="model">reference.register</field>
+            <field name="arch" type="xml">
+                <form string="Reference Register">
+                      <header>
+                        <button name="action_draft" string="Draft" type="object" class="btn-secondary" invisible="state != 'cancelled'" />
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'" />
+                        <button name="action_cancel" string="Cancel" type="object" class="btn-secondary" invisible="state != 'confirmed'" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                        <sheet>
+                            <group>
+                                <field name="company_id" readonly="state != 'draft'"/>
+                                <field name="name" readonly="state != 'draft'"/>
+                                <field name='reference_type_id' readonly="state != 'draft'"/>
+                                <field name="reference_number" readonly="state != 'draft'"/>
+                                <field name="date" readonly="state != 'draft'"/>
+                                <field name="reg_user_id" readonly="state != 'draft'"/>
+                                <field name="employee_id" readonly="state != 'draft'"/>
+                                <field name="department_id" readonly="state != 'draft'"/>
+                                <field name="where_to" readonly="state != 'draft'"/>
+                                <field name="reg_date" readonly="state != 'draft'"/>
+                            </group>
+                        </sheet>
+                        <div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+	                    </div>
+                    </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="reference_register_tree_view">
+            <field name="name">reference.register.tree</field>
+            <field name="model">reference.register</field>
+            <field name="arch" type="xml">
+                <tree string="Reference Register">
+                    <field name="company_id"/>
+                    <field name="name"/>
+                    <field name="reference_number"/>
+                    <field name="date"/>
+                    <field name="reg_user_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="where_to"/>
+                    <field name="reg_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_reference_register">
+            <field name="name">Reference Register</field>
+            <field name="res_model">reference.register</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

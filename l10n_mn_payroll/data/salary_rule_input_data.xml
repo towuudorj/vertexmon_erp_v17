@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data  noupdate="1">
+		
+		<record id="adv_hr_rule_input" model="hr.rule.input">
+            <field name="name">Урьдчилгаа</field>
+            <field name="code">ADV</field>
+            <field name="input_id" ref="adv_salary_rule"/>
+	    </record>
+
+		<record id="mwd_hr_rule_input" model="hr.rule.input">
+            <field name="name">Ажиллах ёстой хоног</field>
+            <field name="code">MWD</field>
+            <field name="input_id" ref="work_day_salary_rule"/>
+	    </record>
+
+		<record id="wdt_hr_rule_input" model="hr.rule.input">
+            <field name="name">Ажилласан цаг</field>
+            <field name="code">WDT</field>
+            <field name="input_id" ref="working_time_salary_rule"/>
+	    </record>
+
+
+		<record id="wdd_hr_rule_input" model="hr.rule.input">
+            <field name="name">Ажилласан хоног</field>
+            <field name="code">WDD</field>
+            <field name="input_id" ref="working_day_salary_rule"/>
+	    </record>
+
+		<record id="mwt_hr_rule_input" model="hr.rule.input">
+            <field name="name">Ажиллах ёстой цаг</field>
+            <field name="code">MWT</field>
+            <field name="input_id" ref="work_time_salary_rule"/>
+	    </record>
+
+
+		<record id="fault_hr_rule_input" model="hr.rule.input">
+            <field name="name">Зөрчлийн суутгал</field>
+            <field name="code">FAULT</field>
+            <field name="input_id" ref="fault_salary_rule"/>
+	    </record>
+		
+
+		<record id="rs_hr_rule_input" model="hr.rule.input">
+            <field name="name">Амралтын мөнгө</field>
+            <field name="code">RS</field>
+            <field name="input_id" ref="rs_salary_rule"/>
+	    </record>
+		
+	</data>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+		<record id="sequence_shift_holiday_register" model="ir.sequence">
+            <field name="name">Shift holiday register</field>
+            <field name="code">shift.holiday.register</field>
+            <field name="prefix">SHR/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+	
+	 	<record id="sequence_hr_hour_record" model="ir.sequence">
+            <field name="name">Hour record order</field>
+            <field name="code">hr.hour.record</field>
+            <field name="prefix">HHR/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        
+        
+        <record id="sequence_hr_payroll_prepayment" model="ir.sequence">
+            <field name="name">HR payroll prepayment</field>
+            <field name="code">hr.payroll.prepayment</field>
+            <field name="prefix">HPP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+	
+</odoo>

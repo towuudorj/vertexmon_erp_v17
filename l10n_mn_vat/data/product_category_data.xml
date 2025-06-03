@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="product_category_1" model="vat.category">
+            <field name="name">ХӨДӨӨ АЖ АХУЙ, ОЙН АЖ АХУЙ, ЗАГАС АГНУУРЫН БҮТЭЭГДЭХҮҮН</field>
+            <field name="code">1</field>
+        </record>
+        
+        <record id="product_category_01" model="vat.category">
+            <field name="parent_id" ref="product_category_1"/>
+            <field name="name">Хөдөө аж ахуй, газар тариалангийн бүтээгдэхүүн</field>
+            <field name="code">01</field>
+        </record>
+        <record id="product_category_011" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Үр тариа</field>
+            <field name="code">011</field>
+        </record>
+        
+	        <record id="product_category_0111" model="vat.category">
+	            <field name="parent_id" ref="product_category_011"/>
+	            <field name="name">Улаан буудай</field>
+	            <field name="code">0111</field>
+	        </record>
+        
+		         <record id="product_category_01111" model="vat.category">
+		            <field name="parent_id" ref="product_category_0111"/>
+		            <field name="name">Улаан буудайн үр</field>
+		            <field name="code">0111100</field>
+		        </record>
+        
+        
+        <record id="product_category_0112" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Эрдэнэ шиш</field>
+            <field name="code">0112</field>
+        </record>
+        
+        <record id="product_category_0113" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Цагаан будаа</field>
+            <field name="code">0113</field>
+        </record>
+        
+        <record id="product_category_0114" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Сорго будаа</field>
+            <field name="code">0114</field>
+        </record>
+                
+		    	<record id="product_category_01141" model="vat.category">
+		            <field name="parent_id" ref="product_category_0114"/>
+		            <field name="name">Сорго будаа үр</field>
+		            <field name="code">0114100</field>
+		        </record>
+		        <record id="product_category_01141" model="vat.category">
+		            <field name="parent_id" ref="product_category_0114"/>
+		            <field name="name">Бусад төрлийн сорго будаа</field>
+		            <field name="code">0114200</field>
+		        </record>
+	
+		 <record id="product_category_0115" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Арвай</field>
+            <field name="code">0115</field>
+        </record>
+        
+		 	<record id="product_category_01151" model="vat.category">
+	            <field name="parent_id" ref="product_category_0115"/>
+	            <field name="name">Арвай үр</field>
+	            <field name="code">0115100</field>
+	        </record>
+	        
+		 	<record id="product_category_01152" model="vat.category">
+	            <field name="parent_id" ref="product_category_0115"/>
+	            <field name="name">Бусад төрлийн арвай</field>
+	            <field name="code">0115200</field>
+	        </record>
+	        
+		 <record id="product_category_0116" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Хөх тариа</field>
+            <field name="code">0116</field>
+        </record>
+        
+			 	<record id="product_category_01161" model="vat.category">
+		            <field name="parent_id" ref="product_category_0116"/>
+		            <field name="name">Хөх тарианы үр</field>
+		            <field name="code">0116100</field>
+		        </record>
+		        
+			 	<record id="product_category_01162" model="vat.category">
+		            <field name="parent_id" ref="product_category_0116"/>
+		            <field name="name">Бусад төрлийн хөх тариа</field>
+		            <field name="code">0116200</field>
+		        </record>
+		        
+			 	
+		<record id="product_category_0117" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Хошуу тариа/ овъёос</field>
+            <field name="code">0117</field>
+        </record>
+        
+			 	<record id="product_category_01161" model="vat.category">
+		            <field name="parent_id" ref="product_category_0117"/>
+		            <field name="name">Хошуу тарианы үр</field>
+		            <field name="code">0117100</field>
+		        </record>
+		        
+			 	<record id="product_category_01162" model="vat.category">
+		            <field name="parent_id" ref="product_category_0116"/>
+		            <field name="name">Бусад төрлийн хошуу тариа</field>
+		            <field name="code">0117200</field>
+		        </record>
+		        
+			 	
+			 	
+		<record id="product_category_0118" model="vat.category">
+            <field name="parent_id" ref="product_category_011"/>
+            <field name="name">Бог будаа, шар будаа</field>
+            <field name="code">0118</field>
+        </record>
+        
+			 	<record id="product_category_01181" model="vat.category">
+		            <field name="parent_id" ref="product_category_0118"/>
+		            <field name="name">Бог будаа, шар будааны үр</field>
+		            <field name="code">0118100</field>
+		        </record>
+		        
+			 	<record id="product_category_01182" model="vat.category">
+		            <field name="parent_id" ref="product_category_0118"/>
+		            <field name="name">Бусад төрлийн бог будаа, шар будаа</field>
+		            <field name="code">0118200</field>
+		        </record>
+		        
+			 	<record id="product_category_0119" model="vat.category">
+		            <field name="parent_id" ref="product_category_011"/>
+		            <field name="name">Бусад төрлийн үр тариа</field>
+		            <field name="code">0119000</field>
+		        </record>
+		        
+		<record id="product_category_012" model="vat.category">
+	            <field name="parent_id" ref="product_category_01"/>
+	            <field name="name">Хүнсний ногоо</field>
+	            <field name="code">012</field>
+	   	</record>
+	   	
+			<record id="product_category_0121" model="vat.category">
+		            <field name="parent_id" ref="product_category_012"/>
+		            <field name="name">Навчит болон ишт хүнсний ногоо</field>
+		            <field name="code">0121</field>
+		   	</record>
+		   	
+				<record id="product_category_01211" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Хэрээний нүд /аспаржа/</field>
+			            <field name="code">0121100</field>
+			   	</record>
+			   	
+				<record id="product_category_01212" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Бөөрөнхий байцаа</field>
+			            <field name="code">0121200</field>
+			   	</record>
+			   	
+				<record id="product_category_012103" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Бөөрөнхий байцааны үр</field>
+			            <field name="code">0121210</field>
+			   	</record>
+			   	
+				<record id="product_category_01213" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Цэцэгт болон брокколийн байцаа</field>
+			            <field name="code">0121300</field>
+			   	</record>
+			   	
+				<record id="product_category_01214" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Шанцай /латук/ болон идрээ</field>
+			            <field name="code">0121400</field>
+			   	</record>
+			   	
+				<record id="product_category_01215" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Бууцай</field>
+			            <field name="code">0121500</field>
+			   	</record>
+			   	
+				<record id="product_category_01216" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Газрын төмс /артушок/</field>
+			            <field name="code">0121600</field>
+			   	</record>
+			   	
+				<record id="product_category_01219" model="vat.category">
+			            <field name="parent_id" ref="product_category_0121"/>
+			            <field name="name">Навчит болон ишт бусад төрлийн хүнсний ногоо</field>
+			            <field name="code">0121900</field>
+			   	</record>
+			   	
+				   	
+		<record id="product_category_0122" model="vat.category">
+	            <field name="parent_id" ref="product_category_012"/>
+	            <field name="name">Амтат гуаны төрлийн жимс</field>
+	            <field name="code">0122</field>
+	   	</record>
+	   	
+				<record id="product_category_01221" model="vat.category">
+			            <field name="parent_id" ref="product_category_0122"/>
+			            <field name="name">Ший гуа</field>
+			            <field name="code">0122100</field>
+			   	</record>
+			   	
+				<record id="product_category_01229" model="vat.category">
+			            <field name="parent_id" ref="product_category_0122"/>
+			            <field name="name">Канталуп болон амтат гуаны төрлийн бусад жимс</field>
+			            <field name="code">0122900</field>
+			   	</record>
+			   	
+		<record id="product_category_0123" model="vat.category">
+	            <field name="parent_id" ref="product_category_012"/>
+	            <field name="name">Жимслэг ногоо</field>
+	            <field name="code">0123</field>
+	   	</record>
+	   	
+				<record id="product_category_01231" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Чинжүү, амтат чинжүү, ногоон (зөвхөн уутат төрлийн чинжүү)</field>
+			            <field name="code">0123110</field>
+			   	</record>
+			   	
+				<record id="product_category_01231" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Чинжүүний үр</field>
+			            <field name="code">0123120</field>
+			   	</record>
+			   	
+				<record id="product_category_01232" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Өргөст хэмх</field>
+			            <field name="code">0123210</field>
+			   	</record>
+			   	
+				<record id="product_category_012320" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Өргөст хэмхийн үр</field>
+			            <field name="code">0123220</field>
+			   	</record>
+			   	
+				<record id="product_category_01233" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Хаш /баклажан (чэс)</field>
+			            <field name="code">0123300</field>
+			   	</record>
+			   	
+				<record id="product_category_01234" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Улаан лооль</field>
+			            <field name="code">0123400</field>
+			   	</record>
+			   	
+				<record id="product_category_01235" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Хулуу</field>
+			            <field name="code">0123510</field>
+			   	</record>
+			   	
+				<record id="product_category_01236" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Хулууны үр</field>
+			            <field name="code">0123520</field>
+			   	</record>
+			   	
+				<record id="product_category_01239" model="vat.category">
+			            <field name="parent_id" ref="product_category_0123"/>
+			            <field name="name">Бусад төрлийн жимслэг ногоо</field>
+			            <field name="code">0123900</field>
+			   	</record>
+			   	
+				
+		<record id="product_category_0124" model="vat.category">
+            <field name="parent_id" ref="product_category_012"/>
+            <field name="name">Буурцагт ургамал</field>
+            <field name="code">0124</field>
+		</record>
+		
+				<record id="product_category_01241" model="vat.category">
+		            <field name="parent_id" ref="product_category_0124"/>
+		            <field name="name">Ногоон шош</field>
+		            <field name="code">0124110</field>
+				</record>
+				
+				
+				<record id="product_category_012410" model="vat.category">
+		            <field name="parent_id" ref="product_category_0124"/>
+		            <field name="name">Шошны үр</field>
+		            <field name="code">0124120</field>
+				</record>
+				
+				<record id="product_category_01242" model="vat.category">
+		            <field name="parent_id" ref="product_category_0124"/>
+		            <field name="name">Ногоон вандуй</field>
+		            <field name="code">0124210</field>
+				</record>
+				
+				<record id="product_category_012420" model="vat.category">
+		            <field name="parent_id" ref="product_category_0124"/>
+		            <field name="name">Вандуйны үр</field>
+		            <field name="code">0124220</field>
+				</record>
+				
+				<record id="product_category_01249" model="vat.category">
+		            <field name="parent_id" ref="product_category_0124"/>
+		            <field name="name">Буурцагт бусад төрлийн ургамал</field>
+		            <field name="code">0124900</field>
+				</record>
+				
+				
+		<record id="product_category_0125" model="vat.category">
+            <field name="parent_id" ref="product_category_012"/>
+            <field name="name">Үндэст, булцуут хүнсний ногоо</field>
+            <field name="code">0125</field>
+		</record>
+		
+				<record id="product_category_01251" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Лууван, шар манжин</field>
+		            <field name="code">0125100</field>
+				</record>
+				
+				<record id="product_category_01252" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Сармис</field>
+		            <field name="code">0125200</field>
+				</record>
+				
+				<record id="product_category_012520" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Сонгины үр</field>
+		            <field name="code">0125320</field>
+				</record>
+				
+				<record id="product_category_01254" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Гогод болон сонгины төрлийн бусад хүнсний ногоо</field>
+		            <field name="code">0125400</field>
+				</record>
+				
+				<record id="product_category_01255" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Улаан манжин</field>
+		            <field name="code">0125500</field>
+				</record>
+				
+				<record id="product_category_0126" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Үндэст болон булцуут бусад төрлийн хүнсний ногоо</field>
+		            <field name="code">0126000</field>
+				</record>
+				
+				<record id="product_category_0127" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Мөөг, малтуу мөөг, таримал мөөг</field>
+		            <field name="code">0127000</field>
+				</record>
+				
+				<record id="product_category_0129" model="vat.category">
+		            <field name="parent_id" ref="product_category_0125"/>
+		            <field name="name">Дээрх дэд ангиудад ангилагдаагүй хүнсний ногоо</field>
+		            <field name="code">0129000</field>
+				</record>
+				
+		<record id="product_category_013" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Жимс, самар</field>
+            <field name="code">013</field>
+		</record>
+		
+				<record id="product_category_0131" model="vat.category">
+		            <field name="parent_id" ref="product_category_013"/>
+		            <field name="name">Халуун болон дулаан орны жимс</field>
+		            <field name="code">0131</field>
+				</record>
+				
+						<record id="product_category_01311" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Авокадо</field>
+				            <field name="code">0131100</field>
+						</record>
+						
+						<record id="product_category_01312" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Гадил</field>
+				            <field name="code">0131200</field>
+						</record>
+						
+						<record id="product_category_01313" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Гадилны төрлийн бусад жимс</field>
+				            <field name="code">0131300</field>
+						</record>
+						
+						
+						<record id="product_category_01314" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Нанжин чавга</field>
+				            <field name="code">0131400</field>
+						</record>
+						
+						<record id="product_category_01315" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Инжир</field>
+				            <field name="code">0131500</field>
+						</record>
+						
+						<record id="product_category_01316" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Манго</field>
+				            <field name="code">0131600</field>
+						</record>
+						
+						
+						<record id="product_category_01317" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Папай гуа</field>
+				            <field name="code">0131700</field>
+						</record>
+						
+						<record id="product_category_01318" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Хан боргоцой</field>
+				            <field name="code">0131800</field>
+						</record>
+						
+						<record id="product_category_01319" model="vat.category">
+				            <field name="parent_id" ref="product_category_0131"/>
+				            <field name="name">Халуун болон дулаан орны бусад төрлийн жимс</field>
+				            <field name="code">0131900</field>
+						</record>
+						
+				<record id="product_category_0132" model="vat.category">
+		            <field name="parent_id" ref="product_category_013"/>
+		            <field name="name">Жүржийн төрлийн жимс</field>
+		            <field name="code">0132</field>
+				</record>
+				
+						<record id="product_category_01321" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Бэрсүүт жүрж</field>
+				            <field name="code">0132100</field>
+						</record>
+						
+						<record id="product_category_01322" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Нимбэг болон хүчит жүрж</field>
+				            <field name="code">0132200</field>
+						</record>
+						
+						<record id="product_category_01323" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Амтат жүрж</field>
+				            <field name="code">0132300</field>
+						</record>
+						
+						<record id="product_category_01324" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Бэрсүүт жүрж, клементин</field>
+				            <field name="code">0132400</field>
+						</record>
+						
+						<record id="product_category_01329" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Жүржийн төрлийн бусад жимс</field>
+				            <field name="code">0132900</field>
+						</record>
+						
+						<record id="product_category_01333" model="vat.category">
+				            <field name="parent_id" ref="product_category_0132"/>
+				            <field name="name">Усан үзэм</field>
+				            <field name="code">0133000</field>
+						</record>
+						
+						
+				<record id="product_category_0134" model="vat.category">
+		            <field name="parent_id" ref="product_category_013"/>
+		            <field name="name">Бутлаг жимс</field>
+		            <field name="code">0134</field>
+				</record>
+				
+					<record id="product_category_01341" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Үхрийн нүд, тошлойн төрлийн жимс</field>
+			            <field name="code">0134100</field>
+					</record>
+					
+					<record id="product_category_01342" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Киви</field>
+			            <field name="code">0134200</field>
+					</record>
+					
+					<record id="product_category_01343" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Бөөрөлзгөнө</field>
+			            <field name="code">0134300</field>
+					</record>
+					
+					
+					<record id="product_category_01344" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Гүзээлзгэнэ</field>
+			            <field name="code">0134400</field>
+					</record>
+					
+					<record id="product_category_013491" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Чацаргана</field>
+			            <field name="code">0134910</field>
+					</record>
+					
+					<record id="product_category_013499" model="vat.category">
+			            <field name="parent_id" ref="product_category_0134"/>
+			            <field name="name">Ойн төрөл бүрийн модны жимс, жимсгэнэ</field>
+			            <field name="code">0134990</field>
+					</record>
+					
+				<record id="product_category_0135" model="vat.category">
+		            <field name="parent_id" ref="product_category_013"/>
+		            <field name="name">Яст болон үрт жимс</field>
+		            <field name="code">0135</field>
+				</record>
+				
+					<record id="product_category_01351" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Алим</field>
+			            <field name="code">0135100</field>
+					</record>
+					
+					<record id="product_category_01352" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Лийр ба айва</field>
+			            <field name="code">0135200</field>
+					</record>
+					
+					
+					<record id="product_category_01353" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Гүйлс</field>
+			            <field name="code">0135300</field>
+					</record>
+					
+					<record id="product_category_01354" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Интоор</field>
+			            <field name="code">0135400</field>
+					</record>
+					
+					<record id="product_category_01355" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Тоор болон нектар</field>
+			            <field name="code">0135500</field>
+					</record>
+					
+					<record id="product_category_01356" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Чавга ба үүргэн жимс</field>
+			            <field name="code">0135600</field>
+					</record>
+					
+					<record id="product_category_01359" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Бусад төрлийн яст болон үрт жимс</field>
+			            <field name="code">0135900</field>
+					</record>
+					
+					<record id="product_category_01360" model="vat.category">
+			            <field name="parent_id" ref="product_category_0135"/>
+			            <field name="name">Жимсний үр, суулгац</field>
+			            <field name="code">0136000</field>
+					</record>
+					
+				<record id="product_category_0137" model="vat.category">
+		            <field name="parent_id" ref="product_category_013"/>
+		            <field name="name">Ястай самар (газрын самрыг оруулахгүйгээр хүнсэнд хэрэглэдэг зэрлэг самар)</field>
+		            <field name="code">0137</field>
+				</record>
+					
+					<record id="product_category_01371" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Буйлс, ястай</field>
+			            <field name="code">0137100</field>
+					</record>
+					
+					<record id="product_category_01372" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Кешью модны самар, ястай</field>
+			            <field name="code">0137200</field>
+					</record>
+					
+					<record id="product_category_01373" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Туулайн бөөр модны самар, ястай</field>
+			            <field name="code">0137300</field>
+					</record>
+					
+					<record id="product_category_01374" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Хушны самар, ястай</field>
+			            <field name="code">0137400</field>
+					</record>
+					
+					<record id="product_category_01375" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Фисташек самар, ястай</field>
+			            <field name="code">0137500</field>
+					</record>
+		
+					<record id="product_category_01376" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Хушга, ястай</field>
+			            <field name="code">0137600</field>
+					</record>
+					
+					<record id="product_category_01377" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Бразил самар, ястай</field>
+			            <field name="code">0137700</field>
+					</record>
+					
+					<record id="product_category_01379" model="vat.category">
+			            <field name="parent_id" ref="product_category_0137"/>
+			            <field name="name">Ястай бусад төрлийн самар (газрын самрыг оруулахгүйгээр хүнсэнд хэрэглэдэг зэрлэг самар)</field>
+			            <field name="code">0137900</field>
+					</record>
+					
+			<record id="product_category_0139" model="vat.category">
+	            <field name="parent_id" ref="product_category_013"/>
+	            <field name="name">Бусад төрлийн жимс, самар</field>
+	            <field name="code">0139</field>
+			</record>
+			
+					<record id="product_category_01391" model="vat.category">
+			            <field name="parent_id" ref="product_category_0139"/>
+			            <field name="name">Хуайс модны шош</field>
+			            <field name="code">0139100</field>
+					</record>
+					
+					<record id="product_category_01392" model="vat.category">
+			            <field name="parent_id" ref="product_category_0139"/>
+			            <field name="name">Бусад жимс</field>
+			            <field name="code">0139900</field>
+					</record>
+					
+			<record id="product_category_014" model="vat.category">
+	            <field name="parent_id" ref="product_category_01"/>
+	            <field name="name">Тослог ургамлын үр, жимс</field>
+	            <field name="code">014</field>
+			</record>
+			
+					<record id="product_category_01411" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Үрсэлгээний зориулалтын шар буурцагны үр</field>
+			            <field name="code">0141100</field>
+					</record>
+					
+					<record id="product_category_01412" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Хэрэглээний бусад төрлийн шар буурцаг</field>
+			            <field name="code">0141200</field>
+					</record>
+					
+					<record id="product_category_01421" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Үрсэлгээний зориулалтын ястай газрын самар</field>
+			            <field name="code">0142100</field>
+					</record>
+					
+					<record id="product_category_01422" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Бусад зориулалтын ястай газрын самар</field>
+			            <field name="code">0142200</field>
+					</record>
+					
+					<record id="product_category_01431" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Үрсэлгээний зориулалтын хөвөнгийн үр</field>
+			            <field name="code">0143100</field>
+					</record>
+					
+					<record id="product_category_01432" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Хэрэглээний бусад төрлийн хөвөнгийн үр</field>
+			            <field name="code">0143200</field>
+					</record>
+					
+					<record id="product_category_01441" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Маалангын үр</field>
+			            <field name="code">0144100</field>
+					</record>
+					
+					<record id="product_category_01442" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Гичний үр</field>
+			            <field name="code">0144200</field>
+					</record>
+					
+					<record id="product_category_01443" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Рапсын үр</field>
+			            <field name="code">0144300</field>
+					</record>
+					
+					<record id="product_category_01444" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Гүнжидийн үр</field>
+			            <field name="code">0144400</field>
+					</record>
+					
+					<record id="product_category_01445" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Наранцэцгийн үр</field>
+			            <field name="code">0144500</field>
+					</record>
+					
+					<record id="product_category_01446" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Мөнхцэцгийн үр</field>
+			            <field name="code">0144600</field>
+					</record>
+					
+					<record id="product_category_01449" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Тосны бусад төрлийн ургамлын үр</field>
+			            <field name="code">0144900</field>
+					</record>
+					
+					<record id="product_category_01450" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Чидун жимс</field>
+			            <field name="code">0145000</field>
+					</record>
+					
+					<record id="product_category_01460" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Ястай наргилын самар</field>
+			            <field name="code">0146000</field>
+					</record>
+					
+					<record id="product_category_01491" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Дал модны самар, самрын идээ</field>
+			            <field name="code">0149100</field>
+					</record>
+					
+					<record id="product_category_01499" model="vat.category">
+			            <field name="parent_id" ref="product_category_014"/>
+			            <field name="name">Тослог бусад төрлийн жимс</field>
+			            <field name="code">0149900</field>
+					</record>
+					
+		<record id="product_category_015" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Хүнсэнд хэрэглэдэг цардууллаг үндсэн үрт ба булцуут ургамал</field>
+            <field name="code">015</field>
+		</record>
+		
+					<record id="product_category_0151" model="vat.category">
+			            <field name="parent_id" ref="product_category_015"/>
+			            <field name="name">Төмс</field>
+			            <field name="code">0151000</field>
+					</record>
+					
+					<record id="product_category_01591" model="vat.category">
+			            <field name="parent_id" ref="product_category_015"/>
+			            <field name="name">Чихэрлэг төмс</field>
+			            <field name="code">0159100</field>
+					</record>
+					
+					<record id="product_category_01592" model="vat.category">
+			            <field name="parent_id" ref="product_category_015"/>
+			            <field name="name">Сүүт өвсний үндэс</field>
+			            <field name="code">0159200</field>
+					</record>
+					
+					<record id="product_category_01593" model="vat.category">
+			            <field name="parent_id" ref="product_category_015"/>
+			            <field name="name">Амтат төмс</field>
+			            <field name="code">0159300</field>
+					</record>
+					
+					<record id="product_category_01599" model="vat.category">
+			            <field name="parent_id" ref="product_category_015"/>
+			            <field name="name">Хүнсний цардууллаг үндсэн үрт ба булцуут бусад төрлийн ургамал</field>
+			            <field name="code">0159900</field>
+					</record>
+					
+		<record id="product_category_016" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Согтууруулагч болон амтлаг ургамал</field>
+            <field name="code">016</field>
+		</record>
+		
+					<record id="product_category_0161" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Кофе /ногоон/</field>
+			            <field name="code">0161000</field>
+					</record>
+					
+					<record id="product_category_0162" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Цайны навч</field>
+			            <field name="code">0162000</field>
+					</record>
+					
+					<record id="product_category_0163" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Цайны төрлийн өвс ургамал (парагвай цай)</field>
+			            <field name="code">0163000</field>
+					</record>
+					
+					<record id="product_category_0164" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Какаоны буурцаг</field>
+			            <field name="code">0164000</field>
+					</record>
+					
+					
+					<record id="product_category_01651" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй чинжүү</field>
+			            <field name="code">0165100</field>
+					</record>
+					
+					<record id="product_category_01652" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй амтат чинжүү, хуурай чинжүү, уутат төрлийн чинжүү</field>
+			            <field name="code">0165200</field>
+					</record>
+					
+					<record id="product_category_01653" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй задь, задийн бүрхүүл ба кардамон</field>
+			            <field name="code">0165300</field>
+					</record>
+					
+					<record id="product_category_01654" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Гоньд, одон гоньд, кориандр, зираан, энгийн зираан, ногоон гоньд ба арц</field>
+			            <field name="code">0165400</field>
+					</record>
+					
+					<record id="product_category_01655" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй шанз /синнамон/</field>
+			            <field name="code">0165500</field>
+					</record>
+					
+					<record id="product_category_01656" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй лиш цэцэг (бүтэн иштэй )</field>
+			            <field name="code">0165600</field>
+					</record>
+					
+					<record id="product_category_01657" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй, хуурай цагаан гаа</field>
+			            <field name="code">0165700</field>
+					</record>
+					
+					<record id="product_category_01658" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Боловсруулаагүй ванил</field>
+			            <field name="code">0165800</field>
+					</record>
+					
+					<record id="product_category_01659" model="vat.category">
+			            <field name="parent_id" ref="product_category_016"/>
+			            <field name="name">Бусад төрлийн согтууруулагч болон амтлаг ургамал</field>
+			            <field name="code">0165900</field>
+					</record>
+					
+		<record id="product_category_017" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Хатаасан төрөл бүрийн буурцагт ургамал</field>
+            <field name="code">017</field>
+		</record>
+		
+					<record id="product_category_01701" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Хатаасан шош</field>
+			            <field name="code">0170100</field>
+					</record>
+					
+					<record id="product_category_01702" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Хатаасан том ширхэгт шош/морин шош</field>
+			            <field name="code">0170200</field>
+					</record>
+					
+					<record id="product_category_01703" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Хатаасан хонин вандуй</field>
+			            <field name="code">0170300</field>
+					</record>
+					
+					<record id="product_category_01704" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Хатаасан сэвэг зарам</field>
+			            <field name="code">0170400</field>
+					</record>
+					
+					<record id="product_category_01705" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Хатаасан вандуй</field>
+			            <field name="code">0170500</field>
+					</record>
+					
+					<record id="product_category_01709" model="vat.category">
+			            <field name="parent_id" ref="product_category_017"/>
+			            <field name="name">Бусад төрлийн хатаасан буурцагт ургамал</field>
+			            <field name="code">0170900</field>
+					</record>
+					
+					
+		<record id="product_category_018" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Саахрын ургамал</field>
+            <field name="code">018</field>
+		</record>
+		
+					<record id="product_category_01801" model="vat.category">
+			            <field name="parent_id" ref="product_category_018"/>
+			            <field name="name">Чихрийн манжин</field>
+			            <field name="code">0180100</field>
+					</record>
+					
+					<record id="product_category_01802" model="vat.category">
+			            <field name="parent_id" ref="product_category_018"/>
+			            <field name="name">Чихрийн нишингэ</field>
+			            <field name="code">0180200</field>
+					</record>
+					
+					<record id="product_category_01803" model="vat.category">
+			            <field name="parent_id" ref="product_category_018"/>
+			            <field name="name">Чихрийн манжингийн үр</field>
+			            <field name="code">0180300</field>
+					</record>
+					
+					<record id="product_category_01809" model="vat.category">
+			            <field name="parent_id" ref="product_category_018"/>
+			            <field name="name">Бусад төрлийн саахрын ургамал</field>
+			            <field name="code">0180900</field>
+					</record>
+					
+					
+		<record id="product_category_019" model="vat.category">
+            <field name="parent_id" ref="product_category_01"/>
+            <field name="name">Тэжээлийн ургамал, хөвөнгийн ургамал, амьд ургамал, бэлтгэсэн цэцэг, цэцгийн баглаа,боловсруулаагүй тамхи болон байгалийн каучук</field>
+            <field name="code">019</field>
+		</record>
+		
+					<record id="product_category_01911" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Тэжээлийн болон даршны зориулалттай эрдэнэ шиш</field>
+			            <field name="code">0191100</field>
+					</record>
+					
+					<record id="product_category_01912" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Тэжээлийн болон даршны зориулалттай царгасны үр</field>
+			            <field name="code">0191200</field>
+					</record>
+					
+					<record id="product_category_01913" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Боловсруулаагүй, нунтагласан, хорголжилсон үр тарианы хальс, сүрэл</field>
+			            <field name="code">0191300</field>
+					</record>
+					
+					<record id="product_category_01919" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Бусад төрлийн тэжээлийн ургамал</field>
+			            <field name="code">0191900</field>
+					</record>
+					
+					<record id="product_category_01921" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Цэвэрлэсэн, цэвэрлээгүй хөвөнгийн ургамал</field>
+			            <field name="code">0192100</field>
+					</record>
+					
+					<record id="product_category_01922" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Боловсруулаагүй, дэвтээсэн сомронз (джут), нэхмэлийн бусад төрлийн ургамал (маалинга,жинхэнэ олс, нанхиад халгай (рами)-наас бусад т өрлийн)</field>
+			            <field name="code">0192200</field>
+					</record>
+					
+					<record id="product_category_01929" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Бусад төрлийн нэхмэлийн боловсруулаагүй ургамал</field>
+			            <field name="code">0192900</field>
+					</record>
+					
+					<record id="product_category_01930" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Үнэртэн, гоо сайхан, эмчилгээний болон хортон шавьж устгах, мөөгөнцрийн эсрэг зэрэг зориулалтын ургамал</field>
+			            <field name="code">0193000</field>
+					</record>
+					
+					<record id="product_category_01940" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Улаан манжингийн болон чихрийн манжингийн үрнээс бусад төрлийн тэжээлийн ургамлын үр</field>
+			            <field name="code">0194000</field>
+					</record>
+					
+					<record id="product_category_01950" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Анхдагч гаралтай, хавтан, хуудас, тууз хэлбэртэй байгалийн каучук</field>
+			            <field name="code">0195000</field>
+					</record>
+					
+					<record id="product_category_01961" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Булцуу, булцуут болон үндэст ургамал: иш ба суулгац, мөөгний түрс</field>
+			            <field name="code">0196100</field>
+					</record>
+					
+					<record id="product_category_01962" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Цэцгийн цомирлог, цэцгийн хэлхээ, цэцгийн сагс болон тэдгээртэй т өстэй эд зүйлийг оруулсан цэцэг, цэцгийн баглаа</field>
+			            <field name="code">0196200</field>
+					</record>
+					
+					<record id="product_category_01963" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Цэцэгний үр</field>
+			            <field name="code">0196300</field>
+					</record>
+					
+					<record id="product_category_01970" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Боловсруулаагүй тамхи</field>
+			            <field name="code">0197000</field>
+					</record>
+					
+					<record id="product_category_01990" model="vat.category">
+			            <field name="parent_id" ref="product_category_019"/>
+			            <field name="name">Бусад төрлийн боловсруулаагүй ургамал</field>
+			            <field name="code">0199000</field>
+					</record>
+					
+					
+		<record id="product_category_17" model="vat.category">
+            <field name="name">ЦАХИЛГААН, ХИЙ, УУР, ДУЛААН</field>
+            <field name="code">17</field>
+		</record>
+		
+		<record id="product_category_171" model="vat.category">
+			<field name="parent_id" ref="product_category_17"/>
+            <field name="name">Цахилгаан эрчим хүч</field>
+            <field name="code">1710000</field>
+		</record>
+		
+		<record id="product_category_172" model="vat.category">
+			<field name="parent_id" ref="product_category_17"/>
+            <field name="name">Нүүрс, ус, цахилгаан үүсгүүрийн хий болон тэдгээртэй төстэй хий (газрын тосны хий
+болон хийн байдалтай нүүрс устөрөгчөөс бусад төрлийн)</field>
+            <field name="code">1720000</field>
+		</record>
+		
+		<record id="product_category_173" model="vat.category">
+			<field name="parent_id" ref="product_category_17"/>
+            <field name="name">Уур, халуун ус</field>
+            <field name="code">173</field>
+		</record>
+			<record id="product_category_1730010" model="vat.category">
+			<field name="parent_id" ref="product_category_173"/>
+            <field name="name">Дулааны эрчим хүч</field>
+            <field name="code">1730010</field>
+		</record>
+		
+		<record id="product_category_1730090" model="vat.category">
+			<field name="parent_id" ref="product_category_173"/>
+            <field name="name">Уур, халуун ус</field>
+            <field name="code">1730090</field>
+		</record>
+		
+		<record id="product_category_1740000" model="vat.category">
+			<field name="parent_id" ref="product_category_17"/>
+            <field name="name">Мөс болон цас</field>
+            <field name="code">1740000</field>
+		</record>
+		
+
+		
+    </data>
+</odoo>

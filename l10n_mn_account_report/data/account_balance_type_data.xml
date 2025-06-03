@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+	
+		<!-- Баланс тайлангийн төрөл -->
+    	<record id="account_balance_type_one" model="account.balance.type">
+            <field name="name">ХӨРӨНГӨ</field>
+            <field name="sequence">01</field>
+            <field name="number">1</field>
+            <field name="level">level1</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_two" model="account.balance.type">
+            <field name="name">Эргэлтийн хөрөнгө</field>
+            <field name="sequence">02</field>
+            <field name="number">1.1</field>
+            <field name="level">level2</field>
+            <field name="parent_id" ref="account_balance_type_one"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n13" model="account.balance.type">
+            <field name="name">Эргэлтийн хөрөнгийн дүн</field>
+            <field name="sequence">13</field>
+            <field name="number">1.1.11</field>
+            <field name="level">level2</field>
+            <field name="parent_id" ref="account_balance_type_two"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_three" model="account.balance.type">
+            <field name="name">Мөнгө,түүнтэй адилтгах хөрөнгө</field>
+            <field name="sequence">03</field>
+            <field name="number">1.1.1</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        
+        <record id="account_balance_type_four" model="account.balance.type">
+            <field name="name">Дансны авлага</field>
+            <field name="number">1.1.2</field>
+            <field name="sequence">04</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_five" model="account.balance.type">
+            <field name="name">Татвар, НДШ – ийн авлага</field>
+            <field name="sequence">05</field>
+            <field name="number">1.1.3</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_six" model="account.balance.type">
+            <field name="name">Бусад авлага</field>
+            <field name="sequence">06</field>
+            <field name="number">1.1.4</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_seven" model="account.balance.type">
+            <field name="name">Бусад санхүүгийн хөрөнгө</field>
+            <field name="sequence">07</field>
+            <field name="number">1.1.5</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n08" model="account.balance.type">
+            <field name="name">Бараа материал</field>
+            <field name="sequence">08</field>
+            <field name="number">1.1.6</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n09" model="account.balance.type">
+            <field name="name">Урьдчилж төлсөн зардал/тооцоо</field>
+            <field name="sequence">09</field>
+            <field name="number">1.1.7</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n10" model="account.balance.type">
+            <field name="name">Бусад эргэлтийн хөрөнгө</field>
+            <field name="sequence">10</field>
+            <field name="number">1.1.8</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n11" model="account.balance.type">
+            <field name="name">Борлуулах зорилгоор эзэмшиж буй эргэлтийн бус хөрөнгө (борлуулах бүлэг хөрөнгө)</field>
+            <field name="sequence">11</field>
+            <field name="number">1.1.9</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n12" model="account.balance.type">
+            <field name="name"> </field>
+            <field name="sequence">12</field>
+            <field name="number">1.1.10</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n13"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n24" model="account.balance.type">
+            <field name="name">Эргэлтийн бус хөрөнгийн дүн</field>
+            <field name="sequence">24</field>
+            <field name="number">1.2.10</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n14" model="account.balance.type">
+            <field name="name">Эргэлтийн бус хөрөнгө</field>
+            <field name="sequence">14</field>
+            <field name="number">1.2</field>
+            <field name="level">level2</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n15" model="account.balance.type">
+            <field name="name">Үндсэн хөрөнгө</field>
+            <field name="sequence">15</field>
+             <field name="number">1.2.1</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n16" model="account.balance.type">
+            <field name="name">Биет бус хөрөнгө</field>
+             <field name="sequence">16</field>
+            <field name="number">1.2.2</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n17" model="account.balance.type">
+            <field name="name">Биологийн хөрөнгө</field>
+             <field name="sequence">17</field>
+            <field name="number">1.2.3</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n18" model="account.balance.type">
+            <field name="name">Урт хугацаат  хөрөнгө оруулалт</field>
+            <field name="sequence">18</field>
+            <field name="number">1.2.4</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n19" model="account.balance.type">
+            <field name="name">Хайгуул ба үнэлгээний хөрөнгө</field>
+            <field name="sequence">19</field>
+            <field name="number">1.2.5</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n20" model="account.balance.type">
+            <field name="name">Хойшлогдсон татварын хөрөнгө</field>
+            <field name="sequence">20</field>
+            <field name="number">1.2.6</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n21" model="account.balance.type">
+            <field name="name">Хөрөнгө оруулалтын зориулалттай үл хөдлөх хөрөнгө</field>
+            <field name="sequence">21</field>
+            <field name="number">1.2.7</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+         <record id="account_balance_type_n22" model="account.balance.type">
+            <field name="name">Бусад эргэлтийн бус хөрөнгө</field>
+            <field name="sequence">22</field>
+            <field name="number">1.2.8</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+	
+	
+		<record id="account_balance_type_n23" model="account.balance.type">
+            <field name="name"> </field>
+            <field name="sequence">23</field>
+            <field name="number">1.2.9</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n24"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        
+        <record id="account_balance_type_n25" model="account.balance.type">
+            <field name="name">Нийт хөрөнгийн дүн</field>
+            <field name="sequence">25</field>
+            <field name="number">1.3</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n26" model="account.balance.type">
+            <field name="name">ӨР ТӨЛБӨР БА ЭЗДИЙН ӨМЧ</field>
+            <field name="sequence">26</field>
+            <field name="number">2</field>
+            <field name="level">level1</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n27" model="account.balance.type">
+            <field name="name">ӨР ТӨЛБӨР</field>
+            <field name="sequence">27</field>
+            <field name="number">2.1</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n28" model="account.balance.type">
+            <field name="name">БОГИНО ХУГАЦААТ ӨР ТӨЛБӨР</field>
+            <field name="sequence">28</field>
+            <field name="number">2.1.1</field>
+            <field name="level">level3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n42" model="account.balance.type">
+            <field name="name">Богино хугацаат өр төлбөрийн дүн</field>
+            <field name="sequence">42</field>
+            <field name="number">2.1.1.13</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n29" model="account.balance.type">
+            <field name="name">Дансны өглөг</field>
+            <field name="sequence">29</field>
+            <field name="number">2.1.1.1</field>
+            <field name="level">level4</field>
+             <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n30" model="account.balance.type">
+            <field name="name">Цалингийн  өглөг</field>
+            <field name="sequence">30</field>
+            <field name="number">2.1.1.2</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n31" model="account.balance.type">
+            <field name="name">Татварын өр</field>
+            <field name="sequence">31</field>
+            <field name="number">2.1.1.3</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n32" model="account.balance.type">
+            <field name="name">НДШ - ийн  өглөг</field>
+            <field name="sequence">32</field>
+            <field name="number">2.1.1.4</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n33" model="account.balance.type">
+            <field name="name">Богино хугацаат зээл</field>
+            <field name="sequence">33</field>
+            <field name="number">2.1.1.5</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n34" model="account.balance.type">
+            <field name="name">Хүүний  өглөг</field>
+            <field name="sequence">34</field>
+            <field name="number">2.1.1.6</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n35" model="account.balance.type">
+            <field name="name">Ногдол ашгийн  өглөг</field>
+            <field name="sequence">35</field>
+            <field name="number">2.1.1.7</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n36" model="account.balance.type">
+            <field name="name">Урьдчилж орсон орлого</field>
+            <field name="sequence">36</field>
+            <field name="number">2.1.1.8</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n37" model="account.balance.type">
+            <field name="name">Нөөц  /өр төлбөр/</field>
+            <field name="sequence">37</field>
+            <field name="number">2.1.1.9</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+
+        <record id="account_balance_type_n39" model="account.balance.type">
+            <field name="name">Бусад богино хугацаат өр төлбөр</field>
+            <field name="sequence">39</field>
+            <field name="number">2.1.1.10</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n40" model="account.balance.type">
+            <field name="name">Борлуулах зорилгоор эзэмшиж буй бүлэг хөрөнгөнд хамаарах өр төлбөр</field>
+            <field name="sequence">40</field>
+            <field name="number">2.1.1.11</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n41" model="account.balance.type">
+            <field name="name"> </field>
+            <field name="sequence">41</field>
+            <field name="number">2.1.1.12</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n42"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n49" model="account.balance.type">
+            <field name="name">Урт хугацаат өр төлбөрийн дүн</field>
+            <field name="sequence">49</field>
+            <field name="number">2.1.2.6</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        <record id="account_balance_type_n43" model="account.balance.type">
+            <field name="name">УРТ ХУГАЦААТ ӨР ТӨЛБӨР</field>
+            <field name="sequence">43</field>
+            <field name="number">2.1.2</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n44" model="account.balance.type">
+            <field name="name">Урт хугацаат зээл</field>
+            <field name="sequence">44</field>
+            <field name="number">2.1.2.1</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n49"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n45" model="account.balance.type">
+            <field name="name">Нөөц /өр төлбөр/</field>
+            <field name="sequence">45</field>
+            <field name="number">2.1.2.2</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n49"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n46" model="account.balance.type">
+            <field name="name">Хойшлогдсон татварын өр</field>
+            <field name="sequence">46</field>
+            <field name="number">2.1.2.3</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n49"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n47" model="account.balance.type">
+            <field name="name">Бусад урт хугацаат өр төлбөр</field>
+            <field name="sequence">47</field>
+            <field name="number">2.1.2.4</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n49"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n48" model="account.balance.type">
+            <field name="name"> </field>
+            <field name="number">2.1.2.5</field>
+            <field name="sequence">48</field>
+            <field name="level">level4</field>
+            <field name="parent_id" ref="account_balance_type_n49"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        
+        
+        <record id="account_balance_type_n50" model="account.balance.type">
+            <field name="name">Өр төлбөрийн нийт дүн</field>
+            <field name="sequence">50</field>
+            <field name="number">2.2</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n51" model="account.balance.type">
+            <field name="name">ЭЗДИЙН ӨМЧ</field>
+            <field name="sequence">51</field>
+            <field name="number">2.3</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+		<record id="account_balance_type_n63" model="account.balance.type">
+            <field name="name">Эздийн өмчийн дүн</field>
+            <field name="sequence">63</field>
+            <field name="number">2.3.11</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n53" model="account.balance.type">
+            <field name="name">-төрийн</field>
+            <field name="sequence">53</field>
+            <field name="number">2.3.1</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n54" model="account.balance.type">
+            <field name="name">-хувийн</field>
+            <field name="sequence">54</field>
+            <field name="number">2.3.2</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n55" model="account.balance.type">
+            <field name="name">-хувьцаат</field>
+            <field name="sequence">55</field>
+             <field name="number">2.3.3</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n56" model="account.balance.type">
+            <field name="name">Халаасны хувьцаа</field>
+            <field name="sequence">56</field>
+             <field name="number">2.3.4</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n57" model="account.balance.type">
+            <field name="name">Нэмж төлөгдсөн капитал</field>
+            <field name="sequence">57</field>
+             <field name="number">2.3.5</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n58" model="account.balance.type">
+            <field name="name">Хөрөнгийн дахин үнэлгээний нэмэгдэл</field>
+            <field name="sequence">58</field>
+             <field name="number">2.3.6</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+         <record id="account_balance_type_n59" model="account.balance.type">
+            <field name="name">Гадаад валютын хөрвүүлэлтийн нөөц</field>
+            <field name="sequence">59</field>
+             <field name="number">2.3.7</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n60" model="account.balance.type">
+            <field name="name">Эздийн өмчийн бусад хэсэг</field>
+            <field name="sequence">60</field>
+             <field name="number">2.3.8</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n61" model="account.balance.type">
+            <field name="name">Хуримтлагдсан ашиг</field>
+            <field name="sequence">61</field>
+            <field name="number">2.3.9</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="account_balance_type_n62" model="account.balance.type">
+            <field name="name"> </field>
+            <field name="sequence">62</field>
+            <field name="number">2.3.10</field>
+            <field name="level">level3</field>
+            <field name="parent_id" ref="account_balance_type_n63"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        
+        
+        <record id="account_balance_type_n64" model="account.balance.type">
+            <field name="name">Өр төлбөр ба эздийн өмчийн дүн</field>
+            <field name="sequence">64</field>
+            <field name="number">2.4</field>
+            <field name="level">level2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+	
+	</data>
+</odoo>

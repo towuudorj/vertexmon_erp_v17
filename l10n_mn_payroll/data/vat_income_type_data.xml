@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data  noupdate="1">
+		
+		<record id="vat_income_0003" model="vat.income.type">
+            <field name="name">Шууд бус орлого олгоогүй</field>
+            <field name="code">0</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+		
+		<record id="vat_income_0004" model="vat.income.type">
+            <field name="name">Үнэ төлбөргүй, эсхүл хөнгөлөлттэй үнээр тээврийн хэрэгслээр үйлчилсэн</field>
+            <field name="code">15.1</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+        <record id="vat_income_0005" model="vat.income.type">
+            <field name="name">Эрс тэс уур амьсгалд ажиллаж амьдарсны нэмэгдэл</field>
+            <field name="code">15.10</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+        <record id="vat_income_0006" model="vat.income.type">
+            <field name="name">Адилтгах бусад орлого</field>
+            <field name="code">15.11</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+         <record id="vat_income_0007" model="vat.income.type">
+            <field name="name">Орон сууцны ашиглалтын болон түрээсийн зардлын төлбөр, байрны хөлс, түлшний зардлын төлбөр</field>
+            <field name="code">15.2</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+         <record id="vat_income_0008" model="vat.income.type">
+            <field name="name">Үзвэр үйлчилгээний олговор</field>
+            <field name="code">15.3</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+        <record id="vat_income_0009" model="vat.income.type">
+            <field name="name">Ахуйн үйлчлэгч, жолооч, цэвэрлэгч болон бусад үйлчилгээ үзүүлсний зардлын төлбөр</field>
+            <field name="code">15.4</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+         <record id="vat_income_0010" model="vat.income.type">
+            <field name="name">Ажил олгогч эсхүл бусад этгээдэд төлөх өр барагдуулсны төлбөр</field>
+            <field name="code">15.5</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+           <record id="vat_income_0011" model="vat.income.type">
+            <field name="name">Арилжааны зээлийн хүүгээс доогуур хүүтэй олгосон зээлийн хүүгийн зөрүү</field>
+            <field name="code">15.6</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+        <record id="vat_income_0012" model="vat.income.type">
+            <field name="name">Ажил олгогчийн төлсөн энэ хуулийн 11.2.7-д зааснаас бусад сайн дурын даатгалын хураамж</field>
+            <field name="code">15.7</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+         <record id="vat_income_0013" model="vat.income.type">
+            <field name="name">Гэр бүлийн гишүүний сургалтын төлбөр</field>
+            <field name="code">15.8</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+        <record id="vat_income_0014" model="vat.income.type">
+            <field name="name">Монгол Улсад нүүж ирэх болон буцахтай холбогдон гарах зардлын төлбөр</field>
+            <field name="code">15.9</field>
+            <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+	</data>
+</odoo>

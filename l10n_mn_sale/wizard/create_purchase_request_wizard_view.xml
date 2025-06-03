@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="create_purchase_request_wizard_view" model="ir.ui.view">
+            <field name="name">create.purchase.request.wizard.form</field>
+            <field name="model">create.purchase.request</field>
+            <field name="arch" type="xml">
+	             <form string="Product register">
+					<footer>
+                        <button name="create_request" string="Хувиарлах" type="object" class="oe_highlight" />
+                        or
+                        <button string="Хаах" class="oe_link" special="cancel" />
+                    </footer>
+				</form>
+            </field>
+        </record>
+        
+    	<record id="action_create_purchase_request_new" model="ir.actions.act_window">
+             <field name="name">Create purchase request</field>
+             <field name="res_model">create.purchase.request</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_id" ref="create_purchase_request_wizard_view"/>
+             <field name="view_mode">form</field>
+             <field name="binding_model_id" ref="l10n_mn_sale.model_crm_lead_line"/>
+             <field name="binding_view_types">list</field>
+             <field name="target">new</field>
+       </record>
+        
+
+    </data>
+</odoo>

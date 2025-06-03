@@ -1,0 +1,280 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_stock
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__name
+msgid "Distributer name"
+msgstr "Дистрибутерийн нэр"
+
+#. module: product
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_product__distributor_ids
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_template__distributor_ids
+msgid "Distributor"
+msgstr "Дистрибутер"
+
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
+msgid "Purchase UoM"
+msgstr "Худалдан авалтын хэмжих нэгж"
+
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
+msgid "Reserve Only Full Packagings"
+msgstr "Сав баглааг бүхэлд нь буцаах"
+
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
+msgid "Reserve Packagings"
+msgstr "Сав баглааг буцаах"
+
+
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
+msgid "Reserve Partial Packagings"
+msgstr "Савю баглааг хэсэгчлэн буцаах"
+
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__project_type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_product__model
+msgid "Model"
+msgstr "Модел"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_template__model
+msgid "Model"
+msgstr "Модел"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__stock_picking__project_type__project
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__stock_picking__project_type__tender
+msgid "Tender"
+msgstr "Тендер"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
+msgid "Weight"
+msgstr "Жин"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__analytic_id
+msgid "Analytic"
+msgstr "Төсөл"
+
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__sale_price
+msgid "Sale price"
+msgstr "Зарах үнэ"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__total_amount
+msgid "Total amount"
+msgstr "Нийт дүн"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight"
+msgstr "Жин"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
+msgid "Weight for Shipping"
+msgstr "Хүргэлтийн жин
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight for shipping"
+msgstr "Хүргэлтийн жин"
+
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
+msgid "Project"
+msgstr "Төсөл"
+
+
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
+msgid "Tender"
+msgstr "Тендер"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier"
+msgstr "Тээвэрлэгч"
+
+
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "Трак дугаар"
+
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
+msgid "Unit Value"
+msgstr "Нэгж үнэ"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Moved Quantity"
+msgstr "Шилжсэн тоо"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
+msgid "Last Count Date"
+msgstr "Тооллогын огноо"
+
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
+msgid "Replenish Location"
+msgstr "Нөхөн дүүргэх байршил эсэх"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Returns Type"
+msgstr "Буцаалтын төрөл"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
+msgid "Default returns location"
+msgstr "Буцаалтын байршил"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid "Min Quantity"
+msgstr "Бага тоо"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
+msgid "Max Quantity"
+msgstr "Их тоо"
+
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__name
+msgid "Name"
+msgstr "Барааны ангилал"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__name
+msgid "Name"
+msgstr "Барааны ангилал"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__code
+msgid "Code"
+msgstr "Ангилалын код"
+
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__active
+msgid "Active"
+msgstr "Идэвхтэй"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__parent_id
+msgid "Parent Category"
+msgstr "Эцэг ангилал"
+
+
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
+msgid "To Order"
+msgstr "Захиалгын тоо"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
+msgid "Shipping Methods"
+msgstr "Хүргэх аргууд"
+
+
+#. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_distributor_register
+#: model:ir.ui.menu,name:l10n_mn_stock.distributer_register_menu
+msgid "Distributer register"
+msgstr "Дистрибутер"
+
+
+#. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_product_category_new
+#: model:ir.ui.menu,name:l10n_mn_stock.product_category_new_menu
+msgid "Product category"
+msgstr "Барааны ангилал"
+
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.inventory_aging_action
+#: model:ir.ui.menu,name:stock_account.menu_inventory_aging
+msgid "Inventory Aging"
+msgstr "Агуулахын насжилт"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
+msgid "Done By"
+msgstr "Дуусгасан ажилтан"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_storage_category
+#: model:ir.model.fields,field_description:stock.field_stock_location__storage_category_id
+#: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__storage_category_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant__storage_category_id
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__name
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__storage_category_id
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
+msgid "Storage Category"
+msgstr "Агуулахын ангилал"

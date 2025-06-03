@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+    	      <record model="ir.ui.view" id="cash_move_report_form_view">
+                <field name="name">cash.move.report.new.form</field>
+                <field name="model">cash.move.line.report</field>
+                <field name="arch" type="xml">
+                    <form string="Cash move line report">
+                    	<group>
+                        	<field name="company_id"/>
+                        	<field name="date_from"/>
+                        	<field name="date_to"/>
+                        </group>
+                        <field name="account_ids" />
+                        <footer>
+                            <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                    	</footer>
+                    </form>
+                </field>
+            </record>
+            
+            
+            
+            <record id="action_cash_move_report_view" model="ir.actions.act_window">
+                <field name="name">Cash move report</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">cash.move.line.report</field>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="cash_move_report_form_view"/>
+                <field name="target">new</field>
+            </record>
+	
+    
+    </data>
+</odoo>

@@ -1,0 +1,792 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_sale
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Quotation start"
+msgstr "Үнийн судалгаа эхэлсэн"
+
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Quotation end"
+msgstr "Үнийн судалгаа дууссан"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Done"
+msgstr "Дууссан"
+
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Send draft"
+msgstr "Драфт илгээх"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Payment waiting"
+msgstr "Төлбөр хүлээгдэж буй"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Closed"
+msgstr "Хаах"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Deposit"
+msgstr "Барьцаа байршуулах"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.create_product_wizard_view
+#: model:ir.actions.act_window,name:l10n_mn_sale.action_create_product_wizard
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Create product"
+msgstr "Бараа үүсгэх"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.create_product_wizard_view
+msgid "Cancel"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_sale
+#: model:ir.actions.act_window,name:l10n_mn_sale.action_sales_contract_register_tree_view
+#: model:ir.ui.menu,name:l10n_mn_sale.sales_contract_register_menu
+msgid "Sales contract"
+msgstr "Гэрээ"
+
+#. module: l10n_mn_sale
+#: model:ir.actions.act_window,name:l10n_mn_sale.action_sales_contract_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_sale.sales_contract_type_menu
+msgid "Sales contract type"
+msgstr "Гэрээний төрөл"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__name
+msgid "Product name"
+msgstr "Барааны нэр"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__uom_id
+msgid "Uom"
+msgstr "Хэмжих нэгж"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__brand_id
+msgid "Brand"
+msgstr "Брэнд"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__product_categ_id
+msgid "Category"
+msgstr "Барааны ангилал"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__distributor_ids
+msgid "Distributor"
+msgstr "Дистрибютер"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__supplier_tax_ids
+msgid "Supplier Taxes"
+msgstr "Нийлүүлэгчийн татвар"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__contract_number_auto
+msgid "Contract number auto"
+msgstr "Системийн гэрээний дугаар"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__payment_term_id
+msgid "Payment term"
+msgstr "Төлбөрийн нөхцөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__sales_type
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__sales_type
+msgid "Sales type"
+msgstr "Борлуулалтын төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__amount_total
+msgid "Total amount"
+msgstr "Нийт дүн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__name
+msgid "Contract name"
+msgstr "Гэрээний нэр"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__contract_number
+msgid "Contract number"
+msgstr "Гэрээний дугаар"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__confirm_date
+msgid "Confirm date"
+msgstr "Батлагдсан огноо"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__partner_id
+msgid "Partner"
+msgstr "Захиалагч"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__sales_manager_id
+msgid "Sales Manager"
+msgstr "Борлуулагч"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__contract_type
+msgid "Contract type"
+msgstr "Гэрээний төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__contract_amount
+msgid "Contract amount"
+msgstr "Гэрээний дүн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__sales_team_id
+msgid "Sales Team"
+msgstr "Борлуулалтын баг"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__reg_user_id
+msgid "Register user"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__reg_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__project_id
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__partner_type
+msgid "Partner type"
+msgstr "Харилцагчийн төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_type__name
+msgid "Contract type name"
+msgstr "Гэрээний төрлийн нэр"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sales_type__direct
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__sales_type__direct
+msgid "Direct"
+msgstr "Шууд борлуулалт"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sales_type__project
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__sales_type__project
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sales_type__tender
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__sales_type__tender
+msgid "Tender"
+msgstr "Тендер"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__invoice_policy__order
+msgid "Ordered quantities"
+msgstr "Захиалгын тоонд"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__invoice_policy__delivery
+msgid "Delivered quantities"
+msgstr "Хүргэлтийн тоонд"
+
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__confirmed
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__closed
+msgid "Closed"
+msgstr "Хаагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__deposit
+msgid "Deposit"
+msgstr "Барьцаа байршуулсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__payment_waiting
+msgid "Payment waiting"
+msgstr "Төлбөр хүлээгдэж буй"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__send_draft
+msgid "Send draft"
+msgstr "Драфт илгээсэн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__cancel
+msgid "Cancel"
+msgstr "Цуцлагдсан"
+
+
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_salesperson
+msgid "Sales Analysis By Salespersons"
+msgstr "Борлуулалтын шинжилгээ ажилтнаар"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_products
+msgid "Sales Analysis Products"
+msgstr "Борлуулалтын шинжилгээ бараагаар"
+
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis By Customers"
+msgstr "Борлуулалтын шинжилгээ захиалагчаар"
+
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_categories
+msgid "Product Categories"
+msgstr "Барааны ангилал"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
+msgid "Activity Plans"
+msgstr "Ажилбарын төлөвлөгөө"
+
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
+msgid "Sale Order Plans"
+msgstr "Ажилбарын төлөвлөгөө"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "Үйл ажиллагаанууд"
+
+#. module: contacts
+#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
+msgid "Industries"
+msgstr "Үйл ажиллагаанууд"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
+#: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
+msgid "Amount to invoice"
+msgstr "Нэхэмжлэлийн дүн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__request_type
+msgid "Request type"
+msgstr "Хүсэлтийн төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__is_price_request
+msgid "Is price request"
+msgstr "Үнэ судлах эсэх"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__status
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__priority
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__priority
+msgid "Priority"
+msgstr "Яаралтай эсэх"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__total_amount
+msgid "Total amount"
+msgstr "Нийт дүн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Sales"
+msgstr "Борлуулалтын захиалга"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Invoice"
+msgstr "Нэхэмжлэх"
+
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax excl."
+msgstr "Татвар шингээгүй"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax incl."
+msgstr "Татвар шингэсэн"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+msgid "Online Payment"
+msgstr "Цахим төлбөр"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+msgid "Online Signature"
+msgstr "Цахим гарын үсэг"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
+msgid "Incoterm Location"
+msgstr "Худалдааны байршил"
+
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
+msgid "Delivery Status"
+msgstr "Хүргэлтийн төлөв"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_res_company__report_image
+msgid "Report image"
+msgstr "Үнийн саналын зураг"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_res_company__company_stamp
+msgid "Company stamp"
+msgstr "Тамганы зураг"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_line__order_line_image
+msgid "Image"
+msgstr "Зураг"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_line__add_desc
+msgid "Add description"
+msgstr "Нэмэлт тайлбар"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_policy
+msgid "Invoice Policy"
+msgstr "Нэхэмжлэх бодлого"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_ids
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__expire_day
+msgid "Expire day"
+msgstr "Хүчинтэй хоног"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__supply_days
+msgid "Supply days"
+msgstr "Нийлүүлэх хоног"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__supply_date
+msgid "Supply date"
+msgstr "Нийлүүлэх хугацаа"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__require_signature
+msgid "Require signature"
+msgstr "Гарын үсэг шаардлагатай"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__crm_lead_id
+msgid "Lead"
+msgstr "Сэжим"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__send_date
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__send_date
+msgid "Quotation send date"
+msgstr "Үнийн санал илгээх огноо"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_res_users__is_purchase_manager
+msgid "Is purchase manager"
+msgstr "Худалдан авалтын менежер эсэх"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__product_id
+msgid "Product"
+msgstr "Бараа ажил үйлчилгээ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__name
+msgid "Reference"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__qty
+msgid "Quantity"
+msgstr "Тоо/Ширхэг"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__uom_id
+msgid "Uom"
+msgstr "Хэмжих нэгж"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__cost_price
+msgid "Cost price"
+msgstr "Судалсан үнэ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__sale_price
+msgid "Sale price"
+msgstr "Зарах үнэ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__price_subtotal
+msgid "Price subtotal"
+msgstr "Нийт үнэ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__purchase_user_id
+msgid "Purchase user"
+msgstr "Худалдан авалтын менежер"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__purchase_user_id
+msgid "Purchase user"
+msgstr "Худалдан авалтын менежер"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Approve"
+msgstr "Зөвшөөрөх"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Unapprove"
+msgstr "Зөвшөөрөхгүй"
+
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
+msgid "Order line"
+msgstr "Захиалгын мөр"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
+msgid "Purchase requisition"
+msgstr "Үнийн судалгаа"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
+msgid "Purchase"
+msgstr "Худалдан авалт"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.view_order_form
+msgid "Create contract"
+msgstr "Гэрээ үүсгэх"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
+msgid "Create project"
+msgstr "Төсөл үүсгэх"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
+msgid "Create purchase requisition"
+msgstr "Үнэ судлуулах хүсэлт"
+
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+msgid "Organization / Contact"
+msgstr "Байгууллага / Захиалагч"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.actions.act_window,name:l10n_mn_sale.crm_lead_action_project_pipeline
+#: model:ir.ui.menu,name:l10n_mn_sale.crm_lead_project_menu
+msgid "Project"
+msgstr "Төсөл"
+
+
+#. module: l10n_mn_sale
+#: model:ir.actions.act_window,name:l10n_mn_sale.crm_lead_action_tender_pipeline
+#: model:ir.ui.menu,name:l10n_mn_sale.crm_lead_tender_menu
+msgid "Tender"
+msgstr "Тендер"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__line_status
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__cancel_reason_id
+msgid "Cancel reason"
+msgstr "Цуцлагдсан шалтгаан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__crm_type
+msgid "Crm type"
+msgstr "CRM Төрөл"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__sale_order_type
+msgid "Sale order type"
+msgstr "Борлуулалтын захиалгын төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__cancel_reason
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_cancel__cancel_reason
+msgid "Cancel reasom"
+msgstr "Цуцалсан шалтгаан"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition__status__new
+msgid "New"
+msgstr "Шинэ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition__status__quotation_st
+msgid "Quotation start"
+msgstr "Судалж эхэлсэн"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition__status__quotation_ed
+msgid "Quotation end"
+msgstr "Судалж дууссан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition__status__done
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition__status__cancel
+msgid "Cancel"
+msgstr "Цуцлагдсан"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sale_order_type__direct
+msgid "Direct"
+msgstr "Шууд"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sale_order_type__non_direct
+msgid "Non Direct"
+msgstr "Шууд бус"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order__sale_order_type__quotation
+msgid "Quotation"
+msgstr "Үнийн санал"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__crm_type__crm
+msgid "CRM"
+msgstr "Сэжим бүртгэх"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__crm_type__quote
+msgid "Quotation Request"
+msgstr "Үнэ судлуулах"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition_line__priority__normal
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__priority__normal
+msgid "Normal"
+msgstr "Хэвийн"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__request_type__is_quotation
+msgid "Is quotation"
+msgstr "Үнэ судлуулах"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__request_type__is_purchase
+msgid "Purchase"
+msgstr "Худалдаж авах"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__request_type__send_quotation
+msgid "Send quotation"
+msgstr "Үнийн санал"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition_line__priority__high
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__priority__high
+msgid "High"
+msgstr "Яаралтай"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition_line__line_status__approve
+msgid "Approve"
+msgstr "Зөвшөөрсөн"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__purchase_requisition_line__line_status__unapprove
+msgid "Unapprove"
+msgstr "Зөвшөөрөөгүй"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__partner_bank_id
+msgid "Bank Account Number"
+msgstr "Банкны данс"

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_account_currency_equalization" model="ir.ui.view">
+            <field name="name">account.currency.equalization.form</field>
+            <field name="model">account.currency.equalization</field>
+            <field name="arch" type="xml">
+                <form string="Currency Rate Equalization">
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="company_id" />
+                            <field name="type"/>
+                            <field name="draft"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="name" />
+                            <field name="reg_date"/>
+                            <field name="journal_id" />
+                            <field name="currency_id" />
+                            <field name="partner_id" invisible="'type','=','liquidity'"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Close"/>
+                        <button string="Do Generate" name="action_equalize" type="object"/>
+                   </footer>
+               </form>
+            </field>
+        </record>
+        
+        
+        <record id="action_account_currency_equalization" model="ir.actions.act_window">
+            <field name="name">Currency rate equalization</field>
+            <field name="res_model">account.currency.equalization</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_currency_equalization"/>
+            <field name="target">new</field>
+        </record>
+
+        
+        
+    </data>
+</odoo>

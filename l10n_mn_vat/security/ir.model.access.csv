@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vat_data,vat.data,model_vat_data,l10n_mn_vat.group_vat_config_user,1,1,1,0
+access_vat_data_manager,vat.data.manager,model_vat_data,l10n_mn_vat.group_vat_config_manager,1,1,1,1
+access_vat_configuration,vat.configuration,model_vat_configure,l10n_mn_vat.group_vat_config_user,1,0,0,0
+access_vat_configuration_manager,vat.configuration.manager,model_vat_configure,l10n_mn_vat.group_vat_config_manager,1,1,1,1
+access_vat_district,vat.district,model_vat_district,l10n_mn_vat.group_vat_config_user,1,0,0,0
+access_vat_district_manager,vat.district.manager,model_vat_district,l10n_mn_vat.group_vat_config_manager,1,1,1,1
+access_vat_data_line,vat.data.line,model_vat_data_line,l10n_mn_vat.group_vat_config_user,1,1,1,0
+access_vat_data_line_manager,vat.data.line.manager,model_vat_data_line,l10n_mn_vat.group_vat_config_manager,1,1,1,1
+access_action_create_invoice,Action.create.invoice,model_action_create_invoice,l10n_mn_vat.group_vat_config_user,1,1,1,0
+access_action_create_invoice_manager,Action.create.invoice.manager,model_action_create_invoice,l10n_mn_vat.group_vat_config_manager,1,1,1,1
+access_vat_category,vat.category,model_vat_category,l10n_mn_vat.group_vat_config_user,1,0,0,0
+access_vat_category_manager,vat.category.manager,model_vat_category,l10n_mn_vat.group_vat_config_manager,1,1,1,1

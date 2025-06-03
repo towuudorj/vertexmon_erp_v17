@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+		<record id="res_bank_khanbank" model="res.bank">
+            <field name="name">Хаан банк</field>
+            <field name="bic">050000</field>
+        </record>
+        
+        
+        <record id="res_bank_golomt" model="res.bank">
+            <field name="name">Голомт банк</field>
+            <field name="bic">150000</field>
+        </record>
+        
+         <record id="res_bank_capital" model="res.bank">
+            <field name="name">Капитал банк</field>
+            <field name="bic">020000</field>
+        </record>
+        
+        
+        <record id="res_bank_tdb" model="res.bank">
+            <field name="name">Худалдаа хөгжлийн банк</field>
+            <field name="bic">040000</field>
+        </record>
+        
+        
+        <record id="res_bank_arig" model="res.bank">
+            <field name="name">Ариг банк</field>
+            <field name="bic">210000</field>
+        </record>
+        
+        
+        <record id="res_bank_bibank" model="res.bank">
+            <field name="name">Үндэсний ХОБанк</field>
+            <field name="bic">290000</field>
+        </record>
+        
+        
+        <record id="res_bank_capitron" model="res.bank">
+            <field name="name">Капитрон банк</field>
+            <field name="bic">300000</field>
+        </record>
+        
+        
+        <record id="res_bank_khasbank" model="res.bank">
+            <field name="name">Хас банк</field>
+            <field name="bic">320000</field>
+        </record>
+        
+        <record id="res_bank_chingis" model="res.bank">
+            <field name="name">Чингис хаан банк</field>
+            <field name="bic">330000</field>
+        </record>
+        
+        <record id="res_bank_mongol" model="res.bank">
+            <field name="name">Төв монгол банк</field>
+            <field name="bic">010000</field>
+        </record>
+        
+        <record id="res_bank_mof" model="res.bank">
+            <field name="name">Төрийн сан</field>
+            <field name="bic">900000</field>
+        </record>
+        
+        <record id="res_bank_state" model="res.bank">
+            <field name="name">Төрийн банк</field>
+            <field name="bic">340000</field>
+        </record>
+        
+        <record id="res_bank_bogd" model="res.bank">
+            <field name="name">Богд банк</field>
+            <field name="bic">380000</field>
+        </record>
+        
+        <record id="res_bank_ub" model="res.bank">
+            <field name="name">Улаанбаатар хотын банк</field>
+            <field name="bic">260000</field>
+        </record>
+        
+        <record id="res_bank_dev" model="res.bank">
+            <field name="name">Хөгжлийн банк</field>
+            <field name="bic">360000</field>
+        </record>
+	
+	
+		 <record id="res_bank_credit" model="res.bank">
+            <field name="name">Кредит банк</field>
+            <field name="bic">220000</field>
+        </record>
+        
+        <record id="res_bank_security" model="res.bank">
+            <field name="name">Арилжааны төлбөр тооцооны төв</field>
+            <field name="bic">940000</field>
+        </record>
+        
+        <record id="res_bank_central" model="res.bank">
+            <field name="name">ҮЦ Төвлөрсөн хадгаламжийн төв</field>
+            <field name="bic">950000</field>
+        </record>
+	</data>
+</odoo>

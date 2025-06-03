@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+            
+            <record model="ir.ui.view" id="shift_holiday_register_tree_view">
+                <field name="name">shift.holiday.register.tree</field>
+                <field name="model">shift.holiday.register</field>
+                <field name="arch" type="xml">
+                    <tree string="Employee hour record">
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="employee_id"/>
+                        <field name="reg_date"/>
+                        <field name="reg_user_id"/>
+                        <field name="give_amount"/>
+                        <field name="account"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="shift_holiday_register_form_view">
+                <field name="name">shift.holiday.register.form</field>
+                <field name="model">shift.holiday.register</field>
+                <field name="arch" type="xml">
+                    <form string="Shift holiday register" >
+	                     	<header>
+                                <button name="action_cancel" class="oe_highlight" string="Цуцлах" invisible="state != 'confirmed'"   type="object" />
+                                <button name="action_confirm" class="oe_highlight" string="Батлах" invisible="state != 'draft'"  type="object" />
+                                <button name="action_salary" class="oe_highlight" string="Тооцоолох" invisible="state != 'draft'"  type="object"/>
+                                <field name="state" widget="statusbar" />
+	                     	</header>
+	                     	<sheet>
+                            <group col="4" colspan="4">
+                                <group col="2" colspan="2" readonly ="state == 'confirmed'">
+                                    <field name="name"/>
+                                    <field name="company_id"/>
+                                    <field name="reg_user_id"/>
+                                    <field name="reg_date"/>
+                                    <field name="employee_id"/>
+                                    <field name="confirm_user_id"/>
+                                    <field name="account"/>
+                                </group>
+                                <group col="2" colspan="2" readonly ="state == 'confirmed'">
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="working_month"/>
+                                    <field name="shift_days"/>
+                                    <field name="shift_start_date"/>
+                                    <field name="total_working_days"/>
+                                    <field name="total_days"/>
+                                    <field name="total_amount"/>
+                                    <field name="ndsh_percent"/>
+                                    <field name="ndsh_amount"/>
+                                    <field name="hhoat_percent"/>
+                                    <field name="hhoat_amount"/>
+                                    <field name="average_amount"/>
+                                    <field name="give_amount"/>
+                                </group>
+                            </group>
+	                     	<field name="line_ids" readonly ="state == 'confirmed'">
+								<tree editable="medium">
+									<field name="year"/>
+                                    <field name="month"/>
+                                    <field name="working_days" sum="Total"/>
+                                    <field name="work_days" sum="Total"/>
+                                    <field name="amount" sum="Total"/>
+                                </tree>
+                        	</field>
+                        	<div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+		                </sheet>
+                    </form>
+                </field>
+            </record>
+            
+
+
+            <record model="ir.actions.act_window" id="action_shift_holiday_register_tree_view">
+                <field name="name">Shift holiday register</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">shift.holiday.register</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="shift_holiday_register_tree_view"/>
+            </record>
+
+
+
+    
+    </data>
+</odoo>

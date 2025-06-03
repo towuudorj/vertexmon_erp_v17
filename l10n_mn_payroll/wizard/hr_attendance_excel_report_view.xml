@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+			  <record id="attendance_excel_report_view" model="ir.ui.view">
+            <field name="name">Hr attendance report</field>
+            <field name="model">hr.attendance.excel.report</field>
+            <field name="arch" type="xml">
+               <form string="Hr attendance excel report">
+                  <group>
+                    <field name="company_id"/>
+                    <field name="department_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                  </group>
+                  <footer>
+                    <button name="action_print_xls_report" string="Report export" type="object" class="oe_highlight" />
+                    or
+                    <button string="Close" class="oe_link" special="cancel" />
+                  </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_attendace_excel_report" model="ir.actions.act_window">
+            <field name="name">Hr attendance report</field>
+            <field name="res_model">hr.attendance.excel.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="attendance_excel_report_view"/>
+            <field name="target">new</field>
+        </record>
+		
+		
+	</data>
+</odoo>

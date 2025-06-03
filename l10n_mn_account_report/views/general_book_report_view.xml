@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		
+    		<record model="ir.ui.view" id="general_book_report_form_view">
+                <field name="name">general.book.report.new.form</field>
+                <field name="model">general.book.report</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                    	<group>
+                        	<field name="company_id"/>
+                        	<field name="target_move"/>
+                        	<field name="fiscalyear_id"/>
+                        	<field name="date_from"/>
+                        	<field name="date_to"/>
+                        </group>
+                        <field name="account_ids"/>
+                        <footer>
+                            <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+	                        or
+	                        <button string="Цуцлах" class="oe_link" special="cancel" />
+	                    </footer>
+                    </form>
+                </field>
+            </record>
+    	
+    	
+    	
+    		<record id="action_general_book_report_view" model="ir.actions.act_window">
+                <field name="name">Ерөнхий дэвтэр тайлан</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">general.book.report</field>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="general_book_report_form_view"/>
+                <field name="target">new</field>
+            </record>
+	    
+		
+		
+		
+	</data>
+</odoo>

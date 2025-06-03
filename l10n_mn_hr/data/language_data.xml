@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="lang_one" model="language.type">
+            <field name="name">Англи хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_two" model="language.type">
+            <field name="name">Монгол хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_three" model="language.type">
+            <field name="name">Солонгос хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_four" model="language.type">
+            <field name="name">Япон хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_five" model="language.type">
+            <field name="name">Хятад хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_six" model="language.type">
+            <field name="name">Орос хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_seven" model="language.type">
+            <field name="name">Франц хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="lang_eight" model="language.type">
+            <field name="name">Итали хэл</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+
+    </data>
+</odoo>

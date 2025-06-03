@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="mn_account_move_landed_cost_view" model="ir.ui.view">
+            <field name="name">account.move.landed.cost.inherit.form</field>
+            <field name="model">account.move</field>            
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">     
+                <xpath expr="//group/filter[@name='status']" position="after">
+                    <filter string="Landed costs" name="landed_costs" domain="[]" context="{'group_by': 'landed_costs'}"/>
+                </xpath>
+            </field>
+		</record>
+
+    </data>
+</odoo>

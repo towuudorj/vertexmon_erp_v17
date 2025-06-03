@@ -1,0 +1,180 @@
+# -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+    
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+
+    partner_type = fields.Many2one('partner.type.register', string='Partner type',
+                                   required=True)
+    currency_rate = fields.Float(string='Currency rate', digits=(12, 6))
+    sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
+    purchase_type = fields.Selection([('local', 'Local'),
+                                        ('foreign' , 'Foreign')], string='Purchase type', 
+                                        default='local', required=True)
+    is_expense = fields.Boolean(string='Is Expense', default=False)
+    destininatio_id = fields.Char(string='Destination')
+    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+
+
+    def _prepare_invoice(self):
+        """Prepare the dict of values to create the new invoice for a purchase order.
+        """
+        self.ensure_one()
+        move_type = self._context.get('default_move_type', 'in_invoice')
+
+        partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
+        partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
+
+        invoice_vals = {
+            'ref': self.partner_ref or '',
+            'move_type': move_type,
+            'narration': self.notes,
+            'currency_id': self.currency_id.id,
+            'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
+            'partner_id': partner_invoice.id,
+            'invoice_date':self.effective_date,            
+            'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
+            'payment_reference': self.partner_ref or '',
+            'partner_bank_id': partner_bank_id.id,
+            'invoice_origin': self.name,
+            'partner_type_id':self.partner_type.id,
+            'invoice_payment_term_id': self.payment_term_id.id,
+            'invoice_line_ids': [],
+            'company_id': self.company_id.id,
+        }
+        return invoice_vals
+
+
+    def button_confirm(self):
+        for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
+            order.order_line._validate_analytic_distribution()
+            order._add_supplier_to_product()
+            # Deal with double validation process
+            if order._approval_allowed():
+                order.button_approve()
+                #order.write({'date_approve': self.date_order})
+            else:
+                order.write({'state': 'to approve'})
+            if order.partner_id not in order.message_partner_ids:
+                order.message_subscribe([order.partner_id.id])
+        return True
+
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id != self.company_id.currency_id:
+            currency_rate = self.env['res.currency']._get_conversion_rate(
+                    from_currency=self.company_id.currency_id,
+                    to_currency=self.currency_id,
+                    company=self.company_id,
+                    date=self.date_approve,
+                )
+            self.currency_rate = currency_rate
+        else:
+            self.currency_rate = 0.0
+    
+
+
+    @api.onchange('requisition_id')
+    def _onchange_requisition_id(self):
+        if not self.requisition_id:
+            return
+
+        self = self.with_company(self.company_id)
+        requisition = self.requisition_id
+        partner = False
+        if self.partner_id:
+            partner = self.partner_id
+        else:
+            for line in requisition.line_ids:
+                if line.supplier_id and line.line_status == 'approve':
+                    partner = line.supplier_id
+                    
+                elif not line.supplier_id and line.line_status == 'approve':
+                    raise UserError(_('Please select a supplier for the purchase order.'))
+        payment_term = partner.property_supplier_payment_term_id
+
+        FiscalPosition = self.env['account.fiscal.position']
+        fpos = FiscalPosition.with_company(self.company_id)._get_fiscal_position(partner)
+
+        self.partner_id = partner.id
+        self.fiscal_position_id = fpos.id
+        self.payment_term_id = payment_term.id
+        self.company_id = requisition.company_id.id
+        self.currency_id = requisition.currency_id.id
+        self.sales_partner_id = requisition.crm_lead_id.partner_id.id
+        if not self.origin or requisition.name not in self.origin.split(', '):
+            if self.origin:
+                if requisition.name:
+                    self.origin = self.origin + ', ' + requisition.name
+            else:
+                self.origin = requisition.name
+        self.notes = requisition.description
+        self.date_order = fields.Datetime.now()
+
+        if requisition.type_id.line_copy != 'copy':
+            return
+
+        # Create PO lines if necessary
+        order_lines = []
+        for line in requisition.line_ids:
+            # Compute name
+            product_lang = line.product_id.with_context(
+                lang=partner.lang or self.env.user.lang,
+                partner_id=partner.id
+            )
+            name = product_lang.display_name
+            if product_lang.description_purchase:
+                name += '\n' + product_lang.description_purchase
+
+            # Compute taxes
+            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
+
+            # Compute quantity and price_unit
+            if line.product_uom_id != line.product_id.uom_po_id:
+                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
+                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
+            else:
+                product_qty = line.product_qty
+                price_unit = line.price_unit
+
+            if requisition.type_id.quantity_copy != 'copy':
+                product_qty = 0
+
+            # Create PO line
+            order_line_values = line._prepare_purchase_order_line(
+                name=name, product_qty=product_qty, price_unit=price_unit,
+                taxes_ids=taxes_ids)
+            order_lines.append((0, 0, order_line_values))
+        self.order_line = order_lines
+    
+
+    @api.onchange('partner_id', 'company_id')
+    def onchange_partner_id(self):
+        # Ensures all properties and fiscal positions
+        # are taken with the company of the order
+        # if not defined, with_company doesn't change anything.
+        self = self.with_company(self.company_id)
+        default_currency = self._context.get("default_currency_id")
+        if not self.partner_id:
+            self.fiscal_position_id = False
+            self.currency_id = default_currency or self.env.company.currency_id.id
+        else:
+            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
+            self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
+            self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+            self.partner_type = self.partner_id.partner_type
+            if self.partner_id.buyer_id:
+                self.user_id = self.partner_id.buyer_id
+        return {}
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
+    country_origin = fields.Many2one('res.country', string='Country of Origin')
+    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')

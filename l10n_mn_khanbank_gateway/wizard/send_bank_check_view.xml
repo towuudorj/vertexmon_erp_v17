@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+    	<record id="view_account_bank_send_check_full" model="ir.ui.view">
+            <field name="name">account.bank.check.full.form</field>
+            <field name="model">account.bank.check</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="password" password="True"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="send_confirm" type="object" class="oe_highlight" />
+                        
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_bank_send_check" model="ir.actions.act_window">
+            <field name="name">Enter password</field>
+            <field name="res_model">account.bank.check</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_bank_send_check_full"/>
+            <field name="target">new</field>
+        </record>
+    	
+    
+    </data>
+</openerp>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+            <record model="ir.ui.view" id="hr_hour_record_tree_view">
+                <field name="name">hr.hour.record.tree</field>
+                <field name="model">hr.hour.record</field>
+                <field name="arch" type="xml">
+                    <tree string="Employee hour record">
+                        <field name="name" />
+                        <field name="department" />
+                        <field name="company_id" />
+                        <field name="start_date" />
+                        <field name="end_date" />
+                        <field name="state" />
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="hr_hour_record_form_view">
+                <field name="name">hr.hour.record.form</field>
+                <field name="model">hr.hour.record</field>
+                <field name="arch" type="xml">
+                    <form string="Employee hour record">
+                        <header>
+                            <button name="action_confirm"  string="Батлах" 
+                                    invisible="state != 'draft'"  type="object" 
+                                    groups="l10n_mn_payroll.group_hr_confirm" />
+
+                            <button name="action_posted"  string="Зөвшөөрөх" 
+                                    invisible="state != 'confirmed'" type="object" 
+                                    groups="l10n_mn_payroll.group_manager_confirm" />
+
+                            <button name="action_done" string="Дуусгах" 
+                                    invisible="state != 'posted'" type="object" 
+                                    groups="l10n_mn_payroll.group_hr_done" />
+
+                            <button name="action_cancel" string="Цуцлах"  
+                                    invisible="state in ('done','confirmed')" type="object" 
+                                    groups="l10n_mn_payroll.group_hr_confirm" />
+
+                            <button name="action_compute" string="Тооцоолох" 
+                                    invisible="state != 'draft'" type="object" 
+                                    groups="l10n_mn_payroll.group_hr_confirm" />
+                            <!--
+                            <button name="%(action_hr_attendace_excel_report)d" string="Тайлан" type="action" />
+                            -->  
+                            <field name="state" widget="statusbar" />
+                        </header>
+                        <sheet>
+                        <group colspan="4" col="4">
+	                     	<group col="2" colspan="2" readonly="state == 'confirmed'">
+	                     		<field name="name" />
+	                        	<field name="company_id" />
+	                        </group>
+	                        <group col="2" colspan="2" readonly="state == 'confirmed'">
+		                        <field name="start_date" />
+                                <field name="end_date" />
+                                <field name="department" />
+                                <field name="holiday_day" />
+                                <field name="work_day" />
+                            </group>
+                        </group>
+                            <button name="hour_record" string="Hour record"  type="object" 
+                                    invisible="state not in ('draft','confirmed')" />
+
+	                     	<field name="line_id" readonly ="state == 'confirmed'">
+								<tree editable="medium">
+                                    <field name="employee_id" readonly="True" />
+                                    <field name="position" readonly="True" />
+                                    <field name="due_day" />
+                                    <field name="due_time" />
+                                    <field name="work_day" editable="True" />
+                                    <field name="night_time" editable="True" widget="float_time" />
+                                    <field name="outer_night_time" editable="True" widget="float_time" />
+                                    <field name="work_time" editable="True" widget="float_time" />
+                                    <field name="sick_time" editable="True" widget="float_time" />
+                                    <field name="shift_holiday" editable="True" />
+                                    <field name="miss_time" editable="True" widget="float_time" />
+                                    <field name="free_time1" editable="True" widget="float_time" />
+                                    <field name="free_time2" editable="True" widget="float_time" />
+                                    <field name="more_time" editable="True" widget="float_time" />
+                                    <field name="more_time1" editable="True" widget="float_time" />
+                                    <field name="total_time" readonly="True" widget="float_time" />
+                                </tree>
+                        	</field>
+                        	<div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+            
+
+
+            <record model="ir.actions.act_window" id="action_hr_hour_record_tree_view">
+                <field name="name">Hr hour record</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">hr.hour.record</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hr_hour_record_tree_view"/>
+            </record>
+
+
+    </data>
+</odoo>

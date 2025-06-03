@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_attendance_mn_tree_view" model="ir.ui.view">
+            <field name="name">hr.attendance.mn.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="overtime_hours"]' position="replace">
+                        <field name="loss_time"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+         <record id="hr_attendance_calendar_view" model="ir.ui.view">
+            <field name="name">hr.attendance.calendar</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <calendar string="Attendance" date_start="check_in" date_stop="check_out" color="employee_id">
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                    <field name="worked_hours"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+    </data>
+</odoo>

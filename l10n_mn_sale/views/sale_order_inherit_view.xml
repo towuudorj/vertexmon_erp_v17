@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_filter_inherit_crm" model="ir.ui.view">
+        <field name="name">sale.order.view.filter.inherit.crm</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='campaign_id']" position="before">
+                 <field name="opportunity_id" string="CRM"/>
+                 <filter string="CRM" name="opportunity_id" domain="[]" context="{'group_by': 'opportunity_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_crm" model="ir.ui.view">
+        <field name="name">sale.order.view.tree.inherit.crm</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="opportunity_id" string="CRM" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+
+
+        <record id="view_sale_order_stock_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.view.stock.form.inherit.crm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_delivery']" position="replace">
+                    <button type="object"
+                        name="action_view_delivery"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="delivery_count == 0" groups="stock.group_stock_user">
+                        <field name="delivery_count" widget="statinfo" string="Агуулахын хүргэлт"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    
+    <!--    Extended sale_order_form_view-->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.sale.product.image</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_purchase_requisition" icon="fa-pencil-square-o">
+                        <field name="purchase_request_count" widget="statinfo" string="Purchase requisition"/>
+                    </button>
+                </div>
+            </xpath>
+
+            <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm" groups="sales_team.group_sale_manager" id="action_confirm" data-hotkey="q" string="Батлах" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
+
+            </xpath>
+            <xpath expr="//button[@name='action_preview_sale_order']" position="replace">
+                <button string="Purchase request" type="object"
+                    invisible="state != 'draft'"
+                    name="purchase_request_create" />
+
+                 <button string="Create contract" type="object"
+                    invisible="state != 'draft'"
+                    name="create_sale_contract" />
+            </xpath>
+            <xpath expr="//button[@id='create_invoice']" position="replace">
+                <field name="invoice_policy" invisible="1"/>
+                <field name="invoice_ids" invisible="1"/>
+                <button id="create_invoice" name="310" string="Нэхэмжлэл үүсгэх" type="action" class="btn-primary" data-hotkey="c" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="replace">
+            </xpath>
+
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                 
+                 <field name="partner_type" />
+                 <field name="partner_bank_id"/>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_type" />
+                <field name="sales_type" />
+                <field name="user_id" />
+                <field name="team_id" />
+                <field name="contract_id" />
+                <field name="expire_day" />
+                <field name="supply_date" />
+                <field name="cancel_reason" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']"
+                   position="after">
+                <field name="order_line_image" widget="image"
+                       style="height:30px ;width:30px;"  readonly="0" optional="hide"/>
+                <field name="add_desc" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

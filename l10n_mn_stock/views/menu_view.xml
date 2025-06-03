@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        
+        <menuitem id="distributer_register_menu" name="Distributer register" parent="stock.menu_stock_config_settings" action="action_distributor_register"  />
+        
+
+        <menuitem id="product_category_new_menu" name="Product category" parent="stock.menu_stock_config_settings" action="action_product_category_new"  />
+
+        <record model="ir.ui.menu" id="stock.menu_product_category_config_stock"><!--Sales online payments-->
+            <field name="name">Item group</field>
+        </record>
+
+    </data>
+</odoo>

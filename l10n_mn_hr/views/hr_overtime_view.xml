@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_overtime_view_form" model="ir.ui.view">
+            <field name="name">hr.overtime.form</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="allowed" groups="l10n_mn_hr.group_overtime_allow" type="object" string="Allow" state="allowed" invisible="state != 'requested'" class="oe_highlight"/>
+                        <button name="approved" groups="l10n_mn_hr.group_overtime_approve" type="object" string="Approve" state="approved" invisible="state != 'allowed'" class="oe_highlight"/>
+                        <button name="cancelled" groups="l10n_mn_hr.group_overtime_approve" type="object" string="Cancel" state="cancelled"  invisible="state != 'approved'" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="requested,allowed,approved,cancelled" statusbar_colors='{"requested":"red","allowed":"blue","approved":"green","cancelled":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="employee_id"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="date_start"/>
+                                <!-- <field name="date_end"/> -->  
+                                <field name="hours"/>
+                                <field name="headsman_id" invisible="state != 'allowed'"/>
+                                <field name="manager_id" invisible="state != 'requested'"/>
+                                <!-- <field name="in_time" widget="float_time"/> 
+                                <field name="out_time" widget="float_time"/>
+                                <field name="is_no_limit"/> -->
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_overtime_view_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.tree</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="date_start"/>
+                    <!-- <field name="date_end"/> -->
+                    <field name="hours"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_overtime_view_search" model="ir.ui.view">
+            <field name="name">hr.overtime.search</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <filter string="My Overtime" name="my_overtime" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="Requested" name="requested" domain="[('state', '=', 'requested')]"/>
+                    <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_overtime" model="ir.actions.act_window">
+            <field name="name">Overtime</field>
+            <field name="res_model">hr.overtime</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Илүү цагаар ажиллах хүсэлт үүсгэх!
+                </p>
+            </field>
+        </record>
+    
+    </data>
+</odoo>

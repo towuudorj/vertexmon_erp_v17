@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_lead_line,crm.lead.line,model_crm_lead_line,sales_team.group_sale_salesman,1,1,1,0
+access_crm_lead_line_manager,crm.lead.line,model_crm_lead_line,sales_team.group_sale_manager,1,1,1,1
+access_sales_contract_register_user,sale.contract.register,model_sales_contract_register,sales_team.group_sale_salesman,1,1,1,0
+access_sales_contract_register_manager,sale.contract.register,model_sales_contract_register,sales_team.group_sale_manager,1,1,1,1
+access_sales_contract_type_user,sale.contract.type,model_sales_contract_type,sales_team.group_sale_salesman,1,1,1,0
+access_sales_contract_type_manager,sale.contract.type,model_sales_contract_type,sales_team.group_sale_manager,1,1,1,1
+access_sales_plan_register_user,sale.plan.register,model_sales_plan_register,sales_team.group_sale_salesman,1,1,1,0
+access_sales_plan_register_manager,sale.plan.register,model_sales_plan_register,sales_team.group_sale_manager,1,1,1,1
+access_sales_plan_user,sale.plan,model_sales_plan,sales_team.group_sale_salesman,1,1,1,0
+access_sales_plan_manager,sale.plan,model_sales_plan,sales_team.group_sale_manager,1,1,1,1
+access_purchase_reason_register_user,purchase.reason.register,model_purchase_reason_register,sales_team.group_sale_salesman,1,1,1,0
+access_purchase_reason_register_manager,purchase.reason.register,model_purchase_reason_register,sales_team.group_sale_manager,1,1,1,1
+access_create_product_wizard_user,create.product.wizard,model_create_product_wizard,sales_team.group_sale_salesman,1,1,1,0
+access_create_product_wizard_manager,create.product.wizard,model_create_product_wizard,sales_team.group_sale_manager,1,1,1,1
+access_create_purchase_request_wizard_user,create.purchase.request,model_create_purchase_request,sales_team.group_sale_salesman,1,1,1,0
+access_create_purchase_request_wizard_manager,create.purchase.request,model_create_purchase_request,sales_team.group_sale_manager,1,1,1,1

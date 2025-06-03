@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+			<record model="ir.ui.view" id="res_company_inherit_form_view">
+		          <field name="name">res.company.inherit.mn.form</field>
+		          <field name="model">res.company</field>
+		          <field name="inherit_id" ref="base.view_company_form"/>
+		          <field name="arch" type="xml">
+		              <data>
+		              	 <xpath expr='//sheet/notebook/page' position="after">
+		              	 	<page string="Currency exchange configure">
+								<group>
+									<field name="income_currency_exchange_account_id" />
+									<field name="expense_currency_exchange_account_id"/>
+								</group>
+							</page>
+		                  </xpath>
+						  <xpath expr='//field[@name="currency_id"]' position="after">
+								<field name="bank_ids" string="Bank account"/>
+						  </xpath>
+		             </data>
+		          </field>
+		      </record>
+		
+		
+	</data>
+</odoo>

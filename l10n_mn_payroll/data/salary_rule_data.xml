@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data  noupdate="1">
+
+        
+        <record id="bs_salary_rule" model="hr.salary.rule">
+            <field name="name">Гэрээний цалин</field>
+            <field name="sequence">10</field>
+            <field name="code">BS</field>
+            <field name="category_id" ref="bs_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="work_day_salary_rule" model="hr.salary.rule">
+            <field name="name">Ажиллах ёстой хоног</field>
+            <field name="sequence">20</field>
+            <field name="code">MWD</field>
+            <field name="category_id" ref="work_day_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.MWD and inputs.MWD.amount</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="working_time_salary_rule" model="hr.salary.rule">
+            <field name="name">Ажилласан цаг</field>
+            <field name="sequence">21</field>
+            <field name="code">WDT</field>
+            <field name="category_id" ref="working_time_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.WDT and inputs.WDT.amount</field>
+            <field name="active">True</field>
+        </record>
+		
+
+
+        <record id="working_day_salary_rule" model="hr.salary.rule">
+            <field name="name">Ажилласан хоног</field>
+            <field name="sequence">30</field>
+            <field name="code">WDD</field>
+            <field name="category_id" ref="working_day_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.WDD and inputs.WDD.amount</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="work_time_salary_rule" model="hr.salary.rule">
+            <field name="name">Ажиллах ёстой цаг</field>
+            <field name="sequence">31</field>
+            <field name="code">MWT</field>
+            <field name="category_id" ref="work_time_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.MWT and inputs.MWT.amount</field>
+            <field name="active">True</field>
+        </record>
+
+
+		
+
+
+        <record id="fault_salary_rule" model="hr.salary.rule">
+            <field name="name">Зөрчлийн суутгал</field>
+            <field name="sequence">40</field>
+            <field name="code">FAULT</field>
+            <field name="category_id" ref="fault_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.FAULT and inputs.FAULT.amount</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="phone_salary_rule" model="hr.salary.rule">
+            <field name="name">Утасны суутгал</field>
+            <field name="sequence">41</field>
+            <field name="code">PH</field>
+            <field name="category_id" ref="phone_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.phone_add</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="aa_salary_rule" model="hr.salary.rule">
+            <field name="name">Удирдлагын нэмэгдэл</field>
+            <field name="sequence">42</field>
+            <field name="code">AA</field>
+            <field name="category_id" ref="aa_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.administration_add</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="lya_salary_rule" model="hr.salary.rule">
+            <field name="name">Удаан жилийн нэмэгдэл</field>
+            <field name="sequence">43</field>
+            <field name="code">LYA</field>
+            <field name="category_id" ref="lya_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.long_year_add</field>
+            <field name="active">True</field>
+        </record>
+        
+
+        <record id="emd_salary_rule" model="hr.salary.rule">
+            <field name="name">ЭМД</field>
+            <field name="sequence">44</field>
+            <field name="code">HI</field>
+            <field name="category_id" ref="emd_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.health_insurance</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="ai_salary_rule" model="hr.salary.rule">
+            <field name="name">Гэнэтийн ослын даатгал</field>
+            <field name="sequence">45</field>
+            <field name="code">AI</field>
+            <field name="category_id" ref="ai_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.accident_insurance</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="aba_salary_rule" model="hr.salary.rule">
+            <field name="name">Хэвийн бус нөхцөлийн нэмэгдэл</field>
+            <field name="sequence">46</field>
+            <field name="code">ABA</field>
+            <field name="category_id" ref="aba_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.abnormal_add</field>
+            <field name="active">True</field>
+        </record>
+        
+        
+        
+        <record id="compute_salary_rule" model="hr.salary.rule">
+            <field name="name">Олговол зохих</field>
+            <field name="sequence">50</field>
+            <field name="code">CS</field>
+            <field name="category_id" ref="compute_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (categories.BS / categories.MWT) * categories.WDT</field>
+            <field name="active">True</field>
+        </record>
+
+
+
+        <record id="kpi_salary_rule" model="hr.salary.rule">
+            <field name="name">Ваучер</field>
+            <field name="sequence">60</field>
+            <field name="code">KPI</field>
+            <field name="category_id" ref="bonus_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.voucher</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="rs_salary_rule" model="hr.salary.rule">
+            <field name="name">Амралтын мөнгө</field>
+            <field name="sequence">70</field>
+            <field name="code">RS</field>
+            <field name="category_id" ref="rs_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.RS and inputs.RS.amount</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="fdd_salary_rule" model="hr.salary.rule">
+            <field name="name">Хоолны унааны мөнгө</field>
+            <field name="sequence">80</field>
+            <field name="code">FDD</field>
+            <field name="category_id" ref="give_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.food_and_vehicle_add</field>
+            <field name="active">True</field>
+        </record>
+
+
+        
+        <record id="computing_salary_rule" model="hr.salary.rule">
+            <field name="name">Нийт тооцсон цалин</field>
+            <field name="sequence">101</field>
+            <field name="code">TCS</field>
+            <field name="category_id" ref="total_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.CS + categories.KPI + categories.RS + categories.FDD + categories.AA + categories.LYA + categories.HI + categories.AI + categories.ABA + categories.PH - categories.FAULT</field>
+            <field name="active">True</field>
+        </record>
+
+
+
+        <record id="self_ndsh_salary_rule" model="hr.salary.rule">
+            <field name="name">ЭМНДШ ажилтнаас 11.3</field>
+            <field name="sequence">110</field>
+            <field name="code">SI11</field>
+            <field name="category_id" ref="self_ndsh_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TCS*0.113</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="comp_ndsh_salary_rule" model="hr.salary.rule">
+            <field name="name">ЭМНДШ байгууллагаас 12.5</field>
+            <field name="sequence">120</field>
+            <field name="code">NDSH</field>
+            <field name="category_id" ref="comp_ndsh_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result= categories.TCS*0.125</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="hhoat_ll_salary_rule" model="hr.salary.rule">
+            <field name="name">ХХОАТ тооцох дүн</field>
+            <field name="sequence">130</field>
+            <field name="code">LL</field>
+            <field name="category_id" ref="hhoat_ll_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TCS - categories.SI11</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="hhoat_lla_salary_rule" model="hr.salary.rule">
+            <field name="name">ХХОАТ</field>
+            <field name="sequence">131</field>
+            <field name="code">LLA</field>
+            <field name="category_id" ref="hhoat_lla_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result= categories.LL * 0.1</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="hhoat_llp_salary_rule" model="hr.salary.rule">
+            <field name="name">ХХОАТ хөнгөлөлтийн дүн</field>
+            <field name="sequence">132</field>
+            <field name="code">LLP</field>
+            <field name="category_id" ref="hhoat_llp_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute"></field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="hhoat_lll_salary_rule" model="hr.salary.rule">
+            <field name="name">ХХОАТ дүн</field>
+            <field name="sequence">133</field>
+            <field name="code">LLL</field>
+            <field name="category_id" ref="hhoat_lll_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute"></field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="hhoat_llt_salary_rule" model="hr.salary.rule">
+            <field name="name">ХХОАТ-с үлдсэн дүн</field>
+            <field name="sequence">134</field>
+            <field name="code">LLT</field>
+            <field name="category_id" ref="hhoat_llt_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.LL - categories.LLL</field>
+            <field name="active">True</field>
+        </record>
+        
+        
+
+
+        <record id="adv_salary_rule" model="hr.salary.rule">
+            <field name="name">Урьдчилгаа цалин</field>
+            <field name="sequence">150</field>
+            <field name="code">ADV</field>
+            <field name="category_id" ref="adv_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.ADV and inputs.ADV.amount</field>
+            <field name="active">True</field>
+        </record>
+        
+        
+
+        
+        <record id="give_salary_rule" model="hr.salary.rule">
+            <field name="name">Сарын сүүл цалин</field>
+            <field name="sequence">180</field>
+            <field name="code">GIVE</field>
+            <field name="category_id" ref="give_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.LLT - categories.ADV</field>
+            <field name="active">True</field>
+        </record>
+        
+        
+     
+        
+        
+		
+	</data>
+</odoo>

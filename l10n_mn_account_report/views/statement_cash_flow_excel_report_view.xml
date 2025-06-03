@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+	 <record id="statement_cashflow_report_view" model="ir.ui.view">
+            <field name="name">cahsflow.statement.report.view</field>
+            <field name="model">statement.cashflow.report</field>
+            <field name="arch" type="xml">
+                <form string="Statement of cash flows">
+                    <group colspan="4">
+                        <field name="target_move" />
+                        <field name="fiscalyear_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_statement_cashflow_report" model="ir.actions.act_window">
+            <field name="name">Statement of cash flows</field>
+            <field name="res_model">statement.cashflow.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="statement_cashflow_report_view"/>
+            <field name="target">new</field>
+        </record>
+        
+		
+	</data>
+</odoo>

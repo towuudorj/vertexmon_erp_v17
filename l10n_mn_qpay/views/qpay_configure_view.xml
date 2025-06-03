@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+            
+            <record model="ir.ui.view" id="qpay_configure_tree_view">
+                <field name="name">qpay.configure.tree</field>
+                <field name="model">qpay.configure</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="url"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="qpay_configure_form_view">
+                <field name="name">qpay.configure.form</field>
+                <field name="model">qpay.configure</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                    	<group col="4" colspan="4">
+                            <group col="2" colspan="2">
+                                <field name="company_id"/>
+                                <field name="name"/>
+                                <field name="password"/>
+                                <field name="operator_code"/>
+                                <field name="invoice_code"/>
+                                <field name="product_code"/>
+                                <field name="note"/>
+                                <field name="data_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <field name="phone"/>
+                                <field name="url"/>
+                                <field name="token_url"/>
+                                <field name="payment_check_url"/>
+                                <field name="config_date"/>
+                                <field name="merchant_code"/>
+                                <field name="merchant_customer_code"/>
+                                <field name="merchant_verification_code"/>
+                                <field name="vat_flag"/>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_qpay_configure_tree_view">
+                <field name="name">Qpay configure</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">qpay.configure</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="qpay_configure_tree_view"/>
+            </record>
+
+    
+    
+    </data>
+</odoo>

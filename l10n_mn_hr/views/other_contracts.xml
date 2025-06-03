@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record  model = "ir.ui.view" id="view_other_contracts_form">
+            <field name="name">other.contracts.form</field>
+            <field name="model">other.contracts</field>
+            <field name="arch" type="xml">
+                <form string="Other Contract">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state == 'confirmed'" />
+                        <button name="action_cancel" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state == 'cancelled'" />
+                        <button name="send_email" string="Send Email" type="object" class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="company_id" readonly="state != 'draft'"/>
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="department_id" readonly="state != 'draft'"/>
+                            <field name="job_id" readonly="state != 'draft'"/>
+                            <field name="contract_type_id" readonly="state != 'draft'"/>
+                            <field name="name" readonly="state != 'draft'"/>
+                            <field name="contract_number" />
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                            <field name="reg_date" readonly="state != 'draft'"/>
+                            <field name="reg_user_id" readonly="state != 'draft'"/>
+                            <field name="note" />
+                        </group>
+                    </sheet>
+                        <div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+	                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record  model="ir.ui.view" id="view_other_contracts_tree">
+            <field name="name">other.contracts.tree</field>
+            <field name="model">other.contracts</field>
+            <field name="arch" type="xml">
+                <tree string="Other Contract">
+                    <field name="company_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="reg_user_id"/>
+                    <field name="contract_number"/>
+                    <field name="reg_date"/>
+                    <field name="name"/>
+                    <field name="contract_type_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+             
+        </record>
+
+            <record id="action_other_contracts" model="ir.actions.act_window">
+                <field name="name">Other contracts</field>
+                <field name="res_model">other.contracts</field>
+                <field name="view_mode">tree,form</field>
+            </record>
+    </data>
+</odoo>

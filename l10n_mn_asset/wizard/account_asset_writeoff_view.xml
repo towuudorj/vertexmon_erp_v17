@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record model="ir.ui.view" id="account_asset_writeoff_form">
+            <field name="name">account.asset.writeoff.form</field>
+            <field name="model">account.asset.writeoff</field>
+            <field name="arch" type="xml">
+                <form string="Asset Writeoff">
+                    <group>
+	                    <field name="name"/>
+	                    <field name="writeoff_date"/>
+	                    <field name="writeoff_amount"/>
+	                    <field name="depreciation_amount"/>
+	                    <field name="writeoff_journal"/>
+	                    <field name="writeoff_account"/>
+                    </group>
+                    <footer>
+                       <button special="cancel" string="Cancel"/>
+                       <button string="Write Off" name="writeoff" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+	    
+	    <record id="action_account_asset_writeoff" model="ir.actions.act_window">
+            <field name="name">Asset Writeoff</field>
+            <field name="res_model">account.asset.writeoff</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_asset_writeoff_form"/>
+            <field name="target">new</field>
+        </record>
+	    
+    </data>
+</odoo>

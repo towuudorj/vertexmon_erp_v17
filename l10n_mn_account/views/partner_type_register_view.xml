@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	 		<record model="ir.ui.view" id="partner_type_register_tree_view">
+                <field name="name">partner.type.register.tree</field>
+                <field name="model">partner.type.register</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                        <field name="company_id"/>
+               			<field name="name" />
+                        <field name="type" />
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="partner_type_register_form_view">
+                <field name="name">partner.type.register.form</field>
+                <field name="model">partner.type.register</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                    	<sheet>
+                    		<group>
+                    			<field name="company_id"/>
+                    			<field name="name" />
+                                <field name="type" />
+                                <field name="payable_account_id" />
+                                <field name="receivable_account_id" />
+                                <field name="cash_move_id" />
+                                <field name="partner_group"/>
+                    		</group>
+                    	</sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_partner_type_register_tree_view">
+                <field name="name">Partner type register</field>
+                <field name="res_model">partner.type.register</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="partner_type_register_tree_view"/>
+            </record>
+		
+	
+	
+</odoo>

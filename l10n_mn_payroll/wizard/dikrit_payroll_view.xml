@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+	
+		<record id="view_dikrit_list" model="ir.ui.view">
+	        <field name="name">dikrit.payroll.wizard.list</field>
+	        <field name="model">dikrit.payroll.wizard</field>
+	        <field name="arch" type="xml">
+	             <form string="Create Invoice Customs">
+	                <group>
+	                	<field name="company_id"/>
+	                    <field name="percent"/>
+	                    <field name="reg_date"/>
+	                </group>
+	                <footer>
+	                    <button name="action_compute" string="Бичилт үүсгэх" type="object"
+	                        class="btn-primary"/>
+	                    <button string="Cancel" class="btn-default" special="cancel"/>
+	                </footer>
+	            </form>
+	        </field>
+	    </record>
+	
+		    <!-- Action of Merge Sale Order -->
+		    <record id="action_view_dikrit_list" model="ir.actions.act_window">
+		        <field name="name">Дикрит бичилт үүсгэх</field>
+		        <field name="type">ir.actions.act_window</field>
+		        <field name="res_model">dikrit.payroll.wizard</field>
+		        <field name="view_mode">form</field>
+		        <field name="view_id" ref="view_dikrit_list"/>
+		        <field name="target">new</field>
+		        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+		    </record>
+		
+		
+	</data>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        
+        <record id="view_bank_statement_form_xacbank" model="ir.ui.view">
+            <field name="name">account.bank.statement.form.xacbank</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account_statement_base.view_bank_statement_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="end_date" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <button
+                        name="download_statement_line"
+                        type="object"
+                        string="Хуулга татах"
+                        icon="fa-folder-open-o"
+                    />
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

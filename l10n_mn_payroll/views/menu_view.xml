@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+			<menuitem id="menu_hr_payroll_compute" name="Payroll compute"  parent="om_hr_payroll.menu_hr_payroll_root" sequence="10" action="action_hr_hour_record_tree_view"/>	
+
+			<menuitem id="menu_hr_hour_record" name="Employee hour record"  parent="menu_hr_payroll_compute" sequence="11" action="action_hr_hour_record_tree_view"/>	
+			<menuitem id="hr_payroll_prepayment_menu" name="Hr payroll prepayment" parent="menu_hr_payroll_compute" sequence="10"  action="action_hr_payroll_prepayment_tree_view"/>
+			<menuitem id="shift_holiday_register_menu" name="Shift holiday register" parent="menu_hr_payroll_compute"  sequence="11" action="action_shift_holiday_register_tree_view"/>
+
+			<menuitem id="root_payroll_report_menu" name="Report" parent="om_hr_payroll.menu_hr_payroll_root" sequence="11" />
+			<menuitem id="payroll_excel_report_menu" name="Payroll report" parent="root_payroll_report_menu" action="action_payroll_excel_report"/>
+			<menuitem id="hhoat_excel_report_menu" name="Hhoat report" parent="root_payroll_report_menu" action="action_hhoat_report_wizard"/>
+			<menuitem id="ndsh_report_import_menu" name="Ndsh import report" parent="root_payroll_report_menu" action="action_ndsh_report_import"/>
+			<menuitem id="hr_payroll_give_bank_report_menu" name="Give bank salary" parent="root_payroll_report_menu" action="action_hr_payroll_give_bank_report"/>
+			<menuitem id="hr_attendace_detail_excel_report_menu" name="Attendance detail report" parent="root_payroll_report_menu" action="action_hr_attendace_detail_excel_report"/>
+			<menuitem id="hr_attendace_excel_report_menu" name="Attendance excel report" parent="root_payroll_report_menu" action="action_hr_attendace_excel_report"/>
+
+
+			<menuitem id="root_payroll_ndsh_menu" name="NDSH" parent="om_hr_payroll.menu_hr_payroll_configuration" />
+			<menuitem id="menu_insurance_type_view" name="Insurance type"  parent="root_payroll_ndsh_menu" action="action_insurance_type_tree_view"   groups="hr.group_hr_manager"/>
+			<menuitem id="work_category_menu" name="Work category" parent="root_payroll_ndsh_menu" action="action_work_category_tree_view"/>
+			<menuitem id="country_register_menu" name="Country register" parent="root_payroll_ndsh_menu" action="action_country_register_tree_view"/>
+			<menuitem id="location_register_menu" name="Location register" parent="root_payroll_ndsh_menu" action="action_location_register_tree_view"/>
+
+			
+			<menuitem id="working_day_register_menu" name="Working day register" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_working_day_register_tree_view"/>
+			<menuitem id="vat_income_type_menu" name="VAT Income Type" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_vat_income_type_tree_view"/>
+			
+	</data>
+</odoo>

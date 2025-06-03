@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="xacbank_configure_menu" name="Xacbank configure" parent="account.account_account_menu" action="action_xacbank_configure"  />
+        
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+            <record id="view_account_journal_mn_inherit" model="ir.ui.view">
+                <field name="name">account.journal.form.mn</field>
+                <field name="model">account.journal</field>
+                <field name="inherit_id" ref="account.view_account_journal_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
+                        <field name="is_po_return"/>
+                        <field name="is_so_return"/>
+                        <field name="default_debit_account_id" invisible="type != 'salary'"/>
+                        <field name="default_credit_account_id"  invisible="type != 'salary'"/>
+                    </xpath>
+                </field>
+            </record>
+
+    </data>
+</odoo>

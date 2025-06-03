@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+            <record id="mn_stock_pikcing_inherit_view" model="ir.ui.view">
+                <field name="name">inherit.mn.stock.picking.form</field>
+                <field name="model">stock.picking</field>            
+                <field name="inherit_id" ref="stock.view_picking_form"/>
+                <field name="arch" type="xml">                
+                    <xpath expr="//field[@name='origin']" position="after">
+                        <field name="project_type" /> 
+                        <field name="analytic_id" string="Project" invisible="project_type=='tender'"/>
+                        <field name="analytic_id" string="Tender" invisible="project_type=='project'"/>
+                    </xpath>
+                    
+                    <xpath expr="//notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="after">
+                		<field name="sale_prices"/>
+                        <field name="price_subtotal"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='package_level_ids']" position="after">
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group colspan="4">
+                            </group>
+                            <group colspan="2">
+                                <field name="amount_total" string="Нийт дүн" colspan="2" readonly="1"/>
+                            </group>
+                            <div class="clearfix"/>
+                        </group>
+                    </xpath>
+                </field>
+            </record>
+
+
+    </data>
+</odoo>

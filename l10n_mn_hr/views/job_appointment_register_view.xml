@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="view_job_appointment_register_form" model="ir.ui.view">
+            <field name="name">job.appointment.register.form</field>
+            <field name="model">job.appointment.register</field>
+            <field name="arch" type="xml">
+                <form string="Job Appointment Register">
+                    <header>
+                        <button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'rejected'"/>
+                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_hr" string="Department Manager Approve" type="object" class="oe_highlight" invisible="state != 'hr_department_manager_review'"/>
+                        <button name="action_director" string="Operations Manager Approve" type="object" class="oe_highlight" invisible="state != 'operations_manager_review'"/>
+                        <button name="action_return" string="Return" type="object" class="btn secondary" invisible="state == 'draft' or state =='rejected'" />
+                        <button name="action_reject" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state =='rejected'" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="number"/>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="reg_user_id"/>
+                            <field name="reg_date"/>
+                            <field name="department_id"/>
+                            <field name='vacancy' />
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                        <div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+	                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_job_appointment_register_tree" model="ir.ui.view">
+            <field name="name">job.appointment.register.tree</field>
+            <field name="model">job.appointment.register</field>
+            <field name="arch" type="xml">
+                <tree string="Job Appointment Register">
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="reg_user_id"/>
+                    <field name="reg_date"/>
+                    <field name='vacancy' />
+                    <field name="department_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_job_appointment_register" model="ir.actions.act_window">
+            <field name="name">Job Appointment Register</field>
+            <field name="res_model">job.appointment.register</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

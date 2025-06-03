@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	
+    
+        
+    	<!-- Мөнгөн гүйлгээний төрөл /Сангийн яамны мөнгөн гүйлгээний тайлангийн загварын дагуу/ -->
+    
+	    <!-- Үндсэн үйл ажиллагааны мөнгөн орлогын гүйлгээ -->
+	    <record id="cash_move_type_1_1" model="account.cash.move.type">
+	        <field name="name">Бараа борлуулсан, үйлчилгээ үзүүлсний орлого</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_1_2" model="account.cash.move.type">
+	        <field name="name">Эрхийн шимтгэл, хураамж, төлбөрийн орлого</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_1_3" model="account.cash.move.type">
+	        <field name="name">Даатгалын нөхвөрөөс хүлээн авсан мөнгө</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_1_4" model="account.cash.move.type">
+	        <field name="name">Буцаан авсан албан татвар</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">4</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_1_5" model="account.cash.move.type">
+	        <field name="name">Татаас, санхүүжилтийн орлого</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">5</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_1_6" model="account.cash.move.type">
+	        <field name="name">Бусад мөнгөн орлого</field>
+	        <field name="group">activities_income</field>
+	        <field name="sequence">6</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <!-- Үндсэн үйл ажиллагааны мөнгөн зарлагын гүйлгээ -->
+	    <record id="cash_move_type_2_1" model="account.cash.move.type">
+	        <field name="name">Ажилчдад төлсөн мөнгө</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_2" model="account.cash.move.type">
+	        <field name="name">Нийгмийн даатгалын байгуулагад төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_3" model="account.cash.move.type">
+	        <field name="name">Бараа материал худалдан авахад төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_4" model="account.cash.move.type">
+	        <field name="name">Ашиглалтын зардалд төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">4</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_5" model="account.cash.move.type">
+	        <field name="name">Түлш, шатахуун, тээврийн хөлс, сэлбэг хэрэгсэлд төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">5</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_6" model="account.cash.move.type">
+	        <field name="name">Хүүний төлбөрт төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">6</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_7" model="account.cash.move.type">
+	        <field name="name"> Татварын байгууллагад төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">7</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_8" model="account.cash.move.type">
+	        <field name="name">Даатгалын байгууллагад төлсөн</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">8</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_2_9" model="account.cash.move.type">
+	        <field name="name">Бусад мөнгөн зарлага</field>
+	        <field name="group">activities_expense</field>
+	        <field name="sequence">9</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    
+	    <!-- Хөрөнгө оруулалтын үйл ажиллагааны мөнгөн орлогын гүйлгээ -->
+	    <record id="cash_move_type_3_1" model="account.cash.move.type">
+	        <field name="name">Үндсэн хөрөнгө борлуулсны орлого</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_2" model="account.cash.move.type">
+	        <field name="name">Биет бус хөрөнгө борлуулсны орлого</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_3" model="account.cash.move.type">
+	        <field name="name">Хөрөнгө оруулалт борлуулсны орлого</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_4" model="account.cash.move.type">
+	        <field name="name">Бусад урт хугацаат хөрөнгө борлуулсны орлого</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">4</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_5" model="account.cash.move.type">
+	        <field name="name">Бусдад олгосон зээл, мөнгөн урьдчилгааны буцаан төлөлт</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">5</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_6" model="account.cash.move.type">
+	        <field name="name">Хүлээн авсан хүүний орлого</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">6</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_3_7" model="account.cash.move.type">
+	        <field name="name">Хүлээн авсан ногдол ашиг</field>
+	        <field name="group">investing_income</field>
+	        <field name="sequence">7</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <!-- Хөрөнгө оруулалтын үйл ажиллагааны мөнгөн зарлагын гүйлгээ -->
+	    <record id="cash_move_type_4_1" model="account.cash.move.type">
+	        <field name="name">Үндсэн хөрөнгө олж эзэмшихэд төлсөн мөнгө</field>
+	        <field name="group">investing_expense</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_4_2" model="account.cash.move.type">
+	        <field name="name">Биет бус хөрөнгө олж эзэмшихэд төлсөн мөнгө</field>
+	        <field name="group">investing_expense</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_4_3" model="account.cash.move.type">
+	        <field name="name">Хөрөнгө оруулалт олж эзэмшихэд төлсөн мөнгө</field>
+	        <field name="group">investing_expense</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_4_4" model="account.cash.move.type">
+	        <field name="name">Бусад урт хугацаат хөрөнгө олж эзэмшихэд төлсөн мөнгө</field>
+	        <field name="group">investing_expense</field>
+	        <field name="sequence">4</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_4_5" model="account.cash.move.type">
+	        <field name="name">Бусад олгосон зээл болон урьдчилгаанд төлсөн мөнгө</field>
+	        <field name="group">investing_expense</field>
+	        <field name="sequence">5</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <!-- Санхүүгийн үйл ажиллагааны мөнгөн орлогын гүйлгээ -->
+	    <record id="cash_move_type_5_1" model="account.cash.move.type">
+	        <field name="name">Зээл авсан, өрийн үнэт цаас гаргаснаас хүлээн авсан орлого</field>
+	        <field name="group">financing_income</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_5_2" model="account.cash.move.type">
+	        <field name="name">Хувьцаа болон өмчийн бусад үнэс цаас гаргаснаас хүлээн авсан орлого</field>
+	        <field name="group">financing_income</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_5_3" model="account.cash.move.type">
+	        <field name="name">Төрөл бүрийн хандивын орлого</field>
+	        <field name="group">financing_income</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <!-- Санхүүгийн үйл ажиллагааны мөнгөн зарлагын гүйлгээ -->
+	    <record id="cash_move_type_6_1" model="account.cash.move.type">
+	        <field name="name">Зээл, өрийн үнэт цаасны төлбөрт төлсөн мөнгө</field>
+	        <field name="group">financing_expense</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_6_2" model="account.cash.move.type">
+	        <field name="name">Санхүүгийн түрээсийн өглөгт төлсөн мөнгө</field>
+	        <field name="group">financing_expense</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_6_3" model="account.cash.move.type">
+	        <field name="name">Хувьцаа буцаан авахад төлсөн мөнгө</field>
+	        <field name="group">financing_expense</field>
+	        <field name="sequence">3</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    <record id="cash_move_type_6_4" model="account.cash.move.type">
+	        <field name="name">Төлсөн ногдол ашиг</field>
+	        <field name="group">financing_expense</field>
+	        <field name="sequence">4</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <record id="cash_move_type_7" model="account.cash.move.type">
+	        <field name="name">Тайлан тооцоололд хамаарахгүй</field>
+	        <field name="group">dummy</field>
+	        <field name="sequence">1</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+	    
+	    <record id="cash_move_type_7_1" model="account.cash.move.type">
+	        <field name="name">Мөнгө, түүнтэй адилтгах хөрөнгийн эхний үлдэгдэл</field>
+	        <field name="group">dummy</field>
+	        <field name="sequence">2</field>
+	        <field name="mn_type">aan</field>
+	        <field name="company_id" ref="base.main_company"/>
+	    </record>
+
+	
+</odoo>

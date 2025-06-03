@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+            
+            <record model="ir.ui.view" id="payroll_bonus_tree_view">
+                <field name="name">Hr payroll prepayment tree</field>
+                <field name="model">payroll.bonus</field>
+                <field name="arch" type="xml">
+                    <tree string="Hr payroll prepayment">
+                    	<field name="company_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="create_user"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="payroll_bonus_form_view">
+                <field name="name">Hr payroll prepayment form</field>
+                <field name="model">payroll.bonus</field>
+                <field name="arch" type="xml">
+                    <form string="Hr payroll prepayment">
+                    	<header>
+                    		<field name="state" widget="statusbar"/>
+                            
+                    		<button name="action_confirm" string="Батлах"  
+                                invisible="state != 'draft'"  type="object" />
+
+                    		<button name="button_click" string="Тооцоолох"  
+                                invisible="state != 'draft'" type="object" />
+
+                    		<button name="action_cancel" string="Цуцлах"  
+                                invisible="state != 'confirm'"  type="object" />
+                    	</header>
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <group col="2" colspan="2" readonly ="state == 'confirmed'">
+                                    <field name="company_id" />
+                                    <field name="name" />
+                                    <field name="now_date" />
+                                    <field name="start_date" />
+                                    <field name="end_date" />
+                                </group>
+                                <group col="2" colspan="2" readonly ="state == 'confirmed'">
+                                    <field name="create_user" />
+                                    <field name="percent" />
+                                    <field name="dep_id" />
+                                    <field name="type" />
+                                </group>
+                            </group>
+                            <field name="line_id" readonly ="state == 'confirmed'">
+                                <tree editable="medium">
+                                    <field name="name"/>
+                                    <field name="worked_time"/>
+                                    <field name="work_time"/>
+                                    <field name="amount" sum="Total"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_payroll_bonus_tree_view">
+                <field name="name">Урамшуулал тооцоолох</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">payroll.bonus</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="payroll_bonus_tree_view"/>
+            </record>
+
+    
+    </data>
+</odoo>

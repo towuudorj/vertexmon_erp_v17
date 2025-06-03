@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="view_res_partner_mn_vat_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.vat.mn</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="currency_id"]' position="before">
+                        <field name="vat_type"  />  
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="mn_pos_inherit_res_partner_view" model="ir.ui.view">
+            <field name="name">inherit.mn.pos.res.partner.form</field>
+            <field name="model">res.partner</field>            
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">          
+                <xpath expr="//field[@name='vat']" position="replace">
+                    <field name="partner_group" invisible="1"/>
+                    <separator string=""/>
+                    <label for="vat" string="Vat" />
+                    <div>
+                        <field name="vat"  style="width:150px;"  class="oe_inline" required="partner_group=='001'"/>
+                        <button  name="get_tin_code"  string="Tin code check" type="object" style="width:200px;" invisible="partner_group!='001'" />
+                    </div>
+                    <separator string=""/>
+                    <label for="tin_code" string="Tin code"/>
+                    <div>
+                        <field name="tin_code"  style="width:150px;" class="oe_inline" required="partner_group=='001'"/>
+                        <button name="get_name_check"  string="Name check" type="object"  style="width:150px;" invisible="partner_group!='001'"/>
+                    </div>
+                </xpath>
+            </field>
+		</record>
+        
+
+    </data>
+</odoo>

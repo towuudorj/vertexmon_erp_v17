@@ -1,0 +1,762 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mn_account_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0-20221012\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-28 06:03+0000\n"
+"PO-Revision-Date: 2024-11-12 15:31+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.5\n"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "-Р ЗАРЛАГЫН БАРИМТЫН ТАСАЛБАР"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "-Р ОРЛОГЫН БАРИМТЫН ТАСАЛБАР"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Албан тушаал :</span> ................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Байгууллагын нэр :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Гүйлгээний утга :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Ерөнхий нягтлан бодогч :</span> ............................"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid ""
+"<span>Ерөнхий нягтлан бодогч :</"
+"span> ......................................................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Кассын нярав :</span> ......................................"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid ""
+"<span>Кассын нярав :</"
+"span> .................................................................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Огноо :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Тушаагч :</span> ......................................"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid ""
+"<span>Тушаагч :</"
+"span> .................................................................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Тушаагч:</span> ......................................"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Утасны дугаар :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Хаанаас :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Хавсаргасан баримт :</span> (нийт ....ш баримт хавсаргав.)"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Харилцагчийн код :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Харилцагчийн нэр :</span>"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "<span>Үнэмлэхний дугаар :</span> ....................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_abstract_report_excel
+msgid "Abstract Report Excel"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_move_analysis_report_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.action_account_move_analysis_report_menu
+msgid "Account move balance report"
+msgstr "Гүйлгээ балансын тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_cash_move_line_report
+msgid "Account move line report"
+msgstr "Касс харилцахын тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_payable_report
+msgid "Account payable report"
+msgstr "Харилцагчийн авлагын тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_receivable_report
+msgid "Account receivable report"
+msgstr "Харилцагчийн өглөгийн тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Банкны хуулгын мөр"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.action_excel_output_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.report,name:l10n_mn_account_report.action_print_cash_order
+msgid "Cash Document"
+msgstr "Хэвлэх"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_cash_move_report_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.menu_cash_move_report_sub_view
+msgid "Cash move report"
+msgstr "Мөнгөн гүйлгээний тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн этгээд"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__create_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__date
+msgid "Creation Date"
+msgstr "Үүсгэсэн огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__display_name
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_report_excel_output
+msgid "Excel Report Output"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: code:addons/l10n_mn_account_report/models/absract_report.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
+#, python-format
+msgid "Export"
+msgstr "Зарлага"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_account__balance_id
+msgid "Balance report type"
+msgstr "Баланс тайлангийн төрөл"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_account__income_id
+msgid "Income report type"
+msgstr "Орлогын тайлангийн төрөл"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__data
+msgid "File"
+msgstr "Файл"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__name
+msgid "Filename"
+msgstr "Файлын нэр"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__name
+msgid "Balance type name"
+msgstr "Баланс тайлангийн нэр"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__number
+msgid "Number"
+msgstr "Дугаар"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__level
+msgid "Level"
+msgstr "Түвшин"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__sequence
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__parent_id
+msgid "Parent type"
+msgstr "Эцэг төрөл"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__name
+msgid "Index"
+msgstr "Индекс"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__sequence
+msgid "Number"
+msgstr "Дугаар"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__seq_type
+msgid "Sequence"
+msgstr "Дараалал"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__type
+msgid "Type"
+msgstr "Төрөл"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_general_book_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.account_general_book_report_menu
+msgid "General book report"
+msgstr "Ерөнхий дэвтэр"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_general_journal_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.account_general_journal_report_menu
+msgid "General journal report"
+msgstr "Ерөнхий журнал"
+
+#. module: l10n_mn_account_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.account_general_book_report_two_menu
+msgid "General book report 2"
+msgstr "Ерөнхий дэвтэр 2"
+
+#. module: l10n_mn_account_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.account_general_journal_report_two_menu
+msgid "General journal report 2"
+msgstr "Ерөнхий журнал 2"
+
+#. module: l10n_mn_account_report
+#: code:addons/l10n_mn_account_report/models/cash_statement.py:0
+#, python-format
+msgid "Hevleh"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd____last_update
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд өөрчилсөн огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлд шинэчилсэн этгээд"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_payment_order_reportsd__write_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_report_excel_output__write_date
+msgid "Last Updated on"
+msgstr "Сүүлд шинэчилсэн огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.account_mn_report
+msgid "MN Report"
+msgstr "Монгол тайлан"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.payment_order_view
+msgid "Payment order Report"
+msgstr "Төлбөрийн даалгавар"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.action_excel_output_view
+msgid "Processing done"
+msgstr "Боловсруулалт дууссан"
+
+#. module: l10n_mn_account_report
+#: code:addons/l10n_mn_account_report/models/absract_report.py:0
+#, python-format
+msgid "Programming Error!"
+msgstr "Програмын алдаа!"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.action_excel_output_view
+msgid "Report Options"
+msgstr "Харилцагчийн авлагын тайлан"
+
+#. module: l10n_mn_account_report
+#: code:addons/l10n_mn_account_report/models/absract_report.py:0
+#, python-format
+msgid "Unimplemented method."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_move_analysis
+msgid "account.move.analysis"
+msgstr "Гүйлгээ баланс"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
+msgid "form_string"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
+msgid "or"
+msgstr "эсвэл"
+
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_payment_order_reportsd
+msgid "payment.order.reportsd"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Байгууллагын нэр :"
+msgstr ""
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_move_analysis__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_payable_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_receivable_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report_two__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report_two__target_move__posted
+msgid "All Posted entries"
+msgstr "Батлагдсан гүйлгээ"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Бэлэн мөнгөний зарлагын баримт"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Бэлэн мөнгөний орлогын баримт"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_move_analysis__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_payable_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_receivable_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report_two__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report_two__target_move__all
+msgid "All Entries"
+msgstr "Бүх гүйлгээ"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний дүн (үсгээр) :"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний дүн (үсгээр):"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний дүн:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний дүнг оруулна уу!"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний код"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Гүйлгээний утга:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__account_ids
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__account_ids
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__account_ids
+msgid "Account"
+msgstr "Данс"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report_two__target_move
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__end_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__end_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__end_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report_two__date_to
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Дэлгэрэнгүй бүртгэл"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Дүн"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_general_book_report_view
+msgid "Ерөнхий дэвтэр тайлан"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_general_journal_report_view
+msgid "Ерөнхий журнал тайлан"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report_two__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Мөнгө хүлээн авагчийн нэр: ............................................."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "НХМаягт МХ-1"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Огноо:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Олгосон мөнгөний дүн (үсгээр) :"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Олгосон мөнгөний дүн (үсгээр):"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Олгосон мөнгөний дүн:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid ""
+"Санхүү, эдийн засгийн сайд, Үндэсний статистикийн газрын\n"
+"                                    даргын 2002 оны 6-р сарын 18-ний 171/111 тоот тушаалын хавсралт"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid ""
+"Санхүү, эдийн засгийн сайд, Үндэсний статистикийн газрын \n"
+"                                   даргын 2002 оны 6-р сарын 18-ний 171/111 \n"
+"                                   тоот тушаалын хавсралт"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report_two__fiscalyear_id
+msgid "Fiscal year"
+msgstr "Санхүүгийн жил"
+
+#. module: l10n_mn_account_report
+#: code:addons/l10n_mn_account_report/report/general_journal_report.py:0
+#, python-format
+msgid "Таны сонгосон данс дээр гүйлгээ байхгүй байна."
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_payment_order_report
+msgid "Төлбөрийн даалгавар"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__target_move
+msgid "Төлөв"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Хаанаас:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__partner_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Харилцах данс"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.view_bank_statement_form_inherit_bank_mn_account_report
+msgid "Хэвлэх"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
+msgid "Хэнд:"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.payment_order_view
+msgid "Цуцлах"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
+msgid "Export"
+msgstr "Экспорт"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.payment_order_view
+msgid "Экспортлох"
+msgstr ""
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__start_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__start_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__start_date
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report_two__date_from
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_equity_report_config_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.equity_report_account_menu
+msgid "Equity report configure"
+msgstr "Өмчийн өөрчлөлтийн тайлангийн тохиргоо"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_partner_ledger_excel_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.action_account_partner_ledger_report_menu
+msgid "Partner ledger report"
+msgstr "Харилцагчийн тайлан"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_income_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.menu_income_type
+msgid "Income report type"
+msgstr "Орлогын тайлангийн төрөл"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_balance_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.menu_balance_type
+msgid "Balance report type"
+msgstr "Баланс тайлангийн төрөл"
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_statement_cashflow_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_statement_cash_flow_report
+msgid "Statement of cash flows"
+msgstr "Мөнгөн гүйлгээний тайлан"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_balance_sheet_excel
+#: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_balance_sheet_report
+msgid "Balance sheet report"
+msgstr "Баланс тайлан"
+
+
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_profit_excel_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_profit_report
+msgid "Profit report"
+msgstr "Орлого үр дүнгийн тайлан"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_equity_changes
+#: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_equity_changes_report
+msgid "Equity changes report"
+msgstr "Өмчийн өөрчлөлтийн тайлан"
+
+
+

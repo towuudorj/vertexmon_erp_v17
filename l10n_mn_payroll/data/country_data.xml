@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		
+		<record id="country_one" model="country.register">
+            <field name="name">Монгол</field>
+            <field name="code">001</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		<record id="country_two" model="country.register">
+            <field name="name">Орос</field>
+            <field name="code">002</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		
+		<record id="country_three" model="country.register">
+            <field name="name">Хятад</field>
+            <field name="code">003</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_four" model="country.register">
+            <field name="name">Солонгос</field>
+            <field name="code">004</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_five" model="country.register">
+            <field name="name">Герман</field>
+            <field name="code">005</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_six" model="country.register">
+            <field name="name">АНУ</field>
+            <field name="code">006</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_seven" model="country.register">
+            <field name="name">Англи</field>
+            <field name="code">007</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_eight" model="country.register">
+            <field name="name">Франц</field>
+            <field name="code">008</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_nine" model="country.register">
+            <field name="name">Тайван</field>
+            <field name="code">009</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_ten" model="country.register">
+            <field name="name">Тайланд</field>
+            <field name="code">010</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		
+		<record id="country_eleven" model="country.register">
+            <field name="name">Энэтхэг</field>
+            <field name="code">011</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_twelve" model="country.register">
+            <field name="name">Япон</field>
+            <field name="code">012</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_thirteen" model="country.register">
+            <field name="name">Польш</field>
+            <field name="code">013</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_fourtheen" model="country.register">
+            <field name="name">Итали</field>
+            <field name="code">014</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_fiftheen" model="country.register">
+            <field name="name">Австрали</field>
+            <field name="code">015</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		<record id="country_sixtheen" model="country.register">
+            <field name="name">Вьетнам</field>
+            <field name="code">016</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_seventheen" model="country.register">
+            <field name="name">Казакстан</field>
+            <field name="code">017</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_eightheen" model="country.register">
+            <field name="name">Бусад</field>
+            <field name="code">018</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_ninetheen" model="country.register">
+            <field name="name">Молдав улс</field>
+            <field name="code">019</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_twenty" model="country.register">
+            <field name="name">Колумби улс</field>
+            <field name="code">020</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_twenty_one" model="country.register">
+            <field name="name">Армен улс</field>
+            <field name="code">021</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="country_twenty_two" model="country.register">
+            <field name="name">Азербайжан улс</field>
+            <field name="code">022</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		
+	</data>
+</odoo>

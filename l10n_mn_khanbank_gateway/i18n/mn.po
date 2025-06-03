@@ -1,0 +1,197 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#  * l10n_mn_khanbank_gateway
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-31 15:46+0000\n"
+"PO-Revision-Date: 2016-01-31 15:46+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__name
+msgid "Bank gateway configure name"
+msgstr "Тохиргооны нэр"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__company_id
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__name
+msgid "Account name"
+msgstr "Дансны нэр"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__currency
+msgid "Currency"
+msgstr "Валют"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__status
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_account_list__balance
+msgid "Balance"
+msgstr "Үлдэгдэл"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__register_date
+msgid "Register date"
+msgstr "Бүртгэлийн огноо"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__register_user_id
+msgid "Register user"
+msgstr "Бүртгэсэн хэрэглэгч"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__user_name
+msgid "User name"
+msgstr "Хэрэглэгчийн нэр"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__password
+msgid "Password"
+msgstr "Нууц үг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_account_journal__is_khanbank_connect
+msgid "Khanbank corporate gateway account journal"
+msgstr "Банктай холбох эсэх"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_account_journal__bank_config_id
+msgid "Khanbank configure"
+msgstr "Банктай тохиргоо"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_account_journal__number
+msgid "Account number"
+msgstr "Дансны дугаар"
+
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_account_bank_statement__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_list_url
+msgid "Account list url"
+msgstr "Дансны жагсаалт шалгах хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_balance_check_url
+msgid "Account balance check url"
+msgstr "Дансны үлдэгдэл шалгах хаяг"
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_info_check_url
+msgid "Account info check url"
+msgstr "Дансны мэдээлэл шалгах хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_statement_check_url
+msgid "Account statement check url"
+msgstr "Дансны хуулга татах хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_name_check_url
+msgid "Account name check url"
+msgstr "Данс эзэмшигчийн нэр шалгах хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_local_transfer_url
+msgid "Account local transfer url"
+msgstr "Банк дотор гүйлгээ хийх хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_interbank_transfer_url
+msgid "Account interbank transfer url"
+msgstr "Банк хооронд гүйлгээ хийх хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_salary_transfer_url
+msgid "Account salary transfer url"
+msgstr "Цалингийн гүйлгээ хийх хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_internationalbank_transfer_url
+msgid "Account international bank transfer url"
+msgstr "Олон улсын банк хооронд гүйлгээ хийх хаяг"
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.model.fields,field_description:l10n_mn_khanbank_gateway.field_bank_gateway_configure__account_rate_check_url
+msgid "Currency rate check url"
+msgstr "Гадаад вальютын ханш татах хаяг"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.bank_gateway_configure_form_view
+msgid "Get token"
+msgstr "Token авах"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.bank_gateway_configure_form_view
+msgid "Get Account"
+msgstr "Дансны жагсаалт татах"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.action_view_account_bank_send_check
+msgid "Enter password"
+msgstr "Нууц үг оруулах"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.bank_gateway_configure_form_view
+msgid "Account list"
+msgstr "Дансны жагсаалт"
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model:ir.ui.menu,name:l10n_mn_khanbank_gateway.bank_gateway_configure_menu
+#: model:ir.actions.act_window,name:l10n_mn_khanbank_gateway.action_bank_gateway_configure_tree_view
+msgid "Bank gateway configure"
+msgstr "Банкны холболтын тохиргоо"
+
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.account_bank_statement_bank_inherit_form
+msgid "Bank send"
+msgstr "Гүйлгээ илгээх"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.account_bank_statement_bank_inherit_form
+msgid "Bank download"
+msgstr "Хуулга татах"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.account_journal_inherit_bank_form
+msgid "Get rate download"
+msgstr "Валютын ханш татах"
+
+#. module: l10n_mn_khanbank_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_mn_khanbank_gateway.account_journal_inherit_bank_form
+msgid "Get statement"
+msgstr "Дансны мэдээлэл татах"
+

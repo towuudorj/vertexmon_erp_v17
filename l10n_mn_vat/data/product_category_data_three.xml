@@ -1,0 +1,1346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="product_category_048" model="vat.category">
+            <field name="name">ЭМЧИЛГЭЭНИЙ ХЭРЭГСЭЛ, НАРИЙН ХЭМЖИЛ, ХАРАА ЗҮЙН БАГАЖ, ХЭРЭГСЭЛ; ЦАГ</field>
+            <field name="code">48</field>
+        </record>
+        
+        <record id="product_category_481" model="vat.category">
+            <field name="parent_id" ref="product_category_048"/>
+            <field name="name">Эмчилгээ, мэс заслын багаж тоног төхөөрөмж, гэмтэл, согогийн хэрэгсэл</field>
+            <field name="code">481</field>
+        </record>
+        <record id="product_category_4811" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Рентген, альфа, бета, гамма цацрагийн багаж, хэрэгсэл</field>
+            <field name="code">4811</field>
+        </record>
+        
+	        <record id="product_category_4811000" model="vat.category">
+	            <field name="parent_id" ref="product_category_4811"/>
+	            <field name="name">Рентген, альфа, бета, гамма цацрагийн багаж, хэрэгсэл</field>
+	            <field name="code">4811000</field>
+	        </record>
+        		        
+        <record id="product_category_4812" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Хүн эмнэлэг, мэс засал, шүдний эмнэлэг эсвэл мал эмнэлгийн зориулалттай оношлогооны цахилгаан тоног төхөөрөмж</field>
+            <field name="code">4812</field>
+        </record>
+        
+	        <record id="product_category_48121" model="vat.category">
+	            <field name="parent_id" ref="product_category_4812"/>
+	            <field name="name">Эмчилгээ, мэс засал, шүдний болон мал эмнэлгийн шинжлэх ухаанд хэрэглэгдэх оношлогооны цахилгаан аппарат</field>
+	            <field name="code">4812100</field>
+	        </record>
+
+		<record id="product_category_48122" model="vat.category">
+	            <field name="parent_id" ref="product_category_4812"/>
+	            <field name="name">Хүн эмнэлэг, мэс засал, шүдний болон мал эмнэлгийн зориулалттай оношлогооны, хэт ягаан, улаан туяаны аппарат</field>
+	            <field name="code">4812200</field>
+	        </record>
+                
+	<record id="product_category_4813" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Шүд эмчилгээний бусад багаж, хэрэгсэл (зүү, тариур болон адил төстэй хэрэгсэл орохгүй)</field>
+            <field name="code">4813</field>
+        </record>
+        
+	        <record id="product_category_48130" model="vat.category">
+	            <field name="parent_id" ref="product_category_4813"/>
+	            <field name="name">Шүд эмчилгээний бусад багаж, хэрэгсэл (зүү, тариур болон адил төстэй хэрэгсэл орохгүй)</field>
+	            <field name="code">4813000</field>
+	        </record>
+	<record id="product_category_4814" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Эмчилгээ, мэс заслын болон лабораторийн ариутгалын хэрэгсэл</field>
+            <field name="code">4814</field>
+        </record>
+        
+	        <record id="product_category_48140" model="vat.category">
+	            <field name="parent_id" ref="product_category_4814"/>
+	            <field name="name">Эмчилгээ, мэс заслын болон лабораторийн ариутгалын хэрэгсэл</field>
+	            <field name="code">4814000</field>
+	        </record>
+	<record id="product_category_4815" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Тариур, зүү, бургуй, хөндий зүү болон шүдний эмчилгээний багаж, хэрэгсэл, тэдгээртэй адилтгах багажийг оруулаад хүн эмнэлэг, мэс засал, шүдний болон мал эмнэлгийн зориулалттай бусад багаж, хэрэгсэл (зүү тариур, эмчилгээний цахилгаан хэрэгсэл зэрэг)</field>
+            <field name="code">4815</field>
+        </record>
+        
+	        <record id="product_category_4815010" model="vat.category">
+	            <field name="parent_id" ref="product_category_4815"/>
+	            <field name="name">Нэг удаагийн тариур</field>
+	            <field name="code">4815010</field>
+	        </record>
+		<record id="product_category_4815020" model="vat.category">
+	            <field name="parent_id" ref="product_category_4815"/>
+	            <field name="name">Нэг удаагийн зүү</field>
+	            <field name="code">4815020</field>
+	        </record>
+		<record id="product_category_4815030" model="vat.category">
+	            <field name="parent_id" ref="product_category_4815"/>
+	            <field name="name">Нүдний эмчилгээний бусад төрлийн багаж, хэрэгсэл</field>
+	            <field name="code">4815030</field>
+	        </record>
+		<record id="product_category_4815090" model="vat.category">
+	            <field name="parent_id" ref="product_category_4815"/>
+	            <field name="name">Бусад төрлийн эмнэлэг, мэс засал, мал эмнэлгийн зориулалттай багаж, хэрэгсэл, цацраг хэмжих, бүртгэх багаж ба эмнэлгийн бусад төрлийн эрдэм шинжилгээ, туршилтын цахилгаан тоног төхөөрөмж ба хараа шалгах хэрэгсэл</field>
+	            <field name="code">4815090</field>
+	        </record>
+	
+	<record id="product_category_4816" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Механик эмчилгээний аппарат; иллэгийн аппарат; сэтгэл з үйн төлөв байдлыг шалгах аппарат; озон-эмчилгээ, хүчилтөрөгч-эмчилгээ, аэрозолийн эмчилгээ, хиймэл амьсгалын аппарат, амьсгалын эмчилгээний бусад төрлийн аппарат; механик эд анги, солих шүүлтүүргүй хамгаалалтын багнаас бусад төрлийн амьсгалын хэрэгсэл болон хийн утааны баг</field>
+            <field name="code">4816</field>
+        </record>
+        
+	        <record id="product_category_48160" model="vat.category">
+	            <field name="parent_id" ref="product_category_4816"/>
+	            <field name="name">Механик эмчилгээний аппарат; иллэгийн аппарат; сэтгэл з үйн төлөв байдлыг шалгах аппарат; озон-эмчилгээ, хүчилтөрөгч-эмчилгээ, аэрозолийн эмчилгээ, хиймэл амьсгалын аппарат, амьсгалын эмчилгээний бусад төрлийн аппарат; механик эд анги, солих шүүлтүүргүй хамгаалалтын багнаас бусад төрлийн амьсгалын хэрэгсэл болон хийн утааны баг</field>
+	            <field name="code">4816000</field>
+	        </record>
+
+	<record id="product_category_4817" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Гэмтэл, согогийн хэрэгсэл, ул төмөр болон хугаралт, бэртлийг эмчлэхэд хэрэглэгдэх бусад хэрэгсэл, хиймэл эрхтэн, сонсголын хэрэгсэл, ясны гэмтэл эмчлэх, засах хэрэгсэл</field>
+            <field name="code">4817</field>
+        </record>
+        
+	        <record id="product_category_48171" model="vat.category">
+	            <field name="parent_id" ref="product_category_4817"/>
+	            <field name="name">Гэмтэл, согогийн хэрэгсэл, ул төмөр болон хугаралт, бэртлийг эмчлэхэд хэрэглэгдэх бусад хэрэгсэл, хүний биеийн хиймэл хэсэг</field>
+	            <field name="code">48171</field>
+	        </record>
+		<record id="product_category_48172" model="vat.category">
+	            <field name="parent_id" ref="product_category_4817"/>
+	            <field name="name">Сонсголын аппарат болон гэмтэл согог заслын зориулалтаар биедээ з үүх, авч явах эсвэл суулгах зориулалтын буса хэрэгсэл</field>
+	            <field name="code">48172</field>
+	        </record>
+	
+	<record id="product_category_4818" model="vat.category">
+            <field name="parent_id" ref="product_category_481"/>
+            <field name="name">Хүн эмнэлэг, мэс зэсал, шүдний болон мал эмнэлгийн зориулалттай тавилга (үсчний эргэх, өргөх хөдөлгөөнт сандалтай төстэй) болон адил төстэй сандал</field>
+            <field name="code">4818</field>
+        </record>
+        
+	        <record id="product_category_48180" model="vat.category">
+	            <field name="parent_id" ref="product_category_4817"/>
+	            <field name="name">Хүн эмнэлэг, мэс зэсал, шүдний болон мал эмнэлгийн зориулалттай тавилга (үсчний эргэх, өргөх хөдөлгөөнт сандалтай төстэй) болон адил төстэй сандал</field>
+	            <field name="code">4818000</field>
+	        </record>
+
+	 <record id="product_category_482" model="vat.category">
+            <field name="parent_id" ref="product_category_048"/>
+            <field name="name">Хараа зүйн оптикийн тоног төхөөрөмжөөс бусад төрлийн хэмжих, шалгах болон үйлдвэрлэлийн хяналтын тоног төхөөрөмж, тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">482</field>
+        </record>
+        <record id="product_category_4821" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Навигацийн, цаг уурын, геофизикийн багаж, хэрэгсэл болон түүнтэй адил төстэй багаж</field>
+            <field name="code">4821</field>
+        </record>
+        
+	<record id="product_category_48211" model="vat.category">
+            <field name="parent_id" ref="product_category_4821"/>
+            <field name="name">Луужин болон чиг заагч багаж, хэрэгсэл</field>
+            <field name="code">48211</field>
+        </record>
+
+		<record id="product_category_4821110" model="vat.category">
+            		<field name="parent_id" ref="product_category_48211"/>
+            		<field name="name">Луужин</field>
+            		<field name="code">4821110</field>
+        	</record>
+		<record id="product_category_4821120" model="vat.category">
+            		<field name="parent_id" ref="product_category_48211"/>
+            		<field name="name">Агаарын, сансрын, усан замын чиг заагч бусад төрлийн багаж, хэрэгсэл (луужингаас бусад)</field>
+            		<field name="code">4821120</field>
+        	</record>
+		<record id="product_category_4821190" model="vat.category">
+            		<field name="parent_id" ref="product_category_48211"/>
+            		<field name="name">Зүг чиг заагч бусад төрлийн багаж, хэрэгсэл</field>
+            		<field name="code">4821190</field>
+        	</record>
+		<record id="product_category_48212" model="vat.category">
+		    <field name="parent_id" ref="product_category_4821"/>
+		    <field name="name">Холын хэмжүүр, теодолит ба тахеометр, тэгшлүүр (невилер)</field>
+		    <field name="code">4821200</field>
+		</record>
+		<record id="product_category_48219" model="vat.category">
+		    <field name="parent_id" ref="product_category_4821"/>
+		    <field name="name">Геодези, газар зүйн хэмжилт, усзүй, далай ба ус судлал, цаг уурын, геофизикийн хэмжилтийн бусад багаж, тоног төхөөрөмж</field>
+		    <field name="code">4821900</field>
+		</record>
+	
+	<record id="product_category_4822" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Радио локаторын аппарат, радио навигацын тусламжийн аппарат, удирдлагын хяналтын аппарат</field>
+            <field name="code">4822</field>
+        </record>	
+		<record id="product_category_48220" model="vat.category">
+		    <field name="parent_id" ref="product_category_4822"/>
+		    <field name="name">Радио локаторын аппарат, радио навигацын тусламжийн аппарат, удирдлагын хяналтын аппарат</field>
+		    <field name="code">4822000</field>
+		</record>
+
+	<record id="product_category_4823" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Нарийн хэмжүүр, зураг төсөл хийх хэрэгсэл, тооцох, уртын хэмжүүрийн хэрэгсэл</field>
+            <field name="code">4823</field>
+        </record>	
+		<record id="product_category_48231" model="vat.category">
+		    <field name="parent_id" ref="product_category_4823"/>
+		    <field name="name">5 мг түүнээс илүү нарийвчлалтай жинлүүр, жин хэмжигч</field>
+		    <field name="code">4823100</field>
+		</record>
+		<record id="product_category_48232" model="vat.category">
+            		<field name="parent_id" ref="product_category_4823"/>
+            		<field name="name">Шугам зураг, тэмдэглэгээ хийх математик тооцооны багаж, хэрэгсэл</field>
+            		<field name="code">4823200</field>
+        	</record>
+		<record id="product_category_48233" model="vat.category">
+            		<field name="parent_id" ref="product_category_4823"/>
+            		<field name="name">Уртын хэмжүүрийн хэрэгсэл (савхан метр, эвхдэг метр, туузан метр, микрометр, штангенциркуль), бусад дэд ангид нэр заагдаг үй багаж</field>
+            		<field name="code">4823300</field>
+        	</record>
+	<record id="product_category_4824" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Цахилгаан үйлдвэрлэлийн цахилгаан нийлүүлэлтийг хэмжигчээс бусад төрлийн цахилгаан гүйдэл хэмжих, шалгах багаж, хэрэгсэл болон ионжсон цацрагийг хэмжих, илрүүлэх багаж, тоног төхөөрөмж</field>
+            <field name="code">4824</field>
+        </record>	
+		<record id="product_category_48241" model="vat.category">
+		    <field name="parent_id" ref="product_category_4824"/>
+		    <field name="name">Ионжсон цацрагийг хэмжих, илрүүлэх багаж тоног төхөөрөмж</field>
+		    <field name="code">4824100</field>
+		</record>
+		<record id="product_category_48242" model="vat.category">
+		    <field name="parent_id" ref="product_category_4824"/>
+		    <field name="name">Катодын туяаны осциллограф болон осциллоскоп</field>
+		    <field name="code">4824200</field>
+		</record>
+		<record id="product_category_48243" model="vat.category">
+		    <field name="parent_id" ref="product_category_4824"/>
+		    <field name="name">Катодын туяаны осциллограф, осциллоскопоос бусад цахилгаан г үйдлийн хүч, хүчдэл, эсэргүүцэл, чадлыг хэмжигч, бичих тоног төхөөрөмжгүй багаж, хэрэгсэл</field>
+		    <field name="code">4824300</field>
+		</record>
+		<record id="product_category_48244" model="vat.category">
+		    <field name="parent_id" ref="product_category_4824"/>
+		    <field name="name">Осциллограф, осциллоскопоос бусад харилцаа холбооны хэмж үүрийн хэрэгсэл багаж тоног</field>
+		    <field name="code">4824400</field>
+		</record>
+		<record id="product_category_48249" model="vat.category">
+		    <field name="parent_id" ref="product_category_4824"/>
+		    <field name="name">Цахилгаан гүйдэл хэмжих, шалгах бусад багаж, хэрэгсэл</field>
+		    <field name="code">4824900</field>
+		</record>
+
+	<record id="product_category_4825" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Гидрометр болон адил төстэй бусад хөвөгч багаж, дулаан, халуун хэмжигч, агаарын даралт хэмжигч агаар хий хэмжигч /термометр, пирометр, барометр, гигрометр/, хий, шингэний зарцуулалт, түвшин, даралт буюу хувьсах бусад хэмжигдэхүүнийг хэмжих, хянах хэрэгсэл; гэрлийн цацраг хянах, шалгах багаж, хэрэгсэл; физик химийн шинжилгээний багаж</field>
+            <field name="code">4825</field>
+        </record>	
+		<record id="product_category_48251" model="vat.category">
+		    <field name="parent_id" ref="product_category_4825"/>
+		    <field name="name">Дулаан, халуун, даралт, чийг хэмжигч болон гидрометр, бусад төрлийн хөвөгч хэрэгсэл болон дулаан хэмжигч(термометр, пирометр, барометр, гидрометр, пиерометр)</field>
+		    <field name="code">4825100</field>
+		</record>
+		<record id="product_category_48252" model="vat.category">
+		    <field name="parent_id" ref="product_category_4825"/>
+		    <field name="name">Хий, шингэний зарцуулалт, түвшин, даралт буюу хувьсах бусад хэмжигдэхүүнийг хэмжих, хянах багаж, хэрэгсэл</field>
+		    <field name="code">4825200</field>
+		</record>
+		<record id="product_category_48253" model="vat.category">
+		    <field name="parent_id" ref="product_category_4825"/>
+		    <field name="name">Физик, химийн шинжилгээний багаж зууралдамтгай чанар, тэлэлт, гадаргын таталцлыг хэмжих, хянах багаж, хэрэгсэл</field>
+		    <field name="code">4825300</field>
+		</record>
+
+	<record id="product_category_4826" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">Хэмжих, хянах, шалгах бусад төрлийн багаж, хэрэгсэл</field>
+            <field name="code">4826</field>
+        </record>	
+		<record id="product_category_48261" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Оптик микроскопоос бусад микроскоп, бичил өсгөгч аппарат болон хугаралтын аппарат /дифракц/</field>
+		    <field name="code">4826100</field>
+		</record>
+		<record id="product_category_48262" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Эд зүйлийн механик шинж төлөвт туршилт хийх багаж, хэрэгсэл</field>
+		    <field name="code">4826200</field>
+		</record>
+		<record id="product_category_48263" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Хий, шингэн цахилгаан үйлдвэрлэлт, дамжуулалтыг хэмжих багаж тоног төхөөрөмж</field>
+		    <field name="code">4826300</field>
+		</record>
+		<record id="product_category_48264" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Эргэлтийн тоолуур, бүтээмжийн тоолуур, таксийн тоолуур, зай алхам хэмжигч, хурд хэмжигч хэрэгсэл ба тэдгээртэй төстэй эд зүйл; гидрографик, цаг уурын багаж тоног төхөөрөмжөөс бусад төрлийн хурд заагч ба тахометр; стробоскоп</field>
+		    <field name="code">4826400</field>
+		</record>
+		<record id="product_category_48266" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Хийн ба шингэний ажиллагаатай автомат тохируулга, удирдлагын тоног төхөөрөмж</field>
+		    <field name="code">4826600</field>
+		</record>
+		<record id="product_category_48269" model="vat.category">
+		    <field name="parent_id" ref="product_category_4826"/>
+		    <field name="name">Бусад ангид нэр заагдаагүй тохируулах, хянах, хэмжих, шалгах автомат аппарат багаж, хэрэгсэл</field>
+		    <field name="code">48269</field>
+		</record>
+			<record id="product_category_4826910" model="vat.category">
+			    <field name="parent_id" ref="product_category_48269"/>
+			    <field name="name">Зүсэгч хутга</field>
+			    <field name="code">4826910</field>
+			</record>
+			<record id="product_category_4826990" model="vat.category">
+			    <field name="parent_id" ref="product_category_48269"/>
+			    <field name="name">Бусад төрлийн тохируулагчийн хяналтын автомат аппарат тоног төхөөрөмж</field>
+			    <field name="code">4826990</field>
+			</record>
+
+	<record id="product_category_4828" model="vat.category">
+            <field name="parent_id" ref="product_category_482"/>
+            <field name="name">4821, 4823-4826-р ангид хамаарах багаж, тоног төхөөрөмжийн сэлбэг, эд анги</field>
+            <field name="code">4828</field>
+        </record>	
+		<record id="product_category_48281" model="vat.category">
+		    <field name="parent_id" ref="product_category_4828"/>
+		    <field name="name">48211, 48212, 48232, 48233, 48241-48249, 48251-48253-р дэд ангид хамаарах багаж тоног төхөөрөмжийн сэлбэг, эд анги; микротом; оптик, гэрэл зураг, кино зураг, нарийн хэмжүүр, эмчилгээ ба мэс заслын багаж, хэрэгсэл, аппарат хэрэгслийн сэлбэг, эд анги</field>
+		    <field name="code">4828100</field>
+		</record>
+		<record id="product_category_48282" model="vat.category">
+		    <field name="parent_id" ref="product_category_4828"/>
+		    <field name="name">48261-р дэд ангид хамаарах тоног төхөөрөмжийн сэлбэг, эд анги</field>
+		    <field name="code">4828200</field>
+		</record>
+		<record id="product_category_48283" model="vat.category">
+		    <field name="parent_id" ref="product_category_4828"/>
+		    <field name="name">48263, 48264-р дэд ангид хамаарах тоног т өхөөрөмжийн сэлбэг, эд анги</field>
+		    <field name="code">4828300</field>
+		</record>
+		<record id="product_category_48284" model="vat.category">
+		    <field name="parent_id" ref="product_category_4828"/>
+		    <field name="name">48266, 48269-р дэд ангид хамаарах багаж хэрэгслийн сэлбэг, эд анги</field>
+		    <field name="code">4828400</field>
+		</record>
+		<record id="product_category_48284" model="vat.category">
+		    <field name="parent_id" ref="product_category_4828"/>
+		    <field name="name">48211, 48262-р дэд ангид хамаарах багаж хэрэгслийн эд анги</field>
+		    <field name="code">4828400</field>
+		</record>
+
+	<record id="product_category_483" model="vat.category">
+            <field name="parent_id" ref="product_category_048"/>
+            <field name="name">Хараа зүй, гэрэл зургийн хэрэгсэл тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">483</field>
+        </record>	
+	<record id="product_category_4831" model="vat.category">
+	    <field name="parent_id" ref="product_category_483"/>
+	    <field name="name">Хараа зүйн багаж, хэрэгсэл</field>
+	    <field name="code">4831</field>
+	</record>
+		<record id="product_category_48311" model="vat.category">
+		    <field name="parent_id" ref="product_category_4831"/>
+		    <field name="name">Оптик мяндас ба багцалсан оптик мяндас, оптик мяндсан дамжуулагч; туйлшруулах материалан хуудас, хавтан; оптик боловсруулалтгүй шилнээс бусад төрлийн ямар ч материалаар хийсэн байж болох, угсраагүй линз, призм, толь ба бусад төрлийн оптик элемент; (камер, дүрс тусгагч (проектор), гэрэл зургийн өсгөгч ба багасгагчийнхаас бусад)</field>
+		    <field name="code">4831100</field>
+		</record>
+		<record id="product_category_48312" model="vat.category">
+		    <field name="parent_id" ref="product_category_4831"/>
+		    <field name="name">Хараа заслын болон нүдний хамгаалалтын шил, эдгээртэй төстэй оптик бусад хэрэгсэл</field>
+		    <field name="code">4831200</field>
+		</record>
+		<record id="product_category_48313" model="vat.category">
+		    <field name="parent_id" ref="product_category_4831"/>
+		    <field name="name">Хараа заслын болон нүдний хамгаалалтын шил, эдгээртэй төстэй оптик бусад хэрэгслийн хүрээ, суурь</field>
+		    <field name="code">4831300</field>
+		</record>
+		<record id="product_category_48314" model="vat.category">
+		    <field name="parent_id" ref="product_category_4831"/>
+		    <field name="name">Нэг, хоёр нүдний дуран ба бусад төрлийн оптик телескоп; одон орны бусад багаж хэрэгсэл, радио-одон орон судлалын багаж, хэрэгсэл, оптик микроскоп</field>
+		    <field name="code">4831400</field>
+		</record>
+		<record id="product_category_48315" model="vat.category">
+		    <field name="parent_id" ref="product_category_4831"/>
+		    <field name="name">Бусад ангид нэр заагдаагүй шингэн талст тоног төхөөрөмж; лазерийн диодоос бусад төрлийн лазер; оптик багаж, хэрэгсэл</field>
+		    <field name="code">4831500</field>
+		</record>
+
+		<record id="product_category_4832" model="vat.category">
+		    <field name="parent_id" ref="product_category_483"/>
+		    <field name="name">Гэрэл зургийн хэрэгсэл</field>
+		    <field name="code">4832</field>
+		</record>
+			<record id="product_category_48321" model="vat.category">
+			    <field name="parent_id" ref="product_category_4832"/>
+			    <field name="name">Зургийн аппарат, кино аппаратын дурангийн линз болон өсгөгч, багасгагч дуран</field>
+			    <field name="code">4832100</field>
+			</record>
+			<record id="product_category_48322" model="vat.category">
+			    <field name="parent_id" ref="product_category_4832"/>
+			    <field name="name">Гэрэл зураг, кино зургийн аппарат</field>
+			    <field name="code">4832200</field>
+			</record>
+			<record id="product_category_48323" model="vat.category">
+			    <field name="parent_id" ref="product_category_4832"/>
+			    <field name="name">Кино зургийн прожектор, слайд тусгагч болон бичил/микро хэлбэртэй уншигчаас бусад дүрс тусгагч/прожектор/</field>
+			    <field name="code">4832300</field>
+			</record>
+			<record id="product_category_48324" model="vat.category">
+			    <field name="parent_id" ref="product_category_4832"/>
+			    <field name="name">Гэрэл цацруулагч хэрэгсэл, гэрэл цацруулагч чийдэн, гэрэл зургийн өсгөгч, багасгагч (кино зургийнхаас бусад); бусад ангид нэр заагдаагүй гэрэл зургийн лабораторийн аппарат, тоног төхөөрөмж, негатоскоп, прожекторын дэлгэц</field>
+			    <field name="code">4832400</field>
+			</record>
+
+		<record id="product_category_4833" model="vat.category">
+		    <field name="parent_id" ref="product_category_483"/>
+		    <field name="name">Бичил хальс, микрофиш бусад бичил дүрсийг дэлгэцэнд тусгагч, уншигч</field>
+		    <field name="code">4833</field>
+		</record>
+			<record id="product_category_48330" model="vat.category">
+			    <field name="parent_id" ref="product_category_4833"/>
+			    <field name="name">Бичил хальс, микрофиш бусад бичил дүрсийг дэлгэцэнд тусгагч, уншигч</field>
+			    <field name="code">4833000</field>
+			</record>
+			<record id="product_category_48322" model="vat.category">
+			    <field name="parent_id" ref="product_category_4832"/>
+			    <field name="name">Гэрэл зураг, кино зургийн аппарат</field>
+			    <field name="code">4832200</field>
+			</record>
+			
+		<record id="product_category_4834" model="vat.category">
+		    <field name="parent_id" ref="product_category_483"/>
+		    <field name="name">Хавтгай, гэрэлд мэдрэмтгий, зурагдаагүй гэрэл зургийн хальс, зургийн хальс, гэрэл зураг, шууд буулгадаг хальс, чий (лак), цавуу, цавуулаг эд зүйл, адил төстэй бэлдмэлээс бусад төрлийн гэрэл зургийн зориулалттай химийн бэлдмэл</field>
+		    <field name="code">4834</field>
+		</record>
+			<record id="product_category_48341" model="vat.category">
+			    <field name="parent_id" ref="product_category_4834"/>
+			    <field name="name">Гэрэл зургийн цаас, зургийн хальс, хавтан, гэрэлд мэдрэмтгий түргэн зургийн хальс</field>
+			    <field name="code">4834100</field>
+			</record>
+			<record id="product_category_48342" model="vat.category">
+			    <field name="parent_id" ref="product_category_4834"/>
+			    <field name="name">Гэрэл зургийн зориулалтын химийн бэлдмэл (чий/лак, цавуулаг эд з үйл ба адил төстэй бэлдмэлээс бусад), гэрэл зургийн зориулалттай, тун хэмжээгээр савласан, эсвэл хэрэглэхэд бэлэн хэлбэрээр жижиглэн худалдаалахаар савласан холимог биш бараа</field>
+			    <field name="code">4834200</field>
+			</record>
+		<record id="product_category_4835" model="vat.category">
+		    <field name="parent_id" ref="product_category_483"/>
+		    <field name="name">4835-4833-р ангид хамаарах хэрэгслийн сэлбэг, эд анги</field>
+		    <field name="code">4835</field>
+		</record>
+			<record id="product_category_48351" model="vat.category">
+			    <field name="parent_id" ref="product_category_4835"/>
+			    <field name="name">48314, 48315-р дэд ангид хамаарах хараа з үйн хэрэгслийн сэлбэг, эд анги</field>
+			    <field name="code">4835100</field>
+			</record>
+			<record id="product_category_48352" model="vat.category">
+			    <field name="parent_id" ref="product_category_4835"/>
+			    <field name="name">Хараа заслын шил, нүдний хамгаалалтын шил болон адил төстэй оптик хэрэгслийн хүрээ, тоноглолийн сэлбэг, эд анги</field>
+			    <field name="code">4835200</field>
+			</record>
+			<record id="product_category_48353" model="vat.category">
+			    <field name="parent_id" ref="product_category_4835"/>
+			    <field name="name">48322-р дэд ангид хэрэгслийн сэлбэг, эд анги; кино зургийн прожекторын эд анги; гэрэл зургийн цацруулагчийн сэлбэг эд анги; кино зургийнхаас бусад төрлийн дүрсийн прожектор болон гэрэл зургийн өсгөгч, багасгагчийн сэлбэг, эд анги; дээр ороогүй гэрэл зургийн лабораторийн аппарат, тоног төхөөрөмжийн сэлбэг, эд анги; микроскоп болон дүрс тусгах дэлгэц /прожекторын сэлбэг, эд анги/</field>
+			    <field name="code">4835300</field>
+			</record>
+			<record id="product_category_48354" model="vat.category">
+			    <field name="parent_id" ref="product_category_4835"/>
+			    <field name="name">48315-р дэд ангид хамаарах тоног төхөөрөмжийн сэлбэг, эд анги</field>
+			    <field name="code">4835400</field>
+			</record>
+
+	<record id="product_category_484" model="vat.category">
+		<field name="parent_id" ref="product_category_048"/>
+	 	<field name="name">Гэрийн болон бугуйн цаг, түүний эд анги</field>
+	 	<field name="code">484</field>
+	</record>
+			<record id="product_category_4841" model="vat.category">
+			    <field name="parent_id" ref="product_category_484"/>
+			    <field name="name">Бугуйн цаг</field>
+			    <field name="code">4841000</field>
+			</record>
+			<record id="product_category_4842" model="vat.category">
+			    <field name="parent_id" ref="product_category_484"/>
+			    <field name="name">Бусад цаг</field>
+			    <field name="code">4842000</field>
+			</record>
+			<record id="product_category_4843" model="vat.category">
+			    <field name="parent_id" ref="product_category_484"/>
+			    <field name="name">Өдрийн цаг тэмдэглэдэг аппарат, цаг, бугуйн цагны хөдөлгөх хэсэг, синхрон мотортой, хугацааны интервалыг хэмжих, тэмдэглэх, заах аппарат</field>
+			    <field name="code">4843000</field>
+			</record>
+			<record id="product_category_4844" model="vat.category">
+			    <field name="parent_id" ref="product_category_484"/>
+			    <field name="name">Цагны хөдлөх эд анги</field>
+			    <field name="code">4844000</field>
+			</record>
+			<record id="product_category_4849" model="vat.category">
+			    <field name="parent_id" ref="product_category_484"/>
+			    <field name="name">Цагны бусад сэлбэг, эд анги (чулуу, цагны гэр, төмөр оосор орно)</field>
+			    <field name="code">4849000</field>
+			</record>
+        <record id="product_category_049" model="vat.category">
+            <field name="name">ТЭЭВРИЙН ХЭРЭГСЭЛ</field>
+            <field name="code">49</field>
+        </record>
+        <record id="product_category_491" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Моторт тээврийн хэрэгсэл, чиргүүл, хагас чиргүүл, тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">491</field>
+        </record>
+        <record id="product_category_4911" model="vat.category">
+            <field name="parent_id" ref="product_category_491"/>
+            <field name="name">Авто тээврийн хэрэгсэл</field>
+            <field name="code">4911</field>
+        </record>
+                <record id="product_category_49111" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Хагас чиргүүлийн зориулалттай, хуурай замын трактор</field>
+	            <field name="code">4911100</field>
+	        </record>
+		<record id="product_category_49112" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Нийтийн тээврийн зориулалттай, хүн тээврийн моторт хэрэгсэл</field>
+	            <field name="code">49112</field>
+	        </record>
+			<record id="product_category_4911210" model="vat.category">
+			    <field name="parent_id" ref="product_category_49112"/>
+			    <field name="name">Том оврын автобус</field>
+			    <field name="code">4911210</field>
+			</record>
+			<record id="product_category_4911220" model="vat.category">
+			    <field name="parent_id" ref="product_category_49112"/>
+			    <field name="name">Бага оврын автобус</field>
+			    <field name="code">4911220</field>
+			</record>
+			<record id="product_category_4911210" model="vat.category">
+			    <field name="parent_id" ref="product_category_49112"/>
+			    <field name="name">Бусад төрлийн нийтийн авто тээврийн хэрэгсэл</field>
+			    <field name="code">4911290</field>
+			</record>
+		<record id="product_category_49113" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Нийтийн тээврийн хэрэгсэл, цасны, гольфийн болон адил төстэй авто тээврийн хэрэгслээс бусад хүн тээврийн зориулалтын хөнгөн тэрэг, моторт тээврийн хэрэгсэл</field>
+	            <field name="code">4911300</field>
+	        </record>
+		<record id="product_category_49114" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Ачаа тээврийн зориулалттай бусад моторт хэрэгсэл</field>
+	            <field name="code">4911400</field>
+	        </record>
+		<record id="product_category_49115" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Авто кран</field>
+	            <field name="code">4911500</field>
+	        </record>
+		<record id="product_category_49116" model="vat.category">
+	            <field name="parent_id" ref="product_category_4911"/>
+	            <field name="name">Цастай замд явах зориулалтын машин, гольф болон түүнтэй адил төстэй хүн тээврийн моторт хэрэгсэл</field>
+	            <field name="code">4911600</field>
+	        </record>
+	<record id="product_category_4912" model="vat.category">
+            <field name="parent_id" ref="product_category_491"/>
+            <field name="name">Моторт тээврийн хэрэгслийн сэлбэг, эд анги</field>
+            <field name="code">4912</field>
+        </record>
+                <record id="product_category_49121" model="vat.category">
+	            <field name="parent_id" ref="product_category_4912"/>
+	            <field name="name">Моторт тээврийн хэрэгсэлд зориулалттай хөдөлгүүр бүхий явах анги</field>
+	            <field name="code">4912100</field>
+	        </record>
+		<record id="product_category_49129" model="vat.category">
+	            <field name="parent_id" ref="product_category_4912"/>
+	            <field name="name">Моторт тээврийн хэрэгслийн бусад сэлбэг эд анги (тормосны систем, хурдны хайрцаг, тэнхлэг, дугуй, амортизатор, радиатор, чимээ намдаагч, олгой хоолой, холбогч механизм, жолоо, залгах, жолоодох механизм, жолооны удирдлага)</field>
+	            <field name="code">49129</field>
+	        </record>
+			<record id="product_category_4912910" model="vat.category">
+			    <field name="parent_id" ref="product_category_49129"/>
+			    <field name="name">Кардоны зөөлөвч</field>
+			    <field name="code">4912910</field>
+			</record>
+			<record id="product_category_4912990" model="vat.category">
+			    <field name="parent_id" ref="product_category_49129"/>
+			    <field name="name">Авто тээврийн хэрэгслийн бусад сэлбэг эд анги (тормосны систем, хурдны хайрцаг, тэнхлэг, дугуй, амортизатор, радиатор, чимээ намдаагч, олгой хоолой, холбогч механизм, жолоо, залгах, жолоодох механизм, жолооны удирдлага)</field>
+			    <field name="code">4912990</field>
+			</record>
+	<record id="product_category_492" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Моторт тээврийн хэрэгслийн бүхээг, чиргүүл, хагас чиргүүл, тэдгээрийн эд анги</field>
+            <field name="code">492</field>
+        </record>
+        <record id="product_category_4921" model="vat.category">
+            <field name="parent_id" ref="product_category_492"/>
+            <field name="name">Моторт тээврийн хэрэгсэлд зориулагдсан бүхээг/кузов</field>
+            <field name="code">4921</field>
+        </record>
+                <record id="product_category_49210" model="vat.category">
+	            <field name="parent_id" ref="product_category_4921"/>
+	            <field name="name">Моторт тээврийн хэрэгсэлд зориулагдсан бүхээг/кузов</field>
+	            <field name="code">49210</field>
+	        </record>
+	<record id="product_category_4922" model="vat.category">
+            <field name="parent_id" ref="product_category_492"/>
+            <field name="name">Чиргүүл, хагас чиргүүл, чингэлэг</field>
+            <field name="code">4922</field>
+        </record>
+                <record id="product_category_49221" model="vat.category">
+	            <field name="parent_id" ref="product_category_4922"/>
+	            <field name="name">Нэг эсвэл хэд хэдэн төрлийн тээврийн хэрэгсэлд зориулсан, тоноглосон ачаа тээвэрлэх зориулалтын чиргүүл, хагас чиргүүл, чингэлэг</field>
+	            <field name="code">4922100</field>
+	        </record>
+		<record id="product_category_49222" model="vat.category">
+	            <field name="parent_id" ref="product_category_4922"/>
+	            <field name="name">Сууц эсвэл аяллын зориулалттай чиргүүл, хагас чиргүүл</field>
+	            <field name="code">4922200</field>
+	        </record>
+		<record id="product_category_49229" model="vat.category">
+	            <field name="parent_id" ref="product_category_4922"/>
+	            <field name="name">Хөдөө аж ахуйд зориулагдсан өөрөө явагч, буулгагч чиргүүл, хагас чиргүүлээс бусад ачаа тээвэрлэх зориулалтын чиргүүл, хагас чиргүүл</field>
+	            <field name="code">4922900</field>
+	        </record>
+	<record id="product_category_4923" model="vat.category">
+            <field name="parent_id" ref="product_category_492"/>
+            <field name="name">4921, 4922-р дэд ангид хамаарах бүтээгдэхүүний сэлбэг, эд анги</field>
+            <field name="code">4923</field>
+        </record>
+                <record id="product_category_49231" model="vat.category">
+	            <field name="parent_id" ref="product_category_4923"/>
+	            <field name="name">49210-р ангид хамаарах бүтээгдэхүүний сэлбэг, эд анги</field>
+	            <field name="code">4923100</field>
+		</record>
+		<record id="product_category_49232" model="vat.category">
+	            <field name="parent_id" ref="product_category_4923"/>
+	            <field name="name">Механик аргаар явдаггүй чиргүүл, хагас чиргүүлийн сэлбэг, эд анги</field>
+	            <field name="code">4923200</field>
+		 </record>
+	
+	<record id="product_category_493" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Хөлөг онгоц</field>
+            <field name="code">493</field>
+        </record>
+        <record id="product_category_4931" model="vat.category">
+            <field name="parent_id" ref="product_category_493"/>
+            <field name="name">Худалдааны болон цэргийн зориулалттай хөлөг онгоц</field>
+            <field name="code">4931</field>
+        </record>
+                <record id="product_category_49311" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Зорчигч тээврийн, аяллын, экскурсын зориулалттай хөлөг онгоц, адил төстэй хүн тээвэрлэх зориулалттай хөлөг онгоц, бүх төрлийн гатлага онгоц</field>
+	            <field name="code">4931100</field>
+	        </record>
+		<record id="product_category_49312" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Шингэн тээвэрлэгч хөлөг онгоц</field>
+	            <field name="code">4931200</field>
+	        </record>
+		<record id="product_category_49313" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Шингэн тээвэрлэгч хөлөг онгоцноос бусад хөргөгчтэй хөлөг онгоц</field>
+	            <field name="code">4931300</field>
+	        </record>
+		<record id="product_category_49314" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Зорчигч болон ачаа тээврийн зориулалттай бусад хөлөг онгоц</field>
+	            <field name="code">4931400</field>
+	        </record>
+		<record id="product_category_49315" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Загас агнуурын хөлөг онгоц, загасан бүтээгдэхүүн боловсруулах, хадгалах зориулалтын хөлөг онгоц</field>
+	            <field name="code">4931500</field>
+	        </record>
+		<record id="product_category_49316" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Чирэгч, түлхэгч хөлөг онгоц</field>
+	            <field name="code">4931600</field>
+	        </record>
+		<record id="product_category_49319" model="vat.category">
+	            <field name="parent_id" ref="product_category_4931"/>
+	            <field name="name">Гэрэлтэгч цамхагтай хөлөг онгоц, гал эсэргүүцэх хөвөгч хэрэгсэл, усны ёроол шүүрдэгч онгоц, хөвөгч кран, усан замын аюулгүй байдлыг хангах туслах хөвөгч хэрэгсэл, сэлүүрт завинаас бусад төрлийн авран хамгаалах хөлөг онгоц</field>
+	            <field name="code">4931900</field>
+	        </record>
+
+	<record id="product_category_4932" model="vat.category">
+            <field name="parent_id" ref="product_category_493"/>
+            <field name="name">Усан дээр (өрөмдлөг хийдэг, усан дээр үйлдвэрлэл явуулах зориулалттай) хөвөгч тавцан</field>
+            <field name="code">4932</field>
+        </record>
+                <record id="product_category_49320" model="vat.category">
+	            <field name="parent_id" ref="product_category_4932"/>
+	            <field name="name">Усан дээр (өрөмдлөг хийдэг, усан дээр үйлдвэрлэл явуулах зориулалттай) хөвөгч тавцан</field>
+	            <field name="code">4932000</field>
+	        </record>
+	<record id="product_category_4939" model="vat.category">
+            <field name="parent_id" ref="product_category_493"/>
+            <field name="name">Бусад төрлийн хөвөгч байгууламж</field>
+            <field name="code">4939</field>
+        </record>
+                <record id="product_category_49390" model="vat.category">
+	            <field name="parent_id" ref="product_category_4932"/>
+	            <field name="name">Бусад төрлийн хөвөгч байгууламж</field>
+	            <field name="code">4939000</field>
+	        </record>
+
+	<record id="product_category_494" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Амралт, зугаалгын болон спортын завь</field>
+            <field name="code">494</field>
+        </record>
+        <record id="product_category_4941" model="vat.category">
+            <field name="parent_id" ref="product_category_494"/>
+            <field name="name">Мотортой болон моторгүй далбаат завь</field>
+            <field name="code">4941</field>
+        </record>
+                <record id="product_category_49410" model="vat.category">
+	            <field name="parent_id" ref="product_category_4941"/>
+	            <field name="name">Мотортой болон моторгүй далбаат завь</field>
+	            <field name="code">4941000</field>
+	        </record>
+	<record id="product_category_4949" model="vat.category">
+            <field name="parent_id" ref="product_category_494"/>
+            <field name="name">Амралтын болон спортын бусад завь, сэлүүрт болон жижиг завь</field>
+            <field name="code">4949</field>
+        </record>
+                <record id="product_category_49490" model="vat.category">
+	            <field name="parent_id" ref="product_category_4941"/>
+	            <field name="name">Амралтын болон спортын бусад завь, сэлүүрт болон жижиг завь</field>
+	            <field name="code">4949000</field>
+	        </record>
+
+	<record id="product_category_495" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Төмөр замын хөдлөх бүрэлдэхүүн, тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">495</field>
+        </record>
+        <record id="product_category_4951" model="vat.category">
+            <field name="parent_id" ref="product_category_495"/>
+            <field name="name">Төмөр замын зүтгүүр, ачаа болон суудлын бүх төрлийн галт тэрэг, төмөр замаар явдаг бусад төрлийн техник</field>
+            <field name="code">4951</field>
+        </record>
+                <record id="product_category_49511" model="vat.category">
+	            <field name="parent_id" ref="product_category_4951"/>
+	            <field name="name">Цахилгаан зүтгүүр</field>
+	            <field name="code">4951100</field>
+	        </record>
+                <record id="product_category_49512" model="vat.category">
+	            <field name="parent_id" ref="product_category_4951"/>
+	            <field name="name">Дизель зүтгүүр</field>
+	            <field name="code">4951200</field>
+	        </record>
+                <record id="product_category_49519" model="vat.category">
+	            <field name="parent_id" ref="product_category_4951"/>
+	            <field name="name">Бусад төрлийн эх үүсвэрээс тэжээгддэг зүтгүүр</field>
+	            <field name="code">4951900</field>
+	        </record>
+	<record id="product_category_4952" model="vat.category">
+            <field name="parent_id" ref="product_category_495"/>
+            <field name="name">Төмөр зам болон хөнгөн төмөр замын өөрөө явагч галт тэрэг, ачааны галт тэргүүд</field>
+            <field name="code">4952</field>
+        </record>
+                <record id="product_category_49520" model="vat.category">
+	            <field name="parent_id" ref="product_category_4952"/>
+	            <field name="name">Төмөр зам болон хөнгөн төмөр замын өөрөө явагч галт тэрэг, ачааны галт тэргүүд</field>
+	            <field name="code">4952000</field>
+	        </record>
+	<record id="product_category_4953" model="vat.category">
+            <field name="parent_id" ref="product_category_495"/>
+            <field name="name">Бусад хөдлөх бүрэлдэхүүн, төмөр зам эсвэл хөнгөн төмөр замын эд анги болон тоноглол, тээврийн хэрэгсэлд зориулсан дохиолол төвлөрүүлэлт, хориглолын тоног төхөөрөмж</field>
+            <field name="code">4953</field>
+        </record>
+                <record id="product_category_49531" model="vat.category">
+	            <field name="parent_id" ref="product_category_4953"/>
+	            <field name="name">Төмөр замын, хөнгөн төмөр замын зам засвар, үйлчилгээний зориулалттай өөрөө явдаггүй</field>
+	            <field name="code">4953100</field>
+	        </record>
+                <record id="product_category_49532" model="vat.category">
+	            <field name="parent_id" ref="product_category_4953"/>
+	            <field name="name">Төмөр зам, хөнгөн төмөр замын өөрөө явдаггүй суудлын галт тэрэг, тээшний галт тэрэг, шуудангийн үйлчилгээний болон тусгай зориулалтын суудлын галт тэрэг /зам засвар, эсвэл үйлчилгээний зориулалтын хэрэгсэл/</field>
+	            <field name="code">4953200</field>
+	        </record>
+                <record id="product_category_49533" model="vat.category">
+	            <field name="parent_id" ref="product_category_4953"/>
+	            <field name="name">Хөнгөн төмөр замын өөрөө явдаггүй ачааны галт тэрэг</field>
+	            <field name="code">4953300</field>
+	        </record>
+	<record id="product_category_4954" model="vat.category">
+            <field name="parent_id" ref="product_category_495"/>
+            <field name="name">Хөнгөн төмөр замын зүтгүүр, хөдлөх бүрэлдэхүүний эд анги, төмөр зам, хөнгөн төмөр замын эд анги болон тоноглол, тэдгээрийн тоног төхөөрөмж, төмөр зам, хөнгөн төмөр зам, авто зам, усан зам, зогсоолын байгууламж, боомтын тоног төхөөрөмж, аэродром болон тэдгээрт зориулсан механик /цахилгаан-механик/ дохиоллын, аюулг үй ажиллагааны, хөдөлгөөний
+хяналтын тоног төхөөрөмж, хэрэгсэл</field>
+            <field name="code">4954</field>
+        </record>
+                <record id="product_category_49540" model="vat.category">
+	            <field name="parent_id" ref="product_category_4954"/>
+	            <field name="name">Хөнгөн төмөр замын зүтгүүр, хөдлөх бүрэлдэхүүний эд анги, төмөр зам, хөнгөн төмөр замын эд анги болон тоноглол, тэдгээрийн тоног төхөөрөмж, төмөр зам, хөнгөн төмөр зам, авто зам, усан зам, зогсоолын байгууламж, боомтын тоног төхөөрөмж, аэродром болон тэдгээрт зориулсан механик /цахилгаан-механик/ дохиоллын, аюулг үй ажиллагааны, хөдөлгөөний
+хяналтын тоног төхөөрөмж, хэрэгсэл</field>
+	            <field name="code">4954000</field>
+	        </record>
+
+	<record id="product_category_496" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Хийн бөмбөлөг, дирижабль, дельтаплан, планер, дельтаплан, тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">496</field>
+        </record>
+        <record id="product_category_4961" model="vat.category">
+            <field name="parent_id" ref="product_category_495"/>
+            <field name="name">Агаарын бөмбөлөг, агаарт хөвөх, нисэх хөдөлгүүргүй хэрэгсэл, дельтаплан, дирижабль, планер болон бусад хөлөг</field>
+            <field name="code">4961</field>
+        </record>
+                <record id="product_category_49610" model="vat.category">
+	            <field name="parent_id" ref="product_category_4961"/>
+	            <field name="name">Агаарын бөмбөлөг, агаарт хөвөх, нисэх хөдөлгүүргүй хэрэгсэл, дельтаплан, дирижабль, планер болон бусад хөлөг</field>
+	            <field name="code">4961000</field>
+	        </record>
+        <record id="product_category_4962" model="vat.category">
+            <field name="parent_id" ref="product_category_496"/>
+            <field name="name">Нисэх онгоц, нисдэг тэрэг</field>
+            <field name="code">4962</field>
+        </record>
+                <record id="product_category_49621" model="vat.category">
+	            <field name="parent_id" ref="product_category_4962"/>
+	            <field name="name">Нисдэг тэрэг</field>
+	            <field name="code">4962100</field>
+	        </record>
+		<record id="product_category_49622" model="vat.category">
+	            <field name="parent_id" ref="product_category_4962"/>
+	            <field name="name">Цэвэр жин нь 2000 кг-аас ихгүй байх нисэх онгоц болон бусад төрлийн /хөдөлгүүртэй/ агаарын хөлөг</field>
+	            <field name="code">4962200</field>
+	        </record>
+		<record id="product_category_49623" model="vat.category">
+	            <field name="parent_id" ref="product_category_4962"/>
+	            <field name="name">Цэвэр жин нь 2000 кг ба түүнээс дээш байх нисэх онгоц болон бусад төрлийн /хөдөлгүүртэй/ агаарын хөлөг</field>
+	            <field name="code">4962300</field>
+	        </record>
+	<record id="product_category_4963" model="vat.category">
+            <field name="parent_id" ref="product_category_496"/>
+            <field name="name">Сансрын хөлөг, хиймэл дагуул, хөлгийг хөөргөгч хэрэгсэл</field>
+            <field name="code">4963</field>
+        </record>
+                <record id="product_category_49630" model="vat.category">
+	            <field name="parent_id" ref="product_category_4963"/>
+	            <field name="name">Сансрын хөлөг, хиймэл дагуул, хөлгийг хөөргөгч хэрэгсэл</field>
+	            <field name="code">4963000</field>
+	        </record>
+	<record id="product_category_4964" model="vat.category">
+            <field name="parent_id" ref="product_category_496"/>
+            <field name="name">Нисэх онгоц, сансрын хөлгийн сэлбэг, эд анги</field>
+            <field name="code">4964</field>
+        </record>
+                <record id="product_category_49640" model="vat.category">
+	            <field name="parent_id" ref="product_category_4964"/>
+	            <field name="name">Нисэх онгоц, сансрын хөлгийн сэлбэг, эд анги</field>
+	            <field name="code">4964000</field>
+	        </record>
+
+	<record id="product_category_499" model="vat.category">
+            <field name="parent_id" ref="product_category_049"/>
+            <field name="name">Тээврийн бусад хэрэгсэл (хөдөлгүүргүй), тэдгээрийн сэлбэг, эд анги</field>
+            <field name="code">499</field>
+        </record>
+        <record id="product_category_4991" model="vat.category">
+            <field name="parent_id" ref="product_category_499"/>
+            <field name="name">Мотоцикл, гурван дугуйтай мотоцикл</field>
+            <field name="code">4991</field>
+        </record>
+                <record id="product_category_49911" model="vat.category">
+	            <field name="parent_id" ref="product_category_4991"/>
+	            <field name="name">Цилиндрийн багтаамж нь 50 см ихгүй дотоод шаталтын ухрах, давших хөдөлгөөнөөр ажилладаг, бүлүүрэн хөдөлгүүртэй мотоцикл болон туслах хөдөлгүүртэй дугуй</field>
+	            <field name="code">4991100</field>
+		 </record>
+		<record id="product_category_49912" model="vat.category">
+	            <field name="parent_id" ref="product_category_4991"/>
+	            <field name="name">Цилиндрийн багтаамж нь 50 см дээш дотоод шаталтын ухрах, давших хөдөлгөөнөөр ажилладаг, бүлүүрэн хөдөлгүүртэй мотоцикл болон туслах хөдөлгүүртэй дугуй</field>
+	            <field name="code">4991200</field>
+		 </record>
+		<record id="product_category_49913" model="vat.category">
+	            <field name="parent_id" ref="product_category_4991"/>
+	            <field name="name">Дотоод шаталтын бүлүүрэн бус хөдөлгүүр бүхий мотоцикл, мотоциклийн шаахай</field>
+	            <field name="code">4991300</field>
+		 </record>
+	<record id="product_category_4992" model="vat.category">
+            <field name="parent_id" ref="product_category_499"/>
+            <field name="name">Унадаг дугуй, хөгжлийн бэрхшээлтэй хүний тэрэг /тэргэнцэр/</field>
+            <field name="code">4992</field>
+        </record>
+                <record id="product_category_49921" model="vat.category">
+	            <field name="parent_id" ref="product_category_4992"/>
+	            <field name="name">Дугуй, моторгүй бусад төрлийн дугуй</field>
+	            <field name="code">4992100</field>
+		 </record>
+                <record id="product_category_49922" model="vat.category">
+	            <field name="parent_id" ref="product_category_4992"/>
+	            <field name="name">Хөгжлийн бэрхшээлтэй иргэдийн тэрэг /тэргэнцэр/</field>
+	            <field name="code">4992200</field>
+		</record>
+	<record id="product_category_4993" model="vat.category">
+            <field name="parent_id" ref="product_category_499"/>
+            <field name="name">Механик биш тээврийн бусад хэрэгсэл</field>
+            <field name="code">4993</field>
+        </record>
+                <record id="product_category_49930" model="vat.category">
+	            <field name="parent_id" ref="product_category_4993"/>
+	            <field name="name">Механик биш тээврийн бусад хэрэгсэл</field>
+	            <field name="code">49930</field>
+		</record>
+		<record id="product_category_4993010" model="vat.category">
+	            <field name="parent_id" ref="product_category_4993"/>
+	            <field name="name">Троллейбус</field>
+	            <field name="code">4993010</field>
+		 </record>
+		<record id="product_category_4993090" model="vat.category">
+	            <field name="parent_id" ref="product_category_4993"/>
+	            <field name="name">Механик биш тээврийн бусад төрлийн хэрэгсэл</field>
+	            <field name="code">4993090</field>
+		</record>
+	<record id="product_category_4994" model="vat.category">
+            <field name="parent_id" ref="product_category_499"/>
+            <field name="name">4991, 4992-р ангид хамаарах мотоцикл, дугуй, тэргэнцэрийн сэлбэг, эд анги</field>
+            <field name="code">4994</field>
+        </record>
+                <record id="product_category_49941" model="vat.category">
+	            <field name="parent_id" ref="product_category_4994"/>
+	            <field name="name">Мотоцикл, мотоциклийн шаахайн сэлбэг, эд анги</field>
+	            <field name="code">4994100</field>
+		</record>
+		<record id="product_category_49942" model="vat.category">
+	            <field name="parent_id" ref="product_category_4994"/>
+	            <field name="name">Унадаг дугуй, хөгжлийн бэрхшээлтэй хүний тэрэгний сэлбэг, эд анги</field>
+	            <field name="code">4994200</field>
+		</record>
+		
+		<record id="product_category_5" model="vat.category">
+		    <field name="name">БАРИЛГА, БАРИЛГЫН АЖИЛ, ҮЙЛЧИЛГЭЭ</field>
+		    <field name="code">5</field>
+		</record>
+        <record id="product_category_053" model="vat.category">
+            <field name="parent_id" ref="product_category_5"/>
+            <field name="name">БАРИЛГА</field>
+            <field name="code">053</field>
+        </record>
+        <record id="product_category_531" model="vat.category">
+            <field name="parent_id" ref="product_category_053"/>
+            <field name="name">Барилга, байгууламж</field>
+            <field name="code">531</field>
+        </record>
+                <record id="product_category_5311" model="vat.category">
+	            <field name="parent_id" ref="product_category_531"/>
+	            <field name="name">Орон сууцны барилга</field>
+	            <field name="code">5311</field>
+	        </record>
+		        <record id="product_category_53111" model="vat.category">
+			    <field name="parent_id" ref="product_category_5311"/>
+			    <field name="name">Нэг эсвэл хоёр айлын зориулалттай орон сууцны барилга</field>
+			    <field name="code">5311100</field>
+			</record>
+		        <record id="product_category_53112" model="vat.category">
+			    <field name="parent_id" ref="product_category_5311"/>
+			    <field name="name">Нийтийн орон сууцны барилга</field>
+			    <field name="code">5311200</field>
+			</record>
+		<record id="product_category_5312" model="vat.category">
+	            <field name="parent_id" ref="product_category_531"/>
+	            <field name="name">Орон сууцны бус барилга</field>
+	            <field name="code">5312</field>
+	        </record>
+		        <record id="product_category_53111" model="vat.category">
+			    <field name="parent_id" ref="product_category_5312"/>
+			    <field name="name">Нэг эсвэл хоёр айлын зориулалттай орон сууцны барилга</field>
+			    <field name="code">5311100</field>
+			    </record>
+		        <record id="product_category_53112" model="vat.category">
+			    <field name="parent_id" ref="product_category_5312"/>
+			    <field name="name">Нийтийн орон сууцны барилга</field>
+			    <field name="code">5311200</field>
+			</record>
+		<record id="product_category_53121" model="vat.category">
+	            <field name="parent_id" ref="product_category_5312"/>
+	            <field name="name">Үйлдвэрийн барилга</field>
+	            <field name="code">53121</field>
+	        </record>
+		        <record id="product_category_5312100" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Үйлдвэрийн барилга</field>
+			    <field name="code">5312100</field>
+			</record>
+		        <record id="product_category_5312110" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Агуулах</field>
+			    <field name="code">5312110</field>
+			</record>
+		        <record id="product_category_5312120" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Гарааж</field>
+			    <field name="code">5312120</field>
+			</record>
+		        <record id="product_category_5312130" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Хүлэмж</field>
+			    <field name="code">5312130</field>
+			</record>
+		        <record id="product_category_5312140" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Уурын зуухны барилга</field>
+			    <field name="code">5312140</field>
+			</record>
+		        <record id="product_category_5312150" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Дизель станцын барилга</field>
+			    <field name="code">5312150</field>
+			</record>
+		        <record id="product_category_5312190" model="vat.category">
+			    <field name="parent_id" ref="product_category_53121"/>
+			    <field name="name">Бусад төрлийн үйлдвэрлэлийн барилга</field>
+			    <field name="code">5312190</field>
+			</record>
+		<record id="product_category_53122" model="vat.category">
+	            <field name="parent_id" ref="product_category_5312"/>
+	            <field name="name">Худалдаа, үйлчилгээний зориулалттай барилга</field>
+	            <field name="code">53122</field>
+	        </record>
+		        <record id="product_category_5312210" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Албан байгууллагын зориулалттай барилга</field>
+			    <field name="code">5312210</field>
+			</record>
+		        <record id="product_category_5312220" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Зочид буудал, амралтын барилга</field>
+			    <field name="code">5312220</field>
+			</record>
+		        <record id="product_category_5312230" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Амралт/бялдаржуулах төв</field>
+			    <field name="code">5312230</field>
+			</record>
+		        <record id="product_category_5312240" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Зоогийн газар, хоолны болон уушийн газар</field>
+			    <field name="code">5312240</field>
+			</record>
+		        <record id="product_category_5312250" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Дэлгүүр</field>
+			    <field name="code">5312250</field>
+			</record>
+		        <record id="product_category_5312260" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Шатахуун түгээх станц</field>
+			    <field name="code">5312260</field>
+			</record>
+		        <record id="product_category_5312270" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Үсчин, гоо сайхан, халуун ус, саун</field>
+			    <field name="code">5312270</field>
+			</record>
+		        <record id="product_category_5312280" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Үзвэрийн газар /театр, кино театр/</field>
+			    <field name="code">5312280</field>
+			</record>
+		        <record id="product_category_5312290" model="vat.category">
+			    <field name="parent_id" ref="product_category_53122"/>
+			    <field name="name">Бусад төрлийн худалдаа,үйлчилгээний зориулалттай барилга</field>
+			    <field name="code">5312290</field>
+			</record>
+		<record id="product_category_53129" model="vat.category">
+	            <field name="parent_id" ref="product_category_5312"/>
+	            <field name="name">Орон сууцны бус барилга</field>
+	            <field name="code">53129</field>
+	        </record>
+		        <record id="product_category_5312901" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Хурлын болон үзэсгэлэнгийн танхим</field>
+			    <field name="code">5312901</field>
+			</record>
+		        <record id="product_category_5312902" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Спорт цогцолбор, заал</field>
+			    <field name="code">5312902</field>
+			</record>
+		        <record id="product_category_5312903" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Дотуур байр</field>
+			    <field name="code">5312903</field>
+			</record>
+		        <record id="product_category_5312904" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Номын сан, архив</field>
+			    <field name="code">5312904</field>
+			</record>
+		        <record id="product_category_5312250" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Музей, галлерей</field>
+			    <field name="code">5312905</field>
+			</record>
+		        <record id="product_category_5312906" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Шашны зориулалттай барилга (сүм, хийд, оршуулгын зан үйлтэй холбоотой газар)</field>
+			    <field name="code">5312906</field>
+			</record>
+		        <record id="product_category_5312907" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Шуудан, холбооны барилга</field>
+			    <field name="code">5312907</field>
+			</record>
+		        <record id="product_category_5312908" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Гал унтраах газар</field>
+			    <field name="code">5312908</field>
+			</record>
+		        <record id="product_category_5312909" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Бусад төрлийн олон нийтийн үйлчилгээний газар</field>
+			    <field name="code">5312909</field>
+			</record>
+		        <record id="product_category_5312910" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Сургууль</field>
+			    <field name="code">5312910</field>
+			</record>
+		        <record id="product_category_5312911" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Ясли, цэцэрлэг</field>
+			    <field name="code">5312911</field>
+			</record>
+		        <record id="product_category_5312912" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Эмнэлэг, рашаан сувилал</field>
+			    <field name="code">5312912</field>
+			</record>
+		        <record id="product_category_5312913" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Лаборатори, туршилт судалгааны байр</field>
+			    <field name="code">5312913</field>
+			</record>
+		        <record id="product_category_5312914" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Засан хүмүүжүүлэх газар, шорон, хорих газар</field>
+			    <field name="code">5312914</field>
+			</record>
+		        <record id="product_category_5312915" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Бусад төрлийн нийтийн үйлчилгээний барилга (нисэх буудал, төмөр замын буудал, автомашины зогсоол зэрэг)</field>
+			    <field name="code">5312915</field>
+			</record>
+		        <record id="product_category_5312990" model="vat.category">
+			    <field name="parent_id" ref="product_category_53129"/>
+			    <field name="name">Орон сууцны бус бусад төрлийн барилга</field>
+			    <field name="code">5312990</field>
+			</record>
+
+	<record id="product_category_532" model="vat.category">
+            <field name="parent_id" ref="product_category_053"/>
+            <field name="name">Инженерийн байгууламж</field>
+            <field name="code">532</field>
+        </record>
+                <record id="product_category_5321" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Иргэний инженерийн гүүрэн хурдны зам ба гудамжны зам, авто зам, төмөр замын суурь бүтэц, агаарын хөлгийн хөөрч буух зурвас</field>
+	            <field name="code">5321</field>
+	        </record>
+		        <record id="product_category_53211" model="vat.category">
+			    <field name="parent_id" ref="product_category_5321"/>
+			    <field name="name">Хурдны зам, хурдны гүүрэн зам, гудамжны зам, авто зам</field>
+			    <field name="code">5321100</field>
+			</record>
+		        <record id="product_category_53212" model="vat.category">
+			    <field name="parent_id" ref="product_category_5321"/>
+			    <field name="name">Төмөр замын суурь бүтэц</field>
+			    <field name="code">5321200</field>
+			</record>
+		        <record id="product_category_5321300" model="vat.category">
+			    <field name="parent_id" ref="product_category_5321"/>
+			    <field name="name">Агаарын хөлгийн хөөрөх буух зурвас</field>
+			    <field name="code">5321300</field>
+			</record>
+                <record id="product_category_5322" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Гүүр, нүхэн гарц болон газар доорхи зам</field>
+	            <field name="code">5322</field>
+	        </record>
+		        <record id="product_category_53221" model="vat.category">
+			    <field name="parent_id" ref="product_category_5322"/>
+			    <field name="name">Гүүр, гүүрэн хурдны зам</field>
+			    <field name="code">5322100</field>
+			</record>
+		        <record id="product_category_53222" model="vat.category">
+			    <field name="parent_id" ref="product_category_5322"/>
+			    <field name="name">Нүхэн гарц ба газар доорхи зам, метроны зам</field>
+			    <field name="code">5322200</field>
+			</record>
+		<record id="product_category_5323" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Боомт, усан онгоцны зогсоол, далан, усжуулалтын болон бусад төрлийн байгууламж</field>
+	            <field name="code">5323</field>
+	        </record>
+		        <record id="product_category_53231" model="vat.category">
+			    <field name="parent_id" ref="product_category_5323"/>
+			    <field name="name">Усан хангамжийн зориулалтаар байгуулсан ус дамжуулах шугам (хоолой орохгүй)</field>
+			    <field name="code">5323100</field>
+			</record>
+		        <record id="product_category_53232" model="vat.category">
+			    <field name="parent_id" ref="product_category_5323"/>
+			    <field name="name">Усан онгоцны зогсоол, боомт болон бусад төрлийн сувгийн байгууламж</field>
+			    <field name="code">5323200</field>
+			</record>
+		        <record id="product_category_53233" model="vat.category">
+			    <field name="parent_id" ref="product_category_5323"/>
+			    <field name="name">Далан</field>
+			    <field name="code">5323300</field>
+			</record>
+		        <record id="product_category_53234" model="vat.category">
+			    <field name="parent_id" ref="product_category_5323"/>
+			    <field name="name">Усжуулалтын болон үерийн хамгаалалтын байгууламж</field>
+			    <field name="code">5323400</field>
+			</record>
+		<record id="product_category_5324" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Алсын зайн шугам хоолой, холбоо, эрчим хүчний шугам (кабель)</field>
+	            <field name="code">5324</field>
+	        </record>
+		        <record id="product_category_53241" model="vat.category">
+			    <field name="parent_id" ref="product_category_5324"/>
+			    <field name="name">Алсын зайн бусад дамжуулах хоолой</field>
+			    <field name="code">5324100</field>
+			</record>
+		        <record id="product_category_53242" model="vat.category">
+			    <field name="parent_id" ref="product_category_5324"/>
+			    <field name="name">Алсын зайн холбоо, цахилгааны шугам (кабель)</field>
+			    <field name="code">5324200</field>
+			</record>
+		<record id="product_category_5325" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Хот доторх дамжуулах хоолой, кабель болон холбогдох ажил</field>
+	            <field name="code">5325</field>
+	        </record>
+		        <record id="product_category_53251" model="vat.category">
+			    <field name="parent_id" ref="product_category_5325"/>
+			    <field name="name">Хот доторх дамжуулах хоолой</field>
+			    <field name="code">5325100</field>
+			</record>
+		        <record id="product_category_53252" model="vat.category">
+			    <field name="parent_id" ref="product_category_5325"/>
+			    <field name="name">Хот доторх шугам кабель тавих ажил, үйлчилгээ</field>
+			    <field name="code">5325200</field>
+			</record>
+			<record id="product_category_53253" model="vat.category">
+			    <field name="parent_id" ref="product_category_5325"/>
+			    <field name="name">Бохир усны байгууламж</field>
+			    <field name="code">53253</field>
+			</record>
+				<record id="product_category_5325310" model="vat.category">
+				    <field name="parent_id" ref="product_category_53253"/>
+				    <field name="name">Бохир ус зайлуулах шугам болон цэвэрлэх байгууламж</field>
+				    <field name="code">5325310</field>
+				</record>
+				<record id="product_category_5325320" model="vat.category">
+				    <field name="parent_id" ref="product_category_53253"/>
+				    <field name="name">Худаг, усан сан</field>
+				    <field name="code">5325320</field>
+				</record>
+				<record id="product_category_5325330" model="vat.category">
+				    <field name="parent_id" ref="product_category_53253"/>
+				    <field name="name">Дулааны шугам хоолой</field>
+				    <field name="code">5325330</field>
+				</record>
+				<record id="product_category_5325340" model="vat.category">
+				    <field name="parent_id" ref="product_category_53253"/>
+				    <field name="name">Цэвэр усны шугам хоолой</field>
+				    <field name="code">5325340</field>
+				</record>
+				<record id="product_category_5325390" model="vat.category">
+				    <field name="parent_id" ref="product_category_53253"/>
+				    <field name="name">Бусад төрлийн шугам хоолой</field>
+				    <field name="code">5325390</field>
+				</record>
+		<record id="product_category_5326" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Уул уурхай, үйлдвэрийн барилга, байгууламж</field>
+	            <field name="code">5326</field>
+	        </record>
+		        <record id="product_category_53261" model="vat.category">
+			    <field name="parent_id" ref="product_category_5326"/>
+			    <field name="name">Уурхайн байгууламж</field>
+			    <field name="code">5326100</field>
+			</record>
+		        <record id="product_category_53262" model="vat.category">
+			    <field name="parent_id" ref="product_category_5326"/>
+			    <field name="name">Цахилгаан станцын барилга, байгууламж</field>
+			    <field name="code">5326200</field>
+			</record>
+		        <record id="product_category_53269" model="vat.category">
+			    <field name="parent_id" ref="product_category_5326"/>
+			    <field name="name">Бусад боловсруулах төрлийн үйлдвэрлэлийн барилга, байгууламж</field>
+			    <field name="code">53269</field>
+			</record>
+				<record id="product_category_5326910" model="vat.category">
+				    <field name="parent_id" ref="product_category_53269"/>
+				    <field name="name">Химийн үйлдвэрлэлийн барилга, байгууламж</field>
+				    <field name="code">5326910</field>
+				</record>
+		<record id="product_category_5327" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Спорт, амралт чөлөөт цагийн зориулалттай талбай, барилга байгууламж</field>
+	            <field name="code">5327</field>
+	        </record>
+		        <record id="product_category_53270" model="vat.category">
+			    <field name="parent_id" ref="product_category_5327"/>
+			    <field name="name">Спорт, амралт чөлөөт цагийн зориулалттай талбай, барилга байгууламж</field>
+			    <field name="code">5327000</field>
+			</record>
+		<record id="product_category_5329" model="vat.category">
+	            <field name="parent_id" ref="product_category_532"/>
+	            <field name="name">Инженерийн бусад байгууламж</field>
+	            <field name="code">5329</field>
+	        </record>
+		        <record id="product_category_53290" model="vat.category">
+			    <field name="parent_id" ref="product_category_5329"/>
+			    <field name="name">Инженерийн бусад байгууламж</field>
+			    <field name="code">53290</field>
+			</record>
+				<record id="product_category_5329010" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Ногоон байгууламж</field>
+				    <field name="code">5329010</field>
+				</record>
+				<record id="product_category_5329020" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Явган хүний зам</field>
+				    <field name="code">5329020</field>
+				</record>
+				<record id="product_category_5329030" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Зогсоол, тавцан</field>
+				    <field name="code">5329030</field>
+				</record>
+				<record id="product_category_5329040" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Бие засах газар</field>
+				    <field name="code">5329040</field>
+				</record>
+				<record id="product_category_5329050" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Хашаа, саравч, сүүдрэвч</field>
+				    <field name="code">5329050</field>
+				</record>
+				<record id="product_category_5329060" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Малын хашаа, саравч, сүүдрэвч</field>
+				    <field name="code">5329060</field>
+				</record>
+				<record id="product_category_5329090" model="vat.category">
+				    <field name="parent_id" ref="product_category_53290"/>
+				    <field name="name">Бусад төрлийн байгууламж</field>
+				    <field name="code">5329090</field>
+				</record>
+
+
+
+
+
+	</data>
+</odoo>

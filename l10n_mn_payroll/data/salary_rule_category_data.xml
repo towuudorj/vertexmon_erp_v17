@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+			
+			<record id="self_ndsh_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ЭМНДШ ажилтанаас 11.3</field>
+	            <field name="code">SI11</field>
+	        </record>
+	        
+	        <record id="comp_ndsh_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ЭМНДШ байгууллагаас 12.5</field>
+	            <field name="code">NDSH</field>
+	        </record>
+	        
+	        <record id="work_day_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ажиллах ёстой хоног</field>
+	            <field name="code">MWD</field>
+	        </record>
+	        
+	        <record id="working_day_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ажилласан хоног</field>
+	            <field name="code">WDD</field>
+	        </record>
+	        
+	        <record id="work_time_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ажиллах ёстой цаг</field>
+	            <field name="code">MWT</field>
+	        </record>
+	        
+	        <record id="working_time_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ажилласан цаг</field>
+	            <field name="code">WDT</field>
+	        </record>
+	        
+	        
+	        <record id="compute_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Бодогдсон цалин</field>
+	            <field name="code">CS</field>
+	        </record>
+	        
+	        
+	        <record id="bonus_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ваучер</field>
+	            <field name="code">KPI</field>
+	        </record>
+	        
+	        
+	        <record id="food_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Хоолны мөнгө</field>
+	            <field name="code">FDD</field>
+	        </record>
+	        
+	        
+	        <record id="total_hhoat_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Нийт ХХОАТ</field>
+	            <field name="code">TPIT11</field>
+	        </record>
+	        
+	        <record id="phone_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Утасны суутгал</field>
+	            <field name="code">PH</field>
+	        </record>
+	        
+	        <record id="pay_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Ажилтнаас авах авлага</field>
+	            <field name="code">PAY</field>
+	        </record>
+	        
+	        <record id="te_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Нийт суутгал</field>
+	            <field name="code">TE</field>
+	        </record>
+	        
+	        
+	        <record id="hhoat_ll_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ХХОАТ тооцох дүн</field>
+	            <field name="code">LL</field>
+	        </record>
+
+			<record id="hhoat_lla_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ХХОАТ</field>
+	            <field name="code">LLA</field>
+	        </record>
+
+
+			<record id="emd_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ЭМД</field>
+	            <field name="code">EMD</field>
+	        </record>
+
+			<record id="ai_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Гэнэтийн ослын даатгал</field>
+	            <field name="code">AI</field>
+	        </record>
+
+			<record id="hhoat_llp_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ХХОАТ хөнгөлөлтийн дүн</field>
+	            <field name="code">LLP</field>
+	        </record>
+
+			<record id="hhoat_lll_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ХХОАТ дүн</field>
+	            <field name="code">LLL</field>
+	        </record>
+
+			<record id="hhoat_llt_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">ХХОАТ-с үлдсэн дүн</field>
+	            <field name="code">LLT</field>
+	        </record>
+	        
+	        <record id="fault_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Зөрчлийн суутгал</field>
+	            <field name="code">FAULT</field>
+	        </record>
+	        
+	         <record id="aa_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Удирдлагын нэмэгдэл</field>
+	            <field name="code">AA</field>
+	        </record>
+
+			<record id="aba_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Хэвийн бус нөхцөлийн нэмэгдэл</field>
+	            <field name="code">ABA</field>
+	        </record>
+
+			<record id="lya_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Удаан жилийн нэмэгдэл</field>
+	            <field name="code">LYA</field>
+	        </record>
+	        
+	        <record id="total_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Нийт тооцсон цалин</field>
+	            <field name="code">TCS</field>
+	        </record>
+	        
+	        <record id="adv_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Урьдчилгаа цалин</field>
+	            <field name="code">ADV</field>
+	        </record>
+	        
+	        <record id="rs_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Амралтын мөнгө</field>
+	            <field name="code">RS</field>
+	        </record>
+			
+			<record id="give_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Сарын сүүл цалин</field>
+	            <field name="code">GIVE</field>
+	        </record>
+			
+			<record id="bs_salary_salary_category" model="hr.salary.rule.category">
+	            <field name="name">Гэрээний цалин</field>
+	            <field name="code">BS</field>
+	        </record>
+	</data>
+</odoo>

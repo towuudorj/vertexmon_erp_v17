@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		 <record id="view_account_asset_capitalization_new_form" model="ir.ui.view">
+           <field name="name">view.account.asset.capitalization.form</field>
+           <field name="model">account.asset.capitalization</field>
+           <field name="arch" type="xml">
+              <form string="Capitalization">
+                <group col="4" colspan="4">
+                    <group col="2" colspan="2">
+                        <field name="old_amount"/>
+                        <field name="capital_amount"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="date" />
+                    </group>
+                  </group>
+                  <separator string="Notes" colspan="4"/>
+                  <field name="note" nolabel="1" colspan="4"/>
+                  <footer>
+                    <button special="cancel" string="Close" type="object" />
+                    <button name="button_capital_asset" string="Capitalization" type="object" />
+                  </footer>
+              </form>
+            </field>
+        </record>
+       
+      <record id="action_account_asset_capitalization" model="ir.actions.act_window">
+            <field name="name">Asset capital</field>
+            <field name="res_model">account.asset.capitalization</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_asset_capitalization_new_form"/>
+            <field name="target">new</field>
+        </record>
+		
+	</data>
+</odoo>

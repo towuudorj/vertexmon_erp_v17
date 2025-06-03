@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="employee_request_register_sequence" model="ir.sequence">
+            <field name="name">employee.request.register</field>
+            <field name="code">employee.request.register</field>
+            <field name="prefix">ER/</field>
+            <field name="padding">9</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="job_appointment_register_sequence" model="ir.sequence">
+                <field name="name">job.appointment.register</field>
+                <field name="code">job.appointment.register</field>
+                <field name="prefix">VO/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="hr_routing_slip_sequence" model="ir.sequence">
+                <field name="name">routing.slip</field>
+                <field name="code">routing.slip</field>
+                <field name="prefix">RS/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="hr_employee_transfer_sequence" model="ir.sequence">
+                <field name="name">employee.transfer</field>
+                <field name="code">employee.transfer</field>
+                <field name="prefix">ET/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="hr_work_handover_act_sequence" model="ir.sequence">
+                <field name="name">work.handover.act</field>
+                <field name="code">work.handover.act</field>
+                <field name="prefix">WHA/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="hr_decree_sequence" model="ir.sequence">
+                <field name="name">hr.decree</field>
+                <field name="code">hr.decree</field>
+                <field name="prefix">HD/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+
+
+        <record id="other_contracts_sequence" model="ir.sequence">
+                <field name="name">other.contracts</field>
+                <field name="code">other.contracts</field>
+                <field name="prefix">OT/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
+        
+        
+
+    </data>
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+		<menuitem 
+				id="account_mn_reports" 
+				name="MN Report" 
+				parent="account.menu_finance_reports" 
+				sequence="50" />
+		<menuitem 
+				id="account_general_book_report_two_menu" 
+				name="General book 2" 
+				parent="account_mn_reports" 
+				action="action_general_book_report_two_view" 
+				sequence="2" />
+		<menuitem 
+				id="account_general_book_report_menu" 
+				name="General book report" 
+				parent="account_mn_reports" 
+				action="action_general_book_report_view" 
+				sequence="2" />
+		<menuitem 
+				id="account_general_journal_report_two_menu" 
+				name="General journal 2" 
+				parent="account_mn_reports" 
+				action="action_general_journal_report_two_view" 
+				sequence="2" />
+		<menuitem 
+				id="account_general_journal_report_menu" 
+				name="General journal report" 
+				parent="account_mn_reports" 
+				action="action_general_journal_report_view" 
+				sequence="2" />
+		<menuitem 
+				id="action_account_move_analysis_report_menu" 
+				name="Account move balance report" 
+				parent="account_mn_reports" 
+				action="action_account_move_analysis_report_view" 
+				sequence="2" />
+		
+		<menuitem
+				action="action_cash_move_report_view"
+				id="menu_cash_move_report_sub_view"
+				parent="account_mn_reports"
+				name="Cash move report"
+				sequence="1" />
+			
+		<menuitem
+				action="action_account_partner_ledger_excel_report"
+				id="action_account_partner_ledger_report_menu"
+				parent="account_mn_reports"
+				name="Partner ledger report"
+				sequence="1" />
+	
+		<menuitem
+				name="Income report type"
+				id="menu_income_type"
+				parent="account.account_account_menu"
+				action="action_account_income_type_tree_view" />
+				
+		<menuitem
+				name="Balance report type"
+				id="menu_balance_type"
+				parent="account.account_account_menu"
+				action="action_account_balance_type_tree_view" />
+		
+		<menuitem 
+				id="equity_report_account_menu" 
+				name="Equity report configure" 
+				parent="account.account_account_menu" 
+				action="action_equity_report_config_view" />
+			
+
+		<menuitem 
+				id="mongolian_account_reports" 
+				name="MN Account Reports" 
+				parent="account.menu_finance_reports" 
+				sequence="60" />
+		
+		
+		
+		<menuitem 
+				id="mn_account_balance_sheet_report" 
+				name="Balance sheet report" 
+				parent="mongolian_account_reports"
+				action="action_balance_sheet_excel"
+				sequence="1" />
+		
+		<menuitem 
+				id="mn_account_statement_cash_flow_report" 
+				name="Statement cash flow report" 
+				parent="mongolian_account_reports"
+				action="action_statement_cashflow_report"
+				sequence="2" />
+		
+		<menuitem 
+				id="mn_account_profit_report" 
+				name="Profit report" 
+				parent="mongolian_account_reports"
+				action="action_profit_excel_report"
+				sequence="3" />
+		
+		
+			
+		<menuitem 
+				id="mn_account_equity_changes_report" 
+				name="Equity changes report" 
+				parent="mongolian_account_reports"
+				action="action_equity_changes"
+				sequence="4" />
+
+			
+
+                
+</odoo>

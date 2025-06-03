@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	
+	<data>
+		
+			<record id="payroll_gww_excel_report_view" model="ir.ui.view">
+            <field name="name">Hr payroll report</field>
+            <field name="model">payroll.gww.excel.report</field>
+            <field name="arch" type="xml">
+               <form string="Hr payroll excel report">
+               		<group>
+               			<field name="company_id"/>
+               			<field name="department_id"/>
+               			<field name="start_date"/>
+               			<field name="end_date"/>
+               		</group>
+                     <footer>
+                       <button name="export_report" string="Export" type="object" class="oe_highlight" />
+                       or
+                       <button string="Cancel" class="oe_link" special="cancel" />
+                     </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_payroll_gww_excel_report" model="ir.actions.act_window">
+            <field name="name">Hr payroll report</field>
+            <field name="res_model">payroll.gww.excel.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="payroll_gww_excel_report_view"/>
+            <field name="target">new</field>
+        </record>
+		
+		
+	</data>
+</odoo>

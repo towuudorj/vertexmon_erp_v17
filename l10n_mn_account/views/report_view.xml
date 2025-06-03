@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record id="account_invoices_mn" model="ir.actions.report">
+            <field name="name">Нэхэмжлэх</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_account.report_mn_account_invoice</field>
+            <field name="report_file">l10n_mn_account.account_invoice_report</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+        
+        <record id="account_invoice_percentage_mn" model="ir.actions.report">
+            <field name="name">Нэхэмжлэх /Хувь/</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_account.report_mn_invoice_percentage</field>
+            <field name="report_file">l10n_mn_account.invoice_percentage_report</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="account_invoice_payment_consensus_mn" model="ir.actions.report">
+            <field name="name">Тооцоо нийлсэн баталгаа</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_account.report_mn_payment_consensus</field>
+            <field name="report_file">l10n_mn_account.payment_consensus_report</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_res_partner"/>
+            <field name="binding_type">report</field>
+        </record>
+
+	</data>
+</odoo>

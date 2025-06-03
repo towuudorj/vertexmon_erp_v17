@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   
+    <!-- Added edit project view -->
+    <record id="project_task_inherit_mn" model="ir.ui.view">
+        <field name="name">project.task.view.form.inherit.mn</field>
+        <field name="model">project.task</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="before">
+                <header>
+                    <button name="action_task_approve" invisible="state != '01_in_progress'" string="Approve" 
+                        type="object" class="oe_highlight" data-hotkey="g" groups="l10n_mn_projet.group_task_approve"/>
+                </header>
+            </xpath>
+            <xpath expr="//span[@id='start_rating_buttons']" position="before">
+                <button class="oe_stat_button"
+                    type="object" 
+                    name="button_open_picking" 
+                    icon="fa-truck"
+                    >
+                    <field string="Stock Picking" name="picking_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='description_page']"
+                   position="inside">
+                <field
+                    name="products_line"
+                    widget="section_and_note_one2many"
+                    mode="tree"
+                    >
+                    <tree
+                            string="Project Product Lines"
+                            editable="bottom"
+                            limit="200"
+                        >
+                        <field name="sequence" widget="handle" />
+                        <field name="product_id"/>
+                        <field name="name" widget="section_and_note_text" optional="show"/>
+                        <field name="product_qty"/>
+                        <field name="qty_available"/>
+                        <field name="qty_delivered"/>
+                        <field name="price_unit"/>
+                        <field name="price_total"/>
+                    </tree>
+                </field>
+                <group class="oe_subtotal_footer oe_right">
+            
+                <!-- <field name="total_amount" force_save="1"/> -->
+
+            </group>
+
+            </xpath>        
+        </field>
+    </record>
+</odoo>

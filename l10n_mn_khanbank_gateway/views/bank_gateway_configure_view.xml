@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+		
+            
+            <record id="bank_gateway_configure_tree_view" model="ir.ui.view" >
+                <field name="name">bank.gateway.configure.tree</field>
+                <field name="model">bank.gateway.configure</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                    	<field name="company_id"/>
+                        <field name="name"/>
+                        <field name="register_date"/>
+                        <field name="register_user_id"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="bank_gateway_configure_form_view" model="ir.ui.view" >
+                <field name="name">bank.gateway.configure.form</field>
+                <field name="model">bank.gateway.configure</field>
+                <field name="arch" type="xml">
+                	 <form string="form_string">
+                	<header>
+                		<button name="get_token" string="Get khanbank token" type="object"/>
+                		<button name="get_account_list" string="Get Account" type="object"/>
+                	</header>
+                    	<group col="4" colspan="2">
+                        	<field name="name"/>
+                        	<field name="company_id"/>
+                        	<field name="register_date"/>
+                        	<field name="register_user_id"/>
+                        	<field name="bank_type"/>
+                        	<field name="user_name" />
+                        	<field name="password" password="True"  />
+                        	<field name="login_name" attrs="{'invisible':[('bank_type','!=','khanbank')]}"/>
+                        	<field name="transaction_password" password="True" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="auth_token_url" />
+                        	<field name="token_session_time" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="token_code" />
+                        </group>
+                        <group>
+                        	<field name="request_url" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="currency_data_seq" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="cert_file_url" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="cert_password" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="bank_data_seq" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="balance_check_seq" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="tran_download_seq" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="role_id" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="password_type_one" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="password_type_two" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="language" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        	<field name="anybic" attrs="{'invisible':[('bank_type','!=','tdb_bank')],'required':[('bank_type','=','tdb_bank')]}"/>
+                        </group>
+                        <group>
+                        	<field name="account_list_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_balance_check_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_info_check_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_statement_check_url" />
+                        	<field name="account_name_check_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_local_transfer_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_interbank_transfer_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_salary_transfer_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_internationalbank_transfer_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        	<field name="account_rate_check_url" attrs="{'invisible':[('bank_type','!=','khanbank')],'required':[('bank_type','=','khanbank')]}"/>
+                        </group>
+                        <notebook>
+                        	<page string="Account list">
+                        		<field name="account_list_line_id">
+                        			<tree editable="bottom">
+                        				<field name="company_id"/>
+                        				<field name="open_date"/>
+                        				<field name="name"/>
+                        				<field name="number"/>
+                        				<field name="currency"/>
+                        				<field name="type"/>   
+                        				<field name="in_method"/>
+                        				<field name="in_rate"/>
+                        				<field name="customer_name"/> 
+                        				<field name="home_phone"/>
+                        				<field name="business_phone"/>   
+                        				<field name="last_maintence_date"/>                 				
+                        				<field name="balance"/>
+                        				<field name="hold_balance"/>
+                        				<field name="avalaible_balance"/>
+                        				<field name="status"/>
+                        				<button name="get_account_info" string="Get info" type="object"/>
+                        			</tree>
+                        		</field>
+                        	</page>
+                        	
+                        </notebook>
+                        <group>
+                        	<field name="desc"/>
+                        </group>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_bank_gateway_configure_tree_view">
+                <field name="name">Bank gateway configure</field>
+                <field name="res_model">bank.gateway.configure</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="bank_gateway_configure_tree_view"/>
+            </record>
+</odoo>

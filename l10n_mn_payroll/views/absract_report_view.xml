@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_excel_output_mn_payroll_view" model="ir.ui.view">
+            <field name="name">action.excel.output.view</field>
+            <field name="model">report.excel.output</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <separator string="Processing done" colspan="4"/>
+                        <field name="data" readonly="1" colspan="4" filename="name"/>
+                    <footer>
+                    	<button string="Cancel" class="oe_link" special="cancel" />
+               		</footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

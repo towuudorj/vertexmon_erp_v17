@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="view_res_partner_mn_inherit_purchase" model="ir.ui.view">
+            <field name="name">res.partner.purchase.form.mn</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="purchase.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="property_purchase_currency_id"]' position="replace">
+                        <field name="partner_group" invisible="1" />
+                        <field name="property_purchase_currency_id"  required="partner_group == '006'" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+ 
+        <record id="view_res_partner_mn_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.mn</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="vat"]' position="before">
+                        <field name="group_company_id" />
+                        <field name="code" />
+                        <field name="partner_group" />
+                    </xpath>
+
+                    <xpath expr='//field[@name="currency_id"]' position="before">
+                        <field name="partner_type" />
+                    </xpath>
+                     
+                </data>
+            </field>
+        </record>
+
+
+
+
+
+        
+
+        
+    </data>
+</odoo>

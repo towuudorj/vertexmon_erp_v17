@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        
+        <template id="asset_move_report">   
+   	 	    <t t-call="web.html_container">
+        	 <t t-foreach="docs" t-as="o">
+        	    <t t-call="web.external_layout">
+                    <div class="page">
+                        <table style="width:100%">
+                            <tr>
+                                <td width="70%" style="vertical-align:top;">
+                                    <h4>ҮНДСЭН ХӨРӨНГӨ ХҮЛЭЭН АВАХ, ШИЛЖҮҮЛЭХ БАРИМТ</h4>
+                                    <h4>№ <span t-field="o.statement_id.name"/>/<span t-field="o.sequence"/></h4>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <p class="small">НХМаягт МХ-1</p>
+                                    <p class="small">Сангийн сайдын 2017 оны дугаар сарын өдрийн тоот тушаалын хавсралт</p>
+                                </td>
+                            </tr>
+                        </table>
+                                
+                        <table class="table table-l10n_mn-header">
+			                <tr>
+                                <td><span>Байгууллагын нэр :</span> <b t-field="o.company_id.name"/></td>
+                            </tr>
+			                <tr>
+                                <td><span>Огноо :</span> <span t-field="o.date"/></td>
+                            </tr>
+			            </table>
+			            <table class="table table-l10n_mn-grid">
+			                <tr>
+                                <th>1.Цех, тасаг, хэсгийн нэр: </th>
+                                <th>2.Хөрөнгийн нэр, төрөл, код</th>
+                                <th>3.Бүртгэлийн дугаар </th>
+                                <th>4.Анхны өртөг (худалдан авсан үнэ) </th>
+                            </tr>
+			                <tr>
+                                <td><span t-field="o.department_id.name"/></td>
+                                <td><span t-field="o.asset_id.name"/></td>
+                                <td><span t-field="o.asset_id.code"/></td>
+                                <td><span t-field="o.asset_id.value"/></td>
+                            </tr>
+                            <tr>
+                                <th>5. өдрийн тоот тушаал (гэрээ/шийдвэр)-ийг үндэслэн  аас ашиглалтанд хүлээн авах (хүлээлгэн өгөх)   үзлэг шалгалт хийв.</th>
+                            </tr>
+                            <tr>
+                                <th>6. Хүлээн авах (хүлээлгэн өгөх) үед үндсэн хөрөнгө     байв.</th>
+                            </tr>
+                            <tr>
+                                <th>7. Элэгдлийн дүн        төгрөг, үлдэгдэл өртөг       төгрөг байв.</th>
+                            </tr>
+
+                        </table>
+                        <table class="table table-l10n_mn-header">
+                            <tr>
+                                <td><span>Тайлбар: </span> <span t-field="o.note"/></td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                </t>
+            </t>
+         </t>
+     
+	</template>
+
+
+
+    </data>
+</odoo>

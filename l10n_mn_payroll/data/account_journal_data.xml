@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="mn_salary_account_journal" model="account.journal">
+            <field name="name">Цалингийн журнал</field>
+            <field name="code">SLR</field>
+            <field name="type">salary</field>
+            <field name="sequence">12</field>
+        </record>
+
+    </data>
+</odoo>

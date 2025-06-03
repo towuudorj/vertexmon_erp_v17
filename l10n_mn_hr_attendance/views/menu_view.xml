@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_kiosk_no_user_mode"><!--Hr kiosk menu-->
+            <field name="parent_id" ref="base.menu_custom"/><!--settings hide-->
+        </record>
+        
+
+    </data>
+</odoo>

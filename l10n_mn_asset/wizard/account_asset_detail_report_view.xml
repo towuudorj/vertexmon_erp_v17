@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+    	<record id="account_asset_detail_report_view" model="ir.ui.view">
+			<field name="name">account.asset.detail.report</field>
+			<field name="model">account.asset.detail.report</field>
+			<field name="arch" type="xml">
+				<form string="Account asset detail" >
+					<group>
+						<field name="company_id" />
+						<field name="fiscalyear_id"/>
+						<field name="start_date"/>
+						<field name="end_date"/>
+						<field name="category_id"/>
+						<field name="owner_id"/>
+						<field name="is_balance"/>
+					</group>
+					<footer>
+						<button name="export_report" string="Export" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Цуцлах" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_account_asset_detail_report" model="ir.actions.act_window">
+			<field name="name">Account asset detail report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.asset.detail.report</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_asset_detail_report_view" />
+			<field name="target">new</field>
+		</record>
+
+    
+    </data>
+</odoo>

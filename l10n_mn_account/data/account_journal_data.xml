@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		
+		<record id="mn_open_account_journal" model="account.journal">
+            <field name="name">Нээлтийн гүйлгээний журнал</field>
+            <field name="code">OPEN</field>
+            <field name="type">opening</field>
+            <field name="sequence">11</field>
+        </record>
+		
+		
+	</data>
+</odoo>

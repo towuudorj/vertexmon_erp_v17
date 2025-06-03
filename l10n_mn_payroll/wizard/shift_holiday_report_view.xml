@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record id="view_shift_holiday_report" model="ir.ui.view">
+	        <field name="name">shift.holiday.report.form</field>
+	        <field name="model">shift.holiday.report</field>
+	        <field name="arch" type="xml">
+	             <form string="Shift holiday">
+	                <footer>
+	                    <button name="export_report" string="Тайлан татах" type="object"
+	                        class="btn-primary"/>
+	                    <button string="Цуцлах" class="btn-default" special="cancel"/>
+	                </footer>
+	            </form>
+	        </field>
+	    </record>
+	
+		    <!-- Action of Merge Sale Order -->
+		    <record id="action_shift_holiday_report" model="ir.actions.act_window">
+		        <field name="name">Shift holiday report</field>
+		        <field name="type">ir.actions.act_window</field>
+		        <field name="res_model">shift.holiday.report</field>
+		        <field name="view_mode">form</field>
+		        <field name="view_id" ref="view_shift_holiday_report"/>
+		        <field name="target">new</field>
+		    </record>
+		
+		
+	</data>
+</odoo>

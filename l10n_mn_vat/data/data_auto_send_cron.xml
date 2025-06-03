@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+ 			
+ 			<record id="ir_cron_auto_vat_pos_data_send" model="ir.cron">
+		        <field name="name">VAT DATA AUTOMATIC 24 HOURS SEND</field>
+		        <field name="interval_number">1</field>
+		        <field name="interval_type">hours</field>
+		        <field name="numbercall">-1</field>
+		        <field name="nextcall" eval="(DateTime.now().replace(hour=22, minute=0) + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')" />
+		        <field name="doall" eval="False"/>
+		        <field name="model_id" ref="model_vat_configure"/>
+		        <field name="code">model._auto_send_vat()</field>
+		        <field name="state">code</field>
+		    </record>
+ 			
+ 			   
+    </data>
+</odoo>

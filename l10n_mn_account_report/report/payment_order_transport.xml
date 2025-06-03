@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="payment_order_transport_report_datas">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <table style="width: 100%; font-size: 11px; border: transparent 1px solid; ">
+                    <tr>
+                        <td colspan="3"></td>
+                        <td style="text-align: right; padding:3px;">Маягт N: TC-7</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td style="text-align: right; padding:3px;">Санхүү эдийн засгийн сайдын 2002 оны</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding:3px; padding-left:5%;">Төлбөрийн даалгавар /Тээвэр/ </td>
+                        <td style="text-align: center; padding:3px; "></td>
+                        <td colspan="2" style="text-align: right; padding:3px;">06 дугаар сарын 28 ны өдрийн 182 тоот</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right; padding:3px; padding-left:5%;"><span t-field="o.date"/></td>
+                        <td colspan="2" style="text-align: right; padding:3px;">тушаалаар батлав.</td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; margin-top: 20px; font-size: 11px; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding:3px;">Төлөгч</td>
+                        <td style="padding:3px; width: 40%;" colspan="2">ДАНС</td>
+                        <td style="padding:3px; text-align: center;">ДҮН</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;">Код</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.company_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;">
+                            <t t-if="o.amount &gt;= 0">Дебет</t>
+                            <t t-else="">Кредит</t>
+                        </td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center; vertical-align: middle;" rowspan="4">
+                            <t t-if ="o.amount &gt;= 0">
+                                <span t-esc="o.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </t>
+                            <t t-else="">
+                                <span t-esc="o.amount*(-1)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;">Төлөгчийн банк</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.journal_id.bank_account_id.bank_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.journal_id.bank_account_id.acc_number"/></td>
+                    
+                    </tr>
+                    
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;">Код</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;">
+                            <t t-if="o.amount &gt;= 0">Кредит</t>
+                            <t t-else="">Дебет</t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;">Хүлээн авагч:</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_bank_id.bank_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.account_number"/></td>
+                    
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="3" style="padding:3px;">Мөнгөн дүн (үсгээр) <span t-field="o.amount_text"/></td>
+                        <td style="padding:3px; text-align: right;">
+                            .... хоногийн ..... хувийн ..... торгууль бүгд ......... төг ......... мөн
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;" colspan="3">Барааг хүлээн авсан буюу ажил үйлчилгээг гүйцэтгэсэн огноо</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;" colspan="2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;" colspan="3"><span t-field="o.date"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;" colspan="2">
+                            <t t-if ="o.amount &gt;= 0">
+                                <span t-esc="o.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </t>
+                            <t t-else="">
+                                <span t-esc="o.amount*(-1)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding:3px;" >Төлбөрийн зориулалт (Барааны болон ажил үйлчилгээний нэр, дагалдах баримтын дугаар)</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;">Гүйлгээний утга</td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;" ><span t-field="o.payment_ref"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;">Төлбөрийн зориулалт</td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; margin-top: 20px; font-size: 11px; border: transparent 1px solid; ">
+                    <tr>
+                        <td style="padding:3px;">Захирал:........................................../ Д.Мэндсайхан /</td>
+                        <td style="padding:3px;">Банкинд гүйлгээ хийсэн .... оны ... сарын ... өдөр</td>
+                        <td style="padding:3px;">Төлөх хугацаа</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" style="padding:3px;">Тамга</td>
+                        <td style="padding:3px;">СЗА Захирал:......................................... / С.Мөнхтуяа /</td>
+                        <td style="padding:3px;">Төлбөрийн ээлж</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:3px;"></td>
+                        <td style="padding:3px;">Тэмдэг, гарын үсэг</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:3px;">Гадаад харилцааны албаны захирал:................................/ М.Баяржаргал /</td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </template>
+
+    <template id="payment_order_transport_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="l10n_mn_account_report.payment_order_transport_report_datas" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

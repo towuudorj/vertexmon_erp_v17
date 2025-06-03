@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bank_gateway_configure_manager,bank.gateway.configure,l10n_mn_khanbank_gateway.model_bank_gateway_configure,account.group_account_manager,1,1,1,1
+access_bank_gateway_configure_invoice,bank.gateway.configure,l10n_mn_khanbank_gateway.model_bank_gateway_configure,account.group_account_invoice,1,1,1,0
+access_bank_gateway_configure_user,bank.gateway.configure,l10n_mn_khanbank_gateway.model_bank_gateway_configure,account.group_account_user,1,1,0,0
+access_bank_gateway_account_list_manager,bank.gateway.account.list,l10n_mn_khanbank_gateway.model_bank_gateway_account_list,account.group_account_manager,1,1,1,1
+access_bank_gateway_account_list_invoice,bank.gateway.account.list,l10n_mn_khanbank_gateway.model_bank_gateway_account_list,account.group_account_invoice,1,1,1,0
+access_bank_gateway_account_list_user,bank.gateway.account.list,l10n_mn_khanbank_gateway.model_bank_gateway_account_list,account.group_account_user,1,1,0,0

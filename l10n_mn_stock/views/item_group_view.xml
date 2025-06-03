@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_item_group_form" model="ir.ui.view">
+            <field name="name">item.group.form</field>
+            <field name="model">item.group</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <sheet>
+                        <group>
+                            <field name="company_id" />
+                            <field name="name" />
+                            <field name="code" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_item_group_tree" model="ir.ui.view">
+            <field name="name">item.group.tree</field>
+            <field name="model">item.group</field>
+            <field name="arch" type="xml">
+               	<tree string="Item group">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_item_group_filter" model="ir.ui.view">
+            <field name="name">item.group.search</field>
+            <field name="model">item.group</field>
+            <field name="arch" type="xml">
+                <search string="Item group">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_item_group" model="ir.actions.act_window">
+            <field name="name">Item group</field>
+            <field name="res_model">item.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_item_group_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+              </p><p>
+                Let's create a item group register.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

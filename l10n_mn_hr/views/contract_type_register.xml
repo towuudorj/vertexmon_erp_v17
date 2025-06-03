@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_contract_type_register_form" model="ir.ui.view">
+        <field name="name">contract.type.register.form</field>
+        <field name="model">contract.type.register</field>
+        <field name="arch" type="xml">
+            <form string="Contract Type Register">
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_contract_type-register_tree" model="ir.ui.view">
+        <field name="name">contract.type.register.tree</field>
+        <field name="model">contract.type.register</field>
+        <field name="arch" type="xml">
+            <tree string="Contract Type Register">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_contract_type_register" model="ir.actions.act_window">
+        <field name="name">Contract Type Register</field>
+        <field name="res_model">contract.type.register</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

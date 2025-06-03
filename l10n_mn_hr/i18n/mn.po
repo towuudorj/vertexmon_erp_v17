@@ -1,0 +1,3600 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_hr
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__last_name
+msgid "Last name"
+msgstr "Овог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__surname
+msgid "Surname"
+msgstr "Ургийн овог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__ndd_number
+msgid "Ndd number"
+msgstr "Нийгмийн даатгалын дэвтрийн дугаар"
+
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__is_purchase_manager
+msgid "Is purchase manager"
+msgstr "Худалдан авалтын менежер эсэх"
+
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__register_number
+msgid "Register number"
+msgstr "Регистрийн дугаар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__residential_address
+msgid "Residential address"
+msgstr "Оршин суугаа хаяг"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Work Information"
+msgstr "Ажлын мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Location"
+msgstr "Байрлал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Schedule"
+msgstr "Цагийн хуваарь"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Private Information"
+msgstr "Хувийн мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Private Contact"
+msgstr "Холбоо барих мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Education"
+msgstr "Боловсрол"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Work Permit"
+msgstr "Визийн мэдээлэл (Гадаад иргэншилтэй тохиолдолд)"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Citizenship"
+msgstr "Иргэний харьяалал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Emergency"
+msgstr "Яаралтай үед холбоо барих хүний мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Private Address"
+msgstr "Хувийн хаяг"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Email"
+msgstr "Имэйл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Phone"
+msgstr "Утас"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Language"
+msgstr "Хэл"
+
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
+msgid "Visa Expire Date"
+msgstr "Виз дуусах хугацаа"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__emergency_contact_relation
+msgid "Emergency Contact Relation"
+msgstr "Яаралтай үед холбогдох хүн"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__emergency_relation_other
+msgid "Specify relation"
+msgstr "Хамаарлаа тодорхойлно уу"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_employee__emergency_contact_relation__mother
+msgid "Mother"
+msgstr "Ээж"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_employee__emergency_contact_relation__father
+msgid "Father"
+msgstr "Аав"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_employee__emergency_contact_relation__other
+msgid "Оther"
+msgstr "Бусад"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Education Information"
+msgstr "Боловсролын мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__education_id
+msgid "Education"
+msgstr "Боловсрол"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Institution"
+msgstr "Төгссөн сургууль"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Start Year"
+msgstr "Элссэн  огноо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "End Year"
+msgstr "Төгссөн огноо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Field of Study"
+msgstr "Судалсан мэргэжил"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Degree Type"
+msgstr "Боловсролын зэрэг"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Grade"
+msgstr "Голч"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Percentile"
+msgstr "Хувь"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Training Courses"
+msgstr "Мэргэжил дээшлүүлэх сургалт, курс"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Employment & Skills"
+msgstr "Ажлын туршлага болон ур чадвар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Employment History"
+msgstr "Ажлын түүх"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__employment_id
+msgid "Employment"
+msgstr "Ажиллаж байсан компаниудын мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Start Date"
+msgstr "Эхэлсэн огноо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "End Date"
+msgstr "Гарсан огноо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Position"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Reason for Leaving"
+msgstr "Гарсан шалтгаан"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Supervisor"
+msgstr "Хариуцаж байсан ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Supervisor Phone"
+msgstr "Хариуцаж байсан ажилтны дугаар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Language Skills"
+msgstr "Гадаад хэлний чадвар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Computer Skills"
+msgstr "Хэрэглээний програмын чадвар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Other Skills"
+msgstr "Бусад програмын чадвар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Reason for Vacancy"
+msgstr "Удаан хугацаагаар ажилгүй байсан бол шалтгаанаа бичнэ үү"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Speaking"
+msgstr "Яриа"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Listening"
+msgstr "Сонсох"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Translation"
+msgstr "Орчлуулах"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Writing"
+msgstr "Бичих"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Software"
+msgstr "Програмын нэр"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Proficiency"
+msgstr "Мэдлэгийн түвшин"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Family Information"
+msgstr "Гэр бүлийн мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Household Members"
+msgstr "Гэр бүлийн гишүүд"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__live_people_id
+msgid "Live"
+msgstr "Гэр бүлийн гишүүдийн мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Relationship"
+msgstr "Хамаарал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Last Name"
+msgstr "Овог"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "First Name"
+msgstr "Нэр"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Age"
+msgstr "Нас"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "References"
+msgstr "Таны талаар дэлгэрэнгүй мэдээлэл өгч чадах хүмүүсийг бөглөнө үү"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Hobbies & Interests"
+msgstr "Хобби болон сонирхолууд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Strengths & Development Areas"
+msgstr "Давуу болон сул талууд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Sports & Arts Activities"
+msgstr "Хичээллэж байсан урлаг, спортын талаар мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Occupation"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Awards & Achievements"
+msgstr "Шагнал болон амжилтууд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Other Information"
+msgstr "Бусад мэдээллүүд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Profession"
+msgstr "Эрхэлж буй ажил, мэргэжил"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Strengths"
+msgstr "Давуу талууд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Activity"
+msgstr "Урлаг, спортын төрөл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Duration"
+msgstr "Хичээллэсэн хугацаа"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Received Award"
+msgstr "Зэрэг, шагналтай эсэх"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Development Areas"
+msgstr "Сул талууд"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Award"
+msgstr "Шагнал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Year"
+msgstr "Шагнагдсан он"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Date"
+msgstr "Төгссөн огноо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Subject"
+msgstr "Судалсан мэргэжил, сургалт"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "HR Settings"
+msgstr "Хүний нөөцийн тохиргоо"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Related User"
+msgstr "Холбогдсон хэрэглэгч"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Launch Plan"
+msgstr "Төлөвлөгөө эхлүүлэх"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__where
+msgid "Where"
+msgstr "Хаана"
+
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Employment, Skill"
+msgstr "Ажлын туршлага болон ур чадвар"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Family information"
+msgstr "Гэр бүлийн мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Reason of Vacancy"
+msgstr "Та удаан хугацаагаар ажилгүй байсан бол тайлбар өгнө үү"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Language information"
+msgstr "Гадаад хэлний мэдлэг"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Computer skill information"
+msgstr "Компьютер дээр ажиллах чадвар"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Training course information"
+msgstr "Мэргэжил дээшлүүлэх сургалтын мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Live people information"
+msgstr "Гэр бүлийн мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Relationship information"
+msgstr "Хувийн харилцааны мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__graduate_school
+msgid "Graduate school courses"
+msgstr "Төгссөн сургууль, дамжаа"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__where
+msgid "Where"
+msgstr "Хаана"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__starting_year
+msgid "Starting year"
+msgstr "Эхэлсэн огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__ending_year
+msgid "Ending year"
+msgstr "Дуусcан огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__qualifications
+msgid "Qualifications"
+msgstr "Тавигдах шаардлага"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__occupation
+msgid "Occupation"
+msgstr "Ажил мэргэжил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__edu_rate
+msgid "Edu rate"
+msgstr "Голч"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__edu_percent
+msgid "Percent"
+msgstr "Хувь"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__edu_payment_type
+msgid "Payment type"
+msgstr "Төлбөрийн хэлбэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__type_id
+msgid "Education degree"
+msgstr "Боловсролын зэрэг"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__hr_employee_id
+msgid "Hr employee"
+msgstr "Хүний нөөцийн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_education__hr_applicant_id
+msgid "Hr applicant"
+msgstr "Өргөдөл гаргагч"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_course__where
+msgid "Name of training/course"
+msgstr "Хаана"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_course__when
+msgid "When"
+msgstr "Хэзээ"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_course__time
+msgid "Time"
+msgstr "Хугацаа"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_course__training_profession
+msgid "Training profession"
+msgstr "Ямар чиглэлээр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_course_training__hr_employee_id
+msgid "Hr employee"
+msgstr "Хүний нөөцийн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__name
+msgid "Organization"
+msgstr "Байгууллагын нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__org_start
+msgid "Start date"
+msgstr "Ажилд орсон огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__org_finish
+msgid "End date"
+msgstr "Ажлаас гарсан огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__salary_size
+msgid "Salary size"
+msgstr "Цалингийн хэмжээ"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__work_schedule
+msgid "Work schedule"
+msgstr "Ажил үүргийн хуваарь"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__org_position
+msgid "Position"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__org_reason
+msgid "Reason"
+msgstr "Ажлаас гарсан шалтгаан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__supervisor_name
+msgid "Supervisor name"
+msgstr "Удирдах албан тушаалтны нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment__supervisor_phone
+msgid "Supervisor phone"
+msgstr "Удирдах албан тушаалтны утас"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_language__name
+msgid "Hr Language"
+msgstr "Хэлний нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_language__lang_speak
+msgid "Speak"
+msgstr "Ярих чадвар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_language__lang_listen
+msgid "Listen"
+msgstr "Сонсох чадвар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_language__lang_translation
+msgid "Translation"
+msgstr "Орчуулах чадвар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_language__lang_write
+msgid "Write"
+msgstr "Бичих чадвар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_computer_skill__name
+msgid "Program name"
+msgstr "Програмын нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_computer_skill__use_skill
+msgid "Use skill"
+msgstr "Ажиллах чадвар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__other_program
+msgid "Other program"
+msgstr "Бусад програм"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__other_use_skill
+msgid "Other use skill"
+msgstr "Бусад ур чадвар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__who
+msgid "Who"
+msgstr "Таны юу болох"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__last_name
+msgid "Last name"
+msgstr "Овог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__first_name
+msgid "First name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__gender
+msgid "Gender"
+msgstr "Хүйс"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__age
+msgid "Age"
+msgstr "Нас"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__position
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_live_people__phone
+msgid "Phone"
+msgstr "Утасны дугаар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.form_hr_employee__other_program
+msgid "Other program"
+msgstr "Бусад програм"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__who
+msgid "Who"
+msgstr "Таны юу болох"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__last_name
+msgid "Last name"
+msgstr "Овог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__first_name
+msgid "First name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__gender
+msgid "Gender"
+msgstr "Хүйс"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__age
+msgid "Age"
+msgstr "Нас"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__position
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_relationship__phone
+msgid "Phone"
+msgstr "Утасны дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__interestedly_job_id
+msgid "Interestedly job"
+msgstr "Сонирхож буй албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__which_section
+msgid "Which section"
+msgstr "Хэн, аль хэлтэст"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__additional_information
+msgid "Additional information"
+msgstr "Та өөрийнхөө талаар нэмэлт мэдээлэл байвал өгнө үү!"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_employee__workplace_environment__normal
+msgid "Normal"
+msgstr "Хэвийн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_employee__workplace_environment__abnormal
+msgid "Abnormal"
+msgstr "Хэвийн бус"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection___hr_employee__is_judgemnet
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__is_judgemnet
+msgid "Is judgemnet"
+msgstr "Сонголт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection___hr_employee__yes
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection___hr_employee__is_judgemnet_yes
+msgid "Yes"
+msgstr "Тийм"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection___hr_employee__no
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection___hr_employee__is_judgemnet_no
+msgid "No"
+msgstr "Үгүй"
+
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__abnormal_id
+msgid "Abnormal"
+msgstr "Хэвийн бус нөхцөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__judgemnet_desc
+msgid "Judgemnet description"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__notify_people_id
+msgid "Notify people"
+msgstr "Таны талаар дэлгэрэнгүй мэдээлэл өгч чадах гурван хүний мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__hr_visit_id
+msgid "hr visit"
+msgstr "Гадаад улсад зорчсон байдал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__hobby
+msgid "Hobby"
+msgstr "Хобби"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__advantage_weaknesses_id
+msgid "Advantage weaknesses"
+msgstr "Давуу, сул талууд"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__art_sport_id
+msgid "Art sport"
+msgstr "Урлаг спортын авьяас"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__hr_award_id
+msgid "Hr award"
+msgstr "Шагнал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_notify_people__last_name
+msgid "Last name"
+msgstr "Овог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_notify_people__first_name
+msgid "First  name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_notify_people__now_profession
+msgid "Now profession"
+msgstr "Одоо эрхэлж буй ажил, мэргэжил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_notify_people__phone
+msgid "Phone"
+msgstr "Утас"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_visit__name
+msgid "Name"
+msgstr "Ямар улс орон"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_visit__went_time
+msgid "Went time"
+msgstr "Хугацаа"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_visit__went_vision
+msgid "Went vision"
+msgstr "Зорилго"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_advantage_weaknesses__advantage
+msgid "Advantage"
+msgstr "Давуу тал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_advantage_weaknesses__weaknesses
+msgid "Weaknesses"
+msgstr "Сул тал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_art_sport__sk_sport
+msgid "Sk sport"
+msgstr "Урлаг спортын авьяас"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_art_sport__sp_time
+msgid "Sp time"
+msgstr "Хичээллэсэн хугацаа"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_art_sport__is_award
+msgid "Is award"
+msgstr "Зэрэг, шагналтай эсэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_award__award_name
+msgid "Award name"
+msgstr "Шагналын нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_award__award_year
+msgid "Award year"
+msgstr "Шагнагдсан он"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_award__award_where
+msgid "Where do awarded during"
+msgstr "Хаана ажиллах хугацаандаа шагнагдсан"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Other"
+msgstr "Бусад мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Notify people information"
+msgstr "Таны талаар дэлгэрэнгүй мэдээлэл өгч чадах гурван хүний мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Hobby"
+msgstr "Хобби"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Visit information"
+msgstr "Гадаад улсад зорчсон байдал"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Advantage weaknesses"
+msgstr "Давуу, сул талууд"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Art sport"
+msgstr "Урлаг спортын авьяас"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Award"
+msgstr "Шагнал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.open_view_employee_new_list
+msgid "Employees"
+msgstr "Хүний нөөц"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Responsibles"
+msgstr "Хариуцагч"
+
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Organization Chart"
+msgstr "Бүтэц зохион байгуулалт"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Contact"
+msgstr "Холбоо барих мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Citizenship"
+msgstr "Иргэний харьяалал"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Dependant"
+msgstr "Хамааралтай"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Emergency"
+msgstr "Яаралтай үед холбоо барих"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
+msgid "Emergency Contact"
+msgstr "Яаралтай үед холбогдох хүн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
+msgid "Emergency Phone"
+msgstr "Яаралтай үед холбогдох хүний дугаар"
+
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_all
+#: model:ir.model,name:hr_holidays.model_hr_leave
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__leave
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
+#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
+#: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model:mail.message.subtype,name:hr_holidays.mt_leave
+msgid "Time Off"
+msgstr "Амралт, чөлөө"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
+#, python-format
+msgid "New Time Off Request"
+msgstr "Амралт,чөлөө авах хүсэлт"
+
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
+#, python-format
+msgid "New Allocation Request"
+msgstr "Шинэээр хувиарлах хүсэлт"
+
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
+msgid "Time Off Type"
+msgstr "Амралт, чөлөөний төрөл"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_sl
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
+msgid "Sick Time Off"
+msgstr "Өвчтэй"
+
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "My Team Time Off"
+msgstr "Миний багийн амралт, чөлөө"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "My Time Off"
+msgstr "Миний амралт, чөлөө"
+
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+#: model:ir.ui.menu,name:hr.menu_config_plan_types
+msgid "Planning Types"
+msgstr "Төлөвлөгөөний төрлүүд"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "Plans"
+msgstr "Төлөвлөгөө"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_payroll
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Time Off Requests"
+msgstr "Амралт, чөлөөний хүсэлтүүд"
+
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model:mail.message.subtype,description:hr_holidays.mt_leave
+msgid "Time Off Request"
+msgstr "Амралт, чөлөө"
+
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
+msgid "Time Off Second Approve"
+msgstr "Амралт, чөлөөний хүсэлтийг батлах"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary2
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_graph
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
+msgid "Time Off Summary"
+msgstr "Амралт, чөлөөний хураангуй"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_report
+msgid "Time Off Summary / Report"
+msgstr "Амралт, чөлөөний хураангуй/тайлан"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Time Off Taken:"
+msgstr "амралт, чөлөө"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
+msgid "Time Off Type"
+msgstr "Амралт, чөлөөний төрөл"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Time Off Types"
+msgstr "Амралт, чөлөөний төрлүүд"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time Off of Your Team Member"
+msgstr "Багийн гишүүний амралт, чөлөө"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
+msgid "Time Off to Approve"
+msgstr "Зөвшөөрсөн амралт чөлөө"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
+msgid "Time Off to Report"
+msgstr "Амралт, чөлөөний тайлан"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Time Off."
+msgstr "Амралт, чөлөө"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
+msgid "Time off Already Taken"
+msgstr "Авсан амралт, чөлөө"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
+msgid "Time off Analysis"
+msgstr "Амралт, чөлөөний анализ"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time off of people you are manager of"
+msgstr "Удирдлаган доорх хүмүүсийн амралт, чөлөө"
+
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan
+msgid "Activity Planning"
+msgstr "Үйл ажиллагааны төлөвлөлт"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
+msgid "by Employee"
+msgstr "Ажилтнаар"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
+msgid "by Type"
+msgstr "Төрлөөр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_insurance_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_insurance_type_view
+msgid "Insurance type"
+msgstr "НД Төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_driver_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_driver_type_view
+msgid "Driver type"
+msgstr "Жолооны зэрэг, ангилал"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_language_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_language_type_view
+msgid "Language type"
+msgstr "Хэлний Төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_computer_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_computer_type_view
+msgid "Computer type"
+msgstr "Компютер эзэмших чадвар"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_education_degree_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_education_degree_type_view
+msgid "Education degree type"
+msgstr "Боловсролын зэрэг"
+
+
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_employees_type_tree_view
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_employees_type_view
+msgid "Employees"
+msgstr "Ажилчид"
+
+
+#. module: hr_skills
+#: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
+msgid "Line Types"
+msgstr "Намтарын төрөл"
+
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_hr_skill_type
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__skill_type_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
+msgid "Skill Type"
+msgstr "Чадварын төрөл"
+
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_hr_skill
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__skill_ids
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
+msgid "Skill"
+msgstr "Чадвар"
+
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_hr_skill_level
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_level_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_level_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_level
+#: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
+msgid "Skill Level"
+msgstr "Чадварын түвшин"
+
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
+msgid "Level Progress"
+msgstr "Чадварын ахиц"
+
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Org Chart"
+msgstr "Байгууллагын бүтэц"
+
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
+msgid "Employment Types"
+msgstr "Хөдөлмөр эрхлэлтийн төрлүүд"
+
+
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Employment Type"
+msgstr "Хөдөлмөр эрхлэлтийн төрөл"
+
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_training_order
+#: model:ir.ui.menu,name:l10n_mn_hr.training_order_menu
+msgid "Training order"
+msgstr "Сургалтын бүртгэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__name
+msgid "Name"
+msgstr "Хүсч буй сургалтын нэр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__training_type
+msgid "Sub type"
+msgstr "Сургалтын төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__hr_employee_id
+msgid "Hr employee"
+msgstr "Бүртгэсэн ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__training_fee_option_id
+msgid "Training Fee Option"
+msgstr "Сургалтын төлбөрийн сонголт"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__state
+msgid "State"
+msgstr "Төлөв"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__training_order__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__training_order__state__send
+msgid "Send"
+msgstr "Илгээгдсэн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__training_order__state__approved
+msgid "Approved"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__training_order__state__done
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__training_order__state__cancel
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__department_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_training_order__position_id
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.training_order__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.training_order_form
+msgid "Send"
+msgstr "Илгээх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.training_order_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.training_order_form
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.training_order_form
+msgid "Approve"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_hr_decree
+#: model:ir.ui.menu,name:l10n_mn_hr.hr_decree_menu
+msgid "HR decree"
+msgstr "Тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__name
+msgid "Decree summary"
+msgstr "Тушаалын хураангуй"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decree_number
+msgid "Decree number"
+msgstr "Тушаалын дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decree_type
+msgid "Decree type"
+msgstr "Тушаалын төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__decree_type__public
+msgid "Public"
+msgstr "Нийтийн тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__decree_type__staff
+msgid "Staff"
+msgstr "Ажилтны тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__transfer_type__company
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__transfer_type__department
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__transfering_company_id
+msgid "Transfering Company"
+msgstr "Шилжиж буй компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__transfering_department_id
+msgid "Transfering Department"
+msgstr "Шилжиж буй алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__employee_ids
+msgid "Employees"
+msgstr "Ажилчид"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__date
+msgid "Date"
+msgstr "Огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__state__cancelled
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__state__approved
+msgid "Approved"
+msgstr "Батлагдсан"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "To draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "To cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "To approve"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "Apply Salary Changes"
+msgstr "Цалингийн өөрчлөлтийг батлах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__hr_decree__form__company
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "Salary Information"
+msgstr "Цалингийн мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__is_transfer
+msgid "Is Transfer Decree"
+msgstr "Шилжилтийн тушаал эсэх"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_routing_slip
+#: model:ir.ui.menu,name:l10n_mn_hr.routing_slip_menu
+msgid "Routing slip"
+msgstr "Тойрох хуудас"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_work_handover_act
+#: model:ir.ui.menu,name:l10n_mn_hr.work_handover_act_menu
+msgid "Work handover act"
+msgstr "Ажил хүлээлгэн өгөх акт"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__workplace_environment
+msgid "Workplace environment"
+msgstr "Ажлын нөхцөл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__disabled_employee
+msgid "Employee with disability"
+msgstr "Тусгай хэрэгцээт эсэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__disability_percentage 
+msgid "Disability Percentage"
+msgstr "Хувиар илэрхийлнэ үү"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__two_jobs
+msgid "Currently employed by another company"
+msgstr "Өөр компанид ажиллаж байгаа эсэх"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__company_name
+msgid "Company"
+msgstr "Компаний нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__employee_id
+msgid "Employee"
+msgstr "Ажилтны нэр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__last_name
+msgid "Last name"
+msgstr "Овог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__job_id
+msgid "Job"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__routing_date
+msgid "Routing date"
+msgstr "Тойрох хуудасын огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__state
+msgid "State"
+msgstr "Төлөв"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__accession_date
+msgid "Accession date"
+msgstr "Ажилд орсон огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__left_date
+msgid "Left date"
+msgstr "Ажлаас гарсан огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__out_reason_id
+msgid "Out reason"
+msgstr "Ажлаас гарсан шалтгаан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__work_handover_act_id
+msgid "Work handover act"
+msgstr "Ажил хүлээлгэн өгөх акт"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__code
+msgid "Code"
+msgstr "Код"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__job_id
+msgid "Job"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__date
+msgid "Date"
+msgstr "Огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__category_ids
+msgid "Tags"
+msgstr "Пайз"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip__survey_id
+msgid "Survey"
+msgstr "Ажлаас гарах үеийн асуумж"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_routing_slip_line__signature
+msgid "Signature"
+msgstr "Гарын үсэг"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__routing_slip__state__send_routing
+msgid "Send routing slip"
+msgstr "Тойрох хуудас илгээх"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__routing_slip__state__routing_ended
+msgid "Routing ended"
+msgstr "Тойрох хуудас бөглөгдсөн"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__routing_slip__state__left_job
+msgid "Left job"
+msgstr "Ажлаас гарсан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__routing_slip__state__cancel
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__routing_slip__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "Send"
+msgstr "Илгээх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "Confirm Quit"
+msgstr "Ажлаас гарахыг батлах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__last_name
+msgid "Last name"
+msgstr "Овог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__job_id
+msgid "Job"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__handover_date
+msgid "Handover date"
+msgstr "Ажил хүлээлгэн өгөх акт"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__state
+msgid "State"
+msgstr "Төлөв"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__accession_date
+msgid "Accession date"
+msgstr "Ажилд орсон огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__left_date
+msgid "Left date"
+msgstr "Ажлаас гарсан огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__work_handover_act_id
+msgid "Work handover act"
+msgstr "Ажил хүлээлгэн өгөх акт"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.work_handover_act_form
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.work_handover_act_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.work_handover_act_form
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.work_handover_act_form
+msgid "Confirm Department"
+msgstr "Ажлаас чөлөөлөх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "To work handover"
+msgstr "Ажлаас гарах акт үүсгэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__code
+msgid "Code"
+msgstr "Код"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__job_id
+msgid "Job"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__date
+msgid "Date"
+msgstr "Огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__handover_category_ids
+msgid "Tags"
+msgstr "Пайз"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__note
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_handover_act_line__signature
+msgid "Signature"
+msgstr "Гарын үсэг"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__work_handover_act__state__work_handover_act_draft
+msgid "Work handover act draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__work_handover_act__state__handover_act_ended
+msgid "Work handover act ended"
+msgstr "Ажил хүлээлгэн өгөх акт дууссан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__work_handover_act__state__left_job
+msgid "Left job"
+msgstr "Ажлаас гарсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__work_handover_act__state__cancel
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_other_contracts
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_other_contracts
+msgid "Other Contracts"
+msgstr "Бусад Гэрээнүүд"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__name
+msgid "Contract name"
+msgstr "Гэрээний нэр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__employee_id
+msgid "Contract employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__contract_number
+msgid "Contract Number"
+msgstr "Гэрээний дугаар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__reg_date
+msgid "Registration Date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__reg_user_id
+msgid "Registered User"
+msgstr "Хүний нөөцийн менежер"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__other_contracts__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__other_contracts__state__confirmed
+msgid "Confirmed"
+msgstr "Зөвшөөрсөн"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__other_contracts__state__cancelled
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__contract_type_id
+msgid "Contract type"
+msgstr "Гэрээний төрөл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__start_date
+msgid "Start Date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__end_date
+msgid "End Date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_other_contracts_form_action_confirm
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_other_contracts_form_action_cancel
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__department_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_other_contracts__job_id
+msgid "Job"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_other_contracts_form
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_other_contracts_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_other_contracts_form
+msgid "Send Email"
+msgstr "Имэйл илгээх"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_employee_transfer
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_employee_transfer
+msgid "Transfer Register"
+msgstr "Шилжилтийн бүртгэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__from_company_id
+msgid "From Company"
+msgstr "Өмнөх компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__to_company_id
+msgid "To Company"
+msgstr "Шилжсэн компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__transfer_date
+msgid "Transfer Date"
+msgstr "Шилжилтийн огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__is_archived
+msgid "Is Archived"
+msgstr "Архивлагдсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__position_id
+msgid "Position"
+msgstr "Албан тушаал"
+
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract End Date"
+msgstr "Гэрээ дуусах огноо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_contract_type_register
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_contract_type_register
+msgid "Contract Type Register"
+msgstr "Гэрээний төрлийн бүртгэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_contract_type_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_contract_type_register__name
+msgid "Contract name"
+msgstr "Гэрээний нэр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_contract_type_register__description
+msgid "Contract description"
+msgstr "Гэрээний тодорхойлолт"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_decree_register_type
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_decree_register_type
+msgid "Decree Type"
+msgstr "Тушаалын төрлийн бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__reg_user_id
+msgid "Registered User"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__name
+msgid "Name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__date
+msgid "Date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__hr_employee_id
+msgid "Employee"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_decree_register_type__description
+msgid "Description"
+msgstr "Тодорхойлолт"
+
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
+msgid "Default Level"
+msgstr "Үндсэн түвшин"
+
+
+#. module: hr_skills
+#: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
+#: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
+msgid "Skill Types"
+msgstr "Ур чадварын төрлүүд"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_driver_type__name
+msgid "Driver type"
+msgstr "Жолооны ангилал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_language_type__name
+msgid "Language type"
+msgstr "Хэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_programm__name
+msgid "Programm name"
+msgstr "Програмын нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_education_degree__name
+msgid "Education degree"
+msgstr "Боловсролын зэрэг"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_contract_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: hr
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:hr.hr_work_location_action
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_hr_work_location
+#: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_hr_work_location
+msgid "Work Locations"
+msgstr "Ажлын байршил"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_departure_reason_action
+#: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
+msgid "Departure Reasons"
+msgstr "Ажлаас гарсан шалтгаан"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr "Ажлын цагийн хуваарь"
+
+
+#. module: l10n_mn_hr
+#: model:ir.ui.menu,name:l10n_mn_hr.workhandover_menu
+msgid "Work handover"
+msgstr "Ажлаас гарах"
+
+
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "Цайны цаг"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "Хугацаа(өдөр)"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__accession_date
+msgid "Accession date"
+msgstr "Ажилд орсон огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__working_year
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Working year"
+msgstr "Компанид ажилласан жил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__working_year_company1
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Working year company"
+msgstr "Компанид ажилласан жил / түүх /"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__working_year_month
+msgid "Working year month"
+msgstr "Ажилласан жил сар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__working_year_other1
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Working year other"
+msgstr "Бусад ажилласан жил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__working_year_other1_month
+msgid "Working year other1 month"
+msgstr "Ажлын жил бусад1 сар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__seniority
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Seniority"
+msgstr "Улсад ажилласан жил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__seniority_month
+msgid "Seniority month"
+msgstr "Улсад ажилласан сар"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "year"
+msgstr "жил"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "month"
+msgstr "сар"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_mn_inherit_form
+msgid "Update"
+msgstr "Шинэчлэх"
+
+
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
+msgid "Refuse Reasons"
+msgstr "Татгалзсан шалтгаан"
+
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_contract_type_action
+msgid "Employment Types"
+msgstr "Хөдөлмөр эрхлэлтийн төрлүүд"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
+msgid "Employment Types"
+msgstr "Хөдөлмөр эрхлэлтийн төрлүүд"
+
+
+#. module: hr_skills
+#: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
+#: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
+msgid "Skill Types"
+msgstr "Ур чадварын төрлүүд"
+
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__children
+#: model:ir.model.fields,field_description:hr.field_res_users__children
+msgid "Number of Dependent Children"
+msgstr "Хүүхдийн тоо"
+
+
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_type
+msgid "Employee Type"
+msgstr "Ажилтны төрөл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_reference_register
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_reference_register
+msgid "Reference Register"
+msgstr "Тодорхойлолтын бүртгэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__name
+msgid "Reference"
+msgstr "Тодорхойлолтын нэр"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__reference_number
+msgid "Reference Number"
+msgstr "Тодорхойлолтын дугаар"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__date
+msgid "Date"
+msgstr "Oгноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__reg_user_id
+msgid "Registered User"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__department_id
+msgid "Department"
+msgstr "Алба"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__where_to
+msgid "Where to"
+msgstr "Хаана өгөх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__reference_type_id
+msgid "Reference Type"
+msgstr "Тодорхойлолт төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register__reg_date
+msgid "Registeration Date"
+msgstr "Бүртгэлийн огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__reference_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__reference_register__state__confirmed
+msgid "Confirmed"
+msgstr "Зөвшөөрсөн"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__reference_register__state__cancelled
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.reference_register_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.reference_register_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.reference_register_form_view
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_reference_register_type
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_reference_register_type
+msgid "Reference Register Types"
+msgstr "Тодорхойлолтын төрлийн бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register_type__name
+msgid "Reference Type"
+msgstr "Тодорхойлолтын Төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register_type__company
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_reference_register_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_dismiss_register
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_dismiss_register
+msgid "Dismiss Register"
+msgstr "Гарсан ажилтны бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__dismissal_date
+msgid "Dismissal Date"
+msgstr "Ажлаас гарсан огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__reason
+msgid "Reason for Dismissal"
+msgstr "Ажлаас гарсан шалтгаан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__archived_info
+msgid "Archived Information"
+msgstr "Хадгалагдсан мэдээлэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__dismissed_employee__state__dismissed
+msgid "Dismissed"
+msgstr "Ажлаас гарсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__dismissed_employee__state__rehired
+msgid "Rehired"
+msgstr "Дахин ажилд авч болох"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__dismissed_employee__state__blacklist
+msgid "Blacklisted"
+msgstr "Хар дансанд орсон"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__dismissed_employee__state__cancel
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__dismissed_employee__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.dismiss_register_form_view
+msgid "Blacklist"
+msgstr "Хар дансанд оруулах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.dismiss_register_form_view
+msgid "Rehire"
+msgstr "Дахин ажилд авч болох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.dismiss_register_form_view
+msgid "Dismiss"
+msgstr "Ажлаас гарах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.dismiss_register_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.dismiss_register_form_view
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_employee_request_register
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_employee_request_register
+msgid "Employee Request Register"
+msgstr "Ажилчдийн Хүсэлт Бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__number
+msgid "Request Number"
+msgstr "Хүсэлтийн Дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__name
+msgid "Request Name"
+msgstr "Хүсэлт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__reg_date
+msgid "Registration Date"
+msgstr "Бүртгэлийн Огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__department_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__job_id
+msgid "Position"
+msgstr "Албан тушаал"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__request_type
+msgid "Request Type"
+msgstr "Хүсэлтийн Төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__description
+msgid "Description"
+msgstr "Tайлбар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_request_register__suggestion
+msgid "Suggestion"
+msgstr "Санал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__state__hr_review
+msgid "HR Review"
+msgstr "ХН хянаж байна"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__state__director_review
+msgid "Director Review"
+msgstr "Захирал хянаж байна"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__state__approved
+msgid "Approved"
+msgstr "Зөвшөөрсөн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__state__rejected
+msgid "Rejected"
+msgstr "Татгалзсан"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "Approve"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "Return"
+msgstr "Буцаах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "HR Approve"
+msgstr "ХН Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "Director Approve"
+msgstr "Захирал Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_request_register_form
+msgid "Draft"
+msgstr "Ноороглох"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__request_type__salary_specification
+msgid "Salary Specification"
+msgstr "Цалингийн тодорхойлолт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__request_type__employment_statement
+msgid "Statement of Employment"
+msgstr "Ажлын газрын тодорхойлолт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__request_type__loan_request
+msgid "Loan Request"
+msgstr "Зээлийн хүсэлт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__request_type__product_credit_request
+msgid "Product Credit Request"
+msgstr "Бүтээгдэхүүний зээлийн хүсэлт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_request_register__request_type__other
+msgid "Other"
+msgstr "Бусад"
+
+#. module: l10n_mn_hr
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_job_appointment_register
+msgid "Vacancy Order Register"
+msgstr "Сул Орон Тооны Захиалгын Бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_job_appointment_register
+msgid "Job Appointment Register"
+msgstr "Сул Орон Тооны Захиалгын Бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__number
+msgid "Request Number"
+msgstr "Хүсэлтийн Дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__name
+msgid "Request Name"
+msgstr "Хүсэлт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__reg_date
+msgid "Registered Date"
+msgstr "Бүртгэсэн Огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__reg_user_id
+msgid "Registered User"
+msgstr "Бүртгэсэн Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__department_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__description
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__job_appointment_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__job_appointment_register__state__hr_department_manager_review
+msgid "Department Manager Review"
+msgstr "ЗХНАлбаны Захирал Баталгаажуулалт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__job_appointment_register__state__operations_manager_review
+msgid "Operations Manager Review"
+msgstr "ҮАХариуцсан Захирал Баталгаажуулалт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__job_appointment_register__state__approved
+msgid "Approved"
+msgstr "Баталсан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__job_appointment_register__state__rejected
+msgid "Rejected"
+msgstr "Татгалзсан"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Approve"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Return"
+msgstr "Буцаах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Department Manager Approve"
+msgstr "ЗХНАлбаны Захирал Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_job_appointment_register_form
+msgid "Operations Manager Approve"
+msgstr "ҮАХариуцсан Захирал Батлах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_job_appointment_register__vacancy
+msgid "Vacancy"
+msgstr "Сул орон тоо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__khoroo_id
+msgid "Khoroo"
+msgstr "Хороо"
+
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
+msgid "Interviewers"
+msgstr "Ярилцлага авагч"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
+msgid "Recruiter"
+msgstr "Хүний нөөцийн ажилтан"
+
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
+msgid "Evaluation"
+msgstr "Үнэлгээ"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
+msgid "Subject / Application"
+msgstr "Ажлын байр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_applicant__workplace_id
+msgid "Workplace"
+msgstr "Албан тушаалын зэрэглэл"
+
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_applicant__surname
+msgid "Surname"
+msgstr "Овог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__workplace_id
+msgid "Workplace"
+msgstr "Албан тушаалын зэрэглэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__employee_age
+msgid "Age"
+msgstr "Нас"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_hr_department
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_hr_department
+msgid "Departments"
+msgstr "Албууд"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_workplace_register
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_workplace_register
+msgid "Workplace Register"
+msgstr "Албан тушаалын зэрэглэл бүртгэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__name
+msgid "Workplace Name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__work_category_id
+msgid "Work Category"
+msgstr "Нийгмийн Даатгалын ажлын байр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__description
+msgid "Description"
+msgstr "Тодорхойлолт"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__job_title
+msgid "Job Title"
+msgstr "Албан тушаалын зэрэглэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__workplace_register__job_title__general_director
+msgid "General Director"
+msgstr "Ерөнхий захирал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__workplace_register__job_title__executive_director
+msgid "Executive Director"
+msgstr "Гүйцэтгэх захирал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__workplace_register__job_title__manager
+msgid "Manager"
+msgstr "Менежер"
+
+#. module: l10n_mn_hж
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__workplace_register__job_title__ordinary_employee
+msgid "Ordinary Employee"
+msgstr "Энгийн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__eng_name
+msgid "English Name"
+msgstr "Англи нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__position_id
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__employees_working
+msgid "Number of Employees Working"
+msgstr "Ажиллаж байгаа ажилчдын тоо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_workplace_register__employees_left
+msgid "Number of Employees Left"
+msgstr "Гарсан ажилчдын тоо"
+
+
+#. module: l10n_mn_hr
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_config_hr
+msgid "HR Organization"
+msgstr "Хүний нөөцийн бүтэц"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_driver_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_language_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_programm__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_education_degree__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_contract_type_register__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_department__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_work_location__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_job__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_applicant__meeting_type
+msgid "Meeting type"
+msgstr "Ярилцлагын төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_applicant__attendance
+msgid "Attended?"
+msgstr "Ярилцлагад ирсэн эсэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_applicant__refuse_reason
+msgid "Refuse Reason"
+msgstr "Татгалзсан шалтгаан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_dismissed_employee__name
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__name
+msgid "Applicant Name"
+msgstr "Нэр"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__job_position_id
+msgid "Job Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__target_number
+msgid "Target Number"
+msgstr "Төлөвлөсөн орон тоо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__start_date
+msgid "Start Date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__end_date
+msgid "End Date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__hr_employee_id
+msgid "HR Employee"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_applicant_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_hr
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_applicant_register
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_applicant_register
+msgid "Applicant Register"
+msgstr "Ажлын байрны төлөвлөгөө"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__applicant_register__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__applicant_register__state__confirmed
+msgid "Confirmed"
+msgstr "Бүртгэгдсэн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__applicant_register__state__cancelled
+msgid "Cancelled"
+msgstr "Бүртгэгдсэн"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.applicant_register_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.applicant_register_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.applicant_register_form_view
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.mn_hr_applicant_inherit
+msgid "Make Contract"
+msgstr "Гэрээ үүсгэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_contract__contract_number
+msgid "Contract Number"
+msgstr "Гэрээний дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_contract__decree_id
+msgid "Decree"
+msgstr "Тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_work_handover_act__survey_id
+msgid "Survey"
+msgstr "Ажлаас гарах үеийн асуумж"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
+msgid "Applicant's Name"
+msgstr "Нэр"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
+msgid "Applied Job"
+msgstr "Албан тушаал"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degree Name"
+msgstr "Боловсрол"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
+msgid "Hired Stage"
+msgstr "Гэрээ байгуулах үе шат"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_contract_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_mediums
+msgid "Mediums"
+msgstr "Веб хөдөлгөөний төрөл"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__questions_layout
+msgid "Pagination"
+msgstr "Хуудасны байрлал"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
+msgid "One page per question"
+msgstr "Асуулт болгон нэг хуудсанд"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_section
+msgid "One page per section"
+msgstr "Бүлэг болгон нэг хуудсанд"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
+msgid "One page with all the questions"
+msgstr "Нэг хуудсанд бүх асуултууд"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
+msgid "Display Progress as"
+msgstr "Явц харуулахдаа"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
+msgid "Percentage left"
+msgstr "Үлдсэн хувиар"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
+msgid "Question Selection"
+msgstr "Асуулт сонголт"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
+msgid "All questions"
+msgstr "Бүх асуултууд"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
+msgid "Randomized per Section"
+msgstr "Бүлгээр нь холих"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Allow Roaming"
+msgstr "Өмнөх хариулсан хуудасруугаа буцаж болох"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
+msgid "Access Mode"
+msgstr "Нэвтрэх эрх"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__public
+msgid "Anyone with the link"
+msgstr "Холбоостой хүн болгон"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
+msgid "Require Login"
+msgstr "Бүртгэл шаардлагатай"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__live_session
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Live Session"
+msgstr "Асуулга"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__assessment
+msgid "Assessment"
+msgstr "Үнэлгээ"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__custom
+msgid "Custom"
+msgstr "Өөриймшүүлсэн"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Survey Time Limit"
+msgstr "Цагийн хязгаар тааруулах"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__no_scoring
+msgid "No scoring"
+msgstr "Оноогүй"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
+msgid "Scoring with answers after each page"
+msgstr "Хуудас болгоны хариултаар оноо олгох"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
+msgid "Scoring with answers at the end"
+msgstr "Төгсгөлд хариулттайгаар оноо олгох"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
+msgid "Scoring without answers"
+msgstr "Хариултгүйгээр оноо олгох"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Time & Scoring"
+msgstr "Цаг болон оноо"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
+msgid "Session Code"
+msgstr "Асуулга код"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
+msgid "Session Link"
+msgstr "Асуулга холбоос"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_speed_rating
+msgid "Reward quick answers"
+msgstr "Түргэн хариулвал урамшуулах"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "End Message"
+msgstr "Төгсгөлд бичих үг"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Create Live Session"
+msgstr "Асуулга үүсгэх"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Participations"
+msgstr "Оролцоо"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.survey_menu_questions
+msgid "Questions & Answers"
+msgstr "Асуулт болон хариултууд"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.survey_question_answer_action
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Suggested Values"
+msgstr "Санал болгож буй утгууд"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.survey_user_input_line_action
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr "Нарийвчлалтай хариултууд"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid "Validity Period"
+msgstr "Хүчинтэй хугацаа"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
+msgid "Private Car Plate"
+msgstr "Машины дугаар"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Family Status"
+msgstr "Гэр бүлийн байдал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__show_maternity_info
+msgid "Show Maternity Info"
+msgstr "Жирэмсний мэдээллийг харуулах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__department_id
+msgid "Department"
+msgstr "Алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__position_id
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__is_read_decree
+msgid "Is read the Decree"
+msgstr "Тушаалтай уншиж танилцсан эсэх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_contract_inherit_form
+msgid "Create Decree"
+msgstr "Тушаал үүсгэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__hr_employee_id
+msgid "Employee"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decree_template
+msgid "Decree Template"
+msgstr "Тушаалын загвар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__transfer_type
+msgid "Transfer Type"
+msgstr "Шилжилтийн төрөл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.mn_hr_applicant_inherit
+msgid "Hire"
+msgstr "Ажилтан үүсгэх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.mn_hr_applicant_view_form
+msgid "Contracts"
+msgstr "Гэрээнүүд"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_transfer__state__draft
+msgid "Draft
+msgstr "Ноорог"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_transfer__state__transfered
+msgid "Transfered"
+msgstr "Шилжсэн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields.selection,name:l10n_mn_hr.selection__employee_transfer__state__cancelled
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employee_transfer_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employee_transfer_form_view
+msgid "Create Decree"
+msgstr "Тушаал үүсгэх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employee_transfer_form_view
+msgid "Transfer"
+msgstr "Шилжих"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employee_transfer_form_view
+msgid "Draft"
+msgstr "Ноороглох"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employee_transfer_form_view
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__transfer_decree_id
+msgid "Transfer Decree"
+msgstr "Шилжилтийн тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__transfer_type
+msgid "Transfer Type"
+msgstr "Шилжилтийн төрөл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__from_department_id
+msgid "From Department"
+msgstr "Өмнөх алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_transfer__to_department_id
+msgid "To Department"
+msgstr "Шилжсэн алба"
+
+#. module: hr_skills
+#: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
+msgid "Employee Skills"
+msgstr "Ур Чадвар"
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
+msgid "Assign Challenge to"
+msgstr "Сорилтыг хариуцагч"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 2 weeks calendar"
+msgstr "2 долоо хоногтой календараар солих"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 1 week calendar"
+msgstr "1 долоо хоногтой календараар солих"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+msgid "Time Off"
+msgstr "Чөлөө"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__is_salary_change
+msgid "Is Salary Change"
+msgstr "Цалингийн өөрчлөлт эсэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__previous_wage
+msgid "Previous Wage"
+msgstr "Өмнөх цалин"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__wage
+msgid "Wage"
+msgstr "Цалин"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__phone_add
+msgid "Phone add"
+msgstr "Утасны нэмэгдэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__administration_add
+msgid "Administration add"
+msgstr "Удирдлагын нэмэгдэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__food_and_vehicle_add
+msgid "Food and vehicle add"
+msgstr "Хоол унааны нэмэгдэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__long_year_add
+msgid "Long year add"
+msgstr "Удаан жилийн нэмэгдэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__health_insurance
+msgid "Health insurance"
+msgstr "Эрүүл мэндийн даатгал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__accident_insurance
+msgid "Accident insurance"
+msgstr "Гэнэтийн ослын даатгал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__voucher
+msgid "Voucher"
+msgstr "Ваучер"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__abnormal_add
+msgid "Abnormal add"
+msgstr "Хэвийн бус нөхцөлийн нэмэгдэл"
+
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_overtime_view_form
+msgid "Request"
+msgstr "Хүсэлт илгээх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_overtime_view_form
+msgid "Allow"
+msgstr "Зөвшөөрөх"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_overtime_view_form
+msgid "Approve Request"
+msgstr "Батлах"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_overtime_view_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_hr
+#: model:ir.actions.act_window,name:l10n_mn_hr.action_hr_overtime
+#: model:ir.ui.menu,name:l10n_mn_hr.menu_hr_overtime
+msgid "Overtime"
+msgstr "Илүү цаг хүсэлт"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Approvers"
+msgstr "Ирц, чөлөө зөвшөөрөгчид"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Decree"
+msgstr "Тушаал"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
+msgid "Contract"
+msgstr "Гэрээ"

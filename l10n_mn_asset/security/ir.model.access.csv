@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_asset_asset_capitalization_user,account.asset.asset.capitalization,model_account_asset_capitalization,account.group_account_user,1,1,0,0
+access_account_asset_asset_capitalization_invoice,account.asset.asset.capitalization,model_account_asset_capitalization,account.group_account_invoice,1,1,1,0
+access_account_asset_asset_capitalization_manager,account.asset.asset.capitalization,model_account_asset_capitalization,account.group_account_manager,1,1,1,1
+access_asset_location_user,asset.location,model_asset_location,account.group_account_user,1,1,0,0
+access_asset_location_invoice,asset.location,model_asset_location,account.group_account_invoice,1,1,1,0
+access_asset_location_manager,asset.location,model_asset_location,account.group_account_manager,1,1,1,1
+access_account_asset_writeoff_user,account.asset.writeoff,model_account_asset_writeoff,account.group_account_user,1,1,0,0
+access_account_asset_writeoff_invoice,account.asset.writeoff,model_account_asset_writeoff,account.group_account_invoice,1,1,1,0
+access_account_asset_writeoff_manager,account.asset.writeoff,model_account_asset_writeoff,account.group_account_manager,1,1,1,1
+access_account_asset_move_user,account.asset.move,model_account_asset_move,account.group_account_user,1,1,0,0
+access_account_asset_move_invoice,account.asset.move,model_account_asset_move,account.group_account_invoice,1,1,1,0
+access_account_asset_move_manager,account.asset.move,model_account_asset_move,account.group_account_manager,1,1,1,1

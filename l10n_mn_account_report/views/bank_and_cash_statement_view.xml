@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="view_bank_statement_line_tree_inherit_bank_mn_account_report" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.tree.inherit.bank.mn.account.report</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_statement_base.account_bank_statement_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+               <button name="print_line_report"
+                    type="object"
+                    string="Хэвлэх"
+                    icon="fa-file-document-o" />
+
+                <button name="print_line_report_transport"
+                    type="object"
+                    string="Хэвлэх/Тээвэр/"
+                    icon="fa-file-document-o" />
+                
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

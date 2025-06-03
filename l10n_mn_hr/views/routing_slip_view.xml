@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	 <data>
+		
+
+        <record id="routing_slip_search" model="ir.ui.view">
+            <field name="name">Routing slip</field>
+            <field name="model">routing.slip</field>
+            <field name="arch" type="xml">
+                <search string="Routing slip">
+					<field name="company_id"/>
+					<field name="employee_id"/>
+					<field name="last_name"/>
+					<field name="job_id"/>
+					<field name="out_reason_id"/>
+					<field name="routing_date"/>
+					<field name="state"/>
+                    <group expand="0" string="Group By">
+						<filter string="Company" name="company_id" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Employee" name="employee_id" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Last name" name="last_name" icon="terp-personal" domain="[]" context="{'group_by':'last_name'}"/>
+                        <filter string="Job" name="job_id" icon="terp-personal" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Routing date" name="routing_date" icon="terp-personal" domain="[]" context="{'group_by':'routing_date'}"/>
+                        <filter string="Left date" name="left_date" icon="terp-personal" domain="[]" context="{'group_by':'left_date'}"/>
+                        <filter string="State" name="state" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Out reason" name="out_reason_id" icon="terp-personal" domain="[]" context="{'group_by':'out_reason_id'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+		
+		<record id="routing_slip_form" model="ir.ui.view">
+		    <field name="name">Routing slip</field>
+		    <field name="model">routing.slip</field>
+		    <field name="arch" type="xml">
+        		<form string="Routing slip">
+               		<header>
+						<button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'cancel'" />
+						<button name="action_send" string="Send" type="object" class="oe_highlight" invisible="state != 'draft'" />
+						<button name="action_cancel" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state == 'cancel'" />
+						<button name="action_to_workhandover_create" string="To work handover" type="object" class="oe_highlight" invisible="state != 'send_routing'"/>
+						<button name="confirm_quit" string="Confirm Quit" type="object" class="oe_highlight" invisible="state != 'routing_ended'" />
+               			<field name="state" widget="statusbar"/>
+	        		</header>
+					<sheet>
+
+						<div class="oe_button_box" name="button_box">
+							<button name="action_to_workhandover_list" 
+									string="Work handover" 
+									type="object" 
+									class="oe_stat_button" 
+									icon="fa-pencil-square-o">
+									<field name="workhandover_count" widget="statinfo" string="Work handover"/>
+							</button>
+						</div>
+						<group colspan="2" col="4">
+							<field name="name" readonly="state == 'cancel'"/>
+							<field name="company_id" required="True" on_change="onchange_company_id(company_id)" readonly="state == 'cancel'"/>
+							<field name="employee_id" required="True" on_change="onchange_employee_id(employee_id)" readonly="state == 'cancel'"/>
+							<field name="last_name" readonly="state == 'cancel'"/>
+							<field name="routing_date" readonly="False"/>
+							<field name="job_id" domain="[('no_of_employee','>','0')]" readonly="state == 'cancel'"/>
+						</group>
+						<group>
+							<field name="accession_date" readonly="state == 'cancel'"/>
+							<field name="left_date" readonly="state == 'cancel'"/>
+							<field name="out_reason_id" required="1" readonly="state == 'cancel'"/>
+							<field name="survey_id"/>
+							<field name="work_handover_act_id" readonly="state == 'cancel'"/>
+						</group>
+						<field name="slip_line_id" readonly="state == 'cancel'">
+							<tree editable="bottom" default_order="code asc">
+								<field name="code"/>
+								<field name="company_id"/>
+								<field name="job_id" required="1" domain="[('no_of_employee','>','0')]" on_change="onchange_job_id(job_id)"/>
+								<field name="employee_id" domain="[('job_id','=',job_id)]"/>
+								<field name="date"/>
+								<field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"/>
+								<field name="note"/>
+								<field name="signature"/>
+							</tree>
+						</field>
+					</sheet>
+					<div class = "oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+        		</form>
+		    </field>
+		</record>
+		
+		<record id="routing_slip_tree" model="ir.ui.view">
+		    <field name="name">Routing slip</field>
+		    <field name="model">routing.slip</field>
+		    <field name="arch" type="xml">
+        		<tree string="Routing slip">
+					<field name="company_id"/>
+					<field name="employee_id"/>
+					<field name="last_name"/>
+					<field name="job_id"/>
+					<field name="routing_date"/>
+					<field name="state"/>
+					<field name="create_date"/>
+					<field name="create_uid"/>
+	           	</tree>
+		    </field>
+		</record>
+		
+		<record id="action_routing_slip" model="ir.actions.act_window">
+		    <field name="name">Routing slip</field>
+		    <field name="res_model">routing.slip</field>
+		    <field name="view_mode">tree,form</field>
+		    <field name="view_id" ref="routing_slip_search"/>
+		    
+		</record>
+		
+		
+		<record id="routing_master_form" model="ir.ui.view">
+		    <field name="name">Routing master</field>
+		    <field name="model">routing.master</field>
+		    <field name="arch" type="xml">
+        		<form string="Routing master">
+        			<sheet>
+        				<group colspan="2" col="4">
+        					<field name="job_id" required="True" domain="[('no_of_employee','>','0')]"/>
+        				</group>
+       					<field name="master_line_id" options="{'always_reload':True}">
+       						<tree editable="bottom" default_order="code asc">
+              					<field name="code"/>
+              					<field name="company_id"/>
+              					<field name="job_id" required="1" domain="[('no_of_employee','>','0')]" on_change="onchange_job_id(job_id)"/>
+              					<field name="employee_id" domain="[('job_id','=',job_id)]"/>
+              					<field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"/>
+              					<field name="date"/>
+              					<field name="note"/>
+              					<field name="signature"/>
+              				</tree>
+                   		</field>
+                	</sheet>
+        		</form>
+		    </field>
+		</record>
+		
+		<record id="routing_master_tree" model="ir.ui.view">
+		    <field name="name">Routing master</field>
+		    <field name="model">routing.master</field>
+		    <field name="arch" type="xml">
+        		<tree string="Routing master">
+					<field name="job_id"/>
+	           	</tree>
+		    </field>
+		</record>
+		
+		<record id="action_routing_master" model="ir.actions.act_window">
+		    <field name="name">Routing master</field>
+		    <field name="res_model">routing.master</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+
+		
+		<record id="view_out_reason_form" model="ir.ui.view">
+		    <field name="name">Out reason</field>
+		    <field name="model">out.reason</field>
+		    <field name="arch" type="xml">
+		        <form string="Out reason">
+		            <sheet>	
+		            	<group colspan="4" col="2">
+		            		<group>
+		            			<field name="left_type" />
+		            			<field name="left_reason_code" />
+		            		</group>
+		            		<group>	
+		            			<field name="name" />
+		            		</group>	
+		            	</group>
+		            </sheet>		
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="view_out_reason_tree" model="ir.ui.view">
+		    <field name="name">Out reason</field>
+		    <field name="model">out.reason</field>
+		    <field name="arch" type="xml">
+		        <tree string="Out reason">
+		        	<field name="left_type" />
+		        	<field name="name" />
+		        	<field name="left_reason_code" />
+		        </tree>
+		    </field>
+		</record>
+		
+		<record id="action_out_reason" model="ir.actions.act_window">
+		    <field name="name">Out reason</field>
+		    <field name="res_model">out.reason</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+		
+		<record id="view_routing_category_form" model="ir.ui.view">
+             <field name="name">routing category</field>
+             <field name="model">routing.category</field>
+             <field name="arch" type="xml">
+                 <form string="Routing Tags">
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+
+         <record id="view_routing_category_list" model="ir.ui.view">
+             <field name="name">routing category</field>
+             <field name="model">routing.category</field>
+             <field eval="8" name="priority"/>
+             <field name="arch" type="xml">
+                 <tree string="Routing Tags" editable="bottom">
+                     <field name="name"/>
+                 </tree>
+             </field>
+         </record>
+
+         <record id="action_routing_category" model="ir.actions.act_window">
+             <field name="name">Routing Tags</field>
+             <field name="res_model">routing.category</field>
+             <field name="view_mode">tree,form</field>
+         </record>
+		
+		
+		<record id="job_inherit_routing" model="ir.ui.view">
+            <field name="name">job inherit routing</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+            	<data>
+					<field name="company_id" position="before">
+						<field name="job_code"/>
+					</field>
+				</data>
+			</field>
+		</record>
+    </data>
+</openerp>

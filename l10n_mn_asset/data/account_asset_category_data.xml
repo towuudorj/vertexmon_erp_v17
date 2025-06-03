@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		 
+		<record id="computer_account_asset_category" model="account.asset.category">
+            <field name="name">Компютер, дагалдах хэрэгсэл</field>
+            <field name="method_number">24</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+        
+        <record id="furniture_account_asset_category" model="account.asset.category">
+            <field name="name">Тавилга эд хогшил</field>
+            <field name="method_number">120</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+        
+        <record id="car_account_asset_category" model="account.asset.category">
+            <field name="name">Тээврийн хэрэгсэл</field>
+            <field name="method_number">120</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+        <record id="machine_account_asset_category" model="account.asset.category">
+            <field name="name">Машин тоног төхөөрөмж</field>
+            <field name="method_number">120</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+        <record id="building_account_asset_category" model="account.asset.category">
+            <field name="name">Барилга байгууламж</field>
+            <field name="method_number">480</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+        <record id="none_asset_account_asset_category" model="account.asset.category">
+            <field name="name">Биет бус хөрөнгө</field>
+            <field name="method_number">120</field>
+            <field name="method_time">number</field>
+            <field name="method_period">1</field>
+            <field name="method">linear</field>
+            <field name="prorata">True</field>
+            <field name="account_asset_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_id" ref="mn_asset_account_template"/>
+            <field name="account_depreciation_expense_id" ref="mn_asset_account_template"/>
+            <field name="date_first_depreciation">manual</field>
+            <field name="journal_id" ref="mn_asset_account_journal"/>
+        </record>
+        
+	
+	</data>
+</odoo>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<record id="hr_decree_search" model="ir.ui.view">
+	            <field name="name">HR decree</field>
+	            <field name="model">hr.decree</field>
+	            <field name="arch" type="xml">
+	                <search string="HR decree">
+                    	<field name="decree_number"/>
+                    	<field name="name"/>
+                    	<field name="decree_type"/>
+                    	<field name="company_id"/>
+                    	<field name="department_id"/>
+                    	<field name="position_id"/>
+                    	<field name="state"/>
+	                    <group  expand='0' string='Group by'>
+	                   		<filter name="decree_number" string='Decree number' icon="terp-mrp" domain="[]" context="{'group_by' : 'decree_number'}"/>
+	                    	<filter name="name" string='Decree summary' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'name'}"/>
+	                    	<filter name="decree_type" string='Decree type' icon="terp-mrp" domain="[]" context="{'group_by' : 'decree_type'}"/>
+	                    	<filter name="company_id" string='Company' icon="terp-mrp" domain="[]" context="{'group_by' : 'company_id'}"/>
+	                    	<filter name="department_id" string='Department' icon="terp-mrp" domain="[]" context="{'group_by' : 'department_id'}"/>
+	                    	<filter name="position_id" string='Position' icon="terp-mrp" domain="[]" context="{'group_by' : 'position_id'}"/>
+	                    	<filter name="is_read_decree" string='Is read the Decree' icon="terp-mrp" domain="[]" context="{'group_by' : 'is_read_decree'}"/>
+	                    	<filter name="state" string='State' icon="terp-mrp" domain="[]" context="{'group_by' : 'state'}"/>
+	                    </group>
+	                </search>
+	            </field>
+        </record>
+		
+		<record id="hr_decree_form" model="ir.ui.view">
+		    <field name="name">HR decree</field>
+		    <field name="model">hr.decree</field>
+		    <field name="arch" type="xml">
+		        <form string="HR decree">
+		        	<header>
+							<button name="action_to_draft" string="To draft"
+									 type="object" 
+									 invisible="state!='cancel'"
+									 />
+                    		<button name="action_to_cancel"  string="To cancel"
+									 type="object"  
+									 invisible="state!='approved'"
+									 />
+                    		<button name="action_to_approve"  string="To approve"
+									 type="object"
+									 class="oe_highlight"
+									 invisible="state!='draft'"
+									 />
+						<field name="state" widget="statusbar" statusbar_visible="draft,approved,cancelled" />
+		            </header>
+					
+		            <sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="action_to_contract" 
+									string="Contract" 
+									type="object" 
+									class="oe_stat_button" 
+									icon="fa-pencil-square-o">
+									<field name="contract_count" widget="statinfo" string="Contract"/>
+							</button>
+						</div>
+		            	<div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Тушаалын хураангуй" required="True" readonly="state != 'draft'"/>
+                            </h1>
+                        </div>
+						<group>
+                            <field name="decree_number" />
+						</group>
+		            	<group colspan="2" col="2">
+							<field name="decree_type" required="1" readonly="state != 'draft'"/>
+							<field name="decree_template" readonly="state != 'draft'"/>
+							<field name="company_id" readonly="state != 'draft'"/>
+							<field name="employee_id" invisible="decree_type != 'staff'"  required="decree_type == 'staff'" readonly="state != 'draft'" />
+							<field name="date" readonly="state != 'draft'"/>
+							<field name="department_id" invisible="decree_type != 'staff'" required="decree_type == 'staff'"  readonly="state != 'draft'" />
+							<field name="position_id" invisible="decree_type != 'staff'" required="decree_type == 'staff'" readonly="state != 'draft'" />
+							<field name="is_read_decree" invisible="decree_type != 'staff'" required="decree_type == 'staff'" readonly="state != 'draft'" />
+							<field name="hr_employee_id" invisible="decree_type != 'staff'" required="decree_type == 'staff'" readonly="state != 'draft'" />
+							<field name="transfer_type" invisible="state != 'draft'"/>
+							<field name="transfer_decree_id" invisible="state != 'draft'"/>
+							<!--<field name="note" placeholder="Тушаалын тэмдэглэл" readonly="state != 'draft'"/> -->
+						</group>
+						<notebook>
+						
+						<page string="Salary Information" name="salary_info" groups="hr_contract.group_hr_contract_manager" invisible="decree_type != 'staff'">
+							<group name="salary_info" invisible="False" attribute="invisible">
+								<group>
+									<field name="previous_wage" readonly="1"/>
+									<field name="wage" attribute="invisible" required="1"/>
+									<field name="currency_id" invisible="1"/>
+									<field name="phone_add"/>
+									<field name="administration_add"/>
+									<field name="food_and_vehicle_add"/>
+									<field name="long_year_add"/>
+									<field name="health_insurance"/>
+									<field name="accident_insurance"/>
+									<field name="voucher"/>
+									<field name="abnormal_add"/>
+								</group>
+							</group>
+						</page>
+						<page string="Contract Details" name="other" groups="hr_contract.group_hr_contract_manager" >
+                                <group name="contract_details_0"/>
+                                <group name="contract_details" col="2"/>
+                                <group name="contract_details_2"/>
+                                <group name="notes_group" string="Notes">
+                                    <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
+                                </group>
+                            </page>	
+						
+						</notebook>
+		            </sheet>
+					<div class="oe_chatter">
+		                <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                <field name="message_ids" widget="mail_thread"/>
+	                </div>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="hr_decree_tree" model="ir.ui.view">
+		    <field name="name">HR decree</field>
+		    <field name="model">hr.decree</field>
+		    <field name="arch" type="xml">
+		        <tree string="HR decree">
+                	<field name="name"/>
+                	<field name="decree_number"/>
+                	<field name="decree_type"/>
+                	<field name="date"/>
+                	<field name="state"/>
+		        </tree>
+		    </field>
+		</record>
+		
+		<record id="hr_decree_pivot" model="ir.ui.view">
+		<field name="name">HR decree</field>
+		<field name="model">hr.decree</field>
+		<field name="type">pivot</field>
+		<field name="arch" type="xml">
+			<pivot string="HR decree">
+                <field name="decree_type" type="row"/>
+                <field name="date" type="col" interval="month"/>
+            </pivot>
+		</field>
+		</record>
+		
+		
+		<record id="action_hr_decree" model="ir.actions.act_window">
+		    <field name="name">HR decree</field>
+		    <field name="res_model">hr.decree</field>
+		    <field name="view_mode">tree,form,pivot</field>
+		    <field name="view_id" ref="hr_decree_tree"/>
+		</record>
+	
+		
+		
+		<record id="hr_contract_inherit_tree" model="ir.ui.view">
+            <field name="name">hr.contract.inherit.tree</field>
+            <field name="model">hr.contract</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+            	<data>
+					<field name="employee_id" position="before">
+						<field name="decree_id"/>
+						<field name="contract_number"/>
+					</field>
+					
+				</data>
+			</field>
+		</record>
+
+		<record id="hr_contract_inherit_form" model="ir.ui.view">
+            <field name="name">hr.contract.inherit.form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+					<xpath expr="//header" position="inside">
+                    	<button name="action_create_decree" string="Create Decree" type="object" class="btn-primary" invisible="decree_id != False"/>
+                	</xpath>
+					<xpath expr="//sheet/div[@class='oe_button_box']" position="inside">
+						<button name="action_to_decree" 
+									string="Decree" 
+									type="object" 
+									class="oe_stat_button" 
+									icon="fa-pencil-square-o">
+									<field name="decree_count" widget="statinfo" string="Decree"/>
+						</button>
+					</xpath>
+					<data>
+						<field name="employee_id" position="before">
+							<field name="contract_number" readonly="1"/>
+							<field name="decree_id" required="0"/>
+						</field>
+					</data>
+					<xpath expr="//field[@name='type_id']" position="attributes">
+						<attribute name="invisible">1</attribute>
+					</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
+		
+		

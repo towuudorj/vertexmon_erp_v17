@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		
+		 <record id="profit_excel_report_view" model="ir.ui.view">
+            <field name="name">profit excel report</field>
+            <field name="model">profit.excel.report</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group colspan="4">
+                        <field name="company_id" widget='selection'/>
+                        <field name="fiscalyear_id"/>
+                        <field name="target_move"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                   
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_profit_excel_report" model="ir.actions.act_window">
+            <field name="name">Profit excel report</field>
+            <field name="res_model">profit.excel.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="profit_excel_report_view"/>
+            <field name="target">new</field>
+        </record>
+        
+        		
+	</data>
+</odoo>

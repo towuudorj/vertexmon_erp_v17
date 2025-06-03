@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	 <data>
+		
+
+        <record id="work_handover_act_search" model="ir.ui.view">
+            <field name="name">Work handover act</field>
+            <field name="model">work.handover.act</field>
+            <field name="arch" type="xml">
+                <search string="Routing slip">
+					<field name="employee_id"/>
+					<field name="last_name"/>
+					<field name="company_id"/>
+					<field name="job_id"/>
+					<field name="handover_date"/>
+					<field name="state"/>
+                    <group expand="0" string="Group By">
+						<filter string="Company" name="company_id" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Employee" name="employee_id" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Last name" name="last_name" icon="terp-personal" domain="[]" context="{'group_by':'last_name'}"/>
+                        <filter string="Job" name="job_id" icon="terp-personal" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Handover date" name="handover_date" icon="terp-personal" domain="[]" context="{'group_by':'handover_date'}"/>
+                        <filter string="Left date" name="left_date" icon="terp-personal" domain="[]" context="{'group_by':'left_date'}"/>
+                        <filter string="State" name="state" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+		
+		<record id="work_handover_act_form" model="ir.ui.view">
+		    <field name="name">Work handover act</field>
+		    <field name="model">work.handover.act</field>
+		    <field name="arch" type="xml">
+        		<form string="Work handover.act">
+               		<header>
+						<button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'cancel'" />
+						<button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'work_handover_act_draft'" />
+                        <button name="action_cancel" string="Cancel" type="object" class="btn secondary" invisible="state =='cancel' or state !='draft'" />
+               			<button name="confirm_quit" string="Confirm Department" type="object" class="oe_highlight" invisible="state != 'handover_act_ended'" />
+               			<field name="state" widget="statusbar"/>
+	        		</header>
+        			<sheet>
+
+						<div class="oe_button_box" name="button_box">
+							<button name="action_to_routing" 
+									string="Routing"
+									type="object" 
+									class="oe_stat_button" 
+									icon="fa-pencil-square-o">
+									<field name="routing_slip_count" widget="statinfo" string="Routing"/>
+							</button>
+						</div>
+
+        				<group colspan="2" col="4">
+							<field name="name" readonly="True"/>
+							<field name="company_id" required="True" on_change="onchange_company_id(company_id)" readonly="state not in ('work_handover_act_draft')"/>
+        					<field name="employee_id" required="True" on_change="onchange_employee_id(employee_id)" readonly="state not in ('work_handover_act_draft')"/>
+							<field name="last_name" readonly="state not in ('work_handover_act_draft')"/>
+        					<field name="handover_date" readonly="False"/>
+							<!-- <field name="survey_id" /> -->
+        					<field name="job_id" domain="[('no_of_employee','>','0')]" readonly="state not in ('work_handover_act_draft')"/>
+        				</group>
+        				<group>
+        					<field name="accession_date" readonly="state not in ('work_handover_act_draft')"/>
+        					<field name="left_date" readonly="state not in ('work_handover_act_draft')"/>
+        				</group>
+    					<field name="slip_line_id" readonly="state not in ('work_handover_act_draft')">
+       						<tree editable="bottom" default_order="code asc">
+              					<field name="code"/>
+              					<field name="company_id"/>
+              					<field name="job_id" required="1" domain="[('no_of_employee','>','0')]" on_change="onchange_job_id(job_id)"/>
+              					<field name="employee_id" domain="[('job_id','=',job_id)]"/>
+              					<field name="date"/>
+              					<field name="handover_category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"/>
+              					<field name="note"/>
+              					<field name="signature"/>
+              				</tree>
+                   		</field>
+	
+						<div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+	                    </div>
+                	</sheet>
+        		</form>
+		    </field>
+		</record>
+		
+		<record id="work_handover_act_tree" model="ir.ui.view">
+		    <field name="name">Work handover act</field>
+		    <field name="model">work.handover.act</field>
+		    <field name="arch" type="xml">
+        		<tree string="Work handover act">
+					<field name="company_id"/>
+					<field name="employee_id"/>
+					<field name="last_name"/>
+					<field name="job_id"/>
+					<field name="handover_date"/>
+					<field name="state"/>
+	           	</tree>
+		    </field>
+		</record>
+		
+		<record id="action_work_handover_act" model="ir.actions.act_window">
+		    <field name="name">Work handover act</field>
+		    <field name="res_model">work.handover.act</field>
+		    <field name="view_mode">tree,form</field>
+		    <field name="view_id" ref="work_handover_act_search"/>
+		    
+		</record>
+		
+		
+		<record id="handover_act_master_form" model="ir.ui.view">
+		    <field name="name">Handover act master</field>
+		    <field name="model">handover.act.master</field>
+		    <field name="arch" type="xml">
+        		<form string="Routing master">
+        			<sheet>
+        				<group colspan="2" col="4">
+
+        					<field name="job_id" required="True" domain="[('no_of_employee','>','0')]"/>
+        				</group>
+       					<field name="master_line_id" options="{'always_reload':True}">
+       						<tree editable="bottom" default_order="code asc">
+              					<field name="code"/>
+              					<field name="company_id"/>
+              					<field name="job_id" required="1" domain="[('no_of_employee','>','0')]" on_change="onchange_job_id(job_id)"/>
+              					<field name="employee_id" domain="[('job_id','=',job_id)]"/>
+              					<field name="handover_category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"/>
+              					<field name="date"/>
+              					<field name="note"/>
+              					<field name="signature"/>
+              				</tree>
+                   		</field>
+                	</sheet>
+        		</form>
+		    </field>
+		</record>
+		
+		<record id="handover_act_master_tree" model="ir.ui.view">
+		    <field name="name">Handover act master</field>
+		    <field name="model">handover.act.master</field>
+		    <field name="arch" type="xml">
+        		<tree string="Handover act master">
+					<field name="job_id"/>
+	           	</tree>
+		    </field>
+		</record>
+		
+		<record id="action_handover_act_master" model="ir.actions.act_window">
+		    <field name="name">Handover act master</field>
+		    <field name="res_model">handover.act.master</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="view_routing_category_form" model="ir.ui.view">
+             <field name="name">handover act category</field>
+             <field name="model">handover.act.category</field>
+             <field name="arch" type="xml">
+                 <form string="Routing Tags">
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+
+         <record id="view_handover_act_category_list" model="ir.ui.view">
+             <field name="name">handover act category</field>
+             <field name="model">handover.act.category</field>
+             <field eval="8" name="priority"/>
+             <field name="arch" type="xml">
+                 <tree string="Routing Tags" editable="bottom">
+                     <field name="name"/>
+                 </tree>
+             </field>
+         </record>
+
+         <record id="action_handover_act_category" model="ir.actions.act_window">
+             <field name="name">Handover Act Tags</field>
+             <field name="res_model">handover.act.category</field>
+             <field name="view_mode">tree,form</field>
+         </record>
+		
+		
+		<record id="job_inherit_routing" model="ir.ui.view">
+            <field name="name">job inherit routing</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+            	<data>
+					<field name="company_id" position="before">
+						<field name="job_code"/>
+					</field>
+				</data>
+			</field>
+		</record>
+		
+
+    </data>
+</odoo>

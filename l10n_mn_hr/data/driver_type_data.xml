@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        
+        <record id="driver_one" model="driver.type">
+            <field name="name">А Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_two" model="driver.type">
+            <field name="name">В Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_three" model="driver.type">
+            <field name="name">ВЕ Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_four" model="driver.type">
+            <field name="name">С Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_five" model="driver.type">
+            <field name="name">С1Е Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_six" model="driver.type">
+            <field name="name">С1 Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_seven" model="driver.type">
+            <field name="name">СЕ Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_eigth" model="driver.type">
+            <field name="name">D Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_nine" model="driver.type">
+            <field name="name">DE Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_ten" model="driver.type">
+            <field name="name">D1 Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_twelve" model="driver.type">
+            <field name="name">D1E Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="driver_tventy" model="driver.type">
+            <field name="name">M Ангилал</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</odoo>

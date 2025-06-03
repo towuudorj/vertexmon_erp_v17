@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	 		<record model="ir.ui.view" id="account_cash_move_type_tree_view">
+                <field name="name">account.cash.move.type.tree</field>
+                <field name="model">account.cash.move.type</field>
+                <field name="arch" type="xml">
+                    <tree string="tree_string">
+                        <field name="company_id"/>
+               			<field name="sequence"/>
+                        <field name="code"/>
+               			<field name="name" />
+               			<field name="group"/>
+               			<field name="description"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="account_cash_move_type_form_view">
+                <field name="name">account.cash.move.type.form</field>
+                <field name="model">account.cash.move.type</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                    	<sheet>
+                    		<group>
+                    			<field name="company_id"/>
+                    			<field name="sequence"/>
+                                <field name="code"/>
+                    			<field name="name" />
+                    			<field name="group"/>
+                    			<field name="description"/>
+                    		</group>
+                    		<notebook>
+                    			<page string="Debit account">
+                    				<field name="debit_account_ids"/>
+                    			</page>
+                    			<page string="Credit account">
+                    				<field name="credit_account_ids"/>
+                    			</page>
+                    		</notebook>
+                    	</sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_account_cash_move_type_tree_view">
+                <field name="name">Account cash move type</field>
+                <field name="res_model">account.cash.move.type</field>
+                <field name="view_mode">tree,kanban,form</field>
+                <field name="view_id" ref="account_cash_move_type_tree_view"/>
+            </record>
+		
+	
+	
+</odoo>

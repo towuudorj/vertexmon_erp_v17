@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_distributor_register,distributor.register,model_distributor_register,stock.group_stock_user,1,0,0,0
+access_distributor_register_manager,distributor.register,model_distributor_register,stock.group_stock_manager,1,1,1,1
+access_item_group,item.group,model_item_group,stock.group_stock_user,1,0,0,0
+access_item_group_manager,item.group,model_item_group,stock.group_stock_manager,1,1,1,1
+access_product_category_new,item.group,model_product_category_new,stock.group_stock_user,1,0,0,0
+access_product_category_new_manager,item.group,model_product_category_new,stock.group_stock_manager,1,1,1,1

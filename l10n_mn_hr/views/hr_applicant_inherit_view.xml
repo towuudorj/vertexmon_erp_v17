@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="mn_hr_applicant_inherit" model="ir.ui.view">
+	        <field name="name">hr.applicant.mn.form.inherit</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+	        <field name="arch" type="xml">
+				<header>
+					<button string="Make Contract" type="object" name="action_contract" class="btn-primary" invisible="date_closed == False or emp_id"/>
+				</header>
+	            <data>
+	                <xpath expr='//field[@name="email_cc"]' position="replace"/>
+					<xpath expr='//field[@name="linkedin_profile"]' position="replace"/>
+					<xpath expr='//field[@name="partner_mobile"]' position="replace"/>
+					<xpath expr='//field[@name="medium_id"]' position="replace"/>
+					<xpath expr='//field[@name="job_id"]' position="before">
+						<field name="workplace_id"/>
+					</xpath>
+					<xpath expr='//h2' position="before">
+						<h2 class="o_row">
+                        <div>
+                            <label for="surname" class="oe_edit_only"/>
+                            <field name="surname"/>
+                        </div>
+                    </h2>
+					</xpath>
+					<xpath expr='//field[@name="type_id"]' position="after">
+						<field name="meeting_type"/>
+					</xpath>
+					<xpath expr='//field[@name="meeting_type"]' position="after">
+						<field name="attendance"/>
+                        <field name="refuse_reason"/>
+					</xpath>
+	            </data>
+	        </field>
+    	</record> 
+    </data>
+</odoo>

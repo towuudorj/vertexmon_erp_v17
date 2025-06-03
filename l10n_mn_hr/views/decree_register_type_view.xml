@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="decree_register_type_form_view" model="ir.ui.view">
+            <field name="name">decree.register.type.form</field>
+            <field name="model">decree.register.type</field>
+            <field name="arch" type="xml">
+                <form string="Decree Register">
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="reg_user_id"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="date"/>
+                            <field name="hr_employee_id"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="decree_register_type_tree_view" model="ir.ui.view">
+            <field name="name">decree.register.type.tree</field>
+            <field name="model">decree.register.type</field>
+            <field name="arch" type="xml">
+                <tree string="Decree Register">
+                    <field name="company_id"/>
+                    <field name="reg_user_id"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_decree_register_type" model="ir.actions.act_window">
+            <field name="name">Decree Register</field>
+            <field name="res_model">decree.register.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_decree_register_type_root" name="Configuration" parent="base.menu_custom" sequence="10"/>
+    </data>
+</odoo>

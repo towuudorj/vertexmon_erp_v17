@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		
+		<record id="location_one" model="location.register">
+            <field name="name">Багануур дүүрэг</field>
+            <field name="code">1101</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+		
+		
+		<record id="location_two" model="location.register">
+            <field name="name">Багахангай дүүрэг</field>
+            <field name="code">1104</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_three" model="location.register">
+            <field name="name">Баянгол дүүрэг</field>
+            <field name="code">1107</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_four" model="location.register">
+            <field name="name">Баянзүрх дүүрэг</field>
+            <field name="code">1110</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_five" model="location.register">
+            <field name="name">Налайх дүүрэг</field>
+            <field name="code">1113</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_six" model="location.register">
+            <field name="name">Сонгинохайрхан дүүрэг</field>
+            <field name="code">1116</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_seven" model="location.register">
+            <field name="name">Сүхбаатар дүүрэг</field>
+            <field name="code">1119</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_eight" model="location.register">
+            <field name="name">Хан-Уул дүүрэг</field>
+            <field name="code">1122</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="location_nine" model="location.register">
+            <field name="name">Чингэлтэй дүүрэг</field>
+            <field name="code">1125</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+	</data>
+</odoo>

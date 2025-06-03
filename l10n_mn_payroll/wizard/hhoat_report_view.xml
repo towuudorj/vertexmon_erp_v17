@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record id="view_hhoat_report_wizard" model="ir.ui.view">
+	        <field name="name">hhoat.report.wizard.form</field>
+	        <field name="model">hhoat.report.wizard</field>
+	        <field name="arch" type="xml">
+	             <form string="Create Invoice Customs">
+	                <group>
+	                	<field name="company_id"/>
+	                    <field name="start_date"/>
+	                    <field name="end_date"/>
+	                </group>
+	                <footer>
+	                    <button name="action_print_xls_report" string="Report export" type="object"
+	                        class="btn-primary"/>
+	                    <button string="Close" class="btn-default" special="cancel"/>
+	                </footer>
+	            </form>
+	        </field>
+	    </record>
+	
+		    <!-- Action of Merge Sale Order -->
+		    <record id="action_hhoat_report_wizard" model="ir.actions.act_window">
+		        <field name="name">Hhoat report</field>
+		        <field name="type">ir.actions.act_window</field>
+		        <field name="res_model">hhoat.report.wizard</field>
+		        <field name="view_mode">form</field>
+		        <field name="view_id" ref="view_hhoat_report_wizard"/>
+		        <field name="target">new</field>
+		    </record>
+		
+		
+	</data>
+</odoo>

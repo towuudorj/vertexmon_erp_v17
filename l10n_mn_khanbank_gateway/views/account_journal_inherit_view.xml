@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    		 <record id="account_journal_inherit_bank_form" model="ir.ui.view">
+		        <field name="name">account.journal.form.bank.inherit</field>
+		        <field name="model">account.journal</field>
+		        <field name="inherit_id" ref="account.view_account_journal_form"/>
+		        <field name="arch" type="xml">
+		            <data>
+		                <xpath expr='//field[@name="type"]' position="after">
+		                	<field name="is_khanbank_connect" />
+		                </xpath>
+		                
+		                <xpath expr='//page[@name="advanced_settings"]' position="after">
+		                	<page string="Bank" attrs="{'invisible':[('is_khanbank_connect','=',False)]}">
+		                		<button type="object" 
+				                        class="oe_stat_button"
+				                        id="get_account_statement_button"
+				                        icon="fa-pencil-square-o"
+				                        name="get_account_statement">
+				                        <div>Get statement</div>
+				                    </button>
+				                    
+				                    <button type="object" 
+				                        class="oe_stat_button"
+				                        id="get_rate_statement_button"
+				                        icon="fa-pencil-square-o"
+				                        name="get_rate_downloads">
+				                        <div>Get rate download</div>
+				                    </button>
+		                		<group colspan="4" col="2">
+		                			<field name="bank_config_id" attrs="{'required':[('is_khanbank_connect','=',True)]}" />
+		                			<field name="number" attrs="{'required':[('is_khanbank_connect','=',True)]}"/>
+		                			<field name="ds_date"/>
+		                			
+		                			<field name="de_date"/>
+		                			<field name="bank_type"/>
+		                			<field name="open_date"/>
+		                			<field name="in_method"/>
+		                			<field name="in_rate"/>
+		                			
+		                		</group>
+		                		
+		                	</page>
+		                </xpath>
+		                
+		                
+		            </data>
+		        </field>
+	    	</record>
+</odoo>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+            
+             <record model="ir.ui.view" id="crm_lead_create_inherit_mn_tree_view">
+                <field name="name">crm.lead.mn.inherit.tree</field>
+	        	<field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+                <field name="model">crm.lead</field>
+                <field name="arch" type="xml">
+                    <data>
+                         <xpath expr='//field[@name="name"]' position="after">
+                            <field name="code" />
+                        </xpath>
+                        <xpath expr='//field[@name="expected_revenue"]' position="replace">
+                            <field name="amount_total" />
+                        </xpath>
+                    </data>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="crm_lead_create_inherit_mn_form_view">
+                <field name="name">crm.lead.mn.create.inherit.form</field>
+	        	<field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+                <field name="model">crm.lead</field>
+                <field name="arch" type="xml">
+                    <data>
+                         <xpath expr='//field[@name="partner_id"]' position="replace">
+                        </xpath>
+                    </data>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="crm_lead_inherit_mn_form_view">
+                <field name="name">crm.lead.mn.inherit.form</field>
+	        	<field name="inherit_id" ref="crm.crm_lead_view_form"/>
+                <field name="model">crm.lead</field>
+                <field name="arch" type="xml">
+                    <data>
+                        <button name="action_schedule_meeting" position="after">
+                            <button class="oe_stat_button" type="object"
+                                name="action_view_invoice" icon="fa-pencil-square-o">
+                                <field name="invoice_count" widget="statinfo" string="Invoice"/>
+                            </button>
+
+                            <button class="oe_stat_button" type="object"
+                                name="action_view_purchase_requisition" icon="fa-pencil-square-o">
+                                <field name="purchase_request_count" widget="statinfo" string="Purchase requisition"/>
+                            </button>
+
+                            <button class="oe_stat_button" type="object"
+                                name="action_view_purchase_order" icon="fa-pencil-square-o">
+                                <field name="purchase_order_count" widget="statinfo" string="Purchase Order"/>
+                            </button>
+                        </button>
+
+                        <!--
+                        <xpath expr='//header/button[@name="toggle_active"]' position="after">
+                            <button string="Create purchase requisition" type="object"
+                                invisible="probability != 100"
+                                name="create_purchase_requisition"/>
+                        </xpath>-->
+
+                        <xpath expr='//sheet/div[@class="oe_title"]/h1' position="after">
+                            <group>
+                                <field name="code" />
+                                <field name="sales_type" />
+                                <field name="crm_type" />
+                                <field name="send_date" />
+                            </group>
+                        </xpath>
+
+                        <xpath expr='//label[@for="date_deadline"]' position="replace">
+                        </xpath>
+
+                        <xpath expr='//div[@class="o_lead_opportunity_form_inline_fields"]' position="replace">
+                        </xpath>
+
+                        <xpath expr='//group[@name="categorization"]' position="replace">
+                        </xpath>
+
+                        <xpath expr='//sheet/div[@class="oe_title"]/h2[@class="row g-0 pb-3 pb-sm-4"]/div[@class="col-auto"]/div[@id="probability"]/field[@name="probability"]' position="replace">
+                            <field name="probability" widget="float" class="oe_inline o_input_6ch" invisible="1"/>
+                        </xpath>
+
+                        <xpath expr='//sheet/div[@class="oe_title"]/h2[@class="row g-0 pb-3 pb-sm-4"]/div[@class="col-auto"]/div[@id="probability"]/span[@class="oe_grey p-2"]' position="replace">
+                        </xpath>
+
+                        <xpath expr='//sheet/div[@class="oe_title"]/h2[@class="row g-0 pb-3 pb-sm-4"]/div[@class="col-auto pb-2 pb-md-0"]' position="replace">
+                        </xpath>
+                        <xpath expr='//notebook/page[@name="lead"]/group/group[@class="mt48"]' position="replace">
+                        </xpath>
+                        <xpath expr='//notebook/page[@name="lead"]/group/group[2]' position="replace">
+                        </xpath>
+                        <xpath expr='//notebook/page[@name="lead"]/group/group/field[@name="team_id"]' position="replace">
+                        </xpath>
+                        <xpath expr='//field[@name="tag_ids"]' position="after">
+                            <field name="team_id" />
+                            <field name="source_id" />
+                        </xpath>
+                        <xpath expr='//notebook/page[@name="internal_notes"]' position="before">
+                            <page string='Order line'>
+                                <field name="lead_line_ids">
+                                    <tree editable="bottom" decoration-success="priority == 'normal'" decoration-danger="priority == 'high'">
+                                        <field name="product_id"/>
+                                        <field name="name" />
+                                        <field name="request_type" optional="show"/>
+                                        <field name="purchase_user_id" optional="show"/>
+                                        <field name="uom_id"  required="product_id != False"/>
+                                        <field name="priority"  optional="show"/>
+                                        <field name="qty"/>
+                                        <field name="cost_price" readonly="request_type!='is_purchase'"/>
+                                        <field name="currency_id"/>
+                                        <field name="sale_price"/>
+                                        <field name="price_subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                </group>
+
+                            </page>
+                        </xpath>
+                    </data>
+                </field>
+            </record>
+
+            
+        <record model="ir.actions.act_window" id="crm_lead_action_tender_pipeline">
+            <field name="name">Pipeline</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
+            <field name="domain">[('type','=','opportunity'),('sales_type','=','tender')]</field>
+            <field name="context">{
+                    'default_sales_type': 'tender',
+                    'default_type': 'opportunity',
+                    'search_default_assigned_to_me': 1
+            }</field>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="crm_lead_action_project_pipeline">
+            <field name="name">Pipeline</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
+            <field name="domain">[('type','=','opportunity'),('sales_type','=','project')]</field>
+            <field name="context">{
+                    'default_sales_type': 'project',
+                    'default_type': 'opportunity',
+                    'search_default_assigned_to_me': 1
+            }</field>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+        </record>
+
+
+     
+
+
+ 
+
+    </data>
+</odoo>

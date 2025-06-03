@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="vat_root_menu" name="Vat" sequence="100" />
+		<menuitem id="vat_configure_menu" name="Vat configure" parent="vat_root_menu" action="action_vat_configure"  />
+		<menuitem id="vat_district_menu" name="Vat district" parent="vat_root_menu" action="action_vat_district"  />
+    	<menuitem id="vat_data_menu" name="Vat receipt data" parent="vat_root_menu" action="action_vat_data"  />
+        <menuitem id="vat_category_menu" name="Vat category" parent="vat_root_menu" action="action_vat_category"  />
+
+
+    </data>
+</odoo>

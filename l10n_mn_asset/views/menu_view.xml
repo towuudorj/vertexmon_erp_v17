@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<data>
+
+    	<menuitem id="account_asset_detail_menu" name="Account asset detail report" parent="account.menu_finance_entries" action="action_account_asset_detail_report"/>
+		<menuitem id="asset_location_menu" name="Asset location" parent="account.account_management_menu" action="action_asset_location_tree_view"/>
+		<menuitem id="asset_move_menu" sequence="102" name="Account asset move" parent="account.menu_finance_entries_management" action="action_account_asset_move_tree_view"/>
+
+</data>
+</odoo>

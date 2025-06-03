@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_directors_form" model="ir.ui.view">
+            <field name="name">directors.form</field>
+            <field name="model">directors</field>
+            <field name="arch" type="xml">
+                <form string="Directors">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="department_id"/>
+                            <field name="executive_director"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_directors_tree" model="ir.ui.view">
+            <field name="name">directors.tree</field>
+            <field name="model">directors</field>
+            <field name="arch" type="xml">
+                <tree string="Directors">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="executive_director"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_directors_kanban" model="ir.ui.view">
+            <field name="name">directors.kanban</field>
+            <field name="model">directors</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <strong><field name="name"/></strong>
+                                <div><field name="department_id"/></div>
+                                <div><field name="executive_director"/></div>
+                                <div><field name="start_date"/></div>
+                                <div><field name="end_date"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_directors_graph" model="ir.ui.view">
+            <field name="name">directors.graph</field>
+            <field name="model">directors</field>
+            <field name="arch" type="xml">
+                <graph string="Directors">
+                    <field name="department_id"/>
+                    <field name="executive_director"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_directors" model="ir.actions.act_window">
+            <field name="name">Directors</field>
+            <field name="res_model">directors</field>
+            <field name="view_mode">tree,form,kanban,graph</field>
+        </record>
+
+    </data>
+</odoo>

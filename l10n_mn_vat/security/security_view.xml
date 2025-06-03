@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="group_vat_config_user" model="res.groups">
+	        <field name="name">Татварын мэдээлэл илгээх ажилтан</field>
+	    </record>
+	    
+	    <record id="group_vat_config_manager" model="res.groups">
+	        <field name="name">Татварын тохиргоо</field>
+	    </record>
+    	
+    
+    </data>
+ </odoo>

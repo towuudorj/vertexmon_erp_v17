@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		
+		<record id="hr_penalty_search_view" model="ir.ui.view">
+	            <field name="name">Hr penalty</field>
+	            <field name="model">hr.penalty</field>
+	            <field name="arch" type="xml">
+	                <search string="HR penalty">
+                    	<field name="hr_employee_id"/>
+                    	<field name="company_id"/>
+                    	<field name="department_name"/>
+                    	<field name="position_name"/>
+                    	<field name="penalty_name"/>
+                    	<field name="date"/>
+                    	<field name="penalty_select"/>
+                    	<field name="note"/>
+	                    <group  expand='0' string='Group by...'>
+	                   		<filter name='state' string='State' icon="terp-mrp" domain="[]" context="{'group_by' : 'state'}"/>
+	                    	<filter name='penalty_name' string='Penalty name' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'penalty_name'}"/>
+	                    	<filter name='hr_employee_id' string='Employee' icon="terp-mrp" domain="[]" context="{'group_by' : 'hr_employee_id'}"/>
+	                   		<filter name='company_id' string='Company' icon="terp-mrp" domain="[]" context="{'group_by' : 'company_id'}"/>
+	                    	<filter name='department_name' string='Department' icon="terp-mrp" domain="[]" context="{'group_by' : 'department_name'}"/>
+	                    	<filter name='penalty_select' string='Penalty select' icon="terp-mrp" domain="[]" context="{'group_by' : 'penalty_select'}"/>
+	                   		<filter name='penalty_type' string='Penalty type' icon="terp-mrp" domain="[]" context="{'group_by' : 'penalty_type'}"/>
+	                    	<filter name='is_withhold_salary' string='Is withhold salary' icon="terp-mrp" domain="[]" context="{'group_by' : 'is_withhold_salary'}"/>
+	                    </group>
+	                </search>
+	            </field>
+        </record>
+		
+		<record id="view_hr_penalty_form" model="ir.ui.view">
+		    <field name="name">Hr penalty</field>
+		    <field name="model">hr.penalty</field>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+		        <form string="Hr penalty">
+		        	<header>
+		        			<!--<button name="action_to_approve" states="nonapprove" string="To approve" icon="fa-arrow-circle-forward" type="object" groups="hr.group_hr_manager" class="oe_read_only"/>
+                			--><field name="state" widget="statusbar"/>
+		            </header>
+		            <sheet>
+			            <group colspan="4" col="2">
+			            	<group>
+			            		<field name="hr_employee_id" />
+			            		<field name="name" />
+			            		<field name="company_id" />
+			            		<field name="department_name" />
+				            	<field name="position_name" />
+				            	<field name="decree_id" invisible="penalty_type == 'penalty'" required="penalty_type == 'penalty'" domain="[('employee_id','=',hr_employee_id)]"/>
+			            	</group>
+				            <group>
+			            		<field name="penalty_type" />
+			            		<field name="penalty_name" />
+				            	<field name="date" />
+				            	<field name="date_end" />
+				            	<field name="need_deliver_finance" />
+				            	<field name="penalty_select" />
+				            	<field name="is_withhold_salary" help="Цалингаас суутгах бол сонгоно уу!"/>
+				            	<!-- 
+				            	<field name="is_degredation" attrs="{'invisible':[('is_salary_deduction','=',True)]}" help="Хэрэв сонгосон бол батлах үед Гэрээний цалин болон албан тушаалыг шууд бууруулна."/>
+				            	<field name="is_salary_deduction" attrs="{'invisible':[('is_degredation','=',True)]}" help="Хэрэв сонгосон бол батлах үед Гэрээний цалинг шууд бууруулна."/>
+				            	 -->
+				            </group>
+				            <group colspan="4" col="2">
+			            		<field name="is_employee_accepted"/>
+			        			<field name="nonaccepted_note"/>
+				            </group>
+				            <group colspan="4" col="2">
+				            	<group string="Salary deduction" invisible="is_withhold_salary == 'False'">
+				            		<field name="percent" help="To compute percent of wage"/>
+				        			<field name="amount" help="Computed percent of wage"/>
+				            	</group>
+				            	<!-- <group string="Degradation" attrs="{'invisible':[('is_degredation','=',False)]}">
+				            		<field name="deg_department" help="To degrade department"/>
+				        			<field name="deg_position" help="To degrade position" domain="[('department_id','=',deg_department)]"/>
+				        			<field name="deg_wage" help="To degrade wage"/>
+				            	</group> -->
+				            </group>
+			            </group>
+			            <separator string="Note"/>
+				            	<field name="note" />
+			        </sheet>
+					<div class="oe_chatter">
+		                <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                <field name="message_ids" widget="mail_thread"/>
+	                </div>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="view_hr_penalty_tree" model="ir.ui.view">
+		    <field name="name">Hr penalty</field>
+		    <field name="model">hr.penalty</field>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+		        <tree string="Hr penalty">
+			        <field name="penalty_type" />
+		        	<field name="hr_employee_id" />
+		            <field name="name" />
+			        <field name="penalty_name" optional="show"/>
+			        <field name="company_id" optional="show"/>
+			        <field name="department_name" optional="show"/>
+			        <field name="position_name" optional="show"/>
+			        <field name="date" />
+			        <field name="state" />
+			        <!--<field name="penaty_select" />
+			         field name="percent" />
+			        <field name="amount" />
+			        <field name="note" />
+		        	 -->
+		        </tree>
+		    </field>
+		</record>
+		
+		<record id="view_hr_penalty_pivot" model="ir.ui.view">
+		    <field name="name">Hr penalty</field>
+		    <field name="model">hr.penalty</field>
+		    <field name="type">pivot</field>
+		    <field name="arch" type="xml">
+				<pivot string="Hr penalty">
+	                <field name="hr_employee_id" type="row"/>
+	                <field name="date" type="col"/>
+	            </pivot>
+		    </field>
+		</record>
+		
+		<record id="action_hr_penalty" model="ir.actions.act_window">
+		    <field name="name">Hr penalty</field>
+		    <field name="res_model">hr.penalty</field>
+		    <field name="view_mode">tree,form,pivot</field>
+		    <field name="view_id" ref="hr_penalty_search_view" />
+		</record>
+		
+		<record id="view_hr_penalty_type_form" model="ir.ui.view">
+		    <field name="name">Hr penalty type</field>
+		    <field name="model">hr.penalty.type</field>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+		        <form string="Hr penalty type">
+		            <group colspan="4" col="2">
+		            	<group>
+		            		<field name="penalty_code" />
+			            </group>
+			            <group>
+			            	<field name="name" />
+			            </group>	
+		            </group>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="view_hr_penalty_type_tree" model="ir.ui.view">
+		    <field name="name">Hr penalty type</field>
+		    <field name="model">hr.penalty.type</field>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+		        <tree string="Hr penalty type">
+			        <field name="penalty_code" />
+			        <field name="name" />
+		        </tree>
+		    </field>
+		</record>
+		
+		<record id="action_hr_penalty_type" model="ir.actions.act_window">
+		    <field name="name">Hr penalty type</field>
+		    <field name="res_model">hr.penalty.type</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+		
+		<record id="view_hr_imposing_penalty_form" model="ir.ui.view">
+		    <field name="name">Hr imposing penalty</field>
+		    <field name="model">hr.imposing.penalty</field>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+		        <form string="Hr imposing penalty">
+		            	<group>
+		            		<field name="name" />
+			            </group>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="action_hr_imposing_penalty" model="ir.actions.act_window">
+		    <field name="name">Hr imposing penalty</field>
+		    <field name="res_model">hr.imposing.penalty</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+		
+		<record id="view_hr_imposing_penalty_tree" model="ir.ui.view">
+		    <field name="name">Hr imposing penalty</field>
+		    <field name="model">hr.imposing.penalty</field>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+		        <tree string="Hr imposing penalty">
+		        	<field name="name" />
+		        </tree>
+		    </field>
+		</record>
+	</data>
+</odoo>

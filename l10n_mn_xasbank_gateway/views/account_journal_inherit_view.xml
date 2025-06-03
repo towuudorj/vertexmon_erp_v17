@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="mn_inherit_xacbank_account_journal_view" model="ir.ui.view">
+            <field name="name">inherit.mn.account.journal.form</field>
+            <field name="model">account.journal</field>            
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">                
+                <xpath expr="//field[@name='currency_id']" position="after">   
+                    <field name="xacbank_cgw_connect"/>
+                    <field name="is_income" invisible="xacbank_cgw_connect==False"/>
+                    <field name="xacbank_config_id" invisible="xacbank_cgw_connect==False"/>
+                </xpath>
+            </field>
+		</record>
+        
+
+    </data>
+</odoo>

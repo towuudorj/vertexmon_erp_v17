@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="view_training_fee_options_form" model="ir.ui.view">
+            <field name="name">training.fee.options.form</field>
+            <field name="model">training.fee.options</field>
+            <field name="arch" type="xml">
+                <form string="Training Fee Options">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="training_fee_options_tre_view" model="ir.ui.view">
+            <field name="name">training.fee.options.tree</field>
+            <field name="model">training.fee.options</field>
+            <field name="arch" type="xml">
+                <tree string="Training Fee Options">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_training_fee_options" model="ir.actions.act_window">
+            <field name="name">Training Fee Options</field>
+            <field name="res_model">training.fee.options</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

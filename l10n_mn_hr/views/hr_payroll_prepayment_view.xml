@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+            
+            <record model="ir.ui.view" id="hr_payroll_prepayment_tree_view">
+                <field name="name">Hr payroll prepayment tree</field>
+                <field name="model">hr.payroll.prepayment</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Hr payroll prepayment">
+                    	<field name="company_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="create_user"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="hr_payroll_prepayment_form_view">
+                <field name="name">Hr payroll prepayment form</field>
+                <field name="model">hr.payroll.prepayment</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Hr payroll prepayment" version="7.0">
+                    	<header>
+                    		<field name="state" widget="statusbar"/>
+                    		<button name="action_confirm" string="Confirm" states="draft" type="object" />
+                    		<button name="button_click" string="Line" states="draft" type="object" />
+                    		<button name="action_print" string="Print" type="object" />
+                    		<button name="action_cancel" string="Cancel" states="confirm" type="object" />
+                    	</header>
+                    	<group>
+                    		<field name="company_id" readonly="state == 'confirm'"/>
+                    		<field name="name" readonly="state == 'confirm'"/>
+                    		<field name="type" readonly="state == 'confirm'"/>
+                    		<field name="now_date" readonly="state == 'confirm'"/>
+                        	<field name="start_date" readonly="state == 'confirm'"/>
+                        	<field name="end_date" readonly="state == 'confirm'"/>
+                        	<field name="create_user" readonly="state == 'confirm'"/>
+                        	<field name="percent" readonly="state == 'confirm'"/>
+                        	<field name="dep_id" readonly="state == 'confirm'"/>
+                        </group>
+                       	<field name="line_id" readonly="state == 'confirm'">
+                       		<tree editable="medium">
+                       			<field name="name"/>
+                       			<field name="prepayment_payroll"/>
+                       			<field name="is_bank"/>
+                       			<field name="other_payment"/>
+                       			<field name="hand_give"/>
+                       		</tree>
+                       	</field>
+                       	<group>
+                       	<field name="journal_id" readonly = "state == 'confirmed'">
+                            <tree editable="bottom">
+                                <field name ="name"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                       	</group>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_hr_payroll_prepayment_tree_view">
+                <field name="name">Hr payroll prepayment</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">hr.payroll.prepayment</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hr_payroll_prepayment_tree_view"/>
+            </record>
+
+
+
+
+		
+    
+    </data>
+</odoo>

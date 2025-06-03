@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		<record id="equity_changes_view" model="ir.ui.view">
+            <field name="name">equity.changes</field>
+            <field name="model">equity.changes</field>
+            <field name="arch" type="xml">
+                <form string="Equity changes report" >
+                    <group colspan="4">
+                        <field name="company_id" widget='selection' readonly="1"/>
+                        <field name="fiscalyear_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                   </group>
+                   <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                       <button string="Cancel" class="oe_link" special="cancel" />
+                   </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_equity_changes" model="ir.actions.act_window">
+            <field name="name">Equity Changes</field>
+            <field name="res_model">equity.changes</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="equity_changes_view"/>
+            <field name="target">new</field>
+        </record>
+		
+		
+	</data>
+</odoo>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_produts_line,project.products.line,model_project_products_line,project.group_project_user,1,1,0,0
+access_project_produts_line,project.products.line,model_project_products_line,project.group_project_manager,1,1,1,1
+access_task_produts_line,task.products.line,model_task_products_line,project.group_project_user,1,1,0,0
+access_task_produts_line,task.products.line,model_task_products_line,project.group_project_manager,1,1,1,1
+access_project_package_task_create,project.package.task.create,model_project_package_task_create,project.group_project_manager,1,1,1,1
+access_project_package_task_create_line,project.package.task.create.line,model_project_package_task_create_line,project.group_project_manager,1,1,1,1
+

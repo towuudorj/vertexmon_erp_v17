@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="view_employee_request_register_form" model="ir.ui.view">
+            <field name="name">employee.request.register.form</field>
+            <field name="model">employee.request.register</field>
+            <field name="arch" type="xml">
+                <form string="Employee Request Register">
+                    <header>
+                        <button name="action_draft" string="Draft" type="object" class="btn secondary" invisible="state != 'rejected'"/>
+                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_hr" string="HR Approve" type="object" class="oe_highlight" invisible="state != 'hr_review'"/>
+                        <button name="action_director" string="Director Approve" type="object" class="oe_highlight" invisible="state != 'director_review'"/>
+                        <button name="action_return" string="Return" type="object" class="btn secondary" invisible="state == 'draft'"/>
+                        <button name="action_reject" string="Cancel" type="object" class="btn secondary" invisible="state == 'draft' or state == 'rejected'"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="number"/>
+                            <field name="name"/>
+                            <field name="request_type"/>
+                            <field name="employee_id"/>
+                            <field name="company_id"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                            <field name="reg_date"/>
+                            <field name="description"/>
+                            <field name="suggestion"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+		                <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_employee_request_register_tree" model="ir.ui.view">
+            <field name="name">employee.request.register.tree</field>
+            <field name="model">employee.request.register</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Request Register">
+                    <field name="number"/>
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="employee_id"/>
+                        <field name="reg_date"/>
+                        <field name="department_id"/>
+                        <field name="request_type"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_employee_request_register" model="ir.actions.act_window">
+            <field name="name">Employee Request Register</field>
+            <field name="res_model">employee.request.register</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+    	
+    	<menuitem id="qpay_configure_menu" name="Qpay configure" parent="account.account_account_menu" action="action_qpay_configure_tree_view"/>
+    	
+    
+    </data>
+</odoo>

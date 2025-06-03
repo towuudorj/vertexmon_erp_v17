@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="routing_slip_report_template_data">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="row mb64">
+                        <div class="col-6">
+                            <p style="text-align: left;">
+                                <img t-attf-src="data:image/jpg;base64,{{o.company_id.logo}}" style="width:190px;height:60px;"/>
+                            </p>
+                        </div>
+                    </div>
+
+                    <p style="text-align:center; font-size:14px; font-weight: bold;">
+                        ТОЙРОХ ХУУДАС
+                    </p>
+
+                    <table style="width: 100%; margin-bottom: 11px; margin-left: 15px;">
+                        <tr style="height: 20px;">
+                            <td style="width: 20%; padding:1px; font-size:11px;">Ажилтны нэр:</td>
+                            <td style="width: 30%; padding:1px; font-size:11px; border-bottom: 1px solid black;">
+                                <span t-field="o.employee_id.name"/>
+                            </td>
+                            <td style="width: 20%; padding:1px; font-size:11px;">Огноо:</td>
+                            <td style="width: 30%; padding:1px; font-size:11px; border-bottom: 1px solid black;">
+                                <span t-field="o.routing_date"/>
+                            </td>
+                        </tr>
+                        <tr style="height: 20px;">
+                            <td style="padding:1px; font-size:11px;">Албан тушаал:</td>
+                            <td style="padding:1px; font-size:11px; border-bottom: 1px solid black;">
+                                <span t-field="o.job_id.name"/>
+                            </td>
+                            <td style="padding:1px; font-size:11px;">Ажилд орсон огноо:</td>
+                            <td style="padding:1px; font-size:11px; border-bottom: 1px solid black;">
+                                <span t-field="o.accession_date"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width: 100%; margin-top: 20px;" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%; text-align: center;">№</th>
+                                <th style="width: 15%;">Код</th>
+                                <th style="width: 20%;">Албан тушаал</th>
+                                <th style="width: 20%;">Ажилтан</th>
+                                <th style="width: 15%;">Огноо</th>
+                                <th style="width: 25%;">Тэмдэглэл</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.slip_line_id" t-as="line">
+                                <td style="text-align: center;"><span t-esc="line_index + 1"/></td>
+                                <td><span t-field="line.code"/></td>
+                                <td><span t-field="line.job_id.name"/></td>
+                                <td><span t-field="line.employee_id.name"/></td>
+                                <td><span t-field="line.date"/></td>
+                                <td><span t-field="line.note"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row" style="margin-top: 50px;">
+                        <div class="col-6">
+                            <p>Боловсруулсан:</p>
+                            <p style="margin-top: 20px;">
+                                ______________________ /                        /
+                            </p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p>Хянасан:</p>
+                            <p style="margin-top: 20px;">
+                                ______________________ /                        /
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="routing_slip_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_mn_hr.routing_slip_report_template_data" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

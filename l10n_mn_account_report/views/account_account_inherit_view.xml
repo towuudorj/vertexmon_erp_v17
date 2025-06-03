@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+
+		<record model="ir.ui.view" id="account_account_inherit_report_form_view">
+			<field name="name">account.account.form.report</field>
+			<field name="model">account.account</field>
+			<field name="inherit_id" ref="account.view_account_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr='//sheet/notebook/page/group/group/field[@name="group_id"]' position="before">
+						<field name="balance_id"/>
+						<field name="income_id"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+	
+	</data>
+</odoo>

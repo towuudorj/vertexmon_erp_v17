@@ -1,0 +1,558 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_mn_vat
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+###--- Vat data field translate start ---###
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__name
+msgid "Vat id"
+msgstr "Төлбөрийн баримтын ДДТД"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__pos_id
+msgid "Pos id"
+msgstr "PosAPI-н системийн дугаар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__reg_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__total_amount
+msgid "Total amount"
+msgstr "Нийт дүн"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__total_vat
+msgid "Total vat"
+msgstr "Нийт татвар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__total_city_tax
+msgid "Total city tax"
+msgstr "Нийт НХАТ"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__district_code
+msgid "District code"
+msgstr "Дүүргийн код"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__branch_no
+msgid "Branch no"
+msgstr "Салбарын дугаар"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__merchant_tin
+msgid "Merchant tin"
+msgstr "Баримт олгогчийн ТТД"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__pos_no
+msgid "Pos no"
+msgstr "Кассын дугаар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__customer_tin
+msgid "Customer tin"
+msgstr "Худалдан авагчийн ТТД"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__customer_no
+msgid "Customer no"
+msgstr "Худалдан авагчийн бүртгэлийн дугаар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__type
+msgid "Type"
+msgstr "Баримтын төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__inactive_id
+msgid "Inactive id"
+msgstr "Засварлах баримтын ДДТД"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__invoice_id
+msgid "Invoice id"
+msgstr "Нэхэмжлэхийн ДДТД"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__report_month
+msgid "Report month"
+msgstr "Баримт харьяалагдах тайлант сар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data__is_return
+msgid "Is return"
+msgstr "Буцаасан эсэх"
+
+###--- Vat data field translate end ---###
+
+
+
+###--- Vat data line field translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__vat_id
+msgid "Vat data"
+msgstr "ТТД"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__name
+msgid "Product name"
+msgstr "Бүтээгдэхүүн үйлчилгээний нэр"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__barcode
+msgid "Barcode"
+msgstr "Баркод
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__barcode_type
+msgid "Barcode type"
+msgstr "Баркодын төрөл"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__classification_code
+msgid "Classification code"
+msgstr "Бүтээгдэхүүн үйлчилгээний ангилалын код"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__tax_product_code
+msgid "Tax product code"
+msgstr "Татварын барааны код"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__measure_unit
+msgid "Measure unit"
+msgstr "Хэмжих нэгж"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__qty
+msgid "Qty"
+msgstr "Тоо/ш"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__unit_price
+msgid "Unit price"
+msgstr "Нэгж үнэ"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__total_bonus
+msgid "Total bonus"
+msgstr "Нийт бонус"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__total_vat
+msgid "Total vat"
+msgstr "Нийт татвар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__total_city_tax
+msgid "Total city tax"
+msgstr "Нийт нхат"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__total_amount
+msgid "Total amount"
+msgstr "Нийт дүн"
+
+###--- Vat data line field translate start ---###
+
+
+
+
+###--- Vat category field translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_category__name
+msgid "Category name"
+msgstr "Татварын ангилал"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_category__code
+msgid "Category code"
+msgstr "Татварын ангилалын код"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_category__parent_id
+msgid "Parent"
+msgstr "Дэд татварын ангилал"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_category__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_category__type
+msgid "Type"
+msgstr "Төрөл"
+
+
+###--- Vat category field translate end ---###
+
+
+###--- Vat district field translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_district__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_district__name
+msgid "Vat district"
+msgstr "Татварын нэгж"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_district__code
+msgid "Vat code"
+msgstr "Татварын нэгжийн код"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_district__parent_id
+msgid "Parent district"
+msgstr "Татварын дэд нэгж"
+
+###--- Vat district field translate end ---###
+
+
+###--- Vat configure field translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__name
+msgid "Configure name"
+msgstr "Татварын тохиргоо"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__district_id
+msgid "Invoice district"
+msgstr "Татварын салбар нэгж"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__tax_type
+msgid "Invoice tax type"
+msgstr "Татварын нэхэмжлэхийн төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__pos_id
+msgid "Pos number"
+msgstr "Пос дугаар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__invoice_branch
+msgid "Invoice branch"
+msgstr "Нэхэмжлэл илгээх салбар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__client_id
+msgid "Client"
+msgstr "Клиент"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__grant_type
+msgid "Grant type"
+msgstr "Зөвшөөрөх төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__username
+msgid "Username"
+msgstr "Нэвтрэх нэр"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__password
+msgid "Password"
+msgstr "Нууц үг"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__reg_date
+msgid "Register date"
+msgstr "Бүртгэсэн огноо"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__reg_user_id
+msgid "Register user"
+msgstr "Бүртгэсэн ажилтан"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__vat_district_list_url
+msgid "Vat district list url"
+msgstr "Татварын салбар нэгж татах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__ebarimt_create_url
+msgid "Ebarimt create url"
+msgstr "Татварын мэдээлэл үүсгэх хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__ebarimt_return_url
+msgid "Ebarimt return url"
+msgstr "Татварын мэдээлэл буцаах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__tin_code_url
+msgid "Tin code url"
+msgstr "Тин код шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__send_data_url
+msgid "Send data url"
+msgstr "Татварын мэдээлэл илгээх хаяг"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__info_check_url
+msgid "Info check url"
+msgstr "Татварын мэдээлэл шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__account_number_check_url
+msgid "Account number check url"
+msgstr "Татварын дансны дугаар шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__access_token_url
+msgid "Access token url"
+msgstr "Токен код авах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__customer_register_check_url
+msgid "Customer register check url"
+msgstr "Харилцагчийн регистрийн дугаараар шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__customer_phone_number_check_url
+msgid "Customer phone check url"
+msgstr "Харилцагчийн дугаараар шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__customer_qrdata_approve_url
+msgid "Customer qrdata send approve url"
+msgstr "Харилцагчийн qrdata баталгаажуулж илгээх хаяг"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__customer_passport_number_check_url
+msgid "Customer passport number check url"
+msgstr "Харилцагчийн пасспортын дугаараар шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__customer_ebarimt_number_check_url
+msgid "Customer ebarimt number check url"
+msgstr "Харилцагчийн ибаримтын дугаараар шалгах хаяг"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__info_desc
+msgid "Info"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__bank_name
+msgid "Bank name"
+msgstr "Банкны нэр"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__bank_account
+msgid "Bank account"
+msgstr "Банкны данс"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__bank_id
+msgid "Bank id"
+msgstr "Банкны id"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__bank
+msgid "Bank"
+msgstr "Банк"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__bank_account_name
+msgid "Bank account name"
+msgstr "Банкны данс эзэмшигчийн нэр"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_configure__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+###--- Vat configure field translate end ---###
+
+
+
+
+
+###--- Vat menu translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.ui.menu,name:l10n_mn_vat.vat_data_menu
+#: model:ir.actions.act_window,name:l10n_mn_vat.action_vat_data
+msgid "Vat receipt data"
+msgstr "Татварын баримтын мэдээлэл"
+
+
+#. module: l10n_mn_vat
+#: model:ir.ui.menu,name:l10n_mn_vat.vat_category_menu
+#: model:ir.actions.act_window,name:l10n_mn_vat.action_vat_category
+msgid "Vat category"
+msgstr "Татварын ангилал"
+
+#. module: l10n_mn_vat
+#: model:ir.ui.menu,name:l10n_mn_vat.vat_district_menu
+#: model:ir.actions.act_window,name:l10n_mn_vat.action_vat_district
+msgid "Vat district"
+msgstr "Татварын нэгж"
+
+
+#. module: l10n_mn_vat
+#: model:ir.ui.menu,name:l10n_mn_vat.vat_configure_menu
+#: model:ir.actions.act_window,name:l10n_mn_vat.action_vat_configure
+msgid "Vat configure"
+msgstr "Татварын тохиргоо"
+
+
+#. module: l10n_mn_vat
+#: model:ir.ui.menu,name:l10n_mn_vat.vat_root_menu
+msgid "Vat"
+msgstr "Татвар"
+
+
+###--- Vat menu translate end ---###
+
+
+###--- Other class translate start ---###
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_res_company__tin_code
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_res_partner__tin_code
+msgid "Tin code"
+msgstr "Тин код"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_res_partner__vat_type
+msgid "Vat type"
+msgstr "Татварын төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_res_company__vat_type
+msgid "Vat type"
+msgstr "Татварын төрөл"
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_product_template__vat_type
+msgid "Vat type"
+msgstr "Татварын төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_product_template__barcode_type
+msgid "Barcode type"
+msgstr "Баркодын төрөл"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_product_template__vat_categ_id
+msgid "Vat category"
+msgstr "Татварын ангилал"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_product_template__is_send_tax
+msgid "Is send tax product"
+msgstr "Татварлуу илгээдэг бараа эсэх"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields,field_description:l10n_mn_vat.field_product_template__tax_product_code
+msgid "Tax product code"
+msgstr "Татварын барааны код"
+
+
+###--- Other class translate start ---###
+
+
+#. module: l10n_mn_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mn_vat.view_vat_data_form
+msgid "Vat data return"
+msgstr "Татварын мэдээлэл буцаах"
+
+#. module: l10n_mn_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mn_vat.mn_pos_inherit_res_partner_view
+msgid "Tin code check"
+msgstr "Тин код шалгах"
+
+#. module: l10n_mn_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mn_vat.mn_pos_inherit_res_partner_view
+msgid "Name check"
+msgstr "Нэр шалгах"
+
+#. module: l10n_mn_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mn_vat.mn_pos_inherit_res_partner_view
+msgid "Vat"
+msgstr "Татвар төлөгчийн дугаар"
+
+#. module: l10n_mn_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mn_vat.mn_pos_inherit_res_partner_view
+msgid "Tin code"
+msgstr "Татвар төлөгчийн тин дугаар"
+
+
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields.selection,name:l10n_mn_vat.selection__vat_category__type__vat_zero
+msgid "Vat zero"
+msgstr "0% татвар"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields.selection,name:l10n_mn_vat.selection__vat_category__type__vat_free
+msgid "Vat free"
+msgstr "Татвараас чөлөөлөгдсөн"
+
+#. module: l10n_mn_vat
+#: model:ir.model.fields.selection,name:l10n_mn_vat.selection__vat_category__type__product_list
+msgid "Product list"
+msgstr "Барааны жагсаалт"

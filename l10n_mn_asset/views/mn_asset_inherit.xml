@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+
+		<record id="view_account_asset_asset_mn_inherit" model="ir.ui.view">
+            <field name="name">account.asset.asset.form.mn</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="om_account_asset.view_account_asset_asset_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//button[@name="set_to_close"]' position="after" >
+                        <button name="%(action_account_asset_capitalization)d" 
+                                string="Asset Capital" type="action" invisible="state != 'open'"/>
+                        <button name="%(action_account_asset_writeoff)d"
+                                string="Write Off" type="action" invisible="state != 'open'" />
+                        <button name="action_asset_scrap" 
+                                string="Scrap" type="object"   invisible="state != 'open'"/>
+                    </xpath>
+                    <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
+                        <field name="write_up"/>
+                    </xpath>
+                    <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
+                        <field name="scrap_id" invisible="1"/>
+                        <field name="scrap_date" readonly="state != 'draft'"/>
+                        <field name="uom_id" readonly="state != 'draft'"/>
+                        <field name="asset_location_id" readonly="state != 'draft'"/>
+                        <field name="owner_id" readonly="state != 'draft'"/>
+                        <field name="asset_qty" readonly="state != 'draft'"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+        
+        <record id="view_account_asset_asset_mn_tree_inherit" model="ir.ui.view">
+            <field name="name">account.asset.asset.tree.mn</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="om_account_asset.view_account_asset_asset_purchase_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="partner_id"]' position="after">
+                        <field name="owner_id" />
+                        <field name="asset_location_id" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+		
+
+	
+	</data>
+</odoo>

@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="product_category_02" model="vat.category">
+            <field name="name">МАЛ, АМЬТАН, ТЭДГЭЭРИЙН ГАРАЛТАЙ БҮТЭЭГДЭХҮҮН (МАХЫГ ОРУУЛАХГҮЙГЭЭР)</field>
+            <field name="code">02</field>
+        </record>
+        
+        <record id="product_category_021" model="vat.category">
+            <field name="parent_id" ref="product_category_02"/>
+            <field name="name">Мал, амьтан</field>
+            <field name="code">021</field>
+        </record>
+        <record id="product_category_0211" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Үхэр, үхрийн төрлийн амьтан</field>
+            <field name="code">0211</field>
+        </record>
+        
+	        <record id="product_category_02111" model="vat.category">
+	            <field name="parent_id" ref="product_category_0211"/>
+	            <field name="name">Үхэр</field>
+	            <field name="code">0211100</field>
+	        </record>
+		<record id="product_category_02112" model="vat.category">
+	            <field name="parent_id" ref="product_category_0211"/>
+	            <field name="name">Одос үхэр</field>
+	            <field name="code">0211200</field>
+	        </record>
+	
+	<record id="product_category_0212" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Хивэгч амьтан</field>
+            <field name="code">0212</field>
+        </record>
+                <record id="product_category_02121" model="vat.category">
+	            <field name="parent_id" ref="product_category_0212"/>
+	            <field name="name">Тэмээ</field>
+	            <field name="code">0212100</field>
+	        </record>
+		<record id="product_category_02122" model="vat.category">
+	            <field name="parent_id" ref="product_category_0212"/>
+	            <field name="name">Хонь</field>
+	            <field name="code">0212200</field>
+	        </record>
+		<record id="product_category_02123" model="vat.category">
+	            <field name="parent_id" ref="product_category_0212"/>
+	            <field name="name">Ямаа</field>
+	            <field name="code">0212300</field>
+	        </record>
+		<record id="product_category_02129" model="vat.category">
+	            <field name="parent_id" ref="product_category_0212"/>
+	            <field name="name">Бусад төрлийн хивэгч амьтан</field>
+	            <field name="code">0212900</field>
+	        </record>
+	<record id="product_category_0213" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Адуу, адууны төрлийн бусад мал, амьтан</field>
+            <field name="code">0213</field>
+        </record>
+                <record id="product_category_02130" model="vat.category">
+	            <field name="parent_id" ref="product_category_0213"/>
+	            <field name="name">Адуу, адууны төрлийн бусад мал, амьтан</field>
+	            <field name="code">02130</field>
+	        </record>
+			<record id="product_category_0213010" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Адуу</field>
+			    <field name="code">0213010</field>
+			</record>
+			<record id="product_category_0213020" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Илжиг</field>
+			    <field name="code">0213020</field>
+			</record>
+			<record id="product_category_0213030" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Луус</field>
+			    <field name="code">0213030</field>
+			</record>
+			<record id="product_category_0213040" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Тахь</field>
+			    <field name="code">0213040</field>
+			</record>
+			<record id="product_category_0213050" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Хулан</field>
+			    <field name="code">0213050</field>
+			</record>
+			<record id="product_category_0213090" model="vat.category">
+			    <field name="parent_id" ref="product_category_02130"/>
+			    <field name="name">Адууны төрлийн бусад мал, амьтан</field>
+			    <field name="code">0213090</field>
+			</record>
+	<record id="product_category_0214" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Гахай</field>
+            <field name="code">0214</field>
+        </record>
+                <record id="product_category_02140" model="vat.category">
+	            <field name="parent_id" ref="product_category_0214"/>
+	            <field name="name">Гахай</field>
+	            <field name="code">0214000</field>
+	        </record>
+	<record id="product_category_0215" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Шувуу</field>
+            <field name="code">0215</field>
+        </record>
+                <record id="product_category_02151" model="vat.category">
+	            <field name="parent_id" ref="product_category_0215"/>
+	            <field name="name">Тахиа</field>
+	            <field name="code">0215100</field>
+	        </record>
+                <record id="product_category_02152" model="vat.category">
+	            <field name="parent_id" ref="product_category_0215"/>
+	            <field name="name">Цацагт хяруул</field>
+	            <field name="code">0215200</field>
+	        </record>
+                <record id="product_category_02153" model="vat.category">
+	            <field name="parent_id" ref="product_category_0215"/>
+	            <field name="name">Галуу</field>
+	            <field name="code">0215300</field>
+	        </record>
+                <record id="product_category_02154" model="vat.category">
+	            <field name="parent_id" ref="product_category_0215"/>
+	            <field name="name">Нугас</field>
+	            <field name="code">0215400</field>
+	        </record>
+                <record id="product_category_02155" model="vat.category">
+	            <field name="parent_id" ref="product_category_0215"/>
+	            <field name="name">Бусад шувуу</field>
+	            <field name="code">0215500</field>
+	        </record>
+	<record id="product_category_0219" model="vat.category">
+            <field name="parent_id" ref="product_category_021"/>
+            <field name="name">Бусад төрлийн мал, амьтан</field>
+            <field name="code">0219</field>
+        </record>
+                <record id="product_category_02191" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Туулай</field>
+	            <field name="code">0219100</field>
+	        </record>
+                <record id="product_category_02192" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Хөхтөн бусад төрлийн амьтан</field>
+	            <field name="code">0219200</field>
+	        </record>
+                <record id="product_category_02193" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Тогоруу</field>
+	            <field name="code">0219300</field>
+	        </record>
+                <record id="product_category_02194" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Бусад төрлийн шувуу</field>
+	            <field name="code">0219400</field>
+	        </record>
+                <record id="product_category_02195" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Хэвлээр явагч амьтан</field>
+	            <field name="code">0219500</field>
+	        </record>
+                <record id="product_category_02196" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Зөгий</field>
+	            <field name="code">0219600</field>
+	        </record>
+                <record id="product_category_02199" model="vat.category">
+	            <field name="parent_id" ref="product_category_0219"/>
+	            <field name="name">Бусад төрлийн зэрлэг амьтан</field>
+	            <field name="code">02199</field>
+	        </record>
+		        <record id="product_category_0219910" model="vat.category">
+			    <field name="parent_id" ref="product_category_02199"/>
+			    <field name="name">Нохой</field>
+			    <field name="code">0219910</field>
+			</record>
+		        <record id="product_category_0219920" model="vat.category">
+			    <field name="parent_id" ref="product_category_02199"/>
+			    <field name="name">Цаа буга</field>
+			    <field name="code">0219920</field>
+			</record>
+		        <record id="product_category_0219930" model="vat.category">
+			    <field name="parent_id" ref="product_category_02199"/>
+			    <field name="name">Муур</field>
+			    <field name="code">0219930</field>
+			</record>
+		        <record id="product_category_0219990" model="vat.category">
+			    <field name="parent_id" ref="product_category_02199"/>
+			    <field name="name">Бусад амьтан</field>
+			    <field name="code">0219990</field>
+			</record>
+	<record id="product_category_022" model="vat.category">
+            <field name="parent_id" ref="product_category_02"/>
+            <field name="name">Боловсруулаагүй түүхий сүү</field>
+            <field name="code">022</field>
+        </record>
+        <record id="product_category_0221" model="vat.category">
+            <field name="parent_id" ref="product_category_022"/>
+            <field name="name">Үхэр, үхрийн төрлийн амьтны сүү</field>
+            <field name="code">0221</field>
+        </record>
+       	        <record id="product_category_02211" model="vat.category">
+	            <field name="parent_id" ref="product_category_0221"/>
+	            <field name="name">Үнээний сүү</field>
+	            <field name="code">02211</field>
+	        </record>
+		<record id="product_category_02212" model="vat.category">
+		    <field name="parent_id" ref="product_category_0221"/>
+		    <field name="name">Одос үхрийн сүү</field>
+		    <field name="code">0221200</field>
+		</record>
+         <record id="product_category_0229" model="vat.category">
+            <field name="parent_id" ref="product_category_022"/>
+            <field name="name">Бусад төрлийн мал, амьтдын сүү</field>
+            <field name="code">0229</field>
+        </record>
+       	        <record id="product_category_02291" model="vat.category">
+	            <field name="parent_id" ref="product_category_0229"/>
+	            <field name="name">Хонины сүү</field>
+	            <field name="code">0229100</field>
+	        </record>  
+       	        <record id="product_category_02292" model="vat.category">
+	            <field name="parent_id" ref="product_category_0229"/>
+	            <field name="name">Ямааны сүү</field>
+	            <field name="code">0229200</field>
+	        </record> 
+       	        <record id="product_category_02293" model="vat.category">
+	            <field name="parent_id" ref="product_category_0229"/>
+	            <field name="name">Ингэний сүү</field>
+	            <field name="code">0229300</field>
+	        </record> 
+       	        <record id="product_category_02299" model="vat.category">
+	            <field name="parent_id" ref="product_category_0229"/>
+	            <field name="name">Бусад төрлийн амьтны сүү</field>
+	            <field name="code">02299</field>
+	        </record>     
+			<record id="product_category_0229910" model="vat.category">
+			    <field name="parent_id" ref="product_category_02299"/>
+			    <field name="name">Гүүний саам</field>
+			    <field name="code">0229910</field>
+			</record>     
+			<record id="product_category_0229990" model="vat.category">
+			    <field name="parent_id" ref="product_category_02299"/>
+			    <field name="name">Дээр дурдагдаагүй бусад төрлийн амьтдын сүү</field>
+			    <field name="code">0229990</field>
+			</record> 
+	<record id="product_category_023" model="vat.category">
+            <field name="parent_id" ref="product_category_02"/>
+            <field name="name">Тахиа болон бусад төрлийн шувууны шинэ, хальстай өндөг</field>
+            <field name="code">023</field>
+        </record>
+        <record id="product_category_0231" model="vat.category">
+            <field name="parent_id" ref="product_category_023"/>
+            <field name="name">Тахианы шинэ, хальстай өндөг</field>
+            <field name="code">0231</field>
+        </record>
+       	        <record id="product_category_02310" model="vat.category">
+	            <field name="parent_id" ref="product_category_0231"/>
+	            <field name="name">Тахианы шинэ, хальстай өндөг</field>
+	            <field name="code">0231000</field>
+	        </record>
+	<record id="product_category_0232" model="vat.category">
+            <field name="parent_id" ref="product_category_023"/>
+            <field name="name">Бусад төрлийн шувууны шинэ, хальстай өндөг</field>
+            <field name="code">0232</field>
+        </record>
+       	        <record id="product_category_02320" model="vat.category">
+	            <field name="parent_id" ref="product_category_0232"/>
+	            <field name="name">Бусад төрлийн шувууны шинэ, хальстай өндөг</field>
+	            <field name="code">0232000</field>
+	        </record>
+	<record id="product_category_0233" model="vat.category">
+            <field name="parent_id" ref="product_category_023"/>
+            <field name="name">Бөдөнгийн өндөг</field>
+            <field name="code">0233</field>
+        </record>
+       	        <record id="product_category_02330" model="vat.category">
+	            <field name="parent_id" ref="product_category_0233"/>
+	            <field name="name">Бөдөнгийн өндөг</field>
+	            <field name="code">0233000</field>
+	        </record>
+	<record id="product_category_0234" model="vat.category">
+            <field name="parent_id" ref="product_category_023"/>
+            <field name="name">Инкубаторын өндөг</field>
+            <field name="code">0234</field>
+        </record>
+       	        <record id="product_category_02340" model="vat.category">
+	            <field name="parent_id" ref="product_category_0234"/>
+	            <field name="name">Инкубаторын өндөг</field>
+	            <field name="code">0234000</field>
+	        </record>
+	<record id="product_category_024" model="vat.category">
+            <field name="parent_id" ref="product_category_02"/>
+            <field name="name">Амьтны нөхөн үйлдвэрлэлийн үр хөврөл</field>
+            <field name="code">024</field>
+        </record>
+        <record id="product_category_0241" model="vat.category">
+            <field name="parent_id" ref="product_category_024"/>
+            <field name="name">Үр</field>
+            <field name="code">0241</field>
+        </record>
+       	        <record id="product_category_02411" model="vat.category">
+	            <field name="parent_id" ref="product_category_0241"/>
+	            <field name="name">Бухын үр</field>
+	            <field name="code">0241100</field>
+	        </record>
+       	        <record id="product_category_02419" model="vat.category">
+	            <field name="parent_id" ref="product_category_0241"/>
+	            <field name="name">Бусад амьтны үр</field>
+	            <field name="code">02419</field>
+	        </record>
+	       	        <record id="product_category_0241910" model="vat.category">
+			    <field name="parent_id" ref="product_category_0241"/>
+			    <field name="name">Хуцны үр</field>
+			    <field name="code">0241910</field>
+			</record>
+	       	        <record id="product_category_0241920" model="vat.category">
+			    <field name="parent_id" ref="product_category_02419"/>
+			    <field name="name">Ухны үр</field>
+			    <field name="code">0241920</field>
+			</record>
+	       	        <record id="product_category_0241930" model="vat.category">
+			    <field name="parent_id" ref="product_category_02419"/>
+			    <field name="name">Азарганы үр</field>
+			    <field name="code">0241930</field>
+			</record>
+	       	        <record id="product_category_0241990" model="vat.category">
+			    <field name="parent_id" ref="product_category_02419"/>
+			    <field name="name">Бусад амьтны үр</field>
+			    <field name="code">0241990</field>
+			</record>
+	<record id="product_category_0242" model="vat.category">
+            <field name="parent_id" ref="product_category_024"/>
+            <field name="name">Үр хөврөл</field>
+            <field name="code">0242</field>
+        </record>
+       	        <record id="product_category_02420" model="vat.category">
+	            <field name="parent_id" ref="product_category_0242"/>
+	            <field name="name">Үр хөврөл</field>
+	            <field name="code">02420</field>
+	        </record>
+	       	        <record id="product_category_0242010" model="vat.category">
+			    <field name="parent_id" ref="product_category_02420"/>
+			    <field name="name">Бухын чив, засаа</field>
+			    <field name="code">0242010</field>
+			</record>
+	       	        <record id="product_category_0242020" model="vat.category">
+			    <field name="parent_id" ref="product_category_02420"/>
+			    <field name="name">Хүдрийн заар</field>
+			    <field name="code">0242020</field>
+			</record>
+	       	        <record id="product_category_0242090" model="vat.category">
+			    <field name="parent_id" ref="product_category_02420"/>
+			    <field name="name">Бусад амьтны үр хөврөл</field>
+			    <field name="code">0242090</field>
+			</record>
+	<record id="product_category_029" model="vat.category">
+            <field name="parent_id" ref="product_category_02"/>
+            <field name="name">Бусад амьтны бүтээгдэхүүн</field>
+            <field name="code">029</field>
+        </record>
+	<record id="product_category_0291" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Зөгийн цэвэр бал</field>
+            <field name="code">0291</field>
+        </record>
+       	        <record id="product_category_02910" model="vat.category">
+	            <field name="parent_id" ref="product_category_0291"/>
+	            <field name="name">Зөгийн цэвэр бал</field>
+	            <field name="code">0291000</field>
+	        </record>
+	<record id="product_category_0292" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Эмгэн хумс (далайн эмгэн хумс орохгүй)</field>
+            <field name="code">0292</field>
+        </record>
+       	        <record id="product_category_02920" model="vat.category">
+	            <field name="parent_id" ref="product_category_0292"/>
+	            <field name="name">Эмгэн хумс (далайн эмгэн хумс орохгүй)</field>
+	            <field name="code">0292000</field>
+	        </record>
+	<record id="product_category_0293" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Амьтны гаралтай хүнсний бусад төрлийн бүтээгдэхүүн</field>
+            <field name="code">0293</field>
+        </record>
+       	        <record id="product_category_02930" model="vat.category">
+	            <field name="parent_id" ref="product_category_0293"/>
+	            <field name="name">Амьтны гаралтай хүнсний бусад төрлийн бүтээгдэхүүн</field>
+	            <field name="code">0293000</field>
+	        </record>
+	<record id="product_category_0294" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Амьтны гаралтай нэхмэлийн түүхий эд</field>
+            <field name="code">0294</field>
+        </record>
+       	        <record id="product_category_02941" model="vat.category">
+	            <field name="parent_id" ref="product_category_0294"/>
+	            <field name="name">Хяргасан ноос, унгас</field>
+	            <field name="code">0294100</field>
+	        </record>
+       	        <record id="product_category_02942" model="vat.category">
+	            <field name="parent_id" ref="product_category_0294"/>
+	            <field name="name">Угаасан ноос, үс хялгас, бодын хөөвөр, дэл сүүл</field>
+	            <field name="code">02942</field>
+	        </record>
+	       	        <record id="product_category_0294210" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Зунгагтай ноос</field>
+			    <field name="code">0294210</field>
+			</record>
+	       	        <record id="product_category_0294220" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Адууны түүвэр хялгас</field>
+			    <field name="code">0294220</field>
+			</record>
+	       	        <record id="product_category_0294230" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Сарлагийн саваг</field>
+			    <field name="code">0294230</field>
+			</record>
+	       	        <record id="product_category_0294240" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Ямааны хялгас, сахал сүүл</field>
+			    <field name="code">0294240</field>
+			</record>
+	       	        <record id="product_category_0294250" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Бодын хөөвөр</field>
+			    <field name="code">0294250</field>
+			</record>
+	       	        <record id="product_category_0294290" model="vat.category">
+			    <field name="parent_id" ref="product_category_02942"/>
+			    <field name="name">Бусад төрлийн угаасан ноос, үс, хялгас, хөөвөр, дэл, сүүл</field>
+			    <field name="code">0294290</field>
+			</record>
+       	        <record id="product_category_02943" model="vat.category">
+	            <field name="parent_id" ref="product_category_0294"/>
+	            <field name="name">Мал амьтны сэмлээгүй, самнаагүй нарийн ноос, үс, ноолуур</field>
+	            <field name="code">02943</field>
+	        </record>
+	       	        <record id="product_category_0294310" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Адууны дэл, сүүл</field>
+			    <field name="code">0294310</field>
+			</record>
+	       	        <record id="product_category_0294320" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Тэмээний эр ноос (өвдөг, зогдор)</field>
+			    <field name="code">0294320</field>
+			</record>
+	       	        <record id="product_category_0294330" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Тэмээний ердийн (эм) ноос</field>
+			    <field name="code">0294330</field>
+			</record>
+	       	        <record id="product_category_0294340" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Ямааны бохир ноолуур</field>
+			    <field name="code">0294340</field>
+			</record>
+	       	        <record id="product_category_0294350" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Хонины ноос</field>
+			    <field name="code">0294350</field>
+			</record>
+	       	        <record id="product_category_0294390" model="vat.category">
+			    <field name="parent_id" ref="product_category_02943"/>
+			    <field name="name">Бусад төрлийн амьтны ноос, үс, ноолуур</field>
+			    <field name="code">0294390</field>
+			</record>
+		<record id="product_category_02944" model="vat.category">
+	            <field name="parent_id" ref="product_category_0294"/>
+	            <field name="name">Хүр хорхойн ороолтод тэнцэхүйц торгоны бүрхүүл</field>
+	            <field name="code">0294400</field>
+	        </record>
+	<record id="product_category_0295" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Арьс, шир, ангийн үс</field>
+            <field name="code">0295</field>
+        </record>
+       	        <record id="product_category_02951" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Үхрийн шир</field>
+	            <field name="code">0295100</field>
+	        </record>
+       	        <record id="product_category_02952" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Адууны шир</field>
+	            <field name="code">0295200</field>
+	        </record>
+       	        <record id="product_category_02953" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Хонины арьс</field>
+	            <field name="code">0295300</field>
+	        </record>
+       	        <record id="product_category_02954" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Ямааны арьс</field>
+	            <field name="code">0295400</field>
+	        </record>
+       	        <record id="product_category_02951" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Тэмээний шир</field>
+	            <field name="code">0295100</field>
+	        </record>
+       	        <record id="product_category_02959" model="vat.category">
+	            <field name="parent_id" ref="product_category_0295"/>
+	            <field name="name">Бусад төрлийн амьтны арьс, шир (шинэ, хатаасан, боловсруулалтанд ороогүй)</field>
+	            <field name="code">02959</field>
+	        </record>
+	       	        <record id="product_category_0295910" model="vat.category">
+			    <field name="parent_id" ref="product_category_02959"/>
+			    <field name="name">Ангийн үс</field>
+			    <field name="code">0295910</field>
+			</record>
+	       	        <record id="product_category_0295990" model="vat.category">
+			    <field name="parent_id" ref="product_category_02959"/>
+			    <field name="name">Бусад төрлийн амьтны арьс (шинэ, хатаасан, боловсруулалтанд ороогүй)</field>
+			    <field name="code">0295990</field>
+			</record>
+	<record id="product_category_0296" model="vat.category">
+            <field name="parent_id" ref="product_category_029"/>
+            <field name="name">Шавьжны лав (цэвэршүүлсэн, цэвэршүүлээгүй, будсан, будаагүй)</field>
+            <field name="code">0296</field>
+        </record>
+       	        <record id="product_category_02960" model="vat.category">
+	            <field name="parent_id" ref="product_category_0296"/>
+	            <field name="name">Шавьжны лав (цэвэршүүлсэн, цэвэршүүлээгүй, будсан, будаагүй)</field>
+	            <field name="code">0296000</field>
+	        </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</data>
+</odoo>

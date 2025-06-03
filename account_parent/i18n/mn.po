@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_parent
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0-20201019\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-11 14:51+0000\n"
+"PO-Revision-Date: 2022-07-06 00:21+0200\n"
+"Last-Translator: Sylvain Lc\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.1\n"
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_account__parent_id
+msgid "Parent account"
+msgstr "Эцэг данс"
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__date_from
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__date_to
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__target_move
+msgid "Target moves"
+msgstr "Төлөв"
+
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__show_initial_balance
+msgid "Show Initial Balance"
+msgstr "Эхний үлдэгдэл харуулах"
+
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__display_account
+msgid "Display Accounts"
+msgstr "Данснууд"
+
+
+#. module: account_parent
+#: model:ir.model.fields,field_description:account_parent.field_account_open_chart__report_type
+msgid "Report type"
+msgstr "Тайлангийн төрөл"
+
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__target_move__posted
+msgid "All Posted Entries"
+msgstr "Батлагдсан гүйлгээ"
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__target_move__all
+msgid "All Entries"
+msgstr "Бүх гүйлгээ"
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__report_type__account
+msgid "Account"
+msgstr "Данс"
+
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__report_type__account_type
+msgid "Account type"
+msgstr "Дансны төрөл"
+
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__display_account__all
+msgid "All"
+msgstr "Бүгд"
+
+#. module: account_parent
+#: model:ir.model.fields.selection,name:account_parent.selection__account_open_chart__display_account__movement
+msgid "With movements"
+msgstr "Гүйлгээтэй"
+
+
+#. module: account_parent
+#: model_terms:ir.ui.view,arch_db:account_parent.view_account_chart
+msgid "Date(s)"
+msgstr "Огноо"
+
+
+#. module: account_parent
+#: model_terms:ir.ui.view,arch_db:account_parent.view_account_chart
+msgid "Cancel"
+msgstr "Хаах"
+
+#. module: account_parent
+#: model_terms:ir.ui.view,arch_db:account_parent.view_account_chart
+msgid "Open Charts"
+msgstr "Төлөвлөгөө харах"
+
+
+#. module: account_parent
+#: model:ir.actions.act_window,name:account_parent.action_account_chart
+#: model:ir.ui.menu,name:account_parent.menu_action_account_chart
+msgid "Chart of Accounts Hierarchy"
+msgstr "Дансны төлөвлөгөө"

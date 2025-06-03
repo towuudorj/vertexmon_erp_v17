@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="report_sales_plan" model="ir.actions.act_window">
+            <field name="name">Sales Plan Report</field>
+            <field name="res_model">l10n_mn_sale.sales_plan_report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="l10n_mn_sale.sales_plan_report_view_tree"/>
+        </record>
+
+        <record id="action_sales_plan_report" model="ir.actions.server">
+            <field name="name">Sales Plan Report</field>
+            <field name="model_id" ref="model_l10n_mn_sale_sales_plan_report"/>
+            <field name="state">code</field>
+            <field name="code">action = self.env.ref('l10n_mn_sale.report_sales_plan').read()[0]</field>
+        </record>
+
+        <menuitem id="menu_sales_plan_report" name="Sales Plan Report" parent="l10n_mn_sale.menu_l10n_mn_sale_root" action="action_sales_plan_report"/>
+
+    </data>
+</odoo>

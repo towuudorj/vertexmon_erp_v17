@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		<record model="ir.ui.view" id="hr_decree_category_tree_view">
+                <field name="name">hr.decree.category.tree</field>
+                <field name="model">hr.decree.category</field>
+                <field name="arch" category="xml">
+                    <tree string="tree_string">
+                        <field name="company_id"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="hr_decree_category_form_view">
+                <field name="name">hr.decree.category.form</field>
+                <field name="model">hr.decree.category</field>
+                <field name="arch" category="xml">
+                    <form string="form_string">
+                    	<group col="4" colspan="2" >
+                    		<field name="company_id" />
+                        	<field name="name"/>
+                        </group>
+                        
+                    </form>
+                </field>
+            </record>
+
+            
+            
+
+            <record model="ir.actions.act_window" id="action_hr_decree_category_tree_view">
+                <field name="name">Тушаалын ангилал</field>
+                <field name="category">ir.actions.act_window</field>
+                <field name="res_model">hr.decree.category</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hr_decree_category_tree_view"/>
+            </record>
+		
+	</data>
+</odoo>

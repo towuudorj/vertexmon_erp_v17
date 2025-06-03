@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+        <template id="report_mn_account_invoice_percentage">
+        	<t t-call="web.external_layout">
+			<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+			<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px;">
+				<div class="row mb64">
+					<div class="col-6">
+						<p style="text-align: left;">
+							<img t-attf-src="data:image/jpg;base64,{{request.env.user.company_id.logo}}" style="width:190px;height:60px;"/>
+						</p>
+					</div>
+				   <!-- <div class="col-6">
+						<p style="text-align:right;font-size: 12px;margin-right:5%; margin-top:-100px;">
+						<span>Сангийн сайдын 2017 оны</span>
+						<br/>
+						<span>347 дугаар тушаалын хавсралт</span>
+						<br/>
+						<span>НХМаягт Т-1</span>
+						</p>
+					</div> -->
+				</div>
+				
+				<p style="text-align:center; font-size:14px; font-weight: bold;">
+					НЭХЭМЖЛЭХ №: <t t-esc="o.invoice_origin or o.name"/>
+				</p>
+				<p style="text-align:center; font-size:11px; font-weight: bold;">
+					Огноо: <t t-esc="o.invoice_date"/>
+				</p>
+
+					
+					<table style="width: 100%; margin-bottom: 11px; margin-left: 15px; border: transparent 1px solid;">
+						<tr style="height: 35px;">
+							 <td colspan="2" style="font-size:11px; width: 50%; text-align: left; font-weight: bold;">Нэхэмжлэгчийн нэр: <t t-esc="o.company_id.name"/></td>
+							 <td colspan="2" style="font-size:11px; width: 50%; text-align: left; font-weight: bold; padding-left:10px ">Төлөгчийн нэр: <t t-esc="o.partner_id.name"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">Нэхэмжлэгчийн хаяг:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.company_id.street"/></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; padding-left:11px; font-weight: bold;">Хаяг:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;">
+								<t t-esc="', '.join(filter(None, [          o.partner_id.street,          o.partner_id.street2,          o.partner_id.city,          o.partner_id.state_id.name if o.partner_id.state_id else '',          o.partner_id.zip,          o.partner_id.country_id.name if o.partner_id.country_id else ''         ]))"/>
+							</td>						
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">Утас:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.company_id.partner_id.phone or o.company_id.phone"/></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold; padding-left:11px;">Утас:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left;  border-bottom: 1px solid black;"><t t-esc="o.partner_id.phone or o.partner_id.mobile"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">ТТД:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.company_id.vat"/></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold; padding-left:11px;">ТТД:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.partner_id.vat"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">Банкны нэр:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold; padding-left:11px;">Гэрээний дугаар :</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.ref or ''"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">Банкны данс:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.acc_number"/></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold; padding-left:11px;">Эх баримтын дугаар:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.invoice_date"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">IBAN:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.iban"/></td>
+						</tr>
+						<tr style="height: 20px;">
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold;">Цахим хаяг:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.user_id.email"/></td>
+							<td style="width: 15%; padding:1px; font-size:11px; text-align: left; font-weight: bold; padding-left:11px;">Төлбөр хийх хугацаа:</td>
+							<td style="width: 35%; padding:1px; font-size:11px; text-align: left; border-bottom: 1px solid black;"><t t-esc="o.invoice_date_due"/></td>
+						</tr>
+					</table>
+				
+				<table style="width: 99%; font-size:11px;text-align: center; border-collapse: collapse; border: transparent 1px solid; margin-left: 15px; padding-top:1px;">
+					<tr class="border-black" style="background-color: #f2f2f2;">
+						<td style="padding: 3px; width: 5%; border: 1px solid black; font-size:11px; font-weight: bold;">№:</td>
+						<td style="padding: 3px; width: 50%; border: 1px solid black; font-size:11px; font-weight: bold;">Барааны нэр</td>
+						<td style="padding: 3px; width: 10%; border: 1px solid black; font-size:11px; font-weight: bold;">Х.Н</td>
+						<td style="padding: 3px; width: 10%; border: 1px solid black; font-size:11px; font-weight: bold;">Тоо хэмжээ</td>
+						<td style="padding: 3px; width: 10%; border: 1px solid black; font-size:11px; font-weight: bold;">Нэгж үнэ</td>
+						<td style="padding: 3px; width: 25%; border: 1px solid black; font-size:11px; font-weight: bold;">Нийт дүн</td>
+					</tr>
+					<t t-set="i" t-value="1"/>
+					<tr class="border-black" t-foreach="o.invoice_line_ids" t-as="line">
+						<td style="padding: 5px; border: 1px solid black; font-size:11px;  text-align: center;">  <span t-esc="i"/> </td>
+						<td style="padding: 5px; border: 1px solid black; font-size:11px; text-align: left;">
+							<t t-esc="line.name"/>
+						</td>
+						<td style="padding: 5px; border: 1px solid black; font-size:11px; text-align: center;"> <span t-field="line.product_uom_id.name"/></td>
+						<td style="padding: 5px; border: 1px solid black; font-size:11px; text-align: center;"> <span t-field="line.quantity"/></td>
+						<td style="padding: 5px; border: 1px solid black; font-size:11px;  text-align: right;"> <span t-esc="line.price_subtotal/line.quantity" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+						<td style="padding: 5px; border: 1px solid black; font-size:11px;  text-align: right;"> <span t-field="line.price_subtotal"/></td>
+						<t t-set="i" t-value="i+1"/>
+					</tr>
+					<tr class="border-black">
+						<td colspan="5" style="padding: 3px; font-weight: bold; border: 1px solid black; font-size:11px; text-align: right;"> Нийт дүн</td>
+						<td style="padding: 2px; border: 1px solid black;  text-align: right; font-size:11px;"> <span t-esc="o.advance_payment_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/> <span t-esc="o.currency_id.symbol"/> </td>
+						<br/>
+					</tr>
+					<tr class="border-black">
+						<td colspan="5" style="padding: 3px; font-weight: bold; border: 1px solid black; font-size:11px; text-align: right;"> Нэхэмжлэх дүн <span t-esc="o.advance_payment_percentage"/> %</td>
+						<td style="padding: 2px; border: 1px solid black; text-align: right; font-size:11px;"><span t-field="o.amount_total"/></td>
+					</tr>
+				</table>
+				<br/>
+				
+				<table style="width: 99%; font-size:11px;border-collapse: collapse; border: 1px solid black; margin-left:20px; padding-top:1px;">
+				<p style="margin-left:15px; margin-right:5%; font-size:11px;">Мөнгөн дүн (үсгээр): <span t-field="o.amount_text"/> болно.</p>
+				</table>
+				<table style="margin-right:1%; margin-left:15px; width: 99%; text-align: center; position: relative;  border-spacing: 0;  border: transparent 1px solid;">
+					<tr style="border: transparent 1px solid;">
+						<td style="text-align:left; padding-top:15px; width: 50%; border:none !important; border-spacing: 0; font-size:11px;">
+							<span>Захирал:  </span>
+						</td>
+						<td style="padding:2px; font-size:14px; width:40%; position: absolute; border:none; top: -5px; right: 80px;">
+							<img t-attf-src="data:image/jpg;base64,{{o.user_id.signature_image}}" style="width:160px;height:100px; "/>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:left; padding-top:15px; width: 50%; border:none !important; border-spacing: 0; font-size:11px;">Ерөнхий нягтлан бодогч:  </td>
+					</tr>
+					<tr>
+						<td style="text-align:left; padding-top:15px; width: 50%; border:none !important; border-spacing: 0; font-size:11px;">
+							<span>Хүлээн авсан:  </span>
+						</td>
+						<td style="padding:2px; font-size:18px; width:40%; position: absolute; border:none; top: -15px;">
+							<img t-attf-src="data:image/jpg;base64,{{o.company_id.company_stamp}}" style="width:210px;height:190px;"/>
+						</td>
+					</tr>
+				</table>
+				
+			
+			</div>
+            </t>
+			
+        </template>
+
+        <template id="report_mn_invoice_percentage">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_mn_account.report_mn_account_invoice_percentage" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

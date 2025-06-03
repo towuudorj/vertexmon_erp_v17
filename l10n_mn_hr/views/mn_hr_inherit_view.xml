@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<record id="view_employee_mn_inherit_form" model="ir.ui.view">
+            <field name="name">hr.employee.inherit.mn.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+				
+            	<data>
+           			<field name="name" position="before">
+                          <label for="surname"/>
+                          <field name="surname"/>
+                          <label for="last_name"/>
+                          <field name="last_name"/>
+                    </field>
+					<field name="birthday" position="after">
+						<div style="width:80%">
+						<label for="employee_age" style="font-weight:bold;vertical-align:center"/>
+						<field name="employee_age"/>
+						<button name="autochange_age" string="Update" icon="fa-arrow-right" type="object" groups="hr.group_hr_manager"  style="margin-left: 8px;"/>
+		            	</div>
+		            </field>
+					<field name="bank_account_id" position="before">
+						<field name="bank_name" readonly="True"/>
+					</field>
+					 <field name="job_id" position="after">
+                    	<field name="interestedly_job_id" widget="many2many_tags"/>	
+						<field name="workplace_id"/>	
+					</field>
+
+					<field name="work_email" position="after">
+						<field name="register_number"/>
+						<button name="get_vat_code_check" string="TTD CHECK"  type="object" groups="hr.group_hr_manager"  />
+						<separator string="Ажилласан жилийн мэдээлэл"/>
+						<field name="accession_date"/>
+						<div style="width:200%;">
+							<div style="height:10px"/>
+								<label for="working_year" string="Working year" style="font-weight:bold;vertical-align:center; padding:3px;"/>
+								<field name="working_year" readonly="True" class="oe_inline"/> year
+								<field name="working_year_month" readonly="True" class="oe_inline"/> month
+						<!--	<div style="height:10px"/>
+								<label for="working_year_other1" string="Working year other" style="font-weight:bold;vertical-align:center;" invisible="1"/>
+								<field name="working_year_other1" readonly="True" class="oe_inline"/> year
+								<field name="working_year_other1_month" nolabel="True" readonly="True" class="oe_inline"/> month
+								<button name="working_year_other2" string="Update" icon="fa-arrow-right" type="object" groups="hr.group_hr_manager" class="oe_link oe_inline"/> -->
+						<!--	<div style="height:10px"/>
+								<label for="working_year_company1" string="Working year company" style="font-weight:bold;vertical-align:center;" invisible="1"/>
+								<field name="working_year_company1" readonly="True" class="oe_inline"/> year
+								<field name="working_year_company1_month" nolabel="True" readonly="True" class="oe_inline"/> month
+								<button name="work_year_company2" string="Update" icon="fa-arrow-right" type="object" groups="hr.group_hr_manager" class="oe_link oe_inline"/> -->
+							<div style="height:10px"/>
+								<label for="seniority" string="Seniority" style="font-weight:bold;vertical-align:center;"/>
+								<field name="seniority" readonly="True" class="oe_inline"/> year
+								<field name="seniority_month" nolabel="True" readonly="True" class="oe_inline"/> month
+								<button name="get_seniority2" string="Update" icon="fa-arrow-right" type="object" groups="hr.group_hr_manager" class="oe_link oe_inline" style="margin-left: 8px;"/>
+						</div>
+
+                    </field>
+
+                    <xpath expr="//group[@name='identification_group']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+
+
+
+					<field name="coach_id" position="after">
+						<separator string="Нэмэлт мэдээлэл"/>
+						<field name="two_jobs"/>
+						<field name="company_name" invisible="two_jobs == False"/>
+						<field name="workplace_environment"/>
+						<field name="abnormal_id"  invisible="workplace_environment =='normal'" />
+						<field name="disabled_employee"/>
+						<field name="disability_percentage" invisible="disabled_employee == False"/>
+					</field>
+
+
+
+                    <field name="children" position="after">
+                    	<separator string="НДШ мэдээлэл"/>
+                    	<field name="tdd_number"/>
+						<field name="show_maternity_info" invisible="1"/>
+						<separator string="Жирэмсний мэдээлэл" invisible="show_maternity_info == False"/>
+						
+						<field name="maternity_year" invisible="show_maternity_info == False" string="year" readonly="True" /> <t>year</t>
+						<field name="maternity_year_month"  invisible="show_maternity_info == False" string="month" nolabel="True" readonly="True" /> <t >month</t>
+						<button name="maternity_year2" invisible="show_maternity_info == False" string="Update" type="object" groups="hr.group_hr_manager"  />
+				
+                    </field>
+                    
+                     <field name="study_school" position="after">
+                    	<separator string="Жолооны үнэмлэх"/>
+                    	<field name="driver_license" widget="many2many_tags"/>	
+                    </field>
+                    <field name="driver_license" position="after">
+                    <group colspan="4">
+                    	<separator string="Та өөрийнхөө талаар нэмэлт мэдээлэл байвал өгнө үү!"/>
+                    	<field name="additional_information"/>	
+                    	<separator string="Шийтгэл / ял шийтгэл, захиргааны шийтгэл эсвэл ямар нэгэн сахилгын арга хэмжээ авагдаж байсан эсэх/"/>
+                    	<field name="is_judgemnet"/>
+                    	<field name="judgemnet_desc"/>
+                    	</group>
+                    </field>
+
+					<field name="emergency_contact" position="after">
+						<field name="emergency_contact_relation"/>
+						<field name="emergency_relation_other" invisible="not show_other_relation" required="show_other_relation"/>
+						<field name="show_other_relation" invisible="1"/>
+					</field>
+					
+					 <xpath expr="//separator[@name='has_work_permit']" position="attributes" string="Визийн талаар мэдээлэл">
+						<attribute name="invisible">1</attribute>
+						<attribute name="string">Визийн талаар мэдээлэл</attribute>
+						<field name="visa_no" string="Визийн дугаар" invisible="1"/>
+						<field name="visa_expire_date" string="Виз дуусах огноо" invisible="1"/>
+						<field name="visa_type" string="Виз төрөл" invisible="1"/>
+						<field name="work_permit_expire_date" string="Ажиллах эрх дуусах огноо" invisible="1"/>
+						<field name="widget='work_permit_upload" string="Өөрийн файлыг оруулах" invisible="1"/>
+						<attribute name="class">o_label_nowrap</attribute>
+						<attribute name="class">o_group</attribute>
+    					<attribute name="style">display: grid; grid-template-columns: 1fr 1fr;</attribute>
+					</xpath>
+
+
+                    <!--
+                    <field name="job_id" position="after">
+                    	<field name="interestedly_job_id" widget="many2many_tags"/>	
+						<field name="residential_address"/>	
+                    	<field name="inshurance_id"/>
+                    </field>
+                    -->
+                                        
+                      <page name="personal_information" position="after">
+                      	<page string="Education information">
+                      		
+								<field name="education_id">
+                    				<tree editable="bottom">
+                    					<field name="graduate_school"/>
+                                        <field name="where"/>
+                                        <field name="starting_year"/>
+                                        <field name="ending_year"/>
+                                        <field name="occupation"/>
+                                        <field name="type_id"/>
+								    	<field name="edu_rate" />
+								    	<field name="edu_percent" />
+                                        <field name="edu_payment_type" />
+                    				</tree>
+                         		</field>
+                         	<separator string="Training course information"/>
+                         		<field name="training_course_id">
+                    				<tree editable="bottom">
+								    	<field name="where" />
+								    	<field name="when" />
+								    	<field name="time" />
+								    	<field name="training_profession" />
+                    				</tree>
+                            	</field>
+                      	
+                      	</page>
+                      	   <page string="Employment, Skill" >
+                               
+                            	<field name="employment_id">
+                    				<tree editable="bottom">
+                    					<field name="name" />
+								    	<field name="org_start" />
+			        					<field name="org_finish" />
+			        					<field name="salary_size" />
+			        					<field name="org_position" />
+			        					<field name="org_reason" />
+			        					<field name="supervisor_name" />
+                                        <field name="supervisor_phone" />
+                    				</tree>
+                             	</field>
+                             	<separator string="Reason of Vacancy"/>
+                					<field name="employment_description" placeholder="Ажилгүй байсан шалтгаанаа бичнэ үү"/>
+                				<separator string="Language information"/>	
+                               	<field name="hr_language_id">
+                    				<tree editable="bottom">
+                    					<field name="name" />
+								    	<field name="lang_speak" />
+			        					<field name="lang_listen" />
+			        					<field name="lang_translation" />
+			        					<field name="lang_write" />
+                    				</tree>
+                              	</field>
+                              	
+                              	<separator string="Computer skill information"/>
+                              	<field name="computer_skill_id">
+                    				<tree editable="bottom">
+                    					<field name="name" />
+								    	<field name="use_skill" />
+                    				</tree>
+                              	</field>
+                              	<group>
+                              		<group>
+                              			<field name="other_program" placeholder="Өөр бусад програмуудаа бичнэ үү"/>
+                              		</group>
+                              		<group>
+                              			<field name="other_use_skill" />
+                              		</group>
+                              	</group>
+                           </page>
+                            <page string="Family information" >
+                            	<field name="live_people_id">
+                    				<tree editable="bottom">
+                    					<field name="who" />
+								    	<field name="last_name" />
+								    	<field name="first_name" />
+								    	<field name="age" />
+								    	<field name="position" />
+								    	<field name="phone" />
+                    				</tree>
+                         		</field>
+                         		<separator string="Relationship information"/>
+                        		<field name="hr_relationship_id">
+                    				<tree editable="bottom">
+                    					<field name="who" />
+								    	<field name="last_name" />
+								    	<field name="first_name" />
+								    	<field name="age" />
+								    	<field name="position" />
+								    	<field name="phone" />
+                    				</tree>
+                         		</field>
+                            
+                            </page>
+                      		<page string="Other">
+                            
+                             <separator string="Notify people information"/>
+                            	<field name="notify_people_id">
+                            		<tree editable="bottom">
+                    					<field name="last_name"/>
+								    	<field name="first_name"/>
+								    	<field name="now_profession"/>
+								    	<field name="phone"/>
+                    				</tree>
+                            	</field>
+                            	<separator string="Hobby"/>
+                					<field name="hobby" placeholder="Hobby..."/>
+                				<separator string="Visit information"/>	
+                            	<field name="hr_visit_id">
+                            		<tree editable="bottom">
+                    					<field name="name"/>
+								    	<field name="went_time"/>
+			        					<field name="went_vision"/>
+                    				</tree>
+                            	</field>
+                                <separator string="Advantage weaknesses"/>	
+                            	<field name="advantage_weaknesses_id">
+                            		<tree editable="bottom">
+                    					<field name="advantage"/>
+								    	<field name="weaknesses"/>
+                    				</tree>
+                            	</field>
+                                
+                                 <separator string="Art sport"/>	
+                            	<field name="art_sport_id">
+                            		<tree editable="bottom">
+                    					<field name="sk_sport"/>
+								    	<field name="sp_time"/>
+                                        <field name="is_award"/>
+                    				</tree>
+                            	</field>
+                                <separator string="Award"/>	
+                            	<field name="hr_award_id">
+                            		<tree editable="bottom">
+                    					<field name="award_name"/>
+								    	<field name="award_year"/>
+                                        <field name="award_where"/>
+                    				</tree>
+                            	</field>  
+                             </page>
+                      </page>
+            	</data>
+           </field>
+        </record>
+
+        <record id="view_hr_employee_search_inherit" model="ir.ui.view">
+	            <field name="name">hr.employee.search.inherit</field>
+	            <field name="model">hr.employee</field>
+	            <field name="inherit_id" ref="hr.view_employee_filter"/>
+	            <field name="arch" type="xml">
+	            <data>
+	            	<xpath expr='//filter[@name="group_manager"]' position="after" >
+	            		<filter name="group_by_company_id" string="Компани" context="{'group_by':'company_id'}"/>
+	                </xpath>
+	            </data>
+	            </field>
+	        </record>
+	
+	
+	</data>
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="view_xacbank_configure_form" model="ir.ui.view">
+            <field name="name">xacbank.configure.form</field>
+            <field name="model">xacbank.configure</field>
+            <field name="arch" type="xml">
+                <form string="Vat data">
+                    <sheet>
+						<group col="4" colspan="4">
+                            <group col="2" colspan="2">
+                                <field name="company_id"/>
+                                <field name="name"/>
+                                <field name="username"/>
+                                <field name="password"/>
+                                <field name="code"/>
+                                <field name="requestId"/>
+                                <field name="keyfield"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <field name="config_url"/>
+                                <field name="statement_url"/>
+                            </group>
+						</group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_xacbank_configure_tree" model="ir.ui.view">
+            <field name="name">xacbank.configure.tree</field>
+            <field name="model">xacbank.configure</field>
+            <field name="arch" type="xml">
+                <tree string="Vat data">
+                	<field name="company_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_xacbank_configure_filter" model="ir.ui.view">
+            <field name="name">xacbank.configure.search</field>
+            <field name="model">xacbank.configure</field>
+            <field name="arch" type="xml">
+               <search string="Vat district">
+                    <field name="name"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_xacbank_configure" model="ir.actions.act_window">
+            <field name="name">Xacbank configure</field>
+            <field name="res_model">xacbank.configure</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_xacbank_configure_filter"/>
+            <field name="help" type="html">
+              <p>
+                Let's create a xacbank configure.
+              </p>
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>

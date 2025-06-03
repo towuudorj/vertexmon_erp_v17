@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<menuitem id="menu_driver_type_view" name="Driver type"  parent="hr.menu_config_employee" action="action_driver_type_tree_view"   groups="hr.group_hr_manager"/>
+		<menuitem id="menu_language_type_view" name="Language type"  parent="hr.menu_config_employee" action="action_language_type_tree_view"   groups="hr.group_hr_manager"/>
+		<menuitem id="menu_computer_type_view" name="Computer type"  parent="hr.menu_config_employee" action="action_computer_type_tree_view"   groups="hr.group_hr_manager"/>
+		<menuitem id="menu_education_degree_type_view" name="Education degree type"  parent="hr.menu_config_employee" action="action_education_degree_type_tree_view"   groups="hr.group_hr_manager"/>
+		<menuitem id="menu_contract_type_register" name="Contract register" parent="hr.menu_config_employee" action="action_contract_type_register" sequence="45"/>
+		<menuitem id="menu_reference_register_type" name="Reference Register Types" parent="hr.menu_config_employee" action="action_reference_register_type"/>
+		<menuitem id="menu_decree_register_type" name="Decree Register" parent="hr.menu_config_employee" action="action_decree_register_type" groups="hr.group_hr_manager" sequence="30"/>
+
+
+		<menuitem id="menu_hr_overtime" name="Overtime" parent="hr.menu_hr_root" action="action_hr_overtime" sequence="40"/>
+		<menuitem id="training_order_menu" name="Training order" parent="hr.menu_hr_root" action="action_training_order" sequence="20"/>
+		<menuitem id="hr_decree_menu" name="Decree" parent="hr.menu_hr_employee_payroll" action="action_hr_decree" sequence="25"/>
+		<menuitem id="menu_other_contracts" name="Other contracts" parent="hr.menu_hr_employee_payroll" action="action_other_contracts"/>
+		<menuitem id="menu_employee_request_register" name="Employee Request Register" parent="hr.menu_hr_employee_payroll" action="action_employee_request_register" sequence="30"/>
+		<menuitem id="menu_job_appointment_register" name="Vacancy Order Register" parent="hr.menu_hr_employee_payroll" action="action_job_appointment_register" sequence="35"/>
+		<menuitem id="menu_reference_register" name="Reference Register" parent="hr.menu_hr_employee_payroll" action="action_reference_register"/>
+		<menuitem id="hr.menu_human_resources_configuration" name="Configuration" parent="hr.menu_hr_root" groups="hr.group_hr_manager" sequence="300"/>
+		<menuitem id="hr.menu_expense" name="Expense" parent="hr.menu_hr_root" sequence="50"/>
+		<menuitem id="hr.menu_holidays" name="Holidays" parent="hr.menu_hr_root" sequence="60"/>
+
+
+		<record id="hr.menu_hr_employee_user" model="ir.ui.menu">
+            <field name="action" ref="open_view_employee_new_list"/>
+        </record>
+
+        <!-- New parent menu -->
+        <menuitem id="workhandover_menu" name="Work Handover" parent="hr.menu_hr_root" sequence="15"/>
+        <menuitem id="work_handover_act_menu" name="Work handover act" parent="workhandover_menu" action="action_work_handover_act" sequence="2"/>
+        <menuitem id="routing_slip_menu" name="Routing slip" parent="workhandover_menu" action="action_routing_slip" sequence="1"/>
+        <menuitem id="menu_employee_transfer" name="Employee Transfer Register" parent="workhandover_menu" action="action_employee_transfer" sequence="3"/>
+		<menuitem id="menu_dismiss_register" name="Dismiss Register" parent="workhandover_menu" action="action_dismiss_register"/>
+
+		<!-- New parent menu for HR ORG requested by Vertex project manager -->
+		<menuitem id="menu_config_hr" name="HR Organization" parent="hr.menu_config_employee" sequence="50"/>
+		<menuitem id="menu_workplace_register" name="Workplace Register" parent="menu_config_hr" action="action_workplace_register"/> 
+		
+		<record model="ir.ui.menu" id="hr.menu_view_hr_job">
+            <field name="parent_id" ref="menu_config_hr"/>
+        </record>
+
+		<record model="ir.ui.menu" id="hr.menu_hr_department_tree">
+            <field name="parent_id" ref="menu_config_hr"/>
+			<field name="name">Departments</field>
+        </record>
+
+		<record model="ir.ui.menu" id="hr.menu_hr_work_location_tree">
+            <field name="parent_id" ref="menu_config_hr"/>
+            <field name="name">Work Locations</field>
+		</record>
+		
+		<!-- сонгон шалгаруулалт applicant.register menu items -->
+		<menuitem id="menu_applicant_register" name="Applicant Register" parent="hr_recruitment.menu_hr_recruitment_root" sequence="10"/>
+        <!-- <menuitem id="menu_applicant_register" name="Applicant Register" parent="menu_applicant_register_root" action="action_applicant_register"/> -->
+
+	</data>
+</odoo>

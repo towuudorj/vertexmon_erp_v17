@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="dismiss_register_form_view" model="ir.ui.view">
+            <field name="name">dismiss.register.form</field>
+            <field name="model">dismissed.employee</field>
+            <field name="arch" type="xml">
+                <form string="Dismiss Register">
+                    <header>
+                        <button name="action_draft" string="Draft" type="object" class="btn-secondary" invisible="state != 'cancel'"/>
+                        <button name="action_dismiss" string="Dismiss" type="object" class="oe_highlight"/>
+                        <button name="action_rehire" string="Rehire" type="object" class="oe_highlight"/>
+                        <button name="action_blacklist" string="Blacklist" type="object" class="oe_highlight"/>
+                        <button name="action_cancel" string="Cancel" type="object" class="btn-secondary" invisible="state =='draft' or state == 'cancel'"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                        <sheet>
+                            <group>
+                                <field name="company_id"/>
+                                <field name="employee_id"/>
+                                <field name="name"/>
+                                <field name="dismissal_date"/>
+                                <field name="reason"/>
+                                <field name="archived_info" />
+                            </group>
+                            <div class="oe_chatter">
+		                        <field name="message_follower_ids" widget="mail_followers" groups="hr.group_hr_user"/>
+		                        <field name="message_ids" widget="mail_thread"/>
+	                        </div>
+                        </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dismiss_register_tree_view" model="ir.ui.view">
+            <field name="name">dismiss.register.tree</field>
+            <field name="model">dismissed.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Dismiss Register">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="employee_id"/>
+                    <field name="dismissal_date"/>
+                    <field name="reason"/>
+                    <field name="archived_info"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_dismiss_register" model="ir.actions.act_window">
+            <field name="name">Dismiss Register</field>
+            <field name="res_model">dismissed.employee</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

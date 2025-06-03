@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="payment_order_view" model="ir.ui.view">
+            <field name="name">Payment order report</field>
+            <field name="model">payment.order.reportsd</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Payment order Report">
+                    <footer col="4" colspan="4">
+                        <button special="cancel" string="Цуцлах" colspan="1"/>
+                        <button name="action_print_xls_report" string="Экспортлох" type="object"  colspan="1"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_payment_order_report" model="ir.actions.act_window">
+            <field name="name">Төлбөрийн даалгавар</field>
+            <field name="res_model">payment.order.reportsd</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="payment_order_view"/>
+            <field name="target">new</field>
+        </record>
+        
+
+    </data>
+</odoo>

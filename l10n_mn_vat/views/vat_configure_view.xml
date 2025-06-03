@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	  <record id="view_vat_configure_form" model="ir.ui.view">
+            <field name="name">vat.configure.form</field>
+            <field name="model">vat.configure</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="get_vat_district_download" string="Татварын салбар нэгжийн мэдээлэл татах" type="object" />
+                        <button name="get_account_number_check" string="Банкны дансны мэдээлэл татах" type="object" />
+                        <button name="get_info" string="POSAPI мэдээлэл" type="object" />
+                        <button name="vat_data_send" string="Татварын дата илгээх" type="object" />
+                        <button name="get_vat_code" string="Татвар төлөгчийн дугаар лавлах" type="object" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" /></h1>
+                        </div>
+                        <group colspan="4" col="4">
+                            <group colspan="2" col="2">
+                                <field name="company_id"/>
+                                <field name="reg_date"/>
+                                <field name="reg_user_id"/>
+                                <field name="client_id"/>
+                                <field name="grant_type"/>
+                                <field name="username"/>
+                                <field name="password"/>
+                                <field name="pos_id"/>
+                                <field name="invoice_branch"/>
+                                <field name="tax_type"/>
+                                <field name="district_id"/>
+                            </group>
+                        	<group colspan="2" col="2">
+                                <field name="tin_code_url"/>
+                                <field name="name_check_url"/>
+                                <field name="vat_district_list_url"/>
+                                <field name="ebarimt_create_url"/>
+                                <field name="ebarimt_return_url"/>
+                                <field name="send_data_url"/>
+                                <field name="info_check_url"/>
+                                <field name="account_number_check_url"/>
+                                <field name="access_token_url"/>
+                                <field name="customer_register_check_url"/>
+                                <field name="customer_phone_number_check_url"/>
+                                <field name="customer_qrdata_approve_url"/>
+                                <field name="customer_passport_number_check_url"/>
+                                <field name="customer_ebarimt_number_check_url"/>
+                            </group>
+                        </group>
+                        <group>
+                        	<field name="info_desc"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vat_configure_tree" model="ir.ui.view">
+            <field name="name">vat.configure.tree</field>
+            <field name="model">vat.configure</field>
+            <field name="arch" type="xml">
+                <tree string="Vat">
+                	<field name="company_id"/>
+                    <field name="name"/>
+                    <field name="reg_date"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_vat_configure_filter" model="ir.ui.view">
+            <field name="name">vat.configure.search</field>
+            <field name="model">vat.configure</field>
+            <field name="arch" type="xml">
+                <search string="Vat district">
+                    <field name="name"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_vat_configure" model="ir.actions.act_window">
+            <field name="name">Vat configure</field>
+            <field name="res_model">vat.configure</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_vat_configure_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+              </p><p>
+                Let's create a vat configure.
+              </p>
+            </field>
+        </record>
+    	
+    
+    </data>
+ </odoo>

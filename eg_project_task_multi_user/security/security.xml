@@ -1,0 +1,5 @@
+<odoo>
+    <record model="res.groups" id="project_display_multi_user_task_group">
+        <field name="name">Display multi users in task</field>
+    </record>
+</odoo>

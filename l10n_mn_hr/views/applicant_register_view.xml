@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="applicant_register_form_view" model="ir.ui.view">
+            <field name="name">applicant.register.form</field>
+            <field name="model">applicant.register</field>
+            <field name="arch" type="xml">
+                <form string="Applicant Register">
+                    <sheet>
+                        <header>
+                            <button string="Confirm" type="object" name="action_confirm" class="btn-primary"/>
+                            <button string="Cancel" type="object" name="action_cancel" class="btn-secondary"/>
+                            <button string="Draft" type="object" name="action_draft" class="btn-secondary"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,approved,cancelled" />
+                        </header>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="code"/>
+                            <field name="job_position_id"/>
+                            <field name="target_number"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="hr_employee_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="applicant_register_tree_view" model="ir.ui.view">
+            <field name="name">applicant.register.tree</field>
+            <field name="model">applicant.register</field>
+            <field name="arch" type="xml">
+                <tree string="Applicant Register">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="job_position_id"/>
+                    <field name="target_number"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="hr_employee_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_applicant_register" model="ir.actions.act_window">
+            <field name="name">Applicant Register</field>
+            <field name="res_model">applicant.register</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+
+    </data>
+</odoo>        

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+		<record id="action_create_vat_send_view" model="ir.ui.view">
+            <field name="name">action.create.vat.send.form</field>
+            <field name="model">action.create.vat.send</field>
+            <field name="arch" type="xml">
+                <form string="Invoices send vat">
+                	<group>
+                		<field name="is_pre_month"/>
+                	</group>
+                    <p class="oe_grey">
+	                    Батлагдсан нэхэмжлэлийг сонгон татварлуу 
+	                    илгээх тул та илгээх нэхэмжлэлээ сонгоно уу.
+                    </p>
+                    <footer>
+                        <button string="Send vat" name="action_create_invoice_send" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Payment register" name="action_create_invoice_send_payment" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        
+        
+        
+        <record id="action_create_vat_send_sends" model="ir.actions.act_window">
+            <field name="name">Vat create 3.0</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">action.create.vat.send</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="action_create_vat_send_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="binding_view_types">list</field>
+        </record>
+        
+        
+
+		
+    </data>
+ </odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_xacbank_configure,xacbank.configure,model_xacbank_configure,l10n_mn_xasbank_gateway.group_xacbank_config_work,1,1,1,0
+access_xacbank_configure_manager,xacbank.configure.manager,model_xacbank_configure,l10n_mn_xasbank_gateway.group_xacbank_config_manager,1,1,1,1

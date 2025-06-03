@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="education_one" model="hr.education.degree">
+            <field name="name">Бага дунд боловсрол</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="education_two" model="hr.education.degree">
+            <field name="name">Бүрэн дунд боловсрол</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="education_three" model="hr.education.degree">
+            <field name="name">Коллежийн боловсрол</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="education_four" model="hr.education.degree">
+            <field name="name">Баклаврын зэрэг</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="education_five" model="hr.education.degree">
+            <field name="name">Магистрийн зэрэг</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="education_six" model="hr.education.degree">
+            <field name="name">Докторын зэрэг</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</odoo>

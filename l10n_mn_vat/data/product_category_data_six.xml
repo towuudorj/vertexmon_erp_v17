@@ -1,0 +1,2254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    
+            
+	<record id="product_category_003" model="vat.category">
+            <field name="name">МЕТАЛЛ БҮТЭЭГДЭХҮҮН БОЛОН МАШИН, ТОНОГ ТӨХӨӨРӨМЖӨӨС БУСАД ТӨРЛИЙН ТЭЭВЭРЛЭЖ БОЛОХ БАРАА, БҮТЭЭГДЭХҮҮН</field>
+            <field name="code">03</field>
+        </record>
+        
+        <record id="product_category_031" model="vat.category">
+            <field name="parent_id" ref="product_category_003"/>
+            <field name="name">МОД, ХОЛТОС, СҮРЭЛ, СҮЛЖМЭЛ ЭД ЗҮЙЛ</field>
+            <field name="code">031</field>
+        </record>
+        <record id="product_category_311" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">6 мм-ээс дээш зузаантай идээлээгүй хөрөөдсөн, цуулсан, захалсан банз, төмөр замын дэр мод</field>
+            <field name="code">31100</field>
+        </record>
+        
+	        <record id="product_category_3111" model="vat.category">
+	            <field name="parent_id" ref="product_category_311"/>
+	            <field name="name">Гуалин</field>
+	            <field name="code">3110010</field>
+	        </record>    
+	        
+	        <record id="product_category_3112" model="vat.category">
+	            <field name="parent_id" ref="product_category_311"/>
+	            <field name="name">Зүсмэл материал</field>
+	            <field name="code">3110020</field>
+	        </record> 
+	        
+	        <record id="product_category_3113" model="vat.category">
+	            <field name="parent_id" ref="product_category_311"/>
+	            <field name="name">6 мм-ээс дээш зузаантай хөрөөдсөн, цуулсан, захалсан банз, төмөр замын дэр мод</field>
+	            <field name="code">3110030</field>
+	        </record>    
+	        T
+	    <record id="product_category_312" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Үргэлжилсэн боловсруулалт хийгдсэн мод, модны зомгол, модны үртэс, цавчсан ба жижиглэсэн мод</field>
+            <field name="code">312</field>
+        </record>
+        
+	        <record id="product_category_3121" model="vat.category">
+	            <field name="parent_id" ref="product_category_312"/>
+	            <field name="name">Өнгөн хэсэг болон зах, ирмэгт боловсруулалт хийсэн мод (ховилтой мод, шалны зүймэл мод)</field>
+	            <field name="code">3121000</field>
+	        </record>    
+	        
+	        <record id="product_category_3122" model="vat.category">
+	            <field name="parent_id" ref="product_category_312"/>
+	            <field name="name">Модны зомгол, модны үртэс</field>
+	            <field name="code">3122000</field>
+	        </record> 
+	        
+	        <record id="product_category_3123" model="vat.category">
+	            <field name="parent_id" ref="product_category_312"/>
+	            <field name="name">Модны цавчдас ба зоргодос</field>
+	            <field name="code">3123000</field>
+	        </record>   
+	        
+	    <record id="product_category_313" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Будсан, бодис шингээж боловсруулсан мод; хар тос шингээсэн идээлсэн т өмөр замын дэр мод</field>
+            <field name="code">313</field>
+        </record>
+        
+	        <record id="product_category_3131" model="vat.category">
+	            <field name="parent_id" ref="product_category_313"/>
+	            <field name="name">Будаг, өнгөлөгч, креозит болон хамгаалалтын бусад төрлийн бодис түрхэж зассан мод</field>
+	            <field name="code">3131000</field>
+	        </record>    
+	        
+	        <record id="product_category_3132" model="vat.category">
+	            <field name="parent_id" ref="product_category_313"/>
+	            <field name="name">Төмөр замын дэр мод (идээлсэн)</field>
+	            <field name="code">3132000</field>
+	        </record> 
+	        
+	        <record id="product_category_3133" model="vat.category">
+	            <field name="parent_id" ref="product_category_313"/>
+	            <field name="name">Зассан, бусад төрлийн мод</field>
+	            <field name="code">3133000</field>
+	        </record>   
+	        
+		<record id="product_category_314" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Модон хавтан</field>
+            <field name="code">314</field>
+        </record>
+        
+	        <record id="product_category_3141" model="vat.category">
+	            <field name="parent_id" ref="product_category_314"/>
+	            <field name="name">Хулснаас бусад төрлийн модоор хийсэн фанер; хуулга наасан хавтан</field>
+	            <field name="code">3141000</field>
+	        </record>
+	        
+	         <record id="product_category_3142" model="vat.category">
+	            <field name="parent_id" ref="product_category_314"/>
+	            <field name="name">Хулснаас бусад төрлийн модоор хийсэн бусад төрлийн фанеран хавтан болон хуулга наасан модон хавтан ба давхарлаж наасан адил төстэй модон материал</field>
+	            <field name="code">3142000</field>
+	        </record>
+	        
+	         <record id="product_category_3143" model="vat.category">
+	            <field name="parent_id" ref="product_category_314"/>
+	            <field name="name">Зоргодсон хавтан болон бусад төрлийн модлог материалаар хийсэн хавтан</field>
+	            <field name="code">3143000</field>
+			 </record>
+			 
+				 <record id="product_category_31431" model="vat.category">
+					<field name="parent_id" ref="product_category_3143"/>
+					<field name="name">Зоргодсон хавтан</field>
+					<field name="code">3143010</field>
+				 </record>
+				 
+				 <record id="product_category_31432" model="vat.category">
+					<field name="parent_id" ref="product_category_3143"/>
+					<field name="name">Бусад төрлийн модлог материалаар хийсэн хавтан</field>
+					<field name="code">3143090</field>
+				 </record>
+	        
+	         <record id="product_category_3144" model="vat.category">
+	            <field name="parent_id" ref="product_category_314"/>
+	            <field name="name">Мод болон бусад төрлийн модлог материалан эслэг хавтан</field>
+	            <field name="code">3144000</field>
+	        </record>
+	        
+	         <record id="product_category_3145" model="vat.category">
+	            <field name="parent_id" ref="product_category_314"/>
+	            <field name="name">Хулсаар хийсэн фанеран хавтан болон хуулга наасан модон хавтан ба давхарлаж наасан адил төстэй модон материал</field>
+	            <field name="code">3145000</field>
+	        </record>
+	        
+		<record id="product_category_315" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Зүсмэл, хуулга, ховилтой мод</field>
+            <field name="code">315</field>
+        </record>
+        
+	        <record id="product_category_3151" model="vat.category">
+	            <field name="parent_id" ref="product_category_315"/>
+	            <field name="name">6 мм-ээс доош зузаантай зүсмэл, фанерын хуулга</field>
+	            <field name="code">3151000</field>
+	        </record>
+	        
+	        <record id="product_category_3152" model="vat.category">
+	            <field name="parent_id" ref="product_category_315"/>
+	            <field name="name">Хэлбэржүүлэн нягтруулсан мод</field>
+	            <field name="code">3152000</field>
+	        </record>
+	        
+		<record id="product_category_316" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Барилгын модон эдлэл, модон хавтан, зүймэл шал, савх мод</field>
+            <field name="code">31600</field>
+        </record>
+        
+	        <record id="product_category_3161" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Барилгын шалны банз</field>
+	            <field name="code">3160010</field>
+	        </record>
+	        
+	        <record id="product_category_3162" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Барилгын хаалга</field>
+	            <field name="code">3160020</field>
+	        </record>
+	        
+	        <record id="product_category_3163" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Барилгын зүймэл шал, савх мод</field>
+	            <field name="code">3160030</field>
+	        </record>
+	        
+	        <record id="product_category_3164" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Модон байшингийн хийц</field>
+	            <field name="code">3160040</field>
+	        </record>
+	        
+	        <record id="product_category_3165" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Барилгын цонх</field>
+	            <field name="code">3160050</field>
+	        </record>
+	        
+	        <record id="product_category_3169" model="vat.category">
+	            <field name="parent_id" ref="product_category_316"/>
+	            <field name="name">Барилгын бусад төрлийн модон эдлэл, модон хавтан, зүймэл шал, савх мод</field>
+	            <field name="code">3160090</field>
+	        </record>
+	        
+		<record id="product_category_317" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Модон авдар, хайрцаг дамар ба адил төстэй модон сав; цахилгаан утасны модон сав;
+тавиур, хайрцган тавиур, бүслүүрэн тавиур, бараа ачих, буулгах зориулалттай модон
+тавиур, модон торх, торхны төрлийн модон сав ба тэдгээрийн эд анги (торхны тавыг
+оруулаад)</field>
+            <field name="code">317</field>
+        </record>
+        
+	        <record id="product_category_3170" model="vat.category">
+	            <field name="parent_id" ref="product_category_317"/>
+	            <field name="name">Модон авдар, хайрцаг дамар ба адил төстэй модон сав; цахилгаан утасны модон сав; тавиур,
+хайрцган тавиур, бүслүүрэн тавиур, бараа ачих, буулгах зориулалттай модон тавиур, модон
+торх, торхны төрлийн модон сав ба тэдгээрийн эд анги (торхны тавыг оруулаад)</field>
+	            <field name="code">31700</field>
+	        </record>
+	        
+	         <record id="product_category_3171" model="vat.category">
+	            <field name="parent_id" ref="product_category_317"/>
+	            <field name="name">Модон авдар, хайрцаг, тавиур</field>
+	            <field name="code">3170010</field>
+	         </record>
+	         
+	         <record id="product_category_3172" model="vat.category">
+	            <field name="parent_id" ref="product_category_317"/>
+	            <field name="name">Модон торх, хувин</field>
+	            <field name="code">3170020</field>
+	         </record>
+	         
+	         <record id="product_category_3173" model="vat.category">
+	            <field name="parent_id" ref="product_category_317"/>
+	            <field name="name">Модон дамар ба адил төстэй модон сав</field>
+	            <field name="code">3170030</field>
+	         </record>
+	         
+	         <record id="product_category_3174" model="vat.category">
+	            <field name="parent_id" ref="product_category_317"/>
+	            <field name="name">Модон авдар, сав, хайрцаг, тавиур, торх зэргийн эд анги (торхны тавыг оруулаад), тоноглол</field>
+	            <field name="code">3170040</field>
+	         </record>
+	         
+		 <record id="product_category_319" model="vat.category">
+            <field name="parent_id" ref="product_category_031"/>
+            <field name="name">Бусад төрлийн модон эдлэл, холтос, сүрлээр хийсэн болон сүлжиж хийсэн эдлэл</field>
+            <field name="code">319</field>
+        </record>
+        
+	        <record id="product_category_3191" model="vat.category">
+	            <field name="parent_id" ref="product_category_319"/>
+	            <field name="name">Бусад төрлийн модон эдлэл</field>
+	            <field name="code">3191</field>
+	        </record>
+	        
+				<record id="product_category_31911" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Модон багаж, хэрэгсэл, бариул, шүүрний иш, гутлын модон хэв</field>
+					<field name="code">3191100</field>
+				</record>
+				
+				<record id="product_category_31912" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Хоол унд болон гал тогооны модон хэрэгсэл</field>
+					<field name="code">3191200</field>
+				</record>
+				
+				<record id="product_category_31913" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Гар урлал, сийлбэр, шигтгээт урлалын зүйл, гоёл чимэглэлийн эд зүйлийн жижиг модон
+хайрцаг, хутганы модон хайрцаг ба адил төстэй эд зүйл, модоор хийсэн хүн хөшөө ба бусад
+төрлийн чимэглэлийн эд зүйл</field>
+					<field name="code">3191300</field>
+				</record>
+				
+				<record id="product_category_31914" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Уран зургийн, гэрэл зургийн, толины болон адил т өстэй модон жааз ба бусад төрлийн модон эдлэл, гэрийн мод</field>
+					<field name="code">3191400</field>
+				</record>
+				
+				<record id="product_category_31915" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Уран зураг, гэрэл зураг, толь ба адил төст эд зүйлийн модон жааз</field>
+					<field name="code">3191410</field>
+				</record>
+				
+				<record id="product_category_31916" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Эмээлийн мод</field>
+					<field name="code">3191420</field>
+				</record>
+				
+				<record id="product_category_31917" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Төрөл бүрийн модон тэрэг</field>
+					<field name="code">3191430</field>
+				</record>
+				
+				<record id="product_category_31918" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Гэрийн мод</field>
+					<field name="code">3191440</field>
+				</record>
+				
+				<record id="product_category_31919" model="vat.category">
+					<field name="parent_id" ref="product_category_3191"/>
+					<field name="name">Бусад төрлийн модон эдлэл</field>
+					<field name="code">3191490</field>
+				</record>
+				
+			<record id="product_category_3192" model="vat.category">
+	            <field name="parent_id" ref="product_category_319"/>
+	            <field name="name">Үйс, сүрэл болон бусад төрлийн сүлжих материалаар хийсэн эдлэл, сагс, сүлжмэл эдлэл</field>
+	            <field name="code">3192</field>
+	        </record>
+	        
+				<record id="product_category_31921" model="vat.category">
+					<field name="parent_id" ref="product_category_3192"/>
+					<field name="name">Түүхий, хагас боловсруулсан байгалийн хаягдал үйс</field>
+					<field name="code">3192100</field>
+				</record>
+				
+				<record id="product_category_31922" model="vat.category">
+					<field name="parent_id" ref="product_category_3192"/>
+					<field name="name">Үйсэн эдлэл, шахмал үйс ба шахмал үйсээр хийсэн эдлэл</field>
+					<field name="code">31922</field>
+				</record>
+				
+					<record id="product_category_319221" model="vat.category">
+						<field name="parent_id" ref="product_category_3192"/>
+						<field name="name">Yйсэн эдлэл</field>
+						<field name="code">3192210</field>
+					</record>
+					
+					<record id="product_category_319222" model="vat.category">
+						<field name="parent_id" ref="product_category_3192"/>
+						<field name="name">Шахмал үйс (холбогч бодистой, бодисгүй) ба шахмал үйсээр хийсэн бараа</field>
+						<field name="code">3192220</field>
+					</record>
+					
+				<record id="product_category_31923" model="vat.category">
+					<field name="parent_id" ref="product_category_3192"/>
+					<field name="name">Сүрэл, сийрсэн болон бусад төрлийн сүлжих материал, сүлжмэл сагс болон сүлжмэл эдлэл</field>
+					<field name="code">3192300</field>
+				</record>
+				
+		<record id="product_category_032" model="vat.category">
+            <field name="parent_id" ref="product_category_003"/>
+            <field name="name">ЦААС, КАРТОН БҮТЭЭГДЭХҮҮН; ХЭВЛЭЛИЙН ЦААС БА ТЭДГЭЭРТЭЙ АДИЛ ТӨСТЭЙ ЭД ЗҮЙЛ</field>
+            <field name="code">032</field>
+        </record>
+			<record id="product_category_321" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Цаасны зутан, цаас, картон</field>
+				<field name="code">321</field>
+			</record>
+			
+				<record id="product_category_3211" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Мод, бусад төрлийн целлюлозон ширхэгт материалын зутан</field>
+					<field name="code">3211</field>
+				</record>
+					<record id="product_category_32111" model="vat.category">
+						<field name="parent_id" ref="product_category_3211"/>
+						<field name="name">Химийн аргаар боловсруулсан модны зутан (уусагч)</field>
+						<field name="code">3211100</field>
+					</record>
+					
+					<record id="product_category_32112" model="vat.category">
+						<field name="parent_id" ref="product_category_3211"/>
+						<field name="name">Химийн аргаар боловсруулсан бусад төрлийн модны зутан (уусагчаас бусад)</field>
+						<field name="code">3211200</field>
+					</record>
+					
+					<record id="product_category_32113" model="vat.category">
+						<field name="parent_id" ref="product_category_3211"/>
+						<field name="name">Модыг механик, хагас химийн аргаар боловсруулж гаргаж авсан зутан; бусад төрлийн целлюлозон ширхэгт материалаас гаргаж авсан зутан</field>
+						<field name="code">3211300</field>
+					</record>
+					
+				<record id="product_category_3212" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Сонины болон гар үйлдвэрийн цаас болон хэвлэлийн зориулалттай өнгөлөөгүй бусад төрлийн цаас ба картон; шугам зургийн цаас, перфокарт, перфолентын зориулалтын хуйлмал цаас</field>
+					<field name="code">3212</field>
+				</record>
+					<record id="product_category_32121" model="vat.category">
+						<field name="parent_id" ref="product_category_3212"/>
+						<field name="name">Сонины цаас</field>
+						<field name="code">3212100</field>
+					</record>
+					
+					<record id="product_category_32122" model="vat.category">
+						<field name="parent_id" ref="product_category_3212"/>
+						<field name="name">Гар үйлдвэрийн цаас, картон</field>
+						<field name="code">3212200</field>
+					</record>
+					
+					<record id="product_category_32129" model="vat.category">
+						<field name="parent_id" ref="product_category_3212"/>
+						<field name="name">Хэвлэл, бичиг, зургийн зориулалттай өнгөлгөөгүй цаас, карт, лентийн зориулалттай цаас, картон</field>
+						<field name="code">32129</field>
+					</record>
+					
+						<record id="product_category_3212910" model="vat.category">
+							<field name="parent_id" ref="product_category_32129"/>
+							<field name="name">Бичгийн цаас</field>
+							<field name="code">3212910</field>
+						</record>
+						
+						<record id="product_category_3212920" model="vat.category">
+							<field name="parent_id" ref="product_category_32129"/>
+							<field name="name">Гэрэл, дулаан, цахилгааны мэдрэмжит цаас ба картоны суурь болгон хэрэглэдэг цаас ба
+картон</field>
+							<field name="code">3212920</field>
+						</record>
+						
+						<record id="product_category_3212930" model="vat.category">
+							<field name="parent_id" ref="product_category_32129"/>
+							<field name="name">Буулгагч, хортой цаасны суурь цаас (бичгийн машины)</field>
+							<field name="code">3212930</field>
+						</record>
+						
+						<record id="product_category_32129140" model="vat.category">
+							<field name="parent_id" ref="product_category_32129"/>
+							<field name="name">Ханын суурь цаас</field>
+							<field name="code">3212940</field>
+						</record>
+						
+						<record id="product_category_3212990" model="vat.category">
+							<field name="parent_id" ref="product_category_32129"/>
+							<field name="name">Хэвлэлийн, бичгийн, зургийн бусад төрлийн өнгөлөөгүй цаас болон шугам зургийн цаас,
+перфокарт, перфолентын зориулалтын хуйлмал цаас</field>
+							<field name="code">3212990</field>
+						</record>
+						
+				<record id="product_category_3213" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Ариун цэврийн цаас, боодлын цаас, картон болон бусад т өрлийн цаас</field>
+					<field name="code">3213</field>
+				</record>
+					<record id="product_category_32131" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Гэр ахуй, ариун цэврийн зориулалттай гар нүүр, ариун цэврийн цаас, цагаан алчуур, амны цаасан алчуур, целлфлозон хөвөн, зулмал</field>
+						<field name="code">3213100</field>
+					</record>
+					
+					<record id="product_category_32132" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Боодлын цаас</field>
+						<field name="code">3213200</field>
+					</record>
+					
+					<record id="product_category_32133" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Гадна талдаа өнгөлөөгүй цаас, уутны крафт цаас, картон болон жижиг атираатай цаас</field>
+						<field name="code">3213300</field>
+					</record>
+					
+					<record id="product_category_32134" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Товгор хээтэй хагас химийн аргаар боловсруулсан цаас</field>
+						<field name="code">3213400</field>
+					</record>
+					
+					<record id="product_category_32135" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Олон давхраат цаас, картон</field>
+						<field name="code">3213500</field>
+					</record>
+					
+					<record id="product_category_32136" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Боодлын сульфитын цаас, шүүлтүүрийн цаас, картон, эсгий цаас ба картон, гуурсан ба хавтгай хэлбэртэй, хуйлмал тамхины цаас</field>
+						<field name="code">32136</field>
+					</record>
+						<record id="product_category_321361" model="vat.category">
+							<field name="parent_id" ref="product_category_32136"/>
+							<field name="name">Мето цаас</field>
+							<field name="code">3213610</field>
+						</record>
+						
+						<record id="product_category_321369" model="vat.category">
+							<field name="parent_id" ref="product_category_32136"/>
+							<field name="name">Боодлын сульфитын цаас, шүүлтүүрийн цаас, картон, эсгий цаас ба картон, гуурсан ба хавтгай
+хэлбэртэй, хуйлмал тамхины цаас</field>
+							<field name="code">3213690</field>
+						</record>
+						
+					
+					
+					<record id="product_category_32137" model="vat.category">
+						<field name="parent_id" ref="product_category_3213"/>
+						<field name="name">Ургамлын гаралтай илгэн цаас, тос нэвтэрдэгг үй цаас, гэрэлтүүлдэг цаас (калька) тунгалаг, хагас тунгалаг цаас</field>
+						<field name="code">3213700</field>
+					</record>
+					
+				<record id="product_category_3214" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Боловсруулалт хийгдсэн, өнгөлөөгүй, нэвчүүлэлт хийгээгүй цаас, картон</field>
+					<field name="code">3214</field>
+				</record>
+					<record id="product_category_32141" model="vat.category">
+						<field name="parent_id" ref="product_category_3214"/>
+						<field name="name">Давхарлаж нааж боловсруулсан цаас, картон</field>
+						<field name="code">3214100</field>
+					</record>
+					
+					<record id="product_category_32142" model="vat.category">
+						<field name="parent_id" ref="product_category_3214"/>
+						<field name="name">Атираа, хээ, нүх гарган боловсруулсан цаас, картон</field>
+						<field name="code">3214200</field>
+					</record>
+					
+					<record id="product_category_32143" model="vat.category">
+						<field name="parent_id" ref="product_category_3214"/>
+						<field name="name">Шохойтой цаас, органик бус бодис өөр өнгөлмөл цаас, картон</field>
+						<field name="code">3214300</field>
+					</record>
+					
+					<record id="product_category_32149" model="vat.category">
+						<field name="parent_id" ref="product_category_3214"/>
+						<field name="name">Өнгөлсөн, гадаргууг нь хээлж чимэглэсэн, будсан, хуудасласан, зүссэн, хуйлмал цаас, целлюлозон хөвөн, целлюлозон зулмал</field>
+						<field name="code">3214900</field>
+					</record>
+					
+				<record id="product_category_3215" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Атираа гарган боловсруулсан цаас, картон болон цаасан хайрцаг</field>
+					<field name="code">3215</field>
+				</record>
+					<record id="product_category_32151" model="vat.category">
+						<field name="parent_id" ref="product_category_3215"/>
+						<field name="name">Атираатай цаас, картон</field>
+						<field name="code">3215100</field>
+					</record>
+					
+					<record id="product_category_32152" model="vat.category">
+						<field name="parent_id" ref="product_category_3215"/>
+						<field name="name">Цаасан уут, сав</field>
+						<field name="code">3215200</field>
+					</record>
+					
+					<record id="product_category_32153" model="vat.category">
+						<field name="parent_id" ref="product_category_3215"/>
+						<field name="name">Цаасан картонон целлозон хөвөн зулмалаар хийсэн хайрцаг, хамгаалалт гэр (гар уутнаас бусад төрлийн) дэлгүүр, албан тасалгаанд ашиглагдах сав, баглаа боодол</field>
+						<field name="code">3215300</field>
+					</record>
+					
+				<record id="product_category_3219" model="vat.category">
+					<field name="parent_id" ref="product_category_321"/>
+					<field name="name">Бусад төрлийн цаас, цаасан бүтээгдэхүүн</field>
+					<field name="code">3219</field>
+				</record>
+					<record id="product_category_32191" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Хуйлмал биш, хорын цаас, хувилан буулгах цаас, хувилагч, офсет машины цаас</field>
+						<field name="code">3219100</field>
+					</record>
+					
+					<record id="product_category_32192" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Цаасан, картонон дугтуй, ил захидал, захидлын цаас; цаас картонон хайрцаг, ц үнх хэтэвч ба
+бичгийн хэрэглэлийн бусад төрлийн уут сав, хайрцаг</field>
+						<field name="code">3219200</field>
+					</record>
+					
+					<record id="product_category_32193" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Ариун цэврийн цаас, нүүр, гар, амны алчуур, ширээний бүтээлэг, хүүхдийн живх, тампон болон
+эдгээртэй төстэй гэр ахуйн ариун цэвэр эмнэлгийн эд зүйл болон цаасны зутан, цаас,
+целлюлозон хөвөн, зулмалаар хийсэн хувцас</field>
+						<field name="code">3219300</field>
+					</record>
+					
+					<record id="product_category_32194" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Ханын цаас болон адил төст бүрээс болон цонхны тунгалаг цаас</field>
+						<field name="code">3219400</field>
+					</record>
+					
+					<record id="product_category_32195" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Хана бүрэх нэхмэл материал</field>
+						<field name="code">3219500</field>
+					</record>
+					
+					<record id="product_category_32197" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Цаасан, картонон хаяг, шошго</field>
+						<field name="code">3219700</field>
+					</record>
+					
+					<record id="product_category_32198" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Цаасны зутангаар хийсэн шүүлтүүр гулдмай, хавтан</field>
+						<field name="code">3219800</field>
+					</record>
+					
+					<record id="product_category_32199" model="vat.category">
+						<field name="parent_id" ref="product_category_3219"/>
+						<field name="name">Тусгай хэмжээгээр зүсэж бэлтгэсэн цаас, тамхины цаас бусад төрлийн цаасан бүтээгдэхүүн</field>
+						<field name="code">3219900</field>
+					</record>
+					
+						<record id="product_category_321991" model="vat.category">
+							<field name="parent_id" ref="product_category_32199"/>
+							<field name="name">Цаасан аяга, таваг</field>
+							<field name="code">3219910</field>
+						</record>
+						
+						<record id="product_category_321999" model="vat.category">
+							<field name="parent_id" ref="product_category_32199"/>
+							<field name="name">Тусгай хэмжээгээр зүсэж бэлтгэсэн цаас, тамхины цаас бусад төрлийн цаасан бүтээгдэхүүн</field>
+							<field name="code">3219990</field>
+						</record>
+						
+			<record id="product_category_322" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Хэвлэмэл ном</field>
+				<field name="code">322</field>
+			</record>
+			
+				<record id="product_category_3221" model="vat.category">
+					<field name="parent_id" ref="product_category_322"/>
+					<field name="name">Сурах бичгийн ном</field>
+					<field name="code">3221000</field>
+				</record>
+				
+				<record id="product_category_3222" model="vat.category">
+					<field name="parent_id" ref="product_category_322"/>
+					<field name="name">Ерөнхий тайлбар, лавлагааны ном</field>
+					<field name="code">3222000</field>
+				</record>
+				
+				<record id="product_category_3223" model="vat.category">
+					<field name="parent_id" ref="product_category_322"/>
+					<field name="name">Системчилсэн лавлагааны ном</field>
+					<field name="code">3223000</field>
+				</record>
+				
+				<record id="product_category_3229" model="vat.category">
+					<field name="parent_id" ref="product_category_322"/>
+					<field name="name">Бусад төрлийн хэвлэмэл ном</field>
+					<field name="code">3229000</field>
+				</record>
+				
+					<record id="product_category_32291" model="vat.category">
+						<field name="parent_id" ref="product_category_3229"/>
+						<field name="name">Мэргэжлийн, техникийн болон эрдэм шинжилгээний ном</field>
+						<field name="code">3229100</field>
+					</record>
+					
+					<record id="product_category_32292" model="vat.category">
+						<field name="parent_id" ref="product_category_3229"/>
+						<field name="name">Хүүхдийн ном</field>
+						<field name="code">3229200</field>
+					</record>
+					
+					<record id="product_category_32299" model="vat.category">
+						<field name="parent_id" ref="product_category_3229"/>
+						<field name="name">Бусад төрлийн хэвлэмэл ном</field>
+						<field name="code">3229900</field>
+					</record>
+					
+			<record id="product_category_323" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Өдөр тутмын сонин, сэтгүүл болон тогтмол хэвлэл</field>
+				<field name="code">3230000</field>
+			</record>
+			
+			<record id="product_category_324" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Өдөр тутмын бус олон нийтийн сонин, сэтгүүл болон тогтмол хэвлэл</field>
+				<field name="code">324</field>
+			</record>
+			
+				<record id="product_category_3241" model="vat.category">
+					<field name="parent_id" ref="product_category_324"/>
+					<field name="name">Өдөр тутмын бус сонин, сэтгүүл болон тогтмол хэвлэл</field>
+					<field name="code">3241000</field>
+				</record>
+				
+				<record id="product_category_3242" model="vat.category">
+					<field name="parent_id" ref="product_category_324"/>
+					<field name="name">Өдөр тутмын бус бизнесийн, мэргэжлийн, эрдэм шинжилгээний сонин, сэтгүүл болон тогтмол хэвлэл</field>
+					<field name="code">3242000</field>
+				</record>
+				
+				<record id="product_category_3243" model="vat.category">
+					<field name="parent_id" ref="product_category_324"/>
+					<field name="name">Өдөр тутмын бус бусад төрлийн сонин, сэтгүүл болон тогтмол хэвлэл</field>
+					<field name="code">3243000</field>
+				</record>
+				
+			<record id="product_category_325" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Газрын зураг, гар бичмэл болон хэвлэмэл нот, ил захидал, мэндчилгээ, хэвлэмэл зураг, төлөвлөгөө</field>
+				<field name="code">325</field>
+			</record>
+			
+				<record id="product_category_3251" model="vat.category">
+					<field name="parent_id" ref="product_category_325"/>
+					<field name="name">Ном хэлбэртэйгээс бусад төрлийн хэвлэмэл газрын зураг, ус болон далай, тэнгисийн зураг /атлас/, ханын газрын зураг /байршил зүйн зураг ба дэлхийн бөмбөрцгийг оруулаад/</field>
+					<field name="code">3251</field>
+				</record>
+				
+					<record id="product_category_32511" model="vat.category">
+						<field name="parent_id" ref="product_category_3251"/>
+						<field name="name">Ном хэлбэртэйгээс бусад төрлийн хэвлэмэл газрын зураг, ус болон далай, тэнгисийн зураг /атлас/, ханын газрын зураг /байршил зүйн зураг/</field>
+						<field name="code">3251100</field>
+					</record>
+					
+					<record id="product_category_32512" model="vat.category">
+						<field name="parent_id" ref="product_category_3251"/>
+						<field name="name">Дэлхийн бөмбөрцөг /глобус/</field>
+						<field name="code">3251200</field>
+					</record>
+					
+				<record id="product_category_3252" model="vat.category">
+					<field name="parent_id" ref="product_category_325"/>
+					<field name="name">Гар бичмэл болон хэвлэмэл хөгжмийн нот</field>
+					<field name="code">3252000</field>
+				</record>
+				
+				<record id="product_category_3253" model="vat.category">
+					<field name="parent_id" ref="product_category_325"/>
+					<field name="name">Хэвлэмэл, зурагтай ил захидал, баярын мэндчилгээ, зарлал, мэдээлэл /дугтуйтай, дугтуйг үй,
+чимэглэлтэй, чимэглэлгүй/</field>
+					<field name="code">32530</field>
+				</record>
+				
+					<record id="product_category_32531" model="vat.category">
+						<field name="parent_id" ref="product_category_3253"/>
+						<field name="name">Ил захидал, урилга, баярын мэндчилгээ</field>
+						<field name="code">3253010</field>
+					</record>
+					
+					<record id="product_category_32532" model="vat.category">
+						<field name="parent_id" ref="product_category_3253"/>
+						<field name="name">Хэвлэмэл хуанли</field>
+						<field name="code">3253020</field>
+					</record>
+					
+					<record id="product_category_32539" model="vat.category">
+						<field name="parent_id" ref="product_category_3253"/>
+						<field name="name">Зарлал, мэдээлэл</field>
+						<field name="code">3253090</field>
+					</record>
+				
+				<record id="product_category_3254" model="vat.category">
+					<field name="parent_id" ref="product_category_325"/>
+					<field name="name">Хэвлэмэл зураг, гэрэл зураг</field>
+					<field name="code">32540</field>
+				</record>
+				
+					<record id="product_category_32541" model="vat.category">
+						<field name="parent_id" ref="product_category_3254"/>
+						<field name="name">Хулдаасан хэвлэл</field>
+						<field name="code">3254010</field>
+					</record>
+					
+					<record id="product_category_32542" model="vat.category">
+						<field name="parent_id" ref="product_category_3254"/>
+						<field name="name">Даавуун хэвлэл</field>
+						<field name="code">3254020</field>
+					</record>
+					
+					<record id="product_category_32549" model="vat.category">
+						<field name="parent_id" ref="product_category_3254"/>
+						<field name="name">Бусад төрлийн хэвлэмэл, гэрэл зураг</field>
+						<field name="code">3254090</field>
+					</record>
+				
+				<record id="product_category_3255" model="vat.category">
+					<field name="parent_id" ref="product_category_325"/>
+					<field name="name">Архитектурын, инженерийн, аж үйлдвэрийн, худалдааны байршлын тонографикийн болон адил төстэй зориулалтын зураг, төслийн гар бичмэл, эх хувь; гэрэл мэдрэмтгий цаасанд
+сэргээн буулгасан зураг ба тэдгээрийг хортой цаасаар буулгасан хуулбар</field>
+					<field name="code">32550</field>
+				</record>
+				
+			<record id="product_category_326" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Марк, чек, мөнгөн тэмдэгт, үнэт цаас, товхимол, ухуулга сурталчилгааны хуудас болон эдгээртэй адил төстэй хэвлэмэл материал</field>
+				<field name="code">326</field>
+			</record>
+			
+				<record id="product_category_3261" model="vat.category">
+					<field name="parent_id" ref="product_category_326"/>
+					<field name="name">Шуудангийн, орлого олох зориулалтын тэмдэг, адил т өстэй зориулалтын марк, сүлдэт цаас, цаасан мөнгөн тэмдэгт, үнэт цаас, хувьцаа, зээлийн бичиг ба эрх зүйн бусад төрлийн үнэт
+цаас, баримт</field>
+					<field name="code">32610</field>
+				</record>
+				
+					<record id="product_category_32611" model="vat.category">
+						<field name="parent_id" ref="product_category_3261"/>
+						<field name="name">Шуудангийн марк</field>
+						<field name="code">3261010</field>
+					</record>
+					
+					<record id="product_category_32612" model="vat.category">
+						<field name="parent_id" ref="product_category_3261"/>
+						<field name="name">Эрхийн бичиг, нэрийн хуудас</field>
+						<field name="code">3261020</field>
+					</record>
+					
+					<record id="product_category_32613" model="vat.category">
+						<field name="parent_id" ref="product_category_3261"/>
+						<field name="name">Бүх төрлийн карт</field>
+						<field name="code">3261030</field>
+					</record>
+					
+					<record id="product_category_32614" model="vat.category">
+						<field name="parent_id" ref="product_category_3261"/>
+						<field name="name">Диплом, гэрчилгээ зэрэг үнэт цаас</field>
+						<field name="code">3261040</field>
+					</record>
+					
+					<record id="product_category_32619" model="vat.category">
+						<field name="parent_id" ref="product_category_3261"/>
+						<field name="name">Сүлдэт цаас, цаасан мөнгөн тэмдэгт, үнэт цаас, хувьцаа, зээлийн бичиг ба эрх зүйн бусад
+төрлийн үнэт цаас, баримт</field>
+						<field name="code">3261090</field>
+					</record>
+					
+				<record id="product_category_3262" model="vat.category">
+					<field name="parent_id" ref="product_category_326"/>
+					<field name="name">Худалдааны зориулалттай зар сурталчилгааны каталоги болон адил т өстэй хэвлэмэл материал</field>
+					<field name="code">32620</field>
+				</record>
+				
+					<record id="product_category_32621" model="vat.category">
+						<field name="parent_id" ref="product_category_3262"/>
+						<field name="name">Танилцуулга, товхимол, каталоги</field>
+						<field name="code">3262010</field>
+					</record>
+					
+					<record id="product_category_32629" model="vat.category">
+						<field name="parent_id" ref="product_category_3262"/>
+						<field name="name">Худалдааны зориулалттай зар сурталчилгааны болон адил т өстэй хэвлэмэл материал</field>
+						<field name="code">3262090</field>
+					</record>
+					
+				<record id="product_category_3263" model="vat.category">
+					<field name="parent_id" ref="product_category_326"/>
+					<field name="name">Наагаад, хуулдаг зураг /декалькомани/, хэвлэмэл хуанли</field>
+					<field name="code">3263000</field>
+				</record>
+				
+				<record id="product_category_3269" model="vat.category">
+					<field name="parent_id" ref="product_category_326"/>
+					<field name="name">Бусад төрлийн хэвлэмэл материал</field>
+					<field name="code">3269000</field>
+				</record>
+				
+			<record id="product_category_327" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Бүртгэл тооцоо, тэмдэглэлийн дэвтэр, захидлын дэвтэр, өдрийн тэмдэглэлийн дэвтэр болон тэдгээртэй адил төстэй материал, дасгалын болон бэх шингээгч цаас, бичиг
+баримтын цаасан хавтас, бичиг хэвлэлийн цаасан картонон маягт болон бусад төрлийн
+материал</field>
+				<field name="code">327</field>
+			</record>
+			
+				<record id="product_category_3270" model="vat.category">
+					<field name="parent_id" ref="product_category_327"/>
+					<field name="name">Бүртгэл тооцоо, тэмдэглэлийн дэвтэр, захидлын дэвтэр, өдрийн тэмдэглэлийн дэвтэр ба тэдгээртэй адил төстэй эд зүйл, дасгалын болон бэх шингээгч цаасны дэвтэр, бичиг баримтын
+цаасан хавтас, бичиг хэвлэлийн цаасан картонон маягт болон бусад т өрлийн эд зүйл</field>
+					<field name="code">32700</field>
+				</record>
+				
+					<record id="product_category_32701" model="vat.category">
+						<field name="parent_id" ref="product_category_3270"/>
+						<field name="name">Сурагчийн дэвтэр</field>
+						<field name="code">3270010</field>
+					</record>
+					
+					<record id="product_category_32702" model="vat.category">
+						<field name="parent_id" ref="product_category_3270"/>
+						<field name="name">Хүснэгт маягт</field>
+						<field name="code">3270020</field>
+					</record>
+					
+					<record id="product_category_32709" model="vat.category">
+						<field name="parent_id" ref="product_category_3270"/>
+						<field name="name">Бүртгэл тооцоо, тэмдэглэлийн дэвтэр, захидлын дэвтэр, өдрийн тэмдэглэлийн дэвтэр, тэдгээртэй адил төстэй материал, дасгалын болон бэх шингээгч цаасны дэвтэр, бичиг
+баримтын цаасан хавтас, бичиг хэвлэлийн цаасан картонон маягт болон бусад т өрлийн
+материал</field>
+						<field name="code">3270090</field>
+					</record>
+					
+			<record id="product_category_328" model="vat.category">
+				<field name="parent_id" ref="product_category_032"/>
+				<field name="name">Хэвлэлийн зориулалттай хавтгай, бөөрөнхий дардас, чулуун барын дардас болон
+хэвлэлийн бусад төрлийн тамгалах хэрэгсэл</field>
+				<field name="code">3280000</field>
+			</record>
+			
+		<record id="product_category_033" model="vat.category">
+            <field name="parent_id" ref="product_category_003"/>
+            <field name="name">КОКС, ГАЗРЫН ТОСНЫ БҮТЭЭГДЭХҮҮН, ЦӨМИЙН ТҮЛШ</field>
+            <field name="code">033</field>
+        </record>
+			<record id="product_category_331" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Чулуун нүүрс, хүрэн нүүрс, хүлэр, хагас кокс, хийн зуухны нүүрс</field>
+				<field name="code">33100</field>
+			</record>
+			
+				<record id="product_category_3311" model="vat.category">
+					<field name="parent_id" ref="product_category_033"/>
+					<field name="name">Үртсэн шахмал түлш</field>
+					<field name="code">3310010</field>
+				</record>
+				
+				<record id="product_category_3312" model="vat.category">
+					<field name="parent_id" ref="product_category_033"/>
+					<field name="name">Коксжсон нүүрс</field>
+					<field name="code">3310020</field>
+				</record>
+				
+				<record id="product_category_3313" model="vat.category">
+					<field name="parent_id" ref="product_category_033"/>
+					<field name="name">Баяжуулсан нүүрс</field>
+					<field name="code">3310030</field>
+				</record>
+				
+				<record id="product_category_3319" model="vat.category">
+					<field name="parent_id" ref="product_category_033"/>
+					<field name="name">Бусад төрлийн чулуун нүүрс, хүрэн нүүрс, хийн зуухны нүүрс</field>
+					<field name="code">3310090</field>
+				</record>
+				
+			<record id="product_category_332" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Чулуун ба хүрэн нүүрсний, бусад төрлийн эрдэс бодисын давирхай</field>
+				<field name="code">3320000</field>
+			</record>
+			
+			<record id="product_category_333" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Газрын тос, лавжсан эрдсийн боловсруулсан газрын тос</field>
+				<field name="code">3330000</field>
+			</record>
+			
+				<record id="product_category_3331" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Бензин, онгоцны шатахуун</field>
+					<field name="code">33310</field>
+				</record>
+				
+					<record id="product_category_33311" model="vat.category">
+						<field name="parent_id" ref="product_category_3331"/>
+						<field name="name">Бензин, 90-ээс доош октантай</field>
+						<field name="code">3331010</field>
+					</record>
+					
+					<record id="product_category_33312" model="vat.category">
+						<field name="parent_id" ref="product_category_3331"/>
+						<field name="name">Бензин, 90-ээс дээш октантай</field>
+						<field name="code">3331020</field>
+					</record>
+					
+					<record id="product_category_33313" model="vat.category">
+						<field name="parent_id" ref="product_category_3331"/>
+						<field name="name">Онгоцны түлш</field>
+						<field name="code">3331030</field>
+					</record>
+					
+				<record id="product_category_3332" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Тийрэлтэт хөдөлгүүрийн түлш</field>
+					<field name="code">3332000</field>
+				</record>
+				
+				<record id="product_category_3333" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Газрын тос, лавжсан эрдсийн бусад төрлийн дэгдэмхий бодис</field>
+					<field name="code">3333000</field>
+				</record>
+				
+				<record id="product_category_3334" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Керосин, тийрэлтэт хөдөлгүүрийн болон энэ төрлийн түлш</field>
+					<field name="code">3334</field>
+				</record>
+				
+					<record id="product_category_33341" model="vat.category">
+						<field name="parent_id" ref="product_category_3334"/>
+						<field name="name">Керосин</field>
+						<field name="code">3334100</field>
+					</record>
+					
+					<record id="product_category_33342" model="vat.category">
+						<field name="parent_id" ref="product_category_3334"/>
+						<field name="name">Керосиний төрлийн тийрэлтэт хөдөлгүүрийн түлш</field>
+						<field name="code">3334200</field>
+					</record>
+					
+				<record id="product_category_3335" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Бусад төрлийн боловсруулсан газрын тос болон битумжсэн эрдсийн боловсруулсан тос /керосиныг оруулахгүй/</field>
+					<field name="code">3335000</field>
+				</record>
+				
+				<record id="product_category_3336" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Хийн түлш</field>
+					<field name="code">3336000</field>
+				</record>
+				
+				<record id="product_category_3337" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Бусад төрлийн шатахуун</field>
+					<field name="code">33370</field>
+				</record>
+				
+					<record id="product_category_33371" model="vat.category">
+						<field name="parent_id" ref="product_category_3337"/>
+						<field name="name">Дизелийн түлш</field>
+						<field name="code">3337010</field>
+					</record>
+					
+					<record id="product_category_33372" model="vat.category">
+						<field name="parent_id" ref="product_category_3337"/>
+						<field name="name">Мазут</field>
+						<field name="code">3337020</field>
+					</record>
+					
+					<record id="product_category_33379" model="vat.category">
+						<field name="parent_id" ref="product_category_3337"/>
+						<field name="name">Бусад төрлийн шатахуун</field>
+						<field name="code">3337090</field>
+					</record>
+					
+				<record id="product_category_3338" model="vat.category">
+					<field name="parent_id" ref="product_category_333"/>
+					<field name="name">Тосолгооны бодис болон нефть, лавжсан эрдэс боловсруулалтын тундас б үтээгдэхүүн, бусад төрлийн шатах тослох материал</field>
+					<field name="code">3338000</field>
+				</record>
+				
+			<record id="product_category_334" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Байгалийн хийнээс бусад төрлийн газрын тосны хий болон хийн төлвийн нүүрс ус төрөгч</field>
+				<field name="code">334</field>
+			</record>
+			
+				<record id="product_category_3341" model="vat.category">
+					<field name="parent_id" ref="product_category_334"/>
+					<field name="name">Шингэрүүлсэн пропан, бутан, байгалийн хий</field>
+					<field name="code">3341000</field>
+				</record>
+				
+				<record id="product_category_3342" model="vat.category">
+					<field name="parent_id" ref="product_category_334"/>
+					<field name="name">Байгалийн хийнээс бусад төрлийн этилен, пропилен, бутилен, бутадиен болон нефтийн хий, хийн төлвийн нүүрс, устөрөгч</field>
+					<field name="code">3342000</field>
+				</record>
+				
+			<record id="product_category_335" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Газрын тосны вазелин, газрын тосны бичил талстад лав, түүхий лав, озокерит, хүрэн нүүрсний лав бусад төрлийн эрдэс лав болон адил төстэй бүтээгдэхүүн; газрын тосны
+кокс, газрын тосны гаралтай битум, битумжсэн эрдсийн газрын тосны бусад төрлийн
+материал</field>
+				<field name="code">3350000</field>
+			</record>
+			
+			<record id="product_category_336" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Цацраг идэвхт бодис, изотоп, тэдгээрийн нэгдэл; эдгээр элементийг агуулсан керамик бүтээгдэхүүн болон хольц, хайлш; цацраг идэвхт хаягдал</field>
+				<field name="code">336</field>
+			</record>
+			
+				<record id="product_category_3361" model="vat.category">
+					<field name="parent_id" ref="product_category_336"/>
+					<field name="name">Байгалийн уран болон түүний нэгдэл; байгалийн уран болон түүний нэгдлийг агуулсан керамик хольц хайлш</field>
+					<field name="code">3361000</field>
+				</record>
+				
+				<record id="product_category_3362" model="vat.category">
+					<field name="parent_id" ref="product_category_336"/>
+					<field name="name">U235 баяжуулсан уран болон түүний нэгдэл; плутони болон түүний нэгдэл; эдгээр нэгдлүүдийг агуулсан керамик бүтээгдэхүүн болон хольц, хайлш</field>
+					<field name="code">3362000</field>
+				</record>
+				
+				<record id="product_category_3363" model="vat.category">
+					<field name="parent_id" ref="product_category_336"/>
+					<field name="name">U235 нь ядууруулсан уран болон түүний нэгдлүүд, тори болон түүний нэгдлүүд, эдгээр нэгдлүүдийг агуулсан керамик бүтээгдэхүүн болон хольц, хайлш</field>
+					<field name="code">3363000</field>
+				</record>
+				
+				<record id="product_category_3369" model="vat.category">
+					<field name="parent_id" ref="product_category_336"/>
+					<field name="name">Бусад төрлийн цацраг идэвхт бодис, изотоп болон нэгдлүүд; эдгээр бодис, изотоп, нэгдлийг агуулсан керамик бүтээгдэхүүн болон хольц, хайлш</field>
+					<field name="code">3369000</field>
+				</record>
+				
+			<record id="product_category_337" model="vat.category">
+				<field name="parent_id" ref="product_category_033"/>
+				<field name="name">Цөмийн реакторын түлшний элемент (багц)</field>
+				<field name="code">337</field>
+			</record>
+			
+				<record id="product_category_3371" model="vat.category">
+					<field name="parent_id" ref="product_category_337"/>
+					<field name="name">Цөмийн реакторын шарагдаагүй түлшний элемент (багц)</field>
+					<field name="code">3371000</field>
+				</record>
+				
+				<record id="product_category_3372" model="vat.category">
+					<field name="parent_id" ref="product_category_337"/>
+					<field name="name">Цөмийн реакторын ашигласан түлшний элемент (багц)</field>
+					<field name="code">3372000</field>
+				</record>
+				
+		<record id="product_category_034" model="vat.category">
+            <field name="parent_id" ref="product_category_003"/>
+            <field name="name">ХИМИЙН БОДИС, БҮТЭЭГДЭХҮҮН</field>
+            <field name="code">034</field>
+        </record>
+			<record id="product_category_341" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Органик химийн үндсэн бодис</field>
+				<field name="code">341</field>
+			</record>
+			
+				<record id="product_category_3411" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Нүүрс, устөрөгчийн галогенжуулсан, сульфожуулсан, нитрожуулсан, нитрозжуулсан бэлдмэл</field>
+					<field name="code">3411000</field>
+				</record>
+				
+				<record id="product_category_3412" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Үйлдвэрийн аргаар гаргасан монокарбоксилийн тосны хүчил, нэрж авсан (рафинаци) хүчиллэг тос</field>
+					<field name="code">3412000</field>
+				</record>
+				
+				<record id="product_category_3413" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Спирт, фенол, фенолт спирт, тэдгээрийн галоген, сульфо, нитрожуулсан, нитрозжуулсан бэлдмэл, үйлдвэрийн тосон спирт</field>
+					<field name="code">3413</field>
+				</record>
+				
+					<record id="product_category_34131" model="vat.category">
+						<field name="parent_id" ref="product_category_3411"/>
+						<field name="name">Этилийн спирт, галогенжуулсан, сульфожуулсан, нитрожуулсан, нитрозжуулсан бэлдмэл</field>
+						<field name="code">3413100</field>
+					</record>
+					
+					<record id="product_category_34139" model="vat.category">
+						<field name="parent_id" ref="product_category_3411"/>
+						<field name="name">Бусад төрлийн спирт, фенол, фенолт спирт, тэдгээрийн галоген, сульфо, нитрожуулсан, нитрозжуулсан бэлдмэл, үйлдвэрийн тосон спирт</field>
+						<field name="code">3413900</field>
+					</record>
+					
+				<record id="product_category_3414" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Салицилийн хүчил түүний давс болон нийлмэл эфир, түүний давснаас бусад төрлийн карбоксилийн хүчил, түүний ангидрид, галоген, пероксид, тэдгээрийн галоген, сульфо,
+нитрожуулсан, нитрозжуулсан бэлдмэл</field>
+					<field name="code">3414000</field>
+				</record>
+				
+				<record id="product_category_3415" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Лизин ба түүний нийлмэл эфир, түүний давс болон глютамины хүчил, түүний давснаас бусад
+төрлийн амины үүрэг бүхий нэгдэл, хүчилтөрөгчийн үүрэгт бүлэг бүхий амин нэгдэл,
+карбоксимидын үүрэг бүхий нэгдэл, иминий нэгдэл, нитрилийн үүрэг бүхий нэгдэл; диазо, азо,
+азокси-ийн нэгдэл, гидразин, гидросиламиний органик бэлдмэл болон азот б үхий холимог
+нэгдэл</field>
+					<field name="code">3415000</field>
+				</record>
+				
+				<record id="product_category_3416" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Органик хүхэрт нэгдэл, элемент органик бусад төрлийн нэгдэл, гетеро цагираг нэгдэл, нуклейний /бөөмийн/ хүчил ба түүний давс</field>
+					<field name="code">3416000</field>
+				</record>
+				
+				<record id="product_category_3417" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Эфир, спиртийн хэт исэл, энгийн эфирийн хэт исэл, эпоксид, ацетали, хагас ацетали болон тэдгээрийн галоген, сульфо, нитрозжуулсан, нитрожуулсан уламжлал, альдигидийн нэгдэл
+болон кетоны нэгдэл, хиноны нэгдэл, фермент, өөр газар ороогүй ферментийн бэлдмэл,
+бусад төрлийн органик нэгдэл</field>
+					<field name="code">34170</field>
+				</record>
+				
+					<record id="product_category_34171" model="vat.category">
+						<field name="parent_id" ref="product_category_3417"/>
+						<field name="name">Ацеталин</field>
+						<field name="code">3417010</field>
+					</record>
+					
+					<record id="product_category_34172" model="vat.category">
+						<field name="parent_id" ref="product_category_3417"/>
+						<field name="name">Эфир, спиртийн хэт исэл, энгийн эфирийн хэт исэл, эпоксид болон тэдгээрийн галоген, ацетали ба хагас ацетали, сульфо, нитрозжуулсан, нитрожуулсан бэлдмэл, альдигидийн нэгдэл болон кетоны нэгдэл, хиноны нэгдэл, фермент, өөр газар ороогүй ферментийн
+бэлдмэл, бусад төрлийн органик нэгдэл</field>
+						<field name="code">3417090</field>
+					</record>
+					
+				<record id="product_category_3418" model="vat.category">
+					<field name="parent_id" ref="product_category_341"/>
+					<field name="name">Органик бус хүчлээс бусад төрлийн фосфор хүчлийн нийлмэл эфир ба түүний давс /лактофосфат орно/, эфир болон тэдгээрийн уламжлал, /уст өрөгжсөн галидын нийлмэл эфир
+орохгүй/ давс; ба тэдгээрийн галогенжуулсан сульфжуулсан бэлдмэл</field>
+					<field name="code">3418000</field>
+				</record>
+				
+			<record id="product_category_342" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Органик бус химийн бодис</field>
+				<field name="code">342</field>
+			</record>
+			
+				<record id="product_category_3421" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Устөрөгч, азот, хүчилтөрөгч, нүүрстөрөгчийн давхар исэл, инертийн хий; металл бус бусад төрлийн органик биш хүчилтөрөгчит нэгдэл</field>
+					<field name="code">34210</field>
+				</record>
+				
+					<record id="product_category_34211" model="vat.category">
+						<field name="parent_id" ref="product_category_3421"/>
+						<field name="name">Хүчилтөрөгч</field>
+						<field name="code">3421010</field>
+					</record>
+					
+					<record id="product_category_34219" model="vat.category">
+						<field name="parent_id" ref="product_category_3421"/>
+						<field name="name">Устөрөгч, азот, нүүрстөрөгчийн давхар исэл, инертийн хий;</field>
+						<field name="code">3421090</field>
+					</record>
+					
+				<record id="product_category_3422" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Цайрын исэл ба хэт исэл, хромын исэл ба гидроксид, манганий исэл, т өмрийн исэл ба
+гидроксид, шороон будаг, кобальт, титаны исэл, хар тугалганы исэл, улаан ба улбар шар
+тугалганы исэлд ороогүй мөнгөн уснаас бусад төрлийн металлын исэл, гидроксид, хэт исэл</field>
+					<field name="code">34220</field>
+				</record>
+				
+					<record id="product_category_34221" model="vat.category">
+						<field name="parent_id" ref="product_category_3422"/>
+						<field name="name">Молибдений исэл</field>
+						<field name="code">3422010</field>
+					</record>
+					
+					<record id="product_category_34229" model="vat.category">
+						<field name="parent_id" ref="product_category_3422"/>
+						<field name="name">Органик бус цайрын исэл, хэт исэл, хромын исэл, гидроксид, манганы исэл, т өмрийн исэл,
+шороон будаг, кобальт, титаны исэл, хар тугалганы исэл, улаан ба улбар шар тугалганы исэл,
+дээр ороогүй мөнгөн уснаас бусад төрлийн металлын исэл, усан исэл, хэт исэл</field>
+						<field name="code">3422090</field>
+					</record>
+					
+				<record id="product_category_3423" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Химийн бусад төрлийн бодис, органик бус хүчил, бори, цахиур, нүүрстөрөгчийн органик биш
+хүчилтөрөгчит нэгдэл, галоген эсвэл металл бус хүхрийн нэгдэл; магнитин, гидроксид,
+стронци, барийн гидроксид, хэт исэл; хөнгөн цагааны гидроксид; гидразин болон
+гидроксиламинт, тэдгээрийн органик биш давс</field>
+					<field name="code">3423</field>
+				</record>
+				
+					<record id="product_category_34231" model="vat.category">
+						<field name="parent_id" ref="product_category_3423"/>
+						<field name="name">Химийн бусад төрлийн бодис; фосфор азот үхрийн хүчлээс бусад төрлийн хүчил, боор,
+цахиур, нүүрстөрөгчийн органик биш нэгдэл; металл бус галоген, хүхрийн нэгдэл, натрийн
+усан исэл, стронци, борийн усан исэл, хэт исэл, гидразин болон гидроксиламин, тэдгээрийн
+органик биш давс</field>
+						<field name="code">3423100</field>
+					</record>
+					
+					<record id="product_category_34232" model="vat.category">
+						<field name="parent_id" ref="product_category_3423"/>
+						<field name="name">Фосфорын хүчил</field>
+						<field name="code">3423200</field>
+					</record>
+					
+					<record id="product_category_34233" model="vat.category">
+						<field name="parent_id" ref="product_category_3423"/>
+						<field name="name">Азотын хүчил болон азот хүхрийн хүчил</field>
+						<field name="code">3423300</field>
+					</record>
+					
+				<record id="product_category_3424" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Гурван аммонийн фосфат, дээр ороогүй органик бус хүчил болон металлын перокси давс</field>
+					<field name="code">3424000</field>
+				</record>
+				
+				<record id="product_category_3425" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Оксометаллын ба пероксометаллын хүчлийн давс, коллоид үнэт металл, тэдгээрийн нэгдэл;
+мөнгөн усны нэгдэл; дээр ороогүй бусад төрлийн органик биш химийн бодис; шахсан агаар;
+амалгам</field>
+					<field name="code">3425000</field>
+				</record>
+				
+				<record id="product_category_3426" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Изотоп болон тэдгээрийн нэгдэл (хүнд усыг оруулаад)</field>
+					<field name="code">3426000</field>
+				</record>
+				
+				<record id="product_category_3427" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Цианид, цианийн исэл ба нийлмэл цианид; фулминат, цианит, тиоцианит; борат;
+оксометаллын ба пероксометаллын хүчлийн давс, силикат, перборат</field>
+					<field name="code">3427000</field>
+				</record>
+				
+				<record id="product_category_3428" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Устөрөгчийн хэт исэл, фосфид, карбид, гидрид, нитрид, азид, борид, силицид</field>
+					<field name="code">3428000</field>
+				</record>
+				
+				<record id="product_category_3429" model="vat.category">
+					<field name="parent_id" ref="product_category_342"/>
+					<field name="name">Газрын ховор элемент, иттрий, сканди</field>
+					<field name="code">3429000</field>
+				</record>
+				
+			<record id="product_category_343" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Идээлэгч эсвэл будагч бодисын ханд; танин ба түүний бусад төрлийн уламжлал; өнгө оруулагч бодис</field>
+				<field name="code">343</field>
+			</record>
+			
+				<record id="product_category_3431" model="vat.category">
+					<field name="parent_id" ref="product_category_343"/>
+					<field name="name">Нийлэг органик өнгө оруулагч бодис, түүнд суурилсан бэлдмэл флуоресцент тодотгогч,
+люмонофор болгон ашигладаг нийлэг органик б үтээгдэхүүн; өнгөт лак, түүнд суурилсан
+бэлдмэл</field>
+					<field name="code">3431000</field>
+				</record>
+				
+				<record id="product_category_3432" model="vat.category">
+					<field name="parent_id" ref="product_category_343"/>
+					<field name="name">Ургамлын гаралтай идээлэгч ханд, таннин т үүний давс ба нийлмэл эфир түүний уламжлал,
+амьтны гаралтай хар будаг, хөөг оруулахгүйгээр амьтан, ургамлын гаралтай өнгө оруулагч
+бодис, бэлдмэл</field>
+					<field name="code">3432000</field>
+				</record>
+				
+				<record id="product_category_3433" model="vat.category">
+					<field name="parent_id" ref="product_category_343"/>
+					<field name="name">Нийлэг органик танины хольц, органик биш танины нэгдэл, танин бэлдмэл; таниныг гаргах бэлдмэл</field>
+					<field name="code">3433000</field>
+				</record>
+				
+				<record id="product_category_3434" model="vat.category">
+					<field name="parent_id" ref="product_category_343"/>
+					<field name="name">Бусад төрлийн будагч бодис болон люминофор болгон ашигладаг өнгө оруулагч органик биш бүтээгдэхүүн</field>
+					<field name="code">3434000</field>
+				</record>
+				
+			<record id="product_category_344" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Идэвхжүүлсэн байгалийн эрдэс бүтээгдэхүүн, амьтны гаралтай хөө, талл тос,
+шилмүүст модны шингэн давирхайн тос, нарс модны тос, боловсруулаагүй дипентин;
+парацимол; давирхайн хүчил, түүний бэлдмэл; жилийн спирт ба эпилийн тос; модны
+давирхайн тос, модны крезот, модны нафта, ургамлын шимэлдэг, шар айрагны
+шимэлдэг</field>
+				<field name="code">3440000</field>
+			</record>
+			
+			<record id="product_category_345" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Төрөл бүрийн химийн бодис</field>
+				<field name="code">345</field>
+			</record>
+			
+				<record id="product_category_3451" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Модны нүүрс</field>
+					<field name="code">3451000</field>
+				</record>
+				
+				<record id="product_category_3452" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Ууршуулж, хатааснаас бусад төрлийн хүхэр, тундасжуулсан хүхэр, коллоид хүхэр</field>
+					<field name="code">3452000</field>
+				</record>
+				
+				<record id="product_category_3453" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Төмрийн шатаасан пирит</field>
+					<field name="code">3453000</field>
+				</record>
+				
+				<record id="product_category_3454" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Нүүрсний давирхайнаас өндөр хэмээр нэрж гаргасан тос, бусад төрлийн шингэн бүтээгдэхүүн;
+эрдэс давирхайны цөв, цөвийн кокс</field>
+					<field name="code">3454000</field>
+				</record>
+				
+				<record id="product_category_3455" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Устөрөгчтэй нэгдүүлэхээс бусад төрлийн химийн аргаар боловсруулсан ургамал амьтны өөх
+тос, түүнтэй ижил төстэй өөх тос, өөр хооронд нь эсвэл дахин эфиржүүлсэн хүнсний
+зориулалттай ургамал, амьтны өөх тосны холимог</field>
+					<field name="code">3455000</field>
+				</record>
+				
+				<record id="product_category_3456" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Нийлэг ба сэргээн засварласан, засварлаагүй үнэт ба хагас үнэт чулуу</field>
+					<field name="code">3456000</field>
+				</record>
+				
+				<record id="product_category_3457" model="vat.category">
+					<field name="parent_id" ref="product_category_345"/>
+					<field name="name">Глицирин</field>
+					<field name="code">3457000</field>
+				</record>
+				
+			<record id="product_category_346" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Бордоо, пестицид</field>
+				<field name="code">346</field>
+			</record>
+			
+				<record id="product_category_3461" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Азотын эрдэс хүчлийн бодис, бордоо, пестицид</field>
+					<field name="code">3461</field>
+				</record>
+				
+					<record id="product_category_34611" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Шээг</field>
+						<field name="code">3461100</field>
+					</record>
+					
+					<record id="product_category_34612" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Аммонийн сульфат</field>
+						<field name="code">3461200</field>
+					</record>
+					
+					<record id="product_category_34613" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Аммонийн нитрат</field>
+						<field name="code">3461300</field>
+					</record>
+					
+					<record id="product_category_34614" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Кальцийн нитрат ба аммонийн нитратын хольц ба давхар давс</field>
+						<field name="code">3461400</field>
+					</record>
+					
+					<record id="product_category_34615" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Аммонийн нитратыг кальцийн карбонат болон бусад т өрлийн эрдэс бодистой хольсон кальц</field>
+						<field name="code">3461500</field>
+					</record>
+					
+					<record id="product_category_34619" model="vat.category">
+						<field name="parent_id" ref="product_category_3461"/>
+						<field name="name">Бусад төрлийн бордоо ба хольц</field>
+						<field name="code">3461900</field>
+					</record>
+					
+						<record id="product_category_3461910" model="vat.category">
+							<field name="parent_id" ref="product_category_34619"/>
+							<field name="name">Гумазат бордоо</field>
+							<field name="code">3461910</field>
+						</record>
+						
+						<record id="product_category_3461920" model="vat.category">
+							<field name="parent_id" ref="product_category_34619"/>
+							<field name="name">Тариалалтын бордоо</field>
+							<field name="code">3461920</field>
+						</record>
+						
+						<record id="product_category_3461990" model="vat.category">
+							<field name="parent_id" ref="product_category_34619"/>
+							<field name="name">Бусад төрлийн бордоо ба хольц</field>
+							<field name="code">3461990</field>
+						</record>
+						
+				<record id="product_category_3462" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Фосфорын эрдэс ба химийн бордоо</field>
+					<field name="code">3462</field>
+				</record>
+				
+					<record id="product_category_34621" model="vat.category">
+						<field name="parent_id" ref="product_category_3462"/>
+						<field name="name">Суперфосфат</field>
+						<field name="code">3462100</field>
+					</record>
+					
+					<record id="product_category_34629" model="vat.category">
+						<field name="parent_id" ref="product_category_3462"/>
+						<field name="name">Бусад төрлийн фосфатын бордоо</field>
+						<field name="code">3462900</field>
+					</record>
+				<record id="product_category_3463" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Химийн эрдэс ба химийн бордоо</field>
+					<field name="code">3463</field>
+				</record>
+				
+					<record id="product_category_34631" model="vat.category">
+						<field name="parent_id" ref="product_category_3463"/>
+						<field name="name">Калийн хлорид</field>
+						<field name="code">3463100</field>
+					</record>
+					
+					<record id="product_category_34632" model="vat.category">
+						<field name="parent_id" ref="product_category_3463"/>
+						<field name="name">Калийн сульфат</field>
+						<field name="code">3463200</field>
+					</record>
+					
+					<record id="product_category_34639" model="vat.category">
+						<field name="parent_id" ref="product_category_3463"/>
+						<field name="name">Карналит, сильвит ба бусад төрлийн калийн бордоо</field>
+						<field name="code">3463900</field>
+					</record>
+					
+				<record id="product_category_3464" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Хоёр ба түүнээс дээш азотын бодис, фосфат кали агуулсан азотын эрдэс ба химийн бордоо</field>
+					<field name="code">3464</field>
+				</record>
+				
+					<record id="product_category_34641" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Гурван бодис агуулсан бордоо: азот фосфар, калий</field>
+						<field name="code">3464100</field>
+					</record>
+					
+					<record id="product_category_34642" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Диаммонийн устөрөгчит фосфат /диаммонийн фосфат/</field>
+						<field name="code">3464200</field>
+					</record>
+					
+					<record id="product_category_34643" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Моноаммонийн фосфат</field>
+						<field name="code">3464300</field>
+					</record>
+					
+					<record id="product_category_34644" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Азот ба фосфат агуулсан бордоо</field>
+						<field name="code">3464400</field>
+					</record>
+					
+						<record id="product_category_3464410" model="vat.category">
+							<field name="parent_id" ref="product_category_34644"/>
+							<field name="name">Азот фосфорын бордоо</field>
+							<field name="code">3464410</field>
+						</record>
+						
+						<record id="product_category_3464490" model="vat.category">
+							<field name="parent_id" ref="product_category_34644"/>
+							<field name="name">Азот ба фосфат агуулсан бусад төрлийн бордоо</field>
+							<field name="code">3464490</field>
+						</record>
+					
+					<record id="product_category_34645" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Фосфор, фосфат агуулсан бордоо</field>
+						<field name="code">3464500</field>
+					</record>
+					
+					<record id="product_category_34646" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Фосфатын тэжээл</field>
+						<field name="code">3464600</field>
+					</record>
+					
+					<record id="product_category_34649" model="vat.category">
+						<field name="parent_id" ref="product_category_3464"/>
+						<field name="name">Бусад төрлийн хоёр ба түүнээс дээш азот, фосфат, кали агуулсан азотын бодис ба химийн бордоо</field>
+						<field name="code">3464900</field>
+					</record>
+					
+				<record id="product_category_3465" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Бусад төрлийн бордоо</field>
+					<field name="code">3465</field>
+				</record>
+				
+					<record id="product_category_34651" model="vat.category">
+						<field name="parent_id" ref="product_category_3465"/>
+						<field name="name">Шүвтэр</field>
+						<field name="code">3465100</field>
+					</record>
+					
+					<record id="product_category_34652" model="vat.category">
+						<field name="parent_id" ref="product_category_3465"/>
+						<field name="name">Шүвтэрийн усан уусмал</field>
+						<field name="code">3465200</field>
+					</record>
+					
+					<record id="product_category_34653" model="vat.category">
+						<field name="parent_id" ref="product_category_3465"/>
+						<field name="name">Аммонийн хлорид</field>
+						<field name="code">3465300</field>
+					</record>
+					
+					<record id="product_category_34654" model="vat.category">
+						<field name="parent_id" ref="product_category_3465"/>
+						<field name="name">Малын өтөг бууц</field>
+						<field name="code">3465400</field>
+					</record>
+					
+					<record id="product_category_34659" model="vat.category">
+						<field name="parent_id" ref="product_category_3465"/>
+						<field name="name">Бусад төрлийн бордоо</field>
+						<field name="code">3465900</field>
+					</record>
+					
+				<record id="product_category_3466" model="vat.category">
+					<field name="parent_id" ref="product_category_346"/>
+					<field name="name">Хортон шавьж устгагч /инсектицид/, мөөгөнцөр устгагч /фунгицид/, тариалангийн хортон өвчний эсрэг бүтээгдэхүүн /гербицид/, ариутгагч, халдваргүйжүүлэгч бэлдмэл</field>
+					<field name="code">3466</field>
+				</record>
+				
+					<record id="product_category_34661" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Хортон шавьж устгагч /инсектицид/</field>
+						<field name="code">3466100</field>
+					</record>
+					
+					<record id="product_category_34662" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Мөөгөнцөр устгагч /фунгицид/</field>
+						<field name="code">3466200</field>
+					</record>
+					
+					<record id="product_category_34663" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Тариалангийн хортон өвчний эсрэг бүтээгдэхүүн /гербицид/</field>
+						<field name="code">3466300</field>
+					</record>
+					
+					<record id="product_category_34664" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Ариутгагч, халдваргүйжүүлэгч бэлдмэл</field>
+						<field name="code">3466400</field>
+					</record>
+					
+					<record id="product_category_34666" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Хортой пестицид</field>
+						<field name="code">3466600</field>
+					</record>
+					
+					<record id="product_category_34669" model="vat.category">
+						<field name="parent_id" ref="product_category_3466"/>
+						<field name="name">Бусад төрлийн хортон шавьж устгагч, мөөгөнцөр устгагч, тариалангийн хортон өвчний эсрэг
+бүтээгдэхүүн, ариутгагч халдваргүйжүүлэгч бэлдмэл</field>
+						<field name="code">3466900</field>
+					</record>
+					
+						<record id="product_category_3466910" model="vat.category">
+							<field name="parent_id" ref="product_category_34669"/>
+							<field name="name">Үлийн цагаан оготны хор</field>
+							<field name="code">3466910</field>
+						</record>
+						
+						<record id="product_category_3466990" model="vat.category">
+							<field name="parent_id" ref="product_category_34669"/>
+							<field name="name">Бусад төрлийн хортон шавьж устгагч, мөөгөнцөр устгагч, тариалангийн хортон өвчний эсрэг
+бүтээгдэхүүн, ариутгагч халдваргүйжүүлэгч бэлдмэл</field>
+							<field name="code">3466990</field>
+						</record>
+						
+			<record id="product_category_347" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Анхдагч хэлбэрийн хуванцар</field>
+				<field name="code">347</field>
+			</record>
+			
+				<record id="product_category_3471" model="vat.category">
+					<field name="parent_id" ref="product_category_347"/>
+					<field name="name">Этилений полимер</field>
+					<field name="code">3471000</field>
+				</record>
+				
+				<record id="product_category_3472" model="vat.category">
+					<field name="parent_id" ref="product_category_347"/>
+					<field name="name">Стиролын полимер</field>
+					<field name="code">3472000</field>
+				</record>
+				
+				<record id="product_category_3473" model="vat.category">
+					<field name="parent_id" ref="product_category_347"/>
+					<field name="name">Винилхлорид, бусад төрлийн галогенжсон олефины полимер</field>
+					<field name="code">3473000</field>
+				</record>
+				
+				<record id="product_category_3474" model="vat.category">
+					<field name="parent_id" ref="product_category_347"/>
+					<field name="name">Анхдагч төлөвт байгаа полиацетал, полиэфир, эпоксидын давирхай; поликарбонат, алкид, полиалилл эфир ба бусад төрлийн полиэфир</field>
+					<field name="code">3474000</field>
+				</record>
+				
+				<record id="product_category_3479" model="vat.category">
+					<field name="parent_id" ref="product_category_347"/>
+					<field name="name">Бусад төрлийн анхдагч хэлбэрийн хуванцар; ион солилцогч</field>
+					<field name="code">3479000</field>
+				</record>
+				
+			<record id="product_category_348" model="vat.category">
+				<field name="parent_id" ref="product_category_034"/>
+				<field name="name">Анхдагч төлөвт байгаа нийлэг хуванцар, ургамал, амьтны тосноос гаргасан фактис, байгалийн
+хуванцар болон байгалийн давирхайтай төстэй зүйлийг хольсон, анхдагч төлөвт байгаа
+хавтан, хуудас, тууз хэлбэртэй нийлэг хуванцар</field>
+				<field name="code">3480000</field>
+			</record>
+			
+		<record id="product_category_035" model="vat.category">
+            <field name="parent_id" ref="product_category_003"/>
+            <field name="name">ХИМИЙН БУСАД БҮТЭЭГДЭХҮҮН</field>
+            <field name="code">035</field>
+        </record>
+			<record id="product_category_351" model="vat.category">
+				<field name="parent_id" ref="product_category_035"/>
+				<field name="name">Будаг, лак болон адил төстэй бүтээгдэхүүн; уран зургийн будаг, бэх</field>
+				<field name="code">35110</field>
+			</record>
+			
+				<record id="product_category_3512" model="vat.category">
+					<field name="parent_id" ref="product_category_351"/>
+					<field name="name">Мэргэжлийн зураач, суралцагч, сонирхогчийн будаг ба будгийн өнгө тохируулагч</field>
+					<field name="code">3512000</field>
+				</record>
+				
+				<record id="product_category_3513" model="vat.category">
+					<field name="parent_id" ref="product_category_351"/>
+					<field name="name">Хэвлэлийн будаг</field>
+					<field name="code">3513000</field>
+				</record>
+				
+				<record id="product_category_3514" model="vat.category">
+					<field name="parent_id" ref="product_category_351"/>
+					<field name="name">Бичгийн, зургийн болон бусад төрлийн бэх</field>
+					<field name="code">3514000</field>
+				</record>
+				
+			<record id="product_category_352" model="vat.category">
+				<field name="parent_id" ref="product_category_035"/>
+				<field name="name">Эмийн зүйл</field>
+				<field name="code">352</field>
+			</record>
+			
+				<record id="product_category_3521" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Салицилийн хүчил, түүний давс ба эфир</field>
+					<field name="code">3521000</field>
+				</record>
+				
+				<record id="product_category_3522" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Лизин, түүний эфир болон давс; глютамины хүчил болон түүний давс; дөрөвдөгч аммонийн
+суурийн давс; усан исэл, лицитин болон фосфораминолипид; цагирагт болон цагирагт бус
+амид тэдгээрийн давс; цагирагт амид (цагираг карбамат орно) ба т үүний уламжлал;
+тэдгээрийн давс</field>
+					<field name="code">3522000</field>
+				</record>
+				
+				<record id="product_category_3523" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Лактон, азотын гетероатом бүхий гетеро цагираг нэгдэл, пирозел агуулсан нэгдэл, пиримидин,
+имидазолын цагираг агуулсан нэгдэл</field>
+					<field name="code">3523000</field>
+				</record>
+				
+				<record id="product_category_3524" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Химийн аргаар цэвэршүүлсэн саахар, энгийн ба нийлмэл эфир, давс</field>
+					<field name="code">3524000</field>
+				</record>
+				
+				<record id="product_category_3525" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Угтвар аминдэм, аминдэм ба даавар тэдгээрийн уламжлал, хольц; гликозид, ургамлын
+алкалоид, тэдгээрийн давс, энгийн ба нийлмэл эфир, антибиотек</field>
+					<field name="code">3525000</field>
+				</record>
+				
+				<record id="product_category_3526" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Эмчилгээ, урьдчилан сэргийлэх зориулалттай эм зүйн бүтээгдэхүүн</field>
+					<field name="code">35260</field>
+				</record>
+				
+					<record id="product_category_3526011" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Эмчилгээ ариутгалын эм бэлдмэл</field>
+						<field name="code">3526011</field>
+					</record>
+					
+					<record id="product_category_3526012" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Монгол эм</field>
+						<field name="code">3526012</field>
+					</record>
+					
+					<record id="product_category_3526013" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Тарилгын эм</field>
+						<field name="code">3526013</field>
+					</record>
+					
+					<record id="product_category_3526014" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Шахмал эм</field>
+						<field name="code">3526014</field>
+					</record>
+					
+					<record id="product_category_3526015" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Шингэн эм</field>
+						<field name="code">3526015</field>
+					</record>
+					
+					<record id="product_category_3526030" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Савлах эм</field>
+						<field name="code">3526030</field>
+					</record>
+					
+					<record id="product_category_3526040" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Тосон эм</field>
+						<field name="code">3526040</field>
+					</record>
+					
+					<record id="product_category_3526050" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Чацарганы тос</field>
+						<field name="code">3526050</field>
+					</record>
+					
+					<record id="product_category_3526060" model="vat.category">
+						<field name="parent_id" ref="product_category_3526"/>
+						<field name="name">Эмнэлгийн боолтын материал</field>
+						<field name="code">3526060</field>
+					</record>
+				
+				<record id="product_category_3527" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Малын эм тариа</field>
+					<field name="code">35270</field>
+				</record>
+					<record id="product_category_3527010" model="vat.category">
+						<field name="parent_id" ref="product_category_3527"/>
+						<field name="name">Малын хатаасан эм</field>
+						<field name="code">3527010</field>
+					</record>
+					
+					<record id="product_category_3527020" model="vat.category">
+						<field name="parent_id" ref="product_category_3527"/>
+						<field name="name">Малын тариа</field>
+						<field name="code">3527020</field>
+					</record>
+					
+					<record id="product_category_3527030" model="vat.category">
+						<field name="parent_id" ref="product_category_3527"/>
+						<field name="name">Малын шингэн эм</field>
+						<field name="code">3527030</field>
+					</record>
+					
+					<record id="product_category_3527090" model="vat.category">
+						<field name="parent_id" ref="product_category_3527"/>
+						<field name="name">Эмчилгээ, урьдчилан сэргийлэх зориулалттай бусад төрлийн эм, ариутгалын бэлдмэл</field>
+						<field name="code">3527090</field>
+					</record>
+				
+				<record id="product_category_3529" model="vat.category">
+					<field name="parent_id" ref="product_category_352"/>
+					<field name="name">Бусад төрлийн эмчилгээ, мэс заслын зориулалттай эмийн эд зүйл</field>
+					<field name="code">35290</field>
+				</record>
+				
+					<record id="product_category_3529010" model="vat.category">
+						<field name="parent_id" ref="product_category_3529"/>
+						<field name="name">Даршилсан цус, улаан бөөм</field>
+						<field name="code">3529010</field>
+					</record>
+					
+					<record id="product_category_3529020" model="vat.category">
+						<field name="parent_id" ref="product_category_3529"/>
+						<field name="name">Бусад төрлийн цусан бүтээгдэхүүн</field>
+						<field name="code">3529020</field>
+					</record>
+					
+					<record id="product_category_3529090" model="vat.category">
+						<field name="parent_id" ref="product_category_3529"/>
+						<field name="name">Мэс заслын зориулалттай бусад төрлийн эмийн эд зүйл</field>
+						<field name="code">3529090</field>
+					</record>
+					
+			<record id="product_category_353" model="vat.category">
+				<field name="parent_id" ref="product_category_035"/>
+				<field name="name">Саван, цэвэрлэгээний бэлдмэл, үнэртэн, ариун цэврийн бэлдмэл</field>
+				<field name="code">353</field>
+			</record>
+			
+				<record id="product_category_3531" model="vat.category">
+					<field name="parent_id" ref="product_category_353"/>
+					<field name="name">Савангаас бусад гадаргуугийн идэвхт органик бэлдмэл</field>
+					<field name="code">3531000</field>
+				</record>
+				
+				<record id="product_category_3532" model="vat.category">
+					<field name="parent_id" ref="product_category_353"/>
+					<field name="name">Саван, угаагч нунтаг, үнэртэн, ариун цэврийн бэлдмэл</field>
+					<field name="code">3532</field>
+				</record>
+				
+					<record id="product_category_35321" model="vat.category">
+						<field name="parent_id" ref="product_category_3532"/>
+						<field name="name">Саван; шахмал, зүсмэл, хэлбэр эсвэл хэвэнд оруулсан гадаргуугийн идэвхт органик бэлдмэл,
+цаас, хөвөн, саван болон гадаргуугийн идэвхт органик бодисоор нэвчүүлсэн, хучсан, бүрсэн
+цаас, хөвөн, эсгий</field>
+						<field name="code">35321</field>
+					</record>
+					
+						<record id="product_category_3532110" model="vat.category">
+							<field name="parent_id" ref="product_category_35321"/>
+							<field name="name">Аж ахуйн саван</field>
+							<field name="code">3532110</field>
+						</record>
+						
+						<record id="product_category_3532120" model="vat.category">
+							<field name="parent_id" ref="product_category_35321"/>
+							<field name="name">Гар нүүрийн саван</field>
+							<field name="code">3532120</field>
+						</record>
+						
+						<record id="product_category_3532130" model="vat.category">
+							<field name="parent_id" ref="product_category_35321"/>
+							<field name="name">Шингэн саван</field>
+							<field name="code">3532130</field>
+						</record>
+						
+						<record id="product_category_3532190" model="vat.category">
+							<field name="parent_id" ref="product_category_35321"/>
+							<field name="name">Бусад төрлийн саван болон гадаргуугийн идэвхт органик бодисоор нэвчүүлсэн, хучсан, бүрхсэн цаас, хөвөн, эсгий</field>
+							<field name="code">3532190</field>
+						</record>
+						
+					<record id="product_category_35322" model="vat.category">
+						<field name="parent_id" ref="product_category_3532"/>
+						<field name="name">Угаагч нунтаг, шингэн</field>
+						<field name="code">35322</field>
+					</record>
+					
+						<record id="product_category_3532210" model="vat.category">
+							<field name="parent_id" ref="product_category_35322"/>
+							<field name="name">Угаалгын нунтаг</field>
+							<field name="code">3532210</field>
+						</record>
+						
+						<record id="product_category_3532220" model="vat.category">
+							<field name="parent_id" ref="product_category_35322"/>
+							<field name="name">Ноос угаагч</field>
+							<field name="code">3532220</field>
+						</record>
+						
+					<record id="product_category_35323" model="vat.category">
+						<field name="parent_id" ref="product_category_3532"/>
+						<field name="name">Үнэртэн, ариун цэврийн бэлдмэл</field>
+						<field name="code">35323</field>
+					</record>
+					
+						<record id="product_category_3532310" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Yнэртэй ус, ариун цэврийн ус</field>
+							<field name="code">3532310</field>
+						</record>
+						
+						<record id="product_category_3532320" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Гоо сайхны тос, бэлдмэл, биеийн арьс арчилж, хамгаалах тос, бэлдмэл (эмийн бэлдмэлээс
+бусад төрлийн наранд шарах ба нарнаас хамгаалах бэлдмэл орно)</field>
+							<field name="code">3532320</field>
+						</record>
+						
+						<record id="product_category_3532330" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Хумс заслын бэлдмэл</field>
+							<field name="code">3532330</field>
+						</record>
+						
+						<record id="product_category_3532340" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Үсний шампунь</field>
+							<field name="code">3532340</field>
+						</record>
+						
+						<record id="product_category_3532350" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Үсний тос, үсэнд түрхэх, үс арчлах бусад төрлийн бэлдмэл</field>
+							<field name="code">3532350</field>
+						</record>
+						
+						<record id="product_category_3532360" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Амны хөндий, шүдний ариун цэврийн бэлдмэл, хиймэл шүд бэхжүүлэх нунтаг, шахмал оо;
+шүдний мяндсан чигчлүүр (боодолтой)</field>
+							<field name="code">3532360</field>
+						</record>
+						
+						<record id="product_category_3532370" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Сахал хусах, арчлахад хэрэглэх бэлдмэл</field>
+							<field name="code">3532370</field>
+						</record>
+						
+						<record id="product_category_3532380" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Дезодорант ба биеийн үнэр дарах бэлдмэл, халуун усны анхилуун үнэр оруулагч бэлдмэл</field>
+							<field name="code">3532380</field>
+						</record>
+						
+						<record id="product_category_3532390" model="vat.category">
+							<field name="parent_id" ref="product_category_35323"/>
+							<field name="name">Бусад төрлийн үнэртэн, гоо сайхан, ариун цэврийн бэлдмэл</field>
+							<field name="code">3532390</field>
+						</record>
+						
+				<record id="product_category_3533" model="vat.category">
+					<field name="parent_id" ref="product_category_353"/>
+					<field name="name">Цэвэрлэгээ, өнгөлгөөний бэлдмэл</field>
+					<field name="code">3533</field>
+				</record>
+				
+					<record id="product_category_35331" model="vat.category">
+						<field name="parent_id" ref="product_category_3533"/>
+						<field name="name">Өрөөнд анхилуун үнэр оруулагч үнэртэн, агаар цэвэршүүлэгч бэлдмэл</field>
+						<field name="code">35331</field>
+					</record>
+					
+						<record id="product_category_3533110" model="vat.category">
+							<field name="parent_id" ref="product_category_35331"/>
+							<field name="name">Өрөө тасалгаанд анхилуун үнэр оруулагч, үнэр дарагч бэлдмэл</field>
+							<field name="code">3533110</field>
+						</record>
+						
+						<record id="product_category_3533190" model="vat.category">
+							<field name="parent_id" ref="product_category_35331"/>
+							<field name="name">Арц хүж ба шатаахад анхилуун үнэр гаргагч бусад төрлийн бэлдмэл</field>
+							<field name="code">3533190</field>
+						</record>
+						
+					<record id="product_category_35332" model="vat.category">
+						<field name="parent_id" ref="product_category_3533"/>
+						<field name="name">Хиймэл ба бэлдмэл лав (тос)</field>
+						<field name="code">3533200</field>
+					</record>
+					
+					<record id="product_category_35333" model="vat.category">
+						<field name="parent_id" ref="product_category_3533"/>
+						<field name="name">Гутал, мебель эдлэл, шал, шил, металл өнгөлөх тос</field>
+						<field name="code">35333</field>
+					</record>
+					
+						<record id="product_category_3533310" model="vat.category">
+							<field name="parent_id" ref="product_category_35333"/>
+							<field name="name">Гутал, савхин эдлэл өнгөлөгч, тос ба түүнтэй адил төстэй бэлдмэл</field>
+							<field name="code">3533310</field>
+						</record>
+						
+						<record id="product_category_3533320" model="vat.category">
+							<field name="parent_id" ref="product_category_35333"/>
+							<field name="name">Модон тавилга, шал, бусад төрлийн модон эдлэл өнгөлөгч, тос ба түүнтэй адил төстэй
+бэлдмэл</field>
+							<field name="code">3533320</field>
+						</record>
+						
+						<record id="product_category_3533330" model="vat.category">
+							<field name="parent_id" ref="product_category_35333"/>
+							<field name="name">Тээврийн хэрэгслийн өнгөлөгч тос ба түүнтэй адил төстэй бэлдмэл (металл өнгөлөгчөөс
+бусад)</field>
+							<field name="code">3533330</field>
+						</record>
+						
+						<record id="product_category_3533390" model="vat.category">
+							<field name="parent_id" ref="product_category_35333"/>
+							<field name="name">Бусад төрлийн өнгөлөгч, тос ба түүнтэй адил төстэй бэлдмэл (металл өнгөлөгчөөс бусад)</field>
+							<field name="code">3533390</field>
+						</record>
+						
+					<record id="product_category_35334" model="vat.category">
+						<field name="parent_id" ref="product_category_3533"/>
+						<field name="name">Цэвэрлэгээний зуурмаг болон нунтаг бэлдмэл</field>
+						<field name="code">3533400</field>
+					</record>
+					
+			<record id="product_category_354" model="vat.category">
+				<field name="parent_id" ref="product_category_035"/>
+				<field name="name">Химийн бусад бүтээгдэхүүн</field>
+				<field name="code">354</field>
+			</record>
+			
+				<record id="product_category_3541" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Эфирийн тосны нэрмэл болон уусмал; давирхайн үнэрт охь; тослог давирхайн ханд; тос,
+хатуурдаг тос, лаванд шингээсэн эфирийн тосны өтгөрмөл (диффузын ба нэвчүүлэх аргаар
+гаргасан), эфирийн тосноос терпенийг ялгаруулах явцад гарах тос; үйлдвэрийн түүхий эд
+болгон ашиглах тансаг үнэрт бодисын хольц</field>
+					<field name="code">3541000</field>
+				</record>
+				
+				<record id="product_category_3542" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Цавуу, желатин, пептон, түүний уламжлал болон адил төстэй бүтээгдэхүүн; альбутин,
+тэдгээрийн бэлдмэл; ээдэмцрийн цавуу, казеинат ба ээдэмцрийн бусад т өрлийн бэлдмэл;
+альбумин, бусад төрлийн альбуминийн бэлдмэл</field>
+					<field name="code">35420</field>
+				</record>
+				
+					<record id="product_category_3542010" model="vat.category">
+						<field name="parent_id" ref="product_category_3542"/>
+						<field name="name">Гутлын цавуу</field>
+						<field name="code">3542010</field>
+					</record>
+					
+					<record id="product_category_3542090" model="vat.category">
+						<field name="parent_id" ref="product_category_3542"/>
+						<field name="name">Бусад төрлийн цавуу, желатин, пептон, түүний уламжлал болон адил төстэй бүтээгдэхүүн;
+альбутин, тэдгээрийн бэлдмэл; ээдэмцрийн цавуу, казеинат ба ээдэмцрийн бусад т өрлийн
+бэлдмэл; альбумин, бусад төрлийн альбуминийн бэлдмэл</field>
+						<field name="code">3542090</field>
+					</record>
+					
+					
+				
+				<record id="product_category_3543" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Нефтээс бусад төрлийн тосолгооны бэлдмэл ба нэхмэл материал, арьс шир, үслэг арьс, бусад
+төрлийн материалыг тослож боловсруулах зориулалттай бэлдмэл; тоормосны шингэн ба
+шингэн дамжуулгад хэрэглэх бусад төрлийн шингэн; хөлдөлтөөс хамгаалах бэлдмэл ба
+мөсгүйжүүлэгч шингэн</field>
+					<field name="code">3543000</field>
+				</record>
+				
+				<record id="product_category_3544" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Баримлын шавран "шүдний хэв авагч", шүдний хэв авах зориулалтын бэлдмэл; гал унтраагч
+бэлдмэл болон гал унтраагчийн цэнэг; гал унтраагч тэсэрдэг бодис; бичил биетнийг өсгөхөд
+зориулан бэлтгэсэн орчин; оношлогоо, лабораторийн урвалж</field>
+					<field name="code">3544000</field>
+				</record>
+				
+				<record id="product_category_3545" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Тэсрэх бодис, гал дамжуулах аюулгүй утас, тэсэлгээний утас, тэсэлгээний бялтат бүрхүүл,
+ноцоогуур, цахилгаан тэслэгч</field>
+					<field name="code">3545000</field>
+				</record>
+				
+				<record id="product_category_3546" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Мэдээ дохиоллын гэрэлт пуужин, аадар эсэрг үүцэгч пуужин, пиротехникийн бусад төрлийн
+хэрэгсэл</field>
+					<field name="code">3546000</field>
+				</record>
+				
+				<record id="product_category_3547" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Цахилгаан техникт хэрэглэх химийн бодис, түүний нэгдэл</field>
+					<field name="code">3547000</field>
+				</record>
+				
+				<record id="product_category_3549" model="vat.category">
+					<field name="parent_id" ref="product_category_354"/>
+					<field name="name">Бусад төрлийн химийн бэлдмэл</field>
+					<field name="code">35490</field>
+				</record>
+				
+					<record id="product_category_3549010" model="vat.category">
+						<field name="parent_id" ref="product_category_3549"/>
+						<field name="name">Уусгагч</field>
+						<field name="code">3549010</field>
+					</record>
+					
+					<record id="product_category_3549020" model="vat.category">
+						<field name="parent_id" ref="product_category_3549"/>
+						<field name="name">Химийн нэмэлт</field>
+						<field name="code">3549020</field>
+					</record>
+					
+					<record id="product_category_3549090" model="vat.category">
+						<field name="parent_id" ref="product_category_3549"/>
+						<field name="name">Химийн бусад төрлийн бэлдмэл</field>
+						<field name="code">3549090</field>
+					</record>
+					
+			<record id="product_category_355" model="vat.category">
+				<field name="parent_id" ref="product_category_035"/>
+				<field name="name">Химийн мяндсан утас</field>
+				<field name="code">355</field>
+			</record>
+			
+				<record id="product_category_3551" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Сэмлээгүй, самнаагүй нийлэг мяндсан тууз ба штапель мяндас</field>
+					<field name="code">35510</field>
+				</record>
+				
+					<record id="product_category_3551010" model="vat.category">
+						<field name="parent_id" ref="product_category_3551"/>
+						<field name="name">Оёдлын машины голны утас</field>
+						<field name="code">3551010</field>
+					</record>
+					
+					<record id="product_category_3551090" model="vat.category">
+						<field name="parent_id" ref="product_category_3551"/>
+						<field name="name">Сэмлээгүй, самнаагүй нийлэг мяндсан тууз ба штапель мяндас</field>
+						<field name="code">3551090</field>
+					</record>
+				
+				<record id="product_category_3552" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Жижиглэн худалдаалах зориулалтын бус оёдлын утас, давхарласан ээрмэлээс бусад т өрлийн
+нийлэг мяндсан ээрмэл</field>
+					<field name="code">3552000</field>
+				</record>
+				
+				<record id="product_category_3553" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Нийлэг дан тууш мяндас</field>
+					<field name="code">3553000</field>
+				</record>
+				
+				<record id="product_category_3554" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Ээрэх зориулалттай сэмлээгүй, самнаагүй хиймэл мяндсан тууз ба штапель мяндас</field>
+					<field name="code">3554000</field>
+				</record>
+				
+				<record id="product_category_3555" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Жижиглэн худалдаалах зориулалтын бус хиймэл мяндсан ээрмэл (оёдлын, давхар ээрмэлээс
+бусад)</field>
+					<field name="code">3555000</field>
+				</record>
+				
+				<record id="product_category_3556" model="vat.category">
+					<field name="parent_id" ref="product_category_355"/>
+					<field name="name">Хиймэл дан мяндас</field>
+					<field name="code">3556000</field>
+				</record>
+        
+        
+        
+        
+    </data>
+</odoo>

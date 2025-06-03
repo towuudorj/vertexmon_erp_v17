@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record model="ir.ui.menu" id="sale.payment_menu"><!--Sales online payments-->
+            <field name="parent_id" ref="base.menu_custom"/><!--settings hide-->
+        </record>
+
+
+        <menuitem id="crm_lead_tender_menu" name="Tender"  parent="crm.crm_menu_sales" sequence="1" action="crm_lead_action_tender_pipeline"/>	
+        <menuitem id="crm_lead_project_menu" name="Project"  parent="crm.crm_menu_sales" sequence="1" action="crm_lead_action_project_pipeline"/>
+
+        <menuitem id="sales_contract_register_menu" name="Sales contract"  parent="sale.sale_menu_root" sequence="20" action="action_sales_contract_register_tree_view"/>	
+        <menuitem id="sales_contract_type_menu" name="Sales type"  parent="sale.menu_sale_config" sequence="30" action="action_sales_contract_type_tree_view"/>	
+        
+        <menuitem id="sales_plan_register_menu" name="Sales plan register"  parent="sale.menu_sale_config" sequence="30" action="action_sales_plan_register_tree_view"/>	
+
+        <menuitem id="purchase_reason_register_menu" name="Purchase reason register"  parent="purchase.menu_purchase_config" sequence="30" action="action_purchase_reason_register_tree_view"/>	
+
+        <menuitem id="crm_lead_line_menu" name="Үнийн судалгааны хувиарлалт"  parent="purchase.menu_procurement_management" sequence="0" action="crm_lead_line_action"/>	
+
+
+    </data>
+</odoo>
