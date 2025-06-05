@@ -68,7 +68,7 @@ class PurchaseRequisition(models.Model):
     def quotation_done(self):
         for pr in self:
             pr.status = 'done'
-            self.create_purchase_order()
+            pr.create_purchase_order()
     
 
 

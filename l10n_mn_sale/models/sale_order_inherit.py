@@ -523,7 +523,8 @@ class SaleOrder(models.Model):
     def _compute_partner_type(self):
         for order in self:
             order = order.with_company(order.company_id)
-            order.partner_type = order.partner_id.partner_type.id
+            partner_type_id = self.env['partner.type.register'].search([('partner_type', '=', order.partner_id.partner_type),('company_id','=',order.company_id.id)], limit=1)
+            order.partner_type = partner_type_id.id
 
     def _compute_contract(self):
         for sale in self:
