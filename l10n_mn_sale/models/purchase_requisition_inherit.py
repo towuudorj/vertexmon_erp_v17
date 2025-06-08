@@ -183,8 +183,8 @@ class PurchaseRequisitionLine(models.Model):
     def action_approve(self):
         for line in self:
             line.line_status = 'approve'
-            if line.price_unit == 0:
-                raise UserError(_('Бараа нэгж үнэ оруулаагүй байгаа тул оруулана уу!'))
+            if line.price_unit == 0 and line.requisition_id.status == 'quotation_ed':
+                raise UserError(_('Бараа нэгж үнэ оруулаагүй байгаа болон үнэ судалж дуусаагүй байгаа тул оруулана уу!'))
             #elif not line.product_id.id:
             #    raise UserError(_('Бараа оруулаагүй байгаа тул оруулана уу!'))
             else:

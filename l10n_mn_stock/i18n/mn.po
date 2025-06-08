@@ -32,6 +32,12 @@ msgstr "Дистрибутерийн нэр"
 msgid "Distributor"
 msgstr "Дистрибутер"
 
+#. module: product
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_product__is_quotation
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_template__is_quotation
+msgid "Is quotation"
+msgstr "Үнийн саналын бараа эсэх"
+
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
