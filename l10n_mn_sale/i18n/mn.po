@@ -166,6 +166,12 @@ msgstr "Борлуулалтын төрөл"
 msgid "Total amount"
 msgstr "Нийт дүн"
 
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__status
+msgid "Status"
+msgstr "Төлөв"
+
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__name
 msgid "Contract name"
@@ -291,6 +297,27 @@ msgid "Ordered quantities"
 msgstr "Захиалгын тоонд"
 
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__status__new
+msgid "New"
+msgstr "Шинэ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__status__send_purchase_confirm
+msgid "Send purchase confirm"
+msgstr "Худалдан авалтын хүсэлт батлах"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__status__purchase_confirm
+msgid "Purchase confirm"
+msgstr "Худалдан авалтын хүсэлт батлагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__status__cancel
+msgid "Cancel"
+msgstr "Цуцлагдсан"
+
+
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__invoice_policy__delivery
@@ -391,6 +418,16 @@ msgstr "Нэхэмжлэлийн дүн"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__currency_id
 msgid "Currency"
 msgstr "Валют"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__currency_amount
+msgid "Currency amount"
+msgstr "Ханш"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__margin_percent
+msgid "Margin percent"
+msgstr "Ашгийн хувь"
 
 
 #. module: l10n_mn_sale

@@ -29,6 +29,11 @@ class CrmLead(models.Model):
     purchase_order_count = fields.Integer(string='Purchase order', compute="_compute_purchase_request")
     lead_line_ids = fields.One2many('crm.lead.line', 'lead_id', string='Lead line')
     contract_id = fields.Many2one('sales.contract.register', string='Contract')
+    status = fields.Selection([('new','New'),
+                                ('send_purchase_confirm','Send purchase confirm'),
+                                ('purchase_confirm','Confirm'),
+                                ('cancel','Cancel')],string='Status', readonly=True, tracking=True, default='new')
+    
     sales_type = fields.Selection([('direct', 'Direct'),
                                    ('tender', 'Tender'),
                                    ('project', 'Project')],
@@ -40,6 +45,25 @@ class CrmLead(models.Model):
     crm_type = fields.Selection([('crm', 'CRM'),
                                 ('quote', 'Quotation Request')], string='CRM type', default='crm')
     
+
+    def send_purchase_request(self):
+        for line in self:
+            line.status = 'send_purchase_confirm'
+
+    
+    def action_cancel(self):
+        for line in self:
+            line.status = 'cancel'
+            line.purchase_request_ids.action_cancel()
+
+    def confirm_purchase(self):
+        """ This method is used to confirm the purchase request """
+        for lead in self:
+            if not lead.purchase_request_ids:
+                raise UserError(_('Purchase request not found!'))
+            lead.purchase_request_ids.quotation_done()
+            lead.status = 'purchase_confirm'
+            #lead.message_post(body=_('Purchase request confirmed.'))
 
 
     def _compute_amount_total(self):
@@ -61,6 +85,7 @@ class CrmLead(models.Model):
                         'product_uom_qty': line.qty,
                         'product_uom': line.uom_id.id,
                         'price_unit': line.sale_price,
+                        'crm_lead_line_id': line.id,
                         'tax_id': [(6, 0, line.product_id.taxes_id.ids)],
                         }
                 line_ids.append((0, 0, datas))

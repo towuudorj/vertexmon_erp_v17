@@ -25,9 +25,7 @@ class CreateProductWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super(CreateProductWizard, self).default_get(fields_list)
-        print('fields_list', fields_list)
         line_ids = self.env['purchase.requisition.line'].browse(self.env.context['active_ids'])
-        print('line_ids', line_ids)
         res['uom_id'] = line_ids.product_uom_id.id
         res['name'] = line_ids.product_description_variants
         return res
@@ -47,6 +45,10 @@ class CreateProductWizard(models.TransientModel):
                 'detailed_type': 'product',
             })
             crm_line_id = self.env['crm.lead.line'].search([('id', '=', line.lead_line_id.id)])
+            if crm_line_id.lead_id.order_ids:
+                for order in crm_line_id.lead_id.order_ids.order_line:
+                    if order.crm_lead_line_id.id == crm_line_id.id:
+                        order.write({'product_id': create_product_id.id, 'product_uom': self.uom_id.id})
             crm_line_id.write({
                                 'product_id': create_product_id.id,
                                 'uom_id': self.uom_id.id

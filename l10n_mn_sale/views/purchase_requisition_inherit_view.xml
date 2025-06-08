@@ -73,13 +73,5 @@
 		</record>
 
 
-        <record model="ir.actions.act_window" id="action_purchase_requisition_form_view">
-            <field name="name">Батлах үнийн судалгаа</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.requisition</field>
-            <field name="domain">[('status','=','quotation_ed')]</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
     </data>
 </odoo>

@@ -106,6 +106,7 @@
                 <field name="order_line_image" widget="image"
                        style="height:30px ;width:30px;"  readonly="0" optional="hide"/>
                 <field name="add_desc" optional="hide"/>
+                <field name="crm_lead_line_id" invisible="1"/>
             </xpath>
         </field>
     </record>

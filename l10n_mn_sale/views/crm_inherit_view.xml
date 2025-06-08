@@ -13,6 +13,7 @@
                         </xpath>
                         <xpath expr='//field[@name="expected_revenue"]' position="replace">
                             <field name="amount_total" />
+                            <field name="status" />
                         </xpath>
                     </data>
                 </field>
@@ -53,12 +54,22 @@
                             </button>
                         </button>
 
-                        <!--
+                        
                         <xpath expr='//header/button[@name="toggle_active"]' position="after">
-                            <button string="Create purchase requisition" type="object"
-                                invisible="probability != 100"
-                                name="create_purchase_requisition"/>
-                        </xpath>-->
+                            <field name="status" invisible="1"/>
+                            <button string="Худалдан авалтын хүсэлт илгээх" type="object"
+                                invisible="status != 'new'" 
+                                groups="sales_team.group_sale_salesman"
+                                name="send_purchase_request"/>
+                            <button string="Худалдан авалтын хүсэлт зөвшөөрөх" type="object"
+                                invisible="status != 'send_purchase_confirm'"
+                                groups="sales_team.group_sale_manager"
+                                name="confirm_purchase"/>
+                            <button string="Цуцлах" type="object"
+                                invisible="status != 'send_purchase_confirm'"
+                                groups="sales_team.group_sale_manager"
+                                name="action_cancel"/>
+                        </xpath>
 
                         <xpath expr='//sheet/div[@class="oe_title"]/h1' position="after">
                             <group>
@@ -110,8 +121,10 @@
                                         <field name="qty"/>
                                         <field name="cost_price" readonly="request_type!='is_purchase'"/>
                                         <field name="currency_id"/>
+                                        <field name="currency_amount"/>
                                         <field name="sale_price"/>
                                         <field name="price_subtotal"/>
+                                        <field name="margin_percent"/>
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer">

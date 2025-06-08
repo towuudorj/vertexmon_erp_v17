@@ -14,6 +14,8 @@ class CrmLeadLine(models.Model):
     is_price_request = fields.Boolean(string='Is price request')
     cost_price = fields.Float(string='Cost price')
     sale_price = fields.Float(string='Sale price')
+    currency_amount = fields.Float(string='Currency amount')
+    margin_percent = fields.Float(string='Margin percent', compute="action_compute_margin_percent")
     qty = fields.Float(string='Quantity')
     price_subtotal = fields.Float(string='Price subtotal')
     lead_id = fields.Many2one('crm.lead', string='Lead')
@@ -28,6 +30,20 @@ class CrmLeadLine(models.Model):
         ('normal', 'Normal'),
         ('high', 'High'),
     ], string='Priority', default='normal')
+
+
+
+    def action_compute_margin_percent(self):
+        for line in self:
+            if line.sale_price >0.0 and line.cost_price > 0 and line.currency_amount > 0:
+                if line.currency_id.id != line.company_id.currency_id.id:
+                    # Convert cost_price to sale_price currency
+                    cost_price_converted = line.cost_price * line.currency_amount
+                    line.margin_percent = ((line.sale_price - cost_price_converted) / line.sale_price) * 100
+                else:
+                    line.margin_percent = ((line.sale_price - line.cost_price) / line.sale_price) * 100
+            else:
+                line.margin_percent = 0.0
 
     
     @api.onchange('product_id')
