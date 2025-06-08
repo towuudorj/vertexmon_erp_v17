@@ -34,6 +34,7 @@
     "data" : [ 
                 'security/ir.model.access.csv',
                 'data/sequence_data.xml',
+                'security/security_view.xml',
                 'report/mn_sale_quotation.xml',
                 'report/mn_sale_quotation_no_sign.xml',
                 'report/mn_sale_invoice.xml',

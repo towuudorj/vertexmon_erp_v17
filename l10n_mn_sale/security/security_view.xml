@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="group_purchase_request" model="res.groups">
+            <field name="name">Худалдан авалтын хүсэлт ажилтан</field>
+        </record>
+
+
+    </data>
+</odoo>
