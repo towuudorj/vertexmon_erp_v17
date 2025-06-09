@@ -68,7 +68,11 @@
                     <button name="%(action_create_product_wizard)d" invisible="product_id != False"  string="Create product" type="action"/>
                     <field name="cancel_reason_id"/>
                 </xpath>
-
+                <xpath expr="//sheet/notebook/page[@name='products']/field[@name='description']" position="before">
+                    <group class="oe_subtotal_footer">
+                        <field name="total_amount" class="oe_subtotal_footer_separator"/>
+                    </group>
+                </xpath>
             </field>
 		</record>
 

@@ -47,6 +47,12 @@ class PurchaseRequisition(models.Model):
                             ('quotation_ed','Quotation end'),
                             ('done','Done'),
                             ('cancel','Cancel')], string='Status', default='new')
+    total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
+
+    def _compute_total_amount(self):
+        for pr in self:
+            total = sum(line.total_amount for line in pr.line_ids if line.line_status == 'approve')
+            pr.total_amount = total
 
 
     def quotation_start(self):
