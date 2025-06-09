@@ -68,8 +68,8 @@
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
                                                         <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/>
                                                     </td>
-                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.sale_price"/></td>
-                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_subtotal"/></td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_unit"/></td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-esc="move.price_unit*move.product_uom_qty"/></td>
                                                 </t>
                                             </tr>
                                             <tr class="border-black">
@@ -88,8 +88,8 @@
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
                                                             <span t-field="move.quantity"/> <span t-field="move.product_uom" groups="product.group_uom"/>
                                                         </td>
-                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_unit"/></td>
-                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-esc="move.price_unit*move.quantity"/></td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.move_id.price_unit"/></td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-esc="move.move_id.price_unit*move.quantity"/></td>
                                                     </t>
                                                 </t>
                                             </tr>
