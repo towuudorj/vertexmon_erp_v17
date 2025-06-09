@@ -48,7 +48,11 @@ class CrmLead(models.Model):
 
     def send_purchase_request(self):
         for line in self:
-            line.status = 'send_purchase_confirm'
+            for lines in line.lead_line_ids:
+                if lines.margin_percent >0.0:
+                    line.status = 'send_purchase_confirm'
+                else:
+                    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
 
     
     def action_cancel(self):
