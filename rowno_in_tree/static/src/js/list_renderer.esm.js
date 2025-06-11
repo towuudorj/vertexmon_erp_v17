@@ -11,7 +11,7 @@ patch(ListRenderer.prototype, {
             const a = $(child_table).prepend(
                 '<th class="o_list_row_number_header o_list_row_count_sheliya" style="width: 4% !important;">'
             );
-            a.find("th.o_list_row_count_sheliya").html("#");
+            a.find("th.o_list_row_count_sheliya").html("###");
         }
         return super.freezeColumnWidths();
     },
