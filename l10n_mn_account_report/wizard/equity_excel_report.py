@@ -23,9 +23,10 @@ class equity_changes(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-            'account_ids': self.account_ids.ids
+            'company_id': self.company_id.id,
+            'start_date': self.date_from,
+            'end_date': self.date_to,
+            'fiscalyear_id': self.fiscalyear_id.id,
         }
         return {
             'type': 'ir.actions.report',
@@ -52,6 +53,8 @@ class equity_changes(models.TransientModel):
                                     'font_size': 12
                                 })
         sheet.set_column(0, 8, 24)
+
+        
 
     def get_export_data(self):
         ''' Тайлангийн загварыг боловсруулж өгөгдлүүдийг

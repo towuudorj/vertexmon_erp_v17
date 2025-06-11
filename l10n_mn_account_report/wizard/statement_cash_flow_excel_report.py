@@ -25,9 +25,11 @@ class statement_cashflow_report(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
+            'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
-            'account_ids': self.account_ids.ids
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'state': self.target_move,
         }
         return {
             'type': 'ir.actions.report',

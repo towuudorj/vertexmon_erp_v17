@@ -40,7 +40,7 @@ class AccountMoveAnalysis(models.TransientModel):
                      'output_format': 'xlsx',
                      'options': json.dumps(data,
                                            default=date_utils.json_default),
-                     'report_name': 'Account move analysis report'}
+                     'report_name': 'account_move'}
         }
     
     
@@ -54,12 +54,27 @@ class AccountMoveAnalysis(models.TransientModel):
                                     'font_size': 20,
                                     'valign': 'vcenter',
                                     })
-        txt_center_no_border = workbook.add_format({
-                                    'align': 'center',
-                                    'font_size': 12
-                                })
+
         txt_center_border = workbook.add_format({
                                     'align': 'center',
+                                    'border':1,
+                                    'font_size': 12
+                                })
+        data_center = workbook.add_format({
+                                    'align': 'center',
+                                    'border':1,
+                                    'font_size': 12
+                                })
+        
+        data_right = workbook.add_format({
+                                    'align': 'right',
+                                    'border':1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00'
+                                })
+        
+        data_left = workbook.add_format({
+                                    'align': 'left',
                                     'border':1,
                                     'font_size': 12
                                 })
@@ -72,7 +87,9 @@ class AccountMoveAnalysis(models.TransientModel):
         txt_right_border = workbook.add_format({
                                     'align': 'right',
                                     'border':1,
-                                    'font_size': 12
+                                    'font_size': 12,
+                                    'bold': True,
+                                    'num_format': '#,##0.00'
                                 })
         txt_left_no_border = workbook.add_format({
                                     'align': 'left',
@@ -83,7 +100,9 @@ class AccountMoveAnalysis(models.TransientModel):
                                     'align': 'right',
                                     'font_size': 12
                                 })
-        sheet.set_column(1, 8, 20)
+        sheet.set_column(3, 8, 20)
+        sheet.set_column(2, 2, 40)
+        sheet.set_column(1, 1, 10)
         sheet.write('A1', u'НХМаягт МХ-4', txt_left_no_border)
         sheet.write('I1', u'Сангийн сайдын 2018 оны 100 дугаар', txt_right_no_border)
         sheet.write('I2', u'тушаалын хавсралт',txt_right_no_border)
@@ -116,7 +135,7 @@ class AccountMoveAnalysis(models.TransientModel):
 
         f_journal = []
         states = ''
-        if data['target_move'] == 'posted':
+        if data['state'] == 'posted':
             states = ['posted']
         else:
             states = ['posted','draft']
@@ -131,8 +150,9 @@ class AccountMoveAnalysis(models.TransientModel):
 
         ty = []
         for li in account_type:
-            ty.append(li.id) 
-        account_ids = account_obj.search([('user_type_id','in',tuple(ty)),('company_id','=',data['company_id'])])
+            ty.append(li.id)
+        account_ids = account_obj.search([('company_id','=',data['company_id'])])
+        fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
 
         total_balance = 0.0
         pre_debit_balance = 0.0
@@ -142,38 +162,41 @@ class AccountMoveAnalysis(models.TransientModel):
         credit_balance = 0.0
         total_credit_balance = 0.0
         total_debit_balance = 0.0
+        number = 0
+        rowx = 8
         for line in account_ids:
             first_balance  = 0.0
             last_balance = 0.0
+            number +=1
             if len(states)==1:
-                if self.fiscalyear_id.date_from == self.start_date:
+                if fiscalyear_id.date_from == data['start_date']:
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml 
                                 left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date <= '%s' 
                             and aml.account_id = %s and am.state='%s'
-                            and aml.journal_id = %s and am.company_id = %s"""%(self.fiscalyear_id.date_from,self.start_date,line.id,states[0],journals.id,self.company_id.id))
+                            and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],journals.id,data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml 
                                 left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date < '%s' 
                             and aml.account_id = %s and am.state='%s'
-                            and aml.journal_id in %s and am.company_id = %s"""%(self.fiscalyear_id.date_from,self.start_date,line.id,states[0],tuple(journal),self.company_id.id))
+                            and aml.journal_id in %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],tuple(journal),data['company_id']))
                     pre_balance = self._cr.dictfetchall()
             else:
-                if self.fiscalyear_id.date_from == self.start_date:
+                if fiscalyear_id.date_from == data['start_date']:
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <= '%s' and aml.account_id = %s 
-                                and am.state in %s and aml.journal_id = %s and am.company_id"""%(self.fiscalyear_id.date_from,self.start_date,line.id,tuple(states),journals.id,self.company_id.id))
+                                and am.state in %s and aml.journal_id = %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),journals.id,data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date < '%s' and aml.account_id = %s 
-                                and am.state in %s and aml.journal_id in %s and am.company_id"""%(self.fiscalyear_id.date_from,self.start_date,line.id,tuple(states),tuple(journal),self.company_id.id))
+                                and am.state in %s and aml.journal_id in %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),tuple(journal),data['company_id']))
                     pre_balance = self._cr.dictfetchall()
-            sheet.write_merge(rowx, rowx, 0, 0, number, data_center)
-            sheet.write_merge(rowx, rowx, 1, 1, u'%s'%line.code, data_center)
-            sheet.write_merge(rowx, rowx, 2, 2, u'%s'%line.name, data_left)
+            sheet.write('A%s'%rowx, number, data_center)
+            sheet.write('B%s'%rowx, u'%s'%line.code, data_center)
+            sheet.write('C%s'%rowx, u'%s'%line.name, data_left)
             for li in pre_balance:
                 if li['debit'] !=None and li['credit'] !=None:
                     first_balance = li['debit']-li['credit']
@@ -184,12 +207,12 @@ class AccountMoveAnalysis(models.TransientModel):
                     
                 
                 if first_balance > 0.0:
-                    sheet.write_merge(rowx, rowx, 3, 3, first_balance or 0.0, data_right)
-                    sheet.write_merge(rowx, rowx, 4, 4, 0.0, data_right)
+                    sheet.write('D%s'%rowx, first_balance or 0.0, data_right)
+                    sheet.write('E%s'%rowx, 0.0, data_right)
                     pre_debit_balance +=first_balance
                 else:
-                    sheet.write_merge(rowx, rowx, 3, 3, 0.0, data_right)
-                    sheet.write_merge(rowx, rowx, 4, 4, first_balance*(-1), data_right)
+                    sheet.write('D%s'%rowx, 0.0, data_right)
+                    sheet.write('E%s'%rowx, first_balance*(-1), data_right)
                     pre_credit_balance +=first_balance
                     
             if len(states)==1:
@@ -198,14 +221,14 @@ class AccountMoveAnalysis(models.TransientModel):
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state='%s' 
                                 and am.journal_id in %s and am.company_id = %s
-                                """%(self.fiscalyear_id.date_from,self.end_date,line.id,states[0],tuple(f_journal),self.company_id.id))
+                                """%(fiscalyear_id.date_from,data['end_date'],line.id,states[0],tuple(f_journal),data['company_id']))
                     move_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state='%s' 
                                 and am.journal_id in %s and am.company_id = %s
-                                """%(self.start_date,self.end_date,line.id,states[0],tuple(journal),self.company_id.id))
+                                """%(data['start_date'],data['end_date'],line.id,states[0],tuple(journal),data['company_id']))
                     move_balance = self._cr.dictfetchall()
             else:
                 if self.fiscalyear_id.date_from == self.start_date:
@@ -213,14 +236,14 @@ class AccountMoveAnalysis(models.TransientModel):
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state in %s 
                                 and am.journal_id in %s and am.company_id = %s"""
-                                %(self.start_date,self.end_date,line.id,tuple(states),tuple(f_journal),self.company_id.id))
+                                %(data['start_date'],data['end_date'],line.id,tuple(states),tuple(f_journal),data['company_id']))
                     move_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state in %s 
                                 and am.journal_id in %s and am.company_id = %s"""
-                                %(self.start_date,self.end_date,line.id,tuple(states),tuple(journal),self.company_id.id))
+                                %(data['start_date'],data['end_date'],line.id,tuple(states),tuple(journal),data['company_id']))
                     move_balance = self._cr.dictfetchall()
             for mli in move_balance:
                 if mli['debit'] !=None:
@@ -238,37 +261,37 @@ class AccountMoveAnalysis(models.TransientModel):
                         
                     last_balance = last_balance-mli['credit']
 
-                sheet.write_merge(rowx, rowx, 5, 5, mli['debit'] or 0.0, data_right)
+                sheet.write('F%s'%rowx, mli['debit'] or 0.0, data_right)
                 if mli['credit']!=None:
                     if mli['credit'] > 0.0:
-                        sheet.write_merge(rowx, rowx, 6, 6, mli['credit'] or 0.0, data_right)
+                        sheet.write('G%s'%rowx, mli['credit'] or 0.0, data_right)
                     else:
-                        sheet.write_merge(rowx, rowx, 6, 6, mli['credit']*(-1) or 0.0, data_right)
+                        sheet.write('G%s'%rowx, mli['credit']*(-1) or 0.0, data_right)
                 else:
                     
-                    sheet.write_merge(rowx, rowx, 6, 6, 0.0, data_right)
+                    sheet.write('G%s'%rowx, 0.0, data_right)
                 if mli['credit']==None and mli['debit'] ==None:
                     last_balance = first_balance
                 
             if last_balance > 0.0:
-                sheet.write_merge(rowx, rowx, 7, 7, last_balance or 0.0, data_right)
-                sheet.write_merge(rowx, rowx, 8, 8,  0.0, data_right)
+                sheet.write('H%s'%rowx, last_balance or 0.0, data_right)
+                sheet.write('I%s'%rowx,  0.0, data_right)
                 total_debit_balance +=last_balance
             else:
                 last_balance = last_balance*(-1)
-                sheet.write_merge(rowx, rowx, 7, 7,  0.0, data_right)
-                sheet.write_merge(rowx, rowx, 8, 8, last_balance or 0.0, txt_right_border)
+                sheet.write('H%s'%rowx,  0.0, data_right)
+                sheet.write('I%s'%rowx, last_balance or 0.0, data_right)
                 total_credit_balance +=last_balance
             total_balance +=last_balance
             rowx += 1
             number +=1
-        sheet.write_merge(rowx, rowx, 0, 2, u'Дүн', txt_right_border)
-        sheet.write_merge(rowx, rowx, 3, 3, pre_debit_balance or 0.0, txt_right_border)
-        sheet.write_merge(rowx, rowx, 4, 4, pre_credit_balance or 0.0, txt_right_border)
-        sheet.write_merge(rowx, rowx, 5, 5, debit_balance or 0.0, txt_right_border)
-        sheet.write_merge(rowx, rowx, 6, 6, credit_balance or 0.0, txt_right_border)
-        sheet.write_merge(rowx, rowx, 7, 7, total_debit_balance or 0.0, txt_right_border)
-        sheet.write_merge(rowx, rowx, 8, 8, total_credit_balance or 0.0, txt_right_border)
+        sheet.merge_range('A%s:C%s'%(rowx,rowx), u'Дүн', txt_right_border)
+        sheet.write('D%s'%rowx, pre_debit_balance or 0.0, txt_right_border)
+        sheet.write('E%s'%rowx, pre_credit_balance or 0.0, txt_right_border)
+        sheet.write('F%s'%rowx, debit_balance or 0.0, txt_right_border)
+        sheet.write('G%s'%rowx, credit_balance or 0.0, txt_right_border)
+        sheet.write('H%s'%rowx, total_debit_balance or 0.0, txt_right_border)
+        sheet.write('I%s'%rowx, total_credit_balance or 0.0, txt_right_border)
 
 
 

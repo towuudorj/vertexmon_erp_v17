@@ -17,10 +17,6 @@ class balance_sheet_excel(models.TransientModel):
                                default=lambda self: self.env.user.company_id)
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
-    level = fields.Selection([('3','3'),
-                              ('4','4'),
-                              ('5','5'),
-                              ('6','6')],string='Level')
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
                                         ], string='State', required=True, default='posted')
@@ -30,9 +26,10 @@ class balance_sheet_excel(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-            'account_ids': self.account_ids.ids
+            'company_id': self.company_id.id,
+            'start_date': self.date_from,
+            'end_date': self.date_to,
+            'state': self.target_move
         }
         return {
             'type': 'ir.actions.report',
@@ -41,7 +38,7 @@ class balance_sheet_excel(models.TransientModel):
                      'output_format': 'xlsx',
                      'options': json.dumps(data,
                                            default=date_utils.json_default),
-                     'report_name': 'Cash and bank report'}
+                     'report_name': 'Account balance report'}
         }
 
     def get_xlsx_report(self, data, response):
@@ -51,15 +48,40 @@ class balance_sheet_excel(models.TransientModel):
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
-                                    'font_size': '20px'
+                                    'font_size': 20
                                     })
         txt = workbook.add_format({
                                     'align': 'center',
                                     'border': 1,
                                     'font_size': 12
                                 })
+
+        title = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'font_size': 12
+                                })
+
         sheet.set_column(0, 8, 24)
-    
+
+        sheet.merge_range('A1:D1', u'САНХҮҮ БАЙДЛЫН ТАЙЛАН', head)
+        sheet.write('A2', u"%s" % (data['company_name']), head)
+
+        sheet.write('A3', u'(Аж ахуй нэгж, байгууллагын нэр)', head)
+        sheet.write('D2', u'%s - %s' % (data['start_date'],data['end_date']), head)
+        sheet.write('D5', u'(төгрөгөөр)', head)
+        rowx = 6
+        sheet.write('A%s'%rowx, u'Д/д', title)
+        sheet.write(rowx, 1, u'Үзүүлэлт', title)
+        sheet.write(rowx, 2, u'%s'%(data['start_date']), title)
+        sheet.write(rowx, 3, u'%s'%(data['end_date']), title)
+        rowx += 1
+        
+
+
+
+
+
     def get_export_data(self):
         ''' Тайлангийн загварыг боловсруулж өгөгдлүүдийг
             тооцоолж байрлуулна.

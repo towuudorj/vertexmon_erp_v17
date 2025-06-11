@@ -54,8 +54,6 @@
             'views/equity_configure_view_report.xml',
             'views/account_account_inherit_view.xml',
             'wizard/account_partner_ledger_excel_report.xml',
-          #  'views/account_payable_report_view.xml',
-          #  'views/account_receivable_report_view.xml',
             'views/menu_view.xml',
             
 

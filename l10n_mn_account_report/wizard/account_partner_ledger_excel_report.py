@@ -9,7 +9,6 @@ from odoo.tools import date_utils
 class AccountPartnerLedgerExcelReport(models.TransientModel):
     _name = 'account.partner.ledger.excel.report'
     _description = 'Account Partner Ledger Report'
-    
 
     
     def _get_all_journal(self):
@@ -40,9 +39,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
+            'company_id': self.company_id.id,
             'start_date': self.start_date,
             'end_date': self.end_date,
-            'account_ids': self.account_ids.ids
+            'state': self.target_move,
+            'account_id': self.account_id.id
         }
         return {
             'type': 'ir.actions.report',
@@ -61,7 +62,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
-                                    'font_size': '20px'
+                                    'font_size': 20
                                     })
         txt = workbook.add_format({
                                     'align': 'center',
@@ -69,11 +70,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                     'font_size': 12
                                 })
         sheet.set_column(0, 8, 24)
+        sheet.write('A1' u'Байгууллагын нэр: %s' % (data['company_name']), head)
+        sheet.merge_range('A1:H1', u'Харилцагчийн дэвтэр', head)
+        sheet.merge_range('A2:H2', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']) , head)
 
 
-    def get_export_data(self):
-        company = self.env['res.company'].browse(self.company_id.id)
-        fiscal_id = self.fiscalyear_id
+        fiscal_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
         account_id = False
         journal_obj = self.env['account.journal']
         account_move_line_obj = self.env['account.move.line']
@@ -138,6 +140,13 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             (fiscal_id.date_start,self.end_date,account_id))
                 parts = self._cr.dictfetchall()
                 partner_id = [p['partner_id'] for p in parts]
+
+        
+
+
+    def get_export_data(self):
+        
+        
                 
 
         #print ('OOOOOO', partner_id)
@@ -158,10 +167,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         data_bold_left = ezxf('font: bold on; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
         data_center = ezxf('font: bold off; align: wrap on, vert centre, horiz center; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
         data_center_no_border = ezxf('font: bold off; align: wrap on, vert centre, horiz center; font: height 200;','#,##0.00_);(#,##0.00)')
-        sheet.write(0, 0, u'Байгууллагын нэр: %s' % (company.name,), ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 280'))
-        sheet.write_merge(1, 1, 0, 6, u'Харилцагчийн дэвтэр', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 280'))
-        sheet.write_merge(2, 2, 0, 6, u'Тайлант хугацаа: %s - %s'%(self.start_date,self.end_date) , ezxf('font:bold off;align:wrap off,vert centre,horiz right;font: height 240'))
-        
+
         
         rowx = 0
         col = 0

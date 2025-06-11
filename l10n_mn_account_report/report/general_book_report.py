@@ -27,8 +27,11 @@ class general_book_report(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
+            'company_id':self.company_id.id,
             'start_date': self.start_date,
             'end_date': self.end_date,
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'state': self.target_move,
             'account_ids': self.account_ids.ids
         }
         return {
@@ -56,6 +59,7 @@ class general_book_report(models.TransientModel):
                                     'font_size': 12
                                 })
         sheet.set_column(0, 8, 24)
+        
 
     
     def get_export_data(self):

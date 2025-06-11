@@ -25,9 +25,11 @@ class profit_excel_report(models.TransientModel):
     def action_print_xls_report(self):
         data = {
             'company_name': self.company_id.name,
+            'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
-            'account_ids': self.account_ids.ids
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'state': self.target_move,
         }
         return {
             'type': 'ir.actions.report',
@@ -36,7 +38,7 @@ class profit_excel_report(models.TransientModel):
                      'output_format': 'xlsx',
                      'options': json.dumps(data,
                                            default=date_utils.json_default),
-                     'report_name': 'Cash and bank report'}
+                     'report_name': 'Profit excel report'}
         }
 
     def get_xlsx_report(self, data, response):
@@ -54,6 +56,24 @@ class profit_excel_report(models.TransientModel):
                                     'font_size': 12
                                 })
         sheet.set_column(0, 8, 24)
+
+        sheet.write(0, 3, u'Маягт CT-3', ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
+        sheet.write(3, 1, u"%s" % (self.company_id.name,), ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
+        
+        sheet.write(1, 1, u'ОРЛОГЫН ДЭЛГЭРЭНГҮЙ ТАЙЛАН', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 200'))
+        
+        sheet.write(4, 1, u'(Аж ахуй нэгж, байгууллагын нэр)', ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
+        sheet.write(4, 2, u'%s' % (self.date_to), ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
+        
+        
+        rowx = 6
+        sheet.write(rowx, 0, u'Мөрийн дугаар', data_style)
+        sheet.write(rowx, 1, u'Үзүүлэлт', data_style)
+        sheet.write(rowx, 2, u'', data_style)
+        sheet.write(rowx, 3, u'%s'%self.date_to, data_style)
+        rowx += 1
+
+        
     
     def action_account_ids(self,account_id):
         account_ids = []
@@ -107,21 +127,7 @@ class profit_excel_report(models.TransientModel):
         data_bold_right = ezxf('font: bold on; align: wrap on, vert centre, horiz right; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
 
         
-        sheet.write(0, 3, u'Маягт CT-3', ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
-        sheet.write(3, 1, u"%s" % (self.company_id.name,), ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
         
-        sheet.write(1, 1, u'ОРЛОГЫН ДЭЛГЭРЭНГҮЙ ТАЙЛАН', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 200'))
-        
-        sheet.write(4, 1, u'(Аж ахуй нэгж, байгууллагын нэр)', ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
-        sheet.write(4, 2, u'%s' % (self.date_to), ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
-        
-        
-        rowx = 6
-        sheet.write(rowx, 0, u'Мөрийн дугаар', data_style)
-        sheet.write(rowx, 1, u'Үзүүлэлт', data_style)
-        sheet.write(rowx, 2, u'', data_style)
-        sheet.write(rowx, 3, u'%s'%self.date_to, data_style)
-        rowx += 1
         if self.target_move =='posted':
             state = ['posted']
         else:
