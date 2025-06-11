@@ -130,8 +130,8 @@ class AccountMoveAnalysis(models.TransientModel):
         account_type_obj = self.env['account.account.type']
         journal_obj = self.env['account.journal']
         journal_ids = journal_obj.search([('company_id','=',data['company_id'])])
-        journals = journal_obj.search([('type','=','opening'),('company_id','=',data['company_id'])])
-        f_journals = journal_obj.search([('type','!=','opening'),('company_id','=',data['company_id'])])
+        f_journals = journal_obj.search([('type','=','opening'),('company_id','=',data['company_id'])])
+        journals = journal_obj.search([('type','!=','opening'),('company_id','=',data['company_id'])])
 
         f_journal = []
         states = ''
@@ -173,26 +173,26 @@ class AccountMoveAnalysis(models.TransientModel):
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml 
                                 left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date <= '%s' 
                             and aml.account_id = %s and am.state='%s'
-                            and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],journals.id,data['company_id']))
+                            and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],f_journal.id,data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit from account_move_line as aml 
                                 left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date < '%s' 
                             and aml.account_id = %s and am.state='%s'
-                            and aml.journal_id in %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],tuple(journal),data['company_id']))
+                            and aml.journal_id in %s and am.company_id = %s"""%(fiscalyear_id.date_from,data['start_date'],line.id,states[0],tuple(f_journal),data['company_id']))
                     pre_balance = self._cr.dictfetchall()
             else:
                 if fiscalyear_id.date_from == data['start_date']:
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date <= '%s' and aml.account_id = %s 
-                                and am.state in %s and aml.journal_id = %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),journals.id,data['company_id']))
+                                and am.state in %s and aml.journal_id = %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),f_journal.id,data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                 left join account_move as am on am.id=aml.move_id 
                                 where aml.date >='%s' and aml.date < '%s' and aml.account_id = %s 
-                                and am.state in %s and aml.journal_id in %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),tuple(journal),data['company_id']))
+                                and am.state in %s and aml.journal_id in %s and am.company_id"""%(fiscalyear_id.date_from,data['start_date'],line.id,tuple(states),tuple(f_journal),data['company_id']))
                     pre_balance = self._cr.dictfetchall()
             sheet.write('A%s'%rowx, number, data_center)
             sheet.write('B%s'%rowx, u'%s'%line.code, data_center)
