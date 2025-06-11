@@ -77,7 +77,11 @@ class PurchaseRequisition(models.Model):
             pr.create_purchase_order()
     
 
-
+    @api.onchange('vendor_id')
+    def _onchange_vendor_id(self):
+        if self.vendor_id:
+            for line in self.line_ids:
+                line.supplier_id = self.vendor_id.id
 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
