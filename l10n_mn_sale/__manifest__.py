@@ -39,6 +39,7 @@
                 'report/mn_sale_quotation_no_sign.xml',
                 'report/mn_sale_invoice.xml',
                 'report/mn_sale_expense.xml',
+                'report/mn_sale_expense_desc.xml',
                 'wizard/create_product_wizard_view.xml',
                 'wizard/create_purchase_request_wizard_view.xml',
                 'wizard/sale_order_cancel_inherit_wizard.xml',

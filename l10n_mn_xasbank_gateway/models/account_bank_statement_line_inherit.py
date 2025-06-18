@@ -45,7 +45,7 @@ class AccountBankStatement(models.Model):
                 'systemCode': '%s'%xacbank_config.code,
                 #'KeyField': '%s'%xacbank_config.keyfield,
             }
-
+            partner_bank_obj = self.env['res.partner.bank']
             response = requests.request("POST", xacbank_config.statement_url, headers=headers_data, cert=client_cert, verify=False, data=payload)
             if response.status_code == 200:
                 result_data = response.json()
@@ -57,11 +57,13 @@ class AccountBankStatement(models.Model):
                             amount_value = float(dline['CREDITAMOUNT'])
                          elif dline['DEBITAMOUNT'] >0.0 and dline['CREDITAMOUNT'] == 0.0:
                             amount_value = float(dline['DEBITAMOUNT'])*(-1)
+                        
+                         
 
                          if line.journal_id.is_income == True and amount_value > 0:
                             line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
                             currency_id = currency_obj.search([('name','=',dline['CURRENCY'])])
-                            partner_id = partner_obj.search([('name','=',dline['CUSTOMERNAME'])])
+                            partner_bank_id = partner_bank_obj.search([('acc_number','=',dline['TRNACNO'])],limit=1)
                             if not line_id:
                                 st_line_obj.create({
                                                     'statement_id':line.id,
@@ -70,13 +72,13 @@ class AccountBankStatement(models.Model):
                                                     'amount':amount_value,
                                                     'currency_id':currency_id.id,
                                                     'payment_ref':dline['DESCRIPTION'],
-                                                    'partner_id':partner_id.id
+                                                    'partner_id':partner_bank_id.partner_id.id
                                                     })
                                 xacbank_config.requestId = int(request_id) + 1 
                          elif line.journal_id.is_income == False and amount_value != 0:
                             line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
                             currency_id = currency_obj.search([('name','=',dline['CURRENCY'])])
-                            partner_id = partner_obj.search([('name','=',dline['CUSTOMERNAME'])])
+                            partner_bank_id = partner_bank_obj.search([('acc_number','=',dline['TRNACNO'])],limit=1)
                             if not line_id:
                                 st_line_obj.create({
                                                     'statement_id':line.id,
@@ -85,7 +87,7 @@ class AccountBankStatement(models.Model):
                                                     'amount':amount_value,
                                                     'currency_id':currency_id.id,
                                                     'payment_ref':dline['DESCRIPTION'],
-                                                    'partner_id':partner_id.id
+                                                    'partner_id':partner_bank_id.partner_id.id
                                                     })
                                 xacbank_config.requestId = int(request_id) + 1 
                 
