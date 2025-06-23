@@ -133,14 +133,13 @@ class CashMovelineReport(models.TransientModel):
                 if line.code==i[4]:
                     if i[10]:
                         partner = partner_obj.browse(i[10])
-                        sheet.write('D%s'%rowx, partner.name, data_right)
+                        sheet.write('E%s'%rowx, partner.name, data_right)
                     else:
-                        sheet.write('D%s'%rowx, '', data_right)
+                        sheet.write('E%s'%rowx, '', data_right)
                     sheet.write('A%s'%rowx, number, data_right)
                     sheet.write('B%s'%rowx, i[9], data_right)
                     sheet.write('C%s'%rowx, '%s'%i[0], data_right)
-                    sheet.write('E%s'%rowx, i[1], data_right)
-                    
+                    sheet.write('D%s'%rowx, i[1], data_right)
                     sheet.write('F%s'%rowx, i[7], data_right)
                     sheet.write('G%s'%rowx, i[8], data_right)
                     if i[7] >0.0:
