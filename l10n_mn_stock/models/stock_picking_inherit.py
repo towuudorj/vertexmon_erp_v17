@@ -40,7 +40,7 @@ class stock_picking(models.Model):
         
         for line in self:
             total = 0.0
-            if line.amount_tax > 0.0 and line.amount_untaxed > 0.0:
+            if line.amount_untaxed > 0.0:
                 total = line.amount_tax + line.amount_untaxed
             line.amount_total = total
 
