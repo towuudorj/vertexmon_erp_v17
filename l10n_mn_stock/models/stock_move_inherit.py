@@ -17,7 +17,8 @@ class StockMove(models.Model):
                         if lines.discount > 0.0:
                             total = (lines.price_subtotal/lines.product_uom_qty)*line.product_uom_qty   
                         else:
-                            total = (lines.price_subtotal/lines.product_uom_qty)*line.product_uom_qty
+                            if lines.price_subtotal>0.0 and lines.product_uom_qty >0.0:
+                                total = (lines.price_subtotal/lines.product_uom_qty)*line.product_uom_qty
             else:
                 if line.product_uom_qty >0.0 and line.sale_prices >0.0:
                     total = line.product_uom_qty * line.sale_prices
