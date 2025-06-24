@@ -5,6 +5,10 @@
         
         <menuitem id="distributer_register_menu" name="Distributer register" parent="stock.menu_stock_config_settings" action="action_distributor_register"  />
         
+        <menuitem id="stock_detail_report_mn_menu" name="Stock detail report" parent="stock.menu_stock_config_settings" action="action_product_detail_report"  />
+        
+        <menuitem id="stock_summary_report_mn_menu" name="Stock summary report" parent="stock.menu_stock_config_settings" action="action_product_summary_report"  />
+        
 
         <menuitem id="product_category_new_menu" name="Product category" parent="stock.menu_stock_config_settings" action="action_product_category_new"  />
 

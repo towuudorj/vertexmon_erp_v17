@@ -34,6 +34,8 @@
                 'report/mn_stock_requisition_report.xml',
                 'report/mn_device_handing_act.xml',
                 'report/mn_stock_expense_desc.xml',
+                'wizard/product_detail_report.xml',
+                'wizard/product_summary_report.xml',
                 'views/distributor_register_view.xml',
                 'views/product_inherit_view.xml',
                 'views/item_group_view.xml',

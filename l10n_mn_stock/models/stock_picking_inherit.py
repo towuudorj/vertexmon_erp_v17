@@ -37,9 +37,10 @@ class stock_picking(models.Model):
 
     
     def _compute_amount(self):
-        total = 0.0
+        
         for line in self:
-            total +=line.amount_tax+line.amount_untaxed
+            if line.amount_tax > 0.0 and line.amount_untaxed > 0.0:
+                total = line.amount_tax + line.amount_untaxed
             line.amount_total = total
 
     def _compute_tax(self):
