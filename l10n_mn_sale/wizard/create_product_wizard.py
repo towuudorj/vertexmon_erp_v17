@@ -36,6 +36,7 @@ class CreateProductWizard(models.TransientModel):
             create_product_id = self.env['product.product'].create({
                 'name': self.name,
                 'uom_id': self.uom_id.id,
+                'uom_po_id': self.uom_id.id,
                 'brand_id': self.brand_id.id,
                 'categ_id': self.categ_id.id,
                 'model':self.model,
