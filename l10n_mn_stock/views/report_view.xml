@@ -37,6 +37,17 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="report_mn_purchase_add_expense" model="ir.actions.report">
+            <field name="name">Худалдан авалтын зардлын баримт</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_purchase_add_expense</field>
+            <field name="report_file">l10n_mn_stock.purchase_add_expense_report</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="stock_landed_costs.model_stock_landed_cost"/>
+            <field name="binding_type">report</field>
+        </record>
+
 
         <record id="report_mn_stock_requisition" model="ir.actions.report">
             <field name="name">Шаардах хуудас</field>

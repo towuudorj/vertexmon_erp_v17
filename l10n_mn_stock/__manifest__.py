@@ -25,7 +25,8 @@
                  'product',
                  'base',
                  'stock',
-                 'stock_delivery'
+                 'stock_delivery',
+                 'stock_landed_costs'
                  ],
     "data" : [
                 'security/ir.model.access.csv',
@@ -34,6 +35,7 @@
                 'report/mn_stock_requisition_report.xml',
                 'report/mn_device_handing_act.xml',
                 'report/mn_stock_expense_desc.xml',
+                'report/purchase_add_expense_report.xml',
                 'wizard/product_detail_report.xml',
                 'wizard/product_summary_report.xml',
                 'views/distributor_register_view.xml',
