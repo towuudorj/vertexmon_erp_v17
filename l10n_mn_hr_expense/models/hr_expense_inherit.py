@@ -166,11 +166,12 @@ class HrExpense(models.Model):
     _inherit = 'hr.expense.sheet'
 
     bank_account_id = fields.Many2one('res.partner.bank',string='Bank account')
-    amount_text = fields.Char(string='Amount in words', compute='_compute_amount_text', store=True)
+    amount_text = fields.Char(string='Amount in words', compute='_compute_amount_text')
     currency_id = fields.Many2one('res.currency', string='Currency')
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete='restrict')
 
 
-    #@api.depends('amount_total')
+    @api.depends('total_amount')
     def _compute_amount_text(self):
         for record in self:
             if record.total_amount:

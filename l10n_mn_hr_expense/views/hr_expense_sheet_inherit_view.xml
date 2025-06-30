@@ -8,7 +8,9 @@
             <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr='//field[@name="accounting_date"]' position="after">
+                    <xpath expr='//field[@name="accounting_date"]' position="replace">
+                        <field name="accounting_date" readonly="0"/>
+                        <field name="partner_id" string="Харилцагч"/>
                         <field name="bank_account_id" string="Банкны данс"/>
                     </xpath>
                 </data>
