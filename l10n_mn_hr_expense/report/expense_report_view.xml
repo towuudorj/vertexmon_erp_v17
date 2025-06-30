@@ -54,7 +54,7 @@
                     
                     <tr>
                         <td style="border: 1px solid black; padding:3px;">Код</td>
-                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.employee_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.name"/></td>
                         <td style="border: 1px solid black; padding:3px; text-align: center;">
                             <t t-if="o.total_amount &gt;= 0">Дебет</t>
                             <t t-else="">Кредит</t>
@@ -62,8 +62,8 @@
                     </tr>
                     <tr>
                         <td style="border: 1px solid black; padding:3px;">Хүлээн авагч:</td>
-                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.employee_id.bank_account_id.bank_id.name"/></td>
-                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.employee_id.bank_account_id.acc_number"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.bank_account_id.bank_id.name"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.bank_account_id.acc_number"/></td>
                     
                     </tr>
                     <tr>
