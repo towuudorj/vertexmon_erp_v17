@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="payment_order_expense_report_hr_new_pdf" model="ir.actions.report">
+           <field name="name">Төлбөрийн даалгавар</field>
+           <field name="model">hr.expense.sheet</field>
+           <field name="report_type">qweb-pdf</field>
+           <field name="report_name">l10n_mn_hr_expense.payment_order_expense_report</field>
+           <field name="report_file">l10n_mn_hr_expense.expense_report_view</field>
+           <field name="print_report_name">'payment_order_pdf'</field>
+           <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+           <field name="binding_type">report</field>
+        </record>
+        
+        
+
+    </data>
+</odoo>
