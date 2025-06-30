@@ -2,6 +2,28 @@
 <odoo>
     <data>
 
+        <record id="mn_stock_landed_cost_search_view" model="ir.ui.view">
+            <field name="name">stock.landed.cost.inherit.search</field>
+            <field name="model">stock.landed.cost</field>            
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_search"/>
+            <field name="arch" type="xml">                
+                <xpath expr="//field[@name='name']" position="after">
+                	<field name="po_ids"/>
+                </xpath>
+            </field>
+		</record>
+
+        <record id="mn_stock_landed_cost_tree_view" model="ir.ui.view">
+            <field name="name">stock.landed.cost.inherit.tree</field>
+            <field name="model">stock.landed.cost</field>            
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_tree"/>
+            <field name="arch" type="xml">                
+                <xpath expr="//field[@name='date']" position="after">
+                	<field name="po_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+		</record>
+
         <record id="mn_stock_landed_cost_view" model="ir.ui.view">
             <field name="name">stock.landed.cost.inherit.form</field>
             <field name="model">stock.landed.cost</field>            
