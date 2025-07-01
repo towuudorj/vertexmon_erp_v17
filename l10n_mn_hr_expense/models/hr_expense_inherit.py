@@ -168,7 +168,7 @@ class HrExpense(models.Model):
     bank_account_id = fields.Many2one('res.partner.bank',string='Bank account')
     amount_text = fields.Char(string='Amount in words', compute='_compute_amount_text')
     currency_id = fields.Many2one('res.currency', string='Currency')
-    partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete='restrict')
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
 
 
     @api.depends('total_amount')
