@@ -125,9 +125,9 @@ class ProductSummaryReport(models.TransientModel):
         
         sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' %(data['company_name']), head_title)
         
-        sheet.merge_range('A2:K2', u'Барааны материалын хураангуй тайлан', head_title)
+        sheet.merge_range('A2:M2', u'Барааны материалын товчоо тайлан', head_title)
         
-        sheet.merge_range('H3:K3', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']), head_title )
+        sheet.merge_range('J3:M3', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']), head_title )
 
         rowx = 4
         sheet.set_column(1, 1, 30)
@@ -137,15 +137,19 @@ class ProductSummaryReport(models.TransientModel):
         sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_center_bold)
         sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_center_bold)
         sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_center_bold)
-        sheet.merge_range('E%s:F%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center_bold)
-        sheet.write('E%s'%(rowx+1), u'Барааны хэмжих нэгж', data_center_bold)
+        sheet.merge_range('E%s:E%s'%(rowx, rowx+1), u'Барааны хэмжих нэгж', data_center_bold)
+        sheet.merge_range('F%s:G%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center_bold)
         sheet.write('F%s'%(rowx+1), u'Тоо', data_center_bold)
-        sheet.merge_range('G%s:G%s'%(rowx, rowx+1), u'Барааны орлого', data_center_bold)
-        sheet.merge_range('H%s:H%s'%(rowx, rowx+1), u'Барааны зарлага', data_center_bold)
-        sheet.merge_range('I%s:K%s'%(rowx, rowx), u'Барааны эцсийн үлдэгдэл', data_center_bold)
-        sheet.write('I%s'%(rowx+1), u'Тоо', data_center_bold)
-        sheet.write('J%s'%(rowx+1), u'Нэгж өртөг', data_center_bold)
+        sheet.write('G%s'%(rowx+1), u'Нийт өртөг', data_center_bold)
+        sheet.merge_range('H%s:I%s'%(rowx, rowx), u'Барааны орлого', data_center_bold)
+        sheet.write('H%s'%(rowx+1), u'Тоо', data_center_bold)
+        sheet.write('I%s'%(rowx+1), u'Нийт өртөг', data_center_bold)
+        sheet.merge_range('J%s:K%s'%(rowx, rowx), u'Барааны зарлага', data_center_bold)
+        sheet.write('J%s'%(rowx+1), u'Тоо', data_center_bold)
         sheet.write('K%s'%(rowx+1), u'Нийт өртөг', data_center_bold)
+        sheet.merge_range('L%s:M%s'%(rowx, rowx), u'Барааны эцсийн үлдэгдэл', data_center_bold)
+        sheet.write('L%s'%(rowx+1), u'Тоо', data_center_bold)
+        sheet.write('M%s'%(rowx+1), u'Нийт өртөг', data_center_bold)
         
 
         rowx += 2
@@ -278,480 +282,184 @@ class ProductSummaryReport(models.TransientModel):
                             product.append(pr.id)
 
 
-            if product_id !=False and  wht.id!=False:          
+            income = []
+            expense = []
+            f_balance = []
+            move_line_obj = self.env['account.move.line']
+            journal_obj = self.env['account.journal']
+            journal = journal_obj.search([('type','=','opening'),('company_id','=',data['company_id'])],limit=1)
+            f_account_ids = 2930
+            income_ids = 2930
+            expense_ids = 2930
+            
+            if product_id !=False and f_account_ids !=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                            stock_move as mv 
-                            left join stock_location as sl on mv.location_id=sl.id
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            where mv.state='done' and mv.product_id = %s and 
-                            date(mv.date) <='%s' and dest_id.id = %s and sl.usage in( 'supplier','customer','inventory','internal','production') and dest_id.usage = 'internal' 
-                            group by mv.product_id """%(product_id,data['start_date'],wh.id))
-                f_income = self.env.cr.dictfetchall()
-                
-                # Барааны зарлага
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                            stock_move as mv 
-                            left join stock_location as sl on mv.location_id=sl.id
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            where mv.state='done' and mv.product_id = %s and 
-                            date(mv.date) <='%s' and sl.id = %s and sl.usage in('internal') and dest_id.usage in ('production','customer','supplier','inventory','internal') 
-                            group by mv.product_id """%(product_id,data['start_date'],wh.id))
-                f_expense = self.env.cr.dictfetchall()
-                
-                #Худалдан авалтын барааны орлого
-                self.env.cr.execute("""  select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                left join stock_location as sl on sl.id=mv.location_id
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                where mv.state='done'  and 
-                                date(mv.date) >'%s' and date(mv.date) <='%s' and sl.usage ='supplier' 
-                                and dest_id.usage='internal' and mv.product_id=%s and dest_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                purchase_income = self.env.cr.dictfetchall()
-                
-                
-                #Захиалагчаас орсон орлого
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                left join stock_location as src_id on mv.location_id = src_id.id
-                                where mv.state='done' and 
-                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
-                                and src_id.usage='customer' and mv.product_id=%s and  mv.location_dest_id = %s 
-                                group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                customer_income = self.env.cr.dictfetchall()
-                
-                #Дотоод хөдөлгөөнөөс орсон орлого
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                left join stock_location as src_id on mv.location_id = src_id.id
-                                where mv.state='done' and 
-                                date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
-                                and src_id.usage='internal' and mv.product_id=%s and  dest_id.id = %s 
-                                group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                internal_income = self.env.cr.dictfetchall()
-                
-                #Тооллогоос орсон орлого
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                left join stock_location as src_id on mv.location_id = src_id.id
-                                where mv.state='done' and 
-                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
-                                and src_id.usage='inventory' and mv.product_id=%s and  dest_id.id = %s 
-                                group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                qty_income = self.env.cr.dictfetchall()
-                
-                #Үйлдвэрлэлийн орсон орлого
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                left join stock_location as src_id on mv.location_id = src_id.id
-                                where mv.state='done' and 
-                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
-                                and src_id.usage='production' and mv.product_id=%s and  dest_id.id = %s 
-                                group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                manu_income = self.env.cr.dictfetchall()
                 
 
                 
-                
-                #Борлуулсан барааны зарлага
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                        left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                        left join stock_location as src_id on mv.location_id = src_id.id
-                        where mv.state='done' and 
-                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='customer' 
-                        and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                sale_expense = self.env.cr.dictfetchall()
-                
-                #Хуадалдан авалтын барааны буцаалт
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                        left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                        left join stock_location as src_id on mv.location_id = src_id.id
-                        where mv.state='done' and 
-                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='supplier' 
-                        and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                pur_ret = self.env.cr.dictfetchall()
-                
-                #Дотоод барааны зарлага
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                        left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                        left join stock_location as src_id on mv.location_id = src_id.id
-                        where mv.state='done' and 
-                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
-                        and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
-                internal_expense = self.env.cr.dictfetchall()
+                move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('product_id','=',product_id),('journal_id','=',journal.id)])
+                if move_line_id:
+                    f_balance = move_line_id
                 
                 
-                #Тооллогын зарлага
-                self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                        left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                        left join stock_location as src_id on mv.location_id = src_id.id
-                        where mv.state='done' and 
-                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='inventory' 
-                        and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,loc_ids[0]))
-                qty_expense = self.env.cr.dictfetchall()
+                if income_ids !=False:
+                        # Барааны худалдан авалтын орлого                  
+                        income_move_line_id = move_line_obj.search([('account_id','=',income_ids),('company_id','=',data['company_id']),('date','>=',data['start_date']),('date','<=',data['end_date']),('product_id','=',product_id),('journal_id','!=',journal.id)])
+                        if income_move_line_id:
+                            income = income_move_line_id
+
+
+                if expense_ids !=False:
+                    # Барааны зарлага
+                    expense_move_line_id = move_line_obj.search([('account_id','=',expense_ids),('company_id','=',data['company_id']),('date','>=',data['start_date']),('date','<=',data['end_date']),('product_id','=',product_id),('journal_id','!=',journal.id)])            
+                    if expense_move_line_id:
+                        expense = expense_move_line_id
                 
-                
+            elif product_id == False and f_account_ids !=False:
+                    #Эхний үлдэгдэл
+                    #print("laaaa",f_account_ids.id)
+                    if len(str(f_account_ids))==1:
+                        # Барааны орлого
+                        move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('journal_id','=',journal.id)])
+                        if move_line_id:
+                            f_balance = move_line_obj.browse( move_line_id)
+                        
+                        
+                        if income_ids !=False:
+                            # Барааны худалдан авалтын орлого
+                            income_move_line_id = move_line_obj.search( [('account_id','=',income_ids),('company_id','=',data['company_id']),('date','>=',data['start_date']),('date','<=',data['end_date']),('journal_id','!=',journal.id)])
+                            if income_move_line_id:
+                                income =income_move_line_id
             
-                
-            elif product_id == False and loc_ids !=False:
-                
-                if len(loc_ids)==1:
-                    #Эхний үлдэгдэл
-                    # Барааны орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                                stock_move as mv 
-                                left join stock_location as sl on mv.location_id=sl.id
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                where mv.state='done'  and 
-                                date(mv.date) <= '%s' and  dest_id.id = %s and 
-                                sl.usage in('supplier','customer','inventory','production','internal') and dest_id.usage = 'internal' 
-                                group by mv.product_id """%(data['start_date'],wh.id))
-                    f_income = self._cr.dictfetchall()
-                    
-                    # Барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                                stock_move as mv 
-                                left join stock_location as sl on mv.location_id=sl.id
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                where mv.state='done' and 
-                                date(mv.date) <= '%s' and  sl.id = %s and sl.usage in('internal') 
-                                and dest_id.usage in ('customer','supplier','inventory','production','internal') group by mv.product_id """%(data['start_date'],wh.id))
-                    f_expense = self._cr.dictfetchall()
-                    
-                    #Худалдан авалтын барааны орлого
-                    self._cr.execute("""  select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as sl on sl.id=mv.location_id
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    where mv.state='done'  and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
-                                    and dest_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    purchase_income = self._cr.dictfetchall()
-                    
-                    
-                    #Захиалагчаас орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='customer' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    customer_income = self._cr.dictfetchall()
-                    
-                    
-                    #Дотоод орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    internal_income = self._cr.dictfetchall()
-                    
-                    #Тооллогоос орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='inventory' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    qty_income = self._cr.dictfetchall()
-                    
-                    
-                    #Үйлдвэрлэлээс орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='production' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    manu_income = self._cr.dictfetchall()
-                    
-                    
-                    
-                    
-                    
-                    #Борлуулсан барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    sale_expense = self._cr.dictfetchall()
-                    
-                    #Худалдан авалтын барааны буцаалт
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    pur_ret = self._cr.dictfetchall()
-                    
-                    #Дотоод барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],loc_ids[0]))
-                    internal_expense = self._cr.dictfetchall()
-                    
-                    
-                    #Тооллого барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    qty_expense = self._cr.dictfetchall()
-                    
-                    
-                    
-                else:
-                    #Эхний үлдэгдэл
-                    # Барааны орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                                stock_move as mv 
-                                left join stock_location as sl on mv.location_id=sl.id
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                where mv.state='done'  and 
-                                date(mv.date) <= '%s' and  dest_id.id = %s and sl.usage in('supplier','customer','inventory','production','internal') 
-                                and dest_id.usage = 'internal' group by mv.product_id """%(data['start_date'],wh.id))
-                    f_income = self._cr.dictfetchall()
-                    
-                    # Барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
-                                stock_move as mv 
-                                left join stock_location as sl on mv.location_id=sl.id
-                                left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                where mv.state='done' and 
-                                date(mv.date) <= '%s' and  sl.id = %s and sl.usage in('internal') and dest_id.usage in ('customer','supplier','inventory','production','internal') 
-                                group by mv.product_id """%(data['start_date'],wh.id))
-                    f_expense = self._cr.dictfetchall()
-                    
-                    #Худалдан авалтын барааны орлого
-                    self._cr.execute("""  select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as sl on sl.id=mv.location_id
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    where mv.state='done'  and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
-                                    and dest_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    purchase_income = self._cr.dictfetchall()
-                    
-                
-                    
-                    #Захиалагчаас орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  src_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='customer' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    customer_income = self._cr.dictfetchall()
-                    
-                    #Дотоод орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    internal_income = self._cr.dictfetchall()
-                    
-                    #Үйлдвэрлэлээс орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='production' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    manu_income = self._cr.dictfetchall()
-                    
-                    #Тооллогоос орсон орлого
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                                    left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                                    left join stock_location as src_id on mv.location_id = src_id.id
-                                    where mv.state='done' and 
-                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
-                                    and src_id.usage='inventory' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    qty_income = self._cr.dictfetchall()
-                    
-                    
-                    #Борлуулсан барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    sale_expense = self._cr.dictfetchall()
-                    
-                    #Борлуулсан барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    pur_ret = self._cr.dictfetchall()
-                    
-                    
-                    #Дотоод барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    internal_expense = self._cr.dictfetchall()
-                    
-                    #Тооллого барааны зарлага
-                    self._cr.execute("""select mv.product_id,sum(mv.product_qty ), avg(mv.price_unit) as price from stock_move as mv 
-                            left join stock_location as dest_id on mv.location_dest_id = dest_id.id
-                            left join stock_location as src_id on mv.location_id = src_id.id
-                            where mv.state='done' and 
-                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
-                            and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
-                    qty_expense = self._cr.dictfetchall()
+                                
+                        if expense_ids !=False:
+                            # Барааны зарлага
+                            expense_move_line_id = move_line_obj.search( [('account_id','=',expense_ids),('company_id','=',data['company_id']),('date','>=',data['start_date']),('date','<=',data['end_date']),('journal_id','!=',journal.id)])            
+                            if expense_move_line_id:
+                                expense = expense_move_line_id
+                    else:
+                        # Барааны орлого
+                        move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('journal_id','=',journal.id)])
+                        if move_line_id:
+                            f_balance = move_line_id
+                            
+                        
+                        if income_ids !=False:
+                            # Барааны худалдан авалтын орлого
+                            income_move_line_id = move_line_obj.search( [('account_id','=',income_ids),('company_id','=',data['company_id']),('date','>',data['start_date']),('date','<=',data['end_date']),('journal_id','!=',journal.id)])
+                            if income_move_line_id:
+                                income = income_move_line_id
+            
+                                
+                        if expense_ids !=False:
+                            # Барааны зарлага
+                            expense_move_line_id = move_line_obj.search( [('account_id','=',expense_ids),('company_id','=',data['company_id']),('date','>',data['start_date']),('date','<=',data['end_date']),('journal_id','!=',journal.id)])            
+                            if expense_move_line_id:
+                                expense = expense_move_line_id
                     
         
                 
                 
            
 
-            
             sheet.merge_range('A%s:K%s'%(rowx,rowx), u'Агуулах: %s'%(wh.name), data_left_bold)
             rowx += 1
             for line in product_obj.browse(product):
                 num +=1
-                f_income_qty = 0.0
-                f_income_price = 0.0
+                f_balance_qty = 0.0
+                f_balance_amount = 0.0
+                f_balance_unit = 0.0
                 f_expense_qty = 0.0
                 f_expense_price = 0.0
-                manu_income_qty = 0.0
-                manu_income_price = 0.0
-                pur_income_qty = 0.0
-                pur_income_price = 0.0
-                custom_income_qty = 0.0
-                custom_income_price = 0.0
-                int_income_qty = 0.0
-                int_income_price = 0.0
-                qty_income_qty = 0.0
-                qty_income_price = 0.0
+                
+                purchase_qty = 0.0
+                purchase_amount = 0.0
+                purchase_unit = 0.0
+                
                 income_qty = 0.0
+                income_amount = 0.0
+                income_unit = 0.0
+                ref_income_amount = 0.0
+                ref_income_qty = 0.0
+                ref_income_unit = 0.0
                 expense_qty = 0.0
-                expense_int_qty = 0.0
-                expense_int_price = 0.0
-                income_price = 0.0
-                sale_expense_qty = 0.0
-                sale_expense_price = 0.0
-                qty_expense_qty = 0.0
-                qty_expense_price = 0.0
-                manu_expense_qty = 0.0
-                cust_expense_qty = 0.0
-                oth_expense_qty = 0.0
-                expense_price = 0.0
+                expense_amount = 0.0
+                expense_unit = 0.0
+                ref_expense_qty = 0.0
+                ref_expense_amount = 0.0
+                ref_expense_unit = 0.0
+                act_amount = 0.0
+                act_qty = 0.0
+                act_unit = 0.0
                 end_qty =0.0
-                expo_qty = 0.0
-                expo_price = 0.0
+                end_unit = 0.0
                 seri = ''
-                if f_income!=[]:
-                    for f_inc in f_income:
-                        if line.id==f_inc['product_id']:
-                            if f_inc['sum'] !=None:
-                                f_income_qty += f_inc['sum']
-                            if f_inc['price'] !=None:
-                                f_income_price +=f_inc['price']
+                if f_balance!=[]:
+                    for f_inc in f_balance:
+                        if line.id == f_inc.product_id.id:
+                            if f_inc.move_id.state !='cancel':
+                                if f_inc.move_id.state !='draft':
+                                    #if f_inc.quantity != 0.0:
+                                        if f_inc.credit != f_inc.debit:
+                                            if f_inc.debit:
+                                                f_balance_qty += f_inc.quantity
+                                            if f_inc.credit:
+                                                f_balance_qty -= f_inc.quantity
+                                            f_balance_amount +=f_inc.debit
+                                        else:
+                                            f_balance_qty += f_inc.quantity
+                                            f_balance_amount +=f_inc.debit
+                            
+                if income!=[]:
+                    for p_inc in income:
+                        if line.id==p_inc.product_id.id:
+                            if p_inc.move_id.state !='cancel':
+                                if p_inc.move_id.state !='draft':
+                                    #if p_inc.quantity != 0.0:
+                                        if p_inc.account_id.id == p_inc.product_id.categ_id.property_stock_account_input_categ_id.id:
+                                            if  p_inc.debit == 0.0 and  p_inc.credit >0.0 :
+                                                purchase_qty += p_inc.quantity
+                                                purchase_amount +=p_inc.credit
+                                                income_qty -= p_inc.quantity
+                                                income_amount -=p_inc.credit
+                                        else:
+                                            if  p_inc.debit > 0.0 and  p_inc.credit == 0.0:
+                                                income_qty += p_inc.quantity
+                                                income_amount +=p_inc.debit
                                 
-                if f_expense !=[]:
-                    for f_exp in f_expense:
-                        if line.id==f_exp['product_id']:
-                            if f_exp['sum'] !=None:
-                                f_expense_qty +=f_exp['sum']
-                            if f_exp['price'] !=None:
-                                f_expense_price +=f_exp['price']
-
-                if purchase_income!=[]:
-                    for pur_income in purchase_income:
-                        if line.id==pur_income['product_id']:
-                            if pur_income['sum'] !=None:
-                                pur_income_qty += pur_income['sum']
-                            if pur_income['price'] !=None:
-                                pur_income_price += pur_income['price']
-                                
-                if customer_income!=[]:
-                    for cust_income in customer_income:
-                        if line.id==cust_income['product_id']:
-                            if cust_income['sum'] !=None:
-                                custom_income_qty += cust_income['sum']
-                            if cust_income['price'] !=None:
-                                custom_income_price += cust_income['price']
-                                
-                if internal_income!=[]:
-                    for int_income in internal_income:
-                        if line.id==int_income['product_id']:
-                            if int_income['sum'] !=None:
-                                int_income_qty += int_income['sum']
-                            if int_income['price'] !=None:
-                                int_income_price += int_income['price']
-                                
-                if qty_income!=[]:
-                    for qt_income in qty_income:
-                        if line.id==qt_income['product_id']:
-                            if qt_income['sum'] !=None:
-                                qty_income_qty += qt_income['sum']
-                            if qt_income['price'] !=None:
-                                qty_income_price += qt_income['price']
-                                
-                if manu_income!=[]:
-                    for manu_inc in manu_income:
-                        if line.id==manu_inc['product_id']:
-                            if manu_inc['sum'] !=None:
-                                manu_income_qty += manu_inc['sum']
-                            if manu_inc['price'] !=None:
-                                manu_income_price += manu_inc['price']
-                                
-
-
-                                
-                if sale_expense !=[]:
-                    for sale_expen in sale_expense:
-                        if line.id==sale_expen['product_id']:
-                            if sale_expen['sum'] !=None:
-                                sale_expense_qty +=sale_expen['sum']
-                            if sale_expen['price'] !=None:
-                                sale_expense_price +=sale_expen['price']
-                                
-                if pur_ret !=[]:
-                    for sale_exp in pur_ret:
-                        if line.id==sale_exp['product_id']:
-                            if sale_exp['sum'] !=None:
-                                expo_qty +=sale_exp['sum']
-                            if sale_exp['price'] !=None:
-                                expo_price +=sale_exp['price']
-                                
-                if internal_expense !=[]:
-                    for inter_exp in internal_expense:
-                        if line.id==inter_exp['product_id']:
-                            if inter_exp['sum'] !=None:
-                                expense_int_qty +=inter_exp['sum']
-                            if inter_exp['price'] !=None:
-                                expense_int_price +=inter_exp['price']
-                                
-                if qty_expense !=[]:
-                    for qty_exp in qty_expense:
-                        if line.id==qty_exp['product_id']:
-                            if qty_exp['sum'] !=None:
-                                qty_expense_qty +=qty_exp['sum']
-                            if qty_exp['price'] !=None:
-                                qty_expense_price +=qty_exp['price']
+                if expense !=[]:
+                    for exp in expense:
+                        if line.id==exp.product_id.id:
+                            if exp.move_id.state !='cancel':
+                                if exp.move_id.state !='draft':
+                            #      if exp.quantity != 0.0:
+                                        if exp.account_id.id != p_inc.product_id.categ_id.property_stock_account_input_categ_id.id:
+                                            if exp.credit and exp.debit==0.0:
+                                                if exp.quantity <0.0:
+                                                    expense_qty +=exp.quantity*(-1)
+                                                expense_amount +=exp.credit
                                 
                             
-                first_qty = f_income_qty - f_expense_qty
-                end_qty = first_qty+(pur_income_qty+custom_income_qty+int_income_qty+manu_income_qty+qty_income_qty)-(sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty)
-                total_price_unit = line.standard_price * end_qty
+                end_qty = f_balance_qty+income_qty+purchase_qty-expense_qty
+                uom_name = 'Нэгж'
+                #if line.uom_id.name=='Unit(s)':
+                #    uom_name = u'Нэгж'
+                if f_balance_amount > 0.0 and f_balance_qty:
+                    f_balance_unit = f_balance_amount/f_balance_qty
+                    
+                
+                if income_amount>0.0 and income_qty>0.0:
+                    income_unit = income_amount/income_qty
+                
+                if purchase_amount >0.0 and purchase_qty >0.0:
+                    purchase_unit = purchase_amount/purchase_qty
+                
+                if expense_amount > 0.0 and expense_qty>0.0:
+                    expense_unit = expense_amount/expense_qty
+
+                if end_qty >0.0 and f_balance_amount > 0.0:
+                    end_unit = (f_balance_amount+income_amount+purchase_amount-expense_amount)
                 uom_name = ''
                 if line.uom_id:
                     uom_name = line.uom_id.name
@@ -760,49 +468,38 @@ class ProductSummaryReport(models.TransientModel):
                 sheet.write('C%s'%rowx, line.barcode or '', data_center)
                 sheet.write('D%s'%rowx, line.default_code or '', data_center)
                 sheet.write('E%s'%rowx, u'%s'%(uom_name), data_center)
-                sheet.write('F%s'%rowx, first_qty, data_right)
-                sheet.write('G%s'%rowx, (pur_income_qty+custom_income_qty+int_income_qty+manu_income_qty+qty_income_qty), data_right)
-                sheet.write('H%s'%rowx, sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty, data_right)
-                sheet.write('I%s'%rowx, first_qty+(pur_income_qty+custom_income_qty+int_income_qty+qty_income_qty)-(sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty), data_right)
+                sheet.write('F%s'%rowx, f_balance_qty, data_right)
+                sheet.write('G%s'%rowx, f_balance_amount, data_right)
+                sheet.write('H%s'%rowx, income_qty+purchase_qty, data_right)
+                sheet.write('I%s'%rowx, income_amount+purchase_amount, data_right)
+                sheet.write('J%s'%rowx, expense_qty, data_right)
+                sheet.write('K%s'%rowx, expense_amount, data_right)
                 
-                if total_price_unit == 0.0:
-                    sheet.write('J%s'%rowx, 0.0, data_right)
+                if end_unit == 0.0:
+                    sheet.write('L%s'%rowx, 0.0, data_right)
                 else:
                     if end_qty == 0.0:
-                        sheet.write('J%s'%rowx, 0.0, data_right)
+                        sheet.write('L%s'%rowx, 0.0, data_right)
                     else:
-                        sheet.write('J%s'%rowx, total_price_unit/end_qty, data_right)
-                sheet.write('K%s'%rowx, total_price_unit, data_right)
+                        sheet.write('L%s'%rowx, end_qty, data_right)
+                sheet.write('M%s'%rowx, end_unit, data_right)
                 if end_qty == 0.0:
                     total_sum_price +=total_price_unit
                 else:
                     total_sum_price +=total_price_unit/end_qty
                 total_all_price +=total_price_unit
                 
-                f_total_qty +=first_qty
-                total_income_pur_qty +=pur_income_qty
-                total_income_cus_qty +=custom_income_qty
-                total_income_qty +=(pur_income_qty+custom_income_qty+int_income_qty+manu_income_qty+qty_income_qty)
-                total_expense_cust_qty +=cust_expense_qty
-                total_expense_sale_qty +=sale_expense_qty
-                total_end_qty +=end_qty
-                total_qty +=(sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty)
-                total_end_oth_qty +=oth_expense_qty
-                total_qty_income_qty +=qty_income_qty
-                total_qty_exp_qty +=qty_expense_qty
-                total_income_int_qty +=int_income_qty
-                total_expo_qty +=expo_qty
-                total_exp_int_qty +=expense_int_qty
-                total_manu_income_qty +=manu_income_qty
+                f_total_qty +=f_balance_qty
+ 
                 rowx +=1
 
-            sheet.merge_range('A%s:E%s'%(rowx, rowx), u'НИЙТ', data_center)
-            sheet.write('F%s'%(rowx), f_total_qty, data_right)
-            sheet.write('G%s'%(rowx), total_qty_income_qty, data_right)
-            sheet.write('H%s'%(rowx), total_qty_exp_qty, data_right)
-            sheet.write('I%s'%(rowx), total_end_qty, data_right)
-            sheet.write('J%s'%(rowx), total_sum_price, data_right)
-            sheet.write('K%s'%(rowx), total_all_price, data_right)
+            #sheet.merge_range('A%s:E%s'%(rowx, rowx), u'НИЙТ', data_center)
+            #sheet.write('F%s'%(rowx), f_total_qty, data_right)
+            #sheet.write('G%s'%(rowx), total_qty_income_qty, data_right)
+            #sheet.write('H%s'%(rowx), total_qty_exp_qty, data_right)
+            #sheet.write('I%s'%(rowx), total_end_qty, data_right)
+            #sheet.write('J%s'%(rowx), total_sum_price, data_right)
+            #sheet.write('K%s'%(rowx), total_all_price, data_right)
             rowx +=1
 
         workbook.close()
