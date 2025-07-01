@@ -231,7 +231,6 @@ class ProductSummaryReport(models.TransientModel):
             total_all_price = 0.0
             products = False
             wh = self.env['stock.location'].browse(wht)
-            print ("loggggg",product_id)
             if product_id:
                 product = product_obj.search([('id','=',product_id)],order='name asc').id
             else:
@@ -279,7 +278,6 @@ class ProductSummaryReport(models.TransientModel):
                             product.append(pr.id)
 
 
-            print ("logggg",product_id)
             if product_id !=False and  wht.id!=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
@@ -307,7 +305,7 @@ class ProductSummaryReport(models.TransientModel):
                                 left join stock_location as sl on sl.id=mv.location_id
                                 left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                 where mv.state='done'  and 
-                                date(mv.date) >='%s' and date(mv.date) <='%s' and sl.usage ='supplier' 
+                                date(mv.date) >'%s' and date(mv.date) <='%s' and sl.usage ='supplier' 
                                 and dest_id.usage='internal' and mv.product_id=%s and dest_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 purchase_income = self.env.cr.dictfetchall()
                 
@@ -317,7 +315,7 @@ class ProductSummaryReport(models.TransientModel):
                                 left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                 left join stock_location as src_id on mv.location_id = src_id.id
                                 where mv.state='done' and 
-                                date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
+                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
                                 and src_id.usage='customer' and mv.product_id=%s and  mv.location_dest_id = %s 
                                 group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 customer_income = self.env.cr.dictfetchall()
@@ -337,7 +335,7 @@ class ProductSummaryReport(models.TransientModel):
                                 left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                 left join stock_location as src_id on mv.location_id = src_id.id
                                 where mv.state='done' and 
-                                date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
+                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
                                 and src_id.usage='inventory' and mv.product_id=%s and  dest_id.id = %s 
                                 group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 qty_income = self.env.cr.dictfetchall()
@@ -347,7 +345,7 @@ class ProductSummaryReport(models.TransientModel):
                                 left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                 left join stock_location as src_id on mv.location_id = src_id.id
                                 where mv.state='done' and 
-                                date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
+                                date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
                                 and src_id.usage='production' and mv.product_id=%s and  dest_id.id = %s 
                                 group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 manu_income = self.env.cr.dictfetchall()
@@ -360,7 +358,7 @@ class ProductSummaryReport(models.TransientModel):
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         left join stock_location as src_id on mv.location_id = src_id.id
                         where mv.state='done' and 
-                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='customer' 
+                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='customer' 
                         and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 sale_expense = self.env.cr.dictfetchall()
                 
@@ -369,7 +367,7 @@ class ProductSummaryReport(models.TransientModel):
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         left join stock_location as src_id on mv.location_id = src_id.id
                         where mv.state='done' and 
-                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='supplier' 
+                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='supplier' 
                         and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 pur_ret = self.env.cr.dictfetchall()
                 
@@ -378,7 +376,7 @@ class ProductSummaryReport(models.TransientModel):
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         left join stock_location as src_id on mv.location_id = src_id.id
                         where mv.state='done' and 
-                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
+                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='internal' 
                         and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,wh.id))
                 internal_expense = self.env.cr.dictfetchall()
                 
@@ -388,7 +386,7 @@ class ProductSummaryReport(models.TransientModel):
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         left join stock_location as src_id on mv.location_id = src_id.id
                         where mv.state='done' and 
-                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='inventory' 
+                        date(mv.date) >'%s' and date(mv.date) <='%s' and dest_id.usage='inventory' 
                         and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,loc_ids[0]))
                 qty_expense = self.env.cr.dictfetchall()
                 
@@ -425,7 +423,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as sl on sl.id=mv.location_id
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     where mv.state='done'  and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
                                     and dest_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     purchase_income = self._cr.dictfetchall()
                     
@@ -435,7 +433,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='customer' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     customer_income = self._cr.dictfetchall()
                     
@@ -445,7 +443,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     internal_income = self._cr.dictfetchall()
                     
@@ -454,7 +452,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='inventory' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     qty_income = self._cr.dictfetchall()
                     
@@ -464,7 +462,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='production' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     manu_income = self._cr.dictfetchall()
                     
@@ -477,7 +475,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     sale_expense = self._cr.dictfetchall()
                     
@@ -486,7 +484,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     pur_ret = self._cr.dictfetchall()
                     
@@ -495,7 +493,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],loc_ids[0]))
                     internal_expense = self._cr.dictfetchall()
                     
@@ -505,7 +503,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     qty_expense = self._cr.dictfetchall()
                     
@@ -538,7 +536,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as sl on sl.id=mv.location_id
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     where mv.state='done'  and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s' and  dest_id.id = %s and sl.usage ='supplier' 
                                     and dest_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     purchase_income = self._cr.dictfetchall()
                     
@@ -549,7 +547,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  src_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  src_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='customer' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     customer_income = self._cr.dictfetchall()
                     
@@ -558,7 +556,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='internal' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     internal_income = self._cr.dictfetchall()
                     
@@ -567,7 +565,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='production' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     manu_income = self._cr.dictfetchall()
                     
@@ -576,7 +574,7 @@ class ProductSummaryReport(models.TransientModel):
                                     left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                     left join stock_location as src_id on mv.location_id = src_id.id
                                     where mv.state='done' and 
-                                    date(mv.date) >='%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
+                                    date(mv.date) >'%s' and date(mv.date) <='%s'  and  dest_id.id = %s and dest_id.usage='internal' 
                                     and src_id.usage='inventory' group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     qty_income = self._cr.dictfetchall()
                     
@@ -586,7 +584,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='customer' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     sale_expense = self._cr.dictfetchall()
                     
@@ -595,7 +593,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='supplier' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     pur_ret = self._cr.dictfetchall()
                     
@@ -605,7 +603,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='internal' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     internal_expense = self._cr.dictfetchall()
                     
@@ -614,7 +612,7 @@ class ProductSummaryReport(models.TransientModel):
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                             left join stock_location as src_id on mv.location_id = src_id.id
                             where mv.state='done' and 
-                            date(mv.date) >='%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
+                            date(mv.date) >'%s' and date(mv.date) <='%s' and src_id.id = %s and dest_id.usage='inventory' 
                             and src_id.usage='internal'  group by mv.product_id """%(data['start_date'],data['end_date'],wh.id))
                     qty_expense = self._cr.dictfetchall()
                     
@@ -753,7 +751,7 @@ class ProductSummaryReport(models.TransientModel):
                             
                 first_qty = f_income_qty - f_expense_qty
                 end_qty = first_qty+(pur_income_qty+custom_income_qty+int_income_qty+manu_income_qty+qty_income_qty)-(sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty)
-                total_price_unit = (f_income_qty*f_income_price)-(f_expense_qty*f_expense_price)+((pur_income_qty*pur_income_price)+(manu_income_qty*manu_income_price)+(custom_income_qty*custom_income_price)+(int_income_qty*int_income_price)+(qty_income_qty*qty_income_price))-((sale_expense_qty*sale_expense_price)+(expo_qty*expo_price)+(expense_int_qty*expense_int_price)+(qty_expense_qty*qty_expense_price))
+                total_price_unit = line.standard_price * end_qty
                 uom_name = ''
                 if line.uom_id:
                     uom_name = line.uom_id.name
@@ -767,7 +765,7 @@ class ProductSummaryReport(models.TransientModel):
                 sheet.write('H%s'%rowx, sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty, data_right)
                 sheet.write('I%s'%rowx, first_qty+(pur_income_qty+custom_income_qty+int_income_qty+qty_income_qty)-(sale_expense_qty+expo_qty+expense_int_qty+qty_expense_qty), data_right)
                 
-                if total_price_unit==0.0:
+                if total_price_unit == 0.0:
                     sheet.write('J%s'%rowx, 0.0, data_right)
                 else:
                     if end_qty == 0.0:
