@@ -261,6 +261,14 @@ msgid "Product category"
 msgstr "Барааны ангилал"
 
 
+
+#. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_product_summary_report
+#: model:ir.ui.menu,name:l10n_mn_stock.stock_summary_report_mn_menu
+msgid "Stock summary report"
+msgstr "Бараа материалын товчоо тайлан"
+
+
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.inventory_aging_action
 #: model:ir.ui.menu,name:stock_account.menu_inventory_aging

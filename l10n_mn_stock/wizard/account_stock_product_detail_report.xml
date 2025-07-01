@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        	<record id="product_stock_account_detail_report_view" model="ir.ui.view">
+			<field name="name">product.stock.account.detail.report</field>
+			<field name="model">product.stock.account.detail.report</field>
+			<field name="arch" type="xml">
+				<form string="Product stock account detail">
+					<group>
+						<field name="company_id" />
+						<field name="product_id"/>
+						<field name="category_id"/>
+						<field name="start_date"/>
+						<field name="end_date"/>
+						<field name="is_sale_price"/>
+						<field name="is_total_qty"/>
+					</group>
+					<separator string="Барааны данс"/>
+						<field name="acc_pro_id" >
+							<tree>
+								<field name="code"/>
+								<field name="name"/>
+								<field name="company_id"/>
+							</tree>
+						</field>
+					<separator string="Барааны орлогын данс"/>
+					<field name="acc_income_pro_id">
+						<tree>
+							<field name="code"/>
+							<field name="name"/>
+							<field name="company_id"/>
+						</tree>
+					</field>
+					<separator string="Барааны зарлагын данс"/>
+					<field name="acc_expense_pro_id">
+						<tree>
+							<field name="code"/>
+							<field name="name"/>
+							<field name="company_id"/>
+						</tree>
+					</field>
+					<footer>
+						<button name="action_print_xls_report" string="Export" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_account_stock_product_detail_report" model="ir.actions.act_window">
+			<field name="name">Бараа материалын санхүү тайлан</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.stock.product.detail.report</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_stock_product_detail_report_view" />
+			<field name="target">new</field>
+		</record>
+		
+		
+		
+    
+    </data>
+</openerp>

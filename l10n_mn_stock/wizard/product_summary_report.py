@@ -19,7 +19,7 @@ class ProductSummaryReport(models.TransientModel):
     company_id = fields.Many2one('res.company', string=u'Компани', readonly=True,
                                 default=lambda self: self.env.user.company_id)
     is_transection = fields.Boolean(string=u'Гүйлгээтэй эсэх')
-    is_warehouse = fields.Boolean(string=u'Агуулахаар татах')
+    is_warehouse = fields.Boolean(string=u'Агуулахаар татах', default=True)
     location_ids = fields.Many2one('stock.location', string=u'Байрлал')
     start_date = fields.Date(string=u'Эхлэх огноо', required=True,
                                     default=fields.Date.context_today)
@@ -160,9 +160,9 @@ class ProductSummaryReport(models.TransientModel):
         rowx = 6
         
         if data['is_warehouse'] == True:
-            print("Warehouse is True", data['warehouse_ids'])
             if len(data['warehouse_ids'])==1:
                 wh_id = wh_obj.browse(data['warehouse_ids'][0])
+                loc_ids.append(wh_id.lot_stock_id.id)
             else:
 
                 for wh in data['warehouse_ids']:
@@ -185,8 +185,9 @@ class ProductSummaryReport(models.TransientModel):
             #                            loc_ids.append(lins.id)
         else:
             loc_ids.append(data['location_ids'])
-
+        
         for wht in loc_ids:
+            
             datas = False
             purchase_income = []
             customer_income = []
@@ -230,6 +231,7 @@ class ProductSummaryReport(models.TransientModel):
             total_all_price = 0.0
             products = False
             wh = self.env['stock.location'].browse(wht)
+            print ("loggggg",product_id)
             if product_id:
                 product = product_obj.search([('id','=',product_id)],order='name asc').id
             else:
@@ -250,6 +252,7 @@ class ProductSummaryReport(models.TransientModel):
                         product_ids = product_obj.search([('categ_id','=',category_id)],order='name asc')
                         for pr in product_ids:
                             product.append(pr.id)
+                
                 else:
                     if data['is_transection'] == True:
                         if len(loc_ids)==1:
@@ -258,22 +261,26 @@ class ProductSummaryReport(models.TransientModel):
                                 left join stock_location as src_id on mv.location_id = src_id.id 
                                 where src_id.id = %s  or dest_id.id = %s group by mv.product_id"""%(wh.id,wh.id))
                             products = self._cr.dictfetchall()
+                            if products:
+                                for line in products:
+                                    product.append(line['product_id'])
                         else:
                             self._cr.execute("""select mv.product_id from stock_move as mv 
                             left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                                 left join stock_location as src_id on mv.location_id = src_id.id 
                                 where src_id.id = %s  or dest_id.id = %s group by mv.product_id"""%(wh.id,wh.id))
                             products = self._cr.dictfetchall()
+                            if products:
+                                for line in products:
+                                    product.append(line['product_id'])
                     else:
                         product_ids = product_obj.search([],order='name asc')
                         for pr in product_ids:
                             product.append(pr.id)
 
-            if data['is_transection'] == True:
-                if products:
-                    for line in products:
-                        product.append(line['product_id'])
-            if product_id !=False and  wh.id!=False:          
+
+            print ("logggg",product_id)
+            if product_id !=False and  wht.id!=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
                 self.env.cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
@@ -389,6 +396,7 @@ class ProductSummaryReport(models.TransientModel):
             
                 
             elif product_id == False and loc_ids !=False:
+                
                 if len(loc_ids)==1:
                     #Эхний үлдэгдэл
                     # Барааны орлого

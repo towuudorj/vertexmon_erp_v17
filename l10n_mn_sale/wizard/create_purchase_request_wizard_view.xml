@@ -18,7 +18,7 @@
         </record>
         
     	<record id="action_create_purchase_request_new" model="ir.actions.act_window">
-             <field name="name">Create purchase request</field>
+             <field name="name">Үнийн судалгаа хувиарлах</field>
              <field name="res_model">create.purchase.request</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_id" ref="create_purchase_request_wizard_view"/>
