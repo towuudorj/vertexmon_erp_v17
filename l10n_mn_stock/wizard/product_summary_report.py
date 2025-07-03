@@ -18,7 +18,7 @@ class ProductSummaryReport(models.TransientModel):
     
     company_id = fields.Many2one('res.company', string=u'Компани', readonly=True,
                                 default=lambda self: self.env.user.company_id)
-    is_transection = fields.Boolean(string=u'Гүйлгээтэй эсэх')
+    is_transection = fields.Boolean(string=u'Гүйлгээтэй эсэх', default=True)
     is_warehouse = fields.Boolean(string=u'Агуулахаар татах', default=True)
     location_ids = fields.Many2one('stock.location', string=u'Байрлал')
     start_date = fields.Date(string=u'Эхлэх огноо', required=True,
