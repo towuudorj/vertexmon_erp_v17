@@ -192,7 +192,11 @@
 		        	<br/>
 		        	
                 	<!--<p style="margin-left:1%; margin-right:5%;">Мөнгөн дүн (үсгээр): <span t-field="o.amount_text"/> болно.</p> -->
-
+					
+				
+				<table style="width: 99%; font-size:11px;border-collapse: collapse; border: 1px solid black; margin-left:20px; padding-top:1px;">
+				<p style="margin-left:15px; margin-right:5%; font-size:11px;">Мөнгөн дүн (үсгээр): <span t-field="o.amount_text"/> болно.</p>
+				</table>
 				<table style="margin-right:1%; margin-left:15px; width: 99%; text-align: center; position: relative;  border-spacing: 0;  border: transparent 1px solid;">
 					<tr style="border: transparent 1px solid;">
 						<td style="text-align:left; width: 30%; border:none !important; border-spacing: 0; font-size:11px;">Ерөнхий нягтлан бодогч:  </td>
