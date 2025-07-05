@@ -156,6 +156,62 @@ msgstr "Системийн гэрээний дугаар"
 msgid "Payment term"
 msgstr "Төлбөрийн нөхцөл"
 
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__target_move
+msgid "State"
+msgstr "Төлөв"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__date_from
+msgid "Date start"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__date_to
+msgid "Date stop"
+msgstr "Дуусах огноо"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__sales_user_id
+msgid "Salesperson"
+msgstr "Борлуулагч"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_new_report_view
+msgid "Close"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_new_report_view
+msgid "Export"
+msgstr "Экспорт"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_new_report__target_move__posted
+msgid "Posted"
+msgstr "Батлагдсан"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_new_report__target_move__all
+msgid "All"
+msgstr "Бүгд"
+
+
+
+
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__sales_type
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__sales_type

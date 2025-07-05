@@ -15,3 +15,5 @@ access_create_product_wizard_user,create.product.wizard,model_create_product_wiz
 access_create_product_wizard_manager,create.product.wizard,model_create_product_wizard,sales_team.group_sale_manager,1,1,1,1
 access_create_purchase_request_wizard_user,create.purchase.request,model_create_purchase_request,sales_team.group_sale_salesman,1,1,1,0
 access_create_purchase_request_wizard_manager,create.purchase.request,model_create_purchase_request,sales_team.group_sale_manager,1,1,1,1
+access_sale_order_new_report_user,sale.order.new.report,model_sale_order_new_report,sales_team.group_sale_salesman,1,1,1,0
+access_sale_order_new_report_manager,sale.order.new.report,model_sale_order_new_report,sales_team.group_sale_manager,1,1,1,1

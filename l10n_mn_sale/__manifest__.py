@@ -40,6 +40,7 @@
                 'report/mn_sale_invoice.xml',
                 'report/mn_sale_expense.xml',
                 'report/mn_sale_expense_desc.xml',
+                'report/sale_order_new_report_view.xml',
                 'wizard/create_product_wizard_view.xml',
                 'wizard/create_purchase_request_wizard_view.xml',
                 'wizard/sale_order_cancel_inherit_wizard.xml',
