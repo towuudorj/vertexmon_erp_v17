@@ -225,7 +225,7 @@ msgstr "Нийт дүн"
 
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_report__invoice_total_price
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_report__invoice_total_price
 msgid "Invoice Sale Price"
 msgstr "Нэхэмжилсэн татвартай нийт дүн"
 
