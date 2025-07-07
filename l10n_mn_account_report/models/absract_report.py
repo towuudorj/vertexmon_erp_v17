@@ -6,6 +6,14 @@ from xlwt import easyxf
 from odoo.exceptions import UserError
 from datetime import timedelta, datetime
 
+class accountreceivablereport(models.Model):
+    _name = 'account.receivable.report'
+    
+class accountpayablereport(models.Model):
+    _name = 'account.payable.report'
+
+
+
 class report_excel_output(models.Model):
     _name = 'report.excel.output'
     _description = "Excel Report Output"

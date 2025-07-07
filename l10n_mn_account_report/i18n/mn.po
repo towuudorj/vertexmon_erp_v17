@@ -134,15 +134,6 @@ msgstr "Гүйлгээ балансын тайлан"
 msgid "Account move line report"
 msgstr "Касс харилцахын тайлан"
 
-#. module: l10n_mn_account_report
-#: model:ir.model,name:l10n_mn_account_report.model_account_payable_report
-msgid "Account payable report"
-msgstr "Харилцагчийн авлагын тайлан"
-
-#. module: l10n_mn_account_report
-#: model:ir.model,name:l10n_mn_account_report.model_account_receivable_report
-msgid "Account receivable report"
-msgstr "Харилцагчийн өглөгийн тайлан"
 
 #. module: l10n_mn_account_report
 #: model:ir.model,name:l10n_mn_account_report.model_account_bank_statement_line
@@ -170,8 +161,6 @@ msgstr "Мөнгөн гүйлгээний тайлан"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__create_uid
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__create_uid
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__create_uid
@@ -183,8 +172,6 @@ msgstr "Үүсгэсэн этгээд"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__create_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__create_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__create_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__create_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__create_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__create_date
@@ -201,8 +188,6 @@ msgstr "Үүсгэсэн огноо"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__display_name
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__display_name
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__display_name
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__display_name
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__display_name
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__display_name
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__display_name
@@ -337,8 +322,6 @@ msgstr ""
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__id
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__id
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__id
@@ -350,8 +333,6 @@ msgstr "ID"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel____last_update
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis____last_update
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report____last_update
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report____last_update
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report____last_update
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report____last_update
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report____last_update
@@ -363,8 +344,6 @@ msgstr "Сүүлд өөрчилсөн огноо"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__write_uid
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__write_uid
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__write_uid
@@ -376,8 +355,6 @@ msgstr "Сүүлд шинэчилсэн этгээд"
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__write_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__write_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__write_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__write_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__write_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__write_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__write_date
@@ -452,8 +429,6 @@ msgstr ""
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_move_analysis__target_move__posted
-#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_payable_report__target_move__posted
-#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_receivable_report__target_move__posted
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report__target_move__posted
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report_two__target_move__posted
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report__target_move__posted
@@ -473,8 +448,6 @@ msgstr ""
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_move_analysis__target_move__all
-#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_payable_report__target_move__all
-#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_receivable_report__target_move__all
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report__target_move__all
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_book_report_two__target_move__all
 #: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__general_journal_report__target_move__all
@@ -521,8 +494,6 @@ msgstr "Данс"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__target_move
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__target_move
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__target_move
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__target_move
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__target_move
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__target_move
@@ -533,8 +504,6 @@ msgstr "Төлөв"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__end_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__end_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__end_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__date_to
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__date_to
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__date_to
@@ -565,8 +534,6 @@ msgstr ""
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__company_id
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__company_id
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__company_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__company_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__company_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__company_id
@@ -642,8 +609,6 @@ msgstr ""
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__target_move
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__target_move
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__target_move
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__target_move
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__target_move
 msgid "Төлөв"
@@ -653,12 +618,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
 msgid "Хаанаас:"
 msgstr ""
-
-#. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__partner_id
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__partner_id
-msgid "Partner"
-msgstr "Харилцагч"
 
 #. module: l10n_mn_account_report
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.print_cash_order
@@ -695,8 +654,6 @@ msgstr ""
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__start_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_payable_report__start_date
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_receivable_report__start_date
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__date_from
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__date_from
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__date_from
@@ -757,6 +714,85 @@ msgstr "Орлого үр дүнгийн тайлан"
 #: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_equity_changes_report
 msgid "Equity changes report"
 msgstr "Өмчийн өөрчлөлтийн тайлан"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__date_from
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__date_from
+msgid "Date Start"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__date_to
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__date_to
+msgid "Date Stop"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__target_move
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__target_move
+msgid "State"
+msgstr "Төлөв"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__fiscalyear_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__fiscalyear_id
+msgid "Fiscal year"
+msgstr "Санхүүгийн жил"
+
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.balance_sheet_excel_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.statement_cashflow_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.profit_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.equity_changes_view
+msgid "Export"
+msgstr "Экспорт"
+
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.balance_sheet_excel_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.statement_cashflow_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.profit_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.equity_changes_view
+msgid "Close"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__statement_cashflow_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__balance_sheet_excel__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__profit_excel_report__target_move__posted
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__equity_changes__target_move__posted
+msgid "All Posted entries"
+msgstr "Батлагдсан гүйлгээ"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__statement_cashflow_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__balance_sheet_excel__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__profit_excel_report__target_move__all
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__equity_changes__target_move__all
+msgid "All entries"
+msgstr "Бүх гүйлгээ"
+
+
 
 
 

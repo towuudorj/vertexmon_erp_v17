@@ -85,7 +85,7 @@ class AccountAssetAsset(models.Model):
 
     owner_id = fields.Many2one('hr.employee', string='Asset owner')
     is_closed = fields.Boolean(string='Asset account remove')
-    uom_id = fields.Many2one('uom.uom', string='Uom', required=True)
+    uom_id = fields.Many2one('uom.uom', string='Uom')
     asset_qty = fields.Float(string='Asset qty', default=1.0)
     capitalization_id = fields.One2many('account.asset.asset.capitalization','asset_id',string='Asset capitalization')
     write_up = fields.Float(string='Write Up', readonly=True, compute='_write_amount')

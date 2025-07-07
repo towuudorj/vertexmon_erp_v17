@@ -19,6 +19,9 @@ class equity_changes(models.TransientModel):
     fiscalyear_id = fields.Many2one('account.fiscal.year', string='Fiscal year', required=True)
     date_from = fields.Date('Start Date', required=True, default=fields.Date.context_today)
     date_to = fields.Date('End Date', required=True, default=fields.Date.context_today)
+    target_move=fields.Selection([('posted', 'All Posted Entries'),
+                                     ('all', 'All Entries'),
+                                    ], string='State', required=True, default='posted')
     
     def action_print_xls_report(self):
         data = {
@@ -27,11 +30,12 @@ class equity_changes(models.TransientModel):
             'start_date': self.date_from,
             'end_date': self.date_to,
             'fiscalyear_id': self.fiscalyear_id.id,
+            'target_move': self.target_move,
         }
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
-            'data': {'model': 'cash.move.line.report',
+            'data': {'model': 'equity.changes',
                      'output_format': 'xlsx',
                      'options': json.dumps(data,
                                            default=date_utils.json_default),

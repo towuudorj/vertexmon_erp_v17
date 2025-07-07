@@ -16,7 +16,7 @@
                     <footer>
                         <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Close" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>

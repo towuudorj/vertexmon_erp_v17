@@ -8,15 +8,16 @@
             <field name="arch" type="xml">
                 <form string="Equity changes report" >
                     <group colspan="4">
-                        <field name="company_id" widget='selection' readonly="1"/>
-                        <field name="fiscalyear_id"/>
+                        <field name="company_id" widget='selection'/>
+                        <field name="fiscalyear_id" widget='selection'/>
+                        <field name="target_move"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                    </group>
                    <footer>
                         <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
                         or
-                       <button string="Cancel" class="oe_link" special="cancel" />
+                       <button string="Close" class="oe_link" special="cancel" />
                    </footer>
                 </form>
             </field>
