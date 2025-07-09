@@ -5,8 +5,10 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from odoo.exceptions import UserError, ValidationError
+from datetime import datetime, time
 
-class equity_changes(models.TransientModel):
+class EquityChanges(models.TransientModel):
     """
         ӨМЧИЙН ӨӨРЧЛӨЛТИЙН ТАЙЛАН
         Statement of stockholder's equity
@@ -49,14 +51,95 @@ class equity_changes(models.TransientModel):
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
-                                    'font_size': '20px'
+                                    'font_size': 20
                                     })
-        txt = workbook.add_format({
+
+        header_txt = workbook.add_format({
                                     'align': 'center',
+                                    'bold': True,
+                                    'font_size': 12
+                                })
+        data_left = workbook.add_format({
+                                    'align': 'left',
                                     'border': 1,
                                     'font_size': 12
                                 })
+        title = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'bold': True,
+                                    'font_size': 12
+                                })
+
+        sheet.write("B4", u"%s ХХК" % (data['company_name']), header_txt)
+        sheet.write('B5',u'(Аж ахуй нэгж, байгууллагын нэр)', head)
+        sheet.merge_range('A2:J2', u'ӨМЧИЙН ӨӨРЧЛӨЛТИЙН ТАЙЛАН', head)
+        
+        sheet.write('J4', u'%s - %s' % (data['start_date'],data['end_date']), head)
+        sheet.write('J6', u'(төгрөгөөр)', head)
+    
+
         sheet.set_column(0, 8, 24)
+        rowx = 7
+        sheet.write("A%s"%rowx, u'Д/д', title)
+        sheet.write("B%s"%rowx, u'Үзүүлэлт', title)
+        sheet.write("C%s"%rowx, u'Өмч', title)
+        sheet.write("D%s"%rowx, u'Халаасны хувьцаа', title)
+        sheet.write("E%s"%rowx, u'Нэмж төлөгдсөн капитал', title)
+        sheet.write("F%s"%rowx, u'Дахин үнэлгээний нэмэгдэл', title)
+        sheet.write("G%s"%rowx, u'Гадаад валютын хөрвүүлэлтийн нөөц', title)
+        sheet.write("H%s"%rowx, u'Эздийн өмчийн бусад хэсэг', title)
+        sheet.write("I%s"%rowx, u'Хуримтлагдсан ашиг', title)
+        sheet.write("J%s"%rowx, u'Нийт дүн', title)
+        rowx += 1
+
+        account_obj = self.env['account.account']
+        journal_obj = self.env['account.journal']
+        account_move_obj = self.env['account.move']
+        account_move_line_obj = self.env['account.move.line']
+        currency_obj = self.env['res.currency']
+        fiscalyear_obj = self.env['account.fiscal.year']
+
+        now_fiscalyear = data['fiscalyear_id']
+        nyear = fiscalyear_obj.browse(now_fiscalyear)
+        print ("now_fiscalyear", int(nyear.name))
+        pre_one_year_id = fiscalyear_obj.search([('name','=',str(int(nyear.name)-1))],order="id asc",limit=1)
+        if pre_one_year_id.id == False:
+            raise UserError(u"%s Санхүүгийн жил үүсээгүй байгаа тул үүсгэнэ үү!"%(int(nyear.name)-1))
+        pre_one_year = pre_one_year_id
+        pre_two_year_id = fiscalyear_obj.search([('name','=',str(int(nyear.name)-2))],order="id asc",limit=1)
+        if pre_two_year_id.id ==False:
+            raise UserError(u"%s Санхүүгийн жил үүсээгүй байгаа тул үүсгэнэ үү!"%(int(nyear.name)-2))
+        
+        pre_two_year = pre_two_year_id
+        report_account = self.env['equity.configure.report'].search([('company_id', '=', data['company_id'])])
+        if report_account.id !=False:
+            report_accounts = self.env['equity.configure.report'].browse(report_account.id)
+        else:
+            raise UserError(u"Өмчийн өөрчлөлтийн тайлангийн тохиргоог хийнэ үү!")
+        date_to_obj = datetime.strptime(str(pre_two_year.date_end), '%Y-%m-%d')
+        number = 1
+        #sheet.write(rowx, 0, str(number), data_style)
+        #sheet.write(rowx, 1,  u'%s оны %s сарын %s-ний үлдэгдэл' % (pre_two_year.name,
+        #                                                                 date_to_obj.strftime('%m'),
+        #                                                                  date_to_obj.strftime('%d')), data_style)
+
+        report_account_equite_two = report_accounts.property_statutory_fund_account.id
+        fund_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite_two),('move_id.date','>=',data['start_date']),('move_id.date','<=',data['end_date']),('move_id.state','=','posted')])
+        fund_amount = 0.0
+        for fund in fund_move_line_ids:
+            fund_amount = fund.debit - fund.credit
+        if fund_amount < 0.0:
+            fund_amount = fund_amount*(-1)
+            
+        #sheet.write(rowx, 2, fund_amount, data_style)
+        #sheet.write(rowx, 3, '', data_style)
+        #sheet.write(rowx, 4, '', data_style)
+        #sheet.write(rowx, 5, '', data_style)
+        #sheet.write(rowx, 6, '', data_style)
+        #sheet.write(rowx, 7, '', data_style)
+        #sheet.write(rowx, 8, '', data_style)
+        #sheet.write(rowx, 9, Formula("SUM(C8:I8)"), data_style)
 
         
 
@@ -65,92 +148,14 @@ class equity_changes(models.TransientModel):
             тооцоолж байрлуулна.
         '''
 
-        
-        date_str = '%s - %s' % (
-            datetime.strptime(str(self.date_from), '%Y-%m-%d').strftime('%Y.%m.%d'),
-            datetime.strptime(str(self.date_to), '%Y-%m-%d').strftime('%Y.%m.%d')
-        )
-        
-        ezxf = xlwt.easyxf
-        styles = self.get_easyxf_styles()
-        
-        book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(u'Өмчийн өөрчлөлтийн тайлан')
-        sheet.portrait = False
-        
-        data_style = ezxf('font: bold off; align: wrap on, vert centre, horiz centre; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_bold = ezxf('font: bold on; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_right = ezxf('font: bold off; align: wrap on, vert centre, horiz right; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_left = ezxf('font: bold off; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_bold_left = ezxf('font: bold on; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_bold_right = ezxf('font: bold on; align: wrap on, vert centre, horiz right; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
 
-        sheet.write(3, 1, u'"%s" ХХК' % (self.company_id.name,), ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
-        sheet.write(4, 1, u'(Аж ахуй нэгж, байгууллагын нэр)', ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
-        sheet.write_merge(1, 1, 0, 9, u'ӨМЧИЙН ӨӨРЧЛӨЛТИЙН ТАЙЛАН', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 200'))
+
         
-        sheet.write(3, 9, u'%s' % (date_str,), ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
-        sheet.write(5, 9, u'(төгрөгөөр)', ezxf('font:bold on;align:wrap off,vert centre,horiz right;font: height 180'))
-        rowx = 6
-        sheet.write(rowx, 0, u'Д/д', styles['heading_xf'])
-        sheet.write(rowx, 1, u'Үзүүлэлт', styles['heading_xf'])
-        sheet.write(rowx, 2, u'Өмч', styles['heading_xf'])
-        sheet.write(rowx, 3, u'Халаасны хувьцаа', styles['heading_xf'])
-        sheet.write(rowx, 4, u'Нэмж төлөгдсөн капитал', styles['heading_xf'])
-        sheet.write(rowx, 5, u'Дахин үнэлгээний нэмэгдэл', styles['heading_xf'])
-        sheet.write(rowx, 6, u'Гадаад валютын хөрвүүлэлтийн нөөц', styles['heading_xf'])
-        sheet.write(rowx, 7, u'Эздийн өмчийн бусад хэсэг', styles['heading_xf'])
-        sheet.write(rowx, 8, u'Хуримтлагдсан ашиг', styles['heading_xf'])
-        sheet.write(rowx, 9, u'Нийт дүн', styles['heading_xf'])
-        rowx += 1
         
-        account_obj = self.env['account.account']
-        journal_obj = self.env['account.journal']
-        account_move_obj = self.env['account.move']
-        account_move_line_obj = self.env['account.move.line']
-        currency_obj = self.env['res.currency']
-        fiscalyear_obj = self.env['sh.fiscal.year']
+        
 
     
-        now_fiscalyear = self.fiscalyear_id
-        pre_one_year_id = fiscalyear_obj.search([('name','=',(int(now_fiscalyear.name)-1))],order="id asc",limit=1)
-        if pre_one_year_id.id == False:
-            raise UserError(u"%s Санхүүгийн жил үүсээгүй байгаа тул үүсгэнэ үү!"%(int(now_fiscalyear.name)-1))
-        pre_one_year = pre_one_year_id
-        pre_two_year_id = fiscalyear_obj.search([('name','=',(int(now_fiscalyear.name)-2))],order="id asc",limit=1)
-        if pre_two_year_id.id ==False:
-            raise UserError(u"%s Санхүүгийн жил үүсээгүй байгаа тул үүсгэнэ үү!"%(int(now_fiscalyear.name)-2))
         
-        pre_two_year = pre_two_year_id
-        company = self.company_id
-        report_account = self.env['mongolian.report.account'].search([('company_id', '=', self.company_id.id)])
-        if report_account.id !=False:
-            report_accounts = self.env['mongolian.report.account'].browse(report_account.id)
-        else:
-            raise UserError(u"Өмчийн өөрчлөлтийн тайлангийн тохиргоог хийнэ үү!")
-        date_to_obj = datetime.strptime(str(pre_two_year.date_end), '%Y-%m-%d')
-        number = 1
-        sheet.write(rowx, 0, str(number), data_style)
-        sheet.write(rowx, 1,  u'%s оны %s сарын %s-ний үлдэгдэл' % (pre_two_year.name,
-                                                                         date_to_obj.strftime('%m'),
-                                                                          date_to_obj.strftime('%d')), data_style)
-
-        report_account_equite_two = report_accounts.property_statutory_fund_account.id
-        fund_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite_two),('move_id.date','>=',self.date_from),('move_id.date','<=',self.date_to),('move_id.state','=','posted')])
-        fund_amount = 0.0
-        for fund in fund_move_line_ids:
-            fund_amount = fund.debit - fund.credit
-        if fund_amount < 0.0:
-            fund_amount = fund_amount*(-1)
-            
-        sheet.write(rowx, 2, fund_amount, data_style)
-        sheet.write(rowx, 3, '', data_style)
-        sheet.write(rowx, 4, '', data_style)
-        sheet.write(rowx, 5, '', data_style)
-        sheet.write(rowx, 6, '', data_style)
-        sheet.write(rowx, 7, '', data_style)
-        sheet.write(rowx, 8, '', data_style)
-        sheet.write(rowx, 9, Formula("SUM(C8:I8)"), data_style)
         
         
         move_id = account_move_obj.search([('journal_id','=',report_accounts.property_adjustment_journal.id),('date','>=',pre_two_year.date_start),('date','<=',pre_two_year.date_end)])
@@ -404,5 +409,4 @@ class equity_changes(models.TransientModel):
         sheet.write(rowx + 20, 2, u'Ерөнхий нягтлан бодогч....................................../\
                                                  /', ezxf('font: bold off; align: wrap off, vert centre, horiz left;font: height 180'))
         
-        return {'data':book, 'directory_name':u'Өмчийн өөрчлөлт',
-                'attache_name':'Өмчийн өөрчлөлт'}
+

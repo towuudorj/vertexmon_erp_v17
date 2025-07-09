@@ -184,11 +184,50 @@ msgstr "Хөрөнгө актлах"
 
 
 #. module: l10n_mn_asset
+#: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_detail_report
+#: model:ir.ui.menu,name:l10n_mn_asset.account_asset_detail_menu
+msgid "Account asset detail report"
+msgstr "Үндсэн хөрөнгийн дэлгэрэнгүй тайлан"
+
+
+#. module: l10n_mn_asset
 #: model:ir.actions.act_window,name:l10n_mn_asset.action_asset_location_tree_view
 #: model:ir.ui.menu,name:l10n_mn_asset.asset_location_menu
 msgid "Asset location"
 msgstr "Хөрөнгийн байршил"
 
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__start_date
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__end_date
+msgid "End date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__fiscalyear_id
+msgid "Fiscal year"
+msgstr "Санхүүгийн жил"
+
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__category_id
+msgid "Asset category"
+msgstr "Хөрөнгийн ангилал"
+
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_detail_report__owner_id
+msgid "Owner"
+msgstr "Хөрөнгө эзэмшигч"
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_asset_location__company_id

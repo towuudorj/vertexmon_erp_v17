@@ -111,21 +111,21 @@ class profit_excel_report(models.TransientModel):
                                     'border': 1,
                                     'bold': True,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00; (#,##0.00)'
                                 })  
 
         data_right = workbook.add_format({
                                     'align': 'right',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00; (#,##0.00)'
                                 })
 
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00; (#,##0.00)'
                                 })
 
         sheet.set_column(0, 0, 10)
@@ -445,14 +445,14 @@ class profit_excel_report(models.TransientModel):
                         sum_balance -=ml.credit
                # sheet.write(rowx, 3, sum_balance, data_right)
                
-                sheet.write("C%s"%rowx, sum_prev_balance, data_right)
+                sheet.write_formula("C%s"%rowx, sum_prev_balance, data_right)
                 #for account in account_id:
                 #    print("loggg",account.balance)
                 #    if account.balance < 0.0:
                 #        expense_balance +=(account.balance*(-1))
                 #    else:
                 #        expense_balance +=account.balance
-                sheet.write("D%s"%rowx, sum_balance, data_right)
+                sheet.write_formula("D%s"%rowx, sum_balance, data_right)
                 rowx +=1
                 last_number +=1
         # ТАТВАР ТӨЛӨХИЙН ӨМНӨХ АШИГ

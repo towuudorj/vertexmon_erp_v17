@@ -284,6 +284,24 @@ msgstr "Дугаар"
 msgid "Sequence"
 msgstr "Дараалал"
 
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__fiscalyear_id
+msgid "Fiscal year"
+msgstr "Санхүүгийн жил"
+
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__target_move
+msgid "State"
+msgstr "Төлөв"
+
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__type

@@ -14,13 +14,12 @@
 						<field name="end_date"/>
 						<field name="category_id"/>
 						<field name="owner_id"/>
-						<field name="is_balance"/>
 					</group>
 					<footer>
-						<button name="export_report" string="Export" type="object"
+						<button name="action_print_xls_report" string="Экспорт" type="object"
 							class="oe_highlight" />
 						or
-						<button string="Цуцлах" class="oe_link" special="cancel" />
+						<button string="Хаах" class="oe_link" special="cancel" />
 					</footer>
 				</form>
 			</field>

@@ -67,13 +67,13 @@ class balance_sheet_excel(models.TransientModel):
                                     'border': 1,
                                     'text_wrap': True,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
 
 
@@ -82,7 +82,7 @@ class balance_sheet_excel(models.TransientModel):
                                     'bold': True,
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         
         data_bold_center = workbook.add_format({
@@ -90,7 +90,7 @@ class balance_sheet_excel(models.TransientModel):
                                     'bold': True,
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
 
         sheet.set_column(0, 0, 10)
@@ -114,6 +114,8 @@ class balance_sheet_excel(models.TransientModel):
         account_move_line_obj = self.env['account.move.line']
         balance_report_obj = self.env['account.balance.type']
         journal_obj = self.env['account.journal']
+        f_journal_ids = journal_obj.search([('type','=','opening'),('company_id','=',data['company_id'])])
+        journal_ids = journal_obj.search([('type','!=','opening'),('company_id','=',data['company_id'])])
         balance_report_id = balance_report_obj.search([('company_id','=',data['company_id'])])
         account_obj = self.env['account.account']
         if data['target_move'] =='posted':
@@ -213,18 +215,18 @@ class balance_sheet_excel(models.TransientModel):
                     if account_ids!=[]:
                         if len(account_ids)>1:
                             if len(state)==1:
-                                move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','>=',self.date_from),('date','<=',self.date_to),('parent_state','=',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',self.date_from),('parent_state','=',state)])
+                                move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','=',state)])
                             else:
-                                move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','>=',self.date_from),('date','<=',self.date_to),('parent_state','in',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',self.company_id.id),('account_id','in',tuple(account_ids)),('date','<=',self.date_from),('parent_state','in',state)])
+                                move_line_ids = account_move_line_obj.search([('company_id','=',self.company_id.id),('account_id','in',tuple(account_ids)),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','in',state)])
                         else:
                             if len(state)==1:
-                                move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','>=',self.date_from),('date','<=',self.date_to),('parent_state','=',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',self.date_from),('parent_state','=',state)])
+                                move_line_ids = account_move_line_obj.search([('company_id','=',self.company_id.id),('account_id','=',account_ids[0]),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',data['start_date']),('parent_state','=',state)])
                             else:
-                                move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','>=',self.date_from),('date','<=',self.date_to),('parent_state','in',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',self.date_from),('parent_state','in',state)])
+                                move_line_ids = account_move_line_obj.search([('company_id','=',self.company_id.id),('account_id','=',account_ids[0]),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',data['start_date']),('parent_state','in',state)])
                             
                         if len(move_line_ids)==1:
                             for mlines in move_line_ids:
@@ -250,6 +252,12 @@ class balance_sheet_excel(models.TransientModel):
                             
                     total = debit - credit
                     pre_total = pdebit - pcredit
+                
+                if total < 0.0:
+                    total = total*(-1)
+                    
+                if pre_total<0.0:
+                    pre_total = pre_total*(-1)
                 sheet.write("C%s"%rowx, pre_total, data_bold_center)
                 sheet.write("D%s"%rowx, total, data_bold_center)
                 num +=1

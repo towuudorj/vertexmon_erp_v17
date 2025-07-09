@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta, datetime
-from odoo import fields, models, _
-import xlwt
+
+import io
+import json
+import xlsxwriter
+from odoo import fields, models
+from odoo.tools import date_utils
 
 class AccountAssetDetailReport(models.TransientModel):
     """
         Үндсэн хөрөнгийн дэлгэрэнгүй тайлан
     """
-    _inherit = "abstract.report.excel"
     _name = "account.asset.detail.report"
     _description = "Asset detial Report - Mongolia"
     
@@ -18,70 +20,157 @@ class AccountAssetDetailReport(models.TransientModel):
     fiscalyear_id = fields.Many2one('account.fiscal.year', string='Fiscal year', required=True)
     category_id = fields.Many2one('account.asset.category', string='Asset category')
     owner_id = fields.Many2one('hr.employee', string='Owner')
-    is_balance = fields.Boolean(string='Is balance')
-    
 
-    def get_export_data(self):
-        ''' Тайлангийн загварыг боловсруулж өгөгдлүүдийг
-            тооцоолж байрлуулна.
-        '''
 
-        company = self.env['res.company'].browse(self.company_id.id)
-        ezxf = xlwt.easyxf
-        styles = self.get_easyxf_styles()
-        book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(u'Үндсэн хөрөнгийн тайлан')
-        sheet.portrait = False
-        data_style = ezxf('font: bold off; align: wrap on, vert centre, horiz centre; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_bold = ezxf('font: bold on; align: wrap on, vert centre, horiz centre; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_right = ezxf('font: bold off; align: wrap on, vert centre, horiz right; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_left = ezxf('font: bold off; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_bold_left = ezxf('font: bold on; align: wrap on, vert centre, horiz left; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        data_center = ezxf('font: bold off; align: wrap on, vert centre, horiz center; font: height 200;borders: left thin, right thin, top thin, bottom thin;','#,##0.00_);(#,##0.00)')
-        sheet.write(0, 0, u'Байгууллагын нэр: %s' % (company.name,), ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
-        sheet.write_merge(3, 3, 0, 18, u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 250'))
-        sheet.write_merge(0, 0, 14, 17,  u'Санхүү Эдийн Засгийн сайдын 2002 оны', ezxf('font:bold on;align:wrap off,vert centre,horiz centre;font: height 180'))
-        sheet.write_merge(1, 1, 14, 17,  u'191 тоот тушаалаар батлав.', ezxf('font:bold on;align:wrap off,vert centre,horiz center;font: height 180'))
-        sheet.write_merge(4, 4, 16, 17, u'Дэлгэрэнгүй бүртгэл', ezxf('font: bold on; align: wrap off, vert centre, horiz left;font: height 150'))
-        sheet.write_merge(5, 5, 16, 17, u'ҮХ-1 №....', ezxf('font: bold on; align: wrap off, vert centre, horiz centre;font: height 150'))
-        sheet.write(5, 7, u'Тайлант %s - %s'%(self.start_date,self.end_date) , ezxf('font:bold on;align:wrap off,vert centre,horiz left;font: height 180'))
-        rowx = 7
-        sheet.write_merge(rowx, rowx+1, 0, 0, u'Д/д', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 1, 1, u'Дансны дугаар', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 2, 2, u'Үндсэн хөрөнгийн нэр', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 3, 3, u'Хөрөнгийн дугаар', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 4, 4, u'Ашиглалтанд орсон он сар өдөр', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 5, 5, u'Ашиглах жил', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx, 6, 7, u'Эхний үлдэгдэл', styles['heading_xf'])
-        sheet.write(rowx+1, 6, u'Тоо', styles['heading_xf'])
-        sheet.write(rowx+1, 7, u'Өртөг', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx , 8, 9, u'Орлого', styles['heading_xf'])
-        sheet.write(rowx+1, 8, u'Тоо', styles['heading_xf'])
-        sheet.write(rowx+1, 9, u'Өртөг', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx , 10, 11, u'Зарлага', styles['heading_xf'])
-        sheet.write(rowx+1, 10, u'Тоо', styles['heading_xf'])
-        sheet.write(rowx+1, 11, u'Өртөг', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx, 12, 13, u'Эцсийн үлдэгдэл', styles['heading_xf'])
-        sheet.write(rowx+1, 12, u'Тоо', styles['heading_xf'])
-        sheet.write(rowx+1, 13, u'Өртөг', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx, 14, 17, u'Элэгдэл', styles['heading_xf'])
-        sheet.write(rowx+1, 14, u'Хуримтдлагдсан', styles['heading_xf'])
-        sheet.write(rowx+1, 15, u'Сарын', styles['heading_xf'])
-        sheet.write(rowx+1, 16, u'Хасагдсанд ногдох', styles['heading_xf'])
-        sheet.write(rowx+1, 17, u'Элэгдлийн дүн', styles['heading_xf'])
-        sheet.write_merge(rowx, rowx+1, 18, 18, u'Үлдэгдэл өртөг', styles['heading_xf'])
-        rowx +=2
-        for col in range(0,19):
-            sheet.write(rowx, col, col+1,styles['heading_xf'])
+    def action_print_xls_report(self):
+        data = {
+            'company_name': self.company_id.name,
+            'company_id': self.company_id.id,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'category_id': self.category_id.id,
+            'owner_id':self.owner_id.id,
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'is_balance':False,
+        }
+        return {
+            'type': 'ir.actions.report',
+            'report_type': 'xlsx',
+            'data': {'model': 'account.asset.detail.report',
+                     'output_format': 'xlsx',
+                     'options': json.dumps(data,
+                                           default=date_utils.json_default),
+                     'report_name': 'Account asset report'}
+        }
+
+    def get_xlsx_report(self, data, response):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+        head = workbook.add_format({
+                                    'align': 'center', 
+                                    'bold': True, 
+                                    'font_size': 16
+                                    })
+        header_txt = workbook.add_format({
+                                    'align': 'center',
+                                    'font_size': 12
+                                })
+
+        title = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'bold': True,
+                                    'font_size': 12,
+                                    'text_wrap': True,
+                                })
+        data_right = workbook.add_format({
+                                    'align': 'right',
+                                    'border': 1,
+                                    'text_wrap': True,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                })
+        data_left = workbook.add_format({
+                                    'align': 'left',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                })
         
+        data_center = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                })
+
+
+        data_bold_left = workbook.add_format({
+                                    'align': 'left',
+                                    'bold': True,
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                })
+        
+        data_bold_center = workbook.add_format({
+                                    'align': 'center',
+                                    'bold': True,
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                })
+
+        sheet.set_column(0, 0, 6)
+        sheet.set_column(1, 1, 30)
+        sheet.set_column(2, 2, 40)
+        sheet.set_column(3, 19, 15)
+
+        sheet.merge_range("A1:B1", u'Байгууллагын нэр: %s' % (data['company_name']), header_txt)
+        sheet.merge_range("A3:S3", u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
+        sheet.merge_range("P1:S1",  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
+        sheet.merge_range("Q2:S2",  u'191 тоот тушаалаар батлав.', header_txt)
+        sheet.merge_range("R4:S4", u'Дэлгэрэнгүй бүртгэл',header_txt)
+        sheet.merge_range("S5", u'ҮХ-1 №....', header_txt)
+        sheet.write("H5", u'Тайлант %s - %s'%(data['start_date'],data['end_date']), header_txt)
+        rowx = 7
+
+        sheet.merge_range("A%s:A%s"%(rowx, rowx+1), u'Д/д', title)
+        sheet.merge_range("B%s:B%s"%(rowx, rowx+1), u'Дансны дугаар', title)
+        sheet.merge_range("C%s:C%s"%(rowx, rowx+1), u'Үндсэн хөрөнгийн нэр', title)
+        sheet.merge_range("D%s:D%s"%(rowx, rowx+1), u'Хөрөнгийн дугаар', title)
+        sheet.merge_range("E%s:E%s"%(rowx, rowx+1), u'Ашиглалтанд орсон он сар өдөр', title)
+        sheet.merge_range("F%s:F%s"%(rowx, rowx+1), u'Ашиглах жил', title)
+        sheet.merge_range("G%s:H%s"%(rowx, rowx), u'Эхний үлдэгдэл', title)
+        sheet.write("G%s"%(rowx+1), u'Тоо', title)
+        sheet.write("H%s"%(rowx+1), u'Өртөг', title)
+        sheet.merge_range("I%s:J%s"%(rowx, rowx), u'Орлого', title)
+        sheet.write("I%s"%(rowx+1), u'Тоо', title)
+        sheet.write("J%s"%(rowx+1), u'Өртөг', title)
+        sheet.merge_range("K%s:L%s"%(rowx, rowx), u'Зарлага', title)
+        sheet.write("K%s"%(rowx+1), u'Тоо', title)
+        sheet.write("L%s"%(rowx+1), u'Өртөг', title)
+        sheet.merge_range("M%s:N%s"%(rowx, rowx), u'Эцсийн үлдэгдэл', title)
+        sheet.write("M%s"%(rowx+1), u'Тоо', title)
+        sheet.write("N%s"%(rowx+1), u'Өртөг', title)
+        sheet.merge_range("O%s:R%s"%(rowx, rowx), u'Элэгдэл', title)
+        sheet.write("O%s"%(rowx+1), u'Хуримтдлагдсан', title)
+        sheet.write("P%s"%(rowx+1), u'Сарын', title)
+        sheet.write("Q%s"%(rowx+1), u'Хасагдсанд ногдох', title)
+        sheet.write("R%s"%(rowx+1), u'Элэгдлийн дүн', title)
+        sheet.merge_range("S%s:S%s"%(rowx, rowx+1), u'Үлдэгдэл өртөг', title)
+        rowx +=2
+
+        sheet.write("A%s"%rowx, 1,title)
+        sheet.write("B%s"%rowx, 2,title)
+        sheet.write("C%s"%rowx, 3,title)
+        sheet.write("D%s"%rowx, 4,title)
+        sheet.write("E%s"%rowx, 5,title)
+        sheet.write("F%s"%rowx, 6,title)
+        sheet.write("G%s"%rowx, 7,title)
+        sheet.write("H%s"%rowx, 8,title)
+        sheet.write("I%s"%rowx, 9,title)
+        sheet.write("J%s"%rowx, 10,title)
+        sheet.write("K%s"%rowx, 11,title)
+        sheet.write("L%s"%rowx, 12,title)
+        sheet.write("M%s"%rowx, 13,title)
+        sheet.write("N%s"%rowx, 14,title)
+        sheet.write("O%s"%rowx, 15,title)
+        sheet.write("P%s"%rowx, 16,title)
+        sheet.write("Q%s"%rowx, 17,title)
+        sheet.write("R%s"%rowx, 18,title)
+        sheet.write("S%s"%rowx, 19,title)
+
         rowx = 10
         asset_obj = self.env['account.asset.asset']
+        fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
         
         asset_capital_obj = self.env['account.asset.asset.capitalization']
         if self.category_id:
-            asset_id = asset_obj.search([('company_id','=',self.company_id.id),('category_id','=',self.category_id.id),('state','!=','draft')],order='date asc')
+            asset_id = asset_obj.search([('company_id','=',data['company_id']),('category_id','=',data['category_id']),('state','!=','draft')],order='date asc')
         else:
-            asset_id = asset_obj.search([('company_id','=',self.company_id.id),('state','!=','draft')],order='date asc')
+            asset_id = asset_obj.search([('company_id','=',data['company_id']),('state','!=','draft')],order='date asc')
         
         num = 0
         first_balance = 0.0
@@ -101,10 +190,10 @@ class AccountAssetDetailReport(models.TransientModel):
         drop_balance = 0.0
         dep_balance = 0.0
         total_balance_amount = 0.0
-        
+
         if asset_id:
             for line in asset_id:
-                if self.is_balance == True:
+                if data['is_balance'] == True:
                     if line.value_residual > 0.0:
                         balance_amount = 0.0
                         write_off_amount = 0.0
@@ -113,31 +202,31 @@ class AccountAssetDetailReport(models.TransientModel):
                         act_amount = 0.0
                         capital_amount = 0.0
                         num +=1
-                        sheet.write(rowx, 0, '%s'%num,data_center)
-                        sheet.write(rowx, 1, line.category_id.name,data_left)
-                        sheet.write(rowx, 2, line.name,data_left)
-                        sheet.write(rowx, 3, line.code,data_left)
-                        sheet.write(rowx, 4, '%s'%line.date,data_left)
-                        sheet.write(rowx, 5, line.method_number/12,data_left)
-                        sheet.write(rowx, 6, 1,data_left)
-                        if line.date <= self.start_date:
-                            sheet.write(rowx, 7, line.value,data_right)
-                            sheet.write(rowx, 8, 1,data_right)
+                        sheet.write("A%s"%rowx, '%s'%num, data_center)
+                        sheet.write("B%s"%rowx, line.category_id.name,data_left)
+                        sheet.write("C%s"%rowx, line.name,data_left)
+                        sheet.write("D%s"%rowx, line.code,data_left)
+                        sheet.write("E%s"%rowx, '%s'%line.date,data_left)
+                        sheet.write("F%s"%rowx, line.method_number/12,data_left)
+                        sheet.write("G%s"%rowx, data_left)
+                        if line.date <= data['start_date']:
+                            sheet.write("H%s"%rowx, line.value,data_right)
+                            sheet.write("I%s"%rowx, 0, data_right)
                         else:
-                            sheet.write(rowx, 7, 0,data_right)
-                            sheet.write(rowx, 8, 0,data_right)
-                        asset_cap_id = asset_capital_obj.search( [('asset_id','=',line.id)])
+                            sheet.write("H%s"%rowx, 0,data_right)
+                            sheet.write("I%s"%rowx, 0,data_right)
+                        #asset_cap_id = asset_capital_obj.search( [('asset_id','=',line.id)])
                         
                         first_balance +=line.value
                         first_qty +=1
                         
                         
-                        if asset_cap_id:
-                            for cap in asset_capital_obj.browse( asset_cap_id.id):
-                                capital_amount += cap.amount
-                        else:
-                            if line.date >= self.start_date:
-                                capital_amount +=line.value
+                        #if asset_cap_id:
+                        #    for cap in asset_cap_id:
+                        #        capital_amount += cap.amount
+                        #else:
+                        #    if line.date >= data['start_date']:
+                        #        capital_amount +=line.value
                                 
                         income_balance +=capital_amount
                         income_qty +=1
@@ -157,17 +246,17 @@ class AccountAssetDetailReport(models.TransientModel):
                         sheet.write(rowx, 13, total_amount,data_right)
                         for lis in line.depreciation_line_ids:
                             for history in lis.move_id.line_ids:
-                                if history.date < self.start_date:
+                                if history.date < data['start_date']:
                                     deprecation_amount +=history.debit
                         in_dep_balance +=deprecation_amount
                         sheet.write(rowx, 14, deprecation_amount,data_right)                
                         for dep in line.depreciation_line_ids:
                             if dep.move_check == True:
-                                if dep.depreciation_date >= self.start_date and dep.depreciation_date<=self.end_date:
+                                if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<=self.end_date:
                                     month_deprecation_amount += dep.amount
                                     
                         month_balance +=month_deprecation_amount
-                        sheet.write(rowx, 15, month_deprecation_amount,data_right)
+                        sheet.write("P%s"%rowx, month_deprecation_amount,data_right)
                         if line.state == 'close':
                             write_off = 0.0
                             self._cr.execute("""SELECT
@@ -182,15 +271,15 @@ class AccountAssetDetailReport(models.TransientModel):
                                     write_off = lines['amount']
                             write_off_amount = line.value_residual
                         drop_balance +=write_off_amount
-                        sheet.write(rowx, 16, write_off_amount,data_right)
+                        sheet.write("Q%s"%rowx, write_off_amount,data_right)
                         last_amount = deprecation_amount+month_deprecation_amount-write_off_amount
-                        sheet.write(rowx, 17, last_amount,data_right)
+                        sheet.write("R%s"%rowx, last_amount,data_right)
                         dep_balance +=last_amount
                         if line.state=='close':                          
                             balance_amount = 0.0
                         else:
                             balance_amount = total_amount-last_amount
-                        sheet.write(rowx, 18, balance_amount,data_right)
+                        sheet.write("S%s"%rowx, balance_amount,data_right)
                         total_balance_amount += balance_amount
                         rowx +=1
                 else:
@@ -207,20 +296,20 @@ class AccountAssetDetailReport(models.TransientModel):
                     
                     
                     num +=1
-                    sheet.write(rowx, 0, '%s'%num,data_center)
-                    sheet.write(rowx, 1, line.category_id.name,data_left)
-                    sheet.write(rowx, 2, line.name,data_left)
-                    sheet.write(rowx, 3, line.code,data_left)
-                    sheet.write(rowx, 4, '%s'%line.date,data_left)
-                    sheet.write(rowx, 5, line.method_number/12,data_left)
-                    
-                    if line.date <=self.start_date:
+                    sheet.write("A%s"%rowx, '%s'%num,data_center)
+                    sheet.write("B%s"%rowx, line.category_id.name,data_left)
+                    sheet.write("C%s"%rowx, line.name,data_left)
+                    sheet.write("D%s"%rowx, line.code,data_left)
+                    sheet.write("E%s"%rowx, '%s'%line.date,data_left)
+                    sheet.write("F%s"%rowx, line.method_number/12,data_left)
+                    print ("aaaaaa",line.date,data['start_date'])
+                    if str(line.date) <= str(data['start_date']):
                         fact_amounts = 0.0
                         fact_amount = 0.0
                         fact_amountsd =0.0
-                        if self.fiscalyear_id.date_start == self.start_date:
+                        if fiscalyear_id.date_start == data['start_date']:
                             if line.state=='close':
-                                if line.scrap_date <= self.start_date:
+                                if line.scrap_date <= data['start_date']:
                                     first_value = 0.0
                                 else:
                                     first_value = line.value
@@ -228,7 +317,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             else:
                                 #or dep in line.depreciation_line_ids:
                                 #        if dep.move_check == True:
-                                #            if dep.depreciation_date < self.start_date:
+                                #            if dep.depreciation_date < data['start_date']:
                                 #                fact_amountsd += dep.amount
                                 first_value = line.value
                         else:
@@ -237,36 +326,37 @@ class AccountAssetDetailReport(models.TransientModel):
                         first_balance +=first_value
                         first_qty +=1
                         count = 1
-                        sheet.write(rowx, 6, count, data_left)
-                        sheet.write(rowx, 7, first_value,data_right)
-                        sheet.write(rowx, 8, 0,data_right)
+                        sheet.write("G%s"%rowx, count, data_left)
+                        sheet.write("H%s"%rowx, first_value,data_right)
+                        #sheet.write("I%s"%rowx, 0,data_right)
                     else:
                         count = 0
-                        sheet.write(rowx, 6, count, data_left)
-                        sheet.write(rowx, 7, 0,data_right)
-                        sheet.write(rowx, 8, 0,data_right)
-                    asset_cap_id = asset_capital_obj.search( [('asset_id','=',line.id)])
+                        sheet.write("G%s"%rowx, count, data_left)
+                        sheet.write("H%s"%rowx, 0,data_right)
+                        #
+                    #asset_cap_id = asset_capital_obj.search([('asset_id','=',line.id)])
+                    
+                    #print ("dddddd",asset_cap_id)
                     
                     
-                    
-                    
-                    if asset_cap_id:
-                        for cap in asset_capital_obj.browse( asset_cap_id.id):
-                            capital_amount += cap.amount
+                    #if asset_cap_id:
+                    #    for cap in asset_cap_id:
+                    #        capital_amount += cap.amount
                         
-                    else:
-                        if line.date > self.start_date and line.date <= self.end_date:
+                    #else:
+                    if str(line.date) > str(data['start_date']) and str(line.date) <= str(data['end_date']):
                             in_amount +=line.value
                                 
                     income_balance +=capital_amount+in_amount
                     income_qty +=1
-                    
-                    sheet.write(rowx, 9, capital_amount+in_amount,data_right)
+
+                    sheet.write("I%s"%rowx, 1,data_right)
+                    sheet.write("J%s"%rowx, capital_amount+in_amount,data_right)
                     
                     if line.state=='close':
                         act_amounts = 0.0
-                        if self.fiscalyear_id.date_start == self.start_date:
-                            if line.scrap_date <= self.start_date:
+                        if self.fiscalyear_id.date_start == data['start_date']:
+                            if line.scrap_date <= data['start_date']:
                                 for dep in line.depreciation_line_ids:
                                         if dep.depreciation_date<=self.end_date:
                                             act_amounts += dep.amount
@@ -290,17 +380,17 @@ class AccountAssetDetailReport(models.TransientModel):
                             else:
                                 act_amount = 0.0
                     if act_amount == 0.0:
-                        sheet.write(rowx, 10, 0,data_left)
+                        sheet.write("K%s"%rowx, 0,data_left)
                     else:
-                        sheet.write(rowx, 10, 1,data_left)
+                        sheet.write("K%s"%rowx, 1, data_left)
                         expense_qty +=1
                     
-                    sheet.write(rowx, 11, act_amount,data_right)
+                    sheet.write("L%s"%rowx, act_amount,data_right)
                     
                     expense_balance +=act_amount
                     
                     
-                    sheet.write(rowx, 12, 1,data_left)
+                    sheet.write("M%s"%rowx, 1,data_left)
                     total_amount = 0.0
                     if first_value == 0.0:
                         #print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa dsdssssssssssssssss",in_amount,line.name)
@@ -314,25 +404,25 @@ class AccountAssetDetailReport(models.TransientModel):
                     last_balance +=total_amount
                     last_qty +=1
                     #print("aaaaaaaaaaaaaaaaaaaaaaaaaaaadddd",total_amount,line.name)
-                    sheet.write(rowx, 13, total_amount,data_right)
+                    sheet.write("N%s"%rowx, total_amount,data_right)
                     if line.state == 'close':
                         for lis in line.depreciation_line_ids:
                             if lis.move_check == True:
                                 for history in lis.move_id.line_ids:
-                                    if history.date < self.start_date:
+                                    if history.date < data['start_date']:
                                         if lis.move_id.state != 'cancel':
                                             deprecation_amount +=history.debit
                         #print("aaaaadddddddddddddddddddddddd",line.value, deprecation_amount)
                         act_amountds = line.value - deprecation_amount
                         if int(act_amountds) == 0.0:
-                            if line.scrap_date <=self.start_date:
+                            if line.scrap_date <=data['start_date']:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
                                 deprecation_amount = deprecation_amount
                                 deprecation_amounts = deprecation_amount
                         else:
-                            if line.scrap_date <=self.start_date:
+                            if line.scrap_date <=data['start_date']:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
@@ -345,7 +435,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             if lis.move_check == True:
                                 for history in lis.move_id.line_ids:
                                     if lis.move_id.state != 'cancel':
-                                        if history.date < self.start_date:
+                                        if history.date < data['start_date']:
                                             deprecation_amount +=history.debit
                     #print("aaaaaaaaaaaaaaaaaaaa",)
                     if total_amount == 0.0:
@@ -354,16 +444,16 @@ class AccountAssetDetailReport(models.TransientModel):
                     else:
                         deprecation_amount = deprecation_amount
                         in_dep_balance +=deprecation_amount
-                    sheet.write(rowx, 14, deprecation_amount,data_right)                
+                    sheet.write("O%s"%rowx, deprecation_amount,data_right)                
                     for lis in line.depreciation_line_ids:
                        # for history in lis.move_id.line_ids:
                            # if history.move_id.state =='posted':
-                            if lis.depreciation_date >=self.start_date and lis.depreciation_date <=self.end_date:
+                            if str(lis.depreciation_date) >= str(data['start_date']) and str(lis.depreciation_date) <= str(data['end_date']):
                                 month_deprecation_amount +=lis.amount
                                 
                     month_balance +=month_deprecation_amount
                     
-                    sheet.write(rowx, 15, month_deprecation_amount,data_right)
+                    sheet.write("P%s"%rowx, month_deprecation_amount,data_right)
                     if line.state == 'close':
                         write_off = 0.0
                         self._cr.execute("""SELECT
@@ -374,7 +464,7 @@ class AccountAssetDetailReport(models.TransientModel):
                                 on am.id = l.move_id
                             WHERE
                                 l.asset_id = %s
-                                and am.date <= %s GROUP BY l.asset_id """, (line.id,self.end_date))
+                                and am.date <= %s GROUP BY l.asset_id """, (line.id,data['end_date']))
                         res=self._cr.dictfetchall()
                         if res !=[]:
                             for lines in res:
@@ -389,7 +479,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         else:
                             for dep in line.depreciation_line_ids:
                                 if dep.move_check == True:
-                                    if dep.depreciation_date >= self.start_date and dep.depreciation_date<= self.end_date:
+                                    if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<= data['end_date']:
                                             if deprecation_amounts >0.0:
                                                 write_off_amount = month_deprecation_amount + deprecation_amounts
                                             else:
@@ -404,27 +494,27 @@ class AccountAssetDetailReport(models.TransientModel):
                         
                     
                     if line.state == 'close':
-                        if line.scrap_date <= self.start_date:
-                            sheet.write(rowx, 16, 0.0,data_right)
+                        if line.scrap_date <= data['start_date']:
+                            sheet.write("Q%s"%rowx, 0.0,data_right)
                             #drop_balance = 0.0
                         else:
-                            sheet.write(rowx, 16, write_off_amount,data_right)
+                            sheet.write("Q%s"%rowx, write_off_amount,data_right)
                             drop_balance += write_off_amount
                     else:
-                        sheet.write(rowx, 16, write_off_amount,data_right)
+                        sheet.write("Q%s"%rowx, write_off_amount,data_right)
                         drop_balance +=write_off_amount
                     #print("aaaaaaaaaaaaaaaaaaaaaaaa",write_off_amount,deprecation_amounts,month_deprecation_amount)
                     if deprecation_amounts >0.0:
                         last_amount = deprecation_amounts + month_deprecation_amount-write_off_amount
                     else:
                         last_amount = deprecation_amount + month_deprecation_amount-write_off_amount
-                    sheet.write(rowx, 17, last_amount,data_right)
+                    sheet.write("R%s"%rowx, last_amount,data_right)
                     dep_balance +=last_amount
                     if line.state == 'close':
                         bal_amounts = 0.0
                         for dep in line.depreciation_line_ids:
                             if dep.move_check == True:
-                                if dep.depreciation_date >= self.start_date and dep.depreciation_date<=self.end_date:
+                                if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<=data['end_date']:
                                     bal_amounts += dep.amount
                         act_amountd = line.value - bal_amounts
                         if act_amountd == 0.0:
@@ -441,55 +531,48 @@ class AccountAssetDetailReport(models.TransientModel):
                             balance_amount = 0.0
                         else:
                             balance_amount = total_amount-last_amount
-                    sheet.write(rowx, 18, balance_amount,data_right)
+                    sheet.write("S%s"%rowx, balance_amount,data_right)
                     total_balance_amount += balance_amount
                     rowx +=1
                 
-            sheet.write_merge(rowx, rowx, 0, 5, 'НИЙТ',data_right)
-            sheet.write(rowx, 6, first_qty,data_right)
-            sheet.write(rowx, 7, first_balance,data_right)
-            sheet.write(rowx, 8, income_qty,data_right)
-            sheet.write(rowx, 9, income_balance,data_right)
-            sheet.write(rowx, 10, expense_qty,data_right)
-            sheet.write(rowx, 11, expense_balance,data_right)
-            sheet.write(rowx, 12, last_qty,data_right)
-            sheet.write(rowx, 13, last_balance,data_right)
-            sheet.write(rowx, 14, in_dep_balance,data_right)
-            sheet.write(rowx, 15, month_balance,data_right)
-            sheet.write(rowx, 16, drop_balance,data_right)
-            sheet.write(rowx, 17, dep_balance,data_right)
-            sheet.write(rowx, 18, total_balance_amount,data_right)
+            sheet.merge_range("A%s:F%s"%(rowx, rowx), 'НИЙТ',data_right)
+            sheet.write("G%s"%rowx, first_qty,data_right)
+            sheet.write("H%s"%rowx, first_balance,data_right)
+            sheet.write("I%s"%rowx, income_qty,data_right)
+            sheet.write("J%s"%rowx, income_balance,data_right)
+            sheet.write("K%s"%rowx, expense_qty,data_right)
+            sheet.write("L%s"%rowx, expense_balance,data_right)
+            sheet.write("M%s"%rowx, last_qty,data_right)
+            sheet.write("N%s"%rowx, last_balance,data_right)
+            sheet.write("O%s"%rowx, in_dep_balance,data_right)
+            sheet.write("P%s"%rowx, month_balance,data_right)
+            sheet.write("Q%s"%rowx, drop_balance,data_right)
+            sheet.write("R%s"%rowx, dep_balance,data_right)
+            sheet.write("S%s"%rowx, total_balance_amount,data_right)
                 
     
-        sheet.write(rowx + 3, 4, u'Хөтөлсөн нягтлан бодогч....................................../\
-                                                 /', ezxf('font: bold off; align: wrap off, vert centre, horiz left;font: height 180'))
-        sheet.write(rowx + 5, 4, u'Хянасан ерөнхий (ахлах) нягтлан бодогч....................................../\
-                                                 /', ezxf('font: bold off; align: wrap off, vert centre, horiz left;font: height 180'))
+        sheet.write("C%s"%(rowx + 3), u'Хөтөлсөн нягтлан бодогч....................................../\
+                                                 /', data_bold_center)
+        sheet.write("C%s"%(rowx + 5), u'Хянасан ерөнхий (ахлах) нягтлан бодогч....................................../\
+                                                 /', data_bold_center)
     
-        inch = 1000
-        sheet.col(0).width = 1 * inch
-        sheet.col(1).width = 8 * inch
-        sheet.col(2).width = 7 * inch
-        sheet.col(3).width = 3 * inch
-        sheet.col(4).width = 4 * inch
-        sheet.col(5).width = 3 * inch
-        sheet.col(6).width = 2 * inch
-        sheet.col(7).width = 4 * inch
-        sheet.col(8).width = 2 * inch
-        sheet.col(9).width = 4 * inch
-        sheet.col(10).width = 2 * inch
-        sheet.col(11).width = 4 * inch
-        sheet.col(12).width = 2 * inch
-        sheet.col(13).width = 4 * inch
-        sheet.col(14).width = 4 * inch
-        sheet.col(15).width = 4 * inch
-        sheet.col(16).width = 4 * inch
-        sheet.col(17).width = 4 * inch
-        sheet.col(18).width = 4 * inch
-        sheet.col(19).width = 4 * inch
-        sheet.row(3).height = 350
-        sheet.row(8).height = 700
 
-        return {'data':book, 'directory_name':u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан',
-                'attache_name':'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан'}
+
+
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()
+
+
+    
+
+        
+        
+        
+        
+        
+        
+
     

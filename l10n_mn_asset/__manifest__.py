@@ -29,6 +29,7 @@
                 'om_account_accountant',
                 'hr',
                 'l10n_mn_account',
+                'l10n_mn_account_report',
                 ],
     'data': [
             'data/account_journal_data.xml',
