@@ -134,8 +134,8 @@ class EquityChanges(models.TransientModel):
         report_account = self.env['equity.configure.report'].search([('company_id', '=', data['company_id'])])
         if report_account.id !=False:
             report_accounts = self.env['equity.configure.report'].browse(report_account.id)
-        #else:
-        #    raise UserError(u"Өмчийн өөрчлөлтийн тайлангийн тохиргоог хийнэ үү!")
+        else:
+            raise UserError(u"Өмчийн өөрчлөлтийн тайлангийн тохиргоог хийнэ үү!")
         date_to_obj = datetime.strptime(str(pre_two_year.date_to), '%Y-%m-%d')
         number = 1
         sheet.write("A%s"%rowx, number, data_right_bold)
@@ -143,13 +143,13 @@ class EquityChanges(models.TransientModel):
                                                                          date_to_obj.strftime('%m'),
                                                                           date_to_obj.strftime('%d')), data_right_bold)
 
-        #report_account_equite_two = report_accounts.property_statutory_fund_account.id
-        #fund_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite_two),('move_id.date','>=',data['start_date']),('move_id.date','<=',data['end_date']),('move_id.state','=','posted')])
+        report_account_equite_two = report_accounts.property_statutory_fund_account.id
+        fund_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite_two),('move_id.date','>=',data['start_date']),('move_id.date','<=',data['end_date']),('move_id.state','=','posted')])
         fund_amount = 0.0
-        #for fund in fund_move_line_ids:
-        #    fund_amount = fund.debit - fund.credit
-        #if fund_amount < 0.0:
-        #    fund_amount = fund_amount*(-1)
+        for fund in fund_move_line_ids:
+            fund_amount = fund.debit - fund.credit
+        if fund_amount < 0.0:
+            fund_amount = fund_amount*(-1)
             
         sheet.write("C%s"%rowx, fund_amount, data_right_bold)
         sheet.write("D%s"%rowx, 0, data_right_bold)
@@ -158,14 +158,14 @@ class EquityChanges(models.TransientModel):
         sheet.write("G%s"%rowx, 0, data_right_bold)
         sheet.write("H%s"%rowx, 0, data_right_bold)
         sheet.write("I%s"%rowx, 0, data_right_bold)
-        #sheet.write(rowx, Formula("SUM(C8:I8)"), data_right)
+        sheet.write("J%s"%rowx, f"=SUM(C8:I8)", data_right_bold)
 
-        #move_id = account_move_obj.search([('journal_id','=',report_accounts.property_adjustment_journal.id),('date','>=',pre_two_year.date_start),('date','<=',pre_two_year.date_end)])
-        #if move_id !=[]:
-        #    total_amount = 0.0
-        #    for line in move_id:
-        #        for lines in line.line_ids:
-        #            total_amount +=lines.debit
+        move_id = account_move_obj.search([('journal_id','=',report_accounts.property_adjustment_journal.id),('date','>=',pre_two_year.date_start),('date','<=',pre_two_year.date_end)])
+        if move_id !=[]:
+            total_amount = 0.0
+            for line in move_id:
+                for lines in line.line_ids:
+                    total_amount +=lines.debit
         
         sheet.write("A%s"%(rowx+1), number+1, data_right)
         sheet.write("B%s"%(rowx+1), u'НББүртгэлийн бодлогын өөрчлөлтийн нөлөө алдааны залруулга', data_right)
@@ -200,11 +200,11 @@ class EquityChanges(models.TransientModel):
         sheet.write("H%s"%(rowx+3), 0, data_right)
 
         
-        #report_account_equite = report_accounts.property_previous_retained_earnings_account.id
-        #tw_earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',pre_one_year.date_start),('move_id.date','<=',pre_one_year.date_end),('move_id.state','=','posted')])
+        report_account_equite = report_accounts.property_previous_retained_earnings_account.id
+        tw_earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',pre_one_year.date_start),('move_id.date','<=',pre_one_year.date_end),('move_id.state','=','posted')])
         tw_earning_amount = 0.0
-        #for tw_earning in tw_earning_move_line_ids:
-        #    tw_earning_amount = tw_earning.debit - tw_earning.credit
+        for tw_earning in tw_earning_move_line_ids:
+            tw_earning_amount = tw_earning.debit - tw_earning.credit
         if tw_earning_amount < 0.0:
             sheet.write("I%s"%(rowx+3), tw_earning_amount*(-1), data_right)
         else:
@@ -309,11 +309,11 @@ class EquityChanges(models.TransientModel):
         sheet.write("F%s"%(rowx+11), 0, data_right)
         sheet.write("G%s"%(rowx+11), 0, data_right)
         sheet.write("H%s"%(rowx+11), 0, data_right)
-        #report_account_equite = report_accounts.property_period_retained_earnings_account.id
-        #earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',self.date_from),('move_id.date','<=',self.date_to),('move_id.state','=','posted')])
+        report_account_equite = report_accounts.property_period_retained_earnings_account.id
+        earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',self.date_from),('move_id.date','<=',self.date_to),('move_id.state','=','posted')])
         earning_amount = 0.0
-        #for earning in earning_move_line_ids:
-        #    earning_amount = earning.debit - earning.credit
+        for earning in earning_move_line_ids:
+            earning_amount = earning.debit - earning.credit
         if earning_amount < 0.0:
             sheet.write("I%s"%(rowx+11), earning_amount*(-1), data_right)
         else:
