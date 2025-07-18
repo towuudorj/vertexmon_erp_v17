@@ -810,6 +810,68 @@ msgstr "Батлагдсан гүйлгээ"
 msgid "All entries"
 msgstr "Бүх гүйлгээ"
 
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_statutory_fund_account
+msgid "Statutory Fund Account"
+msgstr "Дүрмийн сан"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_treasury_stock_account
+msgid "Treasury Stock Account"
+msgstr "Халаасны хувьцаа"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_additional_capital_account
+msgid "Additional Paid-in Capital Account"
+msgstr "Нэмж төлөгдсөн капитал"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_revaluation_addition_account
+msgid "Revaluation Addition Account"
+msgstr "Дахин үнэлгээний нэмэгдэл"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_foreign_currency_conversion_account
+msgid "Foreign Currency Conversion Inventory Account"
+msgstr "Гадаад валютын хөрвүүлэлтийн нөөц"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_stockholders_equity_remainder_account
+msgid "Stockholders Equity Remainder Account"
+msgstr "Эздийн өмчийн бусад хэсэг"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_previous_retained_earnings_account
+msgid "Previously Retained Earnings Account"
+msgstr "Өмнөх үеийн хуримтлагдсан ашиг"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_dividend_expense_account
+msgid "Dividend Expense Account"
+msgstr "Ногдол ашгийн зардал"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_adjustment_journal
+msgid "Adjustment Journal"
+msgstr "Залруулгын журнал"
+
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_equity_changes_journal
+msgid "Equity Changes Journal"
+msgstr "Өмчид гарсан өөрчлөлтийн журнал"
 
 
 
