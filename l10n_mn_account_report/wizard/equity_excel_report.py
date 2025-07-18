@@ -119,6 +119,7 @@ class EquityChanges(models.TransientModel):
         account_move_line_obj = self.env['account.move.line']
         currency_obj = self.env['res.currency']
         fiscalyear_obj = self.env['account.fiscal.year']
+        f_journal_id = journal_obj.search([('type', '=', 'opening'), ('company_id', '=', data['company_id'])],limit=1)
 
         now_fiscalyear = data['fiscalyear_id']
         nyear = fiscalyear_obj.browse(now_fiscalyear)
@@ -159,8 +160,7 @@ class EquityChanges(models.TransientModel):
         sheet.write("H%s"%rowx, 0, data_right_bold)
         sheet.write("I%s"%rowx, 0, data_right_bold)
         sheet.write("J%s"%rowx, f"=SUM(C8:I8)", data_right_bold)
-
-        move_id = account_move_obj.search([('journal_id','=',report_accounts.property_adjustment_journal.id),('date','>=',pre_two_year.date_start),('date','<=',pre_two_year.date_end)])
+        move_id = account_move_obj.search([('journal_id','=',report_accounts.property_adjustment_journal.id),('date','>=',pre_two_year.date_to),('date','<=',pre_two_year.date_from)])
         if move_id !=[]:
             total_amount = 0.0
             for line in move_id:
@@ -201,7 +201,7 @@ class EquityChanges(models.TransientModel):
 
         
         report_account_equite = report_accounts.property_previous_retained_earnings_account.id
-        tw_earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',pre_one_year.date_start),('move_id.date','<=',pre_one_year.date_end),('move_id.state','=','posted')])
+        tw_earning_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_id.id),('account_id','=',report_account_equite),('move_id.date','>=',data['start_date']),('move_id.date','<=',data['start_date']),('move_id.state','=','posted')])
         tw_earning_amount = 0.0
         for tw_earning in tw_earning_move_line_ids:
             tw_earning_amount = tw_earning.debit - tw_earning.credit
@@ -310,7 +310,7 @@ class EquityChanges(models.TransientModel):
         sheet.write("G%s"%(rowx+11), 0, data_right)
         sheet.write("H%s"%(rowx+11), 0, data_right)
         report_account_equite = report_accounts.property_period_retained_earnings_account.id
-        earning_move_line_ids = account_move_line_obj.search([('account_id','=',report_account_equite),('move_id.date','>=',self.date_from),('move_id.date','<=',self.date_to),('move_id.state','=','posted')])
+        earning_move_line_ids = account_move_line_obj.search([('journal_id','!=',f_journal_id.id),('account_id','=',report_account_equite),('move_id.date','>=',data['start_date']),('move_id.date','<=',data['end_date']),('move_id.state','=','posted')])
         earning_amount = 0.0
         for earning in earning_move_line_ids:
             earning_amount = earning.debit - earning.credit
