@@ -219,7 +219,7 @@ class balance_sheet_excel(models.TransientModel):
                                 pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','=',state)])
                             else:
                                 move_line_ids = account_move_line_obj.search([('journal_id','!=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','in',tuple(account_ids)),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','in',state)])
+                                pre_move_line_ids = account_move_line_obj.search(('journal_id','=',f_journal_ids.id),[('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','in',state)])
                         else:
                             if len(state)==1:
                                 move_line_ids = account_move_line_obj.search([('journal_id','!=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','=',account_ids[0]),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
