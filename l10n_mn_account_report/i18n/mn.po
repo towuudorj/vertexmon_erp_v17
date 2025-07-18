@@ -856,7 +856,7 @@ msgid "Previously Retained Earnings Account"
 msgstr "Өмнөх үеийн хуримтлагдсан ашиг"
 
 #. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report_property_period_retained_earnings_account
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_configure_report__property_period_retained_earnings_account
 msgid "Period Retained Earnings Account"
 msgstr "Тайлант үеийн хуримтлагдсан ашиг"
 
