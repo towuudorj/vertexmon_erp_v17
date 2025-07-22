@@ -365,6 +365,16 @@ class ProductSummaryReport(models.TransientModel):
 
             sheet.merge_range('A%s:K%s'%(rowx,rowx), u'Агуулах: %s'%(wh.name), data_left_bold)
             rowx += 1
+            total_end_qty = 0.0
+            total_in_qty = 0.0
+            total_in_amount = 0.0
+            total_exp_qty = 0.0
+            total_exp_amount = 0.0
+            f_total_balance = 0.0
+            f_total_qty = 0.0
+            total_all_price = 0.0
+            total_sum_price = 0.0
+            
             for line in product_obj.browse(product):
                 num +=1
                 f_balance_qty = 0.0
@@ -490,16 +500,24 @@ class ProductSummaryReport(models.TransientModel):
                 total_all_price +=total_price_unit
                 
                 f_total_qty +=f_balance_qty
+                total_end_qty += end_qty
+                f_total_balance += f_balance_amount
+                total_in_qty += (income_qty + purchase_qty)
+                total_in_amount += (income_amount + purchase_amount)
+                total_exp_qty += expense_qty
+                total_exp_amount += expense_amount
  
                 rowx +=1
 
-            #sheet.merge_range('A%s:E%s'%(rowx, rowx), u'НИЙТ', data_center)
-            #sheet.write('F%s'%(rowx), f_total_qty, data_right)
-            #sheet.write('G%s'%(rowx), total_qty_income_qty, data_right)
-            #sheet.write('H%s'%(rowx), total_qty_exp_qty, data_right)
-            #sheet.write('I%s'%(rowx), total_end_qty, data_right)
-            #sheet.write('J%s'%(rowx), total_sum_price, data_right)
-            #sheet.write('K%s'%(rowx), total_all_price, data_right)
+            sheet.merge_range('A%s:E%s'%(rowx, rowx), u'НИЙТ', data_center)
+            sheet.write('F%s'%(rowx), f_total_qty, data_right)
+            sheet.write('G%s'%(rowx), f_total_balance, data_right)
+            sheet.write('H%s'%(rowx), total_in_qty, data_right)
+            sheet.write('I%s'%(rowx), total_in_amount, data_right)
+            sheet.write('J%s'%(rowx), total_exp_qty, data_right)
+            sheet.write('K%s'%(rowx), total_exp_amount, data_right)
+            sheet.write('L%s'%(rowx), total_end_qty, data_right)
+            sheet.write('M%s'%(rowx), total_all_price, data_right)
             rowx +=1
 
         workbook.close()
