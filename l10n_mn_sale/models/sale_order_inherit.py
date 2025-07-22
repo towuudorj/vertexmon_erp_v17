@@ -387,6 +387,8 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state in ('draft','posted'))
         inv.button_cancel()
+        pickings = self.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+        pickings.action_cancel()
         return self.write({'state': 'cancel'})
 
     def _create_invoices(self, grouped=False, final=False, date=None):
