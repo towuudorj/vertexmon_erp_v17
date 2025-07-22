@@ -445,14 +445,14 @@ class profit_excel_report(models.TransientModel):
                         sum_balance -=ml.credit
                # sheet.write(rowx, 3, sum_balance, data_right)
                
-                sheet.write_formula("C%s"%rowx, sum_prev_balance, data_right)
+                sheet.write("C%s"%rowx, sum_prev_balance, data_right)
                 #for account in account_id:
                 #    print("loggg",account.balance)
                 #    if account.balance < 0.0:
                 #        expense_balance +=(account.balance*(-1))
                 #    else:
                 #        expense_balance +=account.balance
-                sheet.write_formula("D%s"%rowx, sum_balance, data_right)
+                sheet.write("D%s"%rowx, sum_balance, data_right)
                 rowx +=1
                 last_number +=1
         # ТАТВАР ТӨЛӨХИЙН ӨМНӨХ АШИГ
