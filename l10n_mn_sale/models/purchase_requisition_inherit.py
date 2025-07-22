@@ -103,6 +103,8 @@ class PurchaseRequisition(models.Model):
                                                                             ('partner_id','=', lines.supplier_id.id),
                                                                             ('state', '=', 'draft'),
                                                                             ('requisition_id', '=', pr.id)],limit=1)
+                    if lines.product_id.id == False:
+                        raise UserError(_('Бараа сонгоогүй байгаа тул сонгоно уу!'))
                     if not purchase_order:
                         
                         datas = {
@@ -155,8 +157,8 @@ class PurchaseRequisition(models.Model):
                                             'currency_id': pr.currency_id.id,
                                             }
                                 line_ids.create(line_data)
-                #else:
-                #    raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
+                else:
+                    raise UserError(_('Supplier сонгоогүй байгаа тул сонгоно уу!'))
             #else:
             #    raise UserError(_('Үнэ судлуулах хүсэлт үүссэн байгаа тул анхаарна уу!'))
         return True
