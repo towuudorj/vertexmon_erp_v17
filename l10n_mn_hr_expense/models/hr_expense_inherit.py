@@ -186,6 +186,12 @@ class HrExpense(models.Model):
     def _compute_amount_text(self):
         for record in self:
             if record.total_amount:
-                record.amount_text = verbose_format(record.total_amount,record.currency_id)
+                currency_amount = 0
+                for line in record.expense_line_ids:
+                    currency_amount = line.total_amount_currency
+                if currency_amount > 0:
+                    record.amount_text = verbose_format(currency_amount,record.currency_id)
+                else:
+                    record.amount_text = verbose_format(record.total_amount,record.currency_id)
             else:
                 record.amount_text = ''
