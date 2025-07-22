@@ -137,8 +137,8 @@ class stock_picking(models.Model):
                     'anotherAction': another_action,
                 }
             }
-        #if self.purchase_id:
-        #    self.purchase_id.action_create_invoice()
+        if self.purchase_id:
+            self.purchase_id.action_create_invoice()
         #if self.sale_id:
         #    self.sale_id._create_invoices()
         return True
