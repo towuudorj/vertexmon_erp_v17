@@ -168,8 +168,19 @@ class HrExpense(models.Model):
     bank_account_id = fields.Many2one('res.partner.bank',string='Bank account')
     amount_text = fields.Char(string='Amount in words', compute='_compute_amount_text')
     currency_id = fields.Many2one('res.currency', string='Currency')
+    currency_amount = fields.Float(string='Currency amount', compute='_compute_currency_amount')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
 
+
+    def _compute_currency_amount(self):
+        for record in self:
+            currency_amount = 0
+            currency_id = False
+            for line in record.expense_line_ids:
+                currency_amount = line.total_amount_currency
+                currency_id = line.currency_id
+            record.currency_amount = currency_amount
+            record.currency_id = currency_id
 
     @api.depends('total_amount')
     def _compute_amount_text(self):
