@@ -58,6 +58,7 @@ class PurchaseRequisition(models.Model):
     def quotation_start(self):
         for pr in self:
             pr.status = 'quotation_st'
+            pr.name = self.env['ir.sequence'].with_company(self.company_id).next_by_code('purchase.requisition.blanket.order')
     
     def qoutation_end(self):
         for pr in self:
@@ -123,10 +124,12 @@ class PurchaseRequisition(models.Model):
 
                         pr.purchase_ids = [(4,purchase_order_id.id)]
                         line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
+                                                                            ('price_unit', '=', lines.price_unit),
                                                                                   ('product_id', '=', lines.product_id.id)])
                         
                         if lines.supplier_id.id == purchase_order_id.partner_id.id:
                             line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
+                                                                                 ('price_unit', '=', lines.price_unit),
                                                                                   ('product_id', '=', lines.product_id.id)])
                             if not line_ids:
                                 line_data = {
@@ -143,7 +146,8 @@ class PurchaseRequisition(models.Model):
                     else:
                         pr.purchase_ids = [(4,purchase_order.id)]
                         if lines.supplier_id.id == purchase_order.partner_id.id:
-                            line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order.id), 
+                            line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order.id),
+                                                                                ('price_unit', '=', lines.price_unit),
                                                                                   ('product_id', '=', lines.product_id.id)])
                             if not line_ids:
                                 line_data = {
