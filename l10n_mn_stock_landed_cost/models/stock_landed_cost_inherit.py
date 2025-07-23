@@ -14,7 +14,11 @@ class StockLandedCost(models.Model):
     
     def _compute_picking_ids(self):
         for rec in self:
-            rec.picking_ids = rec.po_ids.mapped('picking_ids')
+            for po in rec.po_ids:
+                if po.picking_ids:
+                    for picking in po.picking_ids:
+                        if picking.state in ['done']:
+                            rec.picking_ids |= picking
 
 
 class StockValuationAdjustmentLines(models.Model):
