@@ -257,13 +257,22 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
 
                 if len(f_journal)==1:
-                    self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id
+                    if len(account_id)==1:
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id
                                     from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
                                     am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
                                     and am.journal_id = %s and ml.account_id = %s 
                                     and am.company_id = %s group by ml.partner_id
-                                    """%(fiscal_id.date_from,data['start_date'],partner_id[0],f_journal[0],data['account_id'], data['company_id']))
-                    pre_balance = self._cr.dictfetchall()
+                                    """%(fiscal_id.date_from,data['start_date'],partner_id[0],f_journal[0],account_id[0], data['company_id']))
+                        pre_balance = self._cr.dictfetchall()
+                    else:
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id
+                                        from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
+                                        am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                        and am.journal_id = %s and ml.account_id in %s 
+                                        and am.company_id = %s group by ml.partner_id
+                                        """%(fiscal_id.date_from,data['start_date'],partner_id[0],f_journal[0],tuple(account_id), data['company_id']))
+                        pre_balance = self._cr.dictfetchall()
                 else:
                     if len(account_id)==1:
                         self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id 
