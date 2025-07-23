@@ -10,15 +10,15 @@ class StockLandedCost(models.Model):
     po_ids = fields.Many2many('purchase.order', string=u'Худалдан авалт', domain="[('state','=','purchase')]")
     picking_ids = fields.Many2many(
         'stock.picking', string=u'Орлогын баримт',
-        copy=False, compute='_compute_picking_ids')
+        copy=False)
     
-    def _compute_picking_ids(self):
-        for rec in self:
-            for po in rec.po_ids:
-                if po.picking_ids:
-                    for picking in po.picking_ids:
-                        if picking.state in ['done']:
-                            rec.picking_ids |= picking
+    #def _compute_picking_ids(self):
+    #    for rec in self:
+    #        for po in rec.po_ids:
+    #            if po.picking_ids:
+    #                for picking in po.picking_ids:
+    #                    if picking.state in ['done']:
+    #                        rec.picking_ids |= picking
 
 
 class StockValuationAdjustmentLines(models.Model):
