@@ -28,12 +28,15 @@
                  'l10n_mn_account',
                  'purchase_requisition'
                  ],
-    "data" : [  
+    "data" : [
+              "security/ir.model.access.csv",
               "report/mn_purchase_receipt.xml",
               "report/eng_purchase_receipt.xml",
               "views/purchase_order_inherit_view.xml",
               "views/purchase_requisition_inherit_view.xml",
-              "views/report_view.xml"
+              "views/report_view.xml",
+              "wizard/purchase_expense_report_view.xml",
+              "views/menu_view.xml"
                 ],
     "auto_install": False,
     "installable": True,

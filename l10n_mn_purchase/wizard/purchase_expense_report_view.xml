@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_expense_report_view" model="ir.ui.view">
+            <field name="name">purchase.expense.report</field>
+            <field name="model">purchase.expense.report</field>
+            <field name="arch" type="xml">
+                <form string="Equity changes report" >
+                    <group colspan="4">
+                        <field name="company_id" widget='selection'/>
+                        <field name="category_id"/>
+                        <field name="product_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                   </group>
+                   <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                       <button string="Close" class="oe_link" special="cancel" />
+                   </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_expense_report" model="ir.actions.act_window">
+            <field name="name">Purchase detail report</field>
+            <field name="res_model">purchase.expense.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_expense_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

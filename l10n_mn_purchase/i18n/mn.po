@@ -16,6 +16,44 @@ msgstr ""
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+
+#. module: l10n_mn_purchase
+#: model:ir.ui.menu,name:l10n_mn_purchase.purchase_expense_report_menu
+#: model:ir.actions.act_window,name:l10n_mn_purchase.action_purchase_expense_report
+msgid "Purchase detail report"
+msgstr "Худалдан авалтын дэлгэрэнгүй тайлан"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__date_from
+msgid "Start date"
+msgstr "Эхлэх огноо"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__date_to
+msgid "End date"
+msgstr "Дуусах огноо"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__product_id
+msgid "Product"
+msgstr "Бараа"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__category_id
+msgid "Category"
+msgstr "Ангилал"
+
+
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__buyer_id
@@ -42,6 +80,19 @@ msgstr "Хөнгөлөлт (%)"
 #, python-format
 msgid "Request for Quotation"
 msgstr "Худалдан авалтын хүсэлт"
+
+
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_expense_report_view
+msgid "Export"
+msgstr "Экспорт"
+
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_expense_report_view
+msgid "Close"
+msgstr "Хаах"
 
 
 #. module: l10n_mn_purchase

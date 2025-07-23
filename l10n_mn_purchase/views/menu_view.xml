@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem 
+				id="purchase_expense_report_menu" 
+				name="Purchase detail report" 
+				parent="purchase.purchase_report_main"
+                action="action_purchase_expense_report"
+				sequence="50" />
+        
+
+    </data>
+</odoo>
