@@ -157,7 +157,7 @@ class SaleOrderNewReport(models.TransientModel):
         num = 1
 
         for line in sale_order_line_id:
-            margin = line.price_total - (line.product_id.standard_price * line.product_uom_qty)
+            margin = line.price_total - (line.purchase_price * line.product_uom_qty)
             sheet.write("A%s"%rowx, line.order_id.name, data_left)
             sheet.write("B%s"%rowx, num, data_right)
             sheet.write("C%s"%rowx, "%s"%line.order_id.partner_id.code, data_left)
@@ -170,8 +170,8 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("J%s"%rowx, "%s"%line.product_uom.name, data_right)
             sheet.write("K%s"%rowx, line.price_total, data_right)
             sheet.write("L%s"%rowx, "%s"%line.order_id.date_order, data_right)
-            sheet.write("M%s"%rowx, line.product_id.standard_price, data_right)
-            sheet.write("N%s"%rowx, line.product_id.standard_price*line.product_uom_qty, data_right)
+            sheet.write("M%s"%rowx, line.purchase_price, data_right)
+            sheet.write("N%s"%rowx, line.purchase_price*line.product_uom_qty, data_right)
             sheet.write("O%s"%rowx, margin, data_right)
             sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
 
