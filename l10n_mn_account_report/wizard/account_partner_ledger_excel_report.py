@@ -29,7 +29,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     company_id = fields.Many2one('res.company',u'Компани',required=True,default=lambda self: self.env['res.company']._company_default_get('account.partner.ledger.excel.report'))
     fiscalyear_id = fields.Many2one('account.fiscal.year',u'Санхүүгийн жил',required=True)
     is_transaction = fields.Boolean(u'Үлдэгдэлтэй, гүйлгээтэй эсэх')
-    account_id = fields.Many2one('account.account',u'Данс',required=True,default=_get_account_id)
+    account_id = fields.Many2one('account.account',u'Данс')
     target_move = fields.Selection([('posted',u'Батлагдсан гүйлгээ'),
                                     ('all',u'Бүх гүйлгээ')],u'Зорилтот гүйлгээ',required=True,default='posted')
     result_selection = fields.Selection([('customer',u'Авлагын данс'),
@@ -182,10 +182,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         if data['account_id']:
             account_id = data['account_id']
         else:
-            account_id = account_obj.search( [('account_type','in',account_type)])
+            account_id = account_obj.search( [('account_type','in',account_type)]).ids
             
-        if self.partner_id:
-            partner_id.append(self.partner_id.id)
+        if data['partner_id']:
+            partner_id = data['partner_id']
+                        
         else:
             if self.is_transaction:
                 self._cr.execute(""" select aml.partner_id,rp.name, aml.debit,aml.credit as amount from account_move as am left join
@@ -201,15 +202,27 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             partner_id.append(li['partner_id'])
                
             else:
-                self._cr.execute(""" select aml.partner_id,rp.name from account_move as am left join
-                            account_move_line as aml on aml.move_id = am.id left join 
-                            res_partner as rp on rp.id=aml.partner_id where aml.partner_id is not null and
-                            am.date >='%s' and am.date <='%s' and aml.account_id=%s and 
-                                am.state = 'posted' and am.company_id = %s 
-                            group by aml.partner_id,rp.name order by rp.name asc"""%
-                            (fiscal_id.date_from,data['end_date'],account_id, data['company_id']))
-                parts = self._cr.dictfetchall()
-                partner_id = [p['partner_id'] for p in parts]
+                if len(account_id)==1:
+                    self._cr.execute(""" select aml.partner_id,rp.name from account_move as am left join
+                                account_move_line as aml on aml.move_id = am.id left join 
+                                res_partner as rp on rp.id=aml.partner_id where aml.partner_id is not null and
+                                am.date >='%s' and am.date <='%s' and aml.account_id=%s and 
+                                    am.state = 'posted' and am.company_id = %s 
+                                group by aml.partner_id,rp.name order by rp.name asc"""%
+                                (fiscal_id.date_from,data['end_date'],account_id, data['company_id']))
+                    parts = self._cr.dictfetchall()
+                    partner_id = [p['partner_id'] for p in parts]
+                else:
+                    self._cr.execute(""" select aml.partner_id,rp.name from account_move as am left join
+                                account_move_line as aml on aml.move_id = am.id left join 
+                                res_partner as rp on rp.id=aml.partner_id where aml.partner_id is not null and
+                                am.date >='%s' and am.date <='%s' and aml.account_id in %s and 
+                                    am.state = 'posted' and am.company_id = %s 
+                                group by aml.partner_id,rp.name order by rp.name asc"""%
+                                (fiscal_id.date_from,data['end_date'],tuple(account_id), data['company_id']))
+                    parts = self._cr.dictfetchall()
+                    for p in parts:
+                        partner_id = [p['partner_id'] for p in parts]
         
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), head)
         sheet.merge_range("A2:J2", u'Харилцагчийн дэвтэр', head)
@@ -240,7 +253,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 move_ids = []
                 for mv in move:
                     move_ids.append(mv.id)
-                account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','=',data['account_id']),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                if len(account_id)==1:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                else:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+
                 if len(f_journal)==1:
                     self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id
                                     from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
@@ -267,18 +284,33 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 move_ids = []
                 for mv in move:
                     move_ids.append(mv.id)
-                account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',data['account_id']),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                if len(account_id)==1:
+                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                else:
+                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+
                 if len(f_journal)==1:
                     if len(partner_id) >1:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id from account_move_line as ml 
-                                        left join account_move as am on am.id=ml.move_id where 
-                                        am.date>= '%s' and am.date<='%s' and ml.partner_id in %s and am.state='posted'
-                                        and am.journal_id =  %s and ml.account_id = %s and
-                                        am.company_id = %s group by ml.partner_id, ml.currency_id
-                                        """%(fiscal_id.date_from,data['start_date'],
-                                                          tuple(partner_id),
-                                                         f_journal[0],data['account_id'], data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
+                        if len(account_id)>1:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            left join account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date<='%s' and ml.partner_id in %s and am.state='posted'
+                                            and am.journal_id =  %s and ml.account_id in %s and
+                                            am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            tuple(partner_id),
+                                                            f_journal[0],tuple(account_id), data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
+                        else:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            left join account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date<='%s' and ml.partner_id in %s and am.state='posted'
+                                            and am.journal_id =  %s and ml.account_id = %s and
+                                            am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            tuple(partner_id),
+                                                            f_journal[0],data['account_id'], data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
                     else:
                         self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id from account_move_line as ml 
                                         left join account_move as am on am.id=ml.move_id where 
@@ -317,30 +349,59 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 move_ids = []
                 for mv in move:
                     move_ids.append(mv.id)
-                account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','=',data['account_id']),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                if len(account_id)==1:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                else:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+
+                
                 if move_id:
                     if len(f_journal)==1:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id from account_move_line as ml 
+                        if len(account_id)==1:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                                left join account_move as am am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                            and ml.move_id in %s and ml.journal_id = %s and ml.account_id = %s and
+                                            am.company_id = %s 
+                                            group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            partner_id[0],tuple(move_id),
+                                                            f_journal[0],account_id[0], data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
+                        else:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
                                             left join account_move as am am.id=ml.move_id where 
                                         am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
                                         and ml.move_id in %s and ml.journal_id = %s and ml.account_id = %s and
                                         am.company_id = %s 
-                                        group by ml.partner_id, ml.currency_id
+                                        group by ml.partner_id, ml.currency_id, ml.account_id
                                         """%(fiscal_id.date_from,data['start_date'],
                                                           partner_id[0],tuple(move_id),
-                                                          f_journal[0],data['account_id'], data['company_id']))
+                                                          f_journal[0],tuple(account_id), data['company_id']))
                         pre_balance = self._cr.dictfetchall()
                     else:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id from account_move_line as ml 
-                                        left join account_move as am on am.id=ml.move_id where 
-                                        am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
-                                        and ml.move_id in %s and ml.journal_id in %s and ml.account_id = %s and
-                                        am.company_id = %s
-                                        group by ml.partner_id, ml.currency_id
-                                        """%(fiscal_id.date_from,data['start_date'],
-                                                          partner_id[0],tuple(move_id),
-                                                          tuple(f_journal),data['account_id'], data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
+                        if len(account_id)==1:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            left join account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                            and ml.move_id in %s and ml.journal_id in %s and ml.account_id = %s and
+                                            am.company_id = %s
+                                            group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            partner_id[0],tuple(move_id),
+                                                            tuple(f_journal),account_id[0], data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
+                        else:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            left join account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                            and ml.move_id in %s and ml.journal_id in %s and ml.account_id in %s and
+                                            am.company_id = %s
+                                            group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            partner_id[0],tuple(move_id),
+                                                            tuple(f_journal),tuple(account_id), data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
             else:
                 if len(move_state)==1:
                     move_id = move_obj.search( [('state','=',move_state[0]),('date','>=',date_start),('date','<=',data['start_date']),('journal_id','in',tuple(journal_ids))])
@@ -353,28 +414,54 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 move_ids = []
                 for mv in move:
                     move_ids.append(mv.id)
-                account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',data['account_id']),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                if len(account_id)==1:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                else:
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+
                 if move_id: 
                     if len(f_journal)==1:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id from account_move_line as ml 
-                                        account_move as am on am.id=ml.move_id where 
-                                        am.date>= '%s' and am.date <='%s' and ml.account_id = %s and ml.partner_id in %s 
-                                        and ml.move_id in %s and ml.journal_id = %s and ml.account_id = %s and am.state='posted' 
-                                        and am.company_id = %s group by ml.partner_id, ml.currency_id
-                                        """%(fiscal_id.date_from,data['start_date'],
-                                                          account_id,tuple(partner_id),tuple(move_id),
-                                                          f_journal[0],data['account_id'], data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
+                        if len(account_id)==1:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.account_id = %s and ml.partner_id in %s 
+                                            and ml.move_id in %s and ml.journal_id = %s and ml.account_id = %s and am.state='posted' 
+                                            and am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            account_id,tuple(partner_id),tuple(move_id),
+                                                            f_journal[0],account_id[0], data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
+                        else:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
+                                            account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.account_id = %s and ml.partner_id in %s 
+                                            and ml.move_id in %s and ml.journal_id = %s and ml.account_id = %s and am.state='posted' 
+                                            and am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            account_id,tuple(partner_id),tuple(move_id),
+                                                            f_journal[0],tuple(account_id), data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
                     else:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id from account_move_line as ml left join
+                        if len(account_id)==1:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml left join
+                                            account_move as am on am.id=ml.move_id where 
+                                            am.date>= '%s' and am.date <='%s' and ml.account_id = %s and ml.partner_id in %s 
+                                            and ml.move_id in %s and ml.journal_id in %s and ml.account_id = %s and am.state='posted' 
+                                            and am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
+                                            """%(fiscal_id.date_from,data['start_date'],
+                                                            account_id,tuple(partner_id),tuple(move_id),
+                                                            tuple(f_journal),account_id[0], data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
+                        else:
+                            self._cr.execute("""select sum(ml.debit-ml.credit) as balance, ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml left join
                                         account_move as am on am.id=ml.move_id where 
                                         am.date>= '%s' and am.date <='%s' and ml.account_id = %s and ml.partner_id in %s 
-                                        and ml.move_id in %s and ml.journal_id in %s and ml.account_id = %s and am.state='posted' 
-                                        and am.company_id = %s group by ml.partner_id, ml.currency_id
+                                        and ml.move_id in %s and ml.journal_id in %s and ml.account_id in %s and am.state='posted' 
+                                        and am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
                                         """%(fiscal_id.date_from,data['start_date'],
                                                           account_id,tuple(partner_id),tuple(move_id),
-                                                          tuple(f_journal),data['account_id'], data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
+                                                          tuple(f_journal),tuple(account_id), data['company_id']))
+                            pre_balance = self._cr.dictfetchall()
         
             
         
@@ -407,141 +494,150 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 sheet.merge_range("K%s:K%s"%(rowx, rowx+1), u'Валютаарх дүн', data_bold_center)
             rowx = 6
             for line in partner_obj.browse(partner_id):
-                if data['is_extra'] == True:
-                    if pre_balance !=[] and pre_balance !=False or len(account_move_line_id)>=1:
-                        pr_balance = 0.0
-                        balance = 0.0
-                        for li in pre_balance:
-                            if li['partner_id'] == line.id:
-                                balance += li['balance']
-                                pr_balance = li['balance']
-                        
-                        sheet.merge_range("A%s:B%s"%(rowx, rowx), u'%s'%(line.name),data_left)
-                        sheet.write("C%s"%rowx, u'%s'%(line.vat),data_left)
+                for acc in account_obj.browse(account_id):
+                    if data['is_extra'] == True:
+                        if pre_balance !=[] and pre_balance !=False or len(account_move_line_id)>=1:
+                            pr_balance = 0.0
+                            balance = 0.0
+                            for li in pre_balance:
+                                if li['partner_id'] == line.id and li['account_id'] == acc.id:
+                                    balance += li['balance']
+                                    pr_balance = li['balance']
+                            
+                            
+                            sum_debit = 0.0
+                            sum_credit = 0.0
+                            
+                            
+                            
+                            currency_balance = 0
+                            currency_sum_debit = 0
+                            currency_sum_credit = 0
+                            total_currency_balance = 0
+                            sheet.merge_range("A%s:B%s"%(rowx, rowx), u'%s'%(line.name),data_left)
+                            sheet.write("C%s"%rowx, u'%s'%(line.vat),data_left)
+                            sheet.write("D%s"%rowx, u'%s'%(acc.code),data_left)
+                            sheet.write("E%s"%rowx, u'Эхний үлдэгдэл',data_left)
+                            sheet.write("F%s"%rowx, balance, data_left)
+                            rowx +=1
+                            for move in account_move_line_id:
+                                ref = ''
+                                if line.id == move.partner_id.id and move.account_id.id == acc.id:
+                                    sheet.write("A%s"%rowx, u'%s'%move.date, data_center)
+                                    sheet.write("B%s"%rowx, u'%s'%move.journal_id.name,data_center)
+                                    invoice_id = invoice_obj.search([('id','=',move.move_id.id),('state','=','posted')])
+                                    if invoice_id:
+                                        invoice = invoice_id
+                                        ref = invoice.invoice_origin
+                                    sheet.write("C%s"%rowx, u'%s,%s,%s'%(move.name,move.ref,ref),data_center)
+                                    sheet.write("D%s"%rowx, u'%s'%(move.account_id.code),data_center)
+                                    sheet.write("E%s"%rowx, u'%s'%(move.currency_id.name),data_center)
+                                    
+                                    sheet.write("F%s"%rowx, move.debit,data_right)
+                                    if move.currency_id.id !=move.company_id.currency_id.id:
+                                        sheet.write("G%s"%rowx, move.amount_currency,data_right)
+                                    else:
+                                        sheet.write("G%s"%rowx, 0,data_right)
+                                    
+                                    sheet.write("H%s"%rowx, move.credit,data_right)
+                                    if move.currency_id.id !=move.company_id.currency_id.id:
+                                        sheet.write("I%s"%rowx, move.amount_currency,data_right)
+                                    else:
+                                        sheet.write("I%s"%rowx, 0,data_right)
+                                
+                                    if move.debit >0.0:
+                                        balance = balance+move.debit
+                                        sum_debit +=move.debit
+                                        if move.currency_id.id !=move.company_id.currency_id.id:
+                                            currency_balance += move.amount_currency
+                                            currency_sum_debit += move.amount_currency
+                                    else:
+                                        balance = balance-move.credit
+                                        sum_credit +=move.credit
+                                        if move.currency_id.id !=move.company_id.currency_id.id:
+                                            currency_balance -= move.amount_currency
+                                            currency_sum_credit += move.amount_currency
+                                    sheet.write("J%s"%rowx, balance,data_right)
+                                    sheet.write("K%s"%rowx, currency_balance,data_right)
+                                    rowx +=1
+                                    total_currency_balance += currency_balance
+
+                            
+                            sheet.merge_range("A%s:E%s"%(rowx, rowx), u'Нийт',data_right_bold)
+                            sheet.write("F%s"%rowx, sum_debit,data_right_bold)
+                            sheet.write("G%s"%rowx, currency_sum_debit,data_right_bold)
+                            sheet.write("H%s"%rowx, sum_credit, data_right_bold)
+                            sheet.write("I%s"%rowx, currency_sum_credit,data_right_bold)
+                            sheet.write("J%s"%rowx, balance, data_right_bold)
+                            sheet.write("K%s"%rowx, total_currency_balance,data_right_bold)
+                            rowx +=2
+                    else:
+                        currency_obj = self.env['res.currency']
                         sum_debit = 0.0
                         sum_credit = 0.0
-                        
-                        sheet.merge_range("D%s:E%s"%(rowx, rowx), u'Эхний үлдэгдэл',data_left)
-                        sheet.write("F%s"%rowx, balance, data_left)
-                        rowx +=1
+                        pr_balance = 0.0
+                        balance = 0.0
                         currency_balance = 0
                         currency_sum_debit = 0
                         currency_sum_credit = 0
-                        total_currency_balance = 0
-                        for move in account_move_line_id:
-                            ref = ''
-                            if line.id == move.partner_id.id:
-                                sheet.write("A%s"%rowx, u'%s'%move.date, data_center)
-                                sheet.write("B%s"%rowx, u'%s'%move.journal_id.name,data_center)
-                                invoice_id = invoice_obj.search([('id','=',move.move_id.id),('state','=','posted')])
-                                if invoice_id:
-                                    invoice = invoice_id
-                                    ref = invoice.invoice_origin
-                                sheet.write("C%s"%rowx, u'%s,%s,%s'%(move.name,move.ref,ref),data_center)
-                                sheet.write("D%s"%rowx, u'%s'%(move.account_id.code),data_center)
-                                sheet.write("E%s"%rowx, u'%s'%(move.currency_id.name),data_center)
-                                
-                                sheet.write("F%s"%rowx, move.debit,data_right)
-                                if move.currency_id.id !=move.company_id.currency_id.id:
-                                    sheet.write("G%s"%rowx, move.amount_currency,data_right)
-                                else:
-                                    sheet.write("G%s"%rowx, 0,data_right)
-                                
-                                sheet.write("H%s"%rowx, move.credit,data_right)
-                                if move.currency_id.id !=move.company_id.currency_id.id:
-                                    sheet.write("I%s"%rowx, move.amount_currency,data_right)
-                                else:
-                                    sheet.write("I%s"%rowx, 0,data_right)
-                             
-                                if move.debit >0.0:
-                                    balance = balance+move.debit
-                                    sum_debit +=move.debit
-                                    if move.currency_id.id !=move.company_id.currency_id.id:
-                                        currency_balance += move.amount_currency
-                                        currency_sum_debit += move.amount_currency
-                                else:
-                                    balance = balance-move.credit
-                                    sum_credit +=move.credit
-                                    if move.currency_id.id !=move.company_id.currency_id.id:
-                                        currency_balance -= move.amount_currency
-                                        currency_sum_credit += move.amount_currency
-                                sheet.write("J%s"%rowx, balance,data_right)
-                                sheet.write("K%s"%rowx, currency_balance,data_right)
-                                rowx +=1
-                                total_currency_balance += currency_balance
+                        currency = False
+                        if account_move_line_id:
+                            
+                            
 
-                        
-                        sheet.merge_range("A%s:E%s"%(rowx, rowx), u'Нийт',data_right_bold)
-                        sheet.write("F%s"%rowx, sum_debit,data_right_bold)
-                        sheet.write("G%s"%rowx, currency_sum_debit,data_right_bold)
-                        sheet.write("H%s"%rowx, sum_credit, data_right_bold)
-                        sheet.write("I%s"%rowx, currency_sum_credit,data_right_bold)
-                        sheet.write("J%s"%rowx, balance, data_right_bold)
-                        sheet.write("K%s"%rowx, total_currency_balance,data_right_bold)
-                        rowx +=2
-                else:
-                    currency_obj = self.env['res.currency']
-                    sum_debit = 0.0
-                    sum_credit = 0.0
-                    pr_balance = 0.0
-                    balance = 0.0
-                    currency_balance = 0
-                    currency_sum_debit = 0
-                    currency_sum_credit = 0
-                    currency = False
-                    if account_move_line_id:
-
-                        sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
-                        sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
-                        if pre_balance !=[] and pre_balance !=False:
-                            for li in pre_balance:
-                                if li['partner_id'] == line.id:
-                                    balance += li['balance']
-                                    currency = currency_obj.browse(li['currency_id']).name
-                                    pr_balance = li['balance']
-                        account = account_obj.browse(data['account_id'])
-                        sheet.write("C%s"%rowx, u'%s'%(account.code),data_left)
-                        sheet.write("D%s"%rowx, balance,data_right)
-                        sheet.write("E%s"%rowx, currency or 'MNT',data_right)
-                        for move in account_move_line_id:
-                            if move.partner_id.id == line.id:
-                                if move.debit >0.0:
-                                    balance = balance+move.debit
-                                    sum_debit +=move.debit
-                                    if move.currency_id.id !=move.company_id.currency_id.id:
-                                        currency_balance += move.amount_currency
-                                        currency_sum_debit += move.amount_currency
-                                else:
-                                    balance = balance-move.credit
-                                    sum_credit +=move.credit
-                                    if move.currency_id.id !=move.company_id.currency_id.id:
-                                        currency_balance -= move.amount_currency
-                                        currency_sum_credit += move.amount_currency
-                                    
-                        sheet.write("F%s"%rowx, sum_debit,data_right)
-                        sheet.write("G%s"%rowx, currency_sum_debit,data_right)
-                        sheet.write("H%s"%rowx, sum_credit,data_right)
-                        sheet.write("I%s"%rowx, currency_sum_credit,data_right)
-                        sheet.write("J%s"%rowx, balance, data_right)
-                        sheet.write("K%s"%rowx, currency_balance, data_right)
-                        total_amount +=balance
-                        rowx +=1   
-                    else:
-                        if pre_balance !=[] and pre_balance !=False:
-                            for li in pre_balance:
-                                if li['partner_id'] == line.id:
-                                    balance = li['balance']
-                                    pr_balance = li['balance']
-                            account = account_obj.browse(data['account_id'])
-                            sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
-                            sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
-                            sheet.write("C%s"%rowx, u'%s %s'%(account.code,account.name),data_left)
-                            sheet.write("D%s"%rowx, balance,data_right)
-                            sheet.write("E%s"%rowx, 0.0,data_right)
-                            sheet.write("F%s"%rowx, 0.0,data_right)
-                            sheet.write("G%s"%rowx, balance, data_right)
-                            total_amount +=balance
-                            rowx +=1 
+                            if pre_balance !=[] and pre_balance !=False:
+                                for li in pre_balance:
+                                    if li['partner_id'] == line.id and li['account_id'] == acc.id:
+                                        balance += li['balance']
+                                        currency = currency_obj.browse(li['currency_id']).name
+                                        pr_balance = li['balance']
+                            
+                            for move in account_move_line_id:
+                                if move.account_id.id == acc.id:
+                                    if move.partner_id.id == line.id:
+                                        if move.debit >0.0:
+                                            balance = balance+move.debit
+                                            sum_debit +=move.debit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance += move.amount_currency
+                                                currency_sum_debit += move.amount_currency
+                                        else:
+                                            balance = balance-move.credit
+                                            sum_credit +=move.credit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance -= move.amount_currency
+                                                currency_sum_credit += move.amount_currency
+                            if balance == 0.0 and sum_debit == 0.0 and sum_credit == 0.0:
+                                continue
+                            else:
+                                sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
+                                sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
+                                sheet.write("C%s"%rowx, u'%s'%(acc.code),data_left)
+                                sheet.write("D%s"%rowx, balance,data_right)
+                                sheet.write("E%s"%rowx, currency or 'MNT',data_right)
+                                sheet.write("F%s"%rowx, sum_debit,data_right)
+                                sheet.write("G%s"%rowx, currency_sum_debit,data_right)
+                                sheet.write("H%s"%rowx, sum_credit,data_right)
+                                sheet.write("I%s"%rowx, currency_sum_credit,data_right)
+                                sheet.write("J%s"%rowx, balance, data_right)
+                                sheet.write("K%s"%rowx, currency_balance, data_right)
+                                total_amount +=balance
+                                rowx +=1   
+                        else:
+                            if pre_balance !=[] and pre_balance !=False:
+                                for li in pre_balance:
+                                    if li['partner_id'] == line.id and li['account_id'] == account_id:
+                                        balance = li['balance']
+                                        pr_balance = li['balance']
+                                sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
+                                sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
+                                sheet.write("C%s"%rowx, u'%s %s'%(acc.code,acc.name),data_left)
+                                sheet.write("D%s"%rowx, balance,data_right)
+                                sheet.write("E%s"%rowx, 0.0,data_right)
+                                sheet.write("F%s"%rowx, 0.0,data_right)
+                                sheet.write("G%s"%rowx, balance, data_right)
+                                total_amount +=balance
+                                rowx +=1 
         sheet.merge_range("A%s:C%s"%(rowx, rowx), u'Нийт',data_bold_left)
         sheet.write("F%s"%rowx, total_amount,data_right_bold)
         rowx +=2
