@@ -180,13 +180,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         if self.target_move == 'posted':
             move_state = ['posted']
         if data['account_id']:
-            account_id = data['account_id']
+            account_id = [data['account_id']]
         else:
             account_id = account_obj.search( [('account_type','in',account_type)]).ids
-            
         if data['partner_id']:
-            partner_id = data['partner_id']
-                        
+            partner_id = [data['partner_id']]                        
         else:
             if self.is_transaction:
                 self._cr.execute(""" select aml.partner_id,rp.name, aml.debit,aml.credit as amount from account_move as am left join
@@ -267,15 +265,26 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                     """%(fiscal_id.date_from,data['start_date'],partner_id[0],f_journal[0],data['account_id'], data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
-                    self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id 
-                                    from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
-                                    am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
-                                    and am.journal_id in %s and ml.account_id = %s and 
-                                    am.company_id = %s group by ml.partner_id, ml.currency_id
-                                    """%(fiscal_id.date_from,data['start_date'],
-                                                      partner_id[0],
-                                                      tuple(f_journal),data['account_id'], data['company_id']))
-                    pre_balance = self._cr.dictfetchall()
+                    if len(account_id)==1:
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id 
+                                        from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
+                                        am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                        and am.journal_id in %s and ml.account_id = %s and 
+                                        am.company_id = %s group by ml.partner_id, ml.currency_id
+                                        """%(fiscal_id.date_from,data['start_date'],
+                                                        partner_id[0],
+                                                        tuple(f_journal),account_id[0], data['company_id']))
+                        pre_balance = self._cr.dictfetchall()
+                    else:
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.currency_id 
+                                        from account_move_line as ml left join account_move as am on am.id=ml.move_id where 
+                                        am.date>= '%s' and am.date <='%s' and ml.partner_id = %s and am.state='posted'
+                                        and am.journal_id in %s and ml.account_id in %s and 
+                                        am.company_id = %s group by ml.partner_id, ml.currency_id
+                                        """%(fiscal_id.date_from,data['start_date'],
+                                                        partner_id[0],
+                                                        tuple(f_journal),tuple(account_id), data['company_id']))
+                        pre_balance = self._cr.dictfetchall()
             else:
                 if len(move_state)==1:
                     move = move_obj.search( [('state','=',move_state[0]),('date','>=',date_start),('date','<=',data['end_date']),('journal_id','in',tuple(journal_ids))])
