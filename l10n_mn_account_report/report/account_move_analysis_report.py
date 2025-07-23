@@ -143,7 +143,7 @@ class AccountMoveAnalysis(models.TransientModel):
         for fj in f_journals:
             f_journal.append(fj.id)
         journal = []
-        for jour in journal_ids:
+        for jour in journals:
             journal.append(jour.id)
 
         account_type = account_type_obj.search([('type','!=','view')])
