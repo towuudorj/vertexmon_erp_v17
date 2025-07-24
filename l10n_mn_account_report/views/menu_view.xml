@@ -76,7 +76,12 @@
 				parent="account.menu_finance_reports" 
 				sequence="60" />
 		
-		
+		<menuitem 
+				id="mn_multi_account_balance_sheet_report" 
+				name="Санхүү байдал нэгтгэл тайлан" 
+				parent="mongolian_account_reports"
+				action="action_multi_company_balance_sheet"
+				sequence="01" />
 		
 		<menuitem 
 				id="mn_account_balance_sheet_report" 

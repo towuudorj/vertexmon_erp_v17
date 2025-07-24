@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="multi_company_balance_sheet_view" model="ir.ui.view">
+            <field name="name">multi.company.balance.sheet</field>
+            <field name="model">multi.company.balance.sheet</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group colspan="4">
+                        <field name="company_id" widget='selection'/>
+                        <field name="fiscalyear_id" widget='selection'/>
+                        <field name="target_move" />
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_multi_company_balance_sheet" model="ir.actions.act_window">
+            <field name="name">Balance sheet excel</field>
+            <field name="res_model">multi.company.balance.sheet</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="multi_company_balance_sheet_view"/>
+            <field name="target">new</field>
+        </record>
+        
+
+    </data>
+</odoo>

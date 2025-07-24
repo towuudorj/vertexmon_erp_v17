@@ -330,23 +330,23 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                                             f_journal[0],data['account_id'], data['company_id']))
                             pre_balance = self._cr.dictfetchall()
                     else:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id from account_move_line as ml 
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.currency_id, ml.partner_id, ml.account_id from account_move_line as ml 
                                         left join account_move as am on am.id=ml.move_id where 
                                         am.date>= '%s' and am.date<='%s' and am.state='posted'
                                         and am.journal_id =  %s and ml.account_id = %s and
-                                        am.company_id = %s group by ml.partner_id, ml.currency_id
+                                        am.company_id = %s group by ml.partner_id, ml.currency_id, ml.account_id
                                         """%(fiscal_id.date_from,data['start_date'],
                                                         
                                                          f_journal[0],data['account_id'], data['company_id']))
                         pre_balance = self._cr.dictfetchall()
                 else:
                     if len(partner_id) > 1:
-                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id from account_move_line as ml 
+                        self._cr.execute("""select sum(ml.debit-ml.credit) as balance,ml.partner_id, ml.account_id, ml.currency_id from account_move_line as ml 
                                         left join account_move as am on am.id=ml.move_id where 
                                         am.date>= '%s' and am.date<='%s' and ml.partner_id in %s and am.state='posted'
                                         and am.journal_id in  %s and ml.account_id = %s and
                                         am.company_id = %s 
-                                        group by ml.partner_id
+                                        group by ml.partner_id, ml.account_id, ml.currency_id
                                         """%(fiscal_id.date_from,data['start_date'],
                                                           tuple(partner_id),
                                                          tuple(f_journal),data['account_id'], data['company_id']))

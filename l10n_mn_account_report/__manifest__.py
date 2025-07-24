@@ -54,6 +54,7 @@
             'views/equity_configure_view_report.xml',
             'views/account_account_inherit_view.xml',
             'wizard/account_partner_ledger_excel_report.xml',
+            'views/multi_company_balance_sheet_view.xml',
             'views/menu_view.xml',
             
 
