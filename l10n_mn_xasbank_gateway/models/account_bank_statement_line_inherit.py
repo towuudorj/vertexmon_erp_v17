@@ -61,7 +61,7 @@ class AccountBankStatement(models.Model):
                          
 
                          if line.journal_id.is_income == True and amount_value > 0:
-                            line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
+                            line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('amount','=',amount_value),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
                             currency_id = currency_obj.search([('name','=',dline['CURRENCY'])])
                             partner_bank_id = partner_bank_obj.search([('acc_number','=',dline['TRNACNO'])],limit=1)
                             if not line_id:
@@ -76,7 +76,7 @@ class AccountBankStatement(models.Model):
                                                     })
                                 xacbank_config.requestId = int(request_id) + 1 
                          elif line.journal_id.is_income == False and amount_value != 0:
-                            line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
+                            line_id = st_line_obj.search([('branchId','=',dline['TRN_REF_NO']),('amount','=',amount_value),('date','=',str(dline['VALUEDATE'])),('payment_ref','=',dline['DESCRIPTION']),('statement_id','=',line.id)])
                             currency_id = currency_obj.search([('name','=',dline['CURRENCY'])])
                             partner_bank_id = partner_bank_obj.search([('acc_number','=',dline['TRNACNO'])],limit=1)
                             if not line_id:
