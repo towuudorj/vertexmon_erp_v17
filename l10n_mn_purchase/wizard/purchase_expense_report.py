@@ -94,6 +94,7 @@ class PurchaseExpenseReport(models.TransientModel):
         sheet.write("Y1", u'Нийт зардал', header_txt)
         sheet.write("Z1", u'Нийт зардал+өртөг', header_txt)
         sheet.write("AA1", u'Тээврийн компани', header_txt)
+        sheet.write("AB1", u'Хүргэсэн тоо', header_txt)
         
 
         purchase_orders = self.env['purchase.order'].search([
@@ -149,9 +150,9 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("H%s"%rowx, sales_partner.name or '', text_right)
             sheet.write("I%s"%rowx, product.default_code or '', text_right)
             sheet.write("J%s"%rowx, product.name or '', text_right)
-            sheet.write("K%s"%rowx, purchase_data['qty_received'], text_right)
+            sheet.write("K%s"%rowx, purchase_data['product_qty'], text_right)
             sheet.write("L%s"%rowx, purchase_data['price_unit'], text_right)
-            total_price = purchase_data['qty_received'] * purchase_data['price_unit']
+            total_price = purchase_data['product_qty'] * purchase_data['price_unit']
             sheet.write("M%s"%rowx, total_price, text_right)
             sheet.write("N%s"%rowx, currency.name or '', text_right)
             sheet.write("O%s"%rowx, purchase_data['currency_rate'], text_right)
@@ -176,7 +177,6 @@ class PurchaseExpenseReport(models.TransientModel):
                                 group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id
                             """%(purchase_data['order_id'], product.id, data['company_id']))
                 expense_data_ids = self._cr.dictfetchall()
-                print ("logggg:,", expense_data_ids,purchase_data['order_id'],product.id)
                 stock_line_obj = self.env['stock.landed.cost.lines']
                 for exp in expense_data_ids:
                     st_line = stock_line_obj.browse(exp['cost_line_id'])
@@ -201,6 +201,7 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("Y%s"%rowx,  total_cost, text_right)
             sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
             sheet.write("AA%s"%rowx, '', text_right)
+            sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
 
             
             rowx +=1
