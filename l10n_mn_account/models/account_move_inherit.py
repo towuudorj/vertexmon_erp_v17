@@ -193,13 +193,13 @@ class AccountMove(models.Model):
 
         # Don't change anything on moves used to cancel another ones.
         if self._context.get('move_reverse_cancel'):
-            return super()._post(soft)
+            return super()._post(soft=soft)
         ## Create additional COGS lines for customer invoices.
         if self.move_type in ('out_invoice', 'out_refund'):
             self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
         # Post entries.
-        posted = super()._post(soft)
+        posted = super()._post(soft=soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         if not self.env.context.get('skip_cogs_reconciliation'):
