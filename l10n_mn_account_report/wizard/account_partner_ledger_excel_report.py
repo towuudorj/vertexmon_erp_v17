@@ -519,7 +519,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             balance = 0.0
                             for li in pre_balance:
                                 if li['partner_id'] == line.id and li['account_id'] == acc.id:
-                                    balance += li['balance']
+                                    if li['balance'] < 0.0:
+                                        balance += li['balance']*(-1)
+                                    else:
+                                        balance += li['balance']
+                                    #balance += li['balance']
                                     pr_balance = li['balance']
                             
                             
@@ -606,7 +610,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             if pre_balance !=[] and pre_balance !=False:
                                 for li in pre_balance:
                                     if li['partner_id'] == line.id and li['account_id'] == acc.id:
-                                        balance += li['balance']
+                                        if li['balance'] < 0.0:
+                                            balance += li['balance']*(-1)
+                                        else:
+                                            balance += li['balance']
+                                        #balance += li['balance']
                                         currency = currency_obj.browse(li['currency_id']).name
                                         pr_balance = li['balance']
                             
@@ -614,13 +622,13 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                 if move.account_id.id == acc.id:
                                     if move.partner_id.id == line.id:
                                         if move.debit >0.0:
-                                            balance = balance+move.debit
+                                            #balance = balance+move.debit
                                             sum_debit +=move.debit
                                             if move.currency_id.id !=move.company_id.currency_id.id:
                                                 currency_balance += move.amount_currency
                                                 currency_sum_debit += move.amount_currency
                                         else:
-                                            balance = balance-move.credit
+                                            #balance = balance-move.credit
                                             sum_credit +=move.credit
                                             if move.currency_id.id !=move.company_id.currency_id.id:
                                                 currency_balance -= move.amount_currency
@@ -631,12 +639,16 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                 sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
                                 sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
                                 sheet.write("C%s"%rowx, u'%s'%(acc.code),data_left)
+                                #if balance < 0.0:
+                                #    balance = balance*(-1)
+                                #    currency_balance = currency_balance*(-1)
                                 sheet.write("D%s"%rowx, balance,data_right)
                                 sheet.write("E%s"%rowx, currency or 'MNT',data_right)
                                 sheet.write("F%s"%rowx, sum_debit,data_right)
                                 sheet.write("G%s"%rowx, currency_sum_debit,data_right)
                                 sheet.write("H%s"%rowx, sum_credit,data_right)
                                 sheet.write("I%s"%rowx, currency_sum_credit,data_right)
+                                balance = balance - sum_credit + sum_debit
                                 sheet.write("J%s"%rowx, balance, data_right)
                                 sheet.write("K%s"%rowx, currency_balance, data_right)
                                 total_amount +=balance
@@ -645,7 +657,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             if pre_balance !=[] and pre_balance !=False:
                                 for li in pre_balance:
                                     if li['partner_id'] == line.id and li['account_id'] == account_id:
-                                        balance = li['balance']
+                                        if li['balance'] < 0.0:
+                                            
+                                            balance += li['balance']*(-1)
+                                        else:
+                                            balance += li['balance']
+                                        #balance = li['balance']
                                         pr_balance = li['balance']
                                 sheet.write("A%s"%rowx, u'%s'%(line.name),data_left)
                                 sheet.write("B%s"%rowx, u'%s'%(line.vat),data_left)
@@ -656,8 +673,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                 sheet.write("G%s"%rowx, balance, data_right)
                                 total_amount +=balance
                                 rowx +=1 
-        sheet.merge_range("A%s:C%s"%(rowx, rowx), u'Нийт',data_bold_left)
-        sheet.write("F%s"%rowx, total_amount,data_right_bold)
+        sheet.merge_range("A%s:I%s"%(rowx, rowx), u'Нийт',data_bold_left)
+        sheet.write("J%s"%rowx, total_amount,data_right_bold)
         rowx +=2
         sheet.merge_range("A%s:E%s"%(rowx, rowx),  u'Дэд захирал:................................./........................../', data_center_no_border)
         sheet.merge_range("A%s:E%s"%(rowx+1, rowx+1),  u'Нягтлан бодогч:................................/............................../', data_center_no_border)
