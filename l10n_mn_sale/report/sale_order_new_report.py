@@ -118,6 +118,7 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.write("N%s"%rowx, u'Нийт өртөг', title)
         sheet.write("O%s"%rowx, u'Ашиг', title)
         sheet.write("P%s"%rowx, u'Хэрэглэгч', title)
+        sheet.write("Q%s"%rowx, u'Хүргэсэн тоо', title)
         rowx += 1
 
 
@@ -174,6 +175,7 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("N%s"%rowx, line.purchase_price*line.product_uom_qty, data_right)
             sheet.write("O%s"%rowx, margin, data_right)
             sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
+            sheet.write("Q%s"%rowx, "%s"%line.qty_delivered, data_right)
 
             num +=1
             rowx +=1
