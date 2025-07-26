@@ -188,23 +188,7 @@ class AccountMove(models.Model):
     advance_payment_amount = fields.Monetary(string="Advance Payment Amount", compute="_compute_advance_payment_amount")
 
 
-    def _post(self, soft=True):
-        # OVERRIDE
 
-        # Don't change anything on moves used to cancel another ones.
-        if self._context.get('move_reverse_cancel'):
-            return super()._post(soft=soft)
-        ## Create additional COGS lines for customer invoices.
-        if self.move_type in ('out_invoice', 'out_refund'):
-            self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
-
-        # Post entries.
-        posted = super()._post(soft=soft)
-
-        # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
-        if not self.env.context.get('skip_cogs_reconciliation'):
-            posted._stock_account_anglo_saxon_reconcile_valuation()
-        return posted
     
 
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
