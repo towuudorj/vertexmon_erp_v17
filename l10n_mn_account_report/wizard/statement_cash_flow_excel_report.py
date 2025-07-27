@@ -60,7 +60,7 @@ class statement_cashflow_report(models.TransientModel):
                                     'border': 1,
                                     'font_size': 12,
                                     'text_wrap': True,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         data_bold_right = workbook.add_format({
                                     'align': 'right',
@@ -68,19 +68,19 @@ class statement_cashflow_report(models.TransientModel):
                                     'border': 1,
                                     'font_size': 12,
                                     'text_wrap': True,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         data_left = workbook.add_format({ 
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         data_right = workbook.add_format({
                                     'align': 'right',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         
 
@@ -370,7 +370,7 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("B%s"%rowx, u'Санхүүгийн үйл ажиллагааны мөнгөн зарлагын дүн',data_bold_left)
         fie_pre_amount = 0.0
         fie_now_amount = 0.0
-        rowx += 1
+        #rowx += 1
         counts = 1
         for type_fie_exp in cash_ids:
             if type_fie_exp.group == 'financing_expense':
@@ -421,11 +421,11 @@ class statement_cashflow_report(models.TransientModel):
         pre_pre_balance = 0.0
         pre_balance = 0.0
         account_type_obj = self.env['account.account.type']
-        account_type_ids = account_type_obj.search([('type','=','liquidity')])
+        #account_type_ids = account_type_obj.search([('account_type','=','')])
         accounts = []
-        for acc_type_line in account_type_ids:
-            account_ids = account_obj.search([('user_type_id','=',acc_type_line.id)])
-            for acc in account_ids:
+        #for acc_type_line in account_type_ids:
+        account_ids = account_obj.search([('account_type','=','asset_cash')])
+        for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
             nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','>=',self.fiscalyear_id.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
