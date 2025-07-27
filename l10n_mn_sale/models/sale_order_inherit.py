@@ -349,9 +349,9 @@ class SaleOrder(models.Model):
                 ", ".join(self.mapped('display_name')),
             ))
         
-        for lines in self.order_line:
-            if lines.product_id.is_quotation:
-                raise UserError(_(u'Энэ бараа нь үнийн саналын бараа тул баталгаажуулах боломжгүй байна: %s', lines.product_id.name))
+        #for lines in self.order_line:
+        #    if lines.product_id.is_quotation:
+        #        raise UserError(_(u'Энэ бараа нь үнийн саналын бараа тул баталгаажуулах боломжгүй байна: %s', lines.product_id.name))
 
         self.order_line._validate_analytic_distribution()
 
