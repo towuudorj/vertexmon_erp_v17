@@ -424,11 +424,14 @@ class statement_cashflow_report(models.TransientModel):
         #account_type_ids = account_type_obj.search([('account_type','=','')])
         accounts = []
         #for acc_type_line in account_type_ids:
+        now_fiscalyear = data['fiscalyear_id']
+        fiscalyear_obj = self.env['account.fiscal.year']
+        nyear = fiscalyear_obj.browse(now_fiscalyear)
         account_ids = account_obj.search([('account_type','=','asset_cash')])
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','>=',self.fiscalyear_id.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','>=',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -436,7 +439,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_balance -=lines.credit
         else:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','>=',self.fiscalyear_id.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','>=',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
