@@ -148,7 +148,7 @@ class balance_sheet_excel(models.TransientModel):
 
                     else:
                         if len(state)==1:
-                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.id)),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                             pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','<=',data['end_date']),('parent_state','=',state)])
                            
                         else:
