@@ -514,7 +514,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             for line in partner_obj.browse(partner_id):
                 for acc in account_obj.browse(account_id):
                     if data['is_extra'] == True:
-                        if pre_balance !=[] and pre_balance !=False or len(account_move_line_id)>=1:
+                        if pre_balance !=[] and pre_balance !=False and len(account_move_line_id)>=1:
                             pr_balance = 0.0
                             balance = 0.0
                             for li in pre_balance:
@@ -525,13 +525,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                         balance += li['balance']
                                     #balance += li['balance']
                                     pr_balance = li['balance']
-                            
-                            
+
                             sum_debit = 0.0
                             sum_credit = 0.0
-                            
-                            
-                            
                             currency_balance = 0
                             currency_sum_debit = 0
                             currency_sum_credit = 0
@@ -674,7 +670,10 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                 sheet.write("G%s"%rowx, currency_sum_debit,data_right)
                                 sheet.write("H%s"%rowx, sum_credit,data_right)
                                 sheet.write("I%s"%rowx, currency_sum_credit,data_right)
-                                balance = balance - sum_credit + sum_debit
+                                if acc.account_type == 'liability_payable':
+                                    balance = balance + sum_credit - sum_debit
+                                else:
+                                    balance = balance - sum_credit + sum_debit
                                 sheet.write("J%s"%rowx, balance, data_right)
                                 sheet.write("K%s"%rowx, currency_balance, data_right)
                                 total_amount +=balance
@@ -684,7 +683,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                 for li in pre_balance:
                                     if li['partner_id'] == line.id and li['account_id'] == account_id:
                                         if li['balance'] < 0.0:
-                                            
                                             balance += li['balance']*(-1)
                                         else:
                                             balance += li['balance']
