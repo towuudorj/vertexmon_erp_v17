@@ -142,9 +142,9 @@ class statement_cashflow_report(models.TransientModel):
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
-                            pre_amount +=lines.debit
+                            pre_amount -=lines.debit
                         else:
-                            pre_amount -=lines.credit
+                            pre_amount +=lines.credit
                 if len(state)==1:
                     now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
@@ -152,9 +152,9 @@ class statement_cashflow_report(models.TransientModel):
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
-                            now_amount +=now_lines.debit
+                            now_amount -=now_lines.debit
                         else:
-                            now_amount -=now_lines.credit
+                            now_amount +=now_lines.credit
                 sheet.write("A%s"%rowx,  u'%s'%type_line.sequence,data_left)
                 sheet.write("B%s"%rowx,  u'%s'%type_line.name,data_left)
                 sheet.write("C%s"%rowx,  pre_amount, data_right)
@@ -185,9 +185,9 @@ class statement_cashflow_report(models.TransientModel):
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
-                            pre_amount +=lines.debit
+                            pre_amount -=lines.debit
                         else:
-                            pre_amount -=lines.credit
+                            pre_amount +=lines.credit
                 if len(state)==1:       
                     now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
@@ -195,9 +195,9 @@ class statement_cashflow_report(models.TransientModel):
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
-                            now_amount +=now_lines.debit
+                            now_amount -=now_lines.debit
                         else:
-                            now_amount -=now_lines.credit
+                            now_amount +=now_lines.credit
                 sheet.write("A%s"%rowx, u'%s'%type_line_exp.sequence,data_left)
                 sheet.write("B%s"%rowx, u'%s'%type_line_exp.name,data_left)
                 sheet.write("C%s"%rowx, pre_amount, data_right)
@@ -242,9 +242,9 @@ class statement_cashflow_report(models.TransientModel):
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
-                            pre_amount +=lines.debit
+                            pre_amount -=lines.debit
                         else:
-                            pre_amount -=lines.credit
+                            pre_amount +=lines.credit
                 if len(state)==1:    
                     now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
@@ -252,7 +252,7 @@ class statement_cashflow_report(models.TransientModel):
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
-                            now_amount +=now_lines.debit
+                            now_amount -=now_lines.debit
                         else:
                             now_amount -=now_lines.credit
                 sheet.write("A%s"%rowx, u'%s'%type_line_exp.sequence,data_left)
