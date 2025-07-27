@@ -106,32 +106,32 @@ class PurchaseExpenseReport(models.TransientModel):
 
         if data['product_id']:
             self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,po.product_qty
+                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                             from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
                             where po.date_order >= '%s' and po.date_order <= '%s' and po.company_id = %s
                             and po.state in ('purchase', 'done') and pol.qty_received > 0 and 
                             pol.product_id = %s
-                            group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit, po.currency_rate, po.product_qty,po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                            group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit, po.currency_rate, pol.product_qty,po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                             """%(data['start_date'],data['end_date'],data['company_id'], data['product_id']))
             purchase_data_ids = self._cr.dictfetchall()
         elif data['category_id']:
             self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,po.product_qty
+                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                             from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
                             left join product_product as pp on pol.product_id = pp.id
                             where po.date_order >= '%s' and po.date_order <= '%s' and po.company_id = %s
                             and po.state in ('purchase', 'done') and pol.qty_received > 0
                             and pp.categ_id = %s
-                            group by pol.id, pol.order_id,  po.user_id, po.partner_ref, pol.price_unit,po.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                            group by pol.id, pol.order_id,  po.user_id, po.partner_ref, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                             """%(data['start_date'],data['end_date'],data['company_id'],data['category_id']))
             purchase_data_ids = self._cr.dictfetchall()
         elif not data['product_id'] and not data['category_id']:
             self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,po.product_qty
+                            pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                             from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
                             where po.date_order >= '%s' and po.date_order <= '%s' and po.company_id = %s
                             and po.state in ('purchase', 'done') and pol.qty_received > 0
-                            group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit,po.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                            group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                             """%(data['start_date'],data['end_date'],data['company_id']))
             purchase_data_ids = self._cr.dictfetchall()
         rowx = 2
