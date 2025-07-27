@@ -15,7 +15,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     
     def _get_all_journal(self):
         company_id = self.env['res.company']._company_default_get('account.partner.ledger.excel.employee.report')
-        return self.env['account.journal'].search([('type','!=','situation'),('company_id','=',company_id.id)])
+        return self.env['account.journal'].search([('type','!=','opening'),('company_id','=',company_id.id)])
     
 
     
