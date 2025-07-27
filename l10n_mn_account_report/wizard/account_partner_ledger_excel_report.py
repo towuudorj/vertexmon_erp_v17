@@ -252,9 +252,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 for mv in move:
                     move_ids.append(mv.id)
                 if len(account_id)==1:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','=',account_id[0]),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
                 else:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id[0]),('account_id','in',tuple(account_id)),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
 
                 if len(f_journal)==1:
                     if len(account_id)==1:
@@ -303,9 +303,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 for mv in move:
                     move_ids.append(mv.id)
                 if len(account_id)==1:
-                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id[0]),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
                 else:
-                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search([('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
 
                 if len(f_journal)==1:
                     if len(partner_id) >1:
@@ -368,9 +368,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 for mv in move:
                     move_ids.append(mv.id)
                 if len(account_id)==1:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','=',account_id[0]),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','=',account_id[0]),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
                 else:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','=',partner_id),('account_id','in',tuple(account_id)),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
 
                 
                 if move_id:
@@ -433,9 +433,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 for mv in move:
                     move_ids.append(mv.id)
                 if len(account_id)==1:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','=',account_id),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
                 else:
-                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>',data['start_date']),('date','<=',data['end_date'])],order="date asc")
+                    account_move_line_id = account_move_line_obj.search( [('move_id','in',tuple(move_ids)),('partner_id','in',tuple(partner_id)),('account_id','in',tuple(account_id)),('date','>=',data['start_date']),('date','<=',data['end_date'])],order="date asc")
 
                 if move_id: 
                     if len(f_journal)==1:
@@ -650,7 +650,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                         else:
                                             #balance = balance-move.credit
                                             if move.account_id.account_type == 'liability_payable':
-                                                sum_credit -=move.credit
+                                                sum_credit +=move.credit
                                                 if move.currency_id.id !=move.company_id.currency_id.id:
                                                     currency_balance += move.amount_currency
                                                     currency_sum_credit += move.amount_currency
