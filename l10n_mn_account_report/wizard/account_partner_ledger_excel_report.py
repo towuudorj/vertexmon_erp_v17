@@ -177,7 +177,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         partner_parent_id = self._cr.dictfetchall()
         partner_id = []
         move_state = ['draft','posted']
-        if self.target_move == 'posted':
+        if data['target_move'] == 'posted':
             move_state = ['posted']
         if data['account_id']:
             account_id = [data['account_id']]
@@ -568,17 +568,31 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                         sheet.write("I%s"%rowx, 0,data_right)
                                 
                                     if move.debit >0.0:
-                                        balance = balance+move.debit
-                                        sum_debit +=move.debit
-                                        if move.currency_id.id !=move.company_id.currency_id.id:
-                                            currency_balance += move.amount_currency
-                                            currency_sum_debit += move.amount_currency
+                                        if move.account_id.account_type == 'liability_payable':
+                                            balance = balance-move.debit
+                                            sum_debit +=move.debit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance -= move.amount_currency
+                                                currency_sum_debit += move.amount_currency
+                                        else:
+                                            balance = balance+move.debit
+                                            sum_debit +=move.debit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance += move.amount_currency
+                                                currency_sum_debit += move.amount_currency
                                     else:
-                                        balance = balance-move.credit
-                                        sum_credit +=move.credit
-                                        if move.currency_id.id !=move.company_id.currency_id.id:
-                                            currency_balance -= move.amount_currency
-                                            currency_sum_credit += move.amount_currency
+                                        if move.account_id.account_type == 'liability_payable':
+                                            balance = balance+move.credit
+                                            sum_credit +=move.credit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance += move.amount_currency
+                                                currency_sum_credit += move.amount_currency
+                                        else:
+                                            balance = balance-move.credit
+                                            sum_credit +=move.credit
+                                            if move.currency_id.id !=move.company_id.currency_id.id:
+                                                currency_balance -= move.amount_currency
+                                                currency_sum_credit += move.amount_currency
                                     sheet.write("J%s"%rowx, balance,data_right)
                                     sheet.write("K%s"%rowx, currency_balance,data_right)
                                     rowx +=1
@@ -623,16 +637,28 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                     if move.partner_id.id == line.id:
                                         if move.debit >0.0:
                                             #balance = balance+move.debit
-                                            sum_debit +=move.debit
-                                            if move.currency_id.id !=move.company_id.currency_id.id:
-                                                currency_balance += move.amount_currency
-                                                currency_sum_debit += move.amount_currency
+                                            if move.account_id.account_type == 'liability_payable':
+                                                sum_debit +=move.debit
+                                                if move.currency_id.id !=move.company_id.currency_id.id:
+                                                    currency_balance -= move.amount_currency
+                                                    currency_sum_debit += move.amount_currency
+                                            else:
+                                                sum_debit +=move.debit
+                                                if move.currency_id.id !=move.company_id.currency_id.id:
+                                                    currency_balance += move.amount_currency
+                                                    currency_sum_debit += move.amount_currency
                                         else:
                                             #balance = balance-move.credit
-                                            sum_credit +=move.credit
-                                            if move.currency_id.id !=move.company_id.currency_id.id:
-                                                currency_balance -= move.amount_currency
-                                                currency_sum_credit += move.amount_currency
+                                            if move.account_id.account_type == 'liability_payable':
+                                                sum_credit -=move.credit
+                                                if move.currency_id.id !=move.company_id.currency_id.id:
+                                                    currency_balance += move.amount_currency
+                                                    currency_sum_credit += move.amount_currency
+                                            else:
+                                                sum_credit +=move.credit
+                                                if move.currency_id.id !=move.company_id.currency_id.id:
+                                                    currency_balance -= move.amount_currency
+                                                    currency_sum_credit += move.amount_currency
                             if balance == 0.0 and sum_debit == 0.0 and sum_credit == 0.0:
                                 continue
                             else:
