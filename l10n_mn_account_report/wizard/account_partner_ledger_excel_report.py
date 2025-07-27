@@ -514,7 +514,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             for line in partner_obj.browse(partner_id):
                 for acc in account_obj.browse(account_id):
                     if data['is_extra'] == True:
-                        if pre_balance !=[] and pre_balance !=False and len(account_move_line_id)>=1:
+                        if pre_balance !=[] or pre_balance !=False and len(account_move_line_id)>=1:
                             pr_balance = 0.0
                             balance = 0.0
                             for li in pre_balance:
