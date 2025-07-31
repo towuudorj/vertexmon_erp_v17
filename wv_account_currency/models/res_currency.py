@@ -48,18 +48,19 @@ class ResCurrency(models.Model):
             data = request.text.encode("utf-8")
             jdata = json.loads(data)
             now_date = date.today()
+            all_company = self.env['res.company'].search([])
             for dat in jdata:
                 currency_id = currency_obj.search([('active','=',True),('name','=',dat['currency'])])
-                
                 if currency_id:
-                    rate_id = rate_obj.search([('name','=',now_date),('currency_id','=',currency_id.id)])
-                    if not rate_id:
+                    for all_co in all_company:
+                      rate_id = rate_obj.search([('name','=',now_date),('company_id','=',all_co.id),('currency_id','=',currency_id.id)])
+                      if not rate_id:
                         rate_obj.create({'name':now_date,
-                                         'rate':dat['midRate'],
-                                         'company_rate':1/dat['midRate'],
-                                         'inverse_company_rate':1.0,
-                                         'company_id':self.env.company.id,
-                                         'currency_id':currency_id.id})
+		                                 'rate':1/dat['midRate'],
+		                                 'company_rate':1/dat['midRate'],
+		                                 'inverse_company_rate':dat['midRate'],
+		                                 'company_id':all_co.id,
+		                                 'currency_id':currency_id.id})
 
 
     @api.model
