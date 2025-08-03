@@ -509,3 +509,19 @@ class AccountMoveLine(models.Model):
         self.env.add_to_compute(self._fields['debit'], container['records'])
         self.env.add_to_compute(self._fields['credit'], container['records'])
 
+
+    @api.depends('currency_id', 'company_id', 'move_id.date')
+    def _compute_currency_rate(self):
+        for line in self:
+            if line.currency_id:
+                rate = self.env['res.currency']._get_conversion_rate(
+                    
+                    from_currency=line.company_currency_id,
+                    to_currency=line.currency_id,
+                    company=line.company_id,
+                    date=line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
+                )
+                line.currency_rate = round(1/rate,2)
+                
+            else:
+                line.currency_rate = 1
