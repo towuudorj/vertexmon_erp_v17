@@ -47,7 +47,7 @@
                         <tr>
                             <td style="width: 50%;">
                                 <b>Ship to:</b><br/>
-                                <span t-field="o.company_user_id.name"/><br/>
+                                <span t-field="o.company_id.name"/><br/>
                             </td>
                         </tr>
                     </table>
