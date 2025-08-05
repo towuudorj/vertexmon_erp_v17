@@ -8,3 +8,4 @@ from . import project_inherit
 from . import purchase_requisition_inherit
 from . import sales_plan_register
 from . import account_move_inherit
+from . import crm_team_inherit

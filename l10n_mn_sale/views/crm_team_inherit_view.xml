@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="crm_team_warehouse_add_view">
+            <field name="name">crm.team.inherit.mn.sales</field>
+            <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="active"]' position="after">
+                        <field name="warehouse_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -17,3 +17,5 @@ access_create_purchase_request_wizard_user,create.purchase.request,model_create_
 access_create_purchase_request_wizard_manager,create.purchase.request,model_create_purchase_request,sales_team.group_sale_manager,1,1,1,1
 access_sale_order_new_report_user,sale.order.new.report,model_sale_order_new_report,sales_team.group_sale_salesman,1,1,1,0
 access_sale_order_new_report_manager,sale.order.new.report,model_sale_order_new_report,sales_team.group_sale_manager,1,1,1,1
+access_sale_order_common_report_user,sale.order.common.report,model_sale_order_common_report,sales_team.group_sale_salesman,1,1,1,0
+access_sale_order_common_report_manager,sale.order.common.report,model_sale_order_common_report,sales_team.group_sale_manager,1,1,1,1

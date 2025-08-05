@@ -40,6 +40,7 @@
                 'report/mn_sale_invoice.xml',
                 'report/mn_sale_expense.xml',
                 'report/mn_sale_expense_desc.xml',
+                'report/sale_order_common_report_view.xml',
                 'report/sale_order_new_report_view.xml',
                 'wizard/create_product_wizard_view.xml',
                 'wizard/create_purchase_request_wizard_view.xml',
@@ -54,6 +55,7 @@
                 'views/sales_plan_register_view.xml',
                 'views/purchase_reason_register_view.xml',
                 'views/crm_lead_line_view.xml',
+                'views/crm_team_inherit_view.xml',
                 'views/report_view.xml',
                 'views/menu_view.xml'
                 ],

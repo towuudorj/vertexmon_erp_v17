@@ -201,7 +201,7 @@ class SaleOrder(models.Model):
                                    required=True,
                                    compute='_compute_partner_type',
                                    store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-                                    domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+                                   )
     contract_id = fields.Many2one('sales.contract.register', 
                                   string='Contract')
     contract_count = fields.Integer(string='Contract', 
@@ -612,6 +612,9 @@ class SaleOrder(models.Model):
         for vals in vals_list:
             if 'company_id' in vals:
                 self = self.with_company(vals['company_id'])
+                part = self.env['res.partner'].browse(vals.get('partner_id', False))
+                partner_type_id = self.env['partner.type.register'].search([('partner_group', '=', part.partner_group),('company_id','=',vals['company_id'])], limit=1)
+                vals['partner_type'] = partner_type_id.id
             if vals.get('name', _("New")) == _("New"):
                 sequence_date = fields.Datetime.to_datetime(vals['date_order'])
                 seq_year = str(sequence_date.year)[2:]

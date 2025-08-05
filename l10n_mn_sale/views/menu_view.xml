@@ -22,5 +22,11 @@
 
         <menuitem id="sale_order_new_report_menu" name="Борлуулалтын тайлан шинэ"  parent="sale.menu_sale_report" sequence="0" action="action_sale_order_new_report"/>	
 
+
+        <menuitem id="sale_order_common_report_menu" name="Борлуулалтын тайлан хураангуй"  parent="sale.menu_sale_report" sequence="1" action="action_sale_order_common_report"/>	
+
+
+
+
     </data>
 </odoo>

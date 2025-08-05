@@ -8,7 +8,7 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
     code = fields.Char(string='Code', readonly=True,
-                        default=lambda self: self.env['ir.sequence'].next_by_code('crm.lead'))
+                        default=lambda self: self.env['ir.sequence'].with_context(company_id=self.company_id.id).next_by_code('crm.lead'))
     partner_id = fields.Many2one(
         'res.partner', string='Customer', check_company=True, index=True, tracking=10, required=True,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
@@ -33,7 +33,6 @@ class CrmLead(models.Model):
                                 ('send_purchase_confirm','Send purchase confirm'),
                                 ('purchase_confirm','Confirm'),
                                 ('cancel','Cancel')],string='Status', readonly=True, tracking=True, default='new')
-    
     sales_type = fields.Selection([('direct', 'Direct'),
                                    ('tender', 'Tender'),
                                    ('project', 'Project')],
@@ -49,10 +48,10 @@ class CrmLead(models.Model):
     def send_purchase_request(self):
         for line in self:
             for lines in line.lead_line_ids:
-                if lines.margin_percent >0.0:
-                    line.status = 'send_purchase_confirm'
-                else:
-                    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
+                #if lines.margin_percent >0.0:
+                line.status = 'send_purchase_confirm'
+                #else:
+                #    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
 
     
     def action_cancel(self):
@@ -67,6 +66,9 @@ class CrmLead(models.Model):
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
             lead.status = 'purchase_confirm'
+            print ("dddd",lead.action_sale_quotations_new())
+            sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
+            sale_order_id.action_confirm()
             #lead.message_post(body=_('Purchase request confirmed.'))
 
 
@@ -97,22 +99,25 @@ class CrmLead(models.Model):
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
 
         quotation_context = {
-            'default_opportunity_id': self.id,
-            'default_partner_id': self.partner_id.id,
-            'default_partner_type': self.partner_id.partner_type.id,
-            'default_campaign_id': self.campaign_id.id,
-            'default_medium_id': self.medium_id.id,
-            'default_origin': self.name,
-            'default_source_id': self.source_id.id,
-            'default_company_id': self.company_id.id or self.env.company.id,
-            'default_tag_ids': [(6, 0, self.tag_ids.ids)],
-            'default_order_line':line_ids 
+            'opportunity_id': self.id,
+            'partner_id': self.partner_id.id,
+            'partner_type': self.partner_id.partner_type.id,
+            'campaign_id': self.campaign_id.id,
+            'medium_id': self.medium_id.id,
+            'date_order': self.send_date,
+            'origin': self.name,
+            'user_id':self.user_id.id,
+            'source_id': self.source_id.id,
+            'company_id': self.company_id.id or self.env.company.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'team_id': self.team_id.id,
+            'order_line':line_ids 
             }
         
         if self.team_id:
-            quotation_context['default_team_id'] = self.team_id.id
+            quotation_context['team_id'] = self.team_id.id
         if self.user_id:
-            quotation_context['default_user_id'] = self.user_id.id
+            quotation_context['user_id'] = self.user_id.id
         return quotation_context
     
     #үүсгэх
@@ -134,8 +139,10 @@ class CrmLead(models.Model):
                             'user_id': lead.user_id.id,
                             'company_id': lead.company_id.id,
                             'origin': lead.name,
+                            'warehouse_id': lead.team_id.warehouse_id.id,
                             'state': 'draft',
                             'type_id': type_id.id,
+                            'name':self.env['ir.sequence'].with_company(self.company_id).next_by_code('purchase.requisition.blanket.order'),
                             'purchase_user_id':lines.purchase_user_id.id,
                             'send_date': self.send_date,
                         }
@@ -146,8 +153,8 @@ class CrmLead(models.Model):
                                                                                   ('lead_line_id', '=', lines.id)])
                             if not line_ids:
                                 line_status = ''
-                                if lines.request_type == 'is_purchase':
-                                    line_status = 'approve'
+                                #if lines.request_type == 'is_purchase':
+                                #    line_status = 'approve'
                                 
                                 line_data = {
                                             'product_id': lines.product_id.id,
@@ -172,8 +179,8 @@ class CrmLead(models.Model):
                                                                                   ('lead_line_id', '=', lines.id)])
                             if not line_ids:
                                 line_status = ''
-                                if lines.request_type == 'is_purchase':
-                                    line_status = 'approve'
+                                #if lines.request_type == 'is_purchase':
+                                #    line_status = 'approve'
                                 line_data = {
                                             'product_id': lines.product_id.id,
                                             'product_description_variants': lines.name,

@@ -48,6 +48,8 @@ class PurchaseRequisition(models.Model):
                             ('done','Done'),
                             ('cancel','Cancel')], string='Status', default='new')
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+
 
     def _compute_total_amount(self):
         for pr in self:
@@ -107,11 +109,13 @@ class PurchaseRequisition(models.Model):
                     if lines.product_id.id == False:
                         raise UserError(_('Бараа сонгоогүй байгаа тул сонгоно уу!'))
                     if not purchase_order:
-                        
+                        picking_type_id = self.env['stock.picking.type'].search([('code', '=', 'incoming'),
+                                                                                 ('warehouse_id', '=', pr.warehouse_id.id)], limit=1)
                         datas = {
                             'user_id': pr.user_id.id,
                             'company_id': pr.company_id.id,
                             'origin': pr.name,
+                            'picking_type_id':picking_type_id.id,
                             'state': 'draft',
                             'sales_partner_id':pr.crm_lead_id.partner_id.id,
                             'date_order': datetime.now(),
