@@ -376,10 +376,10 @@ class SaleOrder(models.Model):
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_lock()
         
-        if not self.env.user.has_group('sales_team.group_sale_manager') and self.invoice_policy == 'delivery':
-            raise UserError(_(
-                u"Батлах эрх бүхий ажилтнаар батлуулна уу!",
-            ))
+        #if not self.env.user.has_group('sales_team.group_sale_manager') and self.invoice_policy == 'delivery':
+        #    raise UserError(_(
+        #        u"Батлах эрх бүхий ажилтнаар батлуулна уу!",
+        #    ))
 
 
         return True

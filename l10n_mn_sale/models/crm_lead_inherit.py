@@ -59,6 +59,9 @@ class CrmLead(models.Model):
             line.status = 'cancel'
             line.purchase_request_ids.action_cancel()
 
+    def create_quotation(self):
+        sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
+
     def confirm_purchase(self):
         """ This method is used to confirm the purchase request """
         for lead in self:
@@ -78,6 +81,7 @@ class CrmLead(models.Model):
             for line in lead.lead_line_ids:
                 total += line.sale_price * line.qty
             lead.amount_total = total
+    
 
     def _prepare_opportunity_quotation_context(self):
         """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """

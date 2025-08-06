@@ -120,8 +120,7 @@
                 <field name="priority" eval="15"/>
                 <field name="arch" type="xml">
                     <search string="Search Sales Contract Register">
-                        <field name="name"
-                            filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                        <field name="name" filter_domain="[('name', 'ilike', self)]"/>
                         <field name="partner_id" operator="child_of"/>
                         <field name="reg_user_id"/>
                         <field name="sales_team_id" string="Sales Team"/>

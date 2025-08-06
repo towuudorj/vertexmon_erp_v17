@@ -52,6 +52,9 @@
                 <field name="arch" type="xml">
                     <data>
                         <xpath expr='//button[@name="action_sale_quotations_new"]' position="replace">
+                            <button class="oe_stat_button" type="object" string="Борлуулалтын захиалга үүсгэх"
+                                name="create_quotation" icon="fa-pencil-square-o">
+                            </button>
                         </xpath>
                     </data>
                 </field>
