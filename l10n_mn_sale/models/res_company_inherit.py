@@ -8,3 +8,4 @@ class ResCompany(models.Model):
     company_stamp = fields.Binary(string='Company stamp')
     account_stamp = fields.Binary(string='Account stamp')
     report_image = fields.Binary(string='Report image')
+    en_name = fields.Char(string='English name')

@@ -33,7 +33,7 @@
                             </td>
                             <td style="width: 50%; text-align: right;">
                                 <b>Customer ID:</b><br/>
-                                <span t-field="o.company_id.name"/><br/>
+                                <span t-field="o.company_id.en_name"/><br/>
                                 <span t-field="o.company_id.street2"/><br/>
                                 <span t-field="o.company_id.city"/>, <span t-field="o.company_id.state_id.name"/><br/>
                                 <span t-field="o.company_id.country_id.name"/><br/>
@@ -47,7 +47,7 @@
                         <tr>
                             <td style="width: 50%;">
                                 <b>Ship to:</b><br/>
-                                <span t-field="o.company_id.name"/><br/>
+                                <span t-field="o.company_id.en_name"/><br/>
                             </td>
                         </tr>
                     </table>
@@ -82,6 +82,7 @@
                                 <th style="padding: 5px; text-align: center;">QTY</th>
                                 <th style="padding: 5px; text-align: left;">PART NO</th>
                                 <th style="padding: 5px; text-align: left;">DESCRIPTION</th>
+                                <th style="padding: 5px; text-align: left;">QTY</th>
                                 <th style="padding: 5px; text-align: right;">UNIT PRICE</th>
                                 <th style="padding: 5px; text-align: right;">TOTAL /USD/</th>
                             </tr>
@@ -98,6 +99,9 @@
                                 </td>
                                 <td style="padding: 5px; text-align: left;">
                                     <span t-field="line.name"/>
+                                </td>
+                                <td style="padding: 5px; text-align: left;">
+                                    <span t-field="line.product_qty"/>
                                 </td>
                                 <td style="padding: 5px; text-align: right;">
                                     <span t-esc="'%.2f' % line.price_unit"/>

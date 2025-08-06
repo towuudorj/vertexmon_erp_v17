@@ -11,6 +11,7 @@ class StockLandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string=u'Орлогын баримт',
         copy=False)
+
     
     #def _compute_picking_ids(self):
     #    for rec in self:

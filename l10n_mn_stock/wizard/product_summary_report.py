@@ -173,6 +173,7 @@ class ProductSummaryReport(models.TransientModel):
                     wh_id = wh_obj.browse(wh)
                     for li in wh_id:
                         loc_ids.append(li.lot_stock_id.id)
+            print ("loggg",loc_ids)
             
             #loc_id = wh_id.lot_stock_id.id
             # if len(str(loc_id))==1:
@@ -295,12 +296,16 @@ class ProductSummaryReport(models.TransientModel):
             if product_id !=False and f_account_ids !=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
-                
-
-                
-                move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('product_id','=',product_id),('journal_id','=',journal.id)])
-                if move_line_id:
-                    f_balance = move_line_id
+                self._cr.execute("""select ml.debit, ml.credit, ml.quantity, ml.product_id from 
+                    account_move_line as ml left join account_move as am on am.id = ml.move_id 
+                    left join stock_picking as sp on sp.name = am.name
+                    where sp.location_dest = %s and am.company_id = %s
+                    and am.date = '%s' and ml.product_id = %s and am.journal_id = %s
+                    group by mv.product_id"""%(wh.id,data['company_id'],data['start_date'],product_id,journal.id))
+                f_balance = self._cr.dictfetchall()
+                #move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('product_id','=',product_id),('journal_id','=',journal.id)])
+                #if move_line_id:
+                #    f_balance = move_line_id
                 
                 
                 if income_ids !=False:

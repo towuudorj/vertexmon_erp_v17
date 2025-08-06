@@ -19,9 +19,10 @@
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr style="border: 1px solid black;">
-                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Дугаар</strong></th>
-                                            <th style="width: 30%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Орлогын баримт</strong></th>
-                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>худалдан авалт</strong></th>
+                                            <th style="width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Дугаар</strong></th>
+                                            <th style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Орлогын баримт</strong></th>
+                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Худалдан авалт</strong></th>
+                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Харилцагч</strong></th>
                                             <th style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Огноо</strong></th>
                                         </tr>
                                     </thead>
@@ -42,6 +43,9 @@
                                                 </t>
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:2px;">
+                                                    <span t-esc="o.vendor_bill_id.partner_id.name"/>
+                                            </td>
+                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
                                                 <span t-field="o.date"/>
                                             </td>
                                            
@@ -51,7 +55,8 @@
                                     <table class="width: 100%; table table-condensed" >
                                         <thead>
                                             <tr>
-                                                <th style="width: 60%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нэмэлт зардал</strong></th>
+                                                <th style="width: 50%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нэмэлт зардал</strong></th>
+                                                <th style="width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>>Валют</strong></th>
                                                 <th style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Хувиарлах арга</strong></th>
                                                 <th style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Өртөг</strong></th>
                                             </tr>
@@ -59,7 +64,8 @@
                                         <tbody>
                                             <t t-if="o.cost_lines">
                                             <tr t-foreach="o.cost_lines" t-as="move">
-                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td>   
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td> 
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="o.currency_id.name"/></td>  
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.split_method"/></td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
                                                         <span t-field="move.price_unit"/>

@@ -64,6 +64,8 @@ class SaleContractRegister(models.Model):
                                   string='Register user', 
                                   default=lambda self: self.env.user)
     note = fields.Text(string='Note')
+    local_type = fields.Selection([('non_project', 'Non Project'),
+                                    ('project','Project')], string='Local type', default='non_project')
     project_id = fields.Many2one('project.project', 
                                  string='Project', 
                                  readonly=True)
