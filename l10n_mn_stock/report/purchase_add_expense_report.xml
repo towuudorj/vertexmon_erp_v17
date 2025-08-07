@@ -56,7 +56,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 50%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нэмэлт зардал</strong></th>
-                                                <th style="width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>>Валют</strong></th>
+                                                <th style="width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Валют</strong></th>
                                                 <th style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Хувиарлах арга</strong></th>
                                                 <th style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Өртөг</strong></th>
                                             </tr>
