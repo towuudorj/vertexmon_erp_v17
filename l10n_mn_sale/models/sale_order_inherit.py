@@ -749,6 +749,7 @@ class SaleOrderLine(models.Model):
     add_desc = fields.Text(string='Add Description')
     request_line_id = fields.Many2one('purchase.requisition.line', string='Request line')
     crm_lead_line_id = fields.Many2one('crm.lead.line', string='Crm lead line')
+    order_date = fields.Datetime(related='order_id.date_order', store=True)
 
 
 
