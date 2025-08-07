@@ -94,7 +94,7 @@
                                 name="send_purchase_request"/>
                             <button string="Худалдан авалтын хүсэлт зөвшөөрөх" type="object"
                                 invisible="status != 'send_purchase_confirm'"
-                                groups="sales_team.group_sale_manager"
+                                groups="sales_team.group_sale_manager, purchase.group_purchase_manager"
                                 name="confirm_purchase"/>
                             <button string="Цуцлах" type="object"
                                 invisible="status != 'send_purchase_confirm'"

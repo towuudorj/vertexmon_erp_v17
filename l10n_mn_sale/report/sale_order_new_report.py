@@ -102,18 +102,19 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.set_column(7, 17, 15)
 
         rowx = 1
-        sheet.write('A%s'%rowx, u'Захиалгын №', title)
-        sheet.write("B%s"%rowx, u'Мөр', title)
-        sheet.write("C%s"%rowx, u'Харилцагчийн №', title)
-        sheet.write("D%s"%rowx, u'Харилцагч', title)
-        sheet.write("E%s"%rowx, u'Барааны №', title)
-        sheet.write("F%s"%rowx, u'Барааны бүлэг', title)
-        sheet.write("G%s"%rowx, u'Барааны нэр', title)
-        sheet.write("H%s"%rowx, u'Нэгжийн үнэ', title)
-        sheet.write("I%s"%rowx, u'Тоо', title)
-        sheet.write("J%s"%rowx, u'Нэгж', title)
-        sheet.write("K%s"%rowx, u'Нийт үнэ', title)
-        sheet.write("L%s"%rowx, u'Батлагдсан огноо', title)
+        sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
+        sheet.write('B%s'%rowx, u'Захиалгын №', title)
+        sheet.write("C%s"%rowx, u'Мөр', title)
+        sheet.write("D%s"%rowx, u'Харилцагчийн №', title)
+        sheet.write("E%s"%rowx, u'Харилцагч', title)
+        sheet.write("F%s"%rowx, u'Барааны №', title)
+        sheet.write("G%s"%rowx, u'Барааны бүлэг', title)
+        sheet.write("H%s"%rowx, u'Барааны нэр', title)
+        sheet.write("I%s"%rowx, u'Нэгжийн үнэ', title)
+        sheet.write("J%s"%rowx, u'Тоо', title)
+        sheet.write("K%s"%rowx, u'Нэгж', title)
+        sheet.write("L%s"%rowx, u'Нийт үнэ', title)
+        
         sheet.write("M%s"%rowx, u'Нэгжийн өртөг', title)
         sheet.write("N%s"%rowx, u'Нийт өртөг', title)
         sheet.write("O%s"%rowx, u'Ашиг', title)
@@ -131,7 +132,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale']),
                     ('order_id.user_id', '=', data['sales_user_id']),
-                ])
+                ],order='date_order desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -139,7 +140,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel']),
                     ('order_id.user_id', '=', data['sales_user_id'])
-                ])
+                ],order='date_order desc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
@@ -147,30 +148,31 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale'])
-                ])
+                ],order='date_order desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel'])
-                ])
+                ],order='date_order desc')
         num = 1
 
         for line in sale_order_line_id:
             margin = line.price_total - (line.purchase_price * line.product_uom_qty)
-            sheet.write("A%s"%rowx, line.order_id.name, data_left)
-            sheet.write("B%s"%rowx, num, data_right)
-            sheet.write("C%s"%rowx, "%s"%line.order_id.partner_id.code, data_left)
-            sheet.write("D%s"%rowx, "%s"%line.order_id.partner_id.name, data_left)
-            sheet.write("E%s"%rowx, "%s"%line.product_id.default_code, data_left)
-            sheet.write("F%s"%rowx, "%s"%line.product_id.brand_id.name, data_left)
-            sheet.write("G%s"%rowx, "%s"%line.product_id.name, data_left)
-            sheet.write("H%s"%rowx, line.price_unit, data_right)
-            sheet.write("I%s"%rowx, line.product_uom_qty, data_right)
-            sheet.write("J%s"%rowx, "%s"%line.product_uom.name, data_right)
-            sheet.write("K%s"%rowx, line.price_total, data_right)
-            sheet.write("L%s"%rowx, "%s"%line.order_id.date_order, data_right)
+            sheet.write("A%s"%rowx, "%s"%line.order_id.date_order, data_right)
+            sheet.write("B%s"%rowx, line.order_id.name, data_left)
+            sheet.write("C%s"%rowx, num, data_right)
+            sheet.write("D%s"%rowx, "%s"%line.order_id.partner_id.code, data_left)
+            sheet.write("E%s"%rowx, "%s"%line.order_id.partner_id.name, data_left)
+            sheet.write("F%s"%rowx, "%s"%line.product_id.default_code, data_left)
+            sheet.write("G%s"%rowx, "%s"%line.product_id.brand_id.name, data_left)
+            sheet.write("H%s"%rowx, "%s"%line.product_id.name, data_left)
+            sheet.write("I%s"%rowx, line.price_unit, data_right)
+            sheet.write("J%s"%rowx, line.product_uom_qty, data_right)
+            sheet.write("K%s"%rowx, "%s"%line.product_uom.name, data_right)
+            sheet.write("L%s"%rowx, line.price_total, data_right)
+            
             sheet.write("M%s"%rowx, line.purchase_price, data_right)
             sheet.write("N%s"%rowx, line.purchase_price*line.product_uom_qty, data_right)
             sheet.write("O%s"%rowx, margin, data_right)

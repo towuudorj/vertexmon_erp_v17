@@ -102,13 +102,13 @@ class SaleOrderCommonReport(models.TransientModel):
         sheet.set_column(7, 17, 15)
 
         rowx = 1
-        sheet.write('A%s'%rowx, u'Захиалгын №', title)
-        sheet.write("B%s"%rowx, u'Харилцагчийн №', title)
-        sheet.write("C%s"%rowx, u'Харилцагч', title)
-        sheet.write("D%s"%rowx, u'Нийт үнэ', title)
-        sheet.write("E%s"%rowx, u'НӨАТ', title)
-        sheet.write("F%s"%rowx, u'Нийт үнэ НӨАТ', title)
-        sheet.write("G%s"%rowx, u'Батлагдсан огноо', title)
+        sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
+        sheet.write('B%s'%rowx, u'Захиалгын №', title)
+        sheet.write("C%s"%rowx, u'Харилцагчийн №', title)
+        sheet.write("D%s"%rowx, u'Харилцагч', title)
+        sheet.write("E%s"%rowx, u'Нийт үнэ', title)
+        sheet.write("F%s"%rowx, u'НӨАТ', title)
+        sheet.write("G%s"%rowx, u'Нийт үнэ НӨАТ', title)
         sheet.write("H%s"%rowx, u'Хэрэглэгч', title)
         rowx += 1
 
@@ -122,7 +122,7 @@ class SaleOrderCommonReport(models.TransientModel):
                     ('date_order', '<=', data['end_date']),
                     ('state', 'in', ['sale']),
                     ('user_id', '=', data['sales_user_id']),
-                ])
+                ],order='date_order desc')
             else:
                 sale_order_id = sale_order_obj.search([
                     ('company_id', '=', data['company_id']),
@@ -130,7 +130,7 @@ class SaleOrderCommonReport(models.TransientModel):
                     ('date_order', '<=', data['end_date']),
                     ('state', 'not in', ['cancel']),
                     ('user_id', '=', data['sales_user_id'])
-                ])
+                ],order='date_order desc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_id = sale_order_obj.search([
@@ -138,24 +138,24 @@ class SaleOrderCommonReport(models.TransientModel):
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
                     ('state', 'in', ['sale'])
-                ])
+                ],order='date_order desc')
             else:
                 sale_order_id = sale_order_obj.search([
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
                     ('state', 'not in', ['cancel'])
-                ])
+                ],order='date_order desc')
         num = 1
 
         for line in sale_order_id:
-            sheet.write("A%s"%rowx, line.name, data_left)
-            sheet.write("B%s"%rowx, "%s"%line.partner_id.code, data_left)
-            sheet.write("C%s"%rowx, "%s"%line.partner_id.name, data_left)
-            sheet.write("D%s"%rowx, line.amount_untaxed, data_right)
-            sheet.write("E%s"%rowx, line.amount_tax, data_right)
-            sheet.write("F%s"%rowx, line.amount_total, data_right)
-            sheet.write("G%s"%rowx, "%s"%line.date_order, data_right)
+            sheet.write("A%s"%rowx, "%s"%line.date_order, data_right)
+            sheet.write("B%s"%rowx, line.name, data_left)
+            sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
+            sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
+            sheet.write("E%s"%rowx, line.amount_untaxed, data_right)
+            sheet.write("F%s"%rowx, line.amount_tax, data_right)
+            sheet.write("G%s"%rowx, line.amount_total, data_right)
             sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
 
             num +=1
