@@ -132,7 +132,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale']),
                     ('order_id.user_id', '=', data['sales_user_id']),
-                ],order='order_id.date_order desc')
+                ],order='create_date desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -140,7 +140,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel']),
                     ('order_id.user_id', '=', data['sales_user_id'])
-                ],order='order_id.date_order desc')
+                ],order='create_date desc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
@@ -148,14 +148,14 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale'])
-                ],order='order_id.date_order desc')
+                ],order='create_date desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel'])
-                ],order='order_id.date_order desc')
+                ],order='create_date desc')
         num = 1
 
         for line in sale_order_line_id:
