@@ -132,7 +132,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale']),
                     ('order_id.user_id', '=', data['sales_user_id']),
-                ],order='create_date desc')
+                ],order='order_id.date_order desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -140,7 +140,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel']),
                     ('order_id.user_id', '=', data['sales_user_id'])
-                ],order='create_date desc')
+                ],order='order_id.date_order desc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
@@ -148,19 +148,20 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'in', ['sale'])
-                ],order='create_date desc')
+                ],order='order_id.date_order desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel'])
-                ],order='create_date desc')
+                ],order='order_id.date_order desc')
         num = 1
 
         for line in sale_order_line_id:
             margin = line.price_total - (line.purchase_price * line.product_uom_qty)
-            sheet.write("A%s"%rowx, "%s"%line.order_id.date_order, data_right)
+            convert_date = fields.Date.from_string(line.order_id.date_order)
+            sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.order_id.name, data_left)
             sheet.write("C%s"%rowx, num, data_right)
             sheet.write("D%s"%rowx, "%s"%line.order_id.partner_id.code, data_left)

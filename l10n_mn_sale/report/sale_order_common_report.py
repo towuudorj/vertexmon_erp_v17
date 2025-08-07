@@ -149,7 +149,8 @@ class SaleOrderCommonReport(models.TransientModel):
         num = 1
 
         for line in sale_order_id:
-            sheet.write("A%s"%rowx, "%s"%line.date_order, data_right)
+            convert_date = fields.Date.from_string(line.date_order)
+            sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.name, data_left)
             sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
             sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
