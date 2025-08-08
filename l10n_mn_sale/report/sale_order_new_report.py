@@ -173,15 +173,20 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("J%s"%rowx, line.product_uom_qty, data_right)
             sheet.write("K%s"%rowx, "%s"%line.product_uom.name, data_right)
             sheet.write("L%s"%rowx, line.price_total, data_right)
-            
             sheet.write("M%s"%rowx, line.purchase_price, data_right)
             sheet.write("N%s"%rowx, line.purchase_price*line.product_uom_qty, data_right)
             sheet.write("O%s"%rowx, margin, data_right)
             sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
             sheet.write("Q%s"%rowx, "%s"%line.qty_delivered, data_right)
-
             num +=1
             rowx +=1
+        sheet.merge_range('A%s:K%s' % (rowx,rowx), u'Нийт дүн:', data_bold_left)
+        sheet.write('L%s' % rowx, '=SUM(L2:L%s)' % (rowx-1), data_bold_center)
+        sheet.write('M%s' % rowx, '=SUM(M2:M%s)' % (rowx-1), data_bold_center)
+        sheet.write('N%s' % rowx, '=SUM(N2:N%s)' % (rowx-1), data_bold_center)
+        sheet.write('O%s' % rowx, '=SUM(O2:O%s)' % (rowx-1), data_bold_center)
+        sheet.write('P%s' % rowx, '', data_bold_center)
+        sheet.write('Q%s' % rowx, '=SUM(Q2:Q%s)' % (rowx-1), data_bold_center)
 
         workbook.close()
         output.seek(0)

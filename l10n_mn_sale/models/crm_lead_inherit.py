@@ -49,6 +49,8 @@ class CrmLead(models.Model):
         for line in self:
             for lines in line.lead_line_ids:
                 #if lines.margin_percent >0.0:
+                if line.request_type == 'is_quotation':
+                    raise UserError(_(u'Үнийн санал төрөлтэй байгаа тул илгээх шаардлагагүй болно!'))
                 line.status = 'send_purchase_confirm'
                 #else:
                 #    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
@@ -69,7 +71,7 @@ class CrmLead(models.Model):
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
             lead.status = 'purchase_confirm'
-            print ("dddd",lead.action_sale_quotations_new())
+
             sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
             sale_order_id.action_confirm()
             #lead.message_post(body=_('Purchase request confirmed.'))

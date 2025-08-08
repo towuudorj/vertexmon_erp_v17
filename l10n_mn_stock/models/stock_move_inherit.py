@@ -23,6 +23,7 @@ class StockMove(models.Model):
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             receipt_value = 0
+            
             if move_layer:
                 
                 receipt_value += sum(move_layer.mapped(lambda l: l.currency_id._convert(
@@ -45,6 +46,7 @@ class StockMove(models.Model):
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
             price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:

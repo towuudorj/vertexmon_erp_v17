@@ -148,6 +148,9 @@ class SaleOrderCommonReport(models.TransientModel):
                 ],order='date_order desc')
         num = 1
 
+        total_amount_untaxed = 0.0
+        total_amount_tax = 0.0
+        total_amount_total = 0.0
         for line in sale_order_id:
             convert_date = fields.Date.from_string(line.date_order)
             sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
@@ -158,9 +161,16 @@ class SaleOrderCommonReport(models.TransientModel):
             sheet.write("F%s"%rowx, line.amount_tax, data_right)
             sheet.write("G%s"%rowx, line.amount_total, data_right)
             sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
-
+            total_amount_untaxed +=line.amount_untaxed
+            total_amount_tax +=line.amount_tax
+            total_amount_total +=line.amount_total
             num +=1
             rowx +=1
+        sheet.merge_range("A%s:D%s"%(rowx,rowx), u'Нийт дүн:', data_bold_left)
+        sheet.write("E%s"%rowx, total_amount_untaxed, data_bold_center)
+        sheet.write("F%s"%rowx, total_amount_tax, data_bold_center)
+        sheet.write("G%s"%rowx, total_amount_total, data_bold_center)
+        sheet.write("H%s"%rowx, '', data_bold_center)
 
         workbook.close()
         output.seek(0)

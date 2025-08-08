@@ -206,10 +206,26 @@ class PurchaseExpenseReport(models.TransientModel):
             
             rowx +=1
         
+        sheet.merge_range("A%s:J%s"%(rowx,rowx), u'Нийт дүн:', header_txt)
+        sheet.write("K%s"%rowx, '=sum(K2:K%s)'%(rowx-1), header_txt)
+        sheet.write("L%s"%rowx, '=sum(L2:L%s)'%(rowx-1), header_txt)
+        sheet.write("M%s"%rowx, '=sum(M2:M%s)'%(rowx-1), header_txt)
+        sheet.write("N%s"%rowx, '', header_txt)
+        sheet.write("O%s"%rowx, '', header_txt)
+        sheet.write("P%s"%rowx, '=sum(P2:P%s)'%(rowx-1), header_txt)
+        sheet.write("Q%s"%rowx, '=sum(Q2:Q%s)'%(rowx-1), header_txt)
+        sheet.write("R%s"%rowx, '=sum(R2:R%s)'%(rowx-1), header_txt)
+        sheet.write("S%s"%rowx, '', header_txt)
+        sheet.write("T%s"%rowx, '', header_txt)
+        sheet.write("U%s"%rowx, '=sum(U2:U%s)'%(rowx-1), header_txt)
+        sheet.write("V%s"%rowx, '=sum(V2:V%s)'%(rowx-1), header_txt)
+        sheet.write("W%s"%rowx, '=sum(W2:W%s)'%(rowx-1), header_txt)
+        sheet.write("X%s"%rowx, '=sum(X2:X%s)'%(rowx-1), header_txt)
+        sheet.write("Y%s"%rowx, '=sum(Y2:Y%s)'%(rowx-1), header_txt)
+        sheet.write("Z%s"%rowx, '=sum(Z2:Z%s)'%(rowx-1), header_txt)
+        sheet.write("AA%s"%rowx, '', header_txt)
+        sheet.write("AB%s"%rowx, '=sum(AB2:AB%s)'%(rowx-1), header_txt)
 
-
-
-        
 
         workbook.close()
         output.seek(0)

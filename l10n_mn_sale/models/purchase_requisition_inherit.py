@@ -66,7 +66,10 @@ class PurchaseRequisition(models.Model):
         for pr in self:
             for line in pr.line_ids:
                 if line.price_unit > 0.0 and line.line_status == 'approve':
-                    pr.status = 'quotation_ed'
+                    if line.supplier_id:
+                        pr.status = 'quotation_ed'
+                    else:
+                        raise UserError(_('Үнэ судлуулах хүсэлтэнд нийлүүлэгчийг оруулаагүй байгаа тул оруулна уу!'))
                 else:
                     raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
 
