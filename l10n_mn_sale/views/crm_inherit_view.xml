@@ -53,7 +53,7 @@
                     <data>
                         <xpath expr='//button[@name="action_sale_quotations_new"]' position="replace">
                             <button class="oe_stat_button" type="object" string="Борлуулалтын захиалга үүсгэх"
-                                name="create_quotation" icon="fa-pencil-square-o">
+                                name="create_quotation" icon="fa-pencil-square-o" groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads">
                             </button>
                         </xpath>
                     </data>
