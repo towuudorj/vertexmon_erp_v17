@@ -49,7 +49,7 @@ class CrmLead(models.Model):
         for line in self:
             for lines in line.lead_line_ids:
                 #if lines.margin_percent >0.0:
-                if line.request_type == 'is_quotation':
+                if lines.request_type == 'is_quotation':
                     raise UserError(_(u'Үнийн санал төрөлтэй байгаа тул илгээх шаардлагагүй болно!'))
                 line.status = 'send_purchase_confirm'
                 #else:
