@@ -27,6 +27,7 @@
                     <data>
                          <xpath expr='//field[@name="partner_id"]' position="after">
                             <field name="code"/>
+                            <field name="is_sale" />
                         </xpath>
                     </data>
                 </field>

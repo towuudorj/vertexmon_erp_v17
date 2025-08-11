@@ -20,6 +20,7 @@ class CrmLead(models.Model):
         "Delivered Quantity: Invoiced based on the quantity the vendor "
         "delivered (time or deliveries).",
     )
+    is_sale = fields.Boolean(string='Is sale', default=True, tracking=True)
     invoice_ids = fields.Many2many('account.move',string='Invoice', compute="_compute_invoice")
     invoice_count = fields.Integer(string='Invoice', compute="_compute_invoice")
     purchase_request_ids = fields.Many2many('purchase.requisition', string='Purchase requisition')
@@ -49,8 +50,8 @@ class CrmLead(models.Model):
         for line in self:
             for lines in line.lead_line_ids:
                 #if lines.margin_percent >0.0:
-                if lines.request_type == 'send_quotation':
-                    raise UserError(_(u'Үнийн санал төрөлтэй байгаа тул илгээх шаардлагагүй болно!'))
+                #if lines.request_type == 'send_quotation':
+                #    raise UserError(_(u'Үнийн санал төрөлтэй байгаа тул илгээх шаардлагагүй болно!'))
                 line.status = 'send_purchase_confirm'
                 #else:
                 #    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
@@ -71,9 +72,9 @@ class CrmLead(models.Model):
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
             lead.status = 'purchase_confirm'
-
-            sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
-            sale_order_id.action_confirm()
+            if lead.is_sale == True:
+                sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
+                sale_order_id.action_confirm()
             #lead.message_post(body=_('Purchase request confirmed.'))
 
 
