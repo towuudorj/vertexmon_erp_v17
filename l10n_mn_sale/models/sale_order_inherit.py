@@ -218,6 +218,7 @@ class SaleOrder(models.Model):
                                         ('non_direct', 'Non direct'),
                                         ('quotation', 'Quotation')], string='Sale order type', default='direct',
                                         required=True)
+    is_license = fields.Boolean(string='License', default=False)
 
                                         
     def _compute_amount(self):

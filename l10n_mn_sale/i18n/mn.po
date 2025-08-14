@@ -248,6 +248,22 @@ msgstr "Агуулах"
 msgid "Status"
 msgstr "Төлөв"
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__is_license
+msgid "License"
+msgstr "Лицэнз борлуулалт"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_common_report__is_license
+msgid "License"
+msgstr "Лицэнз борлуулалт"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_new_report__is_license
+msgid "License"
+msgstr "Лицэнз борлуулалт"
+
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__is_sale

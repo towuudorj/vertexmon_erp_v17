@@ -20,6 +20,8 @@ class SaleOrderCommonReport(models.TransientModel):
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
     target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
                                       string='States', default='posted')
+    is_license = fields.Boolean(string='License', default=False)
+
     
     
 
@@ -31,6 +33,7 @@ class SaleOrderCommonReport(models.TransientModel):
             'end_date': self.date_to,
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
+            'is_license': self.is_license,
         }
         return {
             'type': 'ir.actions.report',
@@ -121,31 +124,35 @@ class SaleOrderCommonReport(models.TransientModel):
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
                     ('state', 'in', ['sale']),
+                    ('is_license','=', data['is_license']),
                     ('user_id', '=', data['sales_user_id']),
-                ],order='date_order desc')
+                ],order='date_order asc')
             else:
                 sale_order_id = sale_order_obj.search([
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
                     ('state', 'not in', ['cancel']),
+                    ('is_license','=', data['is_license']),
                     ('user_id', '=', data['sales_user_id'])
-                ],order='date_order desc')
+                ],order='date_order asc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_id = sale_order_obj.search([
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
+                    ('is_license','=', data['is_license']),
                     ('state', 'in', ['sale'])
-                ],order='date_order desc')
+                ],order='date_order asc')
             else:
                 sale_order_id = sale_order_obj.search([
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel'])
-                ],order='date_order desc')
+                    ('state', 'not in', ['cancel']),
+                    ('is_license','=', data['is_license'])
+                ],order='date_order asc')
         num = 1
 
         total_amount_untaxed = 0.0
