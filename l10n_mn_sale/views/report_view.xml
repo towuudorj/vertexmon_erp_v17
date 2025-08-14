@@ -16,6 +16,17 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="sale_order_expense_ot_new_mn" model="ir.actions.report">
+            <field name="name">Зарлагын баримт OT</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_sale.mn_sale_ot_stock_expense</field>
+            <field name="report_file">l10n_mn_sale.mn_ot_stock_expense</field>
+            <field name="print_report_name">'expense_receipt_ot_%s' % (object.name)</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
 
         <record id="sale_order_expense_new_mn" model="ir.actions.report">
             <field name="name">Зарлагын баримт</field>

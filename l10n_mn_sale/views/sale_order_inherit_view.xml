@@ -60,7 +60,7 @@
             </xpath>
 
             <xpath expr="//button[@name='action_confirm']" position="replace">
-                <button name="action_confirm" groups="sales_team.group_sale_manager" id="action_confirm" data-hotkey="q" string="Батлах" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
+                <button name="action_confirm" id="action_confirm" data-hotkey="q" string="Батлах" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
 
             </xpath>
             <xpath expr="//button[@name='action_preview_sale_order']" position="replace">
