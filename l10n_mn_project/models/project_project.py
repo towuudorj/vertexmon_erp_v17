@@ -14,16 +14,28 @@ class ProjectProject(models.Model):
     def _amount_all(self):
         for order in self:  
             total_amount = 0
+            total_tax_amount = 0
+            total_cost = 0
             for line in order.products_line:
                 total_amount += line.price_total
+                total_tax_amount += (line.price_total/100.0)*0.101
+                total_cost += line.cost_total
             order.update({
-                'total_amount': total_amount
+                'total_amount': total_amount,
+                'total_tax_amount':total_tax_amount,
+                'total_cost':total_cost
             })
 
     sequence_name = fields.Char("Sequence", copy=False)
 
     products_line = fields.One2many('project.products.line', 'project_id', string='Products Line', copy=True,)
     total_amount = fields.Monetary(string='Total Amount', store=True, readonly=True, compute='_amount_all')
+    total_tax_amount = fields.Monetary(
+        string='Total Tax Amount', store=True, readonly=True, compute='_amount_all'
+    )
+    total_cost = fields.Monetary(
+        string='Total Cost', store=True, readonly=True, compute='_amount_all'
+    )
     product_notes = fields.Char('Product Notes')
     project_type = fields.Selection([
         ('project', 'Project'),
@@ -33,6 +45,7 @@ class ProjectProject(models.Model):
         compute="_compute_purchase_requisition", string="# Purchase requisition"
     )
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager',)
 
     @api.model_create_multi
     def create(self,vals_list):
@@ -45,7 +58,7 @@ class ProjectProject(models.Model):
     #### Худалдан авалтын хүсэлт үүгэх
     def action_create_purchase_requisition(self):
         
-        foreign_line = self.env['project.products.line'].search([('is_purchase','=', False),('is_foreign_purchases','=', True),('project_id','=', self.id)])
+        foreign_line = self.env['project.products.line'].search([('is_purchase','=', False),('project_id','=', self.id)])
         # for line in self.products_line:
         if foreign_line:
             for_req_id = self.env['purchase.requisition'].create({
@@ -57,7 +70,7 @@ class ProjectProject(models.Model):
                 'description':self.description,
                 'type': 'foreign',
             })  
-        inner_line = self.env['project.products.line'].search([('is_purchase','=', False),('is_foreign_purchases','=', False),('project_id','=', self.id)])
+        inner_line = self.env['project.products.line'].search([('is_purchase','=', False),('project_id','=', self.id)])
           
         if inner_line:
             requisition_id = self.env['purchase.requisition'].create({
@@ -112,7 +125,6 @@ class ProjectProject(models.Model):
      #### Даалгавар үүсгэх
     def action_create_tasks(self):
         line_ids = []
-        print('sdsdsdsdsd')
         view = self.env.ref('l10n_mn_project.view_project_pack_tasks')
         for line in self.products_line:
             pline_vals ={
@@ -123,7 +135,6 @@ class ProjectProject(models.Model):
             }
             lines = self.env['project.package.task.create.line'].create(pline_vals)
             line_ids.append(lines.id)
-            print('lineeeeeeeeeeeeeeeesss==', line_ids)
         wiz = self.env['project.package.task.create'].create({
             'product_lines': line_ids,
                                                        })

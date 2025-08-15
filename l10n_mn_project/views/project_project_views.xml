@@ -49,27 +49,25 @@
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="warehouse_id"/>
+                <field name="purchase_manager_id"/>
                 <field name="project_type"/>
             </xpath>    
             
             <xpath expr="//page[@name='description']"
                    position="after">
                 <page name="project_products" string="Products">
-                    <field
-                            name="products_line"
+                    <field name="products_line"
                             widget="section_and_note_one2many"
-                            mode="tree"
-                            >
-                        <tree
-                                string="Project Product Lines"
+                            mode="tree" >
+                        <tree string="Project Product Lines"
                                 editable="bottom"
-                                limit="200"
-                            >
+                                limit="200">
                             <field name="sequence" widget="handle" />
                             <field name="product_id"/>
                             <field name="name" widget="section_and_note_text" optional="show"/>
                             <field name="product_qty"/>
-                            <field name="is_foreign_purchases"/>
+                            <field name="purchase_type"/>
+                            <field name="purchase_manager_id"/>
                             <field name="qty_available"/>
                             <field name="qty_delivered"/>
                             <field name="cost_price"/>
@@ -79,9 +77,8 @@
                         </tree>
                     </field>
                      <group class="oe_subtotal_footer oe_right">
-                    
                         <field name="total_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-        
+                        <field name="total_tax_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                      </group>
                     <field name="product_notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                     <div class="oe_clear"/>
@@ -113,8 +110,7 @@
                     class="oe_stat_button"
                     name="button_open_purchase_requisition"
                     type="object"
-                    icon="fa-shopping-cart"
-                >
+                    icon="fa-shopping-cart">
                     <field string="Purchase Requisition" name="purchase_requisition_count" widget="statinfo" />
                 </button>
             </div>

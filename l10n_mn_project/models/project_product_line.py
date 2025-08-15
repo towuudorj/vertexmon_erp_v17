@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta, time
-from dateutil.relativedelta import relativedelta
-from itertools import groupby
-from pytz import timezone, UTC
-from werkzeug.urls import url_encode
-
+from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.float_utils import float_compare, float_is_zero
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang, get_lang
-from odoo.tools.float_utils import float_round
+
 
 
 class ProjectProductsLine(models.Model):
@@ -25,7 +15,6 @@ class ProjectProductsLine(models.Model):
     def _compute_qty_delivered(self):   
                            
         for line in self:
-            print('asdsadasdasdad', line)
             line.qty_delivered = 1
     
     
@@ -39,20 +28,20 @@ class ProjectProductsLine(models.Model):
         string="Description",
         compute='_compute_name',
         store=True, readonly=False, required=True, precompute=True)
-
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     # product_uom = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
     price_unit = fields.Float(string='Price', required=True, digits='Product Price')
     cost_price = fields.Float(string='Cost Price', required=True, digits='Product Price')
     qty_available = fields.Float(string='Available QTY', required=True, digits='Product', readonly=True, default=0)
     qty_delivered = fields.Float(string='Delivered', compute='_compute_qty_delivered', required=True, digits='Product', readonly=True, default=0)
-   
     price_total = fields.Float(string='Total Price', readonly=True)
     cost_total = fields.Float(string='Total Cost', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True, default=lambda self: self.env.company)
-    is_foreign_purchases = fields.Boolean(string='Foreign purchases')
+    purchase_type = fields.Selection([('local','Local'),
+                                    ('foreign','Foreign')],string='Purchase Type',)
     is_task = fields.Boolean(string='Task', default=False)
     is_purchase = fields.Boolean(string='Purchase', default=False)
+    purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager')
     
     @api.onchange('price_unit')
     def onchange_price_unit(self):

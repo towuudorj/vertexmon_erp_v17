@@ -43,6 +43,22 @@ msgid "Type"
 msgstr "Төрөл"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__purchase_manager_id
+msgid "Purchase Manager"
+msgstr "Худалдан авалтын менежер"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__purchase_manager_id
+msgid "Purchase Manager"
+msgstr "Худалдан авалтын менежер"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__purchase_type
+msgid "Purchase Type"
+msgstr "Худалдан авалтын төрөл"
+
+#. module: l10n_mn_project
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
 msgid "Create Tasks"
 msgstr "Даалгавар үүсгэх"
@@ -81,6 +97,16 @@ msgstr "Тайлбар"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн нэр"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_products_line__purchase_type__foreign
+msgid "Foreign"
+msgstr "Гадаад"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_products_line__purchase_type__local
+msgid "Local"
+msgstr "Дотоод"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__purchase_requisition__type__foreign

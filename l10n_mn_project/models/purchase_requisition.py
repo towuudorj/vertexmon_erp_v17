@@ -13,7 +13,7 @@ class PurchaseRequisition(models.Model):
     
     project_id = fields.Many2one('project.project', string="Project", )
     type = fields.Selection([('inner', 'Inner'),
-        ('foreign', 'Foreign'),], string='Type')
+                            ('foreign', 'Foreign'),], string='Type')
 
 
 class PurchaseRequisitionLine(models.Model):
