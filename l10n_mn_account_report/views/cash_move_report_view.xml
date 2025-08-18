@@ -9,6 +9,7 @@
                     <form string="Cash move line report">
                     	<group>
                         	<field name="company_id"/>
+                            <field name="fiscalyear_id" />
                         	<field name="date_from"/>
                         	<field name="date_to"/>
                         </group>
