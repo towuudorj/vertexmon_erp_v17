@@ -59,13 +59,21 @@ class CashMovelineReport(models.TransientModel):
                                     'align': 'center',
                                     'border': 1,
                                     'font_size': 12,
-                                    'bold': True
+                                    'bold': True,
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                 })
         data_right = workbook.add_format({
                                     'align': 'right',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00'
+                                    'num_format': '#,##0.00;(#,##0.00)'
+                                    })
+        data_right_bold = workbook.add_format({
+                                    'align': 'right',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'bold': True,
+                                    'num_format': '#,##0.00;(#,##0.00)'
                                     })
 
         sheet.set_column(3, 8, 20)
@@ -132,7 +140,7 @@ class CashMovelineReport(models.TransientModel):
             sheet.merge_range('A%s:B%s'%(rowx, rowx), u'Дансны №', txt_center)
             sheet.merge_range('C%s:D%s'%(rowx, rowx), u'%s %s'%(line.code,line.name), txt_center)
             sheet.merge_range('E%s:G%s'%(rowx, rowx), u'Эхний үлдэгдэл', txt_center)
-            sheet.merge_range('H%s:H%s'%(rowx, rowx), balance or 0, txt_center)
+            sheet.write('H%s'%(rowx), balance, data_right_bold)
             rowx +=1
             for i in all:
                 if line.code==i[4]:
@@ -163,8 +171,8 @@ class CashMovelineReport(models.TransientModel):
         sheet.write('G%s'%rowx, total_credit, txt_center)
         sheet.write('H%s'%rowx, balance, data_right)
         rowx += 1
-        sheet.write("C%s"%(rowx + 4), u"Нягтлан бодогч: ..................................................../                                            /",)
-        sheet.write("C%s"%(rowx + 6), u"Мөнгөний нярав: ..................................................../                                           /")
+        sheet.write("C%s"%(rowx + 3), u"Нягтлан бодогч: ..................................................../                                            /",)
+        sheet.write("C%s"%(rowx + 5), u"Мөнгөний нярав: ..................................................../                                           /")
         
         workbook.close()
         output.seek(0)
