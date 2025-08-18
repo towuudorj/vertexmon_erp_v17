@@ -133,7 +133,9 @@ class CashMovelineReport(models.TransientModel):
         total_credit = 0.0
         for line in account_id:
             balance = 0.0
-            self.env.cr.execute("select sum(debit-credit) as balance from account_move_line where date >= '%s' and date < '%s' and account_id = %s"%(fiscalyear_id.date_from,data['start_date'],line.id))
+            self.env.cr.execute("""select sum(aml.debit-aml.credit) as balance from account_move_line as aml
+                                    left join account_move as am on aml.move_id = am.id where aml.date >= '%s' 
+                                    and aml.date < '%s' and aml.account_id = %s and am.state = 'posted' """%(fiscalyear_id.date_from,data['start_date'],line.id))
             acc = self._cr.dictfetchall()
             if acc[0]['balance'] !=None:
                 balance = acc[0]['balance']
