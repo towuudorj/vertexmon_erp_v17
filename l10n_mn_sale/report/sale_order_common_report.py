@@ -103,8 +103,10 @@ class SaleOrderCommonReport(models.TransientModel):
         sheet.set_column(0, 5, 15)
         sheet.set_column(6, 6, 40)
         sheet.set_column(7, 17, 15)
-
         rowx = 1
+        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
+        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        rowx += 3
         sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
         sheet.write('B%s'%rowx, u'Захиалгын №', title)
         sheet.write("C%s"%rowx, u'Харилцагчийн №', title)
@@ -178,6 +180,11 @@ class SaleOrderCommonReport(models.TransientModel):
         sheet.write("F%s"%rowx, total_amount_tax, data_bold_center)
         sheet.write("G%s"%rowx, total_amount_total, data_bold_center)
         sheet.write("H%s"%rowx, '', data_bold_center)
+
+
+        rowx += 1
+        sheet.write("C%s"%(rowx + 3), u"Хянасан ажилтан: ..................................................../                                            /",)
+        
 
         workbook.close()
         output.seek(0)
