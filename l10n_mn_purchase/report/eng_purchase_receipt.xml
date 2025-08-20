@@ -72,6 +72,10 @@
                                 <td style="padding: 5px; text-align: center;">
                                     <span t-field="o.date_order" t-options="{'widget': 'date', 'format': 'yyyy-MM-dd'}"/>
                                 </td>
+                                <td style="padding: 5px; text-align: center;">
+                                </td>
+                                <td style="padding: 5px; text-align: center;">
+                                </td>
                             </tr>
                         </tbody>
                     </table>
