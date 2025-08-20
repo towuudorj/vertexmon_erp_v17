@@ -19,9 +19,7 @@
                         <field name="pline_id" column_invisible="True"/>
                     </tree>
                 </field>
-                
-                
-               
+
                 <footer>
                     <button name="action_create_packege_tasks" type="object"
                         id="create_packege_tasks_open"

@@ -6,6 +6,11 @@
             <field name="name">Худалдан авалтын хүсэлт ажилтан</field>
         </record>
 
+        <record id="group_sale_order_confirm" model="res.groups">
+            <field name="name">Борлуулалтын захиалга батлах</field>
+        </record>
+
+
 
     </data>
 </odoo>

@@ -21,6 +21,7 @@ class CrmLead(models.Model):
         "delivered (time or deliveries).",
     )
     is_sale = fields.Boolean(string='Is sale', default=True, tracking=True)
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True)
     invoice_ids = fields.Many2many('account.move',string='Invoice', compute="_compute_invoice")
     invoice_count = fields.Integer(string='Invoice', compute="_compute_invoice")
     purchase_request_ids = fields.Many2many('purchase.requisition', string='Purchase requisition')
@@ -40,7 +41,7 @@ class CrmLead(models.Model):
                                   string='Sales type',
                                   default='direct',
                                   required=True, readonly=True)
-    send_date = fields.Date(string='Quotation send date', required=True)
+    send_date = fields.Date(string='Quotation send date', required=True, default=fields.Date.today())
     amount_total = fields.Float(string='Total amount', compute='_compute_amount_total')
     crm_type = fields.Selection([('crm', 'CRM'),
                                 ('quote', 'Quotation Request')], string='CRM type', default='crm')
@@ -113,6 +114,7 @@ class CrmLead(models.Model):
             'medium_id': self.medium_id.id,
             'date_order': self.send_date,
             'origin': self.name,
+            'pricelist_id':self.pricelist_id.id,
             'user_id':self.user_id.id,
             'source_id': self.source_id.id,
             'company_id': self.company_id.id or self.env.company.id,

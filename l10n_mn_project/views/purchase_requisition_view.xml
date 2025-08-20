@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Added project Sequence -->
+    <!-- Added project Sequence 
     <record id="view_purchase_requisition_form_mn" model="ir.ui.view">
         <field name="name">purchase.requisition.form.inherit.mn</field>
         <field name="model">purchase.requisition</field>
@@ -13,6 +13,6 @@
             </xpath>
         </field>
     </record>
-
+-->
 
 </odoo>

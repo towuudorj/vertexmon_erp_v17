@@ -60,14 +60,10 @@
             </xpath>
 
             <xpath expr="//button[@name='action_confirm']" position="replace">
-                <button name="action_confirm" id="action_confirm" data-hotkey="q" string="Батлах" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
+                <button name="action_confirm" groups="l10n_mn_sale.group_sale_order_confirm" id="action_confirm" data-hotkey="q" string="Батлах" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
 
             </xpath>
             <xpath expr="//button[@name='action_preview_sale_order']" position="replace">
-                <button string="Purchase request" type="object"
-                    invisible="state != 'draft'"
-                    name="purchase_request_create" />
-
                  <button string="Create contract" type="object"
                     invisible="state != 'draft'"
                     name="create_sale_contract" />

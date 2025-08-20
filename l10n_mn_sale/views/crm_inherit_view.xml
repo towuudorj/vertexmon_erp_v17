@@ -140,6 +140,7 @@
                         <xpath expr='//field[@name="tag_ids"]' position="after">
                             <field name="team_id" />
                             <field name="source_id" />
+                            <field name="pricelist_id"/>
                         </xpath>
                         <xpath expr='//notebook/page[@name="internal_notes"]' position="before">
                             <page string='Order line'>

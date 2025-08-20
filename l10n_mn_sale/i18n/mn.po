@@ -271,6 +271,11 @@ msgid "Is sale"
 msgstr "Борлуулалт"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__pricelist_id
+msgid "Pricelist"
+msgstr "Үнийн хүснэгт"
+
+#. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__name
 msgid "Contract name"
 msgstr "Гэрээний нэр"
