@@ -9,14 +9,14 @@
             <field name="arch" type="xml">
 	             <form string="Product register">
 					<group col="4" colspan="2">
-						<field name="company_id"/>
+						<field name="company_id" options="{'no_create': True, 'no_open': True}" />
 						<field name="name"/>
-						<field name="brand_id"/>
+						<field name="brand_id" options="{'no_create': True, 'no_open': True}" />
                         <field name="model"/>
-						<field name="uom_id"/>
-						<field name="categ_id"/>
-                        <field name="supplier_tax_ids" widget="many2many_tags"/>
-						<field name="distributor_ids"/>
+						<field name="uom_id" options="{'no_create': True, 'no_open': True}" />
+						<field name="categ_id" options="{'no_create': True, 'no_open': True}" />
+                        <field name="supplier_tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" />
+						<field name="distributor_ids" options="{'no_create': True, 'no_open': True}" />
 					</group>
 					<footer>
                         <button name="create_product" string="Create product" type="object" class="oe_highlight" />

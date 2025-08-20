@@ -99,7 +99,9 @@ class CrmLead(models.Model):
                         'product_uom_qty': line.qty,
                         'product_uom': line.uom_id.id,
                         'price_unit': line.sale_price,
+                        'route_id':line.product_id.route_ids.id,
                         'crm_lead_line_id': line.id,
+                        'company_id': self.company_id.id or self.env.company.id,
                         'tax_id': [(6, 0, line.product_id.taxes_id.ids)],
                         }
                 line_ids.append((0, 0, datas))
@@ -114,12 +116,15 @@ class CrmLead(models.Model):
             'medium_id': self.medium_id.id,
             'date_order': self.send_date,
             'origin': self.name,
+            'warehouse_id': self.team_id.warehouse_id.id,
             'pricelist_id':self.pricelist_id.id,
             'user_id':self.user_id.id,
+            'picking_policy': 'direct',
             'source_id': self.source_id.id,
             'company_id': self.company_id.id or self.env.company.id,
             'tag_ids': [(6, 0, self.tag_ids.ids)],
             'team_id': self.team_id.id,
+            'company_id': self.company_id.id or self.env.company.id,
             'order_line':line_ids 
             }
         

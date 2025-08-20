@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 class CreateProductWizard(models.TransientModel):
     _name = 'create.product.wizard'
@@ -33,28 +34,32 @@ class CreateProductWizard(models.TransientModel):
     def create_product(self):
         line_ids = self.env['purchase.requisition.line'].browse(self._context.get('active_ids', []))
         for line in line_ids:
-            create_product_id = self.env['product.product'].create({
-                'name': self.name,
-                'uom_id': self.uom_id.id,
-                'uom_po_id': self.uom_id.id,
-                'brand_id': self.brand_id.id,
-                'categ_id': self.categ_id.id,
-                'model':self.model,
-                'distributor_ids': self.distributor_ids.id,
-                'company_id': self.company_id.id,
-                'supplier_taxes_id': [(6, 0, self.supplier_tax_ids.ids)],
-                'detailed_type': 'product',
-            })
-            crm_line_id = self.env['crm.lead.line'].search([('id', '=', line.lead_line_id.id)])
-            if crm_line_id.lead_id.order_ids:
-                for order in crm_line_id.lead_id.order_ids.order_line:
-                    if order.crm_lead_line_id.id == crm_line_id.id:
-                        order.write({'product_id': create_product_id.id, 'product_uom': self.uom_id.id})
-            crm_line_id.write({
-                                'product_id': create_product_id.id,
-                                'uom_id': self.uom_id.id
-                                })
-            line.product_id = create_product_id.id
+            product_id = self.env['product.product'].search([('name','=',self.name)])
+            if product_id:
+                raise UserError(_('%s Ийм бараа үүссэн байгаа тул та сонгоно уу!'% self.name))
+            else:
+                create_product_id = self.env['product.product'].create({
+                    'name': self.name,
+                    'uom_id': self.uom_id.id,
+                    'uom_po_id': self.uom_id.id,
+                    'brand_id': self.brand_id.id,
+                    'categ_id': self.categ_id.id,
+                    'model':self.model,
+                    'distributor_ids': self.distributor_ids.id,
+                    'company_id': self.company_id.id,
+                    'supplier_taxes_id': [(6, 0, self.supplier_tax_ids.ids)],
+                    'detailed_type': 'product',
+                })
+                crm_line_id = self.env['crm.lead.line'].search([('id', '=', line.lead_line_id.id)])
+                if crm_line_id.lead_id.order_ids:
+                    for order in crm_line_id.lead_id.order_ids.order_line:
+                        if order.crm_lead_line_id.id == crm_line_id.id:
+                            order.write({'product_id': create_product_id.id, 'product_uom': self.uom_id.id})
+                crm_line_id.write({
+                                    'product_id': create_product_id.id,
+                                    'uom_id': self.uom_id.id
+                                    })
+                line.product_id = create_product_id.id
 
 
 
