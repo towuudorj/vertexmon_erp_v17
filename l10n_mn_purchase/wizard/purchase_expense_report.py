@@ -68,7 +68,7 @@ class PurchaseExpenseReport(models.TransientModel):
         sheet.set_column(0, 26, 20)
         rowx = 1
         sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
-        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'Компани: %s'%(data['company_name']), title)
+        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
         sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
         rowx += 3
         sheet.write("A%s"%rowx, u'Захиалгын дугаар', header_txt)
@@ -232,7 +232,8 @@ class PurchaseExpenseReport(models.TransientModel):
 
         rowx += 1
         sheet.write("C%s"%(rowx + 3), u"Хянасан ажилтан: ..................................................../                                            /",)
-        
+        sheet.write("C%s"%(rowx + 4), u"Тайлан гаргасан: ..................................................../                                            /",)
+
 
 
         workbook.close()
