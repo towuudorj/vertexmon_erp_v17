@@ -46,7 +46,7 @@ class CreateProductWizard(models.TransientModel):
                     'categ_id': self.categ_id.id,
                     'model':self.model,
                     'distributor_ids': self.distributor_ids.id,
-                    'company_id': self.company_id.id,
+                    'company_id': False,
                     'supplier_taxes_id': [(6, 0, self.supplier_tax_ids.ids)],
                     'detailed_type': 'product',
                 })
