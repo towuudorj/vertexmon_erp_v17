@@ -63,11 +63,19 @@ class PurchaseExpenseReport(models.TransientModel):
                                     'text_wrap': True,
                                     'num_format': '#,##0.00; (#,##0.00)'
                                     })
+        title = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'bold': True,
+                                    'font_size': 12,
+                                    'bg_color': '#B22222',
+                                    'color': 'white'
+                                })
                                 
 
         sheet.set_column(0, 26, 20)
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
+        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Худалдан авалтын тайлан', title)
         sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
         sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
         rowx += 3
