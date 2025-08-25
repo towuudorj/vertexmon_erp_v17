@@ -75,9 +75,9 @@ class PurchaseExpenseReport(models.TransientModel):
 
         sheet.set_column(0, 26, 20)
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Худалдан авалтын тайлан', title)
+        sheet.merge_range("A%s:AB%s"%(rowx,rowx), u'Худалдан авалтын тайлан', title)
         sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
-        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        sheet.merge_range("F%s:AB%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
         rowx += 3
         sheet.write("A%s"%rowx, u'Захиалгын дугаар', header_txt)
         sheet.write("B%s"%rowx, u"Мөр", header_txt)
@@ -107,6 +107,7 @@ class PurchaseExpenseReport(models.TransientModel):
         sheet.write("Z%s"%rowx, u'Нийт зардал+өртөг', header_txt)
         sheet.write("AA%s"%rowx, u'Тээврийн компани', header_txt)
         sheet.write("AB%s"%rowx, u'Хүргэсэн тоо', header_txt)
+        rowx +=1
         
 
         purchase_orders = self.env['purchase.order'].search([
