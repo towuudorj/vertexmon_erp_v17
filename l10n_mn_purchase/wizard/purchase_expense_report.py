@@ -147,7 +147,7 @@ class PurchaseExpenseReport(models.TransientModel):
                             group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                             """%(data['start_date'],data['end_date'],data['company_id']))
             purchase_data_ids = self._cr.dictfetchall()
-        rowx = 2
+        
         for purchase_data in purchase_data_ids:
             product = self.env['product.product'].browse(purchase_data['product_id'])
             partner = self.env['res.partner'].browse(purchase_data['partner_id'])
