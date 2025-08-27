@@ -20,6 +20,7 @@ class CrmLead(models.Model):
         "Delivered Quantity: Invoiced based on the quantity the vendor "
         "delivered (time or deliveries).",
     )
+    project_id = fields.Many2one('project.project', string='Project')
     is_sale = fields.Boolean(string='Is sale', default=True, tracking=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True)
     invoice_ids = fields.Many2many('account.move',string='Invoice', compute="_compute_invoice")

@@ -9,7 +9,6 @@ class CrmLeadLine(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
     product_id = fields.Many2one('product.product', string='Product')
-    project_id = fields.Many2one('project.project', string='Project')
     name = fields.Text(string='Reference', required=True)
     uom_id = fields.Many2one('uom.uom', string='Uom')
     is_price_request = fields.Boolean(string='Is price request')
