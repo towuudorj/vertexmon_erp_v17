@@ -270,6 +270,12 @@ msgstr "Лицэнз борлуулалт"
 msgid "Is sale"
 msgstr "Борлуулалт"
 
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__project_id
+msgid "Project"
+msgstr "Төсөл"
+
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__pricelist_id
 msgid "Pricelist"

@@ -110,6 +110,7 @@
                                 <field name="sales_type" />
                                 <field name="crm_type" />
                                 <field name="send_date" />
+                                <field name="project_id"/>
                             </group>
                         </xpath>
 
