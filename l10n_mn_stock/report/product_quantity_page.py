@@ -127,6 +127,10 @@ class ProductQuantityPage(models.TransientModel):
                     product_ids = product_obj.search([('categ_id','=',category_id)],order='name asc')
                     for pr in product_ids:
                         product.append(pr.id)
+            else:
+                product_ids = product_obj.search([],order='name asc')
+                for pr in product_ids:
+                    product.append(pr.id)
         products = product_obj.search([('id','in',product)],order='name asc')
         for pro in products:
             rowx += 1
