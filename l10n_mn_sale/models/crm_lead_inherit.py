@@ -7,6 +7,8 @@ from odoo.exceptions import UserError
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
+
+
     code = fields.Char(string='Code', readonly=True,
                         default=lambda self: self.env['ir.sequence'].with_context(company_id=self.company_id.id).next_by_code('crm.lead'))
     partner_id = fields.Many2one(
@@ -47,6 +49,15 @@ class CrmLead(models.Model):
     crm_type = fields.Selection([('crm', 'CRM'),
                                 ('quote', 'Quotation Request')], string='CRM type', default='crm')
     
+    
+    @api.onchange('partner_id', 'company_id')
+    def _onchange_pricelist_id(self):
+        for order in self:
+            if not order.partner_id:
+                order.pricelist_id = False
+                continue
+            order = order.with_company(order.company_id)
+            order.pricelist_id = order.partner_id.property_product_pricelist
 
     def send_purchase_request(self):
         for line in self:

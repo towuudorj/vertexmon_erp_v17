@@ -7,6 +7,8 @@
         
         <menuitem id="stock_detail_report_mn_menu" name="Stock detail report" parent="stock.menu_stock_config_settings" action="action_product_detail_report"  />
         
+        <menuitem id="stock_product_quantity_page_mn_menu" name="Тооллогын хуудас" parent="stock.menu_stock_config_settings" action="action_product_quantity_page"  />
+
         <menuitem id="stock_summary_report_mn_menu" name="Stock summary report" parent="stock.menu_stock_config_settings" action="action_product_summary_report"  />
         
 

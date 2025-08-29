@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        	<record model="ir.ui.view" id="freight_type_register_tree_view">
+                <field name="name">freight.type.register.tree</field>
+                <field name="model">freight.type.register</field>
+                <field name="arch" type="xml">
+                    <tree string="Freight type">
+                    	<field name="company_id"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="freight_type_register_form_view">
+                <field name="name">freight.type.register.form</field>
+                <field name="model">freight.type.register</field>
+                <field name="arch" type="xml">
+                    <form string="Freight Type">
+                        <sheet>
+                            <group>
+                                <field name="company_id" />
+                                <field name="name" />
+                                <field name="code"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_freight_type_register_tree_view">
+                <field name="name">Freight type register</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">freight.type.register</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="freight_type_register_tree_view"/>
+            </record>
+        
+
+    </data>
+</odoo>

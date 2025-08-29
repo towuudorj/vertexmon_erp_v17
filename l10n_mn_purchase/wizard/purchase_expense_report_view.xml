@@ -13,6 +13,7 @@
                         <field name="product_id"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
+                        <field name="is_detailed" />
                    </group>
                    <footer>
                         <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />

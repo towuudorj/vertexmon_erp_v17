@@ -8,6 +8,13 @@
 				parent="purchase.purchase_report_main"
                 action="action_purchase_expense_report"
 				sequence="50" />
+
+        <menuitem 
+				id="action_freight_type_register_menu" 
+				name="Freight type register" 
+				parent="purchase.menu_purchase_config"
+                action="action_freight_type_register_tree_view"
+				sequence="50" />
         
 
     </data>

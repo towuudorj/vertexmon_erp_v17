@@ -15,6 +15,8 @@ class PurchaseOrder(models.Model):
     is_expense = fields.Boolean(string='Is Expense', default=False)
     destininatio_id = fields.Char(string='Destination')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    dispatch_date = fields.Date(string='Dispatch date')
+    freight_type_id = fields.Many2one('freight.type.register', string='Freight type')
 
 
     def _prepare_invoice(self):

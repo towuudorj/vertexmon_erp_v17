@@ -7,6 +7,57 @@ from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+
+    def product_price_update_before_done(self, forced_qty=None):
+        tmpl_dict = defaultdict(lambda: 0.0)
+        # adapt standard price on incomming moves if the product cost_method is 'average'
+        std_price_update = {}
+        for move in self:
+            if not move._is_in():
+                continue
+            if move.with_company(move.company_id).product_id.cost_method == 'standard':
+                continue
+            product_tot_qty_available = move.product_id.sudo().with_company(move.company_id).quantity_svl + tmpl_dict[move.product_id.id]
+            rounding = move.product_id.uom_id.rounding
+
+            valued_move_lines = move._get_in_move_lines()
+            quantity = 0
+            for valued_move_line in valued_move_lines:
+                quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+
+            qty = forced_qty or quantity
+            if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
+                new_std_price = move._get_price_unit()
+            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
+                    float_is_zero(product_tot_qty_available + qty, precision_rounding=rounding):
+                new_std_price = move._get_price_unit()
+            else:
+                # Get the standard price
+                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.with_company(move.company_id).standard_price
+                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
+            tmpl_dict[move.product_id.id] += quantity
+            # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+            move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
+            std_price_update[move.company_id.id, move.product_id.id] = new_std_price
+
+    def _get_in_svl_vals(self, forced_quantity):
+        svl_vals_list = []
+        for move in self:
+            move = move.with_company(move.company_id)
+            valued_move_lines = move._get_in_move_lines()
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+            unit_cost = move.product_id.standard_price
+            if move.product_id.cost_method != 'standard':
+                unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
+            svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
+            svl_vals.update(move._prepare_common_svl_vals())
+            if forced_quantity:
+                svl_vals['description'] = 'Correction of %s (modification of past move)' % (move.picking_id.name or move.name)
+            svl_vals_list.append(svl_vals)
+        return svl_vals_list
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()

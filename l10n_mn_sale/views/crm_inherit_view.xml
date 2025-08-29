@@ -8,9 +8,13 @@
                 <field name="model">crm.lead</field>
                 <field name="arch" type="xml">
                     <data>
-                         <xpath expr='//field[@name="name"]' position="after">
+                        <xpath expr='//field[@name="name"]' position="after">
                             <field name="code" />
                         </xpath>
+
+                         <tree position="attributes">
+                             <attribute name="decoration-success">status == 'purchase_confirm'</attribute>
+                        </tree>
                         <xpath expr='//field[@name="expected_revenue"]' position="replace">
                             <field name="amount_total" />
                             <field name="status" />

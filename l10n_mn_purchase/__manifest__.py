@@ -34,6 +34,7 @@
               "report/eng_purchase_receipt.xml",
               "views/purchase_order_inherit_view.xml",
               "views/purchase_requisition_inherit_view.xml",
+              "views/freight_type_register_view.xml",
               "views/report_view.xml",
               "wizard/purchase_expense_report_view.xml",
               "views/menu_view.xml"

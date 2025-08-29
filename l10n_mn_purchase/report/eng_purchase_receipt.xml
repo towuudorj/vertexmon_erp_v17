@@ -58,8 +58,6 @@
                             <tr>
                                 <th style="padding: 5px; text-align: center;">SHIPPING METHOD</th>
                                 <th style="padding: 5px; text-align: center;">PAYMENT TERM</th>
-                                <th style="padding: 5px; text-align: center;">CURRENCY</th>
-                                <th style="padding: 5px; text-align: center;">DESTINATION</th>
                                 <th style="padding: 5px; text-align: center;">DELIVERY DATE</th>
                             </tr>
                         </thead>
@@ -72,10 +70,6 @@
                                 <td style="padding: 5px; text-align: center;">
                                     <span t-field="o.date_order" t-options="{'widget': 'date', 'format': 'yyyy-MM-dd'}"/>
                                 </td>
-                                <td style="padding: 5px; text-align: center;">
-                                </td>
-                                <td style="padding: 5px; text-align: center;">
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -84,9 +78,8 @@
                         <thead style="background-color: #f2f2f2; text-align: center;">
                             <tr>
                                 <th style="padding: 5px; text-align: center;">QTY</th>
-                                <th style="padding: 5px; text-align: left;">PART NO</th>
+                                <th style="padding: 5px; text-align: left;">ITEM</th>
                                 <th style="padding: 5px; text-align: left;">DESCRIPTION</th>
-                                <th style="padding: 5px; text-align: left;">QTY</th>
                                 <th style="padding: 5px; text-align: right;">UNIT PRICE</th>
                                 <th style="padding: 5px; text-align: right;">TOTAL /<span t-field="o.currency_id.name"/>/</th>
                             </tr>

@@ -36,6 +36,7 @@
                 'report/mn_device_handing_act.xml',
                 'report/mn_stock_expense_desc.xml',
                 'report/purchase_add_expense_report.xml',
+                'report/product_quantity_page_view.xml',
                 'wizard/product_detail_report.xml',
                 'wizard/product_summary_report.xml',
                 'views/distributor_register_view.xml',

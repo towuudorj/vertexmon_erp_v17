@@ -24,11 +24,42 @@ msgstr ""
 msgid "Purchase detail report"
 msgstr "Худалдан авалтын дэлгэрэнгүй тайлан"
 
+#. module: l10n_mn_purchase
+#: model:ir.ui.menu,name:l10n_mn_purchase.action_freight_type_register_menu
+#: model:ir.actions.act_window,name:l10n_mn_purchase.action_freight_type_register_tree_view
+msgid "Freight type register"
+msgstr "Тээврийн төрөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__name
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__freight_type_id
+msgid "Name"
+msgstr "Тээврийн төрөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__code
+msgid "Code"
+msgstr "Код"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__active
+msgid "Active"
+msgstr "Идэвхтэй"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__company_id
 msgid "Company"
 msgstr "Компани"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__is_detailed
+msgid "Detailed Report"
+msgstr "Дэлгэрэнгүй"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__date_from

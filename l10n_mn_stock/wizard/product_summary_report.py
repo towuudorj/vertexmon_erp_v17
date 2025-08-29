@@ -299,10 +299,13 @@ class ProductSummaryReport(models.TransientModel):
                 self._cr.execute("""select ml.debit, ml.credit, ml.quantity, ml.product_id from 
                     account_move_line as ml left join account_move as am on am.id = ml.move_id 
                     left join stock_picking as sp on sp.name = am.name
-                    where sp.location_dest = %s and am.company_id = %s
+                    left join stock_move as mv on mv.picking_id = sp.id
+                    where sp.location_dest_id = %s and am.company_id = %s
                     and am.date = '%s' and ml.product_id = %s and am.journal_id = %s
-                    group by mv.product_id"""%(wh.id,data['company_id'],data['start_date'],product_id,journal.id))
+                    group by ml.debit, ml.credit, ml.quantity, ml.product_id
+                    """%(wh.id,data['company_id'],data['start_date'],product_id,journal.id))
                 f_balance = self._cr.dictfetchall()
+                print ("f_balance",f_balance)
                 #move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('product_id','=',product_id),('journal_id','=',journal.id)])
                 #if move_line_id:
                 #    f_balance = move_line_id
@@ -344,10 +347,36 @@ class ProductSummaryReport(models.TransientModel):
                             if expense_move_line_id:
                                 expense = expense_move_line_id
                     else:
+                        self._cr.execute("""SELECT 
+                                            ml.debit, 
+                                            ml.credit, 
+                                            ml.quantity, 
+                                            ml.product_id
+                                        FROM account_move_line AS ml
+                                        LEFT JOIN account_move AS am 
+                                            ON am.id = ml.move_id
+                                        LEFT JOIN product_product AS pp 
+                                            ON pp.id = ml.product_id
+                                        LEFT JOIN product_template AS pt 
+                                            ON pt.id = pp.product_tmpl_id
+                                        LEFT JOIN stock_move_line AS mv 
+                                            ON ml.name = (mv.reference || ' - ' || pt.name)
+                                        WHERE mv.location_dest_id = %s
+                                        AND am.company_id = %s
+                                        AND am.date = '%s'
+                                        AND am.journal_id = %s
+                                        GROUP BY 
+                                            ml.debit, 
+                                            ml.credit, 
+                                            ml.quantity, 
+                                            ml.product_id
+                            """%(wh.id,data['company_id'],data['start_date'],journal.id))
+                        f_balance = self._cr.dictfetchall()
+                        print ("f_balance",f_balance,wh.id,journal.id)
                         # Барааны орлого
-                        move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('journal_id','=',journal.id)])
-                        if move_line_id:
-                            f_balance = move_line_id
+                        #move_line_id = move_line_obj.search( [('account_id','=',f_account_ids),('company_id','=',data['company_id']),('date','<=',data['start_date']),('journal_id','=',journal.id)])
+                        #if move_line_id:
+                        #    f_balance = move_line_id
                             
                         
                         if income_ids !=False:
@@ -412,6 +441,7 @@ class ProductSummaryReport(models.TransientModel):
                 seri = ''
                 if f_balance!=[]:
                     for f_inc in f_balance:
+                        #print ("aaaaaaaaaaaaaa",f_inc)
                         if line.id == f_inc.product_id.id:
                             if f_inc.move_id.state !='cancel':
                                 if f_inc.move_id.state !='draft':
