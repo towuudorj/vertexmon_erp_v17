@@ -128,7 +128,7 @@
 
                     <div style="margin-top: 30px; font-size: 11px;">
                         <p><b>Signed by:</b></p>
-                        <p><b>Date: </b><span t-field="o.date_order" t-options="{'widget': 'date', 'format': 'MM/DD/YYYY'}"/></p>
+                        <p><b>Date: </b><span t-field="o.date_order" t-options="{'widget': 'date', 'format': 'yyyy-MM-dd'}"/></p>
                     </div>
 
                 </div>
