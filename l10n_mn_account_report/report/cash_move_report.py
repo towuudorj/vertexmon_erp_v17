@@ -111,7 +111,7 @@ class CashMovelineReport(models.TransientModel):
             left join account_account AS aa on aa.id = aml.account_id \
             left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
             WHERE am.date >= '%s' and am.date <='%s' and aml.account_id = %s and am.state='posted' \
-            order by aml.name asc"%(data['start_date'],data['end_date'],data['account_ids'][0]))
+            order by aml.date asc"%(data['start_date'],data['end_date'],data['account_ids'][0]))
             all = self._cr.fetchall()
             
         else:
@@ -123,7 +123,7 @@ class CashMovelineReport(models.TransientModel):
             left join account_account AS aa on aa.id = aml.account_id \
             left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type \
             WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in %s and am.state='posted' \
-            order by aml.name asc"%(data['start_date'],data['end_date'],tuple(data['account_ids'])))
+            order by aml.date asc"%(data['start_date'],data['end_date'],tuple(data['account_ids'])))
             all = self._cr.fetchall()
         start_balance = 0.0
         total = 0.0
