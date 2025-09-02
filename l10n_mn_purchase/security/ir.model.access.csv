@@ -3,3 +3,6 @@ access_purchase_expense_report_user,purchase.expense.report,model_purchase_expen
 access_purchase_expense_report_manager,purchase.expense.report,model_purchase_expense_report,purchase.group_purchase_manager,1,1,1,1
 access_freight_type_register_user,freight.type.register,model_freight_type_register,purchase.group_purchase_user,1,1,1,0
 access_freight_type_register_manager,freight.type.register,model_freight_type_register,purchase.group_purchase_manager,1,1,1,1
+access_purchase_summary_report_user,purchase.summary.report,model_purchase_summary_report,purchase.group_purchase_user,1,1,1,0
+access_purchase_summary_report_manager,purchase.summary.report,model_purchase_summary_report,purchase.group_purchase_manager,1,1,1,1
+

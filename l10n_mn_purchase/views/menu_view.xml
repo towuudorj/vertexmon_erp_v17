@@ -8,6 +8,13 @@
 				parent="purchase.purchase_report_main"
                 action="action_purchase_expense_report"
 				sequence="50" />
+		
+		<menuitem 
+				id="purchase_summary_report_menu" 
+				name="Purchase summary report" 
+				parent="purchase.purchase_report_main"
+                action="action_purchase_order_common_report"
+				sequence="51" />
 
         <menuitem 
 				id="action_freight_type_register_menu" 

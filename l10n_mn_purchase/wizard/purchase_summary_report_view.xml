@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_common_report_view" model="ir.ui.view">
+            <field name="name">purchase.summary.report.form</field>
+            <field name="model">purchase.summary.report</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group colspan="4">
+                        <field name="company_id" widget='selection'/>
+                        <field name="target_move" />
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="purchase_user_id"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
+                        or
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_order_common_report" model="ir.actions.act_window">
+            <field name="name">Худалдан авалтын тайлан хураангуй</field>
+            <field name="res_model">purchase.summary.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_common_report_view"/>
+            <field name="target">new</field>
+        </record>
+        
+
+    </data>
+</odoo>

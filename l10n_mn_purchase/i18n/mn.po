@@ -25,6 +25,12 @@ msgid "Purchase detail report"
 msgstr "Худалдан авалтын дэлгэрэнгүй тайлан"
 
 #. module: l10n_mn_purchase
+#: model:ir.ui.menu,name:l10n_mn_purchase.purchase_summary_report_menu
+#: model:ir.actions.act_window,name:l10n_mn_purchase.action_purchase_summary_report
+msgid "Purchase summary report"
+msgstr "Худалдан авалтын хураангуй тайлан"
+
+#. module: l10n_mn_purchase
 #: model:ir.ui.menu,name:l10n_mn_purchase.action_freight_type_register_menu
 #: model:ir.actions.act_window,name:l10n_mn_purchase.action_freight_type_register_tree_view
 msgid "Freight type register"
@@ -50,6 +56,32 @@ msgstr "Код"
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__active
 msgid "Active"
 msgstr "Идэвхтэй"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__date_from
+msgid "Date start"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__date_to
+msgid "Date stop"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__purchase_user_id
+msgid "Purchase manager"
+msgstr "Худалдан авалтын менежер"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__target_move
+msgid "Target move"
+msgstr "Төлөв"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__company_id
