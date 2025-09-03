@@ -17,6 +17,7 @@ class PurchaseOrder(models.Model):
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     dispatch_date = fields.Date(string='Dispatch date')
     freight_type_id = fields.Many2one('freight.type.register', string='Freight type')
+    freight_partner_id = fields.Many2one('res.partner', string='Freight partner')
 
 
     def _prepare_invoice(self):

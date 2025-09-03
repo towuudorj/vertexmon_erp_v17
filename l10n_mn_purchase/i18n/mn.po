@@ -117,6 +117,12 @@ msgid "Category"
 msgstr "Ангилал"
 
 
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__freight_partner_id
+msgid "Freight partner"
+msgstr "Тээврийн компани"
+
+
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__buyer_id

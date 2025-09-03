@@ -63,8 +63,8 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                     'border': 1,
                                     'bold': True,
                                     'font_size': 12,
-                                    'bg_color': '#B22222',
-                                    'color': 'white'
+                                    'bg_color': '#ead1c0',
+                                    'color': 'black'
                                 })
 
         data_right = workbook.add_format({
@@ -126,6 +126,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
                     ('date_order', '<=', data['end_date']),
                     ('state', 'in', ['purchase']),
                     ('user_id', '=', data['purchase_user_id']),
+                    ('receipt_status', '!=', 'pending')
                 ],order='date_order asc')
             else:
                 purchase_order_id = purchase_order_obj.search([
@@ -133,7 +134,8 @@ class PurchaseOrderCommonReport(models.TransientModel):
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
                     ('state', 'not in', ['cancel']),
-                    ('user_id', '=', data['purchase_user_id'])
+                    ('user_id', '=', data['purchase_user_id']),
+                    ('receipt_status', '!=', 'pending')
                 ],order='date_order asc')
         else:
             if data['target_move'] == 'posted':
@@ -141,14 +143,16 @@ class PurchaseOrderCommonReport(models.TransientModel):
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
-                    ('state', 'in', ['purchase'])
+                    ('state', 'in', ['purchase']),
+                    ('receipt_status', '!=', 'pending')
                 ],order='date_order asc')
             else:
                 purchase_order_id = purchase_order_obj.search([
                     ('company_id', '=', data['company_id']),
                     ('date_order', '>=', data['start_date']),
                     ('date_order', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel'])
+                    ('state', 'not in', ['cancel']),
+                    ('receipt_status', '!=', 'pending')
                 ],order='date_order asc')
         num = 1
 

@@ -122,32 +122,32 @@ class PurchaseExpenseReport(models.TransientModel):
 
             if data['product_id']:
                 self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
+                                pol.qty_received, po.user_id, pol.date_planned, po.freight_partner_id, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                                 from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
-                                where po.date_approve >= '%s' and po.date_approve <= '%s' and po.company_id = %s
+                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
                                 and po.state in ('purchase', 'done') and pol.qty_received > 0 and 
                                 pol.product_id = %s
-                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit, po.currency_rate, pol.product_qty,po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, po.freight_partner_id, pol.price_unit, po.currency_rate, pol.product_qty,po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                                 """%(data['start_date'],data['end_date'],data['company_id'], data['product_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif data['category_id']:
                 self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
+                                pol.qty_received, po.freight_partner_id, po.user_id,po.freight_partner_id,  pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                                 from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
                                 left join product_product as pp on pol.product_id = pp.id
-                                where po.date_approve >= '%s' and po.date_approve <= '%s' and po.company_id = %s
+                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
                                 and po.state in ('purchase', 'done') and pol.qty_received > 0
                                 and pp.categ_id = %s
-                                group by pol.id, pol.order_id,  po.user_id, po.partner_ref, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                                group by pol.id, pol.order_id,  po.user_id, po.freight_partner_id, po.partner_ref, po.freight_partner_id, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                                 """%(data['start_date'],data['end_date'],data['company_id'],data['category_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif not data['product_id'] and not data['category_id']:
                 self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.user_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
+                                pol.qty_received, po.user_id, po.freight_partner_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
                                 from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
-                                where po.date_approve >= '%s' and po.date_approve <= '%s' and po.company_id = %s
+                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
                                 and po.state in ('purchase', 'done') and pol.qty_received > 0
-                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
+                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, po.freight_partner_id, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
                                 """%(data['start_date'],data['end_date'],data['company_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             
@@ -206,6 +206,7 @@ class PurchaseExpenseReport(models.TransientModel):
                             clearance_cost += exp['additional_landed_cost']
                         #additional_costs['%s'%exp['id']] = exp['additional_landed_cost']
                 total_cost = frieght_cost + custom_tax_cost + declaration_cost + clearance_cost
+                fr_partner = self.env['res.partner'].browse(purchase_data['freight_partner_id'])
                 sheet.write("Q%s"%rowx,  total_cost, text_right)
                 sheet.write("R%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("S%s"%rowx,  u"%s"%purchase_data['date_planned'], text_right)
@@ -216,7 +217,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("X%s"%rowx,  clearance_cost, text_right)
                 sheet.write("Y%s"%rowx,  total_cost, text_right)
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
-                sheet.write("AA%s"%rowx, '', text_right)
+                sheet.write("AA%s"%rowx, u"%s"%fr_partner.name, text_right)
                 sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
 
                 
@@ -266,12 +267,11 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("T%s"%rowx, u'Тээврийн компани', header_txt)
             rowx +=1
             purchase_orders = self.env['purchase.order'].search([
-                ('date_approve', '>=', data['start_date']),
-                ('date_approve', '<=', data['end_date']),
+                ('date_planned', '>=', data['start_date']),
+                ('date_planned', '<=', data['end_date']),
                 ('state', 'in', ('purchase', 'done')),
                 ('company_id', '=', data['company_id'])
             ])
-            print ("dddddddddaaa",purchase_orders)
             for purchase_data in purchase_orders:
                 product = self.env['product.product'].browse(purchase_data.product_id.id)
                 partner = self.env['res.partner'].browse(purchase_data.partner_id.id)
@@ -327,7 +327,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Q%s"%rowx,  clearance_cost, text_right)
                 sheet.write("R%s"%rowx,  total_cost, text_right)
                 sheet.write("S%s"%rowx,  total_cost+total_amount, text_right)
-                sheet.write("T%s"%rowx, '', text_right)
+                sheet.write("T%s"%rowx,  u'%s'%purchase_data.freight_partner_id.name, text_right)
 
                 
                 rowx +=1

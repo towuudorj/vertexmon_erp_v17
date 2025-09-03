@@ -10,6 +10,7 @@
                 <xpath expr="//field[@name='effective_date']" position="after">
                     <field name="dispatch_date"  />
                     <field name="freight_type_id" />
+                    <field name="freight_partner_id"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="sales_partner_id"  />
