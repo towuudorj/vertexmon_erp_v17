@@ -122,45 +122,45 @@ class PurchaseOrderCommonReport(models.TransientModel):
             if data['target_move'] == 'posted':
                 purchase_order_id = purchase_order_obj.search([
                     ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
+                    ('date_approve', '>=', data['start_date']),
+                    ('date_approve', '<=', data['end_date']),
                     ('state', 'in', ['purchase']),
                     ('user_id', '=', data['purchase_user_id']),
                     ('receipt_status', '!=', 'pending')
-                ],order='date_order asc')
+                ],order='date_approve asc')
             else:
                 purchase_order_id = purchase_order_obj.search([
                     ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
+                    ('date_approve', '>=', data['start_date']),
+                    ('date_approve', '<=', data['end_date']),
                     ('state', 'not in', ['cancel']),
                     ('user_id', '=', data['purchase_user_id']),
                     ('receipt_status', '!=', 'pending')
-                ],order='date_order asc')
+                ],order='date_approve asc')
         else:
             if data['target_move'] == 'posted':
                 purchase_order_id = purchase_order_obj.search([
                     ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
+                    ('date_approve', '>=', data['start_date']),
+                    ('date_approve', '<=', data['end_date']),
                     ('state', 'in', ['purchase']),
                     ('receipt_status', '!=', 'pending')
-                ],order='date_order asc')
+                ],order='date_approve asc')
             else:
                 purchase_order_id = purchase_order_obj.search([
                     ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
+                    ('date_approve', '>=', data['start_date']),
+                    ('date_approve', '<=', data['end_date']),
                     ('state', 'not in', ['cancel']),
                     ('receipt_status', '!=', 'pending')
-                ],order='date_order asc')
+                ],order='date_approve asc')
         num = 1
-
+        
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
         for line in purchase_order_id:
-            convert_date = fields.Date.from_string(line.date_order)
+            convert_date = fields.Date.from_string(line.date_approve)
             sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.name, data_left)
             sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
