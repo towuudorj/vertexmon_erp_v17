@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.fields import Command
 from itertools import groupby
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from datetime import timedelta
 
 def verbose_format(amount,currency):
     u'''Мөнгөн дүнг үсгээр илэрхийлэх функц
@@ -179,6 +180,7 @@ class SaleOrder(models.Model):
 
     amount_text = fields.Char(string='Amount text',
          readonly=True,compute='_compute_amount')
+    ot_po = fields.Char(string='OT/PO')
     expire_day = fields.Integer(string="Expire day", 
                                 default=14)
     supply_date = fields.Char(string='Supply date',
@@ -219,6 +221,18 @@ class SaleOrder(models.Model):
                                         ('quotation', 'Quotation')], string='Sale order type', default='direct',
                                         required=True)
     is_license = fields.Boolean(string='License', default=False)
+    month = fields.Selection([('01','1'),
+                                ('02','2'),
+                                ('03','3'),
+                                ('04','4'),
+                                ('05','5'),
+                                ('06','6'),
+                                ('07','7'),
+                                ('08','8'),
+                                ('09','9'),
+                                ('10','10'),
+                                ('11','11'),
+                                ('12','12')],string=u'Сар')
 
                                         
     def _compute_amount(self):
@@ -376,6 +390,9 @@ class SaleOrder(models.Model):
         self.with_context(context)._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_lock()
+        
+        # Send confirmation email
+        self._send_confirmation_email()
         
         #if not self.env.user.has_group('sales_team.group_sale_manager') and self.invoice_policy == 'delivery':
         #    raise UserError(_(
@@ -733,6 +750,68 @@ class SaleOrder(models.Model):
                 'end_date': self.date_order,
             })
 
+    def _send_confirmation_email(self):
+        """Send confirmation email when sale order is confirmed"""
+        template = self.env.ref('l10n_mn_sale.email_template_sale_confirmation', raise_if_not_found=False)
+        if template:
+            for order in self:
+                template.send_mail(order.id, force_send=True)
+        return True
+
+    @api.model
+    def _cron_send_reminders(self):
+        """Cron job to send reminders for draft sale orders"""
+        orders = self.search([('state', '=', 'draft'), ('date_order', '<=', fields.Datetime.now() - timedelta(days=7))])
+        for order in orders:
+            # Send reminder logic here
+            pass
+
+    @api.model
+    def _vending_machine_status_send_email(self):
+        import socket
+        import json
+        vending_ids = self.env['vending.machine'].search([])
+        for vline in vending_ids:
+            server_socket = socket.socket()
+            try:
+                server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                host = str(vline.ip_address)
+                port = vline.port
+                server_socket.bind((host, port))
+                server_socket.listen(2)
+                conn, address = server_socket.accept()
+                data = '{"Command_Number": "%s", "Command_data": "%s"}' % (vline.status_command, vline.number)
+                conn.send(data.encode())
+                respons = conn.recv(2048)
+                result = json.loads(respons.decode('utf-8'))
+                if result['Command_Number'] == 201:
+                    vline.status = 'working'
+                    vline.desc = u'Машин ажиллаж байна'
+                else:
+                    vline.status = 'error'
+                    vline.desc = u'Машин ажиллахгүй байна'
+                vline._send_status_check_email()
+                conn.close()
+            except Exception:
+                vline.status = 'error'
+                vline.desc = u'Машинтай холбогдох боломжгүй'
+            finally:
+                server_socket.close()
+
+    @api.model
+    def _vending_machine_status_send_email(self, machine_id=None, status='offline'):
+        """Send vending machine status email"""
+        template = self.env.ref('l10n_mn_sale.email_template_vending_status', raise_if_not_found=False)
+        if template:
+            recipients = self.env['res.users'].search([('groups_id', 'in', self.env.ref('base.group_system').id)])
+            for user in recipients:
+                template.with_context(
+                    machine_id=machine_id,
+                    status=status,
+                    recipient_email=user.email
+                ).send_mail(user.id, force_send=True)
+        return True
+
 
 class SaleOrderLine(models.Model):
     """Inherits the model sale.order.line to add a field"""
@@ -768,6 +847,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.product_uom_qty,
+            'month':self.order_id.month,
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_id.ids)],

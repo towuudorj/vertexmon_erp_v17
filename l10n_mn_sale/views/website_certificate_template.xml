@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="certificate_section" name="Certificate Section">
+        <section class="certificates_section py-5">
+            <div class="container-fluid">
+                <div class="certificates_vertical_scroller">
+                    <button class="btn btn-primary prev-btn" onclick="prevSlide()">&lt;</button>
+                    <div class="scroller_track" id="certificatesScrollerV">
+                        <t t-foreach="certificates" t-as="cert">
+                            <div class="certificate_document vertical" t-att-data-slide="cert_index + 1">
+                                <img t-att-src="cert['image']" alt="" class="document_img img img-fluid" loading="lazy"/>
+                                <div class="slide_number"><t t-esc="cert_index + 1"/></div>
+                            </div>
+                        </t>
+                    </div>
+                    <button class="btn btn-primary next-btn" onclick="nextSlide()">&gt;</button>
+                </div>
+            </div>
+        </section>
+        <script>
+            window.currentSlide = 1;
+            window.nextSlide = function() {
+                const slides = document.querySelectorAll('.certificate_document');
+                if (window.currentSlide < slides.length) window.currentSlide++;
+                window.showSlide();
+            };
+            window.prevSlide = function() {
+                if (window.currentSlide > 1) window.currentSlide--;
+                window.showSlide();
+            };
+            window.showSlide = function() {
+                document.querySelectorAll('.certificate_document').forEach((slide, index) => {
+                    slide.style.display = index + 1 === window.currentSlide ? 'block' : 'none';
+                });
+            };
+            window.showSlide();
+        </script>
+    </template>
+</odoo>

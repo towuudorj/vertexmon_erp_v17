@@ -181,3 +181,37 @@ class PurchaseOrderLine(models.Model):
     sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
     country_origin = fields.Many2one('res.country', string='Country of Origin')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    month = fields.Selection([('01','1'),
+                                ('02','2'),
+                                ('03','3'),
+                                ('04','4'),
+                                ('05','5'),
+                                ('06','6'),
+                                ('07','7'),
+                                ('08','8'),
+                                ('09','9'),
+                                ('10','10'),
+                                ('11','11'),
+                                ('12','12')],string=u'Сар')
+
+
+
+    def _prepare_account_move_line(self, move=False):
+        self.ensure_one()
+        aml_currency = move and move.currency_id or self.currency_id
+        date = move and move.date or fields.Date.today()
+        res = {
+            'display_type': self.display_type or 'product',
+            'name': '%s: %s' % (self.order_id.name, self.name),
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom.id,
+            'quantity': self.qty_to_invoice,
+            'month': self.month,
+            'discount': self.discount,
+            'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
+            'tax_ids': [(6, 0, self.taxes_id.ids)],
+            'purchase_line_id': self.id,
+        }
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
+        return res

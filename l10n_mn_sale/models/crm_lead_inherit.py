@@ -46,8 +46,8 @@ class CrmLead(models.Model):
                                   required=True, readonly=True)
     send_date = fields.Date(string='Quotation send date', required=True, default=fields.Date.today())
     amount_total = fields.Float(string='Total amount', compute='_compute_amount_total')
-    crm_type = fields.Selection([('crm', 'CRM'),
-                                ('quote', 'Quotation Request')], string='CRM type', default='crm')
+    crm_type = fields.Selection([('crm', u'Борлуулалт'),
+                                 ('stock',u'Нөөц')], string='CRM type', default='crm')
     
     
     @api.onchange('partner_id', 'company_id')
@@ -85,7 +85,7 @@ class CrmLead(models.Model):
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
             lead.status = 'purchase_confirm'
-            if lead.is_sale == True:
+            if lead.crm_type == 'crm':
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                 sale_order_id.action_confirm()
             #lead.message_post(body=_('Purchase request confirmed.'))

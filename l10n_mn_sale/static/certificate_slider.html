@@ -1,0 +1,134 @@
+<section class="certificates_section py-5 o_colored_level" style="background-image: none;">
+    <div class="container-fluid">
+        <div class="certificates_vertical_scroller">
+            <button class="btn btn-primary prev-btn" onclick="window.prevSlide(); window.stopAutoSlide(); window.startAutoSlide();">&lt;</button>
+            <div class="scroller_track" id="certificatesScrollerV">
+                <div class="certificate_document vertical" data-slide="1">
+                    <img src="/web/image/1448-7d23753e/Scan_20230315%20%2822%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">1</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="2">
+                    <img src="/web/image/1453-3c1dfe76/Scan_20230315%20%2820%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">2</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="3">
+                    <img src="/web/image/1452-3c8e63a3/Scan_20230315%20%2812%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">3</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="4">
+                    <img src="/web/image/1449-1d255e34/Scan_20230315%20%286%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">4</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="5">
+                    <img src="/web/image/1450-ae5e3605/Scan_20230315%20%2811%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">5</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="6">
+                    <img src="/web/image/1451-0f0c1a31/Scan_20230315%20%2816%29.webp" alt="" class="document_img img img-fluid o_we_custom_image" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">6</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="7">
+                    <img src="/web/image/mongolia_certificate.jpg" class="document_img" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">7</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="8">
+                    <img src="/web/image/mongolia_certificate.jpg" class="document_img" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">8</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="9">
+                    <img src="/web/image/mongolia_certificate.jpg" class="document_img" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">9</div>
+                </div>
+                <div class="certificate_document vertical" data-slide="10">
+                    <img src="/web/image/mongolia_certificate.jpg" class="document_img" loading="lazy"/>
+                    <div class="slide_number oe_structure_solo">10</div>
+                </div>
+            </div>
+            <button class="btn btn-primary next-btn" onclick="window.nextSlide(); window.stopAutoSlide(); window.startAutoSlide();">&gt;</button>
+        </div>
+    </div>
+</section>
+
+<style>
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+}
+.prev-btn {
+    left: 20px;
+}
+.next-btn {
+    right: 20px;
+}
+.prev-btn:hover, .next-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
+.certificates_vertical_scroller {
+    position: relative;
+}
+.scroller_track {
+    display: flex;
+    flex-wrap: wrap;
+}
+.certificate_document {
+    width: 25%;
+    padding: 10px;
+}
+</style>
+
+<script>
+window.currentSlide = 1;
+window.autoSlideInterval = null;
+
+window.nextSlide = function() {
+    const slides = document.querySelectorAll('.certificate_document');
+    const maxSlide = Math.ceil(slides.length / 4);
+    if (window.currentSlide >= maxSlide) {
+        window.currentSlide = 1;
+    } else {
+        window.currentSlide++;
+    }
+    window.showSlide();
+};
+
+window.prevSlide = function() {
+    if (window.currentSlide > 1) window.currentSlide--;
+    window.showSlide();
+};
+
+window.showSlide = function() {
+    const slides = document.querySelectorAll('.certificate_document');
+    slides.forEach((slide, index) => {
+        const start = (window.currentSlide - 1) * 4;
+        slide.style.display = (index >= start && index < start + 4) ? 'block' : 'none';
+    });
+};
+
+window.startAutoSlide = function() {
+    window.autoSlideInterval = setInterval(window.nextSlide, 3000);
+};
+
+window.stopAutoSlide = function() {
+    clearInterval(window.autoSlideInterval);
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    window.showSlide();
+    window.startAutoSlide();
+    
+    // Pause on hover
+    const slider = document.querySelector('.certificates_vertical_scroller');
+    slider.addEventListener('mouseenter', window.stopAutoSlide);
+    slider.addEventListener('mouseleave', window.startAutoSlide);
+});
+</script>
