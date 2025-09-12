@@ -50,7 +50,7 @@
                                 Огноо: <span t-field="o.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;yyyy-MM-dd&quot;}"/>
                             </td>
                             <td style="border: none; font-size:11px; padding:3px; text-align:center;">
-                                Packing list №: <span t-field="o.origin"/>
+                                Packing list №: <span t-field="o.ot_po"/>
                             </td>
                         </tr>
                     </table>
