@@ -84,7 +84,7 @@
 									<tr>
 										<td style="padding: 3px;">IBAN:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.iban"/></td>
-										<td style="padding: 3px;">Packing list №:</td>
+										<td style="padding: 3px;">OT PO:</td>
 										<td><td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.ot_po"/></td></td>
 									</tr>
 									<tr>
