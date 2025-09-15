@@ -34,6 +34,9 @@ class stock_picking(models.Model):
         ('tender', 'Tender'),
     ], string='Type')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    ot_delivery_type = fields.Selection([('part_delivery','Partial delivery'),
+                                        ('comp_delivery','Complete delivery'),
+                                        ('final_delivery','Final delivery')],string='OT Delivery Type')
 
     
     def _compute_amount(self):

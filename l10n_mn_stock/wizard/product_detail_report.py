@@ -783,23 +783,6 @@ class product_detail_report(models.TransientModel):
             total_manu_income_qty +=manu_income_qty
             rowx +=1
 
-        #sheet.merge_ranger(rowx, rowx, 0, 4, u'НИЙТ', data_center)
-        #sheet.write(rowx, 5, f_total_qty, data_right)
-        #sheet.write(rowx, 6, total_income_pur_qty, data_right)
-        #sheet.write(rowx, 7, total_income_cus_qty, data_right)
-        #sheet.write(rowx, 8, total_income_int_qty, data_right)
-        #sheet.write(rowx, 9, total_manu_income_qty, data_right)
-        #sheet.write(rowx, 10, total_qty_income_qty, data_right)
-        #sheet.write(rowx, 11, total_income_qty, data_right)
-        #sheet.write(rowx, 12, total_expense_sale_qty, data_right)
-        #sheet.write(rowx, 13, total_expo_qty, data_right)
-        #sheet.write(rowx, 14, total_exp_int_qty, data_right)
-        #sheet.write(rowx, 15, total_qty_exp_qty, data_right)
-        #sheet.write(rowx, 16, total_qty, data_right)
-        #sheet.write(rowx, 17, total_end_qty, data_right)
-        #sheet.write(rowx, 18, total_sum_price, data_right)
-        #sheet.write(rowx, 19, total_all_price, data_right)
-
         workbook.close()
         output.seek(0)
         response.stream.write(output.read())

@@ -14,7 +14,7 @@ class ProductProduct(models.Model):
     model = fields.Char(string='Model', related="product_tmpl_id.model")
     default_code = fields.Char('Internal Reference', related="product_tmpl_id.default_code")
     is_quotation = fields.Boolean(string='Is quotation', related="product_tmpl_id.is_quotation")
-
+    ot_code = fields.Char(string='OT code', related="product_tmpl_id.ot_code")
 
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
@@ -93,6 +93,7 @@ class ProductTemplate(models.Model):
     default_code = fields.Char('Internal Reference', index=True, compute='_compute_default_code', store=True)
     product_categ_id = fields.Many2one('product.category.new', string='Product Category')
     is_quotation = fields.Boolean(string='Is quotation', default=False)
+    ot_code = fields.Char(string='OT code')
     categ_id = fields.Many2one(
         'product.category', string='Item group',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',

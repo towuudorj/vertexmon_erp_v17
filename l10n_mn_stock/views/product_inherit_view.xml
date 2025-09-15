@@ -11,6 +11,7 @@
                 	<field name="distributor_ids"/>
                     <field name="model"/>
                     <field name="is_quotation"/>
+                    <field name="ot_code"/>
                 </xpath>
             </field>
 		</record>
