@@ -29,7 +29,7 @@ class ProjectProductsLine(models.Model):
         compute='_compute_name',
         store=True, readonly=False, required=True, precompute=True)
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
-    # product_uom = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
+    product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     price_unit = fields.Float(string='Price', required=True, digits='Product Price')
     cost_price = fields.Float(string='Cost Price', required=True, digits='Product Price')
     qty_available = fields.Float(string='Available QTY', required=True, digits='Product', readonly=True, default=0)
@@ -71,7 +71,7 @@ class ProjectProductsLine(models.Model):
         self.price_unit = self.product_id.list_price
         self.cost_price = self.product_id.standard_price
         self.name = self.product_id.name
-        # self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         # 'net_on_hand': obj.with_context({'warehouse': warehouse, 'to_date': end_date}).qty_available
         print( 'qty avail============', self.with_context({'to_date': datetime.today()}).qty_available)
         self.qty_available = self.with_context({'to_date': datetime.today()}).qty_available

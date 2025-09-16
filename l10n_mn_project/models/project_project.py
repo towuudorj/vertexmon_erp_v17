@@ -18,18 +18,21 @@ class ProjectProject(models.Model):
             total_cost = 0
             for line in order.products_line:
                 total_amount += line.price_total
-                total_tax_amount += (line.price_total/100.0)*0.101
+                total_tax_amount += (line.price_total/100.0)*10.0
                 total_cost += line.cost_total
             order.update({
-                'total_amount': total_amount,
+                'total_amount': total_amount+total_tax_amount,
                 'total_tax_amount':total_tax_amount,
+                'untax_amount':total_amount,
                 'total_cost':total_cost
             })
 
     sequence_name = fields.Char("Sequence", copy=False)
-
+    contract_number = fields.Char(string='Contract Number', copy=False)
+    contract_amount = fields.Float(string='Contract Amount', digits='Product Price')
     products_line = fields.One2many('project.products.line', 'project_id', string='Products Line', copy=True,)
     total_amount = fields.Monetary(string='Total Amount', store=True, readonly=True, compute='_amount_all')
+    untax_amount = fields.Monetary(string='Untax Amount', store=True, readonly=True, compute='_amount_all')
     total_tax_amount = fields.Monetary(
         string='Total Tax Amount', store=True, readonly=True, compute='_amount_all'
     )

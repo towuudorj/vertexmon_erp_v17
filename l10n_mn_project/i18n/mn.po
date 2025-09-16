@@ -38,9 +38,26 @@ msgid "Cost Price"
 msgstr "Өртөг үнэ"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__product_uom
+msgid "Unit of Measure"
+msgstr "Хэмжих нэгж"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__project_type
 msgid "Type"
 msgstr "Төрөл"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__contract_number
+msgid "Contract number"
+msgstr "Гэрээний дугаар"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__contract_amount
+msgid "Contract amount"
+msgstr "Гэрээний дүн"
+
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__purchase_manager_id
@@ -270,6 +287,17 @@ msgstr "Даалгавар"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__total_amount
 msgid "Total Amount"
 msgstr "Нийт хэмжээ"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__untax_amount
+msgid "Untax Amount"
+msgstr "Татваргүй дүн"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__total_tax_amount
+msgid "Total tax Amount"
+msgstr "Татварын дүн"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__cost_total

@@ -48,6 +48,8 @@
             </xpath>    
 
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="contract_number"/>
+                <field name="contract_amount"/>
                 <field name="warehouse_id"/>
                 <field name="purchase_manager_id"/>
                 <field name="project_type"/>
@@ -65,6 +67,7 @@
                             <field name="sequence" widget="handle" />
                             <field name="product_id"/>
                             <field name="name" widget="section_and_note_text" optional="show"/>
+                            <field name="product_uom"/>
                             <field name="product_qty"/>
                             <field name="purchase_type"/>
                             <field name="purchase_manager_id"/>
@@ -77,8 +80,9 @@
                         </tree>
                     </field>
                      <group class="oe_subtotal_footer oe_right">
-                        <field name="total_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="untax_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="total_tax_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                      </group>
                     <field name="product_notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                     <div class="oe_clear"/>
