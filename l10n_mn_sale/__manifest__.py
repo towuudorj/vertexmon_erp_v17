@@ -49,6 +49,7 @@
                 'wizard/create_product_wizard_view.xml',
                 'wizard/create_purchase_request_wizard_view.xml',
                 'wizard/sale_order_cancel_inherit_wizard.xml',
+                'views/project_project_inherit_view.xml',
                 'views/crm_inherit_view.xml',
                 'views/sale_order_inherit_view.xml',
                 'views/res_company_inherit_view.xml',

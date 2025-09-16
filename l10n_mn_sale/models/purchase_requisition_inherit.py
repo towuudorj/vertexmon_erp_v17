@@ -195,6 +195,25 @@ class PurchaseRequisitionLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
     
+    
+    def write(self, vals):
+        if 'price_unit' in vals:
+            self.requisition_id.message_post(
+                    body=_(u'%s барааны хуучин үнэ %s шинэ үнэ %s') % (
+                        self.product_description_variants, self.price_unit, vals['price_unit']))
+            self.requisition_id.crm_lead_id.message_post(
+                    body=_(u'%s барааны судалсан үнэ %s') % (self.product_description_variants, vals['price_unit']))
+
+        res = super(PurchaseRequisitionLine, self).write(vals)
+        if 'price_unit' in vals:
+            if vals['price_unit'] <= 0.0 and any(
+                    requisition.state not in ['draft', 'cancel', 'done'] and
+                    requisition.is_quantity_copy == 'none' for requisition in self.mapped('requisition_id')):
+                raise UserError(_('You cannot confirm the blanket order without price.'))
+            # If the price is updated, we have to update the related SupplierInfo
+            self.supplier_info_ids.write({'price': vals['price_unit']})
+            
+        return res
 
     def _compute_total_amount(self):
         for line in self:

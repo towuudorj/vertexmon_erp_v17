@@ -8,6 +8,17 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
 
+    @api.depends('lead_line_ids.price_subtotal')
+    def _compute_amount_total(self):
+        for lead in self:
+            total = 0
+            for line in lead.lead_line_ids:
+                total += line.price_subtotal
+            lead.amount_total = total
+
+            lead.update({
+                        'amount_total': total,
+            })
 
     code = fields.Char(string='Code', readonly=True,
                         default=lambda self: self.env['ir.sequence'].with_context(company_id=self.company_id.id).next_by_code('crm.lead'))
@@ -48,6 +59,8 @@ class CrmLead(models.Model):
     amount_total = fields.Float(string='Total amount', compute='_compute_amount_total')
     crm_type = fields.Selection([('crm', u'Борлуулалт'),
                                  ('stock',u'Нөөц')], string='CRM type', default='crm')
+    is_purchase = fields.Boolean(string='Is purchase', default=False, tracking=True)
+
     
     
     @api.onchange('partner_id', 'company_id')
@@ -61,11 +74,13 @@ class CrmLead(models.Model):
 
     def send_purchase_request(self):
         for line in self:
+            
             for lines in line.lead_line_ids:
                 #if lines.margin_percent >0.0:
                 #if lines.request_type == 'send_quotation':
                 #    raise UserError(_(u'Үнийн санал төрөлтэй байгаа тул илгээх шаардлагагүй болно!'))
                 line.status = 'send_purchase_confirm'
+                line.is_purchase == True
                 #else:
                 #    raise UserError(_(u'Ашиг тооцоологдоогүй байгаа тул бүртгэнэ үү!'))
 
@@ -76,6 +91,8 @@ class CrmLead(models.Model):
             line.purchase_request_ids.action_cancel()
 
     def create_quotation(self):
+        for line in self:
+            line.is_purchase == True
         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
 
     def confirm_purchase(self):
@@ -90,13 +107,7 @@ class CrmLead(models.Model):
                 sale_order_id.action_confirm()
             #lead.message_post(body=_('Purchase request confirmed.'))
 
-
-    def _compute_amount_total(self):
-        for lead in self:
-            total = 0
-            for line in lead.lead_line_ids:
-                total += line.sale_price * line.qty
-            lead.amount_total = total
+    
     
 
     def _prepare_opportunity_quotation_context(self):

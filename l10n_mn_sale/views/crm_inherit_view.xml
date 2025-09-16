@@ -57,8 +57,9 @@
                 <field name="arch" type="xml">
                     <data>
                         <xpath expr='//button[@name="action_sale_quotations_new"]' position="replace">
+                            <field name="is_purchase" invisible="1"/>
                             <button class="oe_stat_button" type="object" string="Борлуулалтын захиалга үүсгэх"
-                                name="create_quotation" icon="fa-pencil-square-o" groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads">
+                                name="create_quotation" icon="fa-pencil-square-o" invisible= "is_purchase != False" >
                             </button>
                         </xpath>
                     </data>
@@ -158,7 +159,7 @@
                                         <field name="priority"  optional="show"/>
                                         <field name="qty"/>
                                         <field name="cost_price" readonly="1"/>
-                                        <field name="currency_id"/>
+                                        <field name="currency_id"  readonly="1"/>
                                         <field name="sale_price"/>
                                         <field name="price_subtotal"/>
                                     </tree>
