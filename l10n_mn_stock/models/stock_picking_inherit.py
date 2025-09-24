@@ -39,6 +39,8 @@ class stock_picking(models.Model):
                                         ('final_delivery','Final delivery')],string='OT Delivery Type')
     ot_address_type = fields.Selection([('site','Site'),
                                         ('office','Office')],string='OT Address Type')
+    ot_contract = fields.Char(string='Purchasing Officer name/contact details')
+    ot_code = fields.Char(string='OT code')
 
     
     def _compute_amount(self):

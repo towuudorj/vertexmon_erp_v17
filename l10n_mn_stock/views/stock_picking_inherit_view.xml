@@ -8,9 +8,11 @@
                 <field name="inherit_id" ref="stock.view_picking_form"/>
                 <field name="arch" type="xml">                
                     <xpath expr="//field[@name='origin']" position="after">
+                        <field name="ot_code"/>
                         <field name="ot_address_type"/>
                         <field name="ot_delivery_type" /> 
                         <field name="project_type" /> 
+                        <field name="ot_contract"/>
                         <field name="analytic_id" string="Project" invisible="project_type=='tender'"/>
                         <field name="analytic_id" string="Tender" invisible="project_type=='project'"/>
                     </xpath>
