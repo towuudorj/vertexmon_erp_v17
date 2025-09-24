@@ -37,6 +37,8 @@ class stock_picking(models.Model):
     ot_delivery_type = fields.Selection([('part_delivery','Partial delivery'),
                                         ('comp_delivery','Complete delivery'),
                                         ('final_delivery','Final delivery')],string='OT Delivery Type')
+    ot_address_type = fields.Selection([('site','Site'),
+                                        ('office','Office')],string='OT Address Type')
 
     
     def _compute_amount(self):
@@ -140,9 +142,9 @@ class stock_picking(models.Model):
                     'anotherAction': another_action,
                 }
             }
-        if self.purchase_id:
+        if not self.purchase_id.invoice_ids:
             self.purchase_id.action_create_invoice()
-        if self.sale_id:
+        if not self.sale_id.invoice_ids:
             self.sale_id._create_invoices()
         return True
     
