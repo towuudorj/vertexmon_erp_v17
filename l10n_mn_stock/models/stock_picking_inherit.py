@@ -36,11 +36,11 @@ class stock_picking(models.Model):
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     ot_delivery_type = fields.Selection([('part_delivery','Partial delivery'),
                                         ('comp_delivery','Complete delivery'),
-                                        ('final_delivery','Final delivery')],string='OT Delivery Type')
+                                        ('final_delivery','Final delivery')],string='OT Delivery Type', default='comp_delivery')
     ot_address_type = fields.Selection([('site','Site'),
                                         ('office','Office')],string='OT Address Type')
-    ot_contract = fields.Char(string='Purchasing Officer name/contact details')
-    ot_code = fields.Char(string='OT code')
+    ot_contract = fields.Char(string='Purchasing Officer name/contact details', default='Your Reference: IT Goods Our Reference: CW2167225')
+    ot_code = fields.Char(string='OT code', default=lambda self:self.env['ir.sequence'].next_by_code('stock.picking.ot'))
 
     
     def _compute_amount(self):

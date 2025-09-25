@@ -29,6 +29,7 @@
                  'stock_landed_costs'
                  ],
     "data" : [
+                'data/sequence_data.xml',
                 'security/ir.model.access.csv',
                 'report/mn_stock_expense.xml',
                 'report/mn_stock_income.xml',
