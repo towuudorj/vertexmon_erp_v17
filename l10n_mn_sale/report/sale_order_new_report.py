@@ -21,6 +21,7 @@ class SaleOrderNewReport(models.TransientModel):
     target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
                                       string='States', default='posted')
     is_license = fields.Boolean(string='License', default=False)
+    partner_id = fields.Many2one('res.partner', string='Customer')
     
     
 
@@ -33,6 +34,7 @@ class SaleOrderNewReport(models.TransientModel):
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
+            'partner_id':self.partner_id.id,
         }
         return {
             'type': 'ir.actions.report',
@@ -149,6 +151,25 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.is_license','=', data['is_license']),
                     ('order_id.user_id', '=', data['sales_user_id'])
                 ],order='order_date desc')
+        elif data['partner_id']:
+            if data['target_move'] == 'posted':
+                sale_order_line_id = sale_order_line_obj.search([
+                    ('order_id.company_id', '=', data['company_id']),
+                    ('order_id.date_order', '>=', data['start_date']),
+                    ('order_id.date_order', '<=', data['end_date']),
+                    ('order_id.state', 'in', ['sale']),
+                    ('order_id.is_license','=', data['is_license']),
+                    ('order_id.user_id', '=', data['sales_user_id']),
+                ],order='order_date desc')
+            else:
+                sale_order_line_id = sale_order_line_obj.search([
+                    ('order_id.company_id', '=', data['company_id']),
+                    ('order_id.date_order', '>=', data['start_date']),
+                    ('order_id.date_order', '<=', data['end_date']),
+                    ('order_id.state', 'not in', ['cancel']),
+                    ('order_id.is_license','=', data['is_license']),
+                    ('order_id.user_id', '=', data['sales_user_id'])
+                ],order='order_date desc')
         else:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
@@ -163,7 +184,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.company_id', '=', data['company_id']),
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.is_license','=', data['is_license']),
+                    ('order_id.partner_id','=', data['partner_id']),
                     ('order_id.state', 'not in', ['cancel'])
                 ],order='order_date desc')
         num = 1

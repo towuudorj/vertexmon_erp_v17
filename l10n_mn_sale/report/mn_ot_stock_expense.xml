@@ -21,8 +21,7 @@
 			        </div>
 
                     <div class="col-xs-8" style="text-align:center; font-size:14px;">
-                        <h4>ЗАРЛАГЫН БАРИМТ</h4>
-                        <p style="text-align:center;">№ <span t-field="o.name"/> </p>
+                        <h4>ЗАРЛАГЫН БАРИМТ №</h4> /  <span t-field="o.ot_po"/> /
                     </div>
                     <table class="width: 100%; table table-condensed; text-align: center; border: transparent 1px solid; margin-left:50px; margin-right:50px;">
                         <tr style="border: none;">
@@ -49,7 +48,7 @@
                             <td style="border: none; font-size:11px; padding:3px; text-align:center;">
                                 Огноо: <span t-field="o.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;yyyy-MM-dd&quot;}"/>
                             </td>
-                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+                            <td style="border: none; font-size:14px; padding:3px; text-align:center;">
                                 OT PO: <span t-field="o.ot_po"/>
                             </td>
                         </tr>

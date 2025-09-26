@@ -13,6 +13,7 @@
                         <field name="target_move" />
                         <field name="date_from"/>
                         <field name="date_to"/>
+                        <field name="partner_id"/>
                         <field name="sales_user_id"/>
                         <field name="is_license"/>
                     </group>
