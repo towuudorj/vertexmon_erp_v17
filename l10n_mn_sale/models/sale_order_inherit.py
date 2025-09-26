@@ -181,6 +181,7 @@ class SaleOrder(models.Model):
     amount_text = fields.Char(string='Amount text',
          readonly=True,compute='_compute_amount')
     ot_po = fields.Char(string='OT/PO')
+    ot_code = fields.Char(string='OT Code')
     expire_day = fields.Integer(string="Expire day", 
                                 default=14)
     supply_date = fields.Char(string='Supply date',

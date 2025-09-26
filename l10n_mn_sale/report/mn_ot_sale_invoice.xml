@@ -23,7 +23,7 @@
 			        </div>
 			        
 			        <p style="text-align:center; font-size:14px; font-weight: bold;">
-			        	НЭХЭМЖЛЭХ №: <t t-esc="o.name"/>
+			        	НЭХЭМЖЛЭХ №: <t t-esc="o.ot_code"/>
 			        </p>
 					
 					<table style="width: 99%; margin-left: 15px; font-size: 11px; border:transparent 1px solid; ">
@@ -38,13 +38,13 @@
 							<tr>
 										<td style="width: 15%; padding: 3px; ">Байгууллагын нэр:</td>
 										<td style="width: 35%; padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.company_id.name"/></b></td>
-										<td style="width: 15%; padding: 3px; padding-left:5px;">Байгууллагын нэр:</td>
+										<td style="width: 15%; padding: 3px; padding-left:15px;">Байгууллагын нэр:</td>
 										<td style="width: 35%; padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_id.name"/></b></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px; border: none;">Хаяг:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.company_id.street"/></td>
-										<td style="padding: 3px; padding-left:5px;">Хаяг:</td>
+										<td style="padding: 3px; padding-left:15px;">Хаяг:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;">
 											<t t-esc="', '.join(filter(None, [
 												o.partner_id.street,
@@ -59,33 +59,33 @@
 									<tr>
 										<td style="padding: 3px; border: none;">Утас:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.company_id.partner_id.phone or o.company_id.phone"/></td>
-										<td style="padding: 3px; padding-left:5px;">Утас:</td>
+										<td style="padding: 3px; padding-left:15px;">Утас:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_id.phone or o.partner_id.mobile"/></td>
 									
 									</tr>
 									<tr>
 										<td style="padding: 3px; border: none;">Регистрийн дугаар:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.company_id.vat"/></td>
-										<td style="padding: 3px; padding-left:5px;">Регистрийн дугаар:</td>
+										<td style="padding: 3px; padding-left:15px;">Регистрийн дугаар:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_id.vat"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Банкны нэр:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
-										<td style="padding: 3px; padding-left:5px;">Xүчинтэй огноо:</td>
+										<td style="padding: 3px; padding-left:15px;">Xүчинтэй огноо:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.validity_date"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Банкны данс:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.acc_number"/></td>
-										<td style="padding: 3px; padding-left:5px;">Үнийн саналийн огноо:</td>
+										<td style="padding: 3px; padding-left:15px;">Үнийн саналийн огноо:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.date_order"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">IBAN:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.iban"/></td>
-										<td style="padding: 3px; padding-left:5px;">OT PO:</td>
-										<td style="padding: 3px;"><t t-esc="o.ot_po"/></td>
+										<td style="padding: 3px; padding-left:15px;">OT PO:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.ot_po"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Цахим хаяг:</td>
