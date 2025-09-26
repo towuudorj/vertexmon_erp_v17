@@ -85,7 +85,7 @@
 										<td style="padding: 3px;">IBAN:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.iban"/></td>
 										<td style="padding: 3px; padding-left:15px;">OT PO:</td>
-										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.ot_po"/></td>
+										<td style="padding: 3px; border-bottom: 1px solid black; font-size:14px;"><t t-esc="o.ot_po"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Цахим хаяг:</td>

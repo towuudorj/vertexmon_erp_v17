@@ -21,7 +21,7 @@
 			        </div>
 
                     <div class="col-xs-8" style="text-align:center; font-size:14px;">
-                        <h4>ЗАРЛАГЫН БАРИМТ №</h4> /  <span t-field="o.ot_po"/> /
+                        <h4>ЗАРЛАГЫН БАРИМТ №</h4> /  <span t-field="o.ot_code"/> /
                     </div>
                     <table class="width: 100%; table table-condensed; text-align: center; border: transparent 1px solid; margin-left:50px; margin-right:50px;">
                         <tr style="border: none;">
@@ -81,19 +81,19 @@
                                         <tr t-foreach="o.order_line" t-as="line">
                                             <t t-if="line.product_id.type !='service'">
                                                 <td style="border: 1px solid black; font-size:11px; padding:7px; text-align:center;"><span t-esc="i"/></td>   
-                                                <td style="border: 1px solid black; font-size:11px; padding:5px;"><span t-field="line.product_id.name"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_id.name"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_uom.name"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:right;">
+                                                <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;">
                                                     <span t-field="line.product_uom_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/>
                                                 </td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:center;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:center;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                             </t>
                                             <t t-set="i" t-value="i+1"/>
                                         </tr>
                                         <tr class="border-black">
                                             <td colspan="3" style="padding: 4px;  font-size:11px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
-                                            <td style="padding: 3px; font-size:11px;  border: 1px solid black;  text-align: right;">
+                                            <td style="padding: 3px; font-size:11px;  border: 1px solid black;  text-align:center;">
                                                 <t t-esc="sum([x for x in o.order_line.mapped('product_uom_qty')])" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/>
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:4px;"/> 
