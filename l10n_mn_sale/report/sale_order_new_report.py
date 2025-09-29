@@ -66,8 +66,8 @@ class SaleOrderNewReport(models.TransientModel):
                                     'border': 1,
                                     'bold': True,
                                     'font_size': 12,
-                                    'bg_color': '#B22222',
-                                    'color': 'white'
+                                    'bg_color': '#FBCEB1',
+                                    'color': 'black'
                                 })
 
         data_right = workbook.add_format({
@@ -106,8 +106,8 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.set_column(7, 17, 15)
 
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
-        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
+        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан дэлгэрэнгүй', title)
+        sheet.merge_range("A%s:E%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
         sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
         rowx += 3
         sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)

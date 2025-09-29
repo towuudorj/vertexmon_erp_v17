@@ -65,7 +65,7 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'border': 1,
                                     'bold': True,
                                     'font_size': 12,
-                                    'bg_color': '#B22222',
+                                    'bg_color': '#FBCEB1',
                                     'color': 'white'
                                 })
 
