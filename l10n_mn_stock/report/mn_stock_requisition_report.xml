@@ -17,9 +17,9 @@
                     </h3>
                     
                     <p style="text-align:right; font-size:12px;">
-                        <span t-field="o.date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;yyyy&quot;}"/> он 
-                        <span t-field="o.date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;MM&quot;}"/> сар 
-                        <span t-field="o.date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;dd&quot;}"/> өдөр
+                        <span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;yyyy&quot;}"/> он 
+                        <span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;MM&quot;}"/> сар 
+                        <span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;dd&quot;}"/> өдөр
                     </p>
                     
                     <table style="width: 100%; font-size:11px; text-align: left; border: transparent 1px solid; margin-bottom: 20px;">
