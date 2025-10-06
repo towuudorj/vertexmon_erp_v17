@@ -48,6 +48,7 @@
                 'views/product_category_new_view.xml',
                 'views/stock_picking_inherit_view.xml',
                 'views/stock_quant_inherit_view.xml',
+                'views/stock_move_line_inherit_view.xml',
                 'report/product_require_report_view.xml',
                 'views/menu_view.xml',
                 'views/report_view.xml',
