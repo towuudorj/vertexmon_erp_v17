@@ -50,6 +50,7 @@
                 'views/stock_quant_inherit_view.xml',
                 'views/stock_move_line_inherit_view.xml',
                 'report/product_require_report_view.xml',
+                'report/mn_ot_purchase_receipt_report.xml',
                 'views/menu_view.xml',
                 'views/report_view.xml',
                 ],
