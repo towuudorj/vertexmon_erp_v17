@@ -299,10 +299,10 @@ class StockMoveLine(models.Model):
     untaxed_amount = fields.Float(string=u'Татваргүй үнэ',compute='_compute_untaxed_amount')
     tax_amount = fields.Float(string=u'Татваргүй үнэ',compute='_compute_tax_amount')
     discount = fields.Float(string=u'Хөнгөлөлт', compute='_compute_discount')
-    delivered_qty = fields.Float(string='Delivered qty')
+    delivered_qty = fields.Integer(string='Delivered qty')
     package_no = fields.Char(string='Package no')
     net_weight = fields.Float(string='Net weight (kg)')
     gross_weight = fields.Float(string='Gross weight (kg)')
     dimensions = fields.Char(string='Dimensions')
     cbm = fields.Float(string='CBM')
-    
+

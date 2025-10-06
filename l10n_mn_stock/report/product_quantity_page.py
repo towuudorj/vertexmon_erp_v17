@@ -105,6 +105,7 @@ class ProductQuantityPage(models.TransientModel):
         sheet.write('E%s'%(rowx), u'Барааны хэмжих нэгж', txt_center)
         sheet.write('F%s'%(rowx), u'Тоолсон тоо', txt_center)
         sheet.write('G%s'%(rowx), u'Тоолсон ажилтан', txt_center)
+        
         product = []
         products = False
         if product_id:

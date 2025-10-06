@@ -9,7 +9,7 @@ import xlsxwriter
 
 class ProductQRequireReport(models.TransientModel):
     """
-        Барааны материалын тооллогын хуудас
+        Барааны материалын шаардах тайлан
     """
     _name = "product.require.report"
     _description = "Stock product quantity page"
