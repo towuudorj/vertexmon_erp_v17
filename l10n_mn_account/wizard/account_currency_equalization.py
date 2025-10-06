@@ -33,7 +33,7 @@ class AccountCurrencyEqualization(models.TransientModel):
         if self._context is None:
             self._context = {}
         
-        query = """SELECT a.id FROM account_account a left join account_account_type as aat on a.user_type_id=aat.id WHERE company_id = %s """ % self.company_id.id
+        query = """SELECT a.id FROM account_account a left join account_account_type as aat on a.user_type_id = aat.id WHERE company_id = %s """ % self.company_id.id
         if type == 1 :
             query += " AND (a.currency_id is not null and a.currency_id <> %s) " % self.company_id.currency_id.id
             query += " AND (aat.type in ('liquidity')) "

@@ -477,6 +477,10 @@ class AccountMoveLine(models.Model):
             distribution_on_each_plan[account.root_plan_id] = distribution_plan
             account_field_values[account.plan_id._column_name()] = account.id
         default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
+        month = False
+        if self.move_id.month:
+            month = self.month
+
         return {
             'name': default_name,
             'date': self.date,
@@ -488,7 +492,7 @@ class AccountMoveLine(models.Model):
             'amount': amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
-            'month':self.month or self.move_id.month,
+            'month':month,
             'move_line_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
             'company_id': self.company_id.id or self.env.company.id,
