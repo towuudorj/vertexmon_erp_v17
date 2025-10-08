@@ -41,6 +41,7 @@ class stock_picking(models.Model):
                                         ('office','Office')],string='OT Address Type')
     ot_contract = fields.Char(string='Purchasing Officer name/contact details', default='Your Reference: IT Goods Our Reference: CW2167225')
     ot_code = fields.Char(string='OT code', default=lambda self:self.env['ir.sequence'].next_by_code('stock.picking.ot'))
+    purchase_count = fields.Integer(string='Purchase number', default=1)
 
     
     def _compute_amount(self):
@@ -144,8 +145,8 @@ class stock_picking(models.Model):
                     'anotherAction': another_action,
                 }
             }
-        #if self.purchase_id.invoice_ids:
-        #    self.purchase_id.action_create_invoice()
+        if self.purchase_id.invoice_ids:
+            self.purchase_id.action_create_invoice()
         if self.sale_id.invoice_ids:
             self.sale_id._create_invoices()
         return True
