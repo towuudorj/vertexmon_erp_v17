@@ -33,15 +33,15 @@ class AccountCurrencyEqualization(models.TransientModel):
         if self._context is None:
             self._context = {}
         
-        query = """SELECT a.id FROM account_account a left join account_account_type as aat on a.user_type_id = aat.id WHERE company_id = %s """ % self.company_id.id
+        query = """SELECT a.id FROM account_account a WHERE company_id = %s """ % self.company_id.id
         if type == 1 :
             query += " AND (a.currency_id is not null and a.currency_id <> %s) " % self.company_id.currency_id.id
-            query += " AND (aat.type in ('liquidity')) "
+            query += " AND (a.account_type in ('asset_cash')) "
             if self.currency_id:
                 query += " AND a.currency_id = %s " % self.currency_id.id
                 
         elif type == 2 :
-            query += " AND (aat.type in ('receivable','payable')) "
+            query += " AND (a.account_type in ('asset_receivable','liability_payable')) "
         
         self._cr.execute(query)
         res = self._cr.fetchall()
@@ -76,6 +76,7 @@ class AccountCurrencyEqualization(models.TransientModel):
             account_ids2 = self.get_accounts(type=2)
         
         res = []
+        print ("sdddddddddddddddddd",account_ids1, account_ids2)
         
         # Мөнгөн хөрөнгийн гадаад валютын дансуудын балансыг тэгшитгэнэ.
         if account_ids1 :
@@ -96,7 +97,6 @@ class AccountCurrencyEqualization(models.TransientModel):
             self._cr.execute("SELECT l.id FROM account_move_line l "
                        "LEFT JOIN account_move m ON m.id = l.move_id "
                        "LEFT JOIN account_account a ON a.id = l.account_id "
-                       "LEFT JOIN account_account_type aat on aat.id=a.user_type_id "
                        "WHERE l.account_id in %s "
                        "AND l.company_id = %s "
                        "AND m.state = 'posted' "
@@ -105,12 +105,11 @@ class AccountCurrencyEqualization(models.TransientModel):
                        "AND l.amount_currency <> 0 "
                        + partner_where +
                        "AND l.currency_id <> %s AND l.currency_id is not null "
-                       "and ((aat.type = 'receivable' and l.debit > 0) or (aat.type = 'payable' and l.credit > 0)) "
+                       "and ((a.account_type = 'asset_receivable' and l.debit > 0) or (a.account_type = 'liability_payable' and l.credit > 0)) "
                        "AND l.date <= %s ",
                     (tuple(account_ids2), self.company_id.id,
                      self.company_id.currency_id.id, self.end_date))
             fetched = self._cr.fetchall()
-           
             if fetched:
                 for line_id, in fetched :
                     ret = account_move_line_obj.currency_equalize_on_balance(line_id, self.company_id.currency_id,self.end_date)
@@ -155,7 +154,6 @@ class AccountCurrencyEqualization(models.TransientModel):
                    "GROUP BY l.account_id ",
             (self.start_date, self.end_date, company.id, tuple(ids)))
         amount_currency_dict = dict(self._cr.fetchall())
-        
         
         for account in account_obj.browse(ids) :
             if not account.currency_id or account.currency_id.id == company.currency_id.id :
@@ -216,7 +214,7 @@ class AccountCurrencyEqualization(models.TransientModel):
                 'partner_id': False,
                 'amount_currency': 0,
                 'company_id': company.id,
-                'currency_id': False,
+                'currency_id': account.currency_id.id,
                 'move_id': move_id.id,
                 'date': date,
                 'journal_id': journal_id,
