@@ -7,7 +7,7 @@ class PurchaseOrder(models.Model):
 
     partner_type = fields.Many2one('partner.type.register', string='Partner type',
                                    required=True)
-    currency_rate = fields.Float(string='Currency rate', digits=(12, 6))
+    currency_rate = fields.Float(string='Currency rate', digits=(12, 6), compute="_compute_currency_rate")
     sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
     purchase_type = fields.Selection([('local', 'Local'),
                                         ('foreign' , 'Foreign')], string='Purchase type', 
@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
 
 
     @api.onchange('currency_id')
-    def _onchange_currency_id(self):
+    def _compute_currency_rate(self):
         if self.currency_id != self.company_id.currency_id:
             currency_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=self.company_id.currency_id,
@@ -75,7 +75,7 @@ class PurchaseOrder(models.Model):
                     company=self.company_id,
                     date=self.date_approve,
                 )
-            self.currency_rate = currency_rate
+            self.currency_rate = 1/currency_rate
         else:
             self.currency_rate = 0.0
     
