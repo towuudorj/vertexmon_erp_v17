@@ -77,9 +77,10 @@
                     <table style="width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 11px;" border="1">
                         <thead style="background-color: #f2f2f2; text-align: center;">
                             <tr>
-                                <th style="padding: 5px; text-align: center;">QTY</th>
+                                <th style="padding: 5px; text-align: center;">№</th>
                                 <th style="padding: 5px; text-align: left;">ITEM</th>
                                 <th style="padding: 5px; text-align: left;">DESCRIPTION</th>
+                                <th style="padding: 5px; text-align: center;">QTY</th>
                                 <th style="padding: 5px; text-align: right;">UNIT PRICE</th>
                                 <th style="padding: 5px; text-align: right;">TOTAL /<span t-field="o.currency_id.name"/>/</th>
                             </tr>
