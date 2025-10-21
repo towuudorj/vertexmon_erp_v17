@@ -9,6 +9,9 @@
         
         <menuitem id="stock_product_quantity_page_mn_menu" name="Тооллогын хуудас" parent="stock.menu_stock_config_settings" action="action_product_quantity_page"  />
 
+        <menuitem id="purchase_product_income_report_menu" name="Орлогын тайлан" parent="stock.menu_stock_config_settings" action="action_purchase_product_income_report"  />
+
+
         <menuitem id="stock_summary_report_mn_menu" name="Stock summary report" parent="stock.menu_stock_config_settings" action="action_product_summary_report"  />
         
 

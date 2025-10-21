@@ -38,6 +38,7 @@
                 'report/mn_stock_expense_desc.xml',
                 'report/purchase_add_expense_report.xml',
                 'report/product_quantity_page_view.xml',
+                'report/purchase_product_income_report_view.xml',
                 'report/ot_packing_list_report.xml',
                 'report/workwear_report.xml',
                 'wizard/product_detail_report.xml',

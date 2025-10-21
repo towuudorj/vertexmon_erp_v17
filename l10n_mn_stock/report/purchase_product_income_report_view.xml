@@ -2,9 +2,40 @@
 <odoo>
     <data>
 
+        <record id="purchase_product_income_report_view" model="ir.ui.view">
+			<field name="name">purchase.product.income.report.form</field>
+			<field name="model">purchase.product.income.report</field>
+			<field name="arch" type="xml">
+				<form string="Product">
+					<group>
+						<field name="company_id" />
+						<field name="product_id"/>
+						<field name="category_id"/>
+						<field name="start_date"/>
+						<field name="end_date"/>
+					</group>
+	
+					<footer>
+						<button name="action_print_xls_report" string="Export" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_purchase_product_income_report" model="ir.actions.act_window">
+			<field name="name">Бараа материалын орлогын тайлан</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.product.income.report</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="purchase_product_income_report_view" />
+			<field name="target">new</field>
+		</record>
         
-        
-        
+
+
 
     </data>
 </odoo>

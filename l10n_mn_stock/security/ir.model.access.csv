@@ -11,3 +11,5 @@ access_product_summary_report_new,item.group,model_product_summary_report,stock.
 access_product_summary_report_new_manager,item.group,model_product_summary_report,stock.group_stock_manager,1,1,1,1
 access_product_quantity_page,product.quantity.page,model_product_quantity_page,stock.group_stock_user,1,0,0,0
 access_product_quantity_page_manager,product.quantity.page,model_product_quantity_page,stock.group_stock_manager,1,1,1,1
+access_purchase_product_income_report,purchase.product.income.report,model_purchase_product_income_report,stock.group_stock_user,1,0,0,0
+access_purchase_product_income_report_manager,purchase.product.income.report,model_purchase_product_income_report,stock.group_stock_manager,1,1,1,1

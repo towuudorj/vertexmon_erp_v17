@@ -18,6 +18,8 @@ class ProductQuantityPage(models.TransientModel):
                                 default=lambda self: self.env.user.company_id)
     category_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
+    start_date = fields.Date(string='Start Date', default=fields.Date.context_today)
+    end_date = fields.Date(string='End Date', default=fields.Date.context_today)
 
     def action_print_xls_report(self):
         data = {
