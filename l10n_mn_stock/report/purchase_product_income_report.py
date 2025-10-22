@@ -171,8 +171,9 @@ class PurchaseProductIncomeReport(models.TransientModel):
                         left join stock_location as sl on mv.location_id=sl.id
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         where mv.state = 'done' and mv.product_id = %s and 
-                        date(mv.date) >= '%s' and date(mv.date) <= '%s' and sl.usage in ('supplier') and dest_id.usage = 'internal' 
-                        group by mv.product_id, mv.picking_id, mv.product_qty """%(pro.id,data['start_date'], data['end_date']))
+                        date(mv.date) >= '%s' and date(mv.date) <= '%s' and mv.company_id = %s
+                        and sl.usage in ('supplier') and dest_id.usage = 'internal' 
+                        group by mv.product_id, mv.picking_id, mv.product_qty """%(pro.id,data['start_date'], data['end_date'],data['company_id']))
             income_pro = self.env.cr.dictfetchall()
             
             for prod in income_pro:
