@@ -28,6 +28,7 @@
                 
                 <xpath expr="//sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
                     <field name="month" optional="show"/>
+                    <field name="pre_qty" optional="show"/>
                 </xpath>
             </field>
         </record>

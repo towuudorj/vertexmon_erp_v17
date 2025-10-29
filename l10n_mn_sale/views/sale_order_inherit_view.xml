@@ -20,6 +20,18 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
                 <field name="opportunity_id" string="CRM" optional="show" />
+                <field name="payment_amount" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_crm_order" model="ir.ui.view">
+        <field name="name">sale.order.view.tree.inherit.crm.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="payment_amount" optional="show" />
             </xpath>
         </field>
     </record>

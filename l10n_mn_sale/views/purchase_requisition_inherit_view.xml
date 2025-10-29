@@ -36,6 +36,8 @@
                         <button name="qoutation_end" groups="l10n_mn_sale.group_purchase_request" type="object" string="Quotation end" class="oe_highlight"  invisible= "status != 'quotation_st'" />
                         <!--<button name="quotation_done" groups="sales_team.group_sale_manager" type="object" string="Батлах" class="oe_highlight"  invisible= "status != 'quotation_ed'" />
                         --><button name="quotation_cancel" groups="l10n_mn_sale.group_purchase_request,sales_team.group_sale_manager" type="object" string="Cancel" class="oe_highlight" invisible= "status != 'new'" />
+                        <button name="quotation_edit_request" groups="l10n_mn_sale.group_purchase_request" type="object" string="Quotation edit request" class="oe_highlight"  invisible= "status != 'done'" />
+
                         <field name="status" widget="statusbar" />
                         <field name="state" invisible="1" />
                     </header>

@@ -193,6 +193,7 @@ class PurchaseOrderLine(models.Model):
                                 ('10','10'),
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
+    pre_qty = fields.Float(string='Pre quantity')
 
 
 

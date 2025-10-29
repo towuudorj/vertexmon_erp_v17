@@ -193,9 +193,6 @@ class PurchaseProductIncomeReport(models.TransientModel):
                 sheet.write('I%s' % (rowx), prod['product_qty'], data_left)
     
 
-
-
-        
         rowx += 2
         sheet.write("C%s"%(rowx + 3), u"Хянасан ажилтан: ..................................................../                                            /",)
 

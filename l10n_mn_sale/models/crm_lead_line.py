@@ -30,6 +30,9 @@ class CrmLeadLine(models.Model):
         ('normal', 'Normal'),
         ('high', 'High'),
     ], string='Priority', default='normal')
+    purchase_type = fields.Selection([('one_year','One year supllier'),
+                                        ('once_pro','Once product')],string='Purchase type', required=True)        
+    pre_qty = fields.Float(string='Pre quantity')
 
 
 
@@ -52,6 +55,7 @@ class CrmLeadLine(models.Model):
             self.name = self.product_id.name
             self.uom_id = self.product_id.uom_id.id
             self.sale_price = self.product_id.list_price
+            self.pre_qty = self.product_id.virtual_available
             
 
     @api.onchange('qty','sale_price')

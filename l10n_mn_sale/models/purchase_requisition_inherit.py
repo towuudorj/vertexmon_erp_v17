@@ -51,6 +51,13 @@ class PurchaseRequisition(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 
 
+    def quotation_edit_request(self):
+        for line in self:
+            line.crm_lead_id.is_price_request = True
+            line.status = 'quotation_st'
+    
+
+
     def _compute_total_amount(self):
         for pr in self:
             total = sum(line.total_amount for line in pr.line_ids if line.line_status == 'approve')

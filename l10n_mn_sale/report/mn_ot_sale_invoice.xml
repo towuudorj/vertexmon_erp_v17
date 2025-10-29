@@ -160,7 +160,7 @@
 						<tr class="border-black" t-foreach="o.order_line" t-as="line">
 							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
 							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
-		                        <t t-esc="line.name"/>
+		                        <t t-esc="line.product_id.name"/>
 		                    </td>
 							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom_qty"/></td>
 							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom"/></td>
@@ -206,7 +206,6 @@
 							<span>Борлуулалтын менежер:  </span>
 						</td>
 						<td style="padding:2px; font-size:14px; width:40%; position: absolute; border:none; top: -10px;">
-							<img t-attf-src="data:image/jpg;base64,{{o.user_id.signature_image}}" style="width:160px;height:100px; "/>
 						</td>
 					</tr>
 					<tr>

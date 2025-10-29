@@ -15,12 +15,13 @@ class CrmLead(models.Model):
             for line in lead.lead_line_ids:
                 total += line.price_subtotal
             lead.amount_total = total
-
             lead.update({
                         'amount_total': total,
+                        'untax_amount': total - (total /1.1*0.10),
+                        'tax_amount':total/1.1*0.10,
             })
 
-    code = fields.Char(string='Code', readonly=True,
+    code = fields.Char(string='Code', readonly=True, copy=False,
                         default=lambda self: self.env['ir.sequence'].with_context(company_id=self.company_id.id).next_by_code('crm.lead'))
     partner_id = fields.Many2one(
         'res.partner', string='Customer', check_company=True, index=True, tracking=10, required=True,
@@ -33,7 +34,9 @@ class CrmLead(models.Model):
         "Delivered Quantity: Invoiced based on the quantity the vendor "
         "delivered (time or deliveries).",
     )
-    project_id = fields.Many2one('project.project', string='Project')
+    together_sales_id = fields.Many2many('res.users', string='Together sales')
+
+    project_id = fields.Many2one('project.project', string='Project', required=True)
     is_sale = fields.Boolean(string='Is sale', default=True, tracking=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True)
     invoice_ids = fields.Many2many('account.move',string='Invoice', compute="_compute_invoice")
@@ -45,6 +48,11 @@ class CrmLead(models.Model):
     purchase_order_count = fields.Integer(string='Purchase order', compute="_compute_purchase_request")
     lead_line_ids = fields.One2many('crm.lead.line', 'lead_id', string='Lead line')
     contract_id = fields.Many2one('sales.contract.register', string='Contract')
+    new_status = fields.Selection([('new','New'),
+                                    ('price_inquire','Price inquire'),
+                                    ('break','Break'),
+                                    ('confirm','Confirm'),
+                                    ('cancel','Cancel')],string='New status', readonly=True, tracking=True, default='new')
     status = fields.Selection([('new','New'),
                                 ('send_purchase_confirm','Send purchase confirm'),
                                 ('purchase_confirm','Confirm'),
@@ -57,13 +65,18 @@ class CrmLead(models.Model):
                                   required=True, readonly=True)
     send_date = fields.Date(string='Quotation send date', required=True, default=fields.Date.today())
     amount_total = fields.Float(string='Total amount', compute='_compute_amount_total')
+    untax_amount = fields.Float(string='Untax amount', compute='_compute_amount_total')
+    tax_amount = fields.Float(string='Tax amount', compute='_compute_amount_total')
     crm_type = fields.Selection([('crm', u'Борлуулалт'),
-                                 ('stock',u'Нөөц')], string='CRM type', default='crm')
+                                 ('stock',u'Нөөцөнд авах')], string='CRM type', default='crm')
     is_purchase = fields.Boolean(string='Is purchase', default=False, tracking=True)
+    cancel_reason = fields.Text(string='Cancel reason')
+    break_reason = fields.Text(string='Break reason')
+
 
     
     
-    @api.onchange('partner_id', 'company_id')
+    @api.onchange('partner_id', 'company_id','team_id')
     def _onchange_pricelist_id(self):
         for order in self:
             if not order.partner_id:
@@ -71,6 +84,7 @@ class CrmLead(models.Model):
                 continue
             order = order.with_company(order.company_id)
             order.pricelist_id = order.partner_id.property_product_pricelist
+            order.project_id = order.team_id.project_id.id
 
     def send_purchase_request(self):
         for line in self:
@@ -97,10 +111,30 @@ class CrmLead(models.Model):
 
     def confirm_purchase(self):
         """ This method is used to confirm the purchase request """
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        
         for lead in self:
             if not lead.purchase_request_ids:
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
+            purchase_id = lead.purchase_request_ids.purchase_ids.id
+            purchase_obj = 'purchase.order'
+            record_link = f"{base_url}/web#id={purchase_id}&model={purchase_obj}&view_type=form"
+
+            body_html = f"""
+                <p>Сайн байна уу {self.name},</p>
+                <p>Худалдан авалтын захиалга үүссэн тул <a href="{record_link}" target="_blank">батална уу.</a>.</p>
+                <p>Баяраллаа!</p>
+            """
+
+            mail_values = {
+                'subject': 'Худалдан авалт батлах',
+                'body_html': body_html,
+                'email_to': self.env.user.email,
+                'email_from': 'erp@vertexmon.com',
+            }
+            mail = self.env['mail.mail'].create(mail_values)
+            mail.send()
             lead.status = 'purchase_confirm'
             if lead.crm_type == 'crm':
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())

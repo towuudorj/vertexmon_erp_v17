@@ -21,7 +21,7 @@
 			        </div>
 
                     <div class="col-xs-8" style="text-align:center; font-size:14px;">
-                        <h4>ЗАРЛАГЫН БАРИМТ №</h4> /  <span t-field="o.ot_code"/> /
+                        <span style="font-size:20px;"><b>ЗАРЛАГЫН БАРИМТ № </b></span> <span>/ <span t-field="o.ot_code"/> /</span>
                     </div>
                     <table class="width: 100%; table table-condensed; text-align: center; border: transparent 1px solid; margin-left:50px; margin-right:50px;">
                         <tr style="border: none;">

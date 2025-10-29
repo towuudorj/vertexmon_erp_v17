@@ -8,6 +8,10 @@
                 <field name="model">crm.lead</field>
                 <field name="arch" type="xml">
                     <data>
+                        <xpath expr='//field[@name="create_date"]' position="replace">
+                        </xpath>
+                        <xpath expr='//field[@name="contact_name"]' position="replace">
+                        </xpath>
                         <xpath expr='//field[@name="name"]' position="after">
                             <field name="code" />
                         </xpath>
@@ -17,7 +21,7 @@
                         </tree>
                         <xpath expr='//field[@name="expected_revenue"]' position="replace">
                             <field name="amount_total" />
-                            <field name="status" />
+                            <field name="status"/>
                         </xpath>
                     </data>
                 </field>
@@ -58,9 +62,6 @@
                     <data>
                         <xpath expr='//button[@name="action_sale_quotations_new"]' position="replace">
                             <field name="is_purchase" invisible="1"/>
-                            <button class="oe_stat_button" type="object" string="Борлуулалтын захиалга үүсгэх"
-                                name="create_quotation" icon="fa-pencil-square-o" invisible= "is_purchase != False" >
-                            </button>
                         </xpath>
                     </data>
                 </field>
@@ -90,35 +91,43 @@
                             </button>
                         </button>
 
-                        
+                        <xpath expr="//header/button[@name='358']" position="replace">
+                        </xpath>
+                        <xpath expr="//header/button[@name='action_set_won_rainbowman']" position="replace">
+                        </xpath>
                         <xpath expr='//header/button[@name="toggle_active"]' position="after">
                             <field name="status" invisible="1"/>
-                            
+                            <!--
                             <button string="Худалдан авалтын хүсэлт илгээх" type="object"
                                 invisible="status != 'new'" 
                                 groups="sales_team.group_sale_salesman"
-                                name="send_purchase_request"/>
-                            <button string="Худалдан авалтын хүсэлт зөвшөөрөх" type="object"
-                                invisible="status != 'send_purchase_confirm'"
+                                name="send_purchase_request"/>-->
+                            <button string="Батлах" type="object"
                                 groups="l10n_mn_sale.group_crm_request_confirm"
                                 name="confirm_purchase"/>
-                            <button string="Цуцлах" type="object"
-                                invisible="status != 'send_purchase_confirm'"
+                            <button string="Цуцлах" type="action"
                                 groups="sales_team.group_sale_manager"
-                                name="action_cancel"/>
+                                name="%(action_crm_cancel_reason_view)d"/>
+                            <button string="Хойшлуулах" type="action"
+                                groups="sales_team.group_sale_manager"
+                                name="%(action_crm_break_reason_view)d"/>
                         </xpath>
 
                         <xpath expr='//sheet/div[@class="oe_title"]/h1' position="after">
                             <group>
                                 <field name="code" />
-                                <field name="sales_type" />
+                                <field name="sales_type" invisible="1"/>
                                 <field name="crm_type" />
                                 <field name="send_date" />
                                 <field name="project_id"/>
+                                
                             </group>
                         </xpath>
 
                         <xpath expr='//label[@for="date_deadline"]' position="replace">
+                        </xpath>
+                        <xpath expr='//field[@name="user_id"]' position="after">
+                            <field name="together_sales_id" string="Борлуулагч /нэмэлт/" widget="many2many_tags"/>
                         </xpath>
 
                         <xpath expr='//div[@class="o_lead_opportunity_form_inline_fields"]' position="replace">
@@ -146,6 +155,8 @@
                             <field name="team_id" />
                             <field name="source_id" />
                             <field name="pricelist_id"/>
+                            <field name="cancel_reason" readonly="1"/>
+                            <field name="break_reason" readonly="1"/>
                         </xpath>
                         <xpath expr='//notebook/page[@name="internal_notes"]' position="before">
                             <page string='Order line'>
@@ -157,6 +168,7 @@
                                         <field name="purchase_user_id" optional="show"/>
                                         <field name="uom_id"  required="product_id != False"/>
                                         <field name="priority"  optional="show"/>
+                                        <field name="pre_qty" readonly="1" optional="show"/>
                                         <field name="qty"/>
                                         <field name="cost_price" readonly="1"/>
                                         <field name="currency_id"  readonly="1"/>
@@ -165,6 +177,8 @@
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer">
+                                    <field name="untax_amount" class="oe_subtotal_footer_separator"/>
+                                    <field name="tax_amount" class="oe_subtotal_footer_separator"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                 </group>
 

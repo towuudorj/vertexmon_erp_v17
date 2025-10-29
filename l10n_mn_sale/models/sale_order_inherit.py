@@ -234,6 +234,36 @@ class SaleOrder(models.Model):
                                 ('10','10'),
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
+    payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
+
+    @api.depends('invoice_ids')
+    def _compute_payment_amount(self):
+        for sale in self:
+            payment_amount = 0.0
+            payments = self.env['account.move'].search([('invoice_origin', '=', sale.name), ('state', '=', 'posted')])
+            if payments:
+                for pay in payments:
+                    payment_amount += pay.amount_residual_signed
+            else:
+                payment_amount = sale.amount_total
+                
+            sale.payment_amount = payment_amount
+
+    
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        for order in self:
+            default_warehouse_id = self.env['ir.default'].with_company(
+                order.company_id.id)._get_model_defaults('sale.order').get('warehouse_id')
+            if order.state in ['draft', 'sent'] or not order.ids:
+                # Should expect empty
+                if order.team_id.warehouse_id:
+                    order.warehouse_id = order.team_id.warehouse_id
+                else:
+                    if default_warehouse_id is not None:
+                        order.warehouse_id = default_warehouse_id
+                    else:
+                        order.warehouse_id = order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
 
                                         
     def _compute_amount(self):

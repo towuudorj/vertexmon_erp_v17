@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+
+        <record id="crm_cancel_reason_view" model="ir.ui.view">
+            <field name="name">crm.cancel.reason.wizard.form</field>
+            <field name="model">crm.cancel.reason</field>
+            <field name="arch" type="xml">
+	             <form string="CRM cancel">
+                    <group>
+                        <field name="reason" />
+                    </group>
+					<footer>
+                        <button name="action_cancel_reason" string="Cancel" type="object" class="oe_highlight" />
+                        or
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+				</form>
+            </field>
+        </record>
+
+
+        <record id="action_crm_cancel_reason_view" model="ir.actions.act_window">
+             <field name="name">Цуцалсан шалтгаан</field>
+             <field name="res_model">crm.cancel.reason</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_id" ref="crm_cancel_reason_view"/>
+             <field name="view_mode">form</field>
+             <field name="target">new</field>
+       </record>  
+
+
+        
+
+    </data>
+</odoo>

@@ -232,6 +232,12 @@ msgstr "Бүгд"
 msgid "Sales type"
 msgstr "Борлуулалтын төрөл"
 
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__together_sales_id
+msgid "Together sales"
+msgstr "Борлуулагч /нэмэлт/"
+
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__amount_total
 msgid "Total amount"
@@ -390,6 +396,35 @@ msgstr "Харилцагчийн төрөл"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_type__name
 msgid "Contract type name"
 msgstr "Гэрээний төрлийн нэр"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__new
+msgid "New"
+msgstr "Шинэ"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__break
+msgid "Break"
+msgstr "Хойшлуулсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__price_inquire
+msgid "Price inquire"
+msgstr "Үнэ судлагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__confirm
+msgid "Confirm"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__cancel
+msgid "Cancel"
+msgstr "Цуцлагдсан"
+
+
 
 
 #. module: l10n_mn_sale
@@ -607,6 +642,11 @@ msgid "Sales"
 msgstr "Борлуулалтын захиалга"
 
 #. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
+msgid "Quotation edit request"
+msgstr "Мэдээлэл шинэчлэх"
+
+#. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
 msgid "Invoice"
 msgstr "Нэхэмжлэх"
@@ -706,6 +746,16 @@ msgstr "Гарын үсэг шаардлагатай"
 msgid "Lead"
 msgstr "Сэжим"
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_cancel_reason__reason
+msgid "Cancel reason"
+msgstr "Цуцлах шалтгаан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_break_reason__reason
+msgid "Break reason"
+msgstr "Хойшлуулах шалтгаан"
+
 
 
 #. module: l10n_mn_sale
@@ -723,6 +773,11 @@ msgstr "Худалдан авалтын менежер эсэх"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__product_id
 msgid "Product"
 msgstr "Бараа ажил үйлчилгээ"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__pre_qty
+msgid "Pre quantity"
+msgstr "Урьдчилан таамагласан тоо"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__name
@@ -768,6 +823,27 @@ msgstr "Худалдан авалтын менежер"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
 msgid "Invoice"
 msgstr "Нэхэмжлэл"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_break_reason_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_break_reason_view
+msgid "Break"
+msgstr "Хойшлуулах"
+
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_cancel_reason_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_cancel_reason_view
+msgid "Cancel"
+msgstr "Цуцлах"
 
 #. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
@@ -847,6 +923,34 @@ msgstr "Цуцлагдсан шалтгаан"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__crm_type
 msgid "Crm type"
 msgstr "CRM Төрөл"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__payment_amount
+msgid "Payment"
+msgstr "Төлбөрийн үлдэгдэл"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__untax_amount
+msgid "Untax amount"
+msgstr "Татваргүй дүн"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__tax_amount
+msgid "Tax amount"
+msgstr "Татварын дүн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__cancel_reason
+msgid "Cancel reason"
+msgstr "Цуцалсан шалтгаан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__break_reason
+msgid "Break reason"
+msgstr "Хойшлуулсан шалтгаан"
 
 
 #. module: l10n_mn_sale

@@ -12,6 +12,7 @@
                         <field name="product_id" readonly="1"/>
                         <field name="name" readonly="1"/>
                         <field name="request_type" optional="show" readonly="1"/>
+                        <field name="purchase_type"/>
                         <field name="purchase_user_id" optional="show"/>
                         <field name="uom_id"  required="product_id != False" readonly="1"/>
                         <field name="priority"  optional="show" readonly="1"/>
