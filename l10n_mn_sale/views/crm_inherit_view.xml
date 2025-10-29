@@ -91,12 +91,15 @@
                             </button>
                         </button>
 
+                        <xpath expr="//header]" position="replace">
+                        </xpath>
+
                         <xpath expr="//header/button[@name='358']" position="replace">
                         </xpath>
                         <xpath expr="//header/button[@name='action_set_won_rainbowman']" position="replace">
                         </xpath>
                         <xpath expr='//header/button[@name="toggle_active"]' position="after">
-                            <field name="status" invisible="1"/>
+                            <field name="new_status" invisible="1"/>
                             <!--
                             <button string="Худалдан авалтын хүсэлт илгээх" type="object"
                                 invisible="status != 'new'" 
@@ -104,12 +107,15 @@
                                 name="send_purchase_request"/>-->
                             <button string="Батлах" type="object"
                                 groups="l10n_mn_sale.group_crm_request_confirm"
+                                invisible="new_status != 'confirm'" 
                                 name="confirm_purchase"/>
                             <button string="Цуцлах" type="action"
                                 groups="sales_team.group_sale_manager"
+                                invisible="new_status != 'cancel'" 
                                 name="%(action_crm_cancel_reason_view)d"/>
                             <button string="Хойшлуулах" type="action"
                                 groups="sales_team.group_sale_manager"
+                                invisible="new_status != 'break'" 
                                 name="%(action_crm_break_reason_view)d"/>
                         </xpath>
 
@@ -160,13 +166,14 @@
                         </xpath>
                         <xpath expr='//notebook/page[@name="internal_notes"]' position="before">
                             <page string='Order line'>
-                                <field name="lead_line_ids">
+                                <field name="lead_line_ids" readonly="new_status == 'confirm'">
                                     <tree editable="bottom" decoration-success="priority == 'normal'" decoration-danger="priority == 'high'">
                                         <field name="product_id"/>
                                         <field name="name" />
                                         <field name="request_type" optional="show"/>
                                         <field name="purchase_user_id" optional="show"/>
                                         <field name="uom_id"  required="product_id != False"/>
+                                        <field name="purchase_type" optional="show"/>
                                         <field name="priority"  optional="show"/>
                                         <field name="pre_qty" readonly="1" optional="show"/>
                                         <field name="qty"/>
