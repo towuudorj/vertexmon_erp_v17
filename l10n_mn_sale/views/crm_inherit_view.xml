@@ -91,7 +91,8 @@
                             </button>
                         </button>
 
-                        <xpath expr="//header]" position="replace">
+                        <xpath expr="//header/field[@name='stage_id'  ]" position="replace">
+                            <field name="new_status"/>
                         </xpath>
 
                         <xpath expr="//header/button[@name='358']" position="replace">
