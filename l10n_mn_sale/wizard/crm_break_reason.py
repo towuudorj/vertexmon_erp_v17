@@ -12,4 +12,4 @@ class CrmBreakReason(models.TransientModel):
         line_ids = self.env['crm.lead'].browse(self._context.get('active_ids', []))
         for line in line_ids:
             line.break_reason = self.reason
-            #line.state = 'breaked'
+            line.new_status = 'break'
