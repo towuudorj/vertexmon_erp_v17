@@ -52,6 +52,7 @@ class CrmLead(models.Model):
                                     ('price_inquire','Price inquire'),
                                     ('break','Break'),
                                     ('confirm','Confirm'),
+                                    ('done','Done'),
                                     ('cancel','Cancel')],string='New status', readonly=True, tracking=True, default='new')
     status = fields.Selection([('new','New'),
                                 ('send_purchase_confirm','Send purchase confirm'),
@@ -109,6 +110,10 @@ class CrmLead(models.Model):
             line.is_purchase == True
         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
 
+    def action_confirm(self):
+        for line in self:
+            line.new_status = 'confirm'
+
     def confirm_purchase(self):
         """ This method is used to confirm the purchase request """
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -119,23 +124,23 @@ class CrmLead(models.Model):
             lead.purchase_request_ids.quotation_done()
             purchase_id = lead.purchase_request_ids.purchase_ids.id
             purchase_obj = 'purchase.order'
-            record_link = f"{base_url}/web#id={purchase_id}&model={purchase_obj}&view_type=form"
+            #record_link = f"{base_url}/web#id={purchase_id}&model={purchase_obj}&view_type=form"
 
-            body_html = f"""
-                <p>Сайн байна уу {self.name},</p>
-                <p>Худалдан авалтын захиалга үүссэн тул <a href="{record_link}" target="_blank">батална уу.</a>.</p>
-                <p>Баяраллаа!</p>
-            """
+            #body_html = f"""
+            #    <p>Сайн байна уу {self.name},</p>
+            #    <p>Худалдан авалтын захиалга үүссэн тул <a href="{record_link}" target="_blank">батална уу.</a>.</p>
+            #    <p>Баяраллаа!</p>
+            #"""
 
-            mail_values = {
-                'subject': 'Худалдан авалт батлах',
-                'body_html': body_html,
-                'email_to': self.env.user.email,
-                'email_from': 'erp@vertexmon.com',
-            }
-            mail = self.env['mail.mail'].create(mail_values)
-            mail.send()
-            lead.status = 'purchase_confirm'
+            #mail_values = {
+            #    'subject': 'Худалдан авалт батлах',
+            #    'body_html': body_html,
+            #    'email_to': self.env.user.email,
+            #    'email_from': 'erp@vertexmon.com',
+            #}
+            #mail = self.env['mail.mail'].create(mail_values)
+            #mail.send()
+            lead.new_status = 'done'
             if lead.crm_type == 'crm':
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                 sale_order_id.action_confirm()

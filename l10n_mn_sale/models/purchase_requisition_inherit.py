@@ -75,6 +75,7 @@ class PurchaseRequisition(models.Model):
                 if line.price_unit > 0.0 and line.line_status == 'approve':
                     if line.supplier_id:
                         pr.status = 'quotation_ed'
+                        pr.crm_lead_id.new_status = 'price_inquire'
                     else:
                         raise UserError(_('Үнэ судлуулах хүсэлтэнд нийлүүлэгчийг оруулаагүй байгаа тул оруулна уу!'))
                 else:
