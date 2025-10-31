@@ -24,7 +24,7 @@
     'depends': [
                 'account',
                 'om_account_accountant',
-                'product'
+                'product',
                 ],
     'data': [
             'security/ir.model.access.csv',
