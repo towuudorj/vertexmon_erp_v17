@@ -53,7 +53,9 @@ class PurchaseRequisition(models.Model):
 
     def quotation_edit_request(self):
         for line in self:
-            line.crm_lead_id.is_price_request = True
+            line.crm_lead_id.new_status = 'new'
+            line.crm_lead_id.order_ids.action_cancel()
+            line.crm_lead_id.order_ids.action_draft()
             line.status = 'quotation_st'
     
 

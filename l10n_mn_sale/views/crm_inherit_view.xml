@@ -132,9 +132,9 @@
                             <group>
                                 <field name="code" />
                                 <field name="sales_type" invisible="1"/>
-                                <field name="crm_type" />
-                                <field name="send_date" />
-                                <field name="project_id"/>
+                                <field name="crm_type" readonly="new_status == 'done'" />
+                                <field name="send_date" readonly="new_status == 'done'"/>
+                                <field name="project_id" readonly="new_status == 'done'"/>
                                 
                             </group>
                         </xpath>
@@ -142,7 +142,7 @@
                         <xpath expr='//label[@for="date_deadline"]' position="replace">
                         </xpath>
                         <xpath expr='//field[@name="user_id"]' position="after">
-                            <field name="together_sales_id" string="Борлуулагч /нэмэлт/" widget="many2many_tags"/>
+                            <field name="together_sales_id" string="Борлуулагч /нэмэлт/" widget="many2many_tags" readonly="new_status == 'done'"/>
                         </xpath>
 
                         <xpath expr='//div[@class="o_lead_opportunity_form_inline_fields"]' position="replace">
@@ -164,12 +164,55 @@
                         </xpath>
                         <xpath expr='//notebook/page[@name="lead"]/group/group[2]' position="replace">
                         </xpath>
+                         <field name="partner_id" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+                        <field name="email_from" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="name" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="phone" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+                        <field name="user_id" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="tag_ids" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+
+                        <field name="partner_name" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="street" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="website" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="lang_id" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
+                        <field name="company_id" position="attributes">
+                            <attribute name="readonly">new_status == 'done'</attribute>
+                        </field>
+
                         <xpath expr='//notebook/page[@name="lead"]/group/group/field[@name="team_id"]' position="replace">
                         </xpath>
                         <xpath expr='//field[@name="tag_ids"]' position="after">
-                            <field name="team_id" />
-                            <field name="source_id" />
-                            <field name="pricelist_id"/>
+                            <field name="team_id" readonly="new_status == 'done'"/>
+                            <field name="source_id" readonly="new_status == 'done'"/>
+                            <field name="pricelist_id" readonly="new_status == 'done'"/>
                             <field name="cancel_reason" readonly="1"/>
                             <field name="break_reason" readonly="1"/>
                         </xpath>
