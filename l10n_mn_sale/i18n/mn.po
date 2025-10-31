@@ -399,6 +399,12 @@ msgstr "Гэрээний төрлийн нэр"
 
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__purchase_type
+msgid "Purchase type"
+msgstr "Худалдан авалт хийгдэх хугацаа"
+
+
+#. module: l10n_mn_sale
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__new
 msgid "New"
 msgstr "Шинэ"
@@ -420,9 +426,25 @@ msgid "Confirm"
 msgstr "Батлагдсан"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__done
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: l10n_mn_sale
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead__new_status__cancel
 msgid "Cancel"
 msgstr "Цуцлагдсан"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__purchase_type__one_year
+msgid "One year supllier"
+msgstr "Хуваагдах"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__crm_lead_line__purchase_type__once_pro
+msgid "Once product"
+msgstr "Нэг удаагийн"
 
 
 

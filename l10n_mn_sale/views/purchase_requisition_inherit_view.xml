@@ -65,14 +65,14 @@
                 </xpath>
                 <xpath expr="//sheet/notebook/page[@name='products']/field[@name='line_ids']/tree/field[@name='price_unit']" position="replace">
                     <field name="price_unit" readonly="line_status =='approve'"/>
-                    <field name="line_status" readonly="1" />
+                    <!--<field name="line_status" readonly="1" />-->
                     <field name="priority" />
                     <field name="currency_id"/>
                     <field name="total_amount"/>
-                    <button name="action_approve" invisible="line_status =='approve' or product_id == False" string="Approve" type="object"/>
+                    <!--<button name="action_approve" invisible="line_status =='approve' or product_id == False" string="Approve" type="object"/>
                     <button name="action_unapproved" invisible="line_status =='approve' or product_id == False" string="Unapprove" type="object"/>
-                    <button name="%(action_create_product_wizard)d" invisible="product_id != False"  string="Create product" type="action"/>
-                    <field name="cancel_reason_id"/>
+                    --><button name="%(action_create_product_wizard)d" invisible="product_id != False"  string="Create product" type="action"/>
+                    <!--<field name="cancel_reason_id"/>-->
                 </xpath>
                 <xpath expr="//sheet/notebook/page[@name='products']/field[@name='description']" position="before">
                     <group class="oe_subtotal_footer">

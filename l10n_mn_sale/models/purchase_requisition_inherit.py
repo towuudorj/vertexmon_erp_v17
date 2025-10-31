@@ -72,8 +72,9 @@ class PurchaseRequisition(models.Model):
     def qoutation_end(self):
         for pr in self:
             for line in pr.line_ids:
-                if line.price_unit > 0.0 and line.line_status == 'approve':
+                if line.price_unit > 0.0:
                     if line.supplier_id:
+                        line.action_approve()
                         pr.status = 'quotation_ed'
                         pr.crm_lead_id.new_status = 'price_inquire'
                     else:

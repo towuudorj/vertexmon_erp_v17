@@ -53,7 +53,7 @@ class CrmLead(models.Model):
                                     ('break','Break'),
                                     ('confirm','Confirm'),
                                     ('done','Done'),
-                                    ('cancel','Cancel')],string='New status', readonly=True, tracking=True, default='new')
+                                    ('cancel','Cancel')],string='New status', readonly=True, tracking=True, default='new', copy=False)
     status = fields.Selection([('new','New'),
                                 ('send_purchase_confirm','Send purchase confirm'),
                                 ('purchase_confirm','Confirm'),
@@ -112,7 +112,13 @@ class CrmLead(models.Model):
 
     def action_confirm(self):
         for line in self:
-            line.new_status = 'confirm'
+            if line.lead_line_ids:
+                for lines in line.lead_line_ids:
+                    if lines.sale_price >0.0:
+                         raise UserError(_('Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
+                line.new_status = 'confirm'
+            else:
+                raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
 
     def confirm_purchase(self):
         """ This method is used to confirm the purchase request """
