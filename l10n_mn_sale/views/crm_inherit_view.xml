@@ -110,7 +110,7 @@
                                 groups="sales_team.group_sale_salesman"
                                 name="send_purchase_request"/>-->
                             <button string="Батлах" type="object"
-                                invisible="new_status != 'price_inquire'" 
+                                invisible="new_status == 'done'" 
                                 name="action_confirm"/>
                             
                             <button string="Зөвшөөрөх" type="object"
@@ -175,7 +175,7 @@
                         </xpath>
                         <xpath expr='//notebook/page[@name="internal_notes"]' position="before">
                             <page string='Order line'>
-                                <field name="lead_line_ids" readonly="new_status == 'confirm'">
+                                <field name="lead_line_ids" readonly="new_status == 'done'">
                                     <tree editable="bottom" decoration-success="priority == 'normal'" decoration-danger="priority == 'high'">
                                         <field name="product_id"/>
                                         <field name="name" />

@@ -113,10 +113,20 @@ class CrmLead(models.Model):
     def action_confirm(self):
         for line in self:
             if line.lead_line_ids:
+                line_type = ''
                 for lines in line.lead_line_ids:
-                    if lines.sale_price >0.0:
+                    if lines.sale_price == 0.0:
                          raise UserError(_('Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
-                line.new_status = 'confirm'
+                    if lines.request_type == 'send_quotation':
+                        line_type = 'send_quotation'
+ 
+                if line.crm_type == 'stock':
+                    line.new_status = 'confirm'
+                elif line.crm_type == 'crm' and line_type=='send_quotation':
+                    line.new_status = 'done'
+                else:
+                    line.new_status = 'confirm'
+
             else:
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
 
