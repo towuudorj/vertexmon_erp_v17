@@ -33,6 +33,10 @@ class CrmLeadLine(models.Model):
     purchase_type = fields.Selection([('one_year','One year supllier'),
                                         ('once_pro','Once product')],string='Purchase type', required=True)        
     pre_qty = fields.Float(string='Pre quantity')
+    order_line_image = fields.Binary(string='Order line image')
+    add_desc = fields.Text(string='Additional description')
+    discount = fields.Float(string='Discount (%)', default=0.0)
+    tax_id = fields.Many2one('account.tax', string='Taxes')
 
 
 

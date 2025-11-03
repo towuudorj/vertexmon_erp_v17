@@ -20,7 +20,7 @@
             <field name="name">CRM Quotation No Sign</field>
             <field name="model">crm.lead</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">l10n_mn_sale.report_crm_mn_quotation_no_sign</field>
+            <field name="report_name">l10n_mn_sale.report_crm_no_sign_mn_quotation</field>
             <field name="report_file">l10n_mn_sale.mn_sale_crm_quotation_no_sign</field>
             <field name="print_report_name">'quotation_%s' % (object.name)</field>
             <field name="attachment"/>

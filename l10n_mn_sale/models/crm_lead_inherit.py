@@ -73,6 +73,9 @@ class CrmLead(models.Model):
     is_purchase = fields.Boolean(string='Is purchase', default=False, tracking=True)
     cancel_reason = fields.Text(string='Cancel reason')
     break_reason = fields.Text(string='Break reason')
+    expire_day = fields.Integer(string='Expire day', default=7)
+    supply_date = fields.Date(string='Supply date')
+    note = fields.Text(string='Note')
 
 
     def action_new(self):
