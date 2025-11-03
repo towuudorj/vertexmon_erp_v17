@@ -77,6 +77,9 @@
                 <field name="model">crm.lead</field>
                 <field name="arch" type="xml">
                     <data>
+
+                        <button name="action_view_sale_quotation" position="replace">
+                        </button>
                         <button name="action_schedule_meeting" position="after">
                             <button class="oe_stat_button" type="object"
                                 name="action_view_invoice" icon="fa-pencil-square-o">
