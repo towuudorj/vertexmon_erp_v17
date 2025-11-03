@@ -201,6 +201,7 @@ class CrmLead(models.Model):
             'warehouse_id': self.team_id.warehouse_id.id,
             'pricelist_id':self.pricelist_id.id,
             'user_id':self.user_id.id,
+            'together_sales_id':[(6,0,self.together_sales_id.ids)],
             'picking_policy': 'direct',
             'source_id': self.source_id.id,
             'company_id': self.company_id.id or self.env.company.id,

@@ -228,7 +228,7 @@ class PurchaseRequisitionLine(models.Model):
 
     def _compute_total_amount(self):
         for line in self:
-            if line.product_qty and line.price_unit:
+            if line.product_qty>0.0 and line.price_unit >0.0:
                 line.total_amount = line.product_qty * line.price_unit
             else:
                 line.total_amount = 0.0

@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class SalesPlanReport(models.Model):
     _name = "sales.plan.report"
+    _description = "Sales Plan Report"
 
     name = fields.Char(string='Name', required=True)
     date = fields.Date(string='Date', required=True)

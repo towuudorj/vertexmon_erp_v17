@@ -235,6 +235,7 @@ class SaleOrder(models.Model):
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
     payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
+    together_sales_id = fields.Many2many('res.users', string='Together sales')
 
     @api.depends('invoice_ids')
     def _compute_payment_amount(self):
