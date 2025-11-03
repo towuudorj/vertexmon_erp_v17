@@ -113,6 +113,15 @@
                                 invisible="new_status == 'done'" 
                                 name="action_confirm"/>
                             
+                            <button string="Шинэ" type="object"
+                                invisible="new_status != 'cancel'" 
+                                name="action_new"/>
+
+                            <button string="Шинэ" type="object"
+                                invisible="new_status != 'break'" 
+                                name="action_new"/>
+
+                            
                             <button string="Зөвшөөрөх" type="object"
                                 groups="l10n_mn_sale.group_crm_request_confirm"
                                 invisible="new_status != 'confirm'" 

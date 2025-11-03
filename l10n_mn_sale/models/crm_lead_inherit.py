@@ -75,7 +75,9 @@ class CrmLead(models.Model):
     break_reason = fields.Text(string='Break reason')
 
 
-    
+    def action_new(self):
+        for line in self:
+            line.new_status = 'new'
     
     @api.onchange('partner_id', 'company_id','team_id')
     def _onchange_pricelist_id(self):
@@ -142,8 +144,8 @@ class CrmLead(models.Model):
             if not lead.purchase_request_ids:
                 raise UserError(_('Purchase request not found!'))
             lead.purchase_request_ids.quotation_done()
-            purchase_id = lead.purchase_request_ids.purchase_ids.id
-            purchase_obj = 'purchase.order'
+            #purchase_id = lead.purchase_request_ids.purchase_ids.id
+            #purchase_obj = 'purchase.order'
             #record_link = f"{base_url}/web#id={purchase_id}&model={purchase_obj}&view_type=form"
 
             #body_html = f"""
