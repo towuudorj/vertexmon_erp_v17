@@ -90,7 +90,8 @@ class CrmLead(models.Model):
                 continue
             order = order.with_company(order.company_id)
             order.pricelist_id = order.partner_id.property_product_pricelist
-            order.project_id = order.team_id.project_id.id
+            if order.team_id.project_id.id:
+                order.project_id = order.team_id.project_id.id
 
     def send_purchase_request(self):
         for line in self:
@@ -122,6 +123,8 @@ class CrmLead(models.Model):
                 for lines in line.lead_line_ids:
                     if lines.sale_price == 0.0:
                          raise UserError(_('Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
+                    if lines.cost_price == 0.0 and lines.request_type != 'send_quotation':
+                        raise UserError(_('Барааны судалсан үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
                     if lines.request_type == 'send_quotation':
                         line_type = 'send_quotation'
                 if not line.order_ids:
@@ -134,7 +137,9 @@ class CrmLead(models.Model):
                     else:
                         line.new_status = 'confirm'
                 else:
-                    raise UserError(_('Борлуулалтын захиалга үүссэн байна!'))
+                    for lines in line.order_ids:
+                        if lines.state in ['sale','done']:
+                            raise UserError(_('Борлуулалтын захиалга үүссэн байна!'))
 
             else:
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
@@ -242,6 +247,7 @@ class CrmLead(models.Model):
                             'company_id': lead.company_id.id,
                             'origin': lead.name,
                             'warehouse_id': lead.team_id.warehouse_id.id,
+                            'currency_id':lead.company_id.currency_id.id,
                             'state': 'draft',
                             'type_id': type_id.id,
                             'name':self.env['ir.sequence'].with_company(self.company_id).next_by_code('purchase.requisition.blanket.order'),

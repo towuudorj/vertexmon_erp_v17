@@ -24,7 +24,7 @@ class CrmLeadLine(models.Model):
     purchase_user_id = fields.Many2one('res.users', string='Purchase user', domain="[('is_purchase_manager','=',True)]")
     request_type = fields.Selection([('is_quotation', 'Is quotation'),
                                       ('is_purchase', 'Purchase'),
-                                      ('send_quotation', 'Send quotation')],
+                                      ('send_quotation', u'Нөөцөөс борлуулах')],
                                      string='Request type', default='send_quotation')
     priority = fields.Selection([
         ('normal', 'Normal'),
@@ -58,7 +58,6 @@ class CrmLeadLine(models.Model):
         if self.product_id:
             self.name = self.product_id.name
             self.uom_id = self.product_id.uom_id.id
-            self.sale_price = self.product_id.list_price
             self.pre_qty = self.product_id.virtual_available
             
 
