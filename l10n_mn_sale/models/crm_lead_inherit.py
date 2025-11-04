@@ -130,7 +130,7 @@ class CrmLead(models.Model):
                 if not line.order_ids:
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
-                    elif line.crm_type == 'crm' and line_type=='send_quotation':
+                    elif line.crm_type == 'crm' and line_type == 'send_quotation':
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                         sale_order_id.action_confirm()

@@ -50,6 +50,9 @@ class CreateProductWizard(models.TransientModel):
                     'supplier_taxes_id': [(6, 0, self.supplier_tax_ids.ids)],
                     'detailed_type': 'product',
                 })
+                create_product_id.product_tmpl_id.write({'distributor_ids': self.distributor_ids.id,
+                                                        'model': self.model,
+                                                        })
                 crm_line_id = self.env['crm.lead.line'].search([('id', '=', line.lead_line_id.id)])
                 if crm_line_id.lead_id.order_ids:
                     for order in crm_line_id.lead_id.order_ids.order_line:
