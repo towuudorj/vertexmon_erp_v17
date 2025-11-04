@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='effective_date']" position="after">
-                    <field name="dispatch_date"  />
+                    <!--<field name="dispatch_date"  />-->
                     <field name="freight_type_id" />
                     <field name="freight_partner_id"/>
                 </xpath>
@@ -20,7 +20,7 @@
 
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="purchase_type" />
-                    <field name="partner_type" />
+                    <!--<field name="partner_type" />-->
                 </xpath>
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="currency_rate" />

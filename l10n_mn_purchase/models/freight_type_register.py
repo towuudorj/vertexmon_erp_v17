@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
     
 class FreightType(models.Model):
     _name = 'freight.type.register'
+    _description = 'Freight type register'
 
     name = fields.Char(string='Freight type', required=True)
     code = fields.Char(string='Code', required=True)
