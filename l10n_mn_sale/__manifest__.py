@@ -29,8 +29,6 @@
                  'l10n_mn_stock',
                  'rt_product_brand',
                  'project',
-                 'crm_iap_enrich',
-
                  'crm'
                  ],
     "data" : [ 
