@@ -23,7 +23,7 @@ class PurchaseProductIncomeReport(models.TransientModel):
     type = fields.Selection([('purchase','Purchase income'),
                              ('internal','Internal income'),
                              ('return','Return income'),
-                             ('all', 'All')],string='Type', defualt='purchase')
+                             ('all', 'All')],string='Type', default='purchase')
 
 
     def action_print_xls_report(self):

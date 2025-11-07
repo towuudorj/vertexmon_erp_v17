@@ -649,7 +649,7 @@ msgstr "Яаралтай эсэх"
 
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__total_amount
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__subtotal
 msgid "Total amount"
 msgstr "Нийт дүн"
 

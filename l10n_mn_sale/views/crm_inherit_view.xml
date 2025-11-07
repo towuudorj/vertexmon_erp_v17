@@ -12,7 +12,8 @@
                         </xpath>
                         <xpath expr='//field[@name="contact_name"]' position="replace">
                         </xpath>
-                        <xpath expr='//field[@name="name"]' position="after">
+                        <xpath expr='//field[@name="name"]' position="replace">
+                             <field name="name"  string="Нэр"/>
                             <field name="code" />
                         </xpath>
 
@@ -258,7 +259,7 @@
                                         <field name="cost_price" readonly="1"/>
                                         <field name="currency_id"  readonly="1"/>
                                         <field name="sale_price"/>
-                                        <field name="price_subtotal"/>
+                                        <field name="price_subtotal" readonly="1"/>
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer">

@@ -6,6 +6,7 @@ from odoo import fields, models, api, _
     
 class ProductCategoryNew(models.Model):
     _name= 'product.category.new'
+    _description = 'Product Category New'
 
     active = fields.Boolean(string='Active', default=True)
     name = fields.Char(string='Name', required=True)

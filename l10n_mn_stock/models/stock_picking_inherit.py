@@ -72,7 +72,7 @@ class stock_picking(models.Model):
                         total +=line.untaxed_amount
                     else:
                         total +=line.price_subtotal
-                    total +=line.untaxed_amount
+                    
             else:
                 for line in lin.move_ids_without_package:
                     if line.untaxed_amount > 0.0:
@@ -80,7 +80,7 @@ class stock_picking(models.Model):
                     else:
                         total +=line.price_subtotal
                         
-                    total +=line.price_subtotal
+                   
             #elif lin.move_ids_without_package:
             #    for line in lin.move_ids_without_package:
             #        total +=line.untaxed_amount

@@ -16,6 +16,7 @@ PURCHASE_REQUISITION_STATES = [
 
 class PurchaseReasonRegister(models.Model):
     _name = 'purchase.reason.register'
+    _description = 'Purchase reason register'
 
     
     company_id = fields.Many2one(
@@ -32,6 +33,8 @@ class PurchaseRequisition(models.Model):
 
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
+
+
 
     crm_lead_id = fields.Many2one('crm.lead', string='Lead')
     sale_id = fields.Many2one('sale.order', string='Sale order')
@@ -51,6 +54,16 @@ class PurchaseRequisition(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 
 
+    @api.depends('line_ids.subtotal', 'line_ids.price_unit')
+    def _compute_total_amount(self):
+        for pr in self:
+            total = 0.0
+            for line in pr.line_ids:
+                #qty = float(line.product_qty or 0.0)
+                #price = float(line.price_unit or 0.0)
+                total += line.subtotal
+            pr.total_amount = total
+
     def quotation_edit_request(self):
         for line in self:
             line.crm_lead_id.new_status = 'new'
@@ -60,10 +73,7 @@ class PurchaseRequisition(models.Model):
     
 
 
-    def _compute_total_amount(self):
-        for pr in self:
-            total = sum(line.total_amount for line in pr.line_ids if line.line_status == 'approve')
-            pr.total_amount = total
+    
 
 
     def quotation_start(self):
@@ -74,15 +84,15 @@ class PurchaseRequisition(models.Model):
     def qoutation_end(self):
         for pr in self:
             for line in pr.line_ids:
-                if line.price_unit > 0.0:
-                    if line.supplier_id:
+                if line.price_unit > 0.0 and line.currency_id.id != False:
+                    if line.supplier_id.id != False:
                         line.action_approve()
                         pr.status = 'quotation_ed'
-                        pr.crm_lead_id.new_status = 'price_inquire'
+                        pr.crm_lead_id.change_status()
                     else:
                         raise UserError(_('Үнэ судлуулах хүсэлтэнд нийлүүлэгчийг оруулаагүй байгаа тул оруулна уу!'))
                 else:
-                    raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
+                    raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ, валют болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
 
     def quotation_cancel(self):
         for pr in self:
@@ -131,6 +141,7 @@ class PurchaseRequisition(models.Model):
                             'origin': pr.name,
                             'picking_type_id':picking_type_id.id,
                             'state': 'draft',
+                            'analytic_account_id': pr.crm_lead_id.analytic_account_id.id,
                             'sales_partner_id':pr.crm_lead_id.partner_id.id,
                             'date_order': datetime.now(),
                             'partner_type':lines.supplier_id.partner_type.id,
@@ -193,6 +204,8 @@ class PurchaseRequisition(models.Model):
 class PurchaseRequisitionLine(models.Model):
     _inherit = 'purchase.requisition.line'
 
+    
+
     line_status = fields.Selection([('approve','Approve'),
                               ('unapproved','Unapproved')],string='Status')
     cancel_reason_id = fields.Many2one('purchase.reason.register', string='Cancel reason')
@@ -204,16 +217,43 @@ class PurchaseRequisitionLine(models.Model):
         ('high', 'High'),
     ], string='Priority', default='normal')
     currency_id = fields.Many2one('res.currency', string='Currency')
-    total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
+    subtotal = fields.Float(string='Total amount', compute='_compute_subtotal_amount')
     
-    
+    @api.depends('subtotal', 'product_qty', 'price_unit')
+    def _compute_subtotal_amount(self):
+        for line in self:
+            qty = line.product_qty or 0.0
+            price = line.price_unit or 0.0
+            line.subtotal = qty * price
+
+    @api.onchange('product_qty', 'price_unit')
+    def _onchange_price_unit(self):
+        for line in self:
+            qty = float(line.product_qty or 0.0)
+            price = float(line.price_unit or 0.0)
+
+            if qty < 0:
+                # Prefer returning a warning to avoid breaking UI in some clients:
+                return {
+                    'warning': {
+                        'title': _("Invalid quantity"),
+                        'message': _("Тоо 0-с их байх ёстой!"),
+                    },
+                    # optionally reset the wrong value
+                    'value': {'product_qty': 0.0, 'total_amount': 0.0},
+                }
+
+            line.subtotal = qty * price
+
+
     def write(self, vals):
         if 'price_unit' in vals:
             self.requisition_id.message_post(
                     body=_(u'%s барааны хуучин үнэ %s шинэ үнэ %s') % (
                         self.product_description_variants, self.price_unit, vals['price_unit']))
-            self.requisition_id.crm_lead_id.message_post(
-                    body=_(u'%s барааны судалсан үнэ %s') % (self.product_description_variants, vals['price_unit']))
+            if self.requisition_id.crm_lead_id:
+                self.requisition_id.crm_lead_id.message_post(
+                        body=_(u'%s барааны судалсан үнэ %s') % (self.product_description_variants, vals['price_unit']))
 
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
@@ -226,18 +266,13 @@ class PurchaseRequisitionLine(models.Model):
             
         return res
 
-    def _compute_total_amount(self):
-        for line in self:
-            if line.product_qty>0.0 and line.price_unit >0.0:
-                line.total_amount = line.product_qty * line.price_unit
-            else:
-                line.total_amount = 0.0
+    
     
     def action_approve(self):
         for line in self:
             line.line_status = 'approve'
-            if line.price_unit == 0:
-                raise UserError(_('Бараа нэгж үнэ оруулаагүй байгаа болон үнэ судалж дуусаагүй байгаа тул оруулана уу!'))
+            if line.price_unit == 0 and line.currency_id.id == False:
+                raise UserError(_('Бараа нэгж үнэ эсвэл валют оруулаагүй байгаа болон үнэ судалж дуусаагүй байгаа тул оруулана уу!'))
             #elif not line.product_id.id:
             #    raise UserError(_('Бараа оруулаагүй байгаа тул оруулана уу!'))
             else:

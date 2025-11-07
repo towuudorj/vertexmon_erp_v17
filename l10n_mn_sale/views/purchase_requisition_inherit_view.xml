@@ -48,12 +48,16 @@
                         <button name="qoutation_end" groups="l10n_mn_sale.group_purchase_request" type="object" string="Quotation end" class="oe_highlight"  invisible= "status != 'quotation_st'" />
                         <!--<button name="quotation_done" groups="sales_team.group_sale_manager" type="object" string="Батлах" class="oe_highlight"  invisible= "status != 'quotation_ed'" />
                         --><button name="quotation_cancel" groups="l10n_mn_sale.group_purchase_request,sales_team.group_sale_manager" type="object" string="Cancel" class="oe_highlight" invisible= "status != 'new'" />
-                        <button name="quotation_edit_request" groups="l10n_mn_sale.group_purchase_request" type="object" string="Quotation edit request" class="oe_highlight"  invisible= "status != 'done'" />
+                        <button name="quotation_edit_request" groups="l10n_mn_sale.group_purchase_request" type="object" string="Quotation edit request" class="oe_highlight"  invisible= "status not in ('done','quotation_ed')" />
                         <field name="status" widget="statusbar" />
                         <field name="state" invisible="1" />
                     </header>
                 </xpath>
                 
+
+                <xpath expr="//label[@for='name']" position="replace"> 
+                    <label for="name" string="Код" class="oe_inline"/>
+                </xpath>
 
                 <xpath expr="//field[@name='date_end']" position="replace">  
                 </xpath>
@@ -98,7 +102,7 @@
                     <!--<field name="line_status" readonly="1" />-->
                     <field name="priority" />
                     <field name="currency_id"/>
-                    <field name="total_amount"/>
+                    <field name="subtotal"/>
                     <!--<button name="action_approve" invisible="line_status =='approve' or product_id == False" string="Approve" type="object"/>
                     <button name="action_unapproved" invisible="line_status =='approve' or product_id == False" string="Unapprove" type="object"/>
                     --><button name="%(action_create_product_wizard)d" invisible="product_id != False"  string="Create product" type="action"/>

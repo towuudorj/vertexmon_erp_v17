@@ -78,6 +78,18 @@ class CrmLead(models.Model):
     note = fields.Text(string='Note')
 
 
+
+    def change_status(self):
+        for line in self:
+            status = False
+            for lines in line.lead_line_ids:
+                if lines.cost_price > 0.0:
+                    status = True
+                else:
+                    status = False
+            if status== True:
+                line.new_status = 'price_inquire'
+
     def action_new(self):
         for line in self:
             line.new_status = 'new'
