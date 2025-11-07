@@ -66,10 +66,18 @@ class PurchaseRequisition(models.Model):
 
     def quotation_edit_request(self):
         for line in self:
+            for pur in line.purchase_ids:
+                if pur.state != 'draft':
+                    pur.button_cancel()
+                    pur.button_draft()
+
+            
             line.crm_lead_id.new_status = 'new'
-            line.crm_lead_id.order_ids.action_cancel()
-            line.crm_lead_id.order_ids.action_draft()
+            for lines in line.crm_lead_id.order_ids:
+                lines.action_cancel()
+                lines.action_draft()
             line.status = 'quotation_st'
+
     
 
 
@@ -84,6 +92,10 @@ class PurchaseRequisition(models.Model):
     def qoutation_end(self):
         for pr in self:
             for line in pr.line_ids:
+                for lines in pr.purchase_ids.order_line:
+                    if lines.product_id.id == line.product_id.id:
+                        lines.price_unit = line.price_unit
+                        
                 if line.price_unit > 0.0 and line.currency_id.id != False:
                     if line.supplier_id.id != False:
                         line.action_approve()

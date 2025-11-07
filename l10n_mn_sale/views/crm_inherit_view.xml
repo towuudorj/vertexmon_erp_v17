@@ -259,7 +259,7 @@
                                         <field name="cost_price" readonly="1"/>
                                         <field name="currency_id"  readonly="1"/>
                                         <field name="sale_price"/>
-                                        <field name="price_subtotal" readonly="1"/>
+                                        <field name="price_subtotal"/>
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer">
