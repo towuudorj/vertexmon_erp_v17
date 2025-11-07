@@ -31,7 +31,7 @@
                 </field>
             </record>
 
-
+            <!--
             <record model="ir.ui.view" id="crm_lead_enrich_inherit_mn_view">
                 <field name="name">crm.lead.mn.enrich.inherit</field>
 	        	<field name="inherit_id" ref="crm_iap_enrich.crm_lead_view_form"/>
@@ -43,7 +43,7 @@
                     </data>
                 </field>
             </record>
-
+            -->
 
             <record model="ir.ui.view" id="crm_lead_create_inherit_mn_search_view">
                 <field name="name">crm.lead.mn.create.inherit.search</field>
