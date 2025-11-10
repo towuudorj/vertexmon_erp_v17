@@ -153,7 +153,7 @@ class PurchaseRequisition(models.Model):
                             'origin': pr.name,
                             'picking_type_id':picking_type_id.id,
                             'state': 'draft',
-                            'analytic_account_id': pr.crm_lead_id.project_id.analytic_account_id.id,
+                            'analytic_id': pr.crm_lead_id.project_id.analytic_account_id.id,
                             'sales_partner_id':pr.crm_lead_id.partner_id.id,
                             'date_order': datetime.now(),
                             'partner_type':lines.supplier_id.partner_type.id,
