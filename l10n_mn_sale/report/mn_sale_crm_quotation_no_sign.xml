@@ -17,7 +17,7 @@
                         </tr>
                     </table>
                     <h3 style="text-align:center; font-size:14px;">
-                        <b><span>ҮНИЙН САНАЛ: </span><span t-field="o.name"/></b>
+                        <b><span>ҮНИЙН САНАЛ: </span><span t-field="o.code"/></b>
                     </h3>
                     
                     <table style="width: 100%; font-size:11px; text-align: center; padding-top:6px; border: transparent 1px solid;">

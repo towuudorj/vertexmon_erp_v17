@@ -36,7 +36,8 @@ class CrmLeadLine(models.Model):
     order_line_image = fields.Binary(string='Order line image')
     add_desc = fields.Text(string='Additional description')
     discount = fields.Float(string='Discount (%)', default=0.0)
-    tax_id = fields.Many2one('account.tax', string='Taxes')
+    tax_id = fields.Many2many('account.tax', string='Taxes')
+
 
 
 
