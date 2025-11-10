@@ -152,6 +152,15 @@ class CrmLead(models.Model):
                     for lines in line.order_ids:
                         if lines.state in ['sale','done']:
                             raise UserError(_('Борлуулалтын захиалга үүссэн байна!'))
+                            
+                    if line.crm_type == 'stock':
+                        line.new_status = 'confirm'
+                    elif line.crm_type == 'crm' and line_type == 'send_quotation':
+                        line.new_status = 'done'
+                        sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
+                        sale_order_id.action_confirm()
+                    else:
+                        line.new_status = 'confirm'
 
             else:
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
