@@ -95,7 +95,7 @@ class PurchaseRequisition(models.Model):
                 for lines in pr.purchase_ids.order_line:
                     if lines.product_id.id == line.product_id.id:
                         lines.price_unit = line.price_unit
-                        
+
                 if line.price_unit > 0.0 and line.currency_id.id != False:
                     if line.supplier_id.id != False:
                         line.action_approve()
@@ -153,7 +153,7 @@ class PurchaseRequisition(models.Model):
                             'origin': pr.name,
                             'picking_type_id':picking_type_id.id,
                             'state': 'draft',
-                            'analytic_account_id': pr.crm_lead_id.analytic_account_id.id,
+                            'analytic_account_id': pr.crm_lead_id.project_id.analytic_account_id.id,
                             'sales_partner_id':pr.crm_lead_id.partner_id.id,
                             'date_order': datetime.now(),
                             'partner_type':lines.supplier_id.partner_type.id,
