@@ -128,7 +128,7 @@
                                 groups="sales_team.group_sale_salesman"
                                 name="send_purchase_request"/>-->
                             <button string="Батлах" type="object"
-                                invisible="new_status == 'confirm'" 
+                                invisible="new_status != 'price_inquire'" 
                                 name="action_confirm"/>
                             
                             <button string="Шинэ" type="object"
