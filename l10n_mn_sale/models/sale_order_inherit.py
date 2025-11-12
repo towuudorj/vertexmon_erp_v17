@@ -237,11 +237,24 @@ class SaleOrder(models.Model):
     payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
     together_sales_id = fields.Many2many('res.users', string='Together sales')
 
+
+    @api.depends('picking_ids', 'picking_ids.state')
+    def _compute_delivery_status(self):
+        for order in self:
+            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+                order.delivery_status = 'pending'
+            elif all(p.state in ['done'] for p in order.picking_ids):
+                order.delivery_status = 'full'
+            elif any(p.state == 'done' for p in order.picking_ids):
+                order.delivery_status = 'partial'
+            else:
+                order.delivery_status = 'pending'
+
     @api.depends('invoice_ids')
     def _compute_payment_amount(self):
         for sale in self:
             payment_amount = 0.0
-            payments = self.env['account.move'].search([('invoice_origin', '=', sale.name), ('state', '=', 'posted')])
+            payments = self.env['account.move'].search([('partner_id', '=', sale.partner_id.id),('invoice_origin', '=', sale.name),('sale_order_count','>=',1), ('state', '=', 'posted')])
             if payments:
                 for pay in payments:
                     payment_amount += pay.amount_residual_signed
@@ -798,37 +811,7 @@ class SaleOrder(models.Model):
             # Send reminder logic here
             pass
 
-    @api.model
-    def _vending_machine_status_send_email(self):
-        import socket
-        import json
-        vending_ids = self.env['vending.machine'].search([])
-        for vline in vending_ids:
-            server_socket = socket.socket()
-            try:
-                server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                host = str(vline.ip_address)
-                port = vline.port
-                server_socket.bind((host, port))
-                server_socket.listen(2)
-                conn, address = server_socket.accept()
-                data = '{"Command_Number": "%s", "Command_data": "%s"}' % (vline.status_command, vline.number)
-                conn.send(data.encode())
-                respons = conn.recv(2048)
-                result = json.loads(respons.decode('utf-8'))
-                if result['Command_Number'] == 201:
-                    vline.status = 'working'
-                    vline.desc = u'Машин ажиллаж байна'
-                else:
-                    vline.status = 'error'
-                    vline.desc = u'Машин ажиллахгүй байна'
-                vline._send_status_check_email()
-                conn.close()
-            except Exception:
-                vline.status = 'error'
-                vline.desc = u'Машинтай холбогдох боломжгүй'
-            finally:
-                server_socket.close()
+
 
     @api.model
     def _vending_machine_status_send_email(self, machine_id=None, status='offline'):
