@@ -242,13 +242,13 @@ class SaleOrder(models.Model):
     def _compute_delivery_status(self):
         for order in self:
             if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
-                order.delivery_status = 'pending'
+                order.delivery_status = 'nothing'
             elif all(p.state in ['done'] for p in order.picking_ids):
                 order.delivery_status = 'full'
             elif any(p.state == 'done' for p in order.picking_ids):
                 order.delivery_status = 'partial'
             else:
-                order.delivery_status = 'pending'
+                order.delivery_status = 'nothing'
 
     @api.depends('invoice_ids')
     def _compute_payment_amount(self):
