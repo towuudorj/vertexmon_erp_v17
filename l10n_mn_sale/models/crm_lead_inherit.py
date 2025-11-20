@@ -279,54 +279,56 @@ class CrmLead(models.Model):
                             purchase_request_id = self.env['purchase.requisition'].with_context(context).create(datas)
                             lead.purchase_request_ids = [(4,purchase_request_id.id)]
                             if lines.purchase_user_id.id == purchase_request_id.purchase_user_id.id:
-                                line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
-                                                                                      ('lead_line_id', '=', lines.id)])
-                                if not line_ids:
-                                    line_status = ''
-                                    #if lines.request_type == 'is_purchase':
-                                    #    line_status = 'approve'
-                                    
-                                    line_data = {
-                                                'product_id': lines.product_id.id,
-                                                'product_description_variants': lines.name,
-                                                'product_qty': lines.qty,
-                                                'product_uom_id': lines.uom_id.id,
-                                                'priority': lines.priority,
-                                                'requisition_id': purchase_request_id.id,
-                                                'currency_id': purchase_requests.currency_id.id,
-                                                'line_status':line_status,
-                                                'price_unit':0,
-                                                'lead_line_id':lines.id,
-                                                }
-                                    line_id = line_obj.create(line_data)
-                                    lines.request_line_id = line_id.id
-                                else:
-                                    lines.request_line_id = line_ids.id
+                                if lines.request_type != 'is_quotation':
+                                    line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
+                                                                                          ('lead_line_id', '=', lines.id)])
+                                    if not line_ids:
+                                        line_status = ''
+                                        #if lines.request_type == 'is_purchase':
+                                        #    line_status = 'approve'
+                                        
+                                        line_data = {
+                                                    'product_id': lines.product_id.id,
+                                                    'product_description_variants': lines.name,
+                                                    'product_qty': lines.qty,
+                                                    'product_uom_id': lines.uom_id.id,
+                                                    'priority': lines.priority,
+                                                    'requisition_id': purchase_request_id.id,
+                                                    'currency_id': purchase_requests.currency_id.id,
+                                                    'line_status':line_status,
+                                                    'price_unit':0,
+                                                    'lead_line_id':lines.id,
+                                                    }
+                                        line_id = line_obj.create(line_data)
+                                        lines.request_line_id = line_id.id
+                                    else:
+                                        lines.request_line_id = line_ids.id
                         else:
                             lead.purchase_request_ids = [(4,purchase_requests.id)]
                             if lines.purchase_user_id.id == purchase_requests.purchase_user_id.id:
-                                line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
-                                                                                      ('lead_line_id', '=', lines.id)])
-                                if not line_ids:
-                                    line_status = ''
-                                    #if lines.request_type == 'is_purchase':
-                                    #    line_status = 'approve'
-                                    line_data = {
-                                                'product_id': lines.product_id.id,
-                                                'product_description_variants': lines.name,
-                                                'product_qty': lines.qty,
-                                                'priority': lines.priority,
-                                                'product_uom_id': lines.uom_id.id,
-                                                'requisition_id': purchase_requests.id,
-                                                'lead_line_id':lines.id,
-                                                'currency_id': purchase_requests.currency_id.id,
-                                                'price_unit':0,
-                                                }
-                                    
-                                    line_id = line_obj.create(line_data)
-                                    lines.request_line_id = line_id.id
-                                else:
-                                    lines.request_line_id = line_ids.id
+                                if lines.request_type != 'is_quotation':
+                                    line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
+                                                                                          ('lead_line_id', '=', lines.id)])
+                                    if not line_ids:
+                                        line_status = ''
+                                        #if lines.request_type == 'is_purchase':
+                                        #    line_status = 'approve'
+                                        line_data = {
+                                                    'product_id': lines.product_id.id,
+                                                    'product_description_variants': lines.name,
+                                                    'product_qty': lines.qty,
+                                                    'priority': lines.priority,
+                                                    'product_uom_id': lines.uom_id.id,
+                                                    'requisition_id': purchase_requests.id,
+                                                    'lead_line_id':lines.id,
+                                                    'currency_id': purchase_requests.currency_id.id,
+                                                    'price_unit':0,
+                                                    }
+                                        
+                                        line_id = line_obj.create(line_data)
+                                        lines.request_line_id = line_id.id
+                                    else:
+                                        lines.request_line_id = line_ids.id
                 #else:
                 #    raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
             #else:
