@@ -178,19 +178,28 @@ class PurchaseProductIncomeReport(models.TransientModel):
             
             for prod in income_pro:
                 rowx += 1
-                sheet.write('A%s' % (rowx), rowx - 4, data_right)
-                sheet.write('B%s' % (rowx), pro.name, data_left)
-                sheet.write('C%s' % (rowx), pro.barcode or '', data_left)
-                sheet.write('D%s' % (rowx), pro.default_code or '', data_left)
-                sheet.write('E%s' % (rowx), pro.uom_id.name or '', data_left)
                 picking = picking_obj.browse(prod['picking_id'])
-                sheet.write('F%s' % (rowx), '%s'%picking.name, data_left)
-                sheet.write('G%s' % (rowx), '%s'%picking.origin, data_left)
-                clean_str = (str(picking.scheduled_date)).split('.')[0]
-                dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
-                dt_plus_8 = dt + timedelta(hours=8)
-                sheet.write('H%s' % (rowx), '%s'%dt_plus_8, data_left)
-                sheet.write('I%s' % (rowx), prod['product_qty'], data_left)
+
+                origin_text = picking.origin or ""        # Null бол хамгаална
+                origin_base = origin_text.split()[0]      # "0001/IN/00006"
+                
+                pre_picking = picking_obj.search([
+                    ('origin', 'ilike', f"%{origin_base}%")
+                ])
+                if picking.id and pre_picking.id == False:
+                    sheet.write('A%s' % (rowx), rowx - 4, data_right)
+                    sheet.write('B%s' % (rowx), pro.name, data_left)
+                    sheet.write('C%s' % (rowx), pro.barcode or '', data_left)
+                    sheet.write('D%s' % (rowx), pro.default_code or '', data_left)
+                    sheet.write('E%s' % (rowx), pro.uom_id.name or '', data_left)
+                    
+                    sheet.write('F%s' % (rowx), '%s'%picking.name, data_left)
+                    sheet.write('G%s' % (rowx), '%s'%picking.origin, data_left)
+                    clean_str = (str(picking.scheduled_date)).split('.')[0]
+                    dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
+                    dt_plus_8 = dt + timedelta(hours=8)
+                    sheet.write('H%s' % (rowx), '%s'%dt_plus_8, data_left)
+                    sheet.write('I%s' % (rowx), prod['product_qty'], data_left)
     
 
         rowx += 2
