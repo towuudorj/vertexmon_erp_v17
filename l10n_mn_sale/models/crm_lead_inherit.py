@@ -8,6 +8,15 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
 
+    @api.model
+    def _compute_default_partner_bank_id(self):
+        """ Default partner bank account for sale order """
+        bank_id = self.env['res.partner.bank'].search([('acc_number', '=', '5002411886')])
+        if bank_id:
+            return bank_id[0].id
+        else:
+            return False
+
     @api.depends('lead_line_ids.price_subtotal')
     def _compute_amount_total(self):
         for lead in self:
@@ -35,7 +44,8 @@ class CrmLead(models.Model):
         "delivered (time or deliveries).",
     )
     together_sales_id = fields.Many2many('res.users', string='Together sales')
-
+    amount_text = fields.Char(string='Amount text',
+         readonly=True,compute='_compute_amount')
     project_id = fields.Many2one('project.project', string='Project', required=True)
     is_sale = fields.Boolean(string='Is sale', default=True, tracking=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True)
@@ -76,6 +86,17 @@ class CrmLead(models.Model):
     expire_day = fields.Integer(string='Expire day', default=7)
     supply_date = fields.Date(string='Supply date')
     note = fields.Text(string='Note')
+    partner_bank_id = fields.Many2one('res.partner.bank', 
+                                   string='Bank Account Number',
+                                   domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]",
+                                   required=False,
+                                   default=_compute_default_partner_bank_id)
+    def _compute_amount(self):
+        for line in self:
+            if line.amount_total:
+                line.amount_text = verbose_format(line.amount_total, line.pricelist_id.currency_id)
+            else:
+                line.amount_text = ''
 
 
     def action_insert_project(self):
