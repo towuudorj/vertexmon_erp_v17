@@ -262,6 +262,7 @@ class CrmLead(models.Model):
                                                                                     ('purchase_user_id', '=', lines.purchase_user_id.id),
                                                                                     ('send_date','=',self.send_date),
                                                                                     ('state', '=', 'draft')])
+                        print ("loggg",purchase_requests)
                         if not purchase_requests:
                             datas = {
                                 'crm_lead_id': lead.id,
@@ -277,6 +278,7 @@ class CrmLead(models.Model):
                                 'send_date': self.send_date,
                             }
                             purchase_request_id = self.env['purchase.requisition'].with_context(context).create(datas)
+                            print ("dddddddddd",purchase_request_id)
                             lead.purchase_request_ids = [(4,purchase_request_id.id)]
                             if lines.purchase_user_id.id == purchase_request_id.purchase_user_id.id:
                                 if lines.request_type != 'is_quotation':

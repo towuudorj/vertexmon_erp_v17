@@ -122,7 +122,6 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.write("J%s"%rowx, u'Тоо', title)
         sheet.write("K%s"%rowx, u'Нэгж', title)
         sheet.write("L%s"%rowx, u'Нийт үнэ', title)
-        
         sheet.write("M%s"%rowx, u'Нэгжийн өртөг', title)
         sheet.write("N%s"%rowx, u'Нийт өртөг', title)
         sheet.write("O%s"%rowx, u'Ашиг', title)
@@ -132,7 +131,7 @@ class SaleOrderNewReport(models.TransientModel):
 
 
         sale_order_line_obj = self.env['sale.order.line']
-        if data['sales_user_id']:
+        if data['sales_user_id'] != False and data['partner_id'] != False:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -141,6 +140,7 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.state', 'in', ['sale']),
                     ('order_id.is_license','=', data['is_license']),
                     ('order_id.user_id', '=', data['sales_user_id']),
+                    ('order_id.partner_id', '=', data['partner_id']),
                 ],order='order_date desc')
             else:
                 sale_order_line_id = sale_order_line_obj.search([
@@ -149,9 +149,10 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.date_order', '<=', data['end_date']),
                     ('order_id.state', 'not in', ['cancel']),
                     ('order_id.is_license','=', data['is_license']),
-                    ('order_id.user_id', '=', data['sales_user_id'])
+                    ('order_id.user_id', '=', data['sales_user_id']),
+                    ('order_id.partner_id', '=', data['partner_id']),
                 ],order='order_date desc')
-        elif data['partner_id']:
+        elif data['partner_id'] != False and  data['sales_user_id'] == False:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -170,7 +171,26 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.is_license','=', data['is_license']),
                     ('order_id.partner_id', '=', data['partner_id'])
                 ],order='order_date desc')
-        else:
+        elif data['partner_id'] == False and  data['sales_user_id'] != False:
+            if data['target_move'] == 'posted':
+                sale_order_line_id = sale_order_line_obj.search([
+                    ('order_id.company_id', '=', data['company_id']),
+                    ('order_id.date_order', '>=', data['start_date']),
+                    ('order_id.date_order', '<=', data['end_date']),
+                    ('order_id.is_license','=', data['is_license']),
+                    ('order_id.user_id', '=', data['sales_user_id']),
+                    ('order_id.state', 'in', ['sale'])
+                ],order='order_date desc')
+            else:
+                sale_order_line_id = sale_order_line_obj.search([
+                    ('order_id.company_id', '=', data['company_id']),
+                    ('order_id.date_order', '>=', data['start_date']),
+                    ('order_id.date_order', '<=', data['end_date']),
+                    ('order_id.user_id', '=', data['sales_user_id']),
+                    ('order_id.state', 'not in', ['cancel'])
+                ],order='order_date desc')
+            
+        elif data['partner_id'] == False and  data['sales_user_id'] == False:
             if data['target_move'] == 'posted':
                 sale_order_line_id = sale_order_line_obj.search([
                     ('order_id.company_id', '=', data['company_id']),
@@ -184,7 +204,6 @@ class SaleOrderNewReport(models.TransientModel):
                     ('order_id.company_id', '=', data['company_id']),
                     ('order_id.date_order', '>=', data['start_date']),
                     ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.partner_id','=', data['partner_id']),
                     ('order_id.state', 'not in', ['cancel'])
                 ],order='order_date desc')
         num = 1
