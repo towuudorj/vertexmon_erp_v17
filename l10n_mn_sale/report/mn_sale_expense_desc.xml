@@ -79,7 +79,7 @@
                                     <t t-if="o.order_line">
                                         <t t-set="i" t-value="1"/>
                                         <tr t-foreach="o.order_line" t-as="line">
-                                            
+                                            <t t-if="line.product_id.type !='service'">
                                                 <td style="border: 1px solid black; font-size:11px; padding:7px; text-align:center;"><span t-esc="i"/></td>   
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px;"><span t-field="line.name"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_uom.name"/></td>
@@ -88,7 +88,7 @@
                                                 </td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                            
+                                            </t>
                                             <t t-set="i" t-value="i+1"/>
                                         </tr>
                                         <tr class="border-black">
@@ -132,7 +132,7 @@
                                     <t t-if="o.order_line">
                                         <t t-set="i" t-value="1"/>
                                         <tr t-foreach="o.order_line" t-as="line">
-                                           
+                                            <t t-if="line.product_id.type !='service'">
                                                 <td style="border: 1px solid black; font-size:11px; padding:7px; text-align:center;"><span t-esc="i"/></td>   
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px;"><span t-field="line.name"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_uom.name"/></td>
@@ -142,7 +142,7 @@
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.discount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                           
+                                            </t>
                                             <t t-set="i" t-value="i+1"/>
                                         </tr>
                                         <tr class="border-black">
