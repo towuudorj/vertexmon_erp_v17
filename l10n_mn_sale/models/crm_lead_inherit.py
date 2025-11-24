@@ -304,7 +304,7 @@ class CrmLead(models.Model):
                         purchase_requests = self.env['purchase.requisition'].search([('crm_lead_id', '=', lead.id),
                                                                                     ('purchase_user_id', '=', lines.purchase_user_id.id),
                                                                                     ('send_date','=',self.send_date),
-                                                                                    ('state', '=', 'draft')])
+                                                                                    ('status', '=', 'new')])
                         print ("loggg",purchase_requests)
                         if not purchase_requests:
                             datas = {
