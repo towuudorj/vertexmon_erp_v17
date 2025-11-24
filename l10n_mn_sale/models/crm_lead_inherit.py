@@ -78,6 +78,28 @@ class CrmLead(models.Model):
     note = fields.Text(string='Note')
 
 
+    def action_insert_project(self):
+        project_line_obj = self.env['project.products.line']
+        for line in self:
+            if line.project_id:
+                for lines in line.lead_line_ids:
+                    if lines.product_id.id:
+                        project_line_id = project_line_obj.search([('product_id','=',lines.product_id.id),('project_id','=',line.project_id.id)])
+                        if not project_line_id:
+                            project_line_obj.create({
+                                'product_id': lines.product_id.id,
+                                'name': lines.name,
+                                'product_uom': lines.uom_id.id,
+                                'project_id': line.project_id.id,
+                                'product_qty': lines.qty,
+                                'price_unit': lines.sale_price,
+                                'cost_price': lines.cost_price,
+                                'qty_available': lines.pre_qty,
+                                'company_id': line.company_id.id
+                            })
+                    else:
+                        raise UserError(_(u'Бараа үүсээгүй байгаа тул төсөл рүү оруулах боломжгүйг анхаарна уу!'))
+
 
     def change_status(self):
         for line in self:
