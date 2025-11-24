@@ -255,7 +255,7 @@ class CrmLead(models.Model):
             context.pop("default_type", None)
             line_obj = self.env['purchase.requisition.line']
             for lines in lead.lead_line_ids:
-                if lines.request_type != "is_quotation":
+                if lines.request_type != "send_quotation":
                     if lines.purchase_user_id:
                         type_id = self.env['purchase.requisition.type'].search([], limit=1)
                         purchase_requests = self.env['purchase.requisition'].search([('crm_lead_id', '=', lead.id),
@@ -306,7 +306,7 @@ class CrmLead(models.Model):
                         else:
                             lead.purchase_request_ids = [(4,purchase_requests.id)]
                             if lines.purchase_user_id.id == purchase_requests.purchase_user_id.id:
-                                if lines.request_type != 'is_quotation':
+                                if lines.request_type != 'send_quotation':
                                     line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
                                                                                           ('lead_line_id', '=', lines.id)])
                                     if not line_ids:
