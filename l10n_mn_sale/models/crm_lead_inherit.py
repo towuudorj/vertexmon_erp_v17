@@ -175,6 +175,8 @@ class CrmLead(models.Model):
         for line in self:
             if line.lead_line_ids:
                 line_type = ''
+                count = 0
+                quote_count = 0
                 for lines in line.lead_line_ids:
                     if lines.sale_price == 0.0:
                          raise UserError(_('Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
@@ -182,10 +184,12 @@ class CrmLead(models.Model):
                         raise UserError(_('Барааны судалсан үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
                     if lines.request_type == 'send_quotation':
                         line_type = 'send_quotation'
+                        quote_count +=1
+                    count +=1
                 if not line.order_ids:
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
-                    elif line.crm_type == 'crm' and line_type == 'send_quotation':
+                    elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                         sale_order_id.action_confirm()
@@ -198,7 +202,7 @@ class CrmLead(models.Model):
                             
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
-                    elif line.crm_type == 'crm' and line_type == 'send_quotation':
+                    elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                         sale_order_id.action_confirm()

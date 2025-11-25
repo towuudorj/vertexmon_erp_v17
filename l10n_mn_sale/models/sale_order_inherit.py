@@ -238,6 +238,38 @@ class SaleOrder(models.Model):
     together_sales_id = fields.Many2many('res.users', string='Together sales')
 
 
+    def action_create_new_invoice(self):
+        for line in self:
+            print ()
+            if line.payment_term_id:
+                for lines in line.payment_term_id.line_ids:
+                    if lines.value == 'percent':
+                        invoice_amount = (line.amount_total * lines.value_amount) / 100
+                        invoice_vals = {
+                            'ref': line.client_order_ref or '',
+                            'move_type': 'out_invoice',
+                            'narration': line.note,
+                            'currency_id': line.currency_id.id,
+                            'partner_id': line.partner_invoice_id.id,
+                            'fiscal_position_id': (line.fiscal_position_id or line.fiscal_position_id._get_fiscal_position(line.partner_invoice_id)).id,
+                            'invoice_origin': line.name,
+                            'invoice_payment_term_id': line.payment_term_id.id,
+                            'invoice_user_id': line.user_id.id,
+                            'partner_type_id': line.partner_type.id,
+                            'payment_reference': line.reference,
+                            'company_id': line.company_id.id,
+                            'invoice_line_ids': [(0,0,{
+                                'product_id': False,
+                                'name': u'Төлбөрийн нөхцөлөөр үүссэн нэхэмжлэл',
+                                'quantity': 1,
+                                'price_unit': invoice_amount,
+                                'tax_ids': [(6, 0, [])],
+                            })],
+                        }
+                        invoice = self.env['account.move'].create(invoice_vals)
+                        #invoice.action_post()
+
+
 
     @api.depends('invoice_ids')
     def _compute_payment_amount(self):
