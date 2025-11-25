@@ -115,10 +115,10 @@
     
         <template id="mn_purchase_add_expense">
             <t t-call="web.html_container">
-                <t t-foreach="doc_ids" t-as="doc_id">
+                
                     <t t-set="lang"/>
                     <t t-call="l10n_mn_stock.mn_purchase_add_expense_data" t-lang="lang"/>
-                </t>
+           
             </t>
         </template>
 
