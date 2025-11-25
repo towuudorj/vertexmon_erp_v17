@@ -128,9 +128,8 @@ class CrmLead(models.Model):
             for lines in line.lead_line_ids:
                 if lines.cost_price > 0.0:
                     status = True
-                else:
-                    status = False
-            if status== True:
+
+            if status == True:
                 line.new_status = 'price_inquire'
 
     def action_new(self):
