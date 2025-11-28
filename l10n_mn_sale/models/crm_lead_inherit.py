@@ -164,6 +164,8 @@ class CrmLead(models.Model):
         for line in self:
             line.status = 'cancel'
             line.purchase_request_ids.action_cancel()
+            for lines in line.lead_line_ids:
+                lines.state = 'cancel'
 
     def create_quotation(self):
         for line in self:

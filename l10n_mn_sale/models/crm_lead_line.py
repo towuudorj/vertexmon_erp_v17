@@ -26,6 +26,8 @@ class CrmLeadLine(models.Model):
                                       ('is_purchase', 'Purchase'),
                                       ('send_quotation', u'Нөөцөөс борлуулах')],
                                      string='Request type', default='send_quotation')
+    state = fields.Selection([('draft','Draft'),
+                              ('cancel','cancel')],string='State', default='draft')
     priority = fields.Selection([
         ('normal', 'Normal'),
         ('high', 'High'),
