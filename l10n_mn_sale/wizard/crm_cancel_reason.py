@@ -13,3 +13,5 @@ class CrmCancelReason(models.TransientModel):
         for line in line_ids:
             line.cancel_reason = self.reason
             line.new_status = 'cancel'
+            for lines in line.lead_line_ids:
+                lines.state = 'cancel'
