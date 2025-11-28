@@ -135,6 +135,8 @@ class CrmLead(models.Model):
     def action_new(self):
         for line in self:
             line.new_status = 'new'
+            for lines in line.lead_line_ids:
+                lines.state = 'draft'
     
     @api.onchange('partner_id', 'company_id','team_id')
     def _onchange_pricelist_id(self):
