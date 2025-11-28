@@ -32,9 +32,9 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
              <header>
-                <button class="btn-secondary" name="action_create_purchase_requisition"
+                <!-- <button class="btn-secondary" name="action_create_purchase_requisition"
                         type="object"
-                        icon="fa-external-link" string="Purchase Requisition"/>
+                        icon="fa-external-link" string="Purchase Requisition"/> -->
                 <button class="btn-secondary" name="action_create_tasks"
                         type="object"
                         icon="fa-tasks" string="Create Tasks"/>
@@ -71,8 +71,9 @@
                             <field name="product_qty"/>
                             <field name="purchase_type"/>
                             <field name="purchase_manager_id"/>
-                            <field name="qty_available"/>
-                            <field name="qty_delivered"/>
+                            <field name="qty_available" string="Нөөцөнд байгаа тоо"/>
+                            <field name="qty_delivered" string="Зарлага хийгдсэн тоо"/>
+                            <field name="last_qty" string="Үлдэгдэл тоо"/>
                             <field name="cost_price"/>
                             <field name="price_unit"/>
                             <field name="cost_total" sum="Total Cost" force_save="1"/>
@@ -80,6 +81,7 @@
                         </tree>
                     </field>
                      <group class="oe_subtotal_footer oe_right">
+                     	<field name="total_cost" string="Нийт өртөг" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="untax_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="total_tax_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="total_amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>

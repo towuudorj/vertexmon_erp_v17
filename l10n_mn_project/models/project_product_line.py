@@ -42,6 +42,14 @@ class ProjectProductsLine(models.Model):
     is_task = fields.Boolean(string='Task', default=False)
     is_purchase = fields.Boolean(string='Purchase', default=False)
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager')
+    last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
+    
+    def _action_compute_qty(self):
+        for line in self:
+            qty = 0 
+            if line.product_qty>0.0 and line.qty_delivered > 0.0:
+                qty = line.product_qty - line.qty_delivered
+            line.last_qty = qty
     
     @api.onchange('price_unit')
     def onchange_price_unit(self):
