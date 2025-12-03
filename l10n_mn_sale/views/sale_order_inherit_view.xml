@@ -73,8 +73,8 @@
             </xpath>
 
             <xpath expr="//button[@name='action_cancel']" position="replace">
-                <!--<button name="action_create_new_invoice"  string="Нэхэмжлэл үүсгэх /хувь/" class="btn-primary" type="object" />
-                -->
+                <button name="%(action_sale_order_invoice_payment_term)d"  string="Нэхэмжлэл үүсгэх /хувь/" class="btn-primary" type="action" />
+                
             </xpath>
 
             <xpath expr="//button[@name='action_confirm']" position="replace">

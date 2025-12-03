@@ -239,35 +239,94 @@ class SaleOrder(models.Model):
 
 
     def action_create_new_invoice(self):
-        for line in self:
-            print ()
-            if line.payment_term_id:
-                for lines in line.payment_term_id.line_ids:
-                    if lines.value == 'percent':
-                        invoice_amount = (line.amount_total * lines.value_amount) / 100
-                        invoice_vals = {
-                            'ref': line.client_order_ref or '',
-                            'move_type': 'out_invoice',
-                            'narration': line.note,
-                            'currency_id': line.currency_id.id,
-                            'partner_id': line.partner_invoice_id.id,
-                            'fiscal_position_id': (line.fiscal_position_id or line.fiscal_position_id._get_fiscal_position(line.partner_invoice_id)).id,
-                            'invoice_origin': line.name,
-                            'invoice_payment_term_id': line.payment_term_id.id,
-                            'invoice_user_id': line.user_id.id,
-                            'partner_type_id': line.partner_type.id,
-                            'payment_reference': line.reference,
-                            'company_id': line.company_id.id,
-                            'invoice_line_ids': [(0,0,{
-                                'product_id': False,
-                                'name': u'Төлбөрийн нөхцөлөөр үүссэн нэхэмжлэл',
-                                'quantity': 1,
-                                'price_unit': invoice_amount,
-                                'tax_ids': [(6, 0, [])],
-                            })],
-                        }
-                        invoice = self.env['account.move'].create(invoice_vals)
-                        #invoice.action_post()
+        self.ensure_one()
+
+        if not self.payment_term_id:
+            return super().action_create_new_invoice()
+
+        percent_lines = self.payment_term_id.line_ids.filtered(lambda l: l.value == 'percent')
+
+        if not percent_lines:
+            return super().action_create_new_invoice()
+
+        percent_lines = percent_lines.sorted(lambda l: l.id)
+        invoices = self.env["account.move"]
+
+        # -----------------------------------------------------------
+        # 1) Create prepayment invoices for ALL percent lines EXCEPT last
+        # -----------------------------------------------------------
+        for p in percent_lines[:-1]:   # all except last
+
+            invoice_amount = self.amount_total * (p.value_amount / 100.0)
+            tax_id = self.env['account.tax'].search([('type_tax_use','=','sale'),('company_id','=',self.company_id.id),('price_include','=',True)],limit=1)
+            inv_vals = self._prepare_invoice()
+            inv_vals.update({
+                "invoice_origin": self.name,
+                "invoice_line_ids": [
+                    (0, 0, {
+                        "name": f"{p.desc} {p.value_amount}%",
+                        "quantity": 1,
+                        "price_unit": invoice_amount,
+                        "is_downpayment":True,
+                        #"sale_line_ids":[(6, 0, [line.id])],
+                        "tax_ids": [(6, 0, [tax_id.id])],
+                    })
+                ]
+            })
+
+            invoice = self.env["account.move"].create(inv_vals)
+            invoices |= invoice
+
+        # -----------------------------------------------------------
+        # 2) Last percent invoice → FULL PRODUCT LINES but scaled
+        # -----------------------------------------------------------
+        last_percent = percent_lines[-1].value_amount
+        ratio = last_percent / 100.0
+
+        inv_vals = self._prepare_invoice()
+        final_lines = []
+        all_amount = 0
+        for line in self.order_line:
+            all_amount +=line.price_total
+            scaled_subtotal = line.price_subtotal
+            unit_price = scaled_subtotal / line.product_uom_qty if line.product_uom_qty else 0
+            final_lines.append((0, 0, {
+                "product_id": line.product_id.id,
+                "name": line.name,
+                "quantity": line.product_uom_qty,
+                "price_unit": unit_price,
+                "sale_line_ids":[(6, 0, [line.id])],
+                "tax_ids": [(6, 0, line.tax_id.ids)],
+            }))
+        
+        pre_percent = 100 - last_percent
+        pre_price = all_amount/100.0*pre_percent
+        tax_id = self.env['account.tax'].search([('type_tax_use','=','sale'),('company_id','=',self.company_id.id),('price_include','=',True)],limit=1)
+        final_lines.append((0, 0, {
+            "name": 'Урьдчилгаа төлбөр %s'%pre_percent,
+            "quantity": -1,
+            "price_unit": pre_price,
+            "tax_ids": [(6, 0, [tax_id.id])],
+        }))
+        inv_vals["invoice_origin"] = self.name
+        inv_vals["invoice_line_ids"] = final_lines
+
+        final_invoice = self.env["account.move"].create(inv_vals)
+        invoices |= final_invoice
+
+        # -----------------------------------------------------------
+        # Post all invoices
+        # -----------------------------------------------------------
+        #invoices.action_post()
+
+        # Open final invoice on screen
+        return {
+            "name": "Invoices",
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "view_mode": "form",
+            "res_id": final_invoice.id,
+        }
 
 
 

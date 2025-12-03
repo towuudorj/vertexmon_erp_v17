@@ -1091,3 +1091,54 @@ msgstr "Зөвшөөрөөгүй"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__partner_bank_id
 msgid "Bank Account Number"
 msgstr "Банкны данс"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term__so_id
+msgid "Sale order"
+msgstr "Борлуулалтын захиалга"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__invoice_id
+msgid "Invoice"
+msgstr "Нэхэмжлэх"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__is_created
+msgid "Is created"
+msgstr "Нэхэмжлэх үүссэн"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__is_new_create
+msgid "Is new create"
+msgstr "Нэхэмжлэх үүсгэх"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__percent
+msgid "Percent"
+msgstr "Хувь"
+
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__invoice_amount
+msgid "Invoice amount"
+msgstr "Нэхэмжлэлийн дүн"
+
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__desc
+msgid "Description"
+msgstr "Гүйлгээний утга"
+
+
+
+
+
+
