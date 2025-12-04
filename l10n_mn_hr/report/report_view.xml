@@ -13,6 +13,17 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="hr_decree_report_new_mn" model="ir.actions.report">
+            <field name="name">Тушаал хэвлэх</field>
+            <field name="model">hr.decree</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_hr.decree_report_view_template_new_mn</field>
+            <field name="report_file">l10n_mn_hr.decree_report_view_template_new_mn</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_hr_decree"/>
+            <field name="binding_type">report</field>
+        </record>
+
         <record id="action_report_reference" model="ir.actions.report">
             <field name="name">Print Reference Report</field>
             <field name="model">reference.register</field>

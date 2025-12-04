@@ -155,19 +155,19 @@
                                          <t t-foreach="o.move_ids_without_package" t-as="moves">
                                          <tr t-foreach="moves.move_line_ids" t-as="move">
                                              <t t-if="move.product_id.type !='service'">
-                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; text-align:center;"><span t-esc="i"/></td>   
-                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px;"><span t-field="moves.product_id.ot_code"/></td>
-                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; text-align:center;"/>
-                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; "><span t-field="moves.product_id.name"/></td>
-                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">ea</td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.quantity" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.delivered_qty"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; text-align:center;"><span t-esc="i"/></td>   
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px;"><span t-field="moves.product_id.ot_code"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; text-align:center;"/>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; "><span t-field="moves.product_id.name"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">ea</td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.move_id.product_uom_qty"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.quantity"  t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2 }"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.package_no"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.net_weight"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.gross_weight"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.dimensions"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.cbm"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "></td>
+                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">0.00</td>
                                              </t>
                                              <t t-set="i" t-value="i+1"/>
                                              </tr>

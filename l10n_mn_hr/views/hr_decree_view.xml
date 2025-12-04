@@ -76,7 +76,7 @@
 								invisible="decree_type != 'staff'"  
 								required="decree_type == 'staff'" 
 								readonly="state != 'draft'" />
-							<field name="date" readonly="state != 'draft'"/>
+							<field name="date" required="1" readonly="state != 'draft'"/>
 							<field name="department_id" 
 								invisible="decree_type != 'staff'" 
 								required="decree_type == 'staff'"  

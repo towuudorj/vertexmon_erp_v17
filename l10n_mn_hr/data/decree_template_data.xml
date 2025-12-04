@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
     <data noupdate="0">
         <record id="decree_template_salary_change" model="decree.register.type">
             <field name="name">Salary Change</field>
@@ -9,4 +10,5 @@
             <field name="reg_user_id" ref="base.user_admin"/>
         </record>
     </data>
+    -->
 </odoo>

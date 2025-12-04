@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        
         <template id="decree_report_view_template_data">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({})"/>
@@ -27,17 +25,161 @@
                         "<t t-esc="o.name"/>"
                     </p>
                     <p style="text-align: center; font-weight: bold; margin-top: 50px;">
-                        ГҮЙЦЭТГЭХ ЗАХИРАЛ:........................................../<span><t t-esc="o.employee_id.name"/></span>/
+                        ГҮЙЦЭТГЭХ ЗАХИРАЛ:. . . . . . . . . . . . . . . . . . ./<span><t t-esc="o.employee_id.name"/></span>/
                     </p>
                 </div>
             </t>
         </template>
 
+        <!-- ==== Тушаал шинэчилсэн, нийт 48 баримт ==== -->
+        <template id="decree_report_view_template_data_new_mn">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="col-6">
+                            <p style="text-align: left; margin-right:20px">
+                                <img t-attf-src="data:image/jpg;base64,{{request.env.user.company_id.logo}}" style="width:190px;height:60px;"/>
+                            </p>
+                        </div>
+                        <div style="
+                            margin-top: 50px;
+                            margin-left: 50px;
+                            margin-right: 80px;
+                            margin-bottom: 50px;
+                            font-size: 16px;
+                        ">
+                            <!-- ==== Date Parsing ==== -->
+                            <t t-set="parsed_date" t-value="o.date and o.date.strftime('%Y-%m-%d')"/>
+                            <t t-set="year"  t-value="parsed_date[:4]"/>
+                            <t t-set="month" t-value="parsed_date[5:7]"/>
+                            <t t-set="day"   t-value="parsed_date[8:10]"/>
+
+                            <!-- ==== Header Line ==== -->
+                            <p style="
+                                display: flex;
+                                justify-content: space-between;
+                                line-height: 1.2;
+                            ">
+                                <span style="white-space: nowrap;">
+                                    <t t-esc="year"/> оны <t t-esc="month"/> сарын <t t-esc="day"/>-ны өдөр
+                                </span>
+                                <span style="text-align: center; flex: 1; white-space: nowrap;">
+                                    Дугаар: <t t-esc="o.decree_number or ''"/>
+                                </span>
+                                <span style="text-align: right; white-space: nowrap;">
+                                    Улаанбаатар хот
+                                </span>
+
+                            </p>
+
+                            <!-- ==== Title ==== -->
+                            <p style="text-align: center; margin-top: 50px;">
+                                “ВЕРТЕКСМОН” ХХК-ИЙН ГҮЙЦЭТГЭХ ЗАХИРЛЫН ТУШААЛ
+                            </p>                           
+                            <p>
+                                <!-- ==== DECR01 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
+                                <t t-if="o.decree_template.code == 'DECR01'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                         ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Туршилтын хугацаанд</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   ажилд томилох тухай</span><br/>
+                                    </p>
+                                    <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл, ажилтантай байгуулсан ........... хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
+                                    </p>
+                                    <p style="text-align: justify; ">
+                                        1. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/> 
+                                        (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-г
+                                        <t t-esc="'____ оны __ сарын __'"/>-ны өдрөөс
+                                        <t t-esc="o.department_id.name or '......................'"/> албаны
+                                        <t t-esc="o.position_id.name or '......................'"/> албан тушаалд
+                                        туршилтын <t t-esc="'....'"/> сарын хугацаанд томилон ажиллуулсугай.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        2. Ажилтныг өдөр тутмын үйл ажиллагаанд чиглүүлж, удирдлагаар хангаж ажиллахыг
+                                        <t t-esc="'......................'"/> албаны
+                                        <t t-esc="'......................'"/> 
+                                        (<t t-esc="'......................'"/>)-т үүрэг болгосугай.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        3. Ажилтны нэг сарын цалинг 
+                                        <t t-esc="o.wage or '......................'"/> төгрөг,
+                                        хоол унааны <t t-esc="o.food_and_vehicle_add or '100,000'"/> төгрөгөөр тооцож олгохыг
+                                        Ерөнхий нягтлан бодогч (<t t-esc="'.....................'"/>)-д зөвшөөрсүгэй.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        4. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа хүний нөөцийн албаны захирал
+                                        (<t t-esc="'.....................................'"/>)-д даалгасугай.
+                                    </p>
+                                </t>
+                                
+                                <!-- ==== DECR02 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
+                                <t t-elif="o.decree_template.code == 'DECR02'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                     ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Үндсэн ажилтнаар </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">    томилох тухай </span><br/>
+                                    </p>
+                                    <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл,  ажилтантай байгуулсан хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
+                                    </p>
+                                    <p style="text-align: justify; ">
+                                        1. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/> 
+                                        (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-г
+                                        <t t-esc="'____ оны __ сарын __'"/>-ны өдрөөс
+                                        <t t-esc="o.department_id.name or '......................'"/> албаны
+                                        <t t-esc="o.position_id.name or '......................'"/> албан тушаалд
+                                        үндсэн ажилтнаар томилон ажиллуулсугай.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        2. Ажилтныг өдөр тутмын үйл ажиллагаанд чиглүүлж, удирдлагаар хангаж ажиллахыг
+                                        <t t-esc="'......................'"/> албаны
+                                        <t t-esc="'......................'"/> 
+                                        (<t t-esc="'......................'"/>)-т үүрэг болгосугай.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        3. Ажилтны нэг сарын цалинг 
+                                        <t t-esc="o.wage or '......................'"/> төгрөг,
+                                        хоол унааны <t t-esc="o.food_and_vehicle_add or '100,000'"/> төгрөгөөр тооцож олгохыг
+                                        Ерөнхий нягтлан бодогч (<t t-esc="'.....................'"/>)-д зөвшөөрсүгэй.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        4. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа хүний нөөцийн албаны захирал
+                                        (<t t-esc="'.....................................'"/>)-д даалгасугай.
+                                    </p>
+                                </t>
+                                <t t-else="o.decree_template.code == ''">
+                                    Тушаалын загвар сонгогдоогүй байна.
+                                </t>
+                            </p>
+
+
+                            
+
+                            <!-- ==== Signature ==== -->
+                            <p style="text-align: center; margin-top: 150px;">
+                                ГҮЙЦЭТГЭХ ЗАХИРАЛ: ...................................../<t t-esc="'Д.МЭНДСАЙХАН'"/>/
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
 
         <template id="decree_report_view_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="l10n_mn_hr.decree_report_view_template_data" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="decree_report_view_template_new_mn">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_mn_hr.decree_report_view_template_data_new_mn" t-lang="lang"/>
                 </t>
             </t>
         </template>
