@@ -55,21 +55,14 @@
                             <t t-set="day"   t-value="parsed_date[8:10]"/>
 
                             <!-- ==== Header Line ==== -->
-                            <p style="
-                                display: flex;
-                                justify-content: space-between;
-                                line-height: 1.2;
-                            ">
-                                <span style="white-space: nowrap;">
-                                    <t t-esc="year"/> оны <t t-esc="month"/> сарын <t t-esc="day"/>-ны өдөр
+                            <p style="text-align: center;">
+                                <span style="margin-right: 100px;"><t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/> -ны өдөр </span>
+                                <span style="margin-right: 100px;">
+                                Дугаар: <t t-esc="o.decree_number"/>
                                 </span>
-                                <span style="text-align: center; flex: 1; white-space: nowrap;">
-                                    Дугаар: <t t-esc="o.decree_number or ''"/>
+                                <span>
+                                Улаанбаатар хот
                                 </span>
-                                <span style="text-align: right; white-space: nowrap;">
-                                    Улаанбаатар хот
-                                </span>
-
                             </p>
 
                             <!-- ==== Title ==== -->
@@ -80,7 +73,7 @@
                                 <!-- ==== DECR01 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
                                 <t t-if="o.decree_template.code == 'DECR01'">
                                     <p style="line-height: 1.1;">
-                                        <span style="font-family: monospace; white-space: pre;">┌                         ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">┌                                     ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   Туршилтын хугацаанд</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   ажилд томилох тухай</span><br/>
                                     </p>
@@ -117,7 +110,7 @@
                                 <!-- ==== DECR02 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
                                 <t t-elif="o.decree_template.code == 'DECR02'">
                                     <p style="line-height: 1.1;">
-                                        <span style="font-family: monospace; white-space: pre;">┌                     ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">┌                               ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   Үндсэн ажилтнаар </span><br/>
                                         <span style="font-family: monospace; white-space: pre;">    томилох тухай </span><br/>
                                     </p>
