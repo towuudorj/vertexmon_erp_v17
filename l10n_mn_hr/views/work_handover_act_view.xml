@@ -192,9 +192,9 @@
             <field name="inherit_id" ref="hr.view_hr_job_form"/>
             <field name="arch" type="xml">
             	<data>
-					<field name="interviewer_ids" position="before">
+					<!--<field name="interviewer_ids" position="before">
 						<field name="allowed_user_ids" invisible="1"/>
-					</field>
+					</field>-->
 					<field name="company_id" position="before">
 						<field name="job_code"/>
 					</field>
