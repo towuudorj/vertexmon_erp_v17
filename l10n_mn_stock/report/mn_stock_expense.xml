@@ -50,6 +50,9 @@
                                 Огноо: <span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;yyyy-MM-dd&quot;}"/>
                             </td>
                             <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+                                <t t-if="o.sale_id.ot_po">
+                                    OT PO: <span t-field="o.sale_id.ot_po"/>
+                                </t>
                             </td>
                         </tr>
                     </table>
