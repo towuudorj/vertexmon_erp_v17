@@ -73,7 +73,7 @@ class account_asset_writeoff(models.TransientModel):
                 'date': data.writeoff_date, #Огноо
                 'ref': asset.code, #Тайлбар
                 'partner_id': asset.partner_id.id, #Харилцагч
-                'asset_id': asset.id, #Мөнгөн хөрөнгө
+              #  'asset_id': asset.id, #Мөнгөн хөрөнгө
                 'journal_id': data.writeoff_journal.id #Журнал
             }))
         if depr_debit:
