@@ -13,7 +13,7 @@ class AccountAssetDepreciationLine(models.Model):
     def _prepare_move(self, line):
         category_id = line.asset_id.category_id
         account_analytic_id = line.asset_id.account_analytic_id
-        analytic_tag_ids = line.asset_id.analytic_tag_ids
+        #analytic_tag_ids = line.asset_id.analytic_tag_ids
         depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
         company_currency = line.asset_id.company_id.currency_id
         current_currency = line.asset_id.currency_id
@@ -30,7 +30,7 @@ class AccountAssetDepreciationLine(models.Model):
             'asset_id':line.asset_id.id,
             
             'analytic_account_id': account_analytic_id.id if category_id.type == 'sale' else False,
-            'analytic_tag_ids': [(6, 0, analytic_tag_ids.ids)] if category_id.type == 'sale' else False,
+            #'analytic_tag_ids': [(6, 0, analytic_tag_ids.ids)] if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -42,7 +42,7 @@ class AccountAssetDepreciationLine(models.Model):
             'partner_id': line.asset_id.partner_id.id,
             'dep_id':line.asset_id.category_id.department_id.id,
             'analytic_account_id': account_analytic_id.id if category_id.type == 'purchase' else False,
-            'analytic_tag_ids': [(6, 0, analytic_tag_ids.ids)] if category_id.type == 'purchase' else False,
+            #'analytic_tag_ids': [(6, 0, analytic_tag_ids.ids)] if category_id.type == 'purchase' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
