@@ -97,44 +97,49 @@ class AccountAssetAsset(models.Model):
         account_move_line_obj = self.env['account.move.line']
         for line in self:
             in_invoice_vals_list = []
-            move_id = {
-                        'journal_id':line.category_id.journal_id.id,
-                        'date':line.scrap_date,
-                        'ref':line.name,
-                        'company_id':line.company_id.id,
-                        'currency_id':line.company_id.currency_id.id,
-                        'amount_total':line.value,
-                        'state':'draft',
-                        'line_ids': [],
-                        }
-            debit_line = {
-                        'account_id':line.category_id.account_depreciation_id.id,
-                        'debit':line.value,
-                        'journal_id':line.category_id.journal_id.id,
-                        'date':line.scrap_date,
-                        'credit':0,
-                        'company_id':line.company_id.id,
-                        'name':line.name,
-                        'amount_currency':0,
-                        }
-            credit_line ={
-                        'account_id':line.category_id.account_asset_id.id,
-                        'credit':line.value,
-                        'journal_id':line.category_id.journal_id.id,
-                        'date':line.scrap_date,
-                        'asset_id':line.id,
-                        'debit':0,
-                        'company_id':line.company_id.id,
-                        'name':line.name,
-                        'amount_currency':0,
-                        }
-            
-            move_id['line_ids'].append((0, 0, debit_line))
-            move_id['line_ids'].append((0, 0, credit_line))
-            in_invoice_vals_list.append(move_id)
-            moves = self.env['account.move'].with_context().create(in_invoice_vals_list)
-            line.scrap_id = moves.id
-            line.scrap_date =  fields.Datetime.now()
+            if not line.scrap_date:
+                raise ValidationError(_(
+                    "Хөрөнгө актлах огноог оруулж өгнө үү."
+                ))
+            else:
+                move_id = {
+                            'journal_id':line.category_id.journal_id.id,
+                            'date':line.scrap_date,
+                            'ref':line.name,
+                            'company_id':line.company_id.id,
+                            'currency_id':line.company_id.currency_id.id,
+                            'amount_total':line.value,
+                            'state':'draft',
+                            'line_ids': [],
+                            }
+                debit_line = {
+                            'account_id':line.category_id.account_depreciation_id.id,
+                            'debit':line.value,
+                            'journal_id':line.category_id.journal_id.id,
+                            'date':line.scrap_date,
+                            'credit':0,
+                            'company_id':line.company_id.id,
+                            'name':line.name,
+                            'amount_currency':0,
+                            }
+                credit_line ={
+                            'account_id':line.category_id.account_asset_id.id,
+                            'credit':line.value,
+                            'journal_id':line.category_id.journal_id.id,
+                            'date':line.scrap_date,
+                            #'asset_id':line.id,
+                            'debit':0,
+                            'company_id':line.company_id.id,
+                            'name':line.name,
+                            'amount_currency':0,
+                            }
+                
+                move_id['line_ids'].append((0, 0, debit_line))
+                move_id['line_ids'].append((0, 0, credit_line))
+                in_invoice_vals_list.append(move_id)
+                moves = self.env['account.move'].with_context().create(in_invoice_vals_list)
+                line.scrap_id = moves.id
+                line.scrap_date =  fields.Datetime.now()
     
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount','write_up')
     def _amount_residual(self):

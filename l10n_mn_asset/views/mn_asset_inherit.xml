@@ -22,7 +22,7 @@
                     </xpath>
                     <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
                         <field name="scrap_id" invisible="1"/>
-                        <field name="scrap_date" readonly="state != 'draft'"/>
+                        <field name="scrap_date"/>
                         <field name="uom_id" readonly="state != 'draft'"/>
                         <field name="asset_location_id" readonly="state != 'draft'"/>
                         <field name="owner_id" readonly="state != 'draft'"/>
