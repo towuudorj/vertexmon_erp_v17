@@ -478,7 +478,7 @@ class AccountMoveLine(models.Model):
             account_field_values[account.plan_id._column_name()] = account.id
         default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         month = False
-        if self.move_id.month:
+        if self.month:
             month = self.month
 
         return {
