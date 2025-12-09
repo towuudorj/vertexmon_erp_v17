@@ -74,7 +74,7 @@ class ForeignPurchaseRequestLine(models.TransientModel):
     desc = fields.Char(string='Desc')
     qty = fields.Float(string='Qty', required=True)
     uom_id = fields.Many2one('uom.uom', string='Uom', required=True)
-    purchase_user_id = fields.Many2one('res.users', string='Purchase user', required=True, domain="[('is_purchase_manager','=',True)]") 
+    purchase_user_id = fields.Many2one('res.users', string='Purchase user', required=True) 
     foreign_parent_id = fields.Many2one('foreign.purchase.request', string='Foreign')
     
     
