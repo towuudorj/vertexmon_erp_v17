@@ -48,6 +48,7 @@ class ProjectProject(models.Model):
         compute="_compute_purchase_requisition", string="# Purchase requisition"
     )
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type')
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager',)
 
     @api.model_create_multi

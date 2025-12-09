@@ -22,6 +22,7 @@ class ProjectTask(models.Model):
 
     products_line = fields.One2many('task.products.line', 'task_id', string='Products Line', copy=True,)
     picking_count = fields.Integer(compute="_compute_picking", string="Stock Picking")
+
     # total_amount = fields.Float(string='Total Amount', store=True, readonly=True, compute='_amount_all')
 
     # ---------------------------------------------------
@@ -73,29 +74,28 @@ class ProjectTask(models.Model):
         }
 
     def action_task_approve(self):
-
         picking_ids = self.create_picking()
-
         self.write({'state': '03_approved'})
         return True
 
     def create_picking(self):
 
         for line in self.products_line:
+        
         ###### Агуулахын хөдөлгөөн үүсгэх
             if self.project_id.warehouse_id.delivery_steps == 'pick_ship':
                 pick_val = {
                     'partner_id': self.partner_id.id,
-                    'picking_type_id': self.project_id.warehouse_id.pick_type_id.id,
-                    'scheduled_date':self.project_id.date,
+                    'picking_type_id': self.project_id.picking_type_id.id,
+                    'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
                     'location_id': self.project_id.warehouse_id.lot_stock_id.id,
                 }
                 out_val ={
                     'partner_id': self.partner_id.id,
-                    'picking_type_id': self.project_id.warehouse_id.out_type_id.id,
-                    'scheduled_date':self.project_id.date,
+                    'picking_type_id': self.project_id.picking_type_id.id,
+                    'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
                     'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
@@ -105,13 +105,13 @@ class ProjectTask(models.Model):
                     out_picking = self.env['stock.picking'].create(out_val)
                     move_vals = {
                         'product_id': line.product_id.id,
-                        'date': self.project_id.date,
+                        'date': self.date_deadline,
                         'name': line.name,
                         'product_uom_qty': line.product_qty,
                         'product_uom': line.product_id.uom_id.id,
                         'picking_id': picking.id,
                         'location_id': self.project_id.warehouse_id.lot_stock_id.id,
-                        'location_dest_id':self.project_id.warehouse_id.wh_output_stock_loc_id.id,
+                        'location_dest_id':self.project_id.picking_type_id.id,
                     }
 
                     move = self.env['stock.move'].create(move_vals)
@@ -120,7 +120,7 @@ class ProjectTask(models.Model):
                     customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
                     out_move_vals = {
                         'product_id': line.product_id.id,
-                        'date': self.project_id.date,
+                        'date': self.date_deadline,
                         'name': line.name,
                         'product_uom_qty': line.product_qty,
                         'product_uom': line.product_id.uom_id.id,
@@ -134,8 +134,8 @@ class ProjectTask(models.Model):
             else:
                 pick_val = {
                     'partner_id': self.partner_id.id,
-                    'picking_type_id': self.project_id.warehouse_id.pick_type_id.id,
-                    'scheduled_date':self.project_id.date,
+                    'picking_type_id': self.project_id.picking_type_id.id,
+                    'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
                     'location_id': self.project_id.warehouse_id.lot_stock_id.id,
@@ -145,7 +145,7 @@ class ProjectTask(models.Model):
                     customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
                     out_move_vals = {
                         'product_id': line.product_id.id,
-                        'date': self.project_id.date,
+                        'date': self.date_deadline,
                         'name': line.name,
                         'product_uom_qty': line.product_qty,
                         'product_uom': line.product_id.uom_id.id,

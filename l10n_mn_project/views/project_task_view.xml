@@ -10,8 +10,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
                 <header>
-                    <button name="action_task_approve" invisible="state != '01_in_progress'" string="Approve" 
-                        type="object" class="oe_highlight" data-hotkey="g" groups="l10n_mn_projet.group_task_approve"/>
+                    <button name="action_task_approve"  string="Approve" 
+                        type="object" class="oe_highlight" data-hotkey="g"/>
                 </header>
             </xpath>
             <xpath expr="//span[@id='start_rating_buttons']" position="before">

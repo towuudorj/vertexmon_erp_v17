@@ -43,6 +43,7 @@ class ProjectProductsLine(models.Model):
     is_purchase = fields.Boolean(string='Purchase', default=False)
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager')
     last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
+    pur_qty = fields.Float(string='Purchase qty')
     
     def _action_compute_qty(self):
         for line in self:

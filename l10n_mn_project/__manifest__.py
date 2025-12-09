@@ -31,6 +31,8 @@
             'security/ir.model.access.csv',
             'security/security_view.xml',
             'data/ir_sequence_data.xml',
+            'wizard/foreign_purchase_request_wizard.xml',
+            'wizard/local_purchase_request_wizard.xml',
             'wizard/make_package_task_wizard.xml',
             'views/project_project_views.xml',
             'views/project_task_view.xml',

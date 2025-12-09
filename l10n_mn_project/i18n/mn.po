@@ -32,6 +32,78 @@ msgstr "Боломжит тоо хэмжээ"
 msgid "Company"
 msgstr "Компани"
 
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__company_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__date
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__date
+msgid "Date"
+msgstr "Огноо"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__supplier_id
+msgid "Supplier"
+msgstr "Нийлүүлэгч"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__project_id
+msgid "Project"
+msgstr "Төсөл"
+
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__product_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__product_id
+msgid "Product"
+msgstr "Бараа бүтээгдэхүүн"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__qty
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__qty
+msgid "Qty"
+msgstr "Тоо"
+
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__picking_type_id
+msgid "Stock picking type"
+msgstr "Агуулах"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__desc
+msgid "Desc"
+msgstr "Тайлбар"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__uom_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__uom_id
+msgid "Uom"
+msgstr "Хэмжих нэгж"
+
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__price
+msgid "Price"
+msgstr "Судалсан үнэ"
+
+
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__cost_price
 msgid "Cost Price"
@@ -79,6 +151,41 @@ msgstr "Худалдан авалтын төрөл"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
 msgid "Create Tasks"
 msgstr "Даалгавар үүсгэх"
+
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
+msgid "Create local purchase"
+msgstr "Дотоод худалдан авалт үүсгэх"
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
+msgid "Create foreign purchase"
+msgstr "Гадаад худалдан авалт үүсгэх"
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_foreign_purchase_request
+msgid "Create crm"
+msgstr "CRM Үүсгэх"
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_local_purchase_request
+msgid "Create purchase"
+msgstr "Худалдан авалт үүсгэх"
+
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_local_purchase_request
+msgid "Cancel"
+msgstr "Хаах"
+
+
+#. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_foreign_purchase_request
+msgid "Cancel"
+msgstr "Хаах"
+
+
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__create_uid

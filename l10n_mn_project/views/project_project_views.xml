@@ -38,6 +38,15 @@
                 <button class="btn-secondary" name="action_create_tasks"
                         type="object"
                         icon="fa-tasks" string="Create Tasks"/>
+                
+                <button class="btn-secondary" name="%(action_local_purchase_request)d"
+                        type="action"
+                        icon="fa-tasks" string="Create local purchase"/>
+                        
+                <button class="btn-secondary" name="%(action_foreign_purchase_request)d"
+                        type="action"
+                        icon="fa-tasks" string="Create foreign purchase"/>
+                
                  <!-- <button class="btn-secondary" name="package_task"
                         type="object"
                         icon="fa-tasks" string="Create Packege Tasks"/> -->
@@ -51,6 +60,7 @@
                 <field name="contract_number"/>
                 <field name="contract_amount"/>
                 <field name="warehouse_id"/>
+                <field name="picking_type_id"/>
                 <field name="purchase_manager_id"/>
                 <field name="project_type"/>
             </xpath>    

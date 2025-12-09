@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_local_purchase_request" model="ir.ui.view">
+        <field name="name">local.purchase.request.form</field >
+        <field name="model">local.purchase.request</field>
+        <field name="arch" type="xml">
+            <form string="Local purchase request">
+                <group>
+                    <field name="company_id"/>
+                    <field name="date"/>
+                    <field name="supplier_id"/>
+                    <field name="project_id"/>
+                    <field name="picking_type_id"/>
+                </group>
+                <field name="line_ids">
+                    <tree editable="bottom">
+                        <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                        <field name="qty"/>
+                        <field name="uom_id" />
+                        <field name="price"/>
+                    </tree>
+                </field>
+
+                <footer>
+                    <button name="action_create_purchase" type="object"
+                        string="Create purchase"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_local_purchase_request" model="ir.actions.act_window">
+        <field name="name">Foreign purchase request</field>
+        <field name="res_model">local.purchase.request</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_project_project"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>
