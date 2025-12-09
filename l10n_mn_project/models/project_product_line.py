@@ -11,11 +11,15 @@ class ProjectProductsLine(models.Model):
     _order = 'project_id, sequence, id'
 
 
-    @api.depends('qty_delivered')
-    def _compute_qty_delivered(self):   
-                           
+    @api.depends('picking_ids')
+    def _compute_qty_delivered(self):
         for line in self:
-            line.qty_delivered = 1
+            qty = 0
+            for pk in line.picking_ids:
+                if pk.state == 'done':
+                    for lines in pk.move_ids_without_package:
+                        qty +=lines.quantity
+            line.qty_delivered = qty
     
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
@@ -44,6 +48,7 @@ class ProjectProductsLine(models.Model):
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager')
     last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
     pur_qty = fields.Float(string='Purchase qty')
+    picking_ids = fields.Many2many('stock.picking', string='Picking')
     
     def _action_compute_qty(self):
         for line in self:
@@ -51,6 +56,12 @@ class ProjectProductsLine(models.Model):
             if line.product_qty>0.0 and line.qty_delivered > 0.0:
                 qty = line.product_qty - line.qty_delivered
             line.last_qty = qty
+            
+    @api.onchange('cost_price')
+    def onchange_cost_price(self):
+        for line in self:
+            if line.product_qty > 0:
+                line.cost_total = line.cost_price * line.product_qty
     
     @api.onchange('price_unit')
     def onchange_price_unit(self):

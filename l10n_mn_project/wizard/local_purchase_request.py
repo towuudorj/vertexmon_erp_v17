@@ -50,8 +50,12 @@ class LocalPurchaseRequest(models.TransientModel):
                                 'date_order':line.date,
                                 'purchase_type':'local'
                                 })
+            line.project_id.purchase_ids = [(4, purchase_id.id)]
             for lines in line.line_ids:
-                qty = lines.line_id.product_qty - lines.line_id.pur_qty
+                if lines.line_id.product_qty >0.0 and lines.line_id.pur_qty >0.0:
+                    qty = lines.line_id.product_qty - lines.line_id.pur_qty
+                else:
+                    qty = lines.qty
                 purchase_line_obj.create({
                                         'product_id':lines.product_id.id,
                                         'product_uom':lines.uom_id.id,

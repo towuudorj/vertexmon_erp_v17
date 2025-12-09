@@ -75,11 +75,17 @@ class ProjectTask(models.Model):
 
     def action_task_approve(self):
         picking_ids = self.create_picking()
+        for line in self:
+            for li in line.project_id.products_line:
+                for lines in line.products_line:
+                    if li.product_id == lines.product_id.id:
+                        li.picking_ids = [(4, picking_ids.id)]
+                        lines.picking_id = [(4, picking_ids.id)]
         self.write({'state': '03_approved'})
         return True
 
     def create_picking(self):
-
+        picking = False
         for line in self.products_line:
         
         ###### Агуулахын хөдөлгөөн үүсгэх
@@ -131,6 +137,7 @@ class ProjectTask(models.Model):
 
                     move = self.env['stock.move'].create(out_move_vals)
                     out_picking.action_confirm()
+                    
             else:
                 pick_val = {
                     'partner_id': self.partner_id.id,
@@ -156,3 +163,7 @@ class ProjectTask(models.Model):
 
                     move = self.env['stock.move'].create(out_move_vals)
                     picking.action_confirm()
+        return picking
+                    
+                    
+                    

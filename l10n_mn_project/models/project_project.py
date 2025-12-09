@@ -26,6 +26,17 @@ class ProjectProject(models.Model):
                 'untax_amount':total_amount,
                 'total_cost':total_cost
             })
+    
+    def _get_crm_count(self):
+        crm_obj = self.env['crm.lead']
+        for line in self:
+            count = 0
+            crm_id = crm_obj.search([('id','in',line.crm_ids.ids)])
+            if crm_id:
+                for crm in crm_id:
+                    count +=1
+            line.crm_count = count
+            
 
     sequence_name = fields.Char("Sequence", copy=False)
     contract_number = fields.Char(string='Contract Number', copy=False)
@@ -47,9 +58,51 @@ class ProjectProject(models.Model):
     purchase_requisition_count = fields.Integer(
         compute="_compute_purchase_requisition", string="# Purchase requisition"
     )
+    purchase_ids = fields.Many2many('purchase.order', string='Purchase order')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type')
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager',)
+    crm_count = fields.Integer(string='Crm count', compute="_get_crm_count")
+    crm_ids = fields.Many2many('crm.lead', string='Crm ids')
+    picking_ids = fields.Many2many('stock.picking', string='Picking')
+    
+    
+    def action_view_crm_lead(self, purchases=False):
+        if not purchases:
+            purchases = self.mapped('crm_ids')
+        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_lead_opportunities')
+        if len(purchases) > 1:
+            action['domain'] = [('id', 'in', purchases.ids)]
+        elif len(purchases) == 1:
+            form_view = [(self.env.ref('crm.crm_lead_view_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = purchases.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+
+        return action
+    
+    
+    def action_view_purchase_requisition(self, purchases=False):
+        if not purchases:
+            purchases = self.mapped('purchase_ids')
+        action = self.env['ir.actions.actions']._for_xml_id('purchase.purchase_rfq')
+        if len(purchases) > 1:
+            action['domain'] = [('id', 'in', purchases.ids)]
+        elif len(purchases) == 1:
+            form_view = [(self.env.ref('purchase.purchase_order_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = purchases.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+
+        return action
 
     @api.model_create_multi
     def create(self,vals_list):
@@ -255,7 +308,7 @@ class ProjectProject(models.Model):
 
     def _compute_purchase_requisition(self):
          for project in self:
-            groups = self.env["purchase.requisition"].search([('project_id', '=', self.id )])
+            groups = self.env["purchase.order"].search([('id', 'in', project.purchase_ids.ids ),('state','!=','cancel')])
             # purchase_line_total = 0
             # for group in groups:
             #     purchase_line_total += group["price_subtotal"]

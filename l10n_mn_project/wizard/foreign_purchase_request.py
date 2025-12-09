@@ -33,6 +33,7 @@ class ForeignPurchaseRequest(models.TransientModel):
                             }))
         res['project_id'] = line_ids.id
         res['line_ids'] = line_id
+        res['partner_id'] = line_ids.partner_id.id
         return res
     
     
@@ -51,8 +52,12 @@ class ForeignPurchaseRequest(models.TransientModel):
                             'pricelist_id':line.partner_id.property_product_pricelist.id,
                             'type':'opportunity',
                             })
+            line.project_id.crm_ids = [(4, crm_id.id)]
             for lines in line.line_ids:
-                qty = lines.line_id.product_qty - lines.line_id.pur_qty
+                if lines.line_id.product_qty > 0.0 and  lines.line_id.pur_qty > 0.0:
+                    qty = lines.line_id.product_qty - lines.line_id.pur_qty
+                else:
+                    qty = lines.qty
                 crm_line_obj.create({
                                     'product_id':lines.product_id.id,
                                     'name':lines.desc,
@@ -74,7 +79,7 @@ class ForeignPurchaseRequestLine(models.TransientModel):
     desc = fields.Char(string='Desc')
     qty = fields.Float(string='Qty', required=True)
     uom_id = fields.Many2one('uom.uom', string='Uom', required=True)
-    purchase_user_id = fields.Many2one('res.users', string='Purchase user', required=True) 
+    purchase_user_id = fields.Many2one('res.users', string='Purchase user', required=True, domain="[('is_purchase_manager','=',True)]") 
     foreign_parent_id = fields.Many2one('foreign.purchase.request', string='Foreign')
     
     
