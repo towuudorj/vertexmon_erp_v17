@@ -73,49 +73,53 @@
                                 <!-- ==== DECR01 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
                                 <t t-if="o.decree_template.code == 'DECR01'">
                                     <p style="line-height: 1.1;">
-                                        <span style="font-family: monospace; white-space: pre;">┌                                     ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">┌                                           ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   Туршилтын хугацаанд</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   ажилд томилох тухай</span><br/>
                                     </p>
                                     <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
-                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл, ажилтантай байгуулсан ........... хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл, ажилтантай байгуулсан <t t-esc="o.decr_emp_contract or '...........'"/> хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
                                     </p>
                                     <p style="text-align: justify; ">
                                         1. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
-                                        <t t-esc="o.employee_id.name or '......................'"/> 
+                                        <t t-esc="o.employee_id.name.rsplit('.', 1)[0] or '......................'"/> 
                                         (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-г
-                                        <t t-esc="'____ оны __ сарын __'"/>-ны өдрөөс
-                                        <t t-esc="o.department_id.name or '......................'"/> албаны
+                                        <!-- ==== Туршилтаар ажилж эхлэх ==== -->
+                                        <t t-set="decrdate" t-value="o.decr_date and o.decr_date.strftime('%Y-%m-%d')"/>
+                                        <t t-set="decryear"  t-value="decrdate[:4]"/>
+                                        <t t-set="decrmonth" t-value="decrdate[5:7]"/>
+                                        <t t-set="decrday"   t-value="decrdate[8:10]"/>
+                                        <t t-esc="decryear"/> оны <t t-esc="decrmonth"/>  сарын <t t-esc="decrday"/>-ны өдрөөс
+                                        <t t-esc="o.department_id.get_name_mn() or '......................'"/> албаны
                                         <t t-esc="o.position_id.name or '......................'"/> албан тушаалд
                                         туршилтын <t t-esc="'....'"/> сарын хугацаанд томилон ажиллуулсугай.
                                     </p>
                                     <p style="text-align: justify;">
                                         2. Ажилтныг өдөр тутмын үйл ажиллагаанд чиглүүлж, удирдлагаар хангаж ажиллахыг
-                                        <t t-esc="'......................'"/> албаны
-                                        <t t-esc="'......................'"/> 
-                                        (<t t-esc="'......................'"/>)-т үүрэг болгосугай.
+                                        <t t-esc="o.decr_guide_dep_id.get_name_mn() or '...........................................................................'"/> албаны
+                                        (<t t-esc="o.guide_emp_short_name or '..................................................'"/>)-т үүрэг болгосугай.
                                     </p>
                                     <p style="text-align: justify;">
                                         3. Ажилтны нэг сарын цалинг 
                                         <t t-esc="o.wage or '......................'"/> төгрөг,
-                                        хоол унааны <t t-esc="o.food_and_vehicle_add or '100,000'"/> төгрөгөөр тооцож олгохыг
-                                        Ерөнхий нягтлан бодогч (<t t-esc="'.....................'"/>)-д зөвшөөрсүгэй.
+                                        хоол унааны <t t-esc="o.food_and_vehicle_add or '..............'"/> төгрөгөөр тооцож олгохыг
+                                        Санхүү, төлөвлөлтийн алба Санхүү эрхэлсэн захирал (<t t-esc="o.chief_acc_short_name or '.....................'"/>)-д зөвшөөрсүгэй.
                                     </p>
                                     <p style="text-align: justify;">
-                                        4. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа хүний нөөцийн албаны захирал
-                                        (<t t-esc="'.....................................'"/>)-д даалгасугай.
+                                        4. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал 
+                                        (<t t-esc="o.chief_hr_short_name or '.....................'"/>)-д даалгасугай.
                                     </p>
                                 </t>
                                 
                                 <!-- ==== DECR02 Туршилтын хугацаанд ажилд томилох тухай ==== --> 
                                 <t t-elif="o.decree_template.code == 'DECR02'">
                                     <p style="line-height: 1.1;">
-                                        <span style="font-family: monospace; white-space: pre;">┌                               ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">┌                                   ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   Үндсэн ажилтнаар </span><br/>
                                         <span style="font-family: monospace; white-space: pre;">    томилох тухай </span><br/>
                                     </p>
                                     <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
-                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл,  ажилтантай байгуулсан хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл, ажилтантай байгуулсан хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ нь:
                                     </p>
                                     <p style="text-align: justify; ">
                                         1. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
@@ -143,6 +147,66 @@
                                         (<t t-esc="'.....................................'"/>)-д даалгасугай.
                                     </p>
                                 </t>
+
+                                <!-- ==== DECR03 Ээлжийн амралтын цалинг олгох тухай ==== --> 
+                                <t t-elif="o.decree_template.code == 'DECR03'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                                  ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Ээлжийн амралтын цалинг </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">    тооцож олгох тухай </span><br/>
+                                    </p>
+                                    <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
+                                        Монгол Улсын Хөдөлмөрийн хуулийн 99.1, “Вертексмон” ХХК-ийн дотоод журмын 11.3,  заалтыг тус тус үндэслэн ТУШААХ НЬ:
+                                    </p>
+                                    <p style="text-align: justify; ">
+                                        Нэг. <t t-esc="o.department_id.name or '......................'"/> албаны
+                                        <t t-esc="o.position_id.name or '......................'"/> албан тушаалтай
+                                        <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/> 
+                                        (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-д
+                                        <t t-esc="'____ оны __ сарын __'"/>-ны өдөр ээлжийн амралтын цалинг  ОЛГОСУГАЙ.  
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        Хоёр. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/>-д 
+                                        ээлжийн амралтын хоногийн цалинг ...... /............................................../
+                                        хоногоор тооцож олгохыг Ерөнхий нягтлан бодогч (<t t-esc="'.....................'"/>)-д ДААЛГАСУГАЙ.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        Гурав. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа хүний нөөцийн албаны захирал
+                                        (<t t-esc="'.....................................'"/>)-д даалгасугай.
+                                    </p>
+                                </t>
+
+                                <!-- ==== DECR04 Цалинтай чөлөө, тэтгэмж олгох тухай ==== --> 
+                                <t t-elif="o.decree_template.code == 'DECR04'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                                    ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Цалинтай чөлөө, тэтгэмж </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">         олгох тухай </span><br/>
+                                    </p>
+                                    <p style="text-align: justify; text-indent: 40px; margin-top: 80px;">
+                                        “Вертексмон” ХХК-ийн дотоод журмын 11.2.2.2  заалтыг тус үндэслэн ТУШААХ НЬ:
+                                    </p>
+                                    <p style="text-align: justify; ">
+                                        Нэг. <t t-esc="o.department_id.name or '......................'"/> албаны
+                                        <t t-esc="o.position_id.name or '......................'"/> албан тушаалтай
+                                        <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/> 
+                                        (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-н 
+                                         (<t t-esc="'.....................................'"/>) тул ...... хоногийн цалинтай чөлөө олгосугай.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        Хоёр. <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                        <t t-esc="o.employee_id.name or '......................'"/>-д .......... /................................................../
+                                        төгрөгийн тэтгэмж олгохыг Ерөнхий нягтлан бодогч (<t t-esc="'.....................'"/>)-д ДААЛГАСУГАЙ.
+                                    </p>
+                                    <p style="text-align: justify;">
+                                        Гурав. Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа хүний нөөцийн албаны захирал
+                                        (<t t-esc="'.....................................'"/>)-д ҮҮРЭГ БОЛГОСУГАЙ.
+                                    </p>
+                                </t>
+
                                 <t t-else="o.decree_template.code == ''">
                                     Тушаалын загвар сонгогдоогүй байна.
                                 </t>
@@ -153,7 +217,7 @@
 
                             <!-- ==== Signature ==== -->
                             <p style="text-align: center; margin-top: 150px;">
-                                ГҮЙЦЭТГЭХ ЗАХИРАЛ: ...................................../<t t-esc="'Д.МЭНДСАЙХАН'"/>/
+                                ГҮЙЦЭТГЭХ ЗАХИРАЛ: ......................................................../<t t-esc="o.exe_director_short_name or '...................................'"/>/
                             </p>
                         </div>
                     </div>

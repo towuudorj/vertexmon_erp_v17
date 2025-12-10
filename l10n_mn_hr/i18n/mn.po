@@ -3598,3 +3598,33 @@ msgstr "Тушаал"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
 msgid "Contract"
 msgstr "Гэрээ"
+
+#. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_decree_form
+msgid "Decree Information"
+msgstr "Тушаалын мэдээлэл"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_emp_contract
+msgid "Contract Number"
+msgstr "Хөдөлмөрийн гэрээний дугаар"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_trial_period
+msgid "Trial Period"
+msgstr "Туршилтын хугацаа"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_date
+msgid "Decree Date"
+msgstr "Эхлэх огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_guide_dep_id
+msgid "Guide Department"
+msgstr "Чиглүүлэгч алба"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_guide_emp_id
+msgid "Guide Employee"
+msgstr "Чиглүүлэгч ажилтан"

@@ -124,7 +124,14 @@ class hr_decree(models.Model):
         
     previous_wage = fields.Float('Previous Wage', readonly=True)
     is_transfer = fields.Boolean('Is Transfer Decree')
-    
+
+    decr_emp_contract = fields.Char('Contract Number')
+    decr_trial_period = fields.Char('Trial Period')
+    decr_date = fields.Date('Date') #Огноо
+    decr_guide_dep_id = fields.Many2one('hr.department', 'Guide Department')#Хэлтэс
+    decr_guide_emp_id = fields.Many2one('hr.employee', 'Guide Employee')
+
+
 
     @api.depends('decree_template')
     def _compute_is_salary_change(self):
@@ -330,3 +337,129 @@ class hr_decree(models.Model):
             
         res = super(hr_decree, self).write(vals)
         return res
+
+class HrTemplateCode(models.Model):
+    _inherit = 'hr.decree'
+
+    decree_template_code = fields.Char(
+        related="decree_template.code",
+        store=False
+    )
+
+class HrDepartment(models.Model):
+    _inherit = 'hr.department'
+
+    def get_name_mn(self):
+        return self.with_context(lang='mn_MN').name
+    
+class HrDecreeReport(models.Model):
+    _inherit = 'hr.decree'
+
+    # Санхүү эрхэлсэн захирал
+    chief_accountant_id = fields.Many2one(
+        'hr.employee',
+        string='Chief Accountant',
+        compute='_compute_chief_accountant',
+        store=False
+    )
+
+    @api.depends()
+    def _compute_chief_accountant(self):
+        chiefacc = self.env['hr.employee'].search([
+            ('job_id.name', '=', 'Санхүү эрхэлсэн захирал')
+        ], limit=1)
+        for rec in self:
+            rec.chief_accountant_id = chiefacc or False
+
+    # Үйл ажиллагаа хариуцсан захирал
+    chief_hresources_id = fields.Many2one(
+        'hr.employee',
+        string='Chief Human Resources',
+        compute='_compute_chief_hresources',
+        store=False
+    )
+
+    @api.depends()
+    def _compute_chief_hresources(self):
+        chiefhr = self.env['hr.employee'].search([
+            ('job_id.name', '=', 'Үйл ажиллагаа хариуцсан захирал')
+        ], limit=1)
+        for rec in self:
+            rec.chief_hresources_id = chiefhr or False
+
+    # Гүйцэтгэх захирал
+    executive_director_id = fields.Many2one(
+        'hr.employee',
+        string='Executive Director',
+        compute='_compute_executive_director',
+        store=False
+    )
+
+    @api.depends('company_id')
+    def _compute_executive_director(self):
+        for rec in self:
+            exedirector = self.env['hr.employee'].search([
+                ('job_id.name', '=', 'Гүйцэтгэх захирал'),
+                ('company_id', '=', rec.company_id.id)
+            ], limit=1)
+            rec.executive_director_id = exedirector or False
+
+    # Accountant short name
+    chief_acc_short_name = fields.Char(compute="_compute_chief_acc_short_name")
+
+    def _compute_chief_acc_short_name(self):
+        for rec in self:
+            emp = rec.chief_accountant_id
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]
+                rec.chief_acc_short_name = initial + first
+            else:
+                rec.chief_acc_short_name = ''
+
+    # HR short name
+    chief_hr_short_name = fields.Char(compute="_compute_chief_hr_short_name")
+
+    def _compute_chief_hr_short_name(self):
+        for rec in self:
+            emp = rec.chief_hresources_id
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]
+                rec.chief_hr_short_name = initial + first
+            else:
+                rec.chief_hr_short_name = ''
+
+    # Director short name
+    exe_director_short_name = fields.Char(compute="_compute_executive_director_short_name")
+
+    def _compute_executive_director_short_name(self):
+        for rec in self:
+            emp = rec.executive_director_id
+            if emp:
+                ln = emp.last_name or ''
+                initial = (ln[:1] + '. ').upper() if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0].upper()
+                rec.exe_director_short_name = initial + first
+            else:
+                rec.exe_director_short_name = ''
+
+    # Guide Emp short name
+    guide_emp_short_name = fields.Char(compute="_compute_guide_emp_short_name")
+
+    def _compute_guide_emp_short_name(self):
+        for rec in self:
+            emp = rec.decr_guide_emp_id
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]
+                rec.guide_emp_short_name = initial + first
+            else:
+                rec.guide_emp_short_name = ''

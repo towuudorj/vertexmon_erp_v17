@@ -108,7 +108,7 @@
 								readonly="state != 'draft'" />
 							<field name="transfering_department_id" 
 								invisible="transfer_type == 'company'"
-								required="decree_type == 'staff'" 
+								required="false" 
 								readonly="state != 'draft'" />
 					 		<field name="transfering_company_id" 
 								invisible="is_transfer == False or transfer_type == 'department'"
@@ -135,6 +135,18 @@
 								</group>
 							</group>
 						</page>
+						<page string="Decree Information" name="decree_info" groups="hr_contract.group_hr_contract_manager">
+							<group col="2">
+								<!-- Related талбар view-д байх шаардлагатай -->
+								<field name="decree_template_code" invisible="1"/>
+								<field name="decr_emp_contract" invisible="decree_template_code != 'DECR01'" required="decree_template_code == 'DECR01'"/>
+								<field name="decr_trial_period" invisible="decree_template_code != 'DECR01'" required="decree_template_code == 'DECR01'"/>
+								<field name="decr_date" invisible="decree_template_code != 'DECR01'" required="decree_template_code == 'DECR01'"/>
+								<field name="decr_guide_dep_id" invisible="decree_template_code != 'DECR01'"/>
+								<field name="decr_guide_emp_id" invisible="decree_template_code != 'DECR01'"/>
+							</group>
+						</page>
+
 						<page string="Contract Details" name="other" groups="hr_contract.group_hr_contract_manager" >
                                 <group name="contract_details_0"/>
                                 <group name="contract_details" col="2"/>
