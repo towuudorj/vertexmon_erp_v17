@@ -1565,6 +1565,11 @@ msgid "Transfering Department"
 msgstr "Шилжиж буй алба"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__transfering_position_id
+msgid "Transfering Position"
+msgstr "Шилжиж буй албан тушаал"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__company_id
 msgid "Company"
 msgstr "Компани"
@@ -3615,8 +3620,8 @@ msgid "Trial Period"
 msgstr "Туршилтын хугацаа"
 
 #. module: l10n_mn_hr
-#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_date
-msgid "Decree Date"
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_startdate
+msgid "Start Date"
 msgstr "Эхлэх огноо"
 
 #. module: l10n_mn_hr
@@ -3628,3 +3633,78 @@ msgstr "Чиглүүлэгч алба"
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_guide_emp_id
 msgid "Guide Employee"
 msgstr "Чиглүүлэгч ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_day_off_wage
+msgid "Day off wage"
+msgstr "Ээлжийн амралтын цалин (хоногоор)"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_day_off
+msgid "Day off"
+msgstr "Хоногийн тоо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_reason
+msgid "Reason"
+msgstr "Шалтгаан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_is_wage
+msgid "Is Wage"
+msgstr "Цалинтай эсэх"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_amount
+msgid "Amount"
+msgstr "Мөнгөн дүн"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_enddate
+msgid "End Date"
+msgstr "Дуусах огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_taks_details
+msgid "Task Details"
+msgstr "Ажлын дэлгэрэнгүй"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_to_location
+msgid "To Location"
+msgstr "Хаашаа явах"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_notes
+msgid "Decree Notes"
+msgstr "Дэлгэрэнгүй мэдээлэл оруулна уу..."
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_partner_id
+msgid "Department"
+msgstr "Алба, нэгж"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_position_id
+msgid "Department"
+msgstr "Албан тушаал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_partner_id
+msgid "Partener"
+msgstr "Харилцагч"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_date
+msgid "Decree Date"
+msgstr "Хэрэгжүүлэх Огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_quarter
+msgid "Quarter"
+msgstr "Улирал"

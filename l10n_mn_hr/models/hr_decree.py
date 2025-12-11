@@ -103,6 +103,7 @@ class hr_decree(models.Model):
     ], string='Transfer Type')
     transfer_decree_id = fields.Many2one('hr.decree', string='Transfer Decree')
     transfering_department_id = fields.Many2one('hr.department', string='Transfering Department')
+    transfering_position_id = fields.Many2one('hr.job', string='Transfering Position')
     transfering_company_id = fields.Many2one('res.company', string='Transfering Company')
 
 
@@ -126,12 +127,24 @@ class hr_decree(models.Model):
     is_transfer = fields.Boolean('Is Transfer Decree')
 
     decr_emp_contract = fields.Char('Contract Number')
-    decr_trial_period = fields.Char('Trial Period')
-    decr_date = fields.Date('Date') #Огноо
+    decr_trial_period = fields.Integer('Trial Period')
+    decr_startdate = fields.Date('Start Date') #Огноо
     decr_guide_dep_id = fields.Many2one('hr.department', 'Guide Department')#Хэлтэс
     decr_guide_emp_id = fields.Many2one('hr.employee', 'Guide Employee')
-
-
+    decr_day_off_wage = fields.Float(string='Day off wage')
+    decr_day_off = fields.Integer(string='Day off')
+    decr_reason = fields.Char('Reason')
+    decr_is_wage = fields.Boolean('Is Wage')
+    decr_amount = fields.Float(string='Amount')
+    decr_enddate = fields.Date('End Date') #Огноо
+    decr_taks_details = fields.Char('Task Details')
+    decr_to_location = fields.Char('To Location')
+    decr_department_id = fields.Many2one('hr.department', 'Department')#Хэлтэс
+    decr_position_id = fields.Many2one('hr.job', 'Position')#Албан тушаал
+    decr_employee_id = fields.Many2one('hr.employee', 'Employee')
+    decr_partner_id = fields.Many2one('res.partner', 'Partner')#Харилцагч
+    decr_date = fields.Date('Decree Date') #Огноо
+    decr_quarter = fields.Char('Quarter')
 
     @api.depends('decree_template')
     def _compute_is_salary_change(self):
@@ -338,6 +351,127 @@ class hr_decree(models.Model):
         res = super(hr_decree, self).write(vals)
         return res
 
+def verbose_format(amount,currency):
+    u'''Мөнгөн дүнг үсгээр илэрхийлэх функц
+    '''
+    amount = str(amount)
+    result = u''
+    BUTARHAI = True
+    i = 0
+    stramount = amount.replace(',','.')
+    
+    if '-' in stramount:
+        stramount= stramount.replace('-','')        
+    if '.' in amount:
+        amount = stramount[:stramount.find('.')]
+        subamount = stramount[stramount.find('.')+1:]
+    else :
+        amount = stramount
+        subamount = u''
+    length = len(amount)
+    if length == 0 or float(amount) == 0:
+        return ''
+    place = 0
+    try :
+        while i < length :
+            c = length - i
+            if c % 3 == 0 :
+                c -= 3
+            else :
+                while c % 3 != 0 :
+                    c -= 1
+            place = c / 3
+            i1 = length - c
+            tmp = amount[i:i1]
+            j = 0
+            if tmp == '000' :
+                i = i1
+                continue
+            while j < len(tmp) :
+                char = int(tmp[j])
+                p = len(tmp) - j
+                if char == 1 :
+                    if p == 3 :
+                        result += u'нэг зуун '
+                    elif p == 2 :
+                        result += u'арван '
+                    elif p == 1 :
+                        if len(result)==0:
+                            result += u'нэг '
+                        else:
+                            result += u'нэгэн '
+                elif char == 2 :
+                    if p == 3 :
+                        result += u'хоёр зуун '
+                    elif p == 2 :
+                        result += u'хорин '
+                    elif p == 1 :
+                        result += u'хоёр '
+                elif char == 3 :
+                    if p == 3 :
+                        result += u'гурван зуун '
+                    elif p == 2 :
+                        result += u'гучин '
+                    elif p == 1 :
+                        result += u'гурван '
+                elif char == 4 :
+                    if p == 3 :
+                        result += u'дөрвөн зуун '
+                    elif p == 2 :
+                        result += u'дөчин '
+                    elif p == 1 :
+                        result += u'дөрвөн '
+                elif char == 5 :
+                    if p == 3 :
+                        result += u'таван зуун '
+                    elif p == 2 :
+                        result += u'тавин '
+                    elif p == 1 :
+                        result += u'таван '
+                elif char == 6 :
+                    if p == 3 :
+                        result += u'зургаан зуун ' 
+                    elif p == 2 :
+                        result += u'жаран '
+                    elif p == 1 :
+                        result += u'зургаан '
+                elif char == 7 :
+                    if p == 3 :
+                        result += u'долоон зуун '
+                    elif p == 2 :
+                        result += u'далан '
+                    elif p == 1 :
+                        result += u'долоон '
+                elif char == 8 :
+                    if p == 3 :
+                        result += u'найман зуун '
+                    elif p == 2 :
+                        result += u'наян '
+                    elif p == 1 :
+                        result += u'найман '
+                elif char == 9 :
+                    if p == 3 :
+                        result += u'есөн зуун '
+                    elif p == 2 :
+                        result += u'ерэн '
+                    elif p == 1 :
+                        result += u'есөн '
+                
+                j += 1
+            # -------- end while j < len(tmp)
+            if place == 3 :
+                result += u'тэрбум '
+            elif place == 2 :
+                result += u'сая '
+            elif place == 1 :
+                result += u'мянга '
+            i = i1
+        # ---------- end while i < len(amount)
+    except Exception :
+        return False
+               
+    return result
+
 class HrTemplateCode(models.Model):
     _inherit = 'hr.decree'
 
@@ -346,12 +480,53 @@ class HrTemplateCode(models.Model):
         store=False
     )
 
+
+
 class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
-    def get_name_mn(self):
+    def get_dep_name_mn(self):
+        return self.with_context(lang='mn_MN').name
+
+class HrPosition(models.Model):
+    _inherit = 'hr.job'
+
+    def get_job_name_mn(self):
         return self.with_context(lang='mn_MN').name
     
+class HrDecree(models.Model):
+    _inherit = 'hr.decree'
+
+    decr_image = fields.Binary(
+        string="Тушаалын зураг",
+        attachment=True
+    )
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    def get_partner_name_mn(self):
+        return self.with_context(lang='mn_MN').name
+
+class HrDecree(models.Model):
+    _name = "hr.decree"
+    _inherit = "hr.decree"  # хэрэв оролцуулах бол
+
+    decr_notes = fields.Text(string="Decree Notes")  # олон мөрт текст талбар
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    def get_department_mn(self):
+        """Сонгосон ажилтны албыг Монгол хэл дээр буцаана"""
+        self.ensure_one()  # зөвхөн нэг record ашиглах
+        return self.with_context(lang='mn_MN').department_id.name or ''
+
+    def get_job_mn(self):
+        """Сонгосон ажилтны албан тушаалыг Монгол хэл дээр буцаана"""
+        self.ensure_one()
+        return self.with_context(lang='mn_MN').job_id.name or ''
+
 class HrDecreeReport(models.Model):
     _inherit = 'hr.decree'
 
@@ -395,12 +570,11 @@ class HrDecreeReport(models.Model):
         store=False
     )
 
-    @api.depends('company_id')
+    @api.depends()
     def _compute_executive_director(self):
         for rec in self:
             exedirector = self.env['hr.employee'].search([
-                ('job_id.name', '=', 'Гүйцэтгэх захирал'),
-                ('company_id', '=', rec.company_id.id)
+                ('job_id.name', '=', 'Гүйцэтгэх захирал')
             ], limit=1)
             rec.executive_director_id = exedirector or False
 
@@ -463,3 +637,100 @@ class HrDecreeReport(models.Model):
                 rec.guide_emp_short_name = initial + first
             else:
                 rec.guide_emp_short_name = ''
+
+    # Цалингийн дүнг текстээр харуулах
+    wage_amount_to_text = fields.Char(
+        string='Wage Amount in Text',
+        compute='_compute_wage_amount_to_text'
+    )
+
+    def _compute_wage_amount_to_text(self):
+        for rec in self:
+            if rec.wage:  # wage утга байгаа бол
+                rec.wage_amount_to_text = verbose_format(rec.wage, rec.currency_id)
+            else:  # wage хоосон бол хоосон string
+                rec.wage_amount_to_text = ''
+
+    # Цалингийн дүнг текстээр харуулах
+    food_and_vehicle_add_amount_to_text = fields.Char(
+        string='Food and Vehicle add Amount in Text',
+        compute='_compute_food_and_vehicle_add_amount_to_text'
+    )
+
+    def _compute_food_and_vehicle_add_amount_to_text(self):
+        for rec in self:
+            if rec.food_and_vehicle_add:  # food_and_vehicle_add утга байгаа бол
+                rec.food_and_vehicle_add_amount_to_text = verbose_format(rec.food_and_vehicle_add, rec.currency_id)
+            else:  # food_and_vehicle_add хоосон бол хоосон string
+                rec.food_and_vehicle_add_amount_to_text = ''
+
+    # Нэрийг Б.Цогтбаяр форматаар авах
+    emp_short_name = fields.Char(compute="_compute_emp_short_name")
+
+    def _compute_emp_short_name(self):
+        for rec in self:
+            emp = rec.employee_id
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]
+                rec.emp_short_name = initial + first
+            else:
+                rec.emp_short_name = ''
+
+    # Ээлжийн амралтын хоног текстээр харуулах
+    day_off_wage_to_text = fields.Char(
+        string='Day off wage in Text',
+        compute='_compute_day_off_wage_to_text'
+    )
+
+    def _compute_day_off_wage_to_text(self):
+        for rec in self:
+            if rec.decr_day_off_wage:  # decr_day_off_wage утга байгаа бол
+                rec.day_off_wage_to_text = verbose_format(rec.decr_day_off_wage, rec.currency_id)
+            else:  # decr_day_off_wage хоосон бол хоосон string
+                rec.day_off_wage_to_text = ''
+
+    # Мөнгөн дүнг текстээр харуулах
+    decr_amount_to_text = fields.Char(
+        string='Amount in Text',
+        compute='_compute_decr_amount_to_text'
+    )
+
+    def _compute_decr_amount_to_text(self):
+        for rec in self:
+            if rec.decr_amount:  # decr_amount утга байгаа бол
+                rec.decr_amount_to_text = verbose_format(rec.decr_amount, rec.currency_id)
+            else:  # decr_amount хоосон бол хоосон string
+                rec.decr_amount_to_text = ''
+
+    # Нэрийг Б.Цогтбаяр форматаар авах
+    decr_emp_short_name = fields.Char(compute="_compute_decr_emp_short_name", string="Товч нэр")
+
+    def _compute_decr_emp_short_name(self):
+        for rec in self:
+            emp = rec.decr_employee_id  # сонгогдсон ажилтан
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]  # нэрийн эхний хэсэг
+                rec.decr_emp_short_name = initial + first
+            else:
+                rec.decr_emp_short_name = ''
+
+    # Нэрийг Б.Цогтбаяр форматаар авах
+    transfering_dep_emp_short_name = fields.Char(compute="_compute_transfering_dep_emp_short_name", string="Товч нэр")
+
+    def _compute_transfering_dep_emp_short_name(self):
+        for rec in self:
+            emp = rec.transfering_department_id.manager_id  # сонгогдсон ажилтан
+            if emp:
+                ln = emp.last_name or ''
+                initial = ln[:1] + '. ' if ln else ''
+                full = emp.name or ''
+                first = full.split('.')[0]  # нэрийн эхний хэсэг
+                rec.transfering_dep_emp_short_name = initial + first
+            else:
+                rec.transfering_dep_emp_short_name = ''
