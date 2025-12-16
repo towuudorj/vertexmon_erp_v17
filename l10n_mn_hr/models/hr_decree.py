@@ -130,6 +130,7 @@ class hr_decree(models.Model):
     decr_trial_period = fields.Integer('Trial Period')
     decr_startdate = fields.Date('Start Date') #Огноо
     decr_guide_dep_id = fields.Many2one('hr.department', 'Guide Department')#Хэлтэс
+    decr_guide_pos_id = fields.Many2one('hr.job', 'Guide Position')#Албан тушаал
     decr_guide_emp_id = fields.Many2one('hr.employee', 'Guide Employee')
     decr_day_off_wage = fields.Float(string='Day off wage')
     decr_day_off = fields.Integer(string='Day off')
@@ -145,6 +146,14 @@ class hr_decree(models.Model):
     decr_partner_id = fields.Many2one('res.partner', 'Partner')#Харилцагч
     decr_date = fields.Date('Decree Date') #Огноо
     decr_quarter = fields.Char('Quarter')
+    decr_location = fields.Char('Location')
+    decr_is_wage_hour = fields.Boolean('Is Wage by Hour')
+    decr_wage_hour = fields.Monetary('Wage by Hour', digits=(16, 2), tracking=True, 
+                          help="Employee's hourly wage")
+    decr_adv_month = fields.Date("Advance Month")
+    decr_pay_month = fields.Date("Pay Month")
+    decr_percentage = fields.Float(string="Процент",digits=(16, 2)
+)
 
     @api.depends('decree_template')
     def _compute_is_salary_change(self):
@@ -486,12 +495,14 @@ class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
     def get_dep_name_mn(self):
+        self.ensure_one()
         return self.with_context(lang='mn_MN').name
 
 class HrPosition(models.Model):
     _inherit = 'hr.job'
 
     def get_job_name_mn(self):
+        self.ensure_one()
         return self.with_context(lang='mn_MN').name
     
 class HrDecree(models.Model):
@@ -506,6 +517,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def get_partner_name_mn(self):
+        self.ensure_one()
         return self.with_context(lang='mn_MN').name
 
 class HrDecree(models.Model):
@@ -518,12 +530,10 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     def get_department_mn(self):
-        """Сонгосон ажилтны албыг Монгол хэл дээр буцаана"""
-        self.ensure_one()  # зөвхөн нэг record ашиглах
+        self.ensure_one()
         return self.with_context(lang='mn_MN').department_id.name or ''
 
     def get_job_mn(self):
-        """Сонгосон ажилтны албан тушаалыг Монгол хэл дээр буцаана"""
         self.ensure_one()
         return self.with_context(lang='mn_MN').job_id.name or ''
 
@@ -650,6 +660,19 @@ class HrDecreeReport(models.Model):
                 rec.wage_amount_to_text = verbose_format(rec.wage, rec.currency_id)
             else:  # wage хоосон бол хоосон string
                 rec.wage_amount_to_text = ''
+
+    # Цалингийн дүнг текстээр харуулах /Цагийн/
+    wage_hour_amount_to_text = fields.Char(
+        string='Wage Hour Amount in Text',
+        compute='_compute_wage_hour_amount_to_text'
+    )
+
+    def _compute_wage_hour_amount_to_text(self):
+        for rec in self:
+            if rec.decr_wage_hour:  # wage_hour утга байгаа бол
+                rec.wage_hour_amount_to_text = verbose_format(rec.decr_wage_hour, rec.currency_id)
+            else:  # wage_hour хоосон бол хоосон string
+                rec.wage_hour_amount_to_text = ''
 
     # Цалингийн дүнг текстээр харуулах
     food_and_vehicle_add_amount_to_text = fields.Char(

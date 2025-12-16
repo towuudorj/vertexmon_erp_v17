@@ -3630,6 +3630,11 @@ msgid "Guide Department"
 msgstr "Чиглүүлэгч алба"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_guide_pos_id
+msgid "Guide Position"
+msgstr "Чиглүүлэгч албан тушаал"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_guide_emp_id
 msgid "Guide Employee"
 msgstr "Чиглүүлэгч ажилтан"
@@ -3708,3 +3713,28 @@ msgstr "Хэрэгжүүлэх Огноо"
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_quarter
 msgid "Quarter"
 msgstr "Улирал"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_to_location
+msgid "Location"
+msgstr "Төсөл/Байршил"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_is_wage_hour
+msgid "Is Wage by Hour"
+msgstr "Цалин цагаар тооцох"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_wage_hour
+msgid "Wage by Hour"
+msgstr "Нэг цагийн цалин"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_adv_month
+msgid "Advance Month"
+msgstr "Урьдчилгааны огноо"
+
+#. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_pay_month
+msgid "Pay Month"
+msgstr "Олгох огноо"
