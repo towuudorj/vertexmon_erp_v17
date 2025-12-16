@@ -86,9 +86,8 @@ class ProjectTask(models.Model):
 
     def create_picking(self):
         picking = False
-        for line in self.products_line:
-        
-        ###### Агуулахын хөдөлгөөн үүсгэх
+        out_picking = False
+        for lines in self:
             if self.project_id.warehouse_id.delivery_steps == 'pick_ship':
                 pick_val = {
                     'partner_id': self.partner_id.id,
@@ -106,63 +105,70 @@ class ProjectTask(models.Model):
                     'task_id': self.id,
                     'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
                 }
-                if line.product_id:
-                    picking = self.env['stock.picking'].create(pick_val)
-                    out_picking = self.env['stock.picking'].create(out_val)
-                    move_vals = {
-                        'product_id': line.product_id.id,
-                        'date': self.date_deadline,
-                        'name': line.name,
-                        'product_uom_qty': line.product_qty,
-                        'product_uom': line.product_id.uom_id.id,
-                        'picking_id': picking.id,
-                        'location_id': self.project_id.warehouse_id.lot_stock_id.id,
-                        'location_dest_id':self.project_id.picking_type_id.id,
-                    }
-
-                    move = self.env['stock.move'].create(move_vals)
-                    picking.action_confirm()
-
-                    customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
-                    out_move_vals = {
-                        'product_id': line.product_id.id,
-                        'date': self.date_deadline,
-                        'name': line.name,
-                        'product_uom_qty': line.product_qty,
-                        'product_uom': line.product_id.uom_id.id,
-                        'picking_id': out_picking.id,
-                        'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                        'location_dest_id':customer_loc[0].id,
-                    }
-
-                    move = self.env['stock.move'].create(out_move_vals)
-                    out_picking.action_confirm()
-                    
+                picking = self.env['stock.picking'].create(pick_val)
+                out_picking = self.env['stock.picking'].create(out_val)
             else:
                 pick_val = {
-                    'partner_id': self.partner_id.id,
-                    'picking_type_id': self.project_id.picking_type_id.id,
-                    'scheduled_date':self.date_deadline,
-                    'origin': self.name,
-                    'task_id': self.id,
-                    'location_id': self.project_id.warehouse_id.lot_stock_id.id,
-                }
+                            'partner_id': self.partner_id.id,
+                            'picking_type_id': self.project_id.picking_type_id.id,
+                            'scheduled_date':self.date_deadline,
+                            'origin': self.name,
+                            'task_id': self.id,
+                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                        }
+                picking = self.env['stock.picking'].create(pick_val)
+                
+            for line in lines.products_line:
+            ###### Агуулахын хөдөлгөөн үүсгэх
                 if line.product_id:
-                    picking = self.env['stock.picking'].create(pick_val)
-                    customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
-                    out_move_vals = {
-                        'product_id': line.product_id.id,
-                        'date': self.date_deadline,
-                        'name': line.name,
-                        'product_uom_qty': line.product_qty,
-                        'product_uom': line.product_id.uom_id.id,
-                        'picking_id': picking.id,
-                        'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                        'location_dest_id':customer_loc[0].id,
-                    }
-
-                    move = self.env['stock.move'].create(out_move_vals)
-                    picking.action_confirm()
+                    if self.project_id.warehouse_id.delivery_steps == 'pick_ship':
+                        move_vals = {
+                            'product_id': line.product_id.id,
+                            'date': self.date_deadline,
+                            'name': line.name,
+                            'product_uom_qty': line.product_qty,
+                            'product_uom': line.product_id.uom_id.id,
+                            'picking_id': picking.id,
+                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                            'location_dest_id':self.project_id.picking_type_id.id,
+                        }
+    
+                        move = self.env['stock.move'].create(move_vals)
+                        picking.action_confirm()
+    
+                        customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
+                        out_move_vals = {
+                            'product_id': line.product_id.id,
+                            'date': self.date_deadline,
+                            'name': line.name,
+                            'product_uom_qty': line.product_qty,
+                            'product_uom': line.product_id.uom_id.id,
+                            'picking_id': out_picking.id,
+                            'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
+                            'location_dest_id':customer_loc[0].id,
+                        }
+    
+                        move = self.env['stock.move'].create(out_move_vals)
+                        out_picking.action_confirm()
+                        
+                    else:
+                        
+                        if line.product_id:
+                            
+                            customer_loc = self.env['stock.location'].search([('usage', '=', 'customer')])
+                            out_move_vals = {
+                                'product_id': line.product_id.id,
+                                'date': self.date_deadline,
+                                'name': line.name,
+                                'product_uom_qty': line.product_qty,
+                                'product_uom': line.product_id.uom_id.id,
+                                'picking_id': picking.id,
+                                'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
+                                'location_dest_id':customer_loc[0].id,
+                            }
+        
+                            move = self.env['stock.move'].create(out_move_vals)
+                            picking.action_confirm()
         return picking
                     
                     

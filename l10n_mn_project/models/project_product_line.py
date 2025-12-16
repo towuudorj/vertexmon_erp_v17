@@ -11,15 +11,17 @@ class ProjectProductsLine(models.Model):
     _order = 'project_id, sequence, id'
 
 
-    @api.depends('picking_ids')
-    def _compute_qty_delivered(self):
+    @api.depends('project_id')
+    def _compute_qty_available(self):
+        quant_obj = self.env['stock.quant']
+        purchase_obj = self.env['purchase.order']
         for line in self:
             qty = 0
-            for pk in line.picking_ids:
-                if pk.state == 'done':
-                    for lines in pk.move_ids_without_package:
-                        qty +=lines.quantity
-            line.qty_delivered = qty
+            purchase_id = purchase_obj.search([('analytic_id','=',line.project_id.analytic_account_id.id),('state','!=','cancel')])
+            for pur in purchase_id.order_line:
+                if pur.product_id.id == line.product_id.id:
+                    qty +=pur.product_qty   
+            line.qty_available = qty
     
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
@@ -36,8 +38,8 @@ class ProjectProductsLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     price_unit = fields.Float(string='Price', required=True, digits='Product Price')
     cost_price = fields.Float(string='Cost Price', required=True, digits='Product Price')
-    qty_available = fields.Float(string='Available QTY', required=True, digits='Product', readonly=True, default=0)
-    qty_delivered = fields.Float(string='Delivered', compute='_compute_qty_delivered', required=True, digits='Product', readonly=True, default=0)
+    qty_available = fields.Float(string='Available QTY', compute='_compute_qty_available', required=True, digits='Product', readonly=True, default=0)
+    qty_delivered = fields.Float(string='Delivered',  required=True, digits='Product', readonly=True, default=0)
     price_total = fields.Float(string='Total Price', readonly=True)
     cost_total = fields.Float(string='Total Cost', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True, default=lambda self: self.env.company)

@@ -29,6 +29,7 @@ class ForeignPurchaseRequest(models.TransientModel):
                             'desc':li.name,
                             'qty':li.product_qty,
                             'uom_id':li.product_uom.id,
+                            'purchase_user_id':li.purchase_manager_id.id,
                             'line_id':li.id
                             }))
         res['project_id'] = line_ids.id
