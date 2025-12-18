@@ -11,16 +11,16 @@
 	             	<group>
 	             		<field name="company_id" readonly="1"/>
 	             	</group>
-	             	<field name="line_ids">
-	             		<tree string="Sale order" editable="bottom" create="0">
-	             			<field name="invoice_id" readonly="1"/>
-	             			<field name="desc"/>
-	             			<field name="percent"/>
-	             			<field name="invoice_amount"/>
-	             			<field name="is_created" readonly="1"/>
-	             			<field name="is_new_create" readonly="is_created == True"/>
-	             		</tree>
-	             	</field>
+<!--	             	<field name="line_ids">-->
+<!--	             		<tree string="Sale order" editable="bottom" create="0">-->
+<!--	             			<field name="invoice_id" readonly="1"/>-->
+<!--	             			<field name="desc"/>-->
+<!--	             			<field name="percent"/>-->
+<!--	             			<field name="invoice_amount"/>-->
+<!--	             			<field name="is_created" readonly="1"/>-->
+<!--	             			<field name="is_new_create" readonly="is_created == True"/>-->
+<!--	             		</tree>-->
+<!--	             	</field>-->
 					<footer>
                         <button name="action_create_invoice" string="Нэхэмжлэл үүсгэх" type="object" class="oe_highlight" />
                         or

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_advance_payment_inv_timesheet_view_form" model="ir.ui.view">
+        <field name="name">sale_timesheet.sale.advance.payment.inv.view.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="disable_autofocus">true</attribute>
+            </xpath>
+            <xpath expr="//group[last()]" position="after">
+                <field name="line_ids" invisible="advance_payment_method != 'term'">
+	             		<tree string="Sale order" editable="bottom" create="0">
+	             			<field name="invoice_id" readonly="1"/>
+	             			<field name="desc"/>
+	             			<field name="percent"/>
+	             			<field name="invoice_amount"/>
+	             			<field name="is_created" readonly="1"/>
+	             			<field name="is_down_payment" readonly="1"/>
+	             			<field name="is_new_create" readonly="is_created == True"/>
+	             		</tree>
+	             	</field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
