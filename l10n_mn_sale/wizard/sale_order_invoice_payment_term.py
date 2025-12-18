@@ -9,7 +9,7 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
     
     company_id = fields.Many2one('res.company', string='Company')
     so_id = fields.Many2one('sale.order', string='Sale order')
-    line_ids = fields.One2many('sale.order.invoice.payment.term.line', 'term_id', string='Invoice list')
+    # line_ids = fields.One2many('sale.order.invoice.payment.term.line', 'term_id', string='Invoice list')
     
     
     
@@ -47,7 +47,7 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
     
     
     def action_create_invoice(self):
-        
+
         for line in self:
             tax_id = self.env['account.tax'].search([('type_tax_use','=','sale'),('company_id','=',self.company_id.id),('price_include','=',True)],limit=1)
             pre_amount = 0
@@ -55,7 +55,7 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
             for pr in line.line_ids:
                pre_amount +=pr.invoice_amount
                count +=1
-               
+
             for lines in line.line_ids[:-1]:
                if lines.is_new_create == True:
                     invoice_amount = lines.invoice_amount
@@ -73,12 +73,12 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
                         ]
                     })
                     invoice = self.env["account.move"].create(inv_vals)
-                    
+
             last_percent = line.line_ids[-1].percent
             last_true = line.line_ids[-1].is_new_create
             if last_true == True:
                 ratio = last_percent / 100.0
-        
+
                 inv_vals = line.so_id._prepare_invoice()
                 final_lines = []
                 all_amount = 0
@@ -94,7 +94,7 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
                         "sale_line_ids":[(6, 0, [line.id])],
                         "tax_ids": [(6, 0, lined.tax_id.ids)],
                     }))
-                
+
                 pre_percent = 100 - last_percent
                 pre_price = all_amount/100.0*pre_percent
                 tax_id = self.env['account.tax'].search([('type_tax_use','=','sale'),('company_id','=',line.company_id.id),('price_include','=',True)],limit=1)
@@ -106,26 +106,26 @@ class SaleOrderInvoicePaymentTerm(models.TransientModel):
                 }))
                 inv_vals["invoice_origin"] = self.so_id.name
                 inv_vals["invoice_line_ids"] = final_lines
-        
+
                 final_invoice = self.env["account.move"].create(inv_vals)
                    
                    
         
     
     
-
-class SaleOrderInvoicePaymentTermLine(models.TransientModel):
-    _name = 'sale.order.invoice.payment.term.line'
-    _description = 'Sale order invoice payment term line'
-    
-    company_id = fields.Many2one('res.company', string='Company')
-    invoice_id = fields.Many2one('account.move', string='Invoice')
-    invoice_amount = fields.Float(string='Invoice amount')
-    percent = fields.Float(string='Percent')
-    is_created = fields.Boolean(string='Is created')
-    is_new_create = fields.Boolean(string='Is new create')
-    desc = fields.Char(string='Description')
-    term_id = fields.Many2one('sale.order.invoice.payment.term', string='Payment term')
+#
+# class SaleOrderInvoicePaymentTermLine(models.TransientModel):
+#     _name = 'sale.order.invoice.payment.term.line'
+#     _description = 'Sale order invoice payment term line'
+#
+#     company_id = fields.Many2one('res.company', string='Company')
+#     invoice_id = fields.Many2one('account.move', string='Invoice')
+#     invoice_amount = fields.Float(string='Invoice amount')
+#     percent = fields.Float(string='Percent')
+#     is_created = fields.Boolean(string='Is created')
+#     is_new_create = fields.Boolean(string='Is new create')
+#     desc = fields.Char(string='Description')
+#     term_id = fields.Many2one('sale.order.invoice.payment.term', string='Payment term')
     
     
     

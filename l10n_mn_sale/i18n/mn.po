@@ -16,6 +16,12 @@ msgstr ""
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. module: l10n_mn_sale
+#. odoo-python
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#, python-format
+msgid "%s has been created"
+msgstr "%s үүсгэлээ"
 
 #. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_inherit_purchase_requisition_view
@@ -41,7 +47,26 @@ msgstr "Цуцлах"
 msgid "Done"
 msgstr "Дууссан"
 
+#. module: l10n_mn_sale
+#. odoo-python
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#, python-format
+msgid "Down payment"
+msgstr "Урьдчилгаа төлбөр"
 
+#. module: l10n_mn_sale
+#. odoo-python
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr "Урьдчилгаа төлбөрийн нэхэмжлэл"
+
+#. module: l10n_mn_sale
+#. odoo-python
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#, python-format
+msgid "Down payment invoice {}%"
+msgstr "Урьдчилгаа төлбөрийн нэхэмжлэл {}%"
 
 #. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
@@ -392,6 +417,13 @@ msgstr "Компани"
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__partner_type
 msgid "Partner type"
 msgstr "Харилцагчийн төрөл"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__wizard_id
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__payment_term_id
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__advance_payment_method__term
+msgid "Payment term"
+msgstr "Төлбөрийн нөхцөл"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_type__name
@@ -1131,6 +1163,10 @@ msgstr "Хувь"
 msgid "Invoice amount"
 msgstr "Нэхэмжлэлийн дүн"
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__is_down_payment
+msgid "Is Down payment"
+msgstr "Урьдчилгаа төлбөр"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__desc

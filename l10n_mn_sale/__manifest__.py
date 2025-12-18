@@ -56,6 +56,7 @@
                 'wizard/crm_break_reason_view.xml',
                 'wizard/crm_cancel_reason_view.xml',
                 'wizard/sale_order_invoice_payment_term.xml',
+                'wizard/sale_make_invoice_advance_inherit.xml',
                 'views/account_payment_term_line_inherit_view.xml',
                 'views/project_project_inherit_view.xml',
                 'views/crm_inherit_view.xml',
