@@ -152,8 +152,12 @@ class hr_decree(models.Model):
                           help="Employee's hourly wage")
     decr_adv_month = fields.Date("Advance Month")
     decr_pay_month = fields.Date("Pay Month")
-    decr_percentage = fields.Float(string="Процент",digits=(16, 2)
-)
+    decr_percentage = fields.Float(string="Хувь/%/",digits=(16, 2))
+    decr_juram_zuil_number = fields.Char('Журам/Зүйлийн дугаар')
+    decr_juram_zaalt_number = fields.Char('Журам/Заалтын дугаар')
+    decr_geree_zuil_number = fields.Char('Гэрээ/Зүйлийн дугаар')
+    decr_geree_zaalt_number = fields.Char('Гэрээ/Заалтын дугаар')
+    decr_lastdate = fields.Date('Хүлээлцэх огноо') #Огноо
 
     @api.depends('decree_template')
     def _compute_is_salary_change(self):
