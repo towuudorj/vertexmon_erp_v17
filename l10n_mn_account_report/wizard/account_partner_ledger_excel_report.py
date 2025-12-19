@@ -257,7 +257,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     partner_ids = self._cr.dictfetchall()
                     partner_id = [p['partner_id'] for p in partner_ids]
                 else:
-                    self._cr.execute(""" select aml.partner_id, rp.name, aml.account_id, aml.currency_id, rp.code,  from 
+                    self._cr.execute(""" select aml.partner_id, rp.name, aml.account_id, aml.currency_id, rp.code  from 
                                 account_move as am left join
                                 account_move_line as aml on aml.move_id = am.id 
                                 left join res_partner as rp on rp.id = aml.partner_id 

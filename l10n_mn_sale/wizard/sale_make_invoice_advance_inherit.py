@@ -5,9 +5,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import format_date, frozendict
-import logging
-
-_logger = logging.getLogger(__name__)
+from datetime import timedelta
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -28,6 +26,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         required=True,
         help="A standard invoice is issued with all the order lines ready for invoicing,"
              "according to their invoicing policy (based on ordered or delivered quantity).")
+    order_has_payment_term = fields.Boolean()
 
 
     @api.model
@@ -42,7 +41,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                                ('company_id', '=', sale_order_id.company_id.id)])
         if sale_order_id.amount_to_invoice != 0:
             for lines in sale_order_id.payment_term_id.line_ids:
-                self._compute_invoice_amounts()
                 if lines.value == 'percent':
                     amount = sale_order_id.amount_to_invoice / 100.0 * lines.value_amount
                     is_create = False
@@ -52,13 +50,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
                             is_create = True
                             invoice_id = inv.id
                             acc_move_id -= inv
-
                     line_data.append((0, 0, {
                         'company_id': sale_order_id.company_id.id,
                         'invoice_amount': amount,
                         'percent': lines.value_amount,
                         'is_created': is_create,
                         'desc': lines.desc,
+                        'nb_days': lines.nb_days,
                         'invoice_id': invoice_id,
                     }))
 
@@ -72,7 +70,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'invoice_id': inv.id,
             }))
         res['line_ids'] = line_data
-        res['advance_payment_method'] = 'delivered'
+        res['advance_payment_method'] = 'term' if sale_order_id.payment_term_id else 'delivered'
+        res['order_has_payment_term'] = True if sale_order_id.payment_term_id else False
         return res
 
     def _create_invoices(self, sale_orders):
@@ -86,10 +85,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             else:
                 for line in self.line_ids:
                     if line.is_new_create:
-                        invoice_ids |= self.create_down_payment_invoices(line.invoice_amount, line.percent)
+                        invoice_ids |= self.create_down_payment_invoices(line.invoice_amount, line)
         return invoice_ids
 
-    def create_down_payment_invoices(self, invoice_amount, pre_percent=False):
+    def create_down_payment_invoices(self, invoice_amount, payment_line=False):
         self.sale_order_ids.ensure_one()
         self = self.with_company(self.company_id)
         order = self.sale_order_ids
@@ -111,9 +110,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
         down_payment_lines = SaleOrderline.create(
             self._prepare_down_payment_lines_values(order, invoice_amount=invoice_amount)
         )
-
         invoice = self.env['account.move'].sudo().create(
-            self._prepare_invoice_values(order, down_payment_lines)
+            self._prepare_invoice_values(order, down_payment_lines, nb_days=payment_line.nb_days if payment_line else False)
         ).with_user(self.env.uid)
 
         # Ensure the invoice total is exactly the expected fixed amount.
@@ -154,7 +152,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             render_values={'self': invoice, 'origin': order},
             subtype_xmlid='mail.mt_note',
         )
-        title = _("Down payment invoice {}%").format(pre_percent) if pre_percent else _("Down payment invoice")
+        title = _("Down payment invoice {}%").format(payment_line.percent) if payment_line else _("Down payment invoice")
         order.with_user(poster).message_post(
             body=_("%s has been created",
                    invoice._get_html_link(title=title)),
@@ -251,6 +249,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         return lines_values
 
+    def _prepare_invoice_values(self, order, so_line, nb_days=False):
+        res = super()._prepare_invoice_values(order, so_line)
+        if self.advance_payment_method == 'term' and nb_days:
+            today = fields.Date.today()
+            res['invoice_date'] = today + timedelta(days=nb_days)
+        return res
+
 class SaleOrderInvoicePaymentTermLine(models.TransientModel):
     _name = 'sale.order.invoice.payment.term.line'
     _description = 'Sale order invoice payment term line'
@@ -263,4 +268,5 @@ class SaleOrderInvoicePaymentTermLine(models.TransientModel):
     is_down_payment = fields.Boolean(string='Is Down payment')
     is_new_create = fields.Boolean(string='Is new create')
     desc = fields.Char(string='Description')
+    nb_days = fields.Integer(string='Description')
     wizard_id = fields.Many2one('sale.advance.payment.inv', string='Payment term')

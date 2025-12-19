@@ -9,18 +9,25 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="disable_autofocus">true</attribute>
             </xpath>
+            <xpath expr="//field[@name='advance_payment_method']" position="after">
+                <field name="order_has_payment_term" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='advance_payment_method']" position="attributes">
+                <attribute name="readonly">order_has_payment_term == True</attribute>
+            </xpath>
             <xpath expr="//group[last()]" position="after">
                 <field name="line_ids" invisible="advance_payment_method != 'term'">
-	             		<tree string="Sale order" editable="bottom" create="0">
-	             			<field name="invoice_id" readonly="1"/>
-	             			<field name="desc"/>
-	             			<field name="percent"/>
-	             			<field name="invoice_amount"/>
-	             			<field name="is_created" readonly="1"/>
-	             			<field name="is_down_payment" readonly="1"/>
-	             			<field name="is_new_create" readonly="is_created == True"/>
-	             		</tree>
-	             	</field>
+                    <tree string="Sale order" editable="bottom" create="0">
+                        <field name="invoice_id" readonly="1"/>
+                        <field name="desc"/>
+                        <field name="percent"/>
+                        <field name="nb_days"/>
+                        <field name="invoice_amount"/>
+                        <field name="is_created" readonly="1"/>
+                        <field name="is_down_payment" readonly="1"/>
+                        <field name="is_new_create" readonly="is_created == True"/>
+                    </tree>
+                </field>
             </xpath>
         </field>
     </record>
