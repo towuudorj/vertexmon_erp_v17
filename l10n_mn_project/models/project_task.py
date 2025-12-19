@@ -132,8 +132,8 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': picking.id,
-                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
-                            'location_dest_id':self.project_id.picking_type_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                            'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
                         move = self.env['stock.move'].create(move_vals)
@@ -147,8 +147,8 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': out_picking.id,
-                            'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                            'location_dest_id':customer_loc[0].id,
+                             'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                            'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
                         move = self.env['stock.move'].create(out_move_vals)
@@ -166,8 +166,8 @@ class ProjectTask(models.Model):
                                 'product_uom_qty': line.product_qty,
                                 'product_uom': line.product_id.uom_id.id,
                                 'picking_id': picking.id,
-                                'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                                'location_dest_id':customer_loc[0].id,
+                                 'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                                 'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                             }
         
                             move = self.env['stock.move'].create(out_move_vals)
