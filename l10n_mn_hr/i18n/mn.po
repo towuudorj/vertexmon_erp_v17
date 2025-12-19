@@ -3715,7 +3715,7 @@ msgid "Quarter"
 msgstr "Улирал"
 
 #. module: l10n_mn_hr
-#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_to_location
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_location
 msgid "Location"
 msgstr "Төсөл/Байршил"
 

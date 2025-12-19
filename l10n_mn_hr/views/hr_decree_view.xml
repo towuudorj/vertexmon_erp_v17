@@ -142,43 +142,64 @@
 						<page string="Decree Information" name="decree_info">
 							<group col="2">
 								<field name="decree_template_code" invisible="1"/>
-								<!-- DECR01 сонгосон үед харуулах талбарууд -->
-								<field name="decr_emp_contract" placeholder="Жишээ нь: ТХГ24/41" invisible="decree_template_code not in ['DECR01','DECR02']" required="decree_template_code in ['DECR01','DECR02']"/>
-								<field name="decr_trial_period" invisible="decree_template_code != 'DECR01'" required="decree_template_code == 'DECR01'"/>
-								<field name="decr_startdate" invisible="decree_template_code not in ['DECR01','DECR02','DECR05']" required="decree_template_code in ['DECR01','DECR02','DECR05']"/>
-								<field name="decr_guide_dep_id" invisible="decree_template_code not in ['DECR01','DECR02']" required="decree_template_code in ['DECR01','DECR02']"/>
-								<field name="decr_guide_emp_id" invisible="decree_template_code not in ['DECR01','DECR02','DECR10']" required="decree_template_code in ['DECR01','DECR02','DECR10']"/>
-								<!-- DECR03 сонгосон үед харуулах талбарууд -->
-								<field name="decr_date" invisible="decree_template_code not in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR12']" 
-										required="decree_template_code in ['DECR03','DECR06','DECR08','DECR09','DECR10']"/>
-								<field name="decr_day_off_wage" invisible="decree_template_code not in ['DECR03']" required="decree_template_code in ['DECR03']"/>
-								<!-- DECR04 сонгосон үед харуулах талбарууд -->
-								<field name="decr_day_off" invisible="decree_template_code not in ['DECR04']" required="decree_template_code in ['DECR04']"/>
-								<field name="decr_reason" placeholder="Жишээ нь: эмнэлэгт хэвтсэн" invisible="decree_template_code not in ['DECR04']" required="decree_template_code in ['DECR04']"/>
-								<field name="decr_amount" invisible="decree_template_code not in ['DECR04']" required="decree_template_code in ['DECR04']"/>
-								<field name="decr_is_wage" invisible="decree_template_code not in ['DECR04']" required="decree_template_code in ['DECR04']"/>
-								<!-- DECR05 сонгосон үед харуулах талбарууд -->
-								<field name="decr_enddate" invisible="decree_template_code not in ['DECR05']" required="decree_template_code in ['DECR05']"/>
+								<field name="decr_juram_zuil_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
+								<field name="decr_juram_zaalt_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
+								<field name="decr_emp_contract" placeholder="Жишээ нь: ТХГ24/41" invisible="decree_template_code not in ['DECR01','DECR02','DECR14','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR01','DECR02']"/>
+								<field name="decr_geree_zuil_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
+								<field name="decr_geree_zaalt_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
+								<field name="decr_trial_period" invisible="decree_template_code != 'DECR01'" 
+										required="decree_template_code == 'DECR01'"/>
+								<field name="decr_startdate" invisible="decree_template_code not in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR36']"/>
+								<field name="decr_enddate" invisible="decree_template_code not in ['DECR05','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR05','DECR29','DECR36']"/>
+								<field name="decr_guide_dep_id" invisible="decree_template_code not in ['DECR01','DECR02','DECR14']" 
+										required="decree_template_code in ['DECR01','DECR02','DECR14']"/>
+								<field name="decr_guide_emp_id" invisible="decree_template_code not in ['DECR01','DECR02','DECR10','DECR14']" 
+										required="decree_template_code in ['DECR01','DECR02','DECR10','DECR14']"/>
+								<field name="decr_date" invisible="decree_template_code not in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR12','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR29','DECR36']"/>
+								<field name="decr_lastdate" invisible="decree_template_code not in ['DECR29','DECR36']" 
+										required="decree_template_code in ['DECR29','DECR36']"/>
+								<field name="decr_day_off_wage" invisible="decree_template_code not in ['DECR03','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR03']"/>
+								<field name="decr_day_off" invisible="decree_template_code not in ['DECR04']" 
+										required="decree_template_code in ['DECR04']"/>
+								<field name="decr_reason" placeholder="Жишээ нь: эмнэлэгт хэвтсэн" invisible="decree_template_code not in ['DECR04','DECR13']" 
+										required="decree_template_code in ['DECR04','DECR13']"/>
+								<field name="decr_amount" invisible="decree_template_code not in ['DECR04']" 
+										required="decree_template_code in ['DECR04']"/>
+								<field name="decr_is_wage" invisible="decree_template_code not in ['DECR04']" 
+										required="decree_template_code in ['DECR04']"/>
 								<field name="decr_taks_details" placeholder="Жишээ нь: EMC Rockwell төслийн бараа материалыг хүлээн авч акт гаргуулах " 
 										invisible="decree_template_code not in ['DECR05']" required="decree_template_code in ['DECR05']"/>
-								<field name="decr_to_location" placeholder="Жишээ нь: Эрдэнэт хот" invisible="decree_template_code not in ['DECR05']" required="decree_template_code in ['DECR05']"/>
-								<!-- DECR07 сонгосон үед харуулах талбарууд -->
-								<field name="decr_notes" placeholder="Компаниас ажилтанд дэмжлэг үзүүлэх бодлогын хүрээнд групп компанийн охин компани Тапапэй ББСБ-с олгогдсон зээлээ хугацаанд нь төлөхгүй байгаа 
-																	 доорх ажилтнуудын гарт олгогдох цалингийн 50%-иар суутган хэвийн төлөлттэй болох хүртлэх хугацаагаар суутгасугай." 
+								<field name="decr_to_location" placeholder="Жишээ нь: Эрдэнэт хот" invisible="decree_template_code not in ['DECR05']" 
+										required="decree_template_code in ['DECR05']"/>
+								<field name="decr_notes" 
+										placeholder="Компаниас ажилтанд дэмжлэг үзүүлэх бодлогын хүрээнд групп компанийн охин компани Тапапэй ББСБ-с олгогдсон зээлээ хугацаанд нь 
+										төлөхгүй байгаа доорх ажилтнуудын гарт олгогдох цалингийн 50%-иар суутган хэвийн төлөлттэй болох хүртлэх хугацаагаар суутгасугай." 
 										invisible="decree_template_code not in ['DECR07']" required="decree_template_code in ['DECR07']"/>
-								<field name="decr_image" widget="image" class="oe_avatar" invisible="decree_template_code not in ['DECR07']"/>
-								<field name="decr_employee_id" invisible="decree_template_code not in ['DECR07']" required="decree_template_code in ['DECR07']"/>
-								<field name="decr_partner_id" invisible="decree_template_code not in ['DECR07']" required="decree_template_code in ['DECR07']"/>
-								<!-- DECR08 сонгосон үед харуулах талбарууд -->
-								<field name="decr_quarter" placeholder="Жишээ нь: 2024 оны 3-р улирар" invisible="decree_template_code not in ['DECR08']" required="decree_template_code in ['DECR08']"/>
-								<!-- DECR10 сонгосон үед харуулах талбарууд -->
-								<field name="decr_location" placeholder="Жишээ нь: ОюуТолгой төсөл-д" invisible="decree_template_code not in ['DECR10']"/>
-								<field name="decr_is_wage_hour" invisible="decree_template_code not in ['DECR10']" />
-								<field name="decr_wage_hour" invisible="decr_is_wage_hour == False" />
-								<!-- DECR11 сонгосон үед харуулах талбарууд -->
-								<field name="decr_adv_month" invisible="decree_template_code not in ['DECR11']" required="decree_template_code in ['DECR11']"/>
-								<field name="decr_pay_month" invisible="decree_template_code not in ['DECR11']" required="decree_template_code in ['DECR11']"/>
-								<field name="decr_percentage" invisible="decree_template_code not in ['DECR11']" required="decree_template_code in ['DECR11']"/>
+								<field name="decr_image" widget="image" class="oe_avatar" 
+										invisible="decree_template_code not in ['DECR07']"/>
+								<field name="decr_employee_id" invisible="decree_template_code not in ['DECR07','DECR13','DECR29','DECR36']" 
+										required="decree_template_code in ['DECR07','DECR13']"/>
+								<field name="decr_partner_id" invisible="decree_template_code not in ['DECR07']" 
+										required="decree_template_code in ['DECR07']"/>
+								<field name="decr_quarter" placeholder="Жишээ нь: 2024 оны 3-р улирар" invisible="decree_template_code not in ['DECR08']" 
+										required="decree_template_code in ['DECR08']"/>
+								<field name="decr_location" placeholder="Жишээ нь: ОюуТолгой төсөл" invisible="decree_template_code not in ['DECR10','DECR13']" 
+										required="decree_template_code in ['DECR13']"/>
+								<field name="decr_is_wage_hour" 
+										invisible="decree_template_code not in ['DECR10']" />
+								<field name="decr_wage_hour" 
+										invisible="decr_is_wage_hour == False" />
+								<field name="decr_adv_month" invisible="decree_template_code not in ['DECR11']" 
+										required="decree_template_code in ['DECR11']"/>
+								<field name="decr_pay_month" invisible="decree_template_code not in ['DECR11']" 
+										required="decree_template_code in ['DECR11']"/>
+								<field name="decr_percentage" invisible="decree_template_code not in ['DECR11']" 
+										required="decree_template_code in ['DECR11']"/>
 							</group>
 						</page>
 

@@ -581,7 +581,7 @@
                                     <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
                                 </t>
 
-                                <!-- ==== DECR12 Ажилтны цалингаас өр төлбөр суутгах тухай ==== --> 
+                                <!-- ==== DECR12 Үндсэн цалинд өөрчлөлт оруулах тухай ==== --> 
                                 <t t-elif="o.decree_template.code == 'DECR12'">
                                     <p style="line-height: 1.1;">
                                         <span style="font-family: monospace; white-space: pre;">┌                                        ┐</span><br/>
@@ -606,7 +606,7 @@
                                             <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөс эхлэн өөрчлөн тогтоосугай.
                                         </li>
                                         <li>
-                                        
+
                                             Ажилтны нэг сарын үндсэн цалинг
                                             <t t-esc="'{:,.2f}'.format(o.wage) if o.wage else '......................'"/>(
                                             <t t-esc="o.wage_amount_to_text or '..................................................'"/>),
@@ -629,8 +629,229 @@
                                     <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
                                 </t>
 
+                                <!-- ==== DECR13 Сахилгын шийтгэл ноогдуулах тухай ==== --> 
+                                <t t-elif="o.decree_template.code == 'DECR13'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                               ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Сахилгын шийтгэл </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   ногдуулах тухай   </span><br/>
+                                    </p>
+                                    <p style="text-align: justify; text-indent: 60px; margin-top: 80px;">
+                                        “Вертексмон” ХХК-ийн Хөдөлмөрийн дотоод журам, Ажилтантай байгуулсан хөдөлмөрийн гэрээ, 
+                                        Монгол Улсын Хөдөлмөрийн тухай хуулийн 123 дугаар зүйлийн 123.2.1 дахь заалтыг үндэслэн ТУШААХ НЬ:
+                                    </p>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт эхлэл -->
+                                    <ol style="margin: 0; padding-left: 25px; text-align: justify; line-height: 1.8;">
+                                        <li>
+                                            <t t-esc="o.department_id.get_dep_name_mn() or '......................'"/>-ны
+                                            <t t-esc="o.position_id.get_job_name_mn() or '......................'"/> албан тушаалтай
+                                            <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                            <t t-esc="(o.employee_id.name.rsplit('.', 1)[0] if o.employee_id and o.employee_id.name else '......................')"/>
+                                            (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>) нь
+                                            <t t-esc="o.decr_location or '......................'"/>-н 
+                                            <t t-esc="o.decr_reason or '......................'"/> 
+                                            үйлдэлд ганцаарчилсан хэлбэрээр хаалттай сануулах сахилгын шийтгэл ногдуулсугай.
+                                        </li>
+                                        <li>
+                                            Ажилтныг дахин алдааг давтахгүй байх тал дээр анхааран ажиллахыг, давтан гаргасан тохиолдолд 
+                                            ажлаас чөлөөлөх хүртэл сахилгын шийтгэл ногдуулахыг сануулан ажиллахыг 
+                                            <t t-esc="o.decr_employee_id.get_department_mn() or '......................'"/>-ны 
+                                            <t t-esc="o.decr_employee_id.get_job_mn() or '......................'"/>
+                                            (<t t-esc="o.decr_emp_short_name or '......................'"/>)-д үүрэг болгосугай.
+                                        </li>
+                                        <li>
+                                            Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, 
+                                            Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал 
+                                            (<t t-esc="o.chief_hr_short_name or '.....................'"/>)-д үүрэг болгосугай.
+                                        </li>
+                                    </ol>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
+                                </t>
+
+                                <!-- ==== DECR14 Ажилд томилох тухай ==== --> 
+                                <t t-if="o.decree_template.code == 'DECR14'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                           ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   Ажилд томилох тухай</span><br/>
+                                    </p>
+
+                                    <p style="text-align: justify; text-indent: 60px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 47 дугаар зүйл, ажилтантай байгуулсан
+                                        <t t-esc="o.decr_emp_contract"/> хөдөлмөрийн гэрээг тус тус үндэслэн ТУШААХ НЬ:
+                                    </p>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт эхлэл -->
+	                                <ol style="margin: 0; padding-left: 25px; text-align: justify; line-height: 1.8;">
+                                        <li>
+                                            <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                            <t t-esc="o.employee_id.name.rsplit('.', 1)[0] or '......................'"/> 
+                                            (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-г
+                                            <t t-set="date" t-value="o.decr_startdate and o.decr_startdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөс
+                                            <t t-esc="o.department_id.get_dep_name_mn() or '......................'"/>-ны
+                                            <t t-esc="o.position_id.get_job_name_mn() or '......................'"/> албан тушаалд томилон ажиллуулсугай.
+                                        </li>
+                                        <li>
+                                            Ажилтныг өдөр тутмын үйл ажиллагаанд чиглүүлж, удирдлагаар хангаж ажиллахыг
+                                            <t t-esc="o.decr_guide_dep_id.get_dep_name_mn() or '...........................................................................'"/>-ны
+                                            (<t t-esc="o.guide_emp_short_name or '..................................................'"/>)-т үүрэг болгосугай.
+                                        </li>
+                                        <li>
+                                            Ажилтны нэг сарын цалинг 
+                                            <t t-esc="'{:,.2f}'.format(o.wage) if o.wage else '......................'"/> ( 
+                                            <t t-esc="o.wage_amount_to_text or '..................................................'"/>) төгрөг,
+                                            хоол унааны нэмэгдэл
+                                            <t t-esc="'{:,.2f}'.format(o.food_and_vehicle_add) if o.food_and_vehicle_add else '..............'"/> ( 
+                                            <t t-esc="o.food_and_vehicle_add_amount_to_text or '..................................................'"/>) 
+                                            төгрөгөөр тооцож олгохыг Санхүү, төлөвлөлтийн алба Санхүү эрхэлсэн захирал (
+                                            <t t-esc="o.chief_acc_short_name or '.....................'"/>)-д зөвшөөрсүгэй.
+                                        </li>
+                                        <li>
+                                            Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал (
+                                            <t t-esc="o.chief_hr_short_name or '.....................'"/>)-д даалгасугай.
+                                        </li>
+                                    </ol>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
+                                </t>
+
+                                <!-- ==== DECR29 Талууд харилцан тохиролцсон -ажил хүлээлцэх комиссгүй ==== --> 
+                                <t t-if="o.decree_template.code == 'DECR29'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                              ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">     Хөдөлмөрийн гэрээг   </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   дуусгавар болгох тухай   </span><br/>
+                                    </p>
+
+                                    <p style="text-align: justify; text-indent: 60px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 78 дугаар зүйлийн 78.1.1 дэх заалт, компанийн “Хөдөлмөрийн дотоод журам”-ын
+                                        <t t-esc="o.decr_juram_zuil_number or '......................'"/> дугаар зүйлийн
+                                        <t t-esc="o.decr_juram_zaalt_number or '......................'"/> дэх заалт,
+                                        <t t-esc="o.decr_emp_contract or '......................'"/> тоот хөдөлмөрийн гэрээний
+                                        <t t-esc="o.decr_geree_zuil_number or '......................'"/> дугаар зүйлийн
+                                        <t t-esc="o.decr_geree_zaalt_number or '......................'"/> 
+                                        дэх заалт, ажилтантай хийсэн уулзалтын тэмдэглэлийг тус тус үндэслэн ТУШААХ нь:
+                                    </p>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт эхлэл -->
+	                                <ol style="margin: 0; padding-left: 25px; text-align: justify; line-height: 1.8;">
+                                        <li>
+                                            Ажилтан, ажил олгогч талуудын санаачилгаар харилцан тохиролцсоны дагуу
+                                            <t t-esc="o.department_id.get_dep_name_mn() or '......................'"/>-ны
+                                            <t t-esc="o.position_id.get_job_name_mn() or '......................'"/> албан тушаалтай
+                                            <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                            <t t-esc="o.employee_id.name.rsplit('.', 1)[0] or '......................'"/> 
+                                            (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-г
+                                            <t t-set="date" t-value="o.decr_date and o.decr_date.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны 
+                                            өдрөөр үүрэгт ажлаас чөлөөлж, түүнтэй байгуулсан 
+                                            <t t-esc="o.decr_emp_contract or '......................'"/> тоот хөдөлмөрийн гэрээг дуусгавар болгосугай.
+                                        </li>
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажлыг 
+                                            <t t-set="date" t-value="o.decr_lastdate and o.decr_lastdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийн дотор актаар хүлээж авахыг  
+                                            (<t t-esc="o.decr_emp_short_name or '......................'"/>)-д үүрэг болгосугай.
+                                        </li>
+
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажилласан  
+                                            <t t-set="date" t-value="o.decr_startdate and o.decr_startdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөс
+                                            <t t-set="date" t-value="o.decr_enddate and o.decr_enddate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийг хүртэл хугацаанд ногдох ээлжийн амралтын
+                                            <t t-esc="'{:,.2f}'.format(o.decr_day_off_wage) if o.decr_day_off_wage else '......................'"/> 
+                                            хоногийн цалин, бусад цалингийн тооцоог бодож олгохыг Санхүү, төлөвлөлтийн алба Санхүү эрхэлсэн захирал 
+                                            (<t t-esc="o.chief_acc_short_name or '.....................'"/>)-д ДААЛГАСУГАЙ.
+                                        </li>
+                                        <li>
+                                            Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал (
+                                            <t t-esc="o.chief_hr_short_name or '.....................'"/>)-д даалгасугай.
+                                        </li>
+                                    </ol>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
+                                </t>
+
+                                <!-- ==== DECR36 Ажилтны хүсэлтээр - ажил хүлээлцэх ==== --> 
+                                <t t-if="o.decree_template.code == 'DECR36'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                              ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">     Хөдөлмөрийн гэрээг   </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   дуусгавар болгох тухай   </span><br/>
+                                    </p>
+
+                                    <p style="text-align: justify; text-indent: 60px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 79 дүгээр зүйлийн 79.1 дэх заалт, компанийн “Хөдөлмөрийн дотоод журам”-ын
+                                        <t t-esc="o.decr_juram_zuil_number or '......................'"/> дугаар зүйлийн
+                                        <t t-esc="o.decr_juram_zaalt_number or '......................'"/> дэх заалт,
+                                        <t t-esc="o.decr_emp_contract or '......................'"/> тоот хөдөлмөрийн гэрээний
+                                        <t t-esc="o.decr_geree_zuil_number or '......................'"/> дугаар зүйлийн
+                                        <t t-esc="o.decr_geree_zaalt_number or '......................'"/> 
+                                        дэх заалт, ажилтны өргөдөл хүсэлтийг тус тус  үндэслэн ТУШААХ нь:
+                                    </p>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт эхлэл -->
+	                                <ol style="margin: 0; padding-left: 25px; text-align: justify; line-height: 1.8;">
+                                        <li>
+                                            <t t-esc="o.department_id.get_dep_name_mn() or '......................'"/>-ны
+                                            <t t-esc="o.position_id.get_job_name_mn() or '......................'"/> албан тушаалтай
+                                            <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                            <t t-esc="o.employee_id.name.rsplit('.', 1)[0] or '......................'"/> 
+                                            (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>)-н гаргасан өргөдөл хүсэлтийн дагуу
+                                            <t t-set="date" t-value="o.decr_date and o.decr_date.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөр тасалбар болгон үүрэгт ажлаас нь чөлөөлж, түүнтэй байгуулсан
+                                            <t t-esc="o.decr_emp_contract or '......................'"/> тоот хөдөлмөрийн гэрээг цуцалсугай.
+                                        </li>
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажлыг 
+                                            <t t-set="date" t-value="o.decr_lastdate and o.decr_lastdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийн дотор актаар хүлээж авахыг  
+                                            (<t t-esc="o.decr_emp_short_name or '......................'"/>)-д үүрэг болгосугай.
+                                        </li>
+
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажилласан  
+                                            <t t-set="date" t-value="o.decr_startdate and o.decr_startdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөс
+                                            <t t-set="date" t-value="o.decr_enddate and o.decr_enddate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийг хүртэл хугацаанд ногдох ээлжийн амралтын
+                                            <t t-esc="'{:,.2f}'.format(o.decr_day_off_wage) if o.decr_day_off_wage else '......................'"/> 
+                                            хоногийн цалин, бусад цалингийн тооцоог бодож олгохыг Санхүү, төлөвлөлтийн алба Санхүү эрхэлсэн захирал 
+                                            (<t t-esc="o.chief_acc_short_name or '.....................'"/>)-т зөвшөөрсүгэй.
+                                        </li>
+                                        <li>
+                                            Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал (
+                                            <t t-esc="o.chief_hr_short_name or '.....................'"/>)-д даалгасугай.
+                                        </li>
+                                    </ol>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
+                                </t>
+
                                 <t t-else="o.decree_template.code == ''">
-                                    Тушаалын загвар сонгогдоогүй байна.
+                                    Тушаалын загвар хоосон байна.
                                 </t>
                             </p>
 
