@@ -144,25 +144,25 @@
 								<field name="decree_template_code" invisible="1"/>
 								<field name="decr_juram_zuil_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
 								<field name="decr_juram_zaalt_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
-								<field name="decr_emp_contract" placeholder="Жишээ нь: ТХГ24/41" invisible="decree_template_code not in ['DECR01','DECR02','DECR14','DECR29','DECR36']" 
+								<field name="decr_emp_contract" placeholder="Жишээ нь: ТХГ24/41" invisible="decree_template_code not in ['DECR01','DECR02','DECR14','DECR29','DECR35','DECR36']" 
 										required="decree_template_code in ['DECR01','DECR02']"/>
 								<field name="decr_geree_zuil_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
 								<field name="decr_geree_zaalt_number" invisible="decree_template_code not in ['DECR29','DECR36']"/>
 								<field name="decr_trial_period" invisible="decree_template_code != 'DECR01'" 
 										required="decree_template_code == 'DECR01'"/>
-								<field name="decr_startdate" invisible="decree_template_code not in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR36']" 
-										required="decree_template_code in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR36']"/>
-								<field name="decr_enddate" invisible="decree_template_code not in ['DECR05','DECR29','DECR36']" 
-										required="decree_template_code in ['DECR05','DECR29','DECR36']"/>
+								<field name="decr_startdate" invisible="decree_template_code not in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR35','DECR36']" 
+										required="decree_template_code in ['DECR01','DECR02','DECR05','DECR14','DECR29','DECR35','DECR36']"/>
+								<field name="decr_enddate" invisible="decree_template_code not in ['DECR05','DECR29','DECR35','DECR36']" 
+										required="decree_template_code in ['DECR05','DECR29','DECR35','DECR36']"/>
 								<field name="decr_guide_dep_id" invisible="decree_template_code not in ['DECR01','DECR02','DECR14']" 
 										required="decree_template_code in ['DECR01','DECR02','DECR14']"/>
 								<field name="decr_guide_emp_id" invisible="decree_template_code not in ['DECR01','DECR02','DECR10','DECR14']" 
 										required="decree_template_code in ['DECR01','DECR02','DECR10','DECR14']"/>
-								<field name="decr_date" invisible="decree_template_code not in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR12','DECR29','DECR36']" 
-										required="decree_template_code in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR29','DECR36']"/>
-								<field name="decr_lastdate" invisible="decree_template_code not in ['DECR29','DECR36']" 
-										required="decree_template_code in ['DECR29','DECR36']"/>
-								<field name="decr_day_off_wage" invisible="decree_template_code not in ['DECR03','DECR29','DECR36']" 
+								<field name="decr_date" invisible="decree_template_code not in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR12','DECR29','DECR35','DECR36']" 
+										required="decree_template_code in ['DECR03','DECR06','DECR08','DECR09','DECR10','DECR29','DECR35','DECR36']"/>
+								<field name="decr_lastdate" invisible="decree_template_code not in ['DECR29','DECR35','DECR36']" 
+										required="decree_template_code in ['DECR29','DECR35','DECR36']"/>
+								<field name="decr_day_off_wage" invisible="decree_template_code not in ['DECR03','DECR29','DECR35','DECR36']" 
 										required="decree_template_code in ['DECR03']"/>
 								<field name="decr_day_off" invisible="decree_template_code not in ['DECR04']" 
 										required="decree_template_code in ['DECR04']"/>
@@ -182,7 +182,7 @@
 										invisible="decree_template_code not in ['DECR07']" required="decree_template_code in ['DECR07']"/>
 								<field name="decr_image" widget="image" class="oe_avatar" 
 										invisible="decree_template_code not in ['DECR07']"/>
-								<field name="decr_employee_id" invisible="decree_template_code not in ['DECR07','DECR13','DECR29','DECR36']" 
+								<field name="decr_employee_id" invisible="decree_template_code not in ['DECR07','DECR13','DECR29','DECR35','DECR36']" 
 										required="decree_template_code in ['DECR07','DECR13']"/>
 								<field name="decr_partner_id" invisible="decree_template_code not in ['DECR07']" 
 										required="decree_template_code in ['DECR07']"/>

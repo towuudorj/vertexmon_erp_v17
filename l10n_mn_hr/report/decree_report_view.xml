@@ -669,7 +669,7 @@
                                 </t>
 
                                 <!-- ==== DECR14 Ажилд томилох тухай ==== --> 
-                                <t t-if="o.decree_template.code == 'DECR14'">
+                                <t t-elif="o.decree_template.code == 'DECR14'">
                                     <p style="line-height: 1.1;">
                                         <span style="font-family: monospace; white-space: pre;">┌                                           ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">   Ажилд томилох тухай</span><br/>
@@ -717,7 +717,7 @@
                                 </t>
 
                                 <!-- ==== DECR29 Талууд харилцан тохиролцсон -ажил хүлээлцэх комиссгүй ==== --> 
-                                <t t-if="o.decree_template.code == 'DECR29'">
+                                <t t-elif="o.decree_template.code == 'DECR29'">
                                     <p style="line-height: 1.1;">
                                         <span style="font-family: monospace; white-space: pre;">┌                                              ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">     Хөдөлмөрийн гэрээг   </span><br/>
@@ -784,8 +784,68 @@
                                     <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
                                 </t>
 
+                                <!-- ==== DECR35 Өөр ажил албан тушаалд томилогдох, сонгогдох ==== --> 
+                                <t t-elif="o.decree_template.code == 'DECR35'">
+                                    <p style="line-height: 1.1;">
+                                        <span style="font-family: monospace; white-space: pre;">┌                                              ┐</span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">     Хөдөлмөрийн гэрээг   </span><br/>
+                                        <span style="font-family: monospace; white-space: pre;">   дуусгавар болгох тухай   </span><br/>
+                                    </p>
+
+                                    <p style="text-align: justify; text-indent: 60px; margin-top: 80px;">
+                                        Монгол улсын Хөдөлмөрийн тухай хуулийн 78 дугаар зүйлийн 78.1.8 дахь заалтыг үндэслэн ТУШААХ нь:
+                                    </p>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт эхлэл -->
+	                                <ol style="margin: 0; padding-left: 25px; text-align: justify; line-height: 1.8;">
+                                        <li>
+                                            <t t-esc="o.department_id.get_dep_name_mn() or '......................'"/>-ны
+                                            <t t-esc="o.position_id.get_job_name_mn() or '......................'"/> албан тушаалтай
+                                            <t t-esc="o.employee_id.last_name or '......................'"/> овогтой
+                                            <t t-esc="o.employee_id.name.rsplit('.', 1)[0] or '......................'"/> 
+                                            (РД: <t t-esc="o.employee_id.ssnid or '......................'"/>) нь өөр албан тушаалд томилогдсон тул
+                                            <t t-set="date" t-value="o.decr_date and o.decr_date.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөр тасалбар болгон үүрэгт ажлаас чөлөөлж, түүнтэй байгуулсан
+                                            <t t-esc="o.decr_emp_contract or '......................'"/> тоот хөдөлмөрийн гэрээг дуусгавар болгосугай.
+                                        </li>
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажлыг 
+                                            <t t-set="date" t-value="o.decr_lastdate and o.decr_lastdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийн дотор актаар хүлээж авахыг  
+                                            (<t t-esc="o.decr_emp_short_name or '......................'"/>)-д үүрэг болгосугай.
+                                        </li>
+
+                                        <li>
+                                            <t t-esc="o.emp_short_name or '......................'"/>-н ажилласан  
+                                            <t t-set="date" t-value="o.decr_startdate and o.decr_startdate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрөөс
+                                            <t t-set="date" t-value="o.decr_enddate and o.decr_enddate.strftime('%Y-%m-%d')"/>
+                                            <t t-set="year"  t-value="date[:4]"/>
+                                            <t t-set="month" t-value="date[5:7]"/>
+                                            <t t-set="day"   t-value="date[8:10]"/>
+                                            <t t-esc="year"/> оны <t t-esc="month"/>  сарын <t t-esc="day"/>-ны өдрийг хүртэл хугацаанд ногдох ээлжийн амралтын
+                                            <t t-esc="'{:,.2f}'.format(o.decr_day_off_wage) if o.decr_day_off_wage else '......................'"/> 
+                                            хоногийн цалин, бусад цалингийн тооцоог бодож олгохыг Санхүү, төлөвлөлтийн алба Санхүү эрхэлсэн захирал 
+                                            (<t t-esc="o.chief_acc_short_name or '.....................'"/>)-т зөвшөөрсүгэй.
+                                        </li>
+                                        <li>
+                                            Энэхүү тушаалын хэрэгжилтэд хяналт тавьж ажиллахыг Захиргаа, Хүний нөөцийн алба Үйл ажиллагаа хариуцсан захирал (
+                                            <t t-esc="o.chief_hr_short_name or '.....................'"/>)-д даалгасугай.
+                                        </li>
+                                    </ol>
+                                    <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
+                                </t>
+
                                 <!-- ==== DECR36 Ажилтны хүсэлтээр - ажил хүлээлцэх ==== --> 
-                                <t t-if="o.decree_template.code == 'DECR36'">
+                                <t t-elif="o.decree_template.code == 'DECR36'">
                                     <p style="line-height: 1.1;">
                                         <span style="font-family: monospace; white-space: pre;">┌                                              ┐</span><br/>
                                         <span style="font-family: monospace; white-space: pre;">     Хөдөлмөрийн гэрээг   </span><br/>
@@ -850,7 +910,7 @@
                                     <!-- 🔥 Дугаарлагдсан жагсаалт төгсгөл -->
                                 </t>
 
-                                <t t-else="o.decree_template.code == ''">
+                                <t t-elif="o.decree_template.code == ''">
                                     Тушаалын загвар хоосон байна.
                                 </t>
                             </p>
