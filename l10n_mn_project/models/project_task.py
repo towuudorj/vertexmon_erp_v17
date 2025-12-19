@@ -96,7 +96,7 @@ class ProjectTask(models.Model):
                     'origin': self.name,
                     'task_id': self.id,
                     'analytic_id':self.project_id.analytic_account_id.id,
-                    'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                    'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                 }
                 out_val ={
                     'partner_id': self.partner_id.id,
@@ -105,7 +105,7 @@ class ProjectTask(models.Model):
                     'origin': self.name,
                     'task_id': self.id,
                     'analytic_id':self.project_id.analytic_account_id.id,
-                    'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
+                    'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                 }
                 picking = self.env['stock.picking'].create(pick_val)
                 out_picking = self.env['stock.picking'].create(out_val)
@@ -117,7 +117,7 @@ class ProjectTask(models.Model):
                             'origin': self.name,
                             'task_id': self.id,
                             'analytic_id':self.project_id.analytic_account_id.id,
-                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                         }
                 picking = self.env['stock.picking'].create(pick_val)
                 
@@ -132,7 +132,7 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': picking.id,
-                            'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                             'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
@@ -147,7 +147,7 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': out_picking.id,
-                             'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                             'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                             'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
@@ -166,7 +166,7 @@ class ProjectTask(models.Model):
                                 'product_uom_qty': line.product_qty,
                                 'product_uom': line.product_id.uom_id.id,
                                 'picking_id': picking.id,
-                                 'location_id': self.project_id.picking_type_id.default_location_scr_id.id,
+                                 'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                                  'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                             }
         
