@@ -23,6 +23,17 @@ class ProjectProductsLine(models.Model):
                     qty +=pur.product_qty   
             line.qty_available = qty
     
+    @api.depends('project_id')
+    def _compute_qty_delivered(self):
+        quant_obj = self.env['stock.quant']
+        picking_obj = self.env['stock.picking']
+        for line in self:
+            qty = 0
+            for pick in line.project_id.picking_ids:
+                for pur in pick.move_ids_without_package:
+                    if pur.product_id.id == line.product_id.id:
+                        qty +=pur.quantity   
+            line.qty_delivered = qty
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
     
@@ -39,7 +50,8 @@ class ProjectProductsLine(models.Model):
     price_unit = fields.Float(string='Price', required=True, digits='Product Price')
     cost_price = fields.Float(string='Cost Price', required=True, digits='Product Price')
     qty_available = fields.Float(string='Available QTY', compute='_compute_qty_available', required=True, digits='Product', readonly=True, default=0)
-    qty_delivered = fields.Float(string='Delivered',  required=True, digits='Product', readonly=True, default=0)
+    qty_delivered = fields.Float(string='Delivered',  required=True, digits='Product', readonly=True, 
+                                        default=0, compute="_compute_qty_delivered")
     price_total = fields.Float(string='Total Price', readonly=True)
     cost_total = fields.Float(string='Total Cost', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True, default=lambda self: self.env.company)

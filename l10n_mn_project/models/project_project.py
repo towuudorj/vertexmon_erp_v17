@@ -65,7 +65,35 @@ class ProjectProject(models.Model):
     crm_count = fields.Integer(string='Crm count', compute="_get_crm_count")
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
+    picking_count = fields.Integer(string='Picking count', compute="action_picking_count")
     
+    
+    def action_picking_count(self):
+        for line in self:
+            count = 0
+            if line.picking_ids:
+                for li in line.picking_ids:
+                    count +=1
+            line.picking_count = count
+    
+    
+    def action_view_picking(self, picking=False):
+        if not picking:
+            picking = self.mapped('picking_ids')
+        action = self.env['ir.actions.actions']._for_xml_id('stock.action_picking_tree_all')
+        if len(picking) > 1:
+            action['domain'] = [('id', 'in', picking.ids)]
+        elif len(picking) == 1:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = picking.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+
+        return action
     
     def action_view_crm_lead(self, purchases=False):
         if not purchases:

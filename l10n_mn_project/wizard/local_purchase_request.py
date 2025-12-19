@@ -26,9 +26,16 @@ class LocalPurchaseRequest(models.TransientModel):
         line_id = []
         for li in line_ids.products_line:
             if li.purchase_type == 'local':
+                if li.product_qty > 0.0 and li.qty_available >0.0:
+                    if li.product_qty > li.qty_available:
+                        qty = li.product_qty - li.qty_available
+                    else:
+                        qty = 0
+                else:
+                    qty = li.product_qty
                 line_id.append((0,0,{
                             'product_id':li.product_id.id,
-                            'qty':li.product_qty,
+                            'qty':qty,
                             'uom_id':li.product_uom.id,
                             'line_id':li.id
                             }))

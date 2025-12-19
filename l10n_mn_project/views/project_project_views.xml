@@ -136,6 +136,13 @@
                     icon="fa-shopping-cart">
                     <field string="CRM /гадаад захиалга/" name="crm_count" widget="statinfo" />
                 </button>
+                <button
+                    class="oe_stat_button"
+                    name="action_view_picking"
+                    type="object"
+                    icon="fa-shopping-cart">
+                    <field string="Зарлагууд" name="picking_count" widget="statinfo" />
+                </button>
             </div>
         </field>
     </record>

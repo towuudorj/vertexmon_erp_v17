@@ -75,12 +75,12 @@ class ProjectTask(models.Model):
 
     def action_task_approve(self):
         picking_ids = self.create_picking()
+        self.project_id.picking_ids = [(4, picking_ids.id)]
         for line in self:
             for li in line.project_id.products_line:
                 for lines in line.products_line:
                     if li.product_id == lines.product_id.id:
                         li.picking_ids = [(4, picking_ids.id)]
-                        lines.picking_id = [(4, picking_ids.id)]
         self.write({'state': '03_approved'})
         return True
 
