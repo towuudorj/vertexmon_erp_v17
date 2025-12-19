@@ -16,6 +16,7 @@ class ProjectProductsLine(models.Model):
         quant_obj = self.env['stock.quant']
         purchase_obj = self.env['purchase.order']
         for line in self:
+            qty = 0
             quant = quant_obj.search([('location_id','=',line.project_id.warehouse_id.lot_stock_id.id),('product_id','=',line.product_id.id),('inventory_quantity_auto_apply','>',0.0)])
             if quant:
                 for qt in quant:
