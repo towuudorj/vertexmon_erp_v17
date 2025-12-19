@@ -55,7 +55,8 @@ class LocalPurchaseRequest(models.TransientModel):
                                 'analytic_id':line.project_id.analytic_account_id.id,
                                 'picking_type_id':line.picking_type_id.id,
                                 'date_order':line.date,
-                                'purchase_type':'local'
+                                'purchase_type':'local',
+                                'partner_type':line.supplier_id.partner_type.id
                                 })
             line.project_id.purchase_ids = [(4, purchase_id.id)]
             for lines in line.line_ids:
