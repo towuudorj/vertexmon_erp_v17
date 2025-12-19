@@ -13,6 +13,19 @@
             </xpath>
         </field>
     </record>
+    
+    
+    <record id="view_project_tree_mn" model="ir.ui.view">
+        <field name="name">project.project.view.tree.inherit.mn</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="replace">
+                <field name="state"/>
+            </xpath>
+        </field>
+    </record>
+    
     <!-- Inserting Sequence the Kanban view -->
     <record id="view_project_kanban" model="ir.ui.view">
         <field name="name">project.project.view.kanban.inherit.mn</field>
@@ -35,6 +48,19 @@
                 <!-- <button class="btn-secondary" name="action_create_purchase_requisition"
                         type="object"
                         icon="fa-external-link" string="Purchase Requisition"/> -->
+                
+                <button class="btn-secondary" name="action_confirm"
+                        type="object"
+                        string="Батлах" invisible="state != 'planned'"/>
+                        
+                <button class="btn-secondary" name="action_done"
+                        type="object"
+                        string="Дууссан" invisible="state != 'process'"/>
+                
+                <button class="btn-secondary" name="action_process"
+                        type="object"
+                        string="Явагдаж буй" invisible="state != 'confirm'"/>
+                
                 <button class="btn-secondary" name="action_create_tasks"
                         type="object"
                         icon="fa-tasks" string="Create Tasks"/>
@@ -51,6 +77,10 @@
                         type="object"
                         icon="fa-tasks" string="Create Packege Tasks"/> -->
             </header>
+            
+            <xpath expr="//field[@name='stage_id']" position="replace">
+                <field name="state" widget="statusbar"/>
+            </xpath>  
 
             <xpath expr="//field[@name='is_favorite']" position="after">
                 <field name="sequence_name"/>

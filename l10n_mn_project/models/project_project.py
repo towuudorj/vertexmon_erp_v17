@@ -71,6 +71,19 @@ class ProjectProject(models.Model):
                               ('process','Process'),
                               ('done','Done')],string='State', default='planned')
     
+    def action_confirm(self):
+        for line in self:
+            line.state = 'confirm'
+            
+    
+    def action_process(self):
+        for line in self:
+            line.state = 'process'
+        
+    def action_done(self):
+        for line in self:
+            line.state = 'done'
+    
     
     def action_picking_count(self):
         for line in self:

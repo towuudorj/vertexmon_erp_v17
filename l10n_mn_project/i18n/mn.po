@@ -234,6 +234,29 @@ msgstr "Тайлбар"
 msgid "Display Name"
 msgstr "Дэлгэцийн нэр"
 
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__planned
+msgid "Planned"
+msgstr "Товлогдсон"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__confirm
+msgid "Confirm"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__process
+msgid "Process"
+msgstr "Явагдаж буй"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__done
+msgid "Done"
+msgstr "Дууссан"
+
 #. module: l10n_mn_project
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_products_line__purchase_type__foreign
 msgid "Foreign"
