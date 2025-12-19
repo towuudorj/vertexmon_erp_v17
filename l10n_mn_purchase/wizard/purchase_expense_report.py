@@ -294,6 +294,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 declaration_cost = 0.0
                 clearance_cost = 0.0
                 total_cost = 0.0
+                freight_partner = ''
                 for exp_pro in expense_product_ids:
                     self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
                                     stock_valuation_adjustment_lines as ad
@@ -307,8 +308,9 @@ class PurchaseExpenseReport(models.TransientModel):
                     stock_line_obj = self.env['stock.landed.cost.lines']
                     for exp in expense_data_ids:
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
-                        if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
+                        if exp_pro.name == u'Тээврийн зардал' or exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
+                            freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
                             custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
@@ -327,7 +329,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Q%s"%rowx,  clearance_cost, text_right)
                 sheet.write("R%s"%rowx,  total_cost, text_right)
                 sheet.write("S%s"%rowx,  total_cost+total_amount, text_right)
-                sheet.write("T%s"%rowx,  u'%s'%purchase_data.freight_partner_id.name, text_right)
+                sheet.write("T%s"%rowx,  u'%s'%freight_partner, text_right)
 
                 
                 rowx +=1

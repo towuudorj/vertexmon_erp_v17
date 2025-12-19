@@ -212,9 +212,17 @@ class ProjectProject(models.Model):
         line_ids = []
         view = self.env.ref('l10n_mn_project.view_project_pack_tasks')
         for line in self.products_line:
+            qty = 0 
+            if line.product_qty > 0.0 and line.qty_delivered:
+                if line.product_qty > line.qty_delivered:
+                    qty = line.product_qty - line.qty_delivered
+                else:
+                    qty = 0
+            else:
+                qty = line.product_qty
             pline_vals ={
                 'product_id': line.product_id.id,
-                'quantity': line.product_qty,
+                'quantity': qty,
                 'pline_id': line.id,
                 'project_id': self.id
             }

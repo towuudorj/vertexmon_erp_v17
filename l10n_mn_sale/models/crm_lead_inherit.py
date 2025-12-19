@@ -340,7 +340,7 @@ class CrmLead(models.Model):
                 count = 0
                 quote_count = 0
                 for lines in line.lead_line_ids:
-                    if lines.sale_price == 0.0:
+                    if lines.sale_price == 0.0 and line.crm_type == 'crm':
                          raise UserError(_('Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))
                     if lines.cost_price == 0.0 and lines.request_type != 'send_quotation':
                         raise UserError(_('Барааны судалсан үнэ бүртгээгүй байгаа тул бүртгэнэ үү!'))

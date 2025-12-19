@@ -16,11 +16,12 @@ class ProjectProductsLine(models.Model):
         quant_obj = self.env['stock.quant']
         purchase_obj = self.env['purchase.order']
         for line in self:
-            qty = 0
-            purchase_id = purchase_obj.search([('analytic_id','=',line.project_id.analytic_account_id.id),('state','!=','cancel')])
-            for pur in purchase_id.order_line:
-                if pur.product_id.id == line.product_id.id:
-                    qty +=pur.product_qty   
+            quant = quant_obj.search([('location_id','=',line.project_id.warehouse_id.lot_stock_id.id),('product_id','=',line.product_id.id),('inventory_quantity_auto_apply','>',0.0)])
+            if quant:
+                for qt in quant:
+                    qty +=qt.inventory_quantity_auto_apply
+            else:
+                qty = 0
             line.qty_available = qty
     
     @api.depends('project_id')
