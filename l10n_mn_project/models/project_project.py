@@ -66,6 +66,10 @@ class ProjectProject(models.Model):
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
     picking_count = fields.Integer(string='Picking count', compute="action_picking_count")
+    state = fields.Selection([('planned','Planned'),
+                              ('confirm','Confirm'),
+                              ('process','Process'),
+                              ('done','Done')],string='State', default='planned')
     
     
     def action_picking_count(self):

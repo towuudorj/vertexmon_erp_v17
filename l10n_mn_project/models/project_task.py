@@ -95,6 +95,7 @@ class ProjectTask(models.Model):
                     'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
+                    'analytic_id':self.project_id.analytic_account_id.id,
                     'location_id': self.project_id.warehouse_id.lot_stock_id.id,
                 }
                 out_val ={
@@ -103,6 +104,7 @@ class ProjectTask(models.Model):
                     'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
+                    'analytic_id':self.project_id.analytic_account_id.id,
                     'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
                 }
                 picking = self.env['stock.picking'].create(pick_val)
@@ -114,6 +116,7 @@ class ProjectTask(models.Model):
                             'scheduled_date':self.date_deadline,
                             'origin': self.name,
                             'task_id': self.id,
+                            'analytic_id':self.project_id.analytic_account_id.id,
                             'location_id': self.project_id.warehouse_id.lot_stock_id.id,
                         }
                 picking = self.env['stock.picking'].create(pick_val)

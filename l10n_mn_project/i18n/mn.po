@@ -51,6 +51,13 @@ msgstr "Огноо"
 msgid "Supplier"
 msgstr "Нийлүүлэгч"
 
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__state
+msgid "State"
+msgstr "Төлөв"
+
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__project_id
 #: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__project_id
