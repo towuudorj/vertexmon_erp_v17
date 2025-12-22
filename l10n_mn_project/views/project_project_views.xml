@@ -112,7 +112,9 @@
                             <field name="purchase_type"/>
                             <field name="purchase_manager_id"/>
                             <field name="qty_available" string="Нөөцөнд байгаа тоо"/>
+                            <field name="qty_available_cost" string="Нөөцөнд байгаа нийт өртөг"/>
                             <field name="qty_delivered" string="Зарлага хийгдсэн тоо"/>
+                            <field name="delivery_cost" string="Нийт зарлагын өртөг"/>
                             <field name="last_qty" string="Үлдэгдэл тоо"/>
                             <field name="cost_price"/>
                             <field name="price_unit"/>

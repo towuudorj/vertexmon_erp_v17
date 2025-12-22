@@ -56,6 +56,8 @@ class ProjectProductsLine(models.Model):
                                         default=0, compute="_compute_qty_delivered")
     price_total = fields.Float(string='Total Price', readonly=True)
     cost_total = fields.Float(string='Total Cost', readonly=True)
+    delivery_cost = fields.Float(string='Delivery cost', compute="compute_delivery_cost")
+    qty_available_cost = fields.Float(string='Qty available cost', compute="compute_qty_available_cost")
     company_id = fields.Many2one('res.company', readonly=True, default=lambda self: self.env.company)
     purchase_type = fields.Selection([('local','Local'),
                                     ('foreign','Foreign')],string='Purchase Type',)
@@ -65,6 +67,22 @@ class ProjectProductsLine(models.Model):
     last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
     pur_qty = fields.Float(string='Purchase qty')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
+    
+    def compute_delivery_cost(self):
+        for line in self:
+            delivery_cost = 0
+            if line.cost_price > 0.0 and line.qty_delivered > 0.0:
+                delivery_cost = line.cost_price * line.qty_delivered
+                
+            line.delivery_cost = delivery_cost
+        
+    def compute_qty_available_cost(self):
+        for line in self:
+            available_cost = 0
+            if line.cost_price > 0.0 and line.qty_available > 0.0:
+                available_cost = line.cost_price * line.qty_available
+                
+            line.qty_available_cost = available_cost
     
     def _action_compute_qty(self):
         for line in self:
