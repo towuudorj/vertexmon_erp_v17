@@ -31,6 +31,7 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
+                <field name="ot_po" optional="hide"/>
                 <field name="payment_amount" optional="show" />
             </xpath>
             <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="attributes">
