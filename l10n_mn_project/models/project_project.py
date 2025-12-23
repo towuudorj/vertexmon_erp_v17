@@ -5,6 +5,7 @@
 #############################################################################
 import json
 from odoo import api, fields, models, _
+import datetime
 
 
 class ProjectProject(models.Model):
@@ -241,12 +242,15 @@ class ProjectProject(models.Model):
                 'product_id': line.product_id.id,
                 'quantity': qty,
                 'pline_id': line.id,
-                'project_id': self.id
+                'project_id': self.id,
+                
             }
             lines = self.env['project.package.task.create.line'].create(pline_vals)
             line_ids.append(lines.id)
         wiz = self.env['project.package.task.create'].create({
             'product_lines': line_ids,
+            'name':'/',
+            'date':datetime.datetime.today()
                                                        })
         # TDE FIXME: a return in a loop, what a good idea. Really.
         return {
