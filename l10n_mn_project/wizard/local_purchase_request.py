@@ -64,6 +64,7 @@ class LocalPurchaseRequest(models.TransientModel):
                     qty = lines.line_id.product_qty - lines.line_id.pur_qty
                 else:
                     qty = lines.qty
+                
                 purchase_line_obj.create({
                                         'product_id':lines.product_id.id,
                                         'product_uom':lines.uom_id.id,
@@ -72,6 +73,17 @@ class LocalPurchaseRequest(models.TransientModel):
                                         'order_id':purchase_id.id
                                         })
                 lines.line_id.pur_qty = lines.line_id.pur_qty + qty
+            crm_manager = self.env.user
+            if crm_manager:
+                # Send email notification
+                purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': ','.join(crm_manager.mapped('email')),
+                    'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.',
+                    'body_html': f'Холбогдох хаягаар орж батлана уу. <a href="{purchase_url}">{purchase_id.name}</a>'+
+                    f'- Төслийн нэр {line.project_id.name} \n Төслийн менежер: {line.project_id.user_id.name}, Нийлүүлэгч: {line.supplier_id.name}'+ 
+                    f'- Худалдан авалтын нийт дүн: {purchase_id.amount_total, purchase_id.currency_id.name}',
+                }).send()
 
 
 class LocalPurchaseRequestLine(models.TransientModel):

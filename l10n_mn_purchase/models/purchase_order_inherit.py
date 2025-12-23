@@ -47,6 +47,9 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id,
         }
         return invoice_vals
+    
+    
+    
 
 
     def button_confirm(self):
@@ -61,6 +64,17 @@ class PurchaseOrder(models.Model):
                 #order.write({'date_approve': self.date_order})
             else:
                 order.write({'state': 'to approve'})
+                
+            crm_manager = order.project_id.user_id
+            if crm_manager:
+                # Send email notification
+                purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': ','.join(crm_manager.mapped('email')),
+                    'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} батлагдсан байна.',
+                    'body_html': f'Дэлгэрэнгүй мэдээллийг харна уу. <a href="{purchase_url}">{order.name}</a>'+
+                    f'- Төслийн нэр: {order.project_id.name} \n Төслийн менежер: {order.project_id.user_id.name}, Нийлүүлэгч: {order.partner_id.name}',
+                }).send()
             if order.partner_id not in order.message_partner_ids:
                 order.message_subscribe([order.partner_id.id])
         return True

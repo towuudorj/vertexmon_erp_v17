@@ -250,6 +250,30 @@ class CrmLead(models.Model):
                                    domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]",
                                    required=False,
                                    default=_compute_default_partner_bank_id)
+    sale_currency_id = fields.Many2one('res.currency', string='Sale currency', compute="_get_sale_currency")
+    buy_currency_id = fields.Many2one('res.currency', string='Buy currency', compute="_get_buy_currency")
+    cost_total_amount = fields.Float(string='Cost total amount', compute="_compute_total_cost")
+    
+    def _get_sale_currency(self):
+        for line in self:
+            line.sale_currency_id = line.pricelist_id.currency_id.id
+    
+    def _get_buy_currency(self):
+        for line in self:
+            currency_id = False
+            for lines in line.lead_line_ids:
+                currency_id = lines.currency_id.id
+            line.buy_currency_id = currency_id
+    
+    def _compute_total_cost(self):
+        for line in self:
+            total = 0 
+            for lines in line.lead_line_ids:
+                total += lines.qty * lines.cost_price
+                
+            line.cost_total_amount = Total
+    
+    
     def _compute_amount(self):
         for line in self:
             if line.amount_total:
@@ -351,12 +375,32 @@ class CrmLead(models.Model):
                 if not line.order_ids:
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
+                        crm_manager = self.team_id.user_id
+                        if crm_manager:
+                            # Send email notification
+                            crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
+                            self.env['mail.mail'].create({
+                                'email_to': ','.join(crm_manager.mapped('email')),
+                                'subject': f'CRM {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
+                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
+                            }).send()
                     elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                         sale_order_id.action_confirm()
                     else:
                         line.new_status = 'confirm'
+                        crm_manager = self.team_id.user_id
+                        if crm_manager:
+                            # Send email notification
+                            crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
+                            self.env['mail.mail'].create({
+                                'email_to': ','.join(crm_manager.mapped('email')),
+                                'subject': f'CRM {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
+                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
+                            }).send()
                 else:
                     for lines in line.order_ids:
                         if lines.state in ['sale','done']:
@@ -364,12 +408,33 @@ class CrmLead(models.Model):
                             
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
+                        crm_manager = self.team_id.user_id
+                        if crm_manager:
+                            # Send email notification
+                            crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
+                            self.env['mail.mail'].create({
+                                'email_to': ','.join(crm_manager.mapped('email')),
+                                'subject': f'CRM {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
+                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
+                            }).send()
                     elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                         sale_order_id.action_confirm()
+                        
                     else:
                         line.new_status = 'confirm'
+                        crm_manager = self.team_id.user_id
+                        if crm_manager:
+                            # Send email notification
+                            crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
+                            self.env['mail.mail'].create({
+                                'email_to': ','.join(crm_manager.mapped('email')),
+                                'subject': f'CRM {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
+                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
+                            }).send()
 
             else:
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
@@ -381,7 +446,8 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.purchase_request_ids:
                 raise UserError(_('Purchase request not found!'))
-            lead.purchase_request_ids.quotation_done()
+            
+            
             #purchase_id = lead.purchase_request_ids.purchase_ids.id
             #purchase_obj = 'purchase.order'
             #record_link = f"{base_url}/web#id={purchase_id}&model={purchase_obj}&view_type=form"
@@ -402,8 +468,22 @@ class CrmLead(models.Model):
             #mail.send()
             lead.new_status = 'done'
             if lead.crm_type == 'crm':
+                lead.purchase_request_ids.quotation_done()
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                 sale_order_id.action_confirm()
+                crm_manager = self.user_id
+                if crm_manager:
+                    # Send email notification
+                    
+                    sale_url = f'/web#id={sale_order_id.id}&model=sale.order&view_type=form'
+                    purchase_url = f'/web#id={self.id}&model=purchase.order&view_type=form'
+                    self.env['mail.mail'].create({
+                        'email_to': ','.join(crm_manager.mapped('email')),
+                        'subject': f'Таны CRM {self.code} -ыг зөвшаарсөн байна.',
+                        'body_html': f'Холбоотой доорхи захиалгууд үүслээ. '+
+                        f'- Борлуулалтын захиалга {sale_order_id.name} <a href="{sale_url}">мэдээлэл харах холбоос</a>\n'+ 
+                        f'- Худалдан авалтын захиалга {sale_order_id.name} <a href="{purchase_url}">мэдээлэл харах холбоос</a>\n',
+                    }).send()
             #lead.message_post(body=_('Purchase request confirmed.'))
 
     
@@ -487,7 +567,6 @@ class CrmLead(models.Model):
                                 'send_date': self.send_date,
                             }
                             purchase_request_id = self.env['purchase.requisition'].with_context(context).create(datas)
-                            print ("dddddddddd",purchase_request_id)
                             lead.purchase_request_ids = [(4,purchase_request_id.id)]
                             if lines.purchase_user_id.id == purchase_request_id.purchase_user_id.id:
                                 if lines.request_type != 'is_quotation':
