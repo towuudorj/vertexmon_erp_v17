@@ -5,7 +5,7 @@ import xlsxwriter
 import time
 from odoo import fields, models
 from odoo.tools import date_utils
-
+from datetime import datetime
 
 class PurchaseExpenseReport(models.TransientModel):
     _name = 'purchase.expense.report'
@@ -156,8 +156,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 partner = self.env['res.partner'].browse(purchase_data['partner_id'])
                 sales_partner = self.env['res.partner'].browse(purchase_data['sales_partner_id'])
                 currency = self.env['res.currency'].browse(purchase_data['currency_id'])
-                st_date = datetime.strptime(purchase_data['date_planned'], '%Y-%m-%d %H:%M:%S').date()
-                currency_rate = self.env['res.currency.rate'].search([('currency_id','=',purchase_data['currency_id']),('name','=',str(st_date))])
+                st_date = datetime.strptime(str(purchase_data['date_planned']).split('.')[0],'%Y-%m-%d %H:%M:%S').date()
+                currency_rate = self.env['res.currency.rate'].search([('company_id','=',data['company_id']),('currency_id','=',purchase_data['currency_id']),('name','=',str(st_date))])
                 sheet.write("A%s"%rowx, purchase_data['name'], text_right)
                 sheet.write("B%s"%rowx, purchase_data['id'], text_right)
                 sheet.write("C%s"%rowx, partner.code or '', text_right)
@@ -201,7 +201,8 @@ class PurchaseExpenseReport(models.TransientModel):
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
-                            freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
+                            if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
+                                freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
                             custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
@@ -281,8 +282,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 partner = self.env['res.partner'].browse(purchase_data.partner_id.id)
                 sales_partner = self.env['res.partner'].browse(purchase_data.sales_partner_id.id)
                 currency = self.env['res.currency'].browse(purchase_data.currency_id.id)
-                st_date = datetime.strptime(purchase_data.date_planned, '%Y-%m-%d %H:%M:%S').date()
-                currency_rate = self.env['res.currency.rate'].search([('currency_id','=',purchase_data.currency_id.id),('name','=',str(st_date))])
+                st_date = datetime.strptime(str(purchase_data['date_planned']).split('.')[0], '%Y-%m-%d %H:%M:%S').date()
+                currency_rate = self.env['res.currency.rate'].search([('company_id','=',data['company_id']),('currency_id','=',purchase_data.currency_id.id),('name','=',str(st_date))])
                 sheet.write("A%s"%rowx, purchase_data.name, text_right)
                 sheet.write("B%s"%rowx, purchase_data.id, text_right)
                 sheet.write("C%s"%rowx, partner.code or '', text_right)
@@ -316,7 +317,8 @@ class PurchaseExpenseReport(models.TransientModel):
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
                         if exp_pro.name == u'Тээврийн зардал' or exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
-                            freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
+                            if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
+                                freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
                             custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
