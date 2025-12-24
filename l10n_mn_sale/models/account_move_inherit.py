@@ -8,6 +8,15 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     contract_id = fields.Many2one('sales.contract.register', string='Contract')
+    payment_type = fields.Selection([('down_payment', 'Down payment'),
+                                     ('progress_payment', 'Progress payment'),
+                                     ('final_payment', 'Final payment'),
+                                     ('barter', 'Barter transaction'),
+                                     ('guarantee_collateral', 'Guarantee and collateral'),
+                                     ('penalty', 'Penalty')],
+                                    required=True,
+                                    default='down_payment',
+                                    string='Payment type')
 
 
 class AccountMoveLine(models.Model):

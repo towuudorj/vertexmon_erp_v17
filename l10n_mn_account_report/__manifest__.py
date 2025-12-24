@@ -59,6 +59,11 @@
             
 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mn_account_report/static/src/css/*.css'
+        ]
+    },
     'test': [],
     'installable': True,
     'auto_install': False,

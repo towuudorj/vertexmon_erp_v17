@@ -6,25 +6,41 @@
         <field name="model">sale.advance.payment.inv</field>
         <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
         <field name="arch" type="xml">
-            <xpath expr="//form" position="attributes">
-                <attribute name="disable_autofocus">true</attribute>
-            </xpath>
-            <xpath expr="//field[@name='advance_payment_method']" position="after">
-                <field name="order_has_payment_term" invisible="1"/>
-            </xpath>
+
             <xpath expr="//field[@name='advance_payment_method']" position="attributes">
-                <attribute name="readonly">order_has_payment_term == True</attribute>
+                <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='amount_invoiced']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_to_invoice']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='down_payment_specification']" position="after">
+                <group invisible="not line_ids">
+                    <field name="payment_type" invisible="new_payment_method != 'fixed'"/>
+                    <field name="invoice_created_amount"/>
+                    <field name="amount_to_invoice_create"/>
+                </group>
+            </xpath>
+
+            <xpath expr="//field[@name='advance_payment_method']" position="after">
+                <field name="new_payment_method" class="oe_inline" widget="radio"/>
+                <field name="payment_term_id" invisible="new_payment_method != 'term'"
+                        required="new_payment_method == 'term'"/>
+            </xpath>
+
             <xpath expr="//group[last()]" position="after">
-                <field name="line_ids" invisible="advance_payment_method != 'term'">
-                    <tree string="Sale order" editable="bottom" create="0">
+                <field name="line_ids" options="{'no_open': True, 'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
+                       domain="[('id','=',False)]">
+                    <tree string="Sale order" editable="bottom" create="false" delete="false">
                         <field name="invoice_id" readonly="1"/>
-                        <field name="desc"/>
-                        <field name="percent"/>
+                        <field name="payment_type" readonly="is_created == True"/>
+                        <field name="desc" readonly="is_created == True"/>
+                        <field name="percent" readonly="is_created == True"/>
                         <field name="nb_days"/>
                         <field name="invoice_amount"/>
                         <field name="is_created" readonly="1"/>
-                        <field name="is_down_payment" readonly="1"/>
                         <field name="is_new_create" readonly="is_created == True"/>
                     </tree>
                 </field>
