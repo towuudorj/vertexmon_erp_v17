@@ -69,10 +69,43 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                      'report_name': 'Account balance report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_report_data(self):
+        return {
+            'company_name': self.company_id.name,
+            'company_id': self.company_id.id,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'target_move': self.target_move,
+            'result_selection': self.result_selection,
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'is_transaction': self.is_transaction,
+            'account_id': self.account_id.id,
+            'partner_id': self.partner_id.id,
+            'is_extra': self.is_extra,
+            'account_journal_ids': self.account_journal_ids.ids,
+            'filter ': 'filter_date'
+        }
+
+    def action_preview_report(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'PDF View',
+            'view_mode': 'form',
+            'view_id':  self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_preview').id,
+            'target': 'new',
+            'res_model': self._name
+        }
+
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
+        sheet.set_landscape()
+        sheet.set_paper(9)  # A4
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
+        sheet.repeat_rows(0, 0)
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
@@ -813,6 +846,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
 

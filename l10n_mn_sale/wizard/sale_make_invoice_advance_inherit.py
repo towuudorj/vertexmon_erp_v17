@@ -6,27 +6,50 @@ from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import format_date, frozendict
 from datetime import timedelta
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = 'sale.advance.payment.inv'
     _description = "Sales Advance Payment Invoice"
 
-    #so_id = sale_order_ids
-    line_ids = fields.One2many('sale.order.invoice.payment.term.line', 'wizard_id', string='Invoice list')
+    line_ids = fields.One2many('sale.order.invoice.payment.term.line', 'wizard_id', string='Invoice list',
+                                compute='_compute_lines', inverse='_inverse_lines', store=True)
     advance_payment_method = fields.Selection(
+        selection_add=[('term', 'Payment term')],
+        string="Create Invoice",
+        default='fixed',
+        required=True,
+        ondelete={'term': 'set default'})
+    new_payment_method = fields.Selection(
         selection=[
-            ('delivered', "Regular invoice"),
-            ('percentage', "Down payment (percentage)"),
-            ('fixed', "Down payment (fixed amount)"),
+            ('fixed', 'Fixed amount'),
             ('term', "Payment term")
         ],
         string="Create Invoice",
-        default='delivered',
+        default='fixed',
         required=True,
         help="A standard invoice is issued with all the order lines ready for invoicing,"
              "according to their invoicing policy (based on ordered or delivered quantity).")
-    order_has_payment_term = fields.Boolean()
+    payment_term_id = fields.Many2one('account.payment.term',  string="Payment Term")
+    invoice_created_amount = fields.Monetary(
+        string="Invoice created amount",
+        compute="_compute_invoice_create_amounts",
+        help="The amount invoice created = Sale Order Total - Down Payments.")
+    amount_to_invoice_create = fields.Monetary(
+        string="Amount to invoice create",
+        compute="_compute_invoice_create_amounts",
+        help="The amount to invoice create = Sale Order Total - Down Payments.")
+    payment_type = fields.Selection([('down_payment', 'Down payment'),
+                                     ('progress_payment', 'Progress payment'),
+                                     ('final_payment', 'Final payment'),
+                                     ('barter', 'Barter transaction'),
+                                     ('guarantee_collateral', 'Guarantee and collateral'),
+                                     ('penalty', 'Penalty')],
+                                    required=True,
+                                    default='down_payment',
+                                    string='Payment type')
 
 
     @api.model
@@ -39,26 +62,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                                ('state', '!=', 'cancel'),
                                                ('partner_id', '=', sale_order_id.partner_id.id),
                                                ('company_id', '=', sale_order_id.company_id.id)])
-        if sale_order_id.amount_to_invoice != 0:
-            for lines in sale_order_id.payment_term_id.line_ids:
-                if lines.value == 'percent':
-                    amount = sale_order_id.amount_to_invoice / 100.0 * lines.value_amount
-                    is_create = False
-                    invoice_id = False
-                    for inv in acc_move_id:
-                        if inv.amount_total == amount:
-                            is_create = True
-                            invoice_id = inv.id
-                            acc_move_id -= inv
-                    line_data.append((0, 0, {
-                        'company_id': sale_order_id.company_id.id,
-                        'invoice_amount': amount,
-                        'percent': lines.value_amount,
-                        'is_created': is_create,
-                        'desc': lines.desc,
-                        'nb_days': lines.nb_days,
-                        'invoice_id': invoice_id,
-                    }))
 
         for inv in acc_move_id:
             line_data.append((0, 0, {
@@ -66,12 +69,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'invoice_amount': inv.amount_total,
                 'is_created': True,
                 'desc': _('Down payment'),
-                'is_down_payment': True,
                 'invoice_id': inv.id,
+                'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
             }))
         res['line_ids'] = line_data
-        res['advance_payment_method'] = 'term' if sale_order_id.payment_term_id else 'delivered'
-        res['order_has_payment_term'] = True if sale_order_id.payment_term_id else False
+        res['advance_payment_method'] = 'fixed'
         return res
 
     def _create_invoices(self, sale_orders):
@@ -81,6 +83,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             invoice_ids = self.env['account.move']
             if self.advance_payment_method == 'fixed':
+                if self.payment_type != 'penalty' and self.display_invoice_amount_warning:
+                    raise UserError(_("Invoice amount is greater than the amount remaining to be invoiced"))
                 self.create_down_payment_invoices(self.fixed_amount)
             else:
                 for line in self.line_ids:
@@ -111,7 +115,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             self._prepare_down_payment_lines_values(order, invoice_amount=invoice_amount)
         )
         invoice = self.env['account.move'].sudo().create(
-            self._prepare_invoice_values(order, down_payment_lines, nb_days=payment_line.nb_days if payment_line else False)
+            self._prepare_invoice_values(order, down_payment_lines, payment_line=payment_line if payment_line else False)
         ).with_user(self.env.uid)
 
         # Ensure the invoice total is exactly the expected fixed amount.
@@ -197,10 +201,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 tax_repartition['price_subtotal']
             ])
             for fixed_tax in fixed_taxes:
-                # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
-                # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
-                # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
-                # any other non fixed tax.
                 if fixed_tax.price_include:
                     continue
 
@@ -249,12 +249,103 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         return lines_values
 
-    def _prepare_invoice_values(self, order, so_line, nb_days=False):
+    def _prepare_invoice_values(self, order, so_line, payment_line=False):
         res = super()._prepare_invoice_values(order, so_line)
-        if self.advance_payment_method == 'term' and nb_days:
+        if self.advance_payment_method == 'term' and payment_line:
             today = fields.Date.today()
-            res['invoice_date'] = today + timedelta(days=nb_days)
+            res['invoice_date'] = today + timedelta(days=payment_line.nb_days)
+            res['payment_type'] = payment_line.payment_type
+            for line_vals in res['invoice_line_ids']:
+                line_vals[2]['name'] = payment_line.desc
+        if self.advance_payment_method == 'fixed':
+            res['payment_type'] = self.payment_type
         return res
+
+    @api.onchange('new_payment_method')
+    def _compute_advance_payment_method(self):
+        for obj in self:
+            obj.advance_payment_method = obj.new_payment_method
+
+    @api.onchange('payment_term_id', 'new_payment_method')
+    def _compute_lines(self):
+        for obj in self:
+            line_obj = self.env['sale.order.invoice.payment.term.line']
+            all_line = line_obj
+            sale_order_id = obj.sale_order_ids[0]
+            if obj.amount_to_invoice_create != 0:
+                account_move_obj = self.env['account.move']
+                acc_move_id = account_move_obj.search([('invoice_origin', '=', sale_order_id.name),
+                                                       ('state', '!=', 'cancel'),
+                                                       ('partner_id', '=', sale_order_id.partner_id.id),
+                                                       ('company_id', '=', sale_order_id.company_id.id)])
+                if obj.payment_term_id and obj.new_payment_method == 'term':
+                    for lines in obj.payment_term_id.line_ids:
+                        if lines.value == 'percent':
+                            amount = obj.amount_to_invoice_create / 100.0 * lines.value_amount
+                            is_create = False
+                            invoice_id = False
+                            for inv in acc_move_id:
+                                if inv.amount_total == amount:
+                                    is_create = True
+                                    invoice_id = inv
+                                    acc_move_id -= inv
+                            line = line_obj.create({
+                                'company_id': sale_order_id.company_id.id,
+                                'invoice_amount': amount,
+                                'percent': lines.value_amount,
+                                'is_created': is_create,
+                                'desc': invoice_id.invoice_line_ids[0].name if invoice_id else '',
+                                'nb_days': lines.nb_days,
+                                'invoice_id': invoice_id.id if invoice_id else False,
+                                'payment_type': 'down_payment',
+                                'wizard_id': obj._origin.id,
+                            })
+                            all_line |= line
+                for inv in acc_move_id:
+                    line = line_obj.create({
+                        'company_id': sale_order_id.company_id.id,
+                        'invoice_amount': inv.amount_total,
+                        'is_created': True,
+                        'desc': inv.invoice_line_ids[0].name,
+                        'invoice_id': inv.id,
+                        'wizard_id': obj._origin.id,
+                        'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
+                    })
+                    all_line |= line
+                if all_line:
+                    obj.line_ids = all_line
+                else:
+                    obj.line_ids = False
+            else:
+                obj.line_ids = False
+
+    def _inverse_lines(self):
+        pass
+
+    @api.onchange('sale_order_ids')
+    def _compute_invoice_create_amounts(self):
+        for obj in self:
+            sale_order_id = obj.sale_order_ids[0]
+            acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', sale_order_id.name),
+                                                   ('state', '!=', 'cancel'),
+                                                   ('partner_id', '=', sale_order_id.partner_id.id),
+                                                   ('company_id', '=', sale_order_id.company_id.id)])
+            if acc_move_ids:
+                total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
+                obj.invoice_created_amount = total_invoice_created_amount
+                obj.amount_to_invoice_create = obj.sale_order_ids[0].amount_total - total_invoice_created_amount
+            else:
+                obj.invoice_created_amount = 0
+                obj.amount_to_invoice_create = obj.sale_order_ids[0].amount_total
+
+    @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
+    def _compute_display_invoice_amount_warning(self):
+        for wizard in self:
+            invoice_amount = wizard.fixed_amount
+            if wizard.advance_payment_method == 'percentage':
+                invoice_amount = wizard.amount / 100 * sum(wizard.sale_order_ids.mapped('amount_total'))
+            wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice_create
+
 
 class SaleOrderInvoicePaymentTermLine(models.TransientModel):
     _name = 'sale.order.invoice.payment.term.line'
@@ -265,8 +356,16 @@ class SaleOrderInvoicePaymentTermLine(models.TransientModel):
     invoice_amount = fields.Float(string='Invoice amount')
     percent = fields.Float(string='Percent')
     is_created = fields.Boolean(string='Is created')
-    is_down_payment = fields.Boolean(string='Is Down payment')
     is_new_create = fields.Boolean(string='Is new create')
     desc = fields.Char(string='Description')
     nb_days = fields.Integer(string='Description')
     wizard_id = fields.Many2one('sale.advance.payment.inv', string='Payment term')
+    payment_type = fields.Selection([('down_payment', 'Down payment'),
+                                     ('progress_payment', 'Progress payment'),
+                                     ('final_payment', 'Final payment'),
+                                     ('barter', 'Barter transaction'),
+                                     ('guarantee_collateral', 'Guarantee and collateral'),
+                                     ('penalty', 'Penalty')],
+                                    required=True,
+                                    default='down_payment',
+                                    string='Payment type')

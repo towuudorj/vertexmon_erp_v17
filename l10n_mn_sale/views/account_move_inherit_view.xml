@@ -2,7 +2,6 @@
 <odoo>
     <data>
 
-        <!--
         <record id="view_account_move_mn_sale_order_inherit" model="ir.ui.view">
             <field name="name">account.move.form.sale.order.mn</field>
             <field name="model">account.move</field>
@@ -10,13 +9,11 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr='//field[@name="partner_shipping_id"]' position="after">
-                        <field name="month"/>
+                        <field name="payment_type"/>
                     </xpath>
                 </data>
             </field>
         </record>
-        -->
-        
 
     </data>
 </odoo>

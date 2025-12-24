@@ -1,0 +1,21 @@
+@media (min-width: 576px) {
+    :not(.s_popup) > .modal .modal-content:has(.custom-modal-height) {
+        max-height: 200%;
+        height: 100%;
+    }
+}
+.custom-modal-height{
+    height: 150%;
+}
+.custom-modal-height > o_form_view_container {
+    height: 100%;
+}
+.custom-modal-height > o_form_view_container > o_content > o_form_nosheet  {
+    height: 100%;
+}
+.custom-modal-height > o_form_view_container > o_content > div {
+    height: 100%;
+}
+.o_form_renderer {
+    height: 100%;
+}
