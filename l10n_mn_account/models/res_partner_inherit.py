@@ -14,7 +14,7 @@ class ResPartner(models.Model):
 
      code = fields.Char(string='Code', readonly=True, copy=False,
                         default=lambda self:self.env['ir.sequence'].next_by_code('res.partner'))
-     partner_type = fields.Many2one('partner.type.register', string='Partner type', required=True, default=_get_partner_type)
+     partner_type = fields.Many2one('partner.type.register', string='Partner type')
      vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
      group_company_id = fields.Many2one('res.partner', string='Parent company')
      is_distributor = fields.Boolean(string='Is distributor')

@@ -29,7 +29,8 @@
                  'l10n_mn_stock',
                  'rt_product_brand',
                  'project',
-                 'crm'
+                 'crm',
+                 'mail'
                  ],
     "data" : [ 
                 'security/ir.model.access.csv',

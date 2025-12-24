@@ -5,6 +5,7 @@
 #############################################################################
 import json
 from odoo import api, fields, models, _
+import datetime
 
 
 class ProjectProject(models.Model):
@@ -65,7 +66,52 @@ class ProjectProject(models.Model):
     crm_count = fields.Integer(string='Crm count', compute="_get_crm_count")
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
+    picking_count = fields.Integer(string='Picking count', compute="action_picking_count")
+    state = fields.Selection([('planned','Planned'),
+                              ('confirm','Confirm'),
+                              ('process','Process'),
+                              ('done','Done')],string='State', default='planned')
     
+    def action_confirm(self):
+        for line in self:
+            line.state = 'confirm'
+            
+    
+    def action_process(self):
+        for line in self:
+            line.state = 'process'
+        
+    def action_done(self):
+        for line in self:
+            line.state = 'done'
+    
+    
+    def action_picking_count(self):
+        for line in self:
+            count = 0
+            if line.picking_ids:
+                for li in line.picking_ids:
+                    count +=1
+            line.picking_count = count
+    
+    
+    def action_view_picking(self, picking=False):
+        if not picking:
+            picking = self.mapped('picking_ids')
+        action = self.env['ir.actions.actions']._for_xml_id('stock.action_picking_tree_all')
+        if len(picking) > 1:
+            action['domain'] = [('id', 'in', picking.ids)]
+        elif len(picking) == 1:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = picking.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+
+        return action
     
     def action_view_crm_lead(self, purchases=False):
         if not purchases:
@@ -184,16 +230,27 @@ class ProjectProject(models.Model):
         line_ids = []
         view = self.env.ref('l10n_mn_project.view_project_pack_tasks')
         for line in self.products_line:
+            qty = 0 
+            if line.product_qty > 0.0 and line.qty_delivered:
+                if line.product_qty > line.qty_delivered:
+                    qty = line.product_qty - line.qty_delivered
+                else:
+                    qty = 0
+            else:
+                qty = line.product_qty
             pline_vals ={
                 'product_id': line.product_id.id,
-                'quantity': line.product_qty,
+                'quantity': qty,
                 'pline_id': line.id,
-                'project_id': self.id
+                'project_id': self.id,
+                
             }
             lines = self.env['project.package.task.create.line'].create(pline_vals)
             line_ids.append(lines.id)
         wiz = self.env['project.package.task.create'].create({
             'product_lines': line_ids,
+            'name':'/',
+            'date':datetime.datetime.today()
                                                        })
         # TDE FIXME: a return in a loop, what a good idea. Really.
         return {

@@ -13,6 +13,19 @@
             </xpath>
         </field>
     </record>
+    
+    
+    <record id="view_project_tree_mn" model="ir.ui.view">
+        <field name="name">project.project.view.tree.inherit.mn</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="replace">
+                <field name="state"/>
+            </xpath>
+        </field>
+    </record>
+    
     <!-- Inserting Sequence the Kanban view -->
     <record id="view_project_kanban" model="ir.ui.view">
         <field name="name">project.project.view.kanban.inherit.mn</field>
@@ -35,6 +48,19 @@
                 <!-- <button class="btn-secondary" name="action_create_purchase_requisition"
                         type="object"
                         icon="fa-external-link" string="Purchase Requisition"/> -->
+                
+                <button class="btn-secondary" name="action_confirm"
+                        type="object"
+                        string="Батлах" invisible="state != 'planned'"/>
+                        
+                <button class="btn-secondary" name="action_done"
+                        type="object"
+                        string="Дууссан" invisible="state != 'process'" groups="account.group_account_manager"/>
+                
+                <button class="btn-secondary" name="action_process"
+                        type="object"
+                        string="Явагдаж буй" invisible="state != 'confirm'" groups="project.group_project_manager"/>
+                
                 <button class="btn-secondary" name="action_create_tasks"
                         type="object"
                         icon="fa-tasks" string="Create Tasks"/>
@@ -51,6 +77,10 @@
                         type="object"
                         icon="fa-tasks" string="Create Packege Tasks"/> -->
             </header>
+            
+            <xpath expr="//field[@name='stage_id']" position="replace">
+                <field name="state" widget="statusbar"/>
+            </xpath>  
 
             <xpath expr="//field[@name='is_favorite']" position="after">
                 <field name="sequence_name"/>
@@ -82,7 +112,9 @@
                             <field name="purchase_type"/>
                             <field name="purchase_manager_id"/>
                             <field name="qty_available" string="Нөөцөнд байгаа тоо"/>
+                            <field name="qty_available_cost" string="Нөөцөнд байгаа нийт өртөг"/>
                             <field name="qty_delivered" string="Зарлага хийгдсэн тоо"/>
+                            <field name="delivery_cost" string="Нийт зарлагын өртөг"/>
                             <field name="last_qty" string="Үлдэгдэл тоо"/>
                             <field name="cost_price"/>
                             <field name="price_unit"/>
@@ -135,6 +167,13 @@
                     type="object"
                     icon="fa-shopping-cart">
                     <field string="CRM /гадаад захиалга/" name="crm_count" widget="statinfo" />
+                </button>
+                <button
+                    class="oe_stat_button"
+                    name="action_view_picking"
+                    type="object"
+                    icon="fa-shopping-cart">
+                    <field string="Зарлагууд" name="picking_count" widget="statinfo" />
                 </button>
             </div>
         </field>

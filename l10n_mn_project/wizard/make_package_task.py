@@ -23,9 +23,11 @@ class ProjectPackageTaskLine(models.TransientModel):
 class ProjectPackageTask(models.TransientModel):
     _name = 'project.package.task.create'
 
-    name = fields.Char(string="Description")
-    date = fields.Date(string="Date")
+    name = fields.Char(string="Description", required=True)
+    date = fields.Date(string="Date", required=True)
     product_lines = fields.One2many('project.package.task.create.line', 'wizard_id', 'Products', readonly=False, store=True)
+    
+    
 
 
     #### Багц Даалгавар үүсгэх
@@ -44,7 +46,6 @@ class ProjectPackageTask(models.TransientModel):
             task = self.env['project.task'].create(vals)
         if task:
             for line in self.product_lines:
-                
                 line_vals = {
                     'product_id': line.product_id.id,
                     'name': line.pline_id.name,

@@ -26,9 +26,16 @@ class LocalPurchaseRequest(models.TransientModel):
         line_id = []
         for li in line_ids.products_line:
             if li.purchase_type == 'local':
+                if li.product_qty > 0.0 and li.qty_available >0.0:
+                    if li.product_qty > li.qty_available:
+                        qty = li.product_qty - li.qty_available
+                    else:
+                        qty = 0
+                else:
+                    qty = li.product_qty
                 line_id.append((0,0,{
                             'product_id':li.product_id.id,
-                            'qty':li.product_qty,
+                            'qty':qty,
                             'uom_id':li.product_uom.id,
                             'line_id':li.id
                             }))
@@ -48,7 +55,8 @@ class LocalPurchaseRequest(models.TransientModel):
                                 'analytic_id':line.project_id.analytic_account_id.id,
                                 'picking_type_id':line.picking_type_id.id,
                                 'date_order':line.date,
-                                'purchase_type':'local'
+                                'purchase_type':'local',
+                                'partner_type':line.supplier_id.partner_type.id
                                 })
             line.project_id.purchase_ids = [(4, purchase_id.id)]
             for lines in line.line_ids:
@@ -56,6 +64,7 @@ class LocalPurchaseRequest(models.TransientModel):
                     qty = lines.line_id.product_qty - lines.line_id.pur_qty
                 else:
                     qty = lines.qty
+                
                 purchase_line_obj.create({
                                         'product_id':lines.product_id.id,
                                         'product_uom':lines.uom_id.id,
@@ -64,6 +73,17 @@ class LocalPurchaseRequest(models.TransientModel):
                                         'order_id':purchase_id.id
                                         })
                 lines.line_id.pur_qty = lines.line_id.pur_qty + qty
+            crm_manager = self.env.user
+            if crm_manager:
+                # Send email notification
+                purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': ','.join(crm_manager.mapped('email')),
+                    'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.',
+                    'body_html': f'Холбогдох хаягаар орж батлана уу. <a href="{purchase_url}">{purchase_id.name}</a>'+
+                    f'- Төслийн нэр {line.project_id.name} \n Төслийн менежер: {line.project_id.user_id.name}, Нийлүүлэгч: {line.supplier_id.name}'+ 
+                    f'- Худалдан авалтын нийт дүн: {purchase_id.amount_total, purchase_id.currency_id.name}',
+                }).send()
 
 
 class LocalPurchaseRequestLine(models.TransientModel):

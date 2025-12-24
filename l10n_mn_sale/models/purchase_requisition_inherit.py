@@ -52,6 +52,7 @@ class PurchaseRequisition(models.Model):
                             ('cancel','Cancel')], string='Status', default='new')
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    price_change = fields.Boolean(string='Price change')
 
 
     @api.depends('line_ids.subtotal', 'line_ids.price_unit')
@@ -77,6 +78,7 @@ class PurchaseRequisition(models.Model):
                 lines.action_cancel()
                 lines.action_draft()
             line.status = 'quotation_st'
+            line.price_change == True
 
     
 
@@ -90,6 +92,7 @@ class PurchaseRequisition(models.Model):
             pr.name = self.env['ir.sequence'].with_company(self.company_id).next_by_code('purchase.requisition.blanket.order')
     
     def qoutation_end(self):
+        team_obj = self.env['crm.team']
         for pr in self:
             for line in pr.line_ids:
                 for lines in pr.purchase_ids.order_line:
@@ -101,10 +104,31 @@ class PurchaseRequisition(models.Model):
                         line.action_approve()
                         pr.status = 'quotation_ed'
                         pr.crm_lead_id.change_status()
+
                     else:
                         raise UserError(_('Үнэ судлуулах хүсэлтэнд нийлүүлэгчийг оруулаагүй байгаа тул оруулна уу!'))
                 else:
                     raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ, валют болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
+            if pr.price_change == False:
+                crm_manager = self.user_id
+                if crm_manager:
+                    # Send email notification
+                    po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
+                    self.env['mail.mail'].create({
+                        'email_to': ','.join(crm_manager.mapped('email')),
+                        'subject': f'Таны CRM {self.crm_lead_id.code} -ын үнэ судлагдав.',
+                        'body_html': f'Үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
+                    }).send()
+            else:
+                crm_manager = self.user_id
+                if crm_manager:
+                    # Send email notification
+                    po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
+                    self.env['mail.mail'].create({
+                        'email_to': ','.join(crm_manager.mapped('email')),
+                        'subject': f'Таны CRM {self.crm_lead_id.code} -ын үнэ шинэчлэгдсэн байна.',
+                        'body_html': f'Шинэчилсэн үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
+                    }).send()
 
     def quotation_cancel(self):
         for pr in self:

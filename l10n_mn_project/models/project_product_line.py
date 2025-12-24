@@ -17,12 +17,25 @@ class ProjectProductsLine(models.Model):
         purchase_obj = self.env['purchase.order']
         for line in self:
             qty = 0
-            purchase_id = purchase_obj.search([('analytic_id','=',line.project_id.analytic_account_id.id),('state','!=','cancel')])
-            for pur in purchase_id.order_line:
-                if pur.product_id.id == line.product_id.id:
-                    qty +=pur.product_qty   
+            quant = quant_obj.search([('location_id','=',line.project_id.warehouse_id.lot_stock_id.id),('product_id','=',line.product_id.id),('inventory_quantity_auto_apply','>',0.0)])
+            if quant:
+                for qt in quant:
+                    qty +=qt.inventory_quantity_auto_apply
+            else:
+                qty = 0
             line.qty_available = qty
     
+    @api.depends('project_id')
+    def _compute_qty_delivered(self):
+        quant_obj = self.env['stock.quant']
+        picking_obj = self.env['stock.picking']
+        for line in self:
+            qty = 0
+            for pick in line.project_id.picking_ids:
+                for pur in pick.move_ids_without_package:
+                    if pur.product_id.id == line.product_id.id:
+                        qty +=pur.quantity   
+            line.qty_delivered = qty
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
     
@@ -39,9 +52,12 @@ class ProjectProductsLine(models.Model):
     price_unit = fields.Float(string='Price', required=True, digits='Product Price')
     cost_price = fields.Float(string='Cost Price', required=True, digits='Product Price')
     qty_available = fields.Float(string='Available QTY', compute='_compute_qty_available', required=True, digits='Product', readonly=True, default=0)
-    qty_delivered = fields.Float(string='Delivered',  required=True, digits='Product', readonly=True, default=0)
+    qty_delivered = fields.Float(string='Delivered',  required=True, digits='Product', readonly=True, 
+                                        default=0, compute="_compute_qty_delivered")
     price_total = fields.Float(string='Total Price', readonly=True)
     cost_total = fields.Float(string='Total Cost', readonly=True)
+    delivery_cost = fields.Float(string='Delivery cost', compute="compute_delivery_cost")
+    qty_available_cost = fields.Float(string='Qty available cost', compute="compute_qty_available_cost")
     company_id = fields.Many2one('res.company', readonly=True, default=lambda self: self.env.company)
     purchase_type = fields.Selection([('local','Local'),
                                     ('foreign','Foreign')],string='Purchase Type',)
@@ -51,6 +67,29 @@ class ProjectProductsLine(models.Model):
     last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
     pur_qty = fields.Float(string='Purchase qty')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
+    change_cost = fields.Float(string='Change cost', compute="action_change_cost")
+    
+    
+    def action_change_cost(self):
+        for line in self:
+            cost = 0
+    
+    
+    def compute_delivery_cost(self):
+        for line in self:
+            delivery_cost = 0
+            if line.cost_price > 0.0 and line.qty_delivered > 0.0:
+                delivery_cost = line.cost_price * line.qty_delivered
+                
+            line.delivery_cost = delivery_cost
+        
+    def compute_qty_available_cost(self):
+        for line in self:
+            available_cost = 0
+            if line.cost_price > 0.0 and line.qty_available > 0.0:
+                available_cost = line.cost_price * line.qty_available
+                
+            line.qty_available_cost = available_cost
     
     def _action_compute_qty(self):
         for line in self:

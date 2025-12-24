@@ -51,6 +51,13 @@ msgstr "Огноо"
 msgid "Supplier"
 msgstr "Нийлүүлэгч"
 
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__state
+msgid "State"
+msgstr "Төлөв"
+
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__project_id
 #: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__project_id
@@ -226,6 +233,29 @@ msgstr "Тайлбар"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн нэр"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__planned
+msgid "Planned"
+msgstr "Товлогдсон"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__confirm
+msgid "Confirm"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__process
+msgid "Process"
+msgstr "Явагдаж буй"
+
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__state__done
+msgid "Done"
+msgstr "Дууссан"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_products_line__purchase_type__foreign

@@ -75,12 +75,12 @@ class ProjectTask(models.Model):
 
     def action_task_approve(self):
         picking_ids = self.create_picking()
+        self.project_id.picking_ids = [(4, picking_ids.id)]
         for line in self:
             for li in line.project_id.products_line:
                 for lines in line.products_line:
                     if li.product_id == lines.product_id.id:
                         li.picking_ids = [(4, picking_ids.id)]
-                        lines.picking_id = [(4, picking_ids.id)]
         self.write({'state': '03_approved'})
         return True
 
@@ -95,7 +95,8 @@ class ProjectTask(models.Model):
                     'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
-                    'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                    'analytic_id':self.project_id.analytic_account_id.id,
+                    'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                 }
                 out_val ={
                     'partner_id': self.partner_id.id,
@@ -103,7 +104,8 @@ class ProjectTask(models.Model):
                     'scheduled_date':self.date_deadline,
                     'origin': self.name,
                     'task_id': self.id,
-                    'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
+                    'analytic_id':self.project_id.analytic_account_id.id,
+                    'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                 }
                 picking = self.env['stock.picking'].create(pick_val)
                 out_picking = self.env['stock.picking'].create(out_val)
@@ -114,7 +116,8 @@ class ProjectTask(models.Model):
                             'scheduled_date':self.date_deadline,
                             'origin': self.name,
                             'task_id': self.id,
-                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
+                            'analytic_id':self.project_id.analytic_account_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                         }
                 picking = self.env['stock.picking'].create(pick_val)
                 
@@ -129,8 +132,8 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': picking.id,
-                            'location_id': self.project_id.warehouse_id.lot_stock_id.id,
-                            'location_dest_id':self.project_id.picking_type_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_src_id.id,
+                            'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
                         move = self.env['stock.move'].create(move_vals)
@@ -144,8 +147,8 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': out_picking.id,
-                            'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                            'location_dest_id':customer_loc[0].id,
+                             'location_id': self.project_id.picking_type_id.default_location_src_id.id,
+                            'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                         }
     
                         move = self.env['stock.move'].create(out_move_vals)
@@ -163,8 +166,8 @@ class ProjectTask(models.Model):
                                 'product_uom_qty': line.product_qty,
                                 'product_uom': line.product_id.uom_id.id,
                                 'picking_id': picking.id,
-                                'location_id': self.project_id.warehouse_id.wh_output_stock_loc_id.id,
-                                'location_dest_id':customer_loc[0].id,
+                                 'location_id': self.project_id.picking_type_id.default_location_src_id.id,
+                                 'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
                             }
         
                             move = self.env['stock.move'].create(out_move_vals)
