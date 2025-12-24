@@ -156,6 +156,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 partner = self.env['res.partner'].browse(purchase_data['partner_id'])
                 sales_partner = self.env['res.partner'].browse(purchase_data['sales_partner_id'])
                 currency = self.env['res.currency'].browse(purchase_data['currency_id'])
+                st_date = datetime.strptime(purchase_data['date_planned'], '%Y-%m-%d %H:%M:%S').date()
+                currency_rate = self.env['res.currency.rate'].search([('currency_id','=',purchase_data['currency_id']),('name','=',str(st_date))])
                 sheet.write("A%s"%rowx, purchase_data['name'], text_right)
                 sheet.write("B%s"%rowx, purchase_data['id'], text_right)
                 sheet.write("C%s"%rowx, partner.code or '', text_right)
@@ -171,8 +173,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 total_price = purchase_data['product_qty'] * purchase_data['price_unit']
                 sheet.write("M%s"%rowx, total_price, text_right)
                 sheet.write("N%s"%rowx, currency.name or '', text_right)
-                sheet.write("O%s"%rowx, purchase_data['currency_rate'], text_right)
-                total_amount = total_price * purchase_data['currency_rate']
+                sheet.write("O%s"%rowx, currency_rate.inverse_company_rate, text_right)
+                total_amount = total_price * currency_rate.inverse_company_rate
                 sheet.write("P%s"%rowx, total_amount, text_right)
 
 
@@ -183,6 +185,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 declaration_cost = 0.0
                 clearance_cost = 0.0
                 total_cost = 0.0
+                freight_partner = ''
                 for exp_pro in expense_product_ids:
                     self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
                                     stock_valuation_adjustment_lines as ad
@@ -198,6 +201,7 @@ class PurchaseExpenseReport(models.TransientModel):
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
+                            freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
                             custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
@@ -217,7 +221,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("X%s"%rowx,  clearance_cost, text_right)
                 sheet.write("Y%s"%rowx,  total_cost, text_right)
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
-                sheet.write("AA%s"%rowx, u"%s"%fr_partner.name, text_right)
+                sheet.write("AA%s"%rowx, u"%s"%freight_partner, text_right)
                 sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
 
                 
@@ -277,6 +281,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 partner = self.env['res.partner'].browse(purchase_data.partner_id.id)
                 sales_partner = self.env['res.partner'].browse(purchase_data.sales_partner_id.id)
                 currency = self.env['res.currency'].browse(purchase_data.currency_id.id)
+                st_date = datetime.strptime(purchase_data.date_planned, '%Y-%m-%d %H:%M:%S').date()
+                currency_rate = self.env['res.currency.rate'].search([('currency_id','=',purchase_data.currency_id.id),('name','=',str(st_date))])
                 sheet.write("A%s"%rowx, purchase_data.name, text_right)
                 sheet.write("B%s"%rowx, purchase_data.id, text_right)
                 sheet.write("C%s"%rowx, partner.code or '', text_right)
@@ -284,8 +290,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("E%s"%rowx, sales_partner.name or '', text_right)
                 sheet.write("F%s"%rowx, purchase_data.amount_total, text_right)
                 sheet.write("G%s"%rowx, currency.name or '', text_right)
-                sheet.write("H%s"%rowx, purchase_data.currency_rate, text_right)
-                total_amount = purchase_data.amount_total * purchase_data.currency_rate
+                sheet.write("H%s"%rowx, currency_rate.inverse_company_rate, text_right)
+                total_amount = purchase_data.amount_total * currency_rate.inverse_company_rate
                 sheet.write("I%s"%rowx, total_amount, text_right)
                 expense_product_ids = self.env['product.product'].search([('landed_cost_ok', '=', True),('type', '=', 'service')])
                 additional_costs = {}
