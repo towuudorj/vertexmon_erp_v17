@@ -67,6 +67,13 @@ class ProjectProductsLine(models.Model):
     last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
     pur_qty = fields.Float(string='Purchase qty')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
+    change_cost = fields.Float(string='Change cost', compute="action_change_cost")
+    
+    
+    def action_change_cost(self):
+        for line in self:
+            cost = 0
+    
     
     def compute_delivery_cost(self):
         for line in self:
