@@ -270,8 +270,7 @@ class CrmLead(models.Model):
             total = 0 
             for lines in line.lead_line_ids:
                 total += lines.qty * lines.cost_price
-                
-            line.cost_total_amount = Total
+            line.cost_total_amount = total
     
     
     def _compute_amount(self):
