@@ -17,6 +17,7 @@ class AccountMove(models.Model):
                                     required=True,
                                     default='down_payment',
                                     string='Payment type')
+    payment_percent = fields.Float(string='Payment percent')
 
 
 class AccountMoveLine(models.Model):
