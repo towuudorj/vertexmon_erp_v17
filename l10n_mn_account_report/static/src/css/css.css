@@ -19,3 +19,14 @@
 .o_form_renderer {
     height: 100%;
 }
+.o_form_renderer{
+    max-width: 100% !important;
+}
+.o_form_sheet_bg{
+    max-width: 100% !important;
+    width: 100% !important;
+}
+.o-mail-ChatterContainer{
+    max-width: 18% !important;
+    width: 18% !important;
+}

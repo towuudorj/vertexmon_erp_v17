@@ -42,6 +42,14 @@ msgstr "Ноорог нэхэмжлэлүүд"
 #. module: l10n_mn_sale
 #. odoo-python
 #: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
+#, python-format
+msgid " invoice "
+msgstr " нэхэмжлэл "
+
+#. module: l10n_mn_sale
+#. odoo-python
+#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
 #, python-format
 msgid "%s has been created"
 msgstr "%s үүсгэлээ"
@@ -72,20 +80,6 @@ msgstr "Дууссан"
 #, python-format
 msgid "Down payment"
 msgstr "Урьдчилгаа төлбөр"
-
-#. module: l10n_mn_sale
-#. odoo-python
-#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
-#, python-format
-msgid "Down payment invoice"
-msgstr "Урьдчилгаа төлбөрийн нэхэмжлэл"
-
-#. module: l10n_mn_sale
-#. odoo-python
-#: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
-#, python-format
-msgid "Down payment invoice {}%"
-msgstr "Урьдчилгаа төлбөрийн нэхэмжлэл {}%"
 
 #. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sales_contract_register_form_view
@@ -1025,6 +1019,10 @@ msgid "Purchase user"
 msgstr "Худалдан авалтын менежер"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_count
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_ids
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__invoice_id
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__invoice_ids
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.crm_lead_inherit_mn_form_view
 msgid "Invoice"
 msgstr "Нэхэмжлэл"

@@ -68,7 +68,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'company_id': sale_order_id.company_id.id,
                 'invoice_amount': inv.amount_total,
                 'is_created': True,
-                'desc': _('Down payment'),
+                'desc': inv.invoice_line_ids[0].name,
                 'invoice_id': inv.id,
                 'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
             }))
@@ -156,7 +156,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             render_values={'self': invoice, 'origin': order},
             subtype_xmlid='mail.mt_note',
         )
-        title = _("Down payment invoice {}%").format(payment_line.percent) if payment_line else _("Down payment invoice")
+        if payment_line:
+            title = dict(payment_line._fields['payment_type']._description_selection(payment_line.env)).get(payment_line.payment_type) + _(' invoice ') +  f"{payment_line.percent}%"
+        else:
+            title = dict(self._fields['payment_type']._description_selection(self.env)).get(self.payment_type) + _(' invoice ')
         order.with_user(poster).message_post(
             body=_("%s has been created",
                    invoice._get_html_link(title=title)),
@@ -255,6 +258,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             today = fields.Date.today()
             res['invoice_date'] = today + timedelta(days=payment_line.nb_days)
             res['payment_type'] = payment_line.payment_type
+            res['payment_percent'] = payment_line.percent
             for line_vals in res['invoice_line_ids']:
                 line_vals[2]['name'] = payment_line.desc
         if self.advance_payment_method == 'fixed':
@@ -272,12 +276,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
             line_obj = self.env['sale.order.invoice.payment.term.line']
             all_line = line_obj
             sale_order_id = obj.sale_order_ids[0]
+            account_move_obj = self.env['account.move']
+            acc_move_id = account_move_obj.search([('invoice_origin', '=', sale_order_id.name),
+                                                   ('state', '!=', 'cancel'),
+                                                   ('partner_id', '=', sale_order_id.partner_id.id),
+                                                   ('company_id', '=', sale_order_id.company_id.id)])
             if obj.amount_to_invoice_create != 0:
-                account_move_obj = self.env['account.move']
-                acc_move_id = account_move_obj.search([('invoice_origin', '=', sale_order_id.name),
-                                                       ('state', '!=', 'cancel'),
-                                                       ('partner_id', '=', sale_order_id.partner_id.id),
-                                                       ('company_id', '=', sale_order_id.company_id.id)])
                 if obj.payment_term_id and obj.new_payment_method == 'term':
                     for lines in obj.payment_term_id.line_ids:
                         if lines.value == 'percent':
@@ -285,7 +289,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                             is_create = False
                             invoice_id = False
                             for inv in acc_move_id:
-                                if inv.amount_total == amount:
+                                if inv.amount_total == amount and inv.payment_percent == lines.value_amount:
                                     is_create = True
                                     invoice_id = inv
                                     acc_move_id -= inv
@@ -301,21 +305,20 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                 'wizard_id': obj._origin.id,
                             })
                             all_line |= line
-                for inv in acc_move_id:
-                    line = line_obj.create({
-                        'company_id': sale_order_id.company_id.id,
-                        'invoice_amount': inv.amount_total,
-                        'is_created': True,
-                        'desc': inv.invoice_line_ids[0].name,
-                        'invoice_id': inv.id,
-                        'wizard_id': obj._origin.id,
-                        'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
-                    })
-                    all_line |= line
-                if all_line:
-                    obj.line_ids = all_line
-                else:
-                    obj.line_ids = False
+            for inv in acc_move_id:
+                line = line_obj.create({
+                    'company_id': sale_order_id.company_id.id,
+                    'invoice_amount': inv.amount_total,
+                    'is_created': True,
+                    'desc': inv.invoice_line_ids[0].name,
+                    'invoice_id': inv.id,
+                    'percent': inv.payment_percent,
+                    'wizard_id': obj._origin.id,
+                    'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
+                })
+                all_line |= line
+            if all_line:
+                obj.line_ids = all_line
             else:
                 obj.line_ids = False
 
