@@ -40,7 +40,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     is_extra = fields.Boolean(u'Задаргаатай эсэх')
     start_date = fields.Date(u'Эхлэх огноо',default=lambda *a: time.strftime('%Y-%m-01'))
     end_date = fields.Date(u'Дуусах огноо',default=lambda *a: time.strftime('%Y-%m-%d'))
-    account_journal_ids = fields.Many2many('account.journal', 'account_partner_new_ledger_excel_journal_rel', 'account_id', 'journal_id','Journals',default=_get_all_journal) 
+    account_journal_ids = fields.Many2many('account.journal', 'account_partner_new_ledger_excel_journal_rel', 'account_id', 'journal_id','Journals',default=_get_all_journal)
+    preview_html = fields.Html(compute="_compute_preview_html", sanitize=False)
 
 
     def action_print_xls_report(self):
@@ -86,6 +87,29 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'filter ': 'filter_date'
         }
 
+    def return_main_view(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'PDF View',
+            'view_mode': 'form',
+            'view_id': self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_view').id,
+            'target': 'new',
+            'res_id': self.id,
+            'res_model': self._name
+        }
+
+    def _compute_preview_html(self):
+        for rec in self:
+            rec.preview_html = f"""
+                <iframe
+                    src={f"/partner_ledger/report/pdf/{rec.id}"}
+                    style="width:100%; height:100%; border:none;"
+                    scrolling="true"
+                    allow="autoplay; fullscreen; picture-in-picture" allowFullScreen="true"
+                    frameborder="0"
+                ></iframe>
+            """
+
     def action_preview_report(self):
         self.ensure_one()
         return {
@@ -94,6 +118,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'view_mode': 'form',
             'view_id':  self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_preview').id,
             'target': 'new',
+            'res_id': self.id,
             'res_model': self._name
         }
 
@@ -222,7 +247,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             account_id = [data['account_id']]
         else:
             account_id = account_obj.search( [('account_type','in',account_type)]).ids
-
         if data['partner_id']:
             if len(account_id)==1:
                 self._cr.execute(""" select aml.partner_id, rp.name, aml.account_id, aml.currency_id, rp.code from 

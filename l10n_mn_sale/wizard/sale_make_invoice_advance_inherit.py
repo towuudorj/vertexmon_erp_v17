@@ -332,7 +332,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', sale_order_id.name),
                                                    ('state', '!=', 'cancel'),
                                                    ('partner_id', '=', sale_order_id.partner_id.id),
-                                                   ('company_id', '=', sale_order_id.company_id.id)])
+                                                   ('company_id', '=', sale_order_id.company_id.id),
+                                                   ('payment_type', '!=', 'penalty')])
             if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
                 obj.invoice_created_amount = total_invoice_created_amount

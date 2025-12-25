@@ -42,13 +42,10 @@
             <field name="model">account.partner.ledger.excel.report</field>
             <field name="arch" type="xml">
                 <form string="Partner ledger report" class="custom-modal-height" height="100%">
-                    <div style="height:100%;">
-                        <iframe style="height:100%; width:100%;"
-                                src="http://localhost:8069/partner_ledger/report/pdf/144"
-                                scrolling="true"
-                                allow="autoplay; fullscreen; picture-in-picture" allowFullScreen="true"
-                                frameborder="0"/>
-                    </div>
+                    <field name="preview_html" style="height:100%; width:100%"/>
+                    <footer>
+                        <button name="return_main_view" type="object" string="return" class="btn-primary"/>
+                    </footer>
                 </form>
             </field>
         </record>
