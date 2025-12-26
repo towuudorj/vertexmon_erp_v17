@@ -478,7 +478,7 @@ class CrmLead(models.Model):
                     purchase_url = f'/web#id={self.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({
                         'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Таны Сэжим {self.code} -ыг зөвшаарсөн байна.',
+                        'subject': f'Таны Сэжим {self.code} -ыг зөвшөөрсөн байна.',
                         'body_html': f'Холбоотой доорхи захиалгууд үүслээ. '+
                         f'- Борлуулалтын захиалга {sale_order_id.name} <a href="{sale_url}">мэдээлэл харах холбоос</a>\n'+ 
                         f'- Худалдан авалтын захиалга {sale_order_id.name} <a href="{purchase_url}">мэдээлэл харах холбоос</a>\n',
