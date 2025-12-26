@@ -470,18 +470,19 @@ class CrmLead(models.Model):
                 lead.purchase_request_ids.quotation_done()
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                 sale_order_id.action_confirm()
+                purchase_id = self.env['purchase.order'].search([('requisition_id','in',lead.purchase_request_ids.ids)],limit=1)
                 crm_manager = self.user_id
                 if crm_manager:
                     # Send email notification
                     
                     sale_url = f'/web#id={sale_order_id.id}&model=sale.order&view_type=form'
-                    purchase_url = f'/web#id={self.id}&model=purchase.order&view_type=form'
+                    purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({
                         'email_to': ','.join(crm_manager.mapped('email')),
                         'subject': f'Таны Сэжим {self.code} -ыг зөвшөөрсөн байна.',
                         'body_html': f'Холбоотой доорхи захиалгууд үүслээ. '+
                         f'- Борлуулалтын захиалга {sale_order_id.name} <a href="{sale_url}">мэдээлэл харах холбоос</a>\n'+ 
-                        f'- Худалдан авалтын захиалга {sale_order_id.name} <a href="{purchase_url}">мэдээлэл харах холбоос</a>\n',
+                        f'- Худалдан авалтын захиалга {purchase_id.name} <a href="{purchase_url}">мэдээлэл харах холбоос</a>\n',
                     }).send()
             #lead.message_post(body=_('Purchase request confirmed.'))
 
