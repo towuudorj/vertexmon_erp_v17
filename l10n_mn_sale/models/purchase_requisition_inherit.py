@@ -116,7 +116,7 @@ class PurchaseRequisition(models.Model):
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
                     self.env['mail.mail'].create({
                         'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Таны CRM {self.crm_lead_id.code} -ын үнэ судлагдав.',
+                        'subject': f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ судлагдав.',
                         'body_html': f'Үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
                     }).send()
             else:
@@ -126,7 +126,7 @@ class PurchaseRequisition(models.Model):
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
                     self.env['mail.mail'].create({
                         'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Таны CRM {self.crm_lead_id.code} -ын үнэ шинэчлэгдсэн байна.',
+                        'subject': f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ шинэчлэгдсэн байна.',
                         'body_html': f'Шинэчилсэн үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
                     }).send()
 
