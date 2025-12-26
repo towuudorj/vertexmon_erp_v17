@@ -151,14 +151,14 @@ class stock_picking(models.Model):
         for mv in self.move_ids_without_package:
             purchase_manager = mv.purchase_line_id.order_id.requisition_id.crm_lead_id.user_id
             crm_id = mv.purchase_line_id.order_id.requisition_id.crm_lead_id.code
-            purchase_order = mv.purchase_line_id.order_id.name
+            purchase_order = mv.purchase_line_id.order_id
         if purchase_manager:
             # Send email notification
             purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
             self.env['mail.mail'].create({
                 'email_to': ','.join(purchase_manager.mapped('email')),
                 'subject': f'Таны CRM : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
-                'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order}</a>',
+                'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
             }).send()
         if self.purchase_id.invoice_ids:
             self.purchase_id.action_create_invoice()
