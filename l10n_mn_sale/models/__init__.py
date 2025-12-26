@@ -10,3 +10,4 @@ from . import sales_plan_register
 from . import account_move_inherit
 from . import crm_team_inherit
 from . import account_payment_term_line_inherit
+from . import mail_mail
