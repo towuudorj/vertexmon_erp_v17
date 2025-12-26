@@ -121,34 +121,104 @@ class PurchaseExpenseReport(models.TransientModel):
             ])
 
             if data['product_id']:
-                self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.user_id, pol.date_planned, po.freight_partner_id, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
-                                from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
-                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
-                                and po.state in ('purchase', 'done') and pol.qty_received > 0 and 
-                                pol.product_id = %s
-                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, po.freight_partner_id, pol.price_unit, po.currency_rate, pol.product_qty,po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
-                                """%(data['start_date'],data['end_date'],data['company_id'], data['product_id']))
+                self._cr.execute("""SELECT
+                                        pol.id,
+                                        pol.order_id,
+                                        po.name,
+                                        pol.product_id,
+                                        po.partner_id,
+                                        po.sales_partner_id,
+                                        po.currency_id,
+                                        pol.qty_received,
+                                        po.user_id,
+                                        po.freight_partner_id,
+                                        sp.date_done,
+                                        pol.price_unit,
+                                        po.currency_rate,
+                                        po.partner_ref,
+                                        pol.product_qty
+                                    FROM purchase_order po
+                                    LEFT JOIN stock_picking sp
+                                        ON sp.origin = po.name
+                                    LEFT JOIN stock_move as sm
+                                        ON sm.picking_id = sp.id
+                                    LEFT JOIN purchase_order_line pol
+                                        ON pol.product_id = sm.product_id
+                                       AND date(sp.date_done) = date(pol.date_planned)
+                                       AND sm.quantity = pol.product_qty
+                                    WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
+                                      AND po.company_id = %s
+                                      AND pol.product_id = %s
+                                      AND po.state IN ('purchase', 'done')
+                                      AND pol.qty_received > 0 order by sp.date_done, po.name
+                                      """%(data['start_date'],data['end_date'],data['company_id'], data['product_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif data['category_id']:
-                self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.freight_partner_id, po.user_id,po.freight_partner_id,  pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
-                                from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
-                                left join product_product as pp on pol.product_id = pp.id
-                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
-                                and po.state in ('purchase', 'done') and pol.qty_received > 0
-                                and pp.categ_id = %s
-                                group by pol.id, pol.order_id,  po.user_id, po.freight_partner_id, po.partner_ref, po.freight_partner_id, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
-                                """%(data['start_date'],data['end_date'],data['company_id'],data['category_id']))
+                self._cr.execute("""SELECT
+                                        pol.id,
+                                        pol.order_id,
+                                        po.name,
+                                        pol.product_id,
+                                        po.partner_id,
+                                        po.sales_partner_id,
+                                        po.currency_id,
+                                        pol.qty_received,
+                                        po.user_id,
+                                        po.freight_partner_id,
+                                        sp.date_done,
+                                        pol.price_unit,
+                                        po.currency_rate,
+                                        po.partner_ref,
+                                        pol.product_qty
+                                    FROM purchase_order po
+                                    LEFT JOIN stock_picking sp
+                                        ON sp.origin = po.name
+                                    LEFT JOIN stock_move as sm
+                                        ON sm.picking_id = sp.id
+                                    LEFT JOIN purchase_order_line pol
+                                        ON pol.product_id = sm.product_id
+                                       AND date(sp.date_done) = date(pol.date_planned)
+                                       AND sm.quantity = pol.product_qty
+                                    LEFT JOIN product_product as pp
+                                        ON pp.id = pol.product_id
+                                    WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
+                                      AND po.company_id = %s
+                                      AND pp.categ_id = %s
+                                      AND po.state IN ('purchase', 'done')
+                                      AND pol.qty_received > 0 order by sp.date_done, po.name
+                                      """%(data['start_date'],data['end_date'],data['company_id'],data['category_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif not data['product_id'] and not data['category_id']:
-                self._cr.execute("""select pol.id, pol.order_id, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id,
-                                pol.qty_received, po.user_id, po.freight_partner_id, pol.date_planned, pol.price_unit, po.currency_rate, po.partner_ref,pol.product_qty
-                                from purchase_order as po left join purchase_order_line as pol on pol.order_id = po.id
-                                where po.date_planned >= '%s' and po.date_planned <= '%s' and po.company_id = %s
-                                and po.state in ('purchase', 'done') and pol.qty_received > 0
-                                group by pol.id, pol.order_id, po.user_id, po.partner_ref, po.freight_partner_id, pol.price_unit,pol.product_qty, po.currency_rate, po.name, pol.product_id, po.partner_id, po.sales_partner_id, po.currency_id, pol.qty_received
-                                """%(data['start_date'],data['end_date'],data['company_id']))
+                self._cr.execute("""SELECT
+                                        pol.id,
+                                        pol.order_id,
+                                        po.name,
+                                        pol.product_id,
+                                        po.partner_id,
+                                        po.sales_partner_id,
+                                        po.currency_id,
+                                        pol.qty_received,
+                                        po.user_id,
+                                        po.freight_partner_id,
+                                        sp.date_done,
+                                        pol.price_unit,
+                                        po.currency_rate,
+                                        po.partner_ref,
+                                        pol.product_qty
+                                    FROM purchase_order po
+                                    LEFT JOIN stock_picking sp
+                                        ON sp.origin = po.name
+                                    LEFT JOIN stock_move as sm
+                                        ON sm.picking_id = sp.id
+                                    LEFT JOIN purchase_order_line pol
+                                        ON pol.product_id = sm.product_id
+                                       AND date(sp.date_done) = date(pol.date_planned)
+                                       AND sm.quantity = pol.product_qty
+                                    WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
+                                      AND po.company_id = %s
+                                      AND po.state IN ('purchase', 'done')
+                                      AND pol.qty_received > 0 order by sp.date_done, po.name
+                                  """%(data['start_date'],data['end_date'],data['company_id']))
                 purchase_data_ids = self._cr.dictfetchall()
             
             for purchase_data in purchase_data_ids:
