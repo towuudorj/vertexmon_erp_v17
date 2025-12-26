@@ -157,7 +157,7 @@ class stock_picking(models.Model):
             purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
             self.env['mail.mail'].create({
                 'email_to': ','.join(purchase_manager.mapped('email')),
-                'subject': f'Таны CRM : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
+                'subject': f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
                 'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
             }).send()
         if self.purchase_id.invoice_ids:
