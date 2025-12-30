@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
 
 
 
@@ -68,6 +69,31 @@ class ProjectProductsLine(models.Model):
     pur_qty = fields.Float(string='Purchase qty')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
     change_cost = fields.Float(string='Change cost', compute="action_change_cost")
+    
+    
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self.env.user.has_group('account.group_account_manager'):
+            for vals in vals_list:
+                project_id = vals.get('project_id')
+                product_id = vals.get('product_id')
+    
+                if project_id and product_id:
+                    project = self.env['project.project'].browse(project_id)
+                    if project.state == 'process':
+                        raise UserError(
+                            "Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу!"
+                        )
+    
+        return super().create(vals_list)
+    
+    def write(self, vals):
+        for order in self:
+            if 'product_id' in vals and order.project_id.state == 'process':
+                if not self.env.user.has_group('account.group_account_manager'):
+                     raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
+        return super(ProjectProductsLine, self).write(vals)
     
     
     def action_change_cost(self):
