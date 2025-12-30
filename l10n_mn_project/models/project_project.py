@@ -71,6 +71,14 @@ class ProjectProject(models.Model):
                               ('confirm','Confirm'),
                               ('process','Process'),
                               ('done','Done')],string='State', default='planned')
+    product_count = fields.Integer(sttring='Product count', compute="compute_product_count")
+    
+    def compute_product_count(self):
+        for line in self:
+            count = 0
+            for lines in line.products_line:
+                count +=1
+            line.product_count = count
     
     def action_confirm(self):
         for line in self:
