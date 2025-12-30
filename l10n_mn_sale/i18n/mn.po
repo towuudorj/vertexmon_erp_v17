@@ -137,7 +137,10 @@ msgstr "Гэрээ"
 msgid "Sales contract type"
 msgstr "Гэрээний төрөл"
 
-
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__is_free_pro
+msgid "Is free product"
+msgstr "Дагалдан бараа эсэх"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_create_product_wizard__company_id

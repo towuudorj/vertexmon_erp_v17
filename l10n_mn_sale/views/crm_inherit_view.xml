@@ -263,6 +263,7 @@
                                         <field name="cost_price" readonly="1"/>
                                         <field name="currency_id"  readonly="1"/>
                                         <field name="sale_price"/>
+                                        <field name="is_free_pro" optional="hide"/>
                                         <field name="discount"  optional="hide"/>
                                         <field name="tax_id"  optional="hide"/>
                                         <field name="price_subtotal"/>

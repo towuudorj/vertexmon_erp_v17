@@ -39,6 +39,7 @@ class CrmLeadLine(models.Model):
     add_desc = fields.Text(string='Additional description')
     discount = fields.Float(string='Discount (%)', default=0.0)
     tax_id = fields.Many2many('account.tax', string='Taxes')
+    is_free_pro = fields.Boolean(string='Is free product')
 
 
 
