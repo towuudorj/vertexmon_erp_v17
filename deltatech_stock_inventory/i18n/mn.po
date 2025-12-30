@@ -684,7 +684,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "New inventory for Not Ok"
-msgstr "Inventar nou pentru Not ok"
+msgstr "Агуулахын шинэ тоолого тийм биш"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__activity_date_deadline
@@ -729,7 +729,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_tree
 msgid "On Hand"
-msgstr "Disponibil"
+msgstr "Гарт байгаа тоо"
 
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_search
@@ -882,12 +882,12 @@ msgstr "Тэмдэглэл"
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_tree
 msgid "Refresh quantity"
-msgstr ""
+msgstr "Тоо шинэчлэх"
 
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Remove Not Ok"
-msgstr ""
+msgstr "Тийм биш бол устгах"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__activity_user_id
@@ -1102,7 +1102,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_tree
 msgid "UoM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_product_template_warehouse_form
@@ -1119,7 +1119,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Validate Inventory"
-msgstr "Validare inventar"
+msgstr "Тооллого батлах"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields.selection,name:deltatech_stock_inventory.selection__stock_inventory__state__done
@@ -1135,7 +1135,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_product_warehouse_location__warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Агуулах"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_product_product__warehouse_loc_ids
