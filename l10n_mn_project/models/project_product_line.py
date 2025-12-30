@@ -90,7 +90,7 @@ class ProjectProductsLine(models.Model):
     
     def write(self, vals):
         for order in self:
-            if 'product_id' in vals and order.project_id.state == 'process':
+            if order.project_id.state == 'process':
                 if not self.env.user.has_group('account.group_account_manager'):
                      raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
         return super(ProjectProductsLine, self).write(vals)

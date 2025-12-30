@@ -32,7 +32,10 @@ msgstr "Боломжит тоо хэмжээ"
 msgid "Company"
 msgstr "Компани"
 
-
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__product_count
+msgid "Product count"
+msgstr "Төслийн бараа"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__picking_type_id
