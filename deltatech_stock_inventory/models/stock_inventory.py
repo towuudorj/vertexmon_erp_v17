@@ -538,7 +538,7 @@ class InventoryLine(models.Model):
         store=True,
     )
     state = fields.Selection(string="Status", related="inventory_id.state", store=True)
-    theoretical_qty = fields.Float("Theoretical Quantity", digits="Product Unit of Measure", readonly=True)
+    theoretical_qty = fields.Float("Theoretical Quantity", digits="Product Unit of Measure", readonly=True, store=True)
     difference_qty = fields.Float(
         "Difference",
         compute="_compute_difference",
@@ -664,7 +664,7 @@ class InventoryLine(models.Model):
             # We update `product_qty` only if it equals to `theoretical_qty` to
             # avoid to reset quantity when user manually set it.
             self.product_qty = theoretical_qty
-        self.theoretical_qty = theoretical_qty
+        #self.theoretical_qty = theoretical_qty
 
     @api.model_create_multi
     def create(self, vals_list):
