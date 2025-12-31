@@ -14,11 +14,19 @@ class AccountMove(models.Model):
                                      ('barter', 'Barter transaction'),
                                      ('guarantee_collateral', 'Guarantee and collateral'),
                                      ('penalty', 'Penalty')],
-                                    required=True,
-                                    default='down_payment',
+                                    required=False,
+                                    default=False,
                                     string='Payment type')
     payment_percent = fields.Float(string='Payment percent')
+    line_names = fields.Text(string='Line names', compute='_compute_line_names')
 
+    @api.depends('invoice_line_ids')
+    def _compute_line_names(self):
+        for obj in self:
+            if obj.invoice_line_ids and obj.payment_type:
+                obj.line_names = ',\n'.join([l.name for l in obj.invoice_line_ids])
+            else:
+                obj.line_names = ''
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
