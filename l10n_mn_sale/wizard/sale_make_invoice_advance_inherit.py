@@ -382,7 +382,9 @@ class SaleOrderInvoicePaymentTermLine(models.TransientModel):
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
-        if self.wizard_id:
-            created_payment_types = self.wizard_id.line_ids.mapped('payment_type')
-            if self.payment_type in ['down_payment', 'final_payment'] and self.payment_type in created_payment_types:
-                raise UserError(_("You cannot create more than one invoice with this payment type."))
+        for obj in self:
+            if obj.wizard_id:
+                line_ids = obj.wizard_id.line_ids.filtered(lambda line: line.id != obj.id)
+                created_payment_types = line_ids.mapped('payment_type') if line_ids else False
+                if obj.payment_type in ['down_payment', 'final_payment'] and created_payment_types and obj.payment_type in created_payment_types:
+                    raise UserError(_("You cannot create more than one invoice with this payment type."))
