@@ -129,8 +129,9 @@ class ProjectProject(models.Model):
             elif (date_end_update and no_current_date_begin and not date_start_update):
                 del vals['date']
         if self.state == 'process':
-            if not self.env.user.has_group('account.group_account_manager'):
-                 raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
+            if 'partner_id' in vals or 'sale_contract_id' in vals or 'user_id' in vals or 'contract_amount' in vals or 'warehouse_id' in vals or 'project_type' in vals or 'analytic_account_id' in vals:
+                if not self.env.user.has_group('account.group_account_manager'):
+                    raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
 
         res = super(ProjectProject, self).write(vals) if vals else True
 

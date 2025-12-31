@@ -78,7 +78,6 @@ class ProjectProductsLine(models.Model):
             for vals in vals_list:
                 project_id = vals.get('project_id')
                 product_id = vals.get('product_id')
-    
                 if project_id and product_id:
                     project = self.env['project.project'].browse(project_id)
                     if project.state == 'process':
@@ -91,8 +90,9 @@ class ProjectProductsLine(models.Model):
     def write(self, vals):
         for order in self:
             if order.project_id.state == 'process':
-                if not self.env.user.has_group('account.group_account_manager'):
-                     raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
+                if 'product_id' in vals or 'product_qty' in vals or 'purchase_type' in vals or 'purchase_manager_id' in vals or 'cost_price' in vals or 'price_unit' in vals:
+                    if not self.env.user.has_group('account.group_account_manager'):
+                        raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
         return super(ProjectProductsLine, self).write(vals)
     
     
