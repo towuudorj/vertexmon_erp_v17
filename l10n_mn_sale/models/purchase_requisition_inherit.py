@@ -99,7 +99,7 @@ class PurchaseRequisition(models.Model):
                     if lines.product_id.id == line.product_id.id:
                         lines.price_unit = line.price_unit
 
-                if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == True:
+                if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == False:
                     if line.supplier_id.id != False:
                         line.action_approve()
                         pr.status = 'quotation_ed'
@@ -108,7 +108,8 @@ class PurchaseRequisition(models.Model):
                     else:
                         raise UserError(_('Үнэ судлуулах хүсэлтэнд нийлүүлэгчийг оруулаагүй байгаа тул оруулна уу!'))
                 else:
-                    raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ, валют болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
+                    if line.price_unit == 0.0 and line.currency_id.id != False and line.is_free_pro == False:
+                        raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ, валют болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
             if pr.price_change == False:
                 crm_manager = self.user_id
                 if crm_manager:
