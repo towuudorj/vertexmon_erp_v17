@@ -17,10 +17,13 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//group[@name='down_payment_specification']" position="after">
-                <group invisible="not line_ids">
-                    <field name="payment_type" invisible="new_payment_method != 'fixed'"/>
-                    <field name="invoice_created_amount"/>
-                    <field name="amount_to_invoice_create"/>
+                <group>
+                    <field name="payment_type"
+                           invisible="new_payment_method == 'term'"
+                           required="new_payment_method != 'term'"
+                           context="{'line_ids': line_ids}"/>
+                    <field name="invoice_created_amount" invisible="not line_ids"/>
+                    <field name="amount_to_invoice_create" invisible="not line_ids"/>
                 </group>
             </xpath>
 
@@ -35,7 +38,7 @@
                        domain="[('id','=',False)]">
                     <tree string="Sale order" editable="bottom" create="false" delete="false">
                         <field name="invoice_id" readonly="1"/>
-                        <field name="payment_type" readonly="is_created == True"/>
+                        <field name="payment_type" readonly="is_created == True" required='True'/>
                         <field name="desc" readonly="is_created == True"/>
                         <field name="percent" readonly="is_created == True"/>
                         <field name="nb_days"/>

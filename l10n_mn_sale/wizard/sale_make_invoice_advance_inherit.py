@@ -47,9 +47,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                      ('barter', 'Barter transaction'),
                                      ('guarantee_collateral', 'Guarantee and collateral'),
                                      ('penalty', 'Penalty')],
-                                    required=True,
-                                    default='down_payment',
-                                    string='Payment type')
+                                     default=False,
+                                     string='Payment type')
 
 
     @api.model
@@ -75,6 +74,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
         res['line_ids'] = line_data
         res['advance_payment_method'] = 'fixed'
         return res
+
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if self.line_ids:
+            created_payment_types = self.line_ids.mapped('payment_type')
+            if self.payment_type in ['down_payment', 'final_payment'] and self.payment_type in created_payment_types:
+                raise UserError(_("You cannot create more than one invoice with this payment type."))
+
 
     def _create_invoices(self, sale_orders):
         self.ensure_one()
@@ -301,7 +308,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                 'desc': invoice_id.invoice_line_ids[0].name if invoice_id else '',
                                 'nb_days': lines.nb_days,
                                 'invoice_id': invoice_id.id if invoice_id else False,
-                                'payment_type': 'down_payment',
+                                'payment_type': False,
                                 'wizard_id': obj._origin.id,
                             })
                             all_line |= line
@@ -370,6 +377,12 @@ class SaleOrderInvoicePaymentTermLine(models.TransientModel):
                                      ('barter', 'Barter transaction'),
                                      ('guarantee_collateral', 'Guarantee and collateral'),
                                      ('penalty', 'Penalty')],
-                                    required=True,
-                                    default='down_payment',
+                                    default=False,
                                     string='Payment type')
+
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if self.wizard_id:
+            created_payment_types = self.wizard_id.line_ids.mapped('payment_type')
+            if self.payment_type in ['down_payment', 'final_payment'] and self.payment_type in created_payment_types:
+                raise UserError(_("You cannot create more than one invoice with this payment type."))
