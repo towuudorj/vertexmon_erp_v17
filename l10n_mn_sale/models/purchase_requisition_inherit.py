@@ -99,7 +99,7 @@ class PurchaseRequisition(models.Model):
                     if lines.product_id.id == line.product_id.id:
                         lines.price_unit = line.price_unit
 
-                if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == False:
+                if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == True:
                     if line.supplier_id.id != False:
                         line.action_approve()
                         pr.status = 'quotation_ed'
