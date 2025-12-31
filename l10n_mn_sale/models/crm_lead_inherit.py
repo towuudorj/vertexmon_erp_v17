@@ -551,7 +551,6 @@ class CrmLead(models.Model):
                                                                                     ('purchase_user_id', '=', lines.purchase_user_id.id),
                                                                                     ('send_date','=',self.send_date),
                                                                                     ('status', '=', 'new')])
-                        print ("loggg",purchase_requests)
                         if not purchase_requests:
                             datas = {
                                 'crm_lead_id': lead.id,
@@ -588,6 +587,7 @@ class CrmLead(models.Model):
                                                     'line_status':line_status,
                                                     'price_unit':0,
                                                     'lead_line_id':lines.id,
+                                                    'is_free_pro':lines.is_free_pro,
                                                     }
                                         line_id = line_obj.create(line_data)
                                         lines.request_line_id = line_id.id
@@ -613,6 +613,7 @@ class CrmLead(models.Model):
                                                     'lead_line_id':lines.id,
                                                     'currency_id': purchase_requests.currency_id.id,
                                                     'price_unit':0,
+                                                    'is_free_pro':lines.is_free_pro,
                                                     }
                                         
                                         line_id = line_obj.create(line_data)

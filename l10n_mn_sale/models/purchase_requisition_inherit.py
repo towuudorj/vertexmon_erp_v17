@@ -99,7 +99,7 @@ class PurchaseRequisition(models.Model):
                     if lines.product_id.id == line.product_id.id:
                         lines.price_unit = line.price_unit
 
-                if line.price_unit > 0.0 and line.currency_id.id != False:
+                if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == False:
                     if line.supplier_id.id != False:
                         line.action_approve()
                         pr.status = 'quotation_ed'
@@ -254,6 +254,7 @@ class PurchaseRequisitionLine(models.Model):
     ], string='Priority', default='normal')
     currency_id = fields.Many2one('res.currency', string='Currency')
     subtotal = fields.Float(string='Total amount', compute='_compute_subtotal_amount')
+    is_free_pro = fields.Boolean(string='Is product free')
     
     @api.depends('subtotal', 'product_qty', 'price_unit')
     def _compute_subtotal_amount(self):
@@ -307,7 +308,7 @@ class PurchaseRequisitionLine(models.Model):
     def action_approve(self):
         for line in self:
             line.line_status = 'approve'
-            if line.price_unit == 0 and line.currency_id.id == False:
+            if line.price_unit == 0 and line.currency_id.id == False and line.is_free_pro == False:
                 raise UserError(_('Бараа нэгж үнэ эсвэл валют оруулаагүй байгаа болон үнэ судалж дуусаагүй байгаа тул оруулана уу!'))
             #elif not line.product_id.id:
             #    raise UserError(_('Бараа оруулаагүй байгаа тул оруулана уу!'))
