@@ -135,6 +135,7 @@
                             <field name="last_qty" string="Үлдэгдэл тоо"/>
                             <field name="cost_price"/>
                             <field name="price_unit"/>
+                            <field name="change_cost" readonly="1"/>
                             <field name="cost_total" sum="Total Cost" force_save="1"/>
                             <field name="price_total" sum="Total Price" force_save="1"/>
                         </tree>

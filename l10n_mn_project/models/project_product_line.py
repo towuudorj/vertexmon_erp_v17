@@ -99,6 +99,11 @@ class ProjectProductsLine(models.Model):
     def action_change_cost(self):
         for line in self:
             cost = 0
+            for lines in line.project_id.purchase_ids:
+                for list in lines.order_line:
+                    cost = ((list.price_unit * lines.currency_rate) + line.change_cost)/2
+            line.change_cost = cost
+            
     
     
     def compute_delivery_cost(self):
@@ -156,6 +161,7 @@ class ProjectProductsLine(models.Model):
         # list_price = pricelist._get_product_price(self.product_id , 1, self.project_id.partner_id)
         
         self.price_unit = self.product_id.list_price
+        self.change_cost = self.product_id.standard_price
         self.cost_price = self.product_id.standard_price
         self.name = self.product_id.name
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
