@@ -339,7 +339,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                  group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
              where
-                 aml.date > '{data['start_date']}'
+                 aml.date >= '{data['start_date']}'
                  and aml.date <= '{data['end_date']}'
                  and aml.move_id in (select id from account_move where state in ('{"', '".join(str(move) for move in move_state)}'))
                  and aml.company_id = {self.company_id.id} 
