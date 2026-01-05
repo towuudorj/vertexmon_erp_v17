@@ -279,7 +279,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                        "aml.amount_currency as amount_currency,"
                        "aml.name as ref,"
                        "aml.date as date")
-            order_by.append("aml.date DESC")
+            order_by.append("aml.date ASC")
             # group_by += ['aml.account_id']
         if group_by:
             group_by = '\nGROUP BY ' + ', '.join(group for group in group_by)
