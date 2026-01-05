@@ -267,7 +267,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             res['payment_type'] = payment_line.payment_type
             res['payment_percent'] = payment_line.percent
             for line_vals in res['invoice_line_ids']:
-                line_vals[2]['name'] = payment_line.desc
+                line_vals[2]['name'] = payment_line.desc if payment_line.desc else dict(payment_line._fields['payment_type']._description_selection(self.env)).get(payment_line.payment_type)
         if self.advance_payment_method == 'fixed':
             res['payment_type'] = self.payment_type
         return res

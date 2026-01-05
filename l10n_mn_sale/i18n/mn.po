@@ -524,6 +524,13 @@ msgid "Payment amount"
 msgstr "Төлбөрийн үлдэгдэл"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_account_bank_statement_line__payment_date
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_account_move__payment_date
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_account_payment__payment_date
+msgid "Payment date"
+msgstr "Төлөгдөх огноо"
+
+#. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sales_contract_register__payment_term_id
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__advance_payment_method__term
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__new_payment_method__term
