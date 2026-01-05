@@ -331,9 +331,10 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                      RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
                      from account_move_line aml
                      left join account_journal aj on aj.id = aml.journal_id
-                     where aj.type ='opening' and aml.date < '{data['start_date']}'
+                     where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date < '{data['start_date']}'
                  ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id 
-                 where am.state = 'posted' and 
+                 where am.state = 'posted' 
+                 and aml.company_id = {self.company_id.id} and
                  (eoy.rank = 1 or eoy.rank is null) and aml.date < '{data['start_date']}' and (eoy.date IS NULL OR aml.date >= eoy.date)
                  group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
