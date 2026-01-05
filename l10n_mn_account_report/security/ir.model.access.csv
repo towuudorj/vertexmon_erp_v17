@@ -35,3 +35,4 @@ access_account_partner_ledger_excel_report_user,account.partner.ledger.excel.rep
 access_account_partner_ledger_excel_report_manager,account.partner.ledger.excel.report,model_account_partner_ledger_excel_report,account.group_account_manager,1,1,1,1
 access_multi_balance_sheet_excel_user,multi.balance.sheet.excel,model_multi_company_balance_sheet,account.group_account_user,1,0,0,0
 access_multi_balance_sheet_excel_manager,multi.balance.sheet.excel,model_multi_company_balance_sheet,account.group_account_manager,1,1,1,1
+access_ledger_report_group_option_user,ledger.report.group.option,model_ledger_report_group_option,base.group_user,1,0,0,0
