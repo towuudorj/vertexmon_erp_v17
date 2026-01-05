@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+	
+		<!-- Тайлангын бүлэглэлтийн төрөл -->
+    	<record id="account_balance_type_1" model="ledger.report.group.option">
+            <field name="name">Валют</field>
+            <field name="code">currency</field>
+        </record>
+
+    	<record id="account_balance_type_2" model="ledger.report.group.option">
+            <field name="name">Харилцагч</field>
+            <field name="code">partner</field>
+        </record>
+
+    	<record id="account_balance_type_3" model="ledger.report.group.option">
+            <field name="name">Данс</field>
+            <field name="code">account</field>
+        </record>
+
+	</data>
+</odoo>

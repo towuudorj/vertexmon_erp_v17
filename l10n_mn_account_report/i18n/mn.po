@@ -247,6 +247,13 @@ msgid "Number"
 msgstr "Дугаар"
 
 #. module: l10n_mn_account_report
+#. odoo-python
+#: code:addons/l10n_mn_account_report/wizard/account_partner_ledger_excel_report.py:0
+#, python-format
+msgid "PDF View"
+msgstr "PDF"
+
+#. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_balance_type__level
 msgid "Level"
 msgstr "Түвшин"
@@ -261,6 +268,16 @@ msgstr "Дараалал"
 msgid "Parent type"
 msgstr "Эцэг төрөл"
 
+#. module: l10n_mn_account_report
+#. odoo-python
+#: code:addons/l10n_mn_account_report/wizard/account_partner_ledger_excel_report.py:0
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_partner_ledger_excel_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.action_account_partner_ledger_report_menu
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_preview
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_view
+#, python-format
+msgid "Partner ledger report"
+msgstr "Харилцагчийн тайлан"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__company_id
@@ -273,6 +290,10 @@ msgstr "Компани"
 msgid "Index"
 msgstr "Индекс"
 
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__account_journal_ids
+msgid "Journals"
+msgstr "Журнал"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__sequence
@@ -330,6 +351,11 @@ msgstr "Ерөнхий дэвтэр 2"
 #: model:ir.ui.menu,name:l10n_mn_account_report.account_general_journal_report_two_menu
 msgid "General journal report 2"
 msgstr "Ерөнхий журнал 2"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__group_option_ids
+msgid "Group options"
+msgstr "Бүлэглэх"
 
 #. module: l10n_mn_account_report
 #: code:addons/l10n_mn_account_report/models/cash_statement.py:0
@@ -433,6 +459,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
 msgid "or"
 msgstr "эсвэл"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_preview
+msgid "return"
+msgstr "Буцах"
 
 #. module: l10n_mn_account_report
 #: model:ir.model,name:l10n_mn_account_report.model_payment_order_reportsd
@@ -660,8 +691,21 @@ msgid "Цуцлах"
 msgstr ""
 
 #. module: l10n_mn_account_report
+#. odoo-python
+#: code:addons/l10n_mn_account_report/models/absract_report.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.balance_sheet_excel_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.equity_changes_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_book_report_two_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.general_journal_report_two_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.multi_company_balance_sheet_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.profit_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.statement_cashflow_report_view
+#, python-format
 msgid "Export"
 msgstr "Экспорт"
 
@@ -685,12 +729,6 @@ msgstr "Эхлэх огноо"
 #: model:ir.ui.menu,name:l10n_mn_account_report.equity_report_account_menu
 msgid "Equity report configure"
 msgstr "Өмчийн өөрчлөлтийн тайлангийн тохиргоо"
-
-#. module: l10n_mn_account_report
-#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_partner_ledger_excel_report
-#: model:ir.ui.menu,name:l10n_mn_account_report.action_account_partner_ledger_report_menu
-msgid "Partner ledger report"
-msgstr "Харилцагчийн тайлан"
 
 #. module: l10n_mn_account_report
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_income_type_tree_view
