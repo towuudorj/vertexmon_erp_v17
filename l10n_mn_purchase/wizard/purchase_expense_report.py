@@ -267,19 +267,35 @@ class PurchaseExpenseReport(models.TransientModel):
                                 """%(purchase_data['order_id'], product.id, data['company_id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines']
+                    count = 0
                     for exp in expense_data_ids:
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
+                        
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
-                            frieght_cost += exp['additional_landed_cost']
+                            
+                            count +=1
+                            if count == 1:
+                                frieght_cost += exp['additional_landed_cost']
                             if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
                                 freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
-                            custom_tax_cost += exp['additional_landed_cost']
+                            
+                            count +=1
+                            if count == 1:
+                                custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
-                            declaration_cost += exp['additional_landed_cost']
+                            
+                            count +=1
+                            if count == 1:
+                                declaration_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн бүрдүүлэлт'  and st_line.product_id.id == exp_pro.id:
-                            clearance_cost += exp['additional_landed_cost']
+                            count +=1
+                            if count == 1:
+                                clearance_cost += exp['additional_landed_cost']
                         #additional_costs['%s'%exp['id']] = exp['additional_landed_cost']
+                
+
+                    
                 total_cost = frieght_cost + custom_tax_cost + declaration_cost + clearance_cost
                 fr_partner = self.env['res.partner'].browse(purchase_data['freight_partner_id'])
                 sheet.write("Q%s"%rowx,  total_cost, text_right)
