@@ -13,3 +13,7 @@ access_product_quantity_page,product.quantity.page,model_product_quantity_page,s
 access_product_quantity_page_manager,product.quantity.page,model_product_quantity_page,stock.group_stock_manager,1,1,1,1
 access_purchase_product_income_report,purchase.product.income.report,model_purchase_product_income_report,stock.group_stock_user,1,0,0,0
 access_purchase_product_income_report_manager,purchase.product.income.report,model_purchase_product_income_report,stock.group_stock_manager,1,1,1,1
+access_product_aged_report,product.aged.report,model_product_aged_report,stock.group_stock_user,1,0,0,0
+access_product_aged_report_manager,product.aged.report,model_product_aged_report,stock.group_stock_manager,1,1,1,1
+access_product_sales_report,product.sales.report,model_product_sales_report,stock.group_stock_user,1,0,0,0
+access_product_sales_report_manager,product.sales.report,model_product_sales_report,stock.group_stock_manager,1,1,1,1

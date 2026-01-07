@@ -18,8 +18,8 @@ class PurchaseProductIncomeReport(models.TransientModel):
                                 default=lambda self: self.env.user.company_id)
     category_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
-    start_date = fields.Date(string='Start date')
-    end_date = fields.Date('End date')
+    start_date = fields.Date(string=u'Эхлэх огноо')
+    end_date = fields.Date(string=u'Дуусах огноо')
     type = fields.Selection([('purchase','Purchase income'),
                              ('internal','Internal income'),
                              ('return','Return income'),
@@ -62,11 +62,12 @@ class PurchaseProductIncomeReport(models.TransientModel):
                                     'bold': True
                                     })
         txt_center = workbook.add_format({
-                                    'align': 'center',
+                                    'align': 'justify',   # horizontal justify
+                                    'valign': 'top',      # optional: vertical alignment
                                     'border': 1,
                                     'font_size': 12,
                                     'bold': True,
-                                    'text_wrap': True
+                                    'text_wrap': True,
                                 })
         
         txt_center_no_border = workbook.add_format({
@@ -173,7 +174,7 @@ class PurchaseProductIncomeReport(models.TransientModel):
                         where mv.state = 'done' and mv.product_id = %s and 
                         date(mv.date) >= '%s' and date(mv.date) <= '%s' and mv.company_id = %s
                         and sl.usage in ('supplier') and dest_id.usage = 'internal' 
-                        group by mv.product_id, mv.picking_id, mv.product_qty """%(pro.id,data['start_date'], data['end_date'],data['company_id']))
+                        group by mv.product_id, mv.picking_id, mv.product_qty, mv.date order by mv.date asc"""%(pro.id,data['start_date'], data['end_date'],data['company_id']))
             income_pro = self.env.cr.dictfetchall()
             
             for prod in income_pro:

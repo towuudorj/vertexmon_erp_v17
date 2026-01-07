@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+        	<record id="product_sales_report_view" model="ir.ui.view">
+				<field name="name">product.sales.report</field>
+				<field name="model">product.sales.report</field>
+				<field name="arch" type="xml">
+					<form string="Product sales report" >
+						<group>
+							<field name="company_id" />
+							<field name="product_id"/>
+							<field name="categ_id"/>
+							<field name="start_date"/>
+							<field name="end_date"/>
+						</group>
+						<field name="warehouse_ids" />
+						<footer>
+							<button name="action_print_xls_report" string="Export" type="object"
+								class="oe_highlight" />
+							or
+							<button string="Cancel" class="oe_link" special="cancel" />
+						</footer>
+					</form>
+				</field>
+			</record>
+
+		<record id="action_product_sales_report" model="ir.actions.act_window">
+			<field name="name">Бараа материалын эргэцийн тайлан</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.sales.report</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="product_sales_report_view" />
+			<field name="target">new</field>
+		</record>
+		
+
+    </data>
+</odoo>

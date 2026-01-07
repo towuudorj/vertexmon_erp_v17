@@ -14,6 +14,9 @@
 
         <menuitem id="stock_summary_report_mn_menu" name="Stock summary report" parent="stock.menu_stock_config_settings" action="action_product_summary_report"  />
         
+        <menuitem id="product_aged_report_mn_menu" name="Product aged report" parent="stock.menu_stock_config_settings" action="action_product_aged_report"  />
+        
+        <menuitem id="product_sales_report_mn_menu" name="Product sales report" parent="stock.menu_stock_config_settings" action="action_product_sales_report"  />
 
         <menuitem id="product_category_new_menu" name="Product category" parent="stock.menu_stock_config_settings" action="action_product_category_new"  />
 

@@ -43,6 +43,8 @@
                 'report/workwear_report.xml',
                 'wizard/product_detail_report.xml',
                 'wizard/product_summary_report.xml',
+                'wizard/product_aged_report_view.xml',
+                'wizard/product_sales_report_view.xml',
                 'views/distributor_register_view.xml',
                 'views/product_inherit_view.xml',
                 'views/item_group_view.xml',

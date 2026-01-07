@@ -260,6 +260,20 @@ msgstr "Дистрибутер"
 msgid "Product category"
 msgstr "Барааны ангилал"
 
+#. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_product_aged_report
+#: model:ir.ui.menu,name:l10n_mn_stock.product_aged_report_mn_menu
+msgid "Product aged report"
+msgstr "Бараа материалын насжилтын тайлан"
+
+
+#. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_product_sales_report
+#: model:ir.ui.menu,name:l10n_mn_stock.product_sales_report_mn_menu
+msgid "Product sales report"
+msgstr "Бараа материалын эргэцийн тайлан"
+
+
 
 
 #. module: l10n_mn_stock
