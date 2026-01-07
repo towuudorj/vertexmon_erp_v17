@@ -256,7 +256,7 @@
                                         <field name="request_type" optional="show"/>
                                         <field name="purchase_user_id" optional="show"/>
                                         <field name="uom_id"  required="product_id != False"/>
-                                        <field name="purchase_type" optional="show"/>
+                                        <field name="purchase_type" optional="show" required="request_type != 'send_quotation' "/>
                                         <field name="priority"  optional="show"/>
                                         <field name="pre_qty" readonly="1" optional="show"/>
                                         <field name="qty"/>

@@ -33,7 +33,7 @@ class CrmLeadLine(models.Model):
         ('high', 'High'),
     ], string='Priority', default='normal')
     purchase_type = fields.Selection([('one_year','One year supllier'),
-                                        ('once_pro','Once product')],string='Purchase type', required=True)        
+                                        ('once_pro','Once product')],string='Purchase type')        
     pre_qty = fields.Float(string='Pre quantity')
     order_line_image = fields.Binary(string='Order line image')
     add_desc = fields.Text(string='Additional description')

@@ -13,49 +13,53 @@
                                 </p>
                                 </div>
                                 <div class="col-xs-8" style="text-align:center;">
-                                <h4>Орлогын баримт</h4>
-                                <span t-field="o.picking_type_id.name"/>:
-                                <span t-field="o.name"/>
+                                <h4>Орлогын баримт: <span t-field="o.name"/></h4>
+                                
                                         
                                 </div>
-                                <table class="table table-condensed">
-                                    <thead>
-                                        <tr style="border: 1px solid black;">
-                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Эх баримт</strong></th>
-                                            <th style="width: 30%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нийлүүлэгчийн нэр</strong></th>
-                                            <th style="width: 15%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Утас</strong></th>
-                                            <th style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Хаяг</strong></th>
-                                            <th  style="width: 20%; border: 1px solid black; font-size:11px; padding:2px;" name="td_sched_date_h"><strong>Хэрэгжсэн огноо</strong></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
-                                                <span t-field="o.origin"/>
-                                            </td>
-                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
-                                                <span t-field="o.partner_id.name"/>
-                                            </td>
-                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
-                                                <span t-field="o.partner_id.phone"/>
-                                            </td>
-                                            <td style="border: 1px solid black; font-size:11px; padding:2px;">
-                                                <span t-field="o.partner_id.street"/>
-                                            </td>
-                                            <td style="border: 1px solid black; font-size:11px; padding:2px;" name="td_sched_date">
-                                                <span t-field="o.date_done"/>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                                <table class="width: 100%; table table-condensed; text-align: center; border: transparent 1px solid; margin-left:50px; margin-right:50px;">
+			                        <tr style="border: none;">
+			                            <td style="width: 50%; border: none; font-size:11px; padding:3px; text-align:center; text-decoration: underline;"><span t-field="o.company_id.name"/></td>
+			                            <td style="width: 50%; border: none; font-size:11px; padding:3px; text-align:center; text-decoration: underline;"></td>
+			                        </tr>
+			                        <tr style="border: none; underline;">
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                                ( Байгууллагын нэр )
+			                            </td>
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                                  <span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;yyyy-MM-dd&quot;}"/>
+			                            </td>
+			                        </tr>
+			                        <tr style="border: none;">
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                               <span t-field="o.partner_id.name"/>
+			                            </td>
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                                    Дагалдах баримт №: <span t-field="o.origin"/>
+			                            </td>
+			                        </tr>
+			                        <tr style="border: none;">
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                               ( Бэлтгэн нийлүүлэгчийн нэр )
+			                            </td>
+			                            <td style="border: none; font-size:11px; padding:3px; text-align:center;">
+			                                
+			                            </td>
+			                        </tr>
+			                    </table>
                                     <table class="width: 100%; table table-condensed" >
                                         <thead>
                                             <tr>
-                                                <th style="width: 37%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Бараа</strong></th>
-                                                <th style=" width: 8%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Баркод</strong></th>
-                                                <th style=" width: 5%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Тоо</strong></th>
-                                                <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;"><strong>Нэгж үнэ</strong></th>
-                                                <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Нийт үнэ</strong></th>
+                                                <th style=" width: 40%; border: 1px solid black; font-size:11px; padding:2px;" rowspan="2" ><strong>Материалын үнэт зүйлийн нэр, зэрэг, дугаар</strong></th>
+                                                <th style=" width: 15%;  border: 1px solid black; font-size:11px; padding:2px;" rowspan="2" class="text-right"><strong>Код</strong></th>
+                                                <th style=" width: 15%;  border: 1px solid black; font-size:11px; padding:2px;" rowspan="2" class="text-right"><strong>Хэмжих нэгж</strong></th>
+                                                <th style=" width: 10%;  border: 1px solid black; font-size:11px; padding:2px;" rowspan="2" class="text-right"><strong>Нэгж үнэ</strong></th>
+                                                <th style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;" colspan="2"><strong>Хүлээн авсан</strong></th>
+                                                
+                                            </tr>
+                                            <tr>
+                                            	<th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Тоо</strong></th>
+                                                <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><strong>Дүн</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -66,9 +70,11 @@
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td>   
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id.barcode"/></td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
-                                                        <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/>
+                                                        <span t-field="move.product_uom" groups="product.group_uom"/>
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.price_unit" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                    <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.product_uom_qty"/> </td>
+                                                    
                                                     <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-esc="move.price_unit*move.product_uom_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 </t>
                                             </tr>
@@ -86,16 +92,18 @@
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id"/></td>   
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;"><span t-field="move.product_id.barcode"/></td>
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
-                                                            <span t-field="move.quantity"/> <span t-field="move.product_uom" groups="product.group_uom"/>
+                                                            <span t-field="move.product_uom" groups="product.group_uom"/>
                                                         </td>
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.move_id.price_unit" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-field="move.quantity"/> </td>
                                                         <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"><span t-esc="move.move_id.price_unit*move.quantity" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                     </t>
                                                 </t>
                                             </tr>
                                         <tr class="border-black">
-                                            <td  colspan="4" style="padding: 3px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
-                                            <td style="padding: 3px; border: 1px solid black;  text-align: right;">   <t t-esc="sum([x for x in o.move_line_ids_without_package.mapped('quantity')])" /></td>
+                                            <td  colspan="4" style="font-size:11px; padding: 3px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
+                                            <td style="font-size:11px; padding: 3px; border: 1px solid black;  text-align: right;">   <t t-esc="sum([x for x in o.move_line_ids_without_package.mapped('quantity')])" /></td>
+                                            <td style="font-size:11px; padding: 3px; border: 1px solid black;  text-align: right;"></td>
                                         </tr>
                                     </t>
                                 </t>
@@ -104,21 +112,23 @@
                             <tr>
                                 <td style="border: 1px solid black; font-size:11px; padding:2px;">Нийт</td>
                                 <td style="border: 1px solid black; padding:2px;"></td>
-
+ 								<td style="border: 1px solid black; padding:2px;"></td>
                                 <td style="border: 1px solid black; font-size:11px; padding:2px;"  class="text-right">
-                                    <t t-if="o.state=='done'">
-                                        <span t-esc="sum(line.quantity for line in o.move_line_ids_without_package)" t-options='{"widget": "float", "precision": 2}'/>
-                                    </t>
                                 </td>
-                                <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right"></td>
-                                <td style="border: 1px solid black; padding:2px;"></td>
+                                <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                	<t t-if="o.state=='done'">
+                                        <span t-esc="sum(line.quantity for line in o.move_line_ids_without_package)" t-options='{"widget": "float", "precision": 2}'/>
+                                    </t></td>
+                                <td style="border: 1px solid black; padding:2px;"> <span t-esc="sum((line.quantity*line.move_id.price_unit) for line in o.move_line_ids_without_package)" t-options='{"widget": "float", "precision": 2}'/></td>
                             </tr>
                         </tbody>
                     </table>
-                    <div style="font-size:11px; padding:4px;"> Хүлээн авсан :.................................................../................................../
+                    <div style="font-size:11px; padding:4px; text-align:right;"> Хүлээн авсан :.................................................../................................../
                     </div>          
-                    <div style="font-size:11px; padding:4px;"> Хүлээлгэн өгсөн :..................................................//
-                    </div>                                                                                                                                              
+                    <div style="font-size:11px; padding:4px; text-align:right;"> Хүлээлгэн өгсөн :................................................../.................................../
+                    </div>     
+                    <div style="font-size:11px; padding:4px; text-align:right;"> Шалгасан нягтлан бодогч :................................................../.................................../
+                    </div>                                                                                                                                            
                     </div>
                 </t>
             </t> 

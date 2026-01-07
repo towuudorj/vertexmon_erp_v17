@@ -119,18 +119,37 @@
 
                 <table style="width: 100%; margin-top: 20px; font-size: 11px; border: transparent 1px solid; ">
                     <tr>
-                        <td style="padding:3px;">Захирал:......................................./ Д.Мэндсайхан /</td>
+
+                        
+                        
                         <td style="padding:3px;">Банкинд гүйлгээ хийсэн .... оны ... сарын ... өдөр</td>
+                                                <t t-if="o.company_id.id==1">
+                            <td style="padding:3px; padding-bottom:10px;">Захирал:......................................./ Д.Мэндсайхан /</td>
+                        </t>
+                         <t t-if="o.company_id.id!=1">
+                            <td style="padding:3px; padding-bottom:10px;">Захирал:......................................./ Х.Баяржаргал /</td>
+                        </t>
                         <td style="padding:3px;">Төлөх хугацаа</td>
                     </tr>
                     <tr>
                         <td rowspan="2" style="padding:3px;">Тамга</td>
-                        <td style="padding:3px;">СЗА Захирал:......................................... / С.Мөнхтуяа /</td>
+                        <td style="padding:3px; padding-bottom:10px;">СЗА Захирал:......................................... / С.Мөнхтуяа /</td>
+                        
                         <td style="padding:3px;">Төлбөрийн ээлж</td>
+                        
+                    </tr>
+                    
+                    <tr>
+                        
+                        <td style="padding:3px; padding-bottom:10px;">Ви эм си группын захирал:......................................... / Т.Энэрэл /</td>
+                        
+                        <td style="padding:3px;">Тэмдэг, гарын үсэг</td>
                     </tr>
                     <tr>
-                        <td style="padding:3px;"></td>
-                        <td style="padding:3px;">Тэмдэг, гарын үсэг</td>
+                        <td/>
+                          
+                        <td style="padding:3px;">Ахлах нягтлан бодогч:......................................... / Т.Ганцэцэг /</td>
+                        
                     </tr>
                 </table>
             </t>

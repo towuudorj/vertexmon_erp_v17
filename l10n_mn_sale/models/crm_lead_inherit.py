@@ -254,6 +254,15 @@ class CrmLead(models.Model):
     buy_currency_id = fields.Many2one('res.currency', string='Buy currency', compute="_get_buy_currency")
     cost_total_amount = fields.Float(string='Cost total amount', compute="_compute_total_cost")
     
+    @api.depends('partner_id')
+    def _compute_name(self):
+        for lead in self:
+            if not lead.name and lead.partner_id and lead.partner_id.name:
+                if lead.partner_id.parent_id.id:
+                    lead.name = _("%s's opportunity") % lead.partner_id.parent_id.name
+                else:
+                    lead.name = _("%s's opportunity") % lead.partner_id.name
+    
     def _get_sale_currency(self):
         for line in self:
             line.sale_currency_id = line.pricelist_id.currency_id.id
