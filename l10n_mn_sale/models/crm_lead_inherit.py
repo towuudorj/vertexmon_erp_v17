@@ -475,8 +475,8 @@ class CrmLead(models.Model):
             #mail = self.env['mail.mail'].create(mail_values)
             #mail.send()
             lead.new_status = 'done'
+            lead.purchase_request_ids.quotation_done()
             if lead.crm_type == 'crm':
-                lead.purchase_request_ids.quotation_done()
                 sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
                 sale_order_id.action_confirm()
                 purchase_id = self.env['purchase.order'].search([('requisition_id','in',lead.purchase_request_ids.ids)],limit=1)
