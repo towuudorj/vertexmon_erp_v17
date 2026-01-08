@@ -21,6 +21,10 @@ class StockLandedCost(models.Model):
     #                    if picking.state in ['done']:
     #                        rec.picking_ids |= picking
 
+class StockLandedCostLine(models.Model):
+    _inherit = "stock.landed.cost.lines"
+
+    split_method = fields.Selection(default='by_current_cost_price')
 
 class StockValuationAdjustmentLines(models.Model):
     _inherit = 'stock.valuation.adjustment.lines'
