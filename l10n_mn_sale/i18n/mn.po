@@ -263,6 +263,11 @@ msgid "Salesperson"
 msgstr "Борлуулагч"
 
 #. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.view_order_form
+msgid "Same OT/PO records"
+msgstr "Борлуулалтын захиалга"
+
+#. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_new_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_common_report_view
 msgid "Close"
@@ -984,6 +989,11 @@ msgstr "Нэхэмжлэл үүссэн дүн = Нийт Дүн - Урьдчи�
 #: model:ir.model.fields,help:l10n_mn_sale.field_sale_advance_payment_inv__amount_to_invoice_create
 msgid "The amount to invoice create = Sale Order Total - Down Payments."
 msgstr "Нэхэмжлэл үүсгэх дүн = Нийт Дүн - Урьдчилсан төлөлт"
+
+#. module: l10n_mn_sale
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.view_order_form
+msgid "There are records existing same OT/PO"
+msgstr "Адил OT/PO дугаартай борлуулалтын захиалга үүссэн байна "
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead_line__pre_qty

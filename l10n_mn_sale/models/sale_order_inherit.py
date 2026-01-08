@@ -236,6 +236,7 @@ class SaleOrder(models.Model):
                                 ('12','12')],string=u'Сар')
     payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
     together_sales_id = fields.Many2many('res.users', string='Together sales')
+    is_ot_po_duplicated = fields.Boolean(compute='_compute_ot_po_duplicated')
 
 
     def action_create_new_invoice(self):
@@ -907,6 +908,29 @@ class SaleOrder(models.Model):
                 ).send_mail(user.id, force_send=True)
         return True
 
+    @api.onchange('ot_po')
+    def _compute_ot_po_duplicated(self):
+        for obj in self:
+            if obj.ot_po:
+                ot_po_duplicated_order = self.search([('ot_po', '=', obj.ot_po), ('id', '!=', obj._origin.id)])
+                if obj.ot_po and ot_po_duplicated_order:
+                    obj.is_ot_po_duplicated = True
+                else:
+                    obj.is_ot_po_duplicated = False
+            else:
+                obj.is_ot_po_duplicated = False
+
+    def see_ot_po_duplicated_orders(self):
+        ot_po_duplicated_order = self.search([('ot_po', '=', self.ot_po), ('id', '!=', self._origin.id)])
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Борлуулалтын захиалга',
+            'view_mode': 'tree,form',
+            'views': [(self.env.ref('sale.view_order_tree').id, 'tree'), (self.env.ref('sale.view_order_form').id, 'form')],
+            'target': 'current',
+            'domain': [('id', 'in', ot_po_duplicated_order.ids)],
+            'res_model': 'sale.order',
+        }
 
 class SaleOrderLine(models.Model):
     """Inherits the model sale.order.line to add a field"""

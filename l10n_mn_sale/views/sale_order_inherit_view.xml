@@ -131,6 +131,12 @@
                 <field name="add_desc" optional="hide"/>
                 <field name="crm_lead_line_id" invisible="1"/>
             </xpath>
+            <xpath expr="//form/header" position="after">
+                <field name="is_ot_po_duplicated" invisible="1"/>
+                <div class="alert alert-warning pb-1" role="alert" invisible="not is_ot_po_duplicated">
+                    <p>There are records existing same OT/PO <a name="see_ot_po_duplicated_orders" type="object">Same OT/PO records</a></p>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
