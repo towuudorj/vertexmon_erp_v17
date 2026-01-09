@@ -11,7 +11,8 @@
                     <field name="name"/>
                     <field name="date"/>
                 </group>
-                <field name="product_lines">
+                <field name="product_lines" invisible="1"/>
+                <field name="task_lines">
                     <tree editable="top" create="0">
                         <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
                         <field name="quantity"/>
@@ -28,6 +29,18 @@
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
+        </field>
+    </record>
+
+    <record id="view_project_pack_tasks_line_tree" model="ir.ui.view">
+        <field name="name">Package Tasks Create Line</field >
+        <field name="model">project.package.task.create.line</field>
+        <field name="arch" type="xml">
+            <tree string="Package Task" limit="100">
+                <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                <field name="quantity"/>
+                <field name="uom_id" groups="uom.group_uom"/>
+            </tree>
         </field>
     </record>
 

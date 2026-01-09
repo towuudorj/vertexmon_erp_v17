@@ -26,6 +26,8 @@ class ProjectPackageTask(models.TransientModel):
     name = fields.Char(string="Description", required=True)
     date = fields.Date(string="Date", required=True)
     product_lines = fields.One2many('project.package.task.create.line', 'wizard_id', 'Products', readonly=False, store=True)
+    task_lines = fields.Many2many('project.package.task.create.line', 'package_task_create_line_rel', 'wizard_id', 'line_id',
+                                  string="Products", readonly=False, domain="[('id', 'in', product_lines)]")
     
     
 
@@ -45,7 +47,7 @@ class ProjectPackageTask(models.TransientModel):
             }
             task = self.env['project.task'].create(vals)
         if task:
-            for line in self.product_lines:
+            for line in self.task_lines:
                 line_vals = {
                     'product_id': line.product_id.id,
                     'name': line.pline_id.name,
