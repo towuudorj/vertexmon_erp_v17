@@ -11,7 +11,7 @@
             <xpath expr="//field[@name='stage_id']" position="before">
                 <header>
                     <button name="action_task_approve"  string="Approve" 
-                        type="object" class="oe_highlight" data-hotkey="g"/>
+                        type="object" class="oe_highlight" data-hotkey="g" invisible="state=='03_approved'"/>
                 </header>
             </xpath>
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
