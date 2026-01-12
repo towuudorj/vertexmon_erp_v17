@@ -936,7 +936,7 @@ class SaleOrder(models.Model):
     def _compute_invoice_status(self):
         for obj in self:
             acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
-                                                            ('state', '=', 'posted'),
+                                                            ('state', '!=', 'cancel'),
                                                             ('partner_id', '=', obj.partner_id.id),
                                                             ('company_id', '=', obj.company_id.id),
                                                             ('payment_type', '!=', 'penalty')])
