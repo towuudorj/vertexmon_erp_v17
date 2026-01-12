@@ -305,4 +305,5 @@ class StockMoveLine(models.Model):
     gross_weight = fields.Float(string='Gross weight (kg)')
     dimensions = fields.Char(string='Dimensions')
     cbm = fields.Float(string='CBM')
+    po_origin = fields.Char(related="picking_id.origin", string=u'Баримтын дугаар', store=True)
 
