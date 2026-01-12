@@ -304,7 +304,7 @@ class SaleOrder(models.Model):
         pre_price = all_amount/100.0*pre_percent
         tax_id = self.env['account.tax'].search([('type_tax_use','=','sale'),('company_id','=',self.company_id.id),('price_include','=',True)],limit=1)
         final_lines.append((0, 0, {
-            "name": 'Урьдчилгаа төлбөр %s'%pre_percent,
+            "name": 'Урьдчилгаа төлбөр %s' % pre_percent,
             "quantity": -1,
             "price_unit": pre_price,
             "tax_ids": [(6, 0, [tax_id.id])],
@@ -931,6 +931,23 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', ot_po_duplicated_order.ids)],
             'res_model': 'sale.order',
         }
+
+    @api.depends('state', 'order_line.invoice_status', 'order_line')
+    def _compute_invoice_status(self):
+        for obj in self:
+            acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
+                                                            ('state', '=', 'posted'),
+                                                            ('partner_id', '=', obj.partner_id.id),
+                                                            ('company_id', '=', obj.company_id.id),
+                                                            ('payment_type', '!=', 'penalty')])
+            if acc_move_ids:
+                total_invoice_created_amount = sum(acc_move_ids.mapped('invoice_line_ids').mapped('price_unit'))
+                if total_invoice_created_amount == obj.amount_total:
+                    obj.invoice_status = 'invoiced'
+                else:
+                    return super(SaleOrder, self)._compute_invoice_status()
+            else:
+                return super(SaleOrder, self)._compute_invoice_status()
 
 class SaleOrderLine(models.Model):
     """Inherits the model sale.order.line to add a field"""

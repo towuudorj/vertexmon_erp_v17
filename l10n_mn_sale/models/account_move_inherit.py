@@ -20,6 +20,7 @@ class AccountMove(models.Model):
     payment_percent = fields.Float(string='Payment percent')
     line_names = fields.Text(string='Line names', compute='_compute_line_names')
     payment_date = fields.Date(string='Payment date')
+    ot_po = fields.Char(string='OT/PO', compute='_compute_ot_po')
 
     @api.depends('invoice_line_ids')
     def _compute_line_names(self):
@@ -28,6 +29,14 @@ class AccountMove(models.Model):
                 obj.line_names = ',\n'.join([l.name for l in obj.invoice_line_ids])
             else:
                 obj.line_names = ''
+
+    @api.onchange('line_ids')
+    def _compute_ot_po(self):
+        for obj in self:
+            if obj.sale_order_count == 1:
+                obj.ot_po = obj.line_ids.sale_line_ids.order_id.ot_po
+            else:
+                obj.ot_po = ''
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
