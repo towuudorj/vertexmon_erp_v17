@@ -71,6 +71,7 @@ class ForeignPurchaseRequest(models.TransientModel):
                                     'name':lines.desc,
                                     'uom_id':lines.uom_id.id,
                                     'lead_id':crm_id.id,
+                                    'sale_price':lines.price_unit,
                                     'qty':qty,
                                     'request_type':'is_purchase',
                                     'purchase_user_id':lines.purchase_user_id.id
