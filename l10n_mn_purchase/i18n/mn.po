@@ -122,6 +122,37 @@ msgstr "Ангилал"
 msgid "Freight partner"
 msgstr "Тээврийн компани"
 
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__freight_status
+msgid "Freight status"
+msgstr "Тээврийн төлөв"
+
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__order
+msgid "Order done"
+msgstr "Захиалга хийгдсэн"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__manufacturer
+msgid "Manufacturer"
+msgstr "Үйлдвэрлэгдэж байгаа"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__freight
+msgid "Freight"
+msgstr "Тээвэрт гарсан"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__customs
+msgid "Customs"
+msgstr "Гааль дээр ирсэн"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__stock
+msgid "Stock"
+msgstr "Агуулахад авсан"
+
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
