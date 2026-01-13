@@ -244,7 +244,7 @@ class CrmLead(models.Model):
     break_reason = fields.Text(string='Break reason')
     expire_day = fields.Integer(string='Expire day', default=7)
     supply_date = fields.Date(string='Supply date')
-    supply_day = fields.Date(string='Supply day', default='7 хоног')
+    supply_day = fields.Char(string='Supply day', default='7 хоног')
     note = fields.Text(string='Note')
     partner_bank_id = fields.Many2one('res.partner.bank', 
                                    string='Bank Account Number',
