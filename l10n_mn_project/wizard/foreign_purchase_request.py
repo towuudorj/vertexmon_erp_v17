@@ -35,6 +35,7 @@ class ForeignPurchaseRequest(models.TransientModel):
                             'product_id':li.product_id.id,
                             'desc':li.name,
                             'qty':qty,
+                            'price_unit':li.price_unit,
                             'uom_id':li.product_uom.id,
                             'purchase_user_id':li.purchase_manager_id.id,
                             'line_id':li.id
@@ -87,6 +88,7 @@ class ForeignPurchaseRequestLine(models.TransientModel):
     line_id = fields.Many2one('project.products.line', string='Project line')
     desc = fields.Char(string='Desc')
     qty = fields.Float(string='Qty', required=True)
+    price_unit = fields.Float(string='Sale price')
     uom_id = fields.Many2one('uom.uom', string='Uom', required=True)
     purchase_user_id = fields.Many2one('res.users', string='Purchase user', required=True, domain="[('is_purchase_manager','=',True)]") 
     foreign_parent_id = fields.Many2one('foreign.purchase.request', string='Foreign')

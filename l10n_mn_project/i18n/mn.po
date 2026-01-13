@@ -56,6 +56,8 @@ msgid "Date"
 msgstr "Огноо"
 
 
+
+
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__supplier_id
 msgid "Supplier"
@@ -88,6 +90,11 @@ msgstr "Бараа бүтээгдэхүүн"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__qty
 msgid "Qty"
 msgstr "Тоо"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__price_unit
+msgid "Sale price"
+msgstr "Зарах үнэ"
 
 
 
