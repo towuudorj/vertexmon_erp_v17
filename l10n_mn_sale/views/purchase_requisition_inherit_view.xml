@@ -60,6 +60,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='date_end']" position="replace">  
+                	 
                 </xpath>
 
                 <xpath expr="//field[@name='ordering_date']" position="replace">  
@@ -68,10 +69,13 @@
                 <xpath expr="//field[@name='schedule_date']" position="replace">  
                 </xpath>
 
-                <xpath expr="//field[@name='origin']" position="replace">  
+                <xpath expr="//field[@name='origin']" position="replace">
+                	<field name="supplier_day"  readonly="status =='done'"/> 
+                	<field name="edit_info_desc" readonly="status =='done'"/> 
                 </xpath>
 
-                <xpath expr="//field[@name='type_id']" position="replace">  
+                <xpath expr="//field[@name='type_id']" position="replace">
+                	
                 </xpath>
 
                 <field name="company_id" position="attributes">
@@ -83,6 +87,8 @@
 					<field name="crm_lead_id" readonly="1" string="Холбогдсон сэжим"/>
                     <field name="send_date" readonly="1"/>
                     <field name="purchase_user_id" readonly="1"/>
+					<field name="currency_date"  readonly="status =='done'"/>
+				 	<field name="currency_rate"  readonly="status =='done'"/>
                 </xpath>
 
 
@@ -116,7 +122,7 @@
                 <field name="user_id" position="attributes">
                     <attribute name="readonly">status == 'quotation_ed'</attribute>
                 </field>
-
+				 
                 <field name="currency_id" position="attributes">
                     <attribute name="readonly">status == 'quotation_ed'</attribute>
                 </field>      

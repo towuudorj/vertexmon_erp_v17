@@ -14,6 +14,7 @@
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="sales_partner_id"  />
+                    <field name="crm_code" readonly="1"/>
                     <field name="analytic_id"  />
                     <field name="is_expense"  />
                 </xpath>

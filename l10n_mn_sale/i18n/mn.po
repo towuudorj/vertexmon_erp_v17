@@ -811,11 +811,31 @@ msgstr "Хүсэлтийн төрөл"
 msgid "Is price request"
 msgstr "Үнэ судлах эсэх"
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__supply_day
+msgid "Supply day"
+msgstr "Нийлүүлэх хугацаа"
+
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__status
 msgid "Status"
 msgstr "Төлөв"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__supplier_day
+msgid "Supplier day"
+msgstr "Нийлүүлэх хугацаа"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__currency_date
+msgid "Currency date"
+msgstr "Ханшийн огноо"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__currency_rate
+msgid "Currency rate"
+msgstr "Валютын ханш"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__total_amount
