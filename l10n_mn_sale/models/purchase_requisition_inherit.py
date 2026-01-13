@@ -212,12 +212,14 @@ class PurchaseRequisition(models.Model):
                         pr.purchase_ids = [(4,purchase_order_id.id)]
                         line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
                                                                             ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                         
                         if lines.supplier_id.id == purchase_order_id.partner_id.id:
                             line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
                                                                                  ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                             if not line_ids:
                                 line_data = {
                                             'product_id': lines.product_id.id,
@@ -235,7 +237,8 @@ class PurchaseRequisition(models.Model):
                         if lines.supplier_id.id == purchase_order.partner_id.id:
                             line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order.id),
                                                                                 ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                             if not line_ids:
                                 line_data = {
                                             'product_id': lines.product_id.id,
