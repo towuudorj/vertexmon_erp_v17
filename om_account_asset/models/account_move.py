@@ -50,7 +50,8 @@ class AccountMove(models.Model):
             context = dict(self.env.context)
             context.pop('default_type', None)
             for mv_line in inv.invoice_line_ids:
-                mv_line.with_context(context).asset_create()
+                for qty in range(0, int(mv_line.quantity)):
+                    mv_line.with_context(context).asset_create()
         return result
 
 
@@ -111,11 +112,12 @@ class AccountMoveLine(models.Model):
                 self.company_id,
                 self.move_id.invoice_date or fields.Date.context_today(
                     self))
+            price_unit = self.price_subtotal/self.quantity
             vals = {
                 'name': self.name,
                 'code': self.name or False,
                 'category_id': self.asset_category_id.id,
-                'value': price_subtotal,
+                'value': price_unit,
                 'partner_id': self.move_id.partner_id.id,
                 'company_id': self.move_id.company_id.id,
                 'currency_id': self.move_id.company_currency_id.id,
