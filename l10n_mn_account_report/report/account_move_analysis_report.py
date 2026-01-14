@@ -199,14 +199,14 @@ class AccountMoveAnalysis(models.TransientModel):
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                             left join account_move as am on am.id=aml.move_id 
                                             where aml.date >='%s' and aml.date <= '%s' and aml.account_id = %s 
-                                            and am.state in %s and aml.journal_id = %s and am.company_id"""%(fiscalyear_id.date_from,
+                                            and am.state in %s and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,
                                             data['start_date'],line.id,tuple(states),f_journal[0],data['company_id']))
                     pre_balance = self._cr.dictfetchall()
                 else:
                     self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit from account_move_line as aml
                                         left join account_move as am on am.id=aml.move_id 
                                         where aml.date >='%s' and aml.date < '%s' and aml.account_id = %s 
-                                        and am.state in %s and am.company_id"""%(fiscalyear_id.date_from,
+                                        and am.state in %s and am.company_id = %s """%(fiscalyear_id.date_from,
                                         data['start_date'],line.id,tuple(states),data['company_id']))
                     pre_balance = self._cr.dictfetchall()
             sheet.write('A%s'%rowx, number, data_center)
