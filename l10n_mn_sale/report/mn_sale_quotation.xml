@@ -428,7 +428,7 @@
                         </tr>
                         <tr style="border:none;">
                             <td style="padding:4px; font-size:11px; width:60%; padding-left:0%; border:none;">
-                                Нийлүүлэх хугацаа: <span t-field="o.supply_day"/>
+                                Нийлүүлэх хугацаа: <span t-field="o.supply_date"/>
                             </td>
                             <td style="padding:4px; font-size:11px; width:40%; position: absolute; border:none;">
                             </td>
