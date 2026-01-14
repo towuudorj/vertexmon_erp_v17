@@ -107,7 +107,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         # Create deposit product if necessary
         if not self.product_id:
             self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
-                self._prepare_down_payment_product_values(self.fixed_amount)
+                self._prepare_down_payment_product_values()
             )
             self._compute_product_id()
 
@@ -263,9 +263,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
         res = super()._prepare_invoice_values(order, so_line)
         if self.advance_payment_method == 'term' and payment_line:
             today = fields.Date.today()
-            res['invoice_date'] = today + timedelta(days=payment_line.nb_days)
-            res['payment_type'] = payment_line.payment_type
-            res['payment_percent'] = payment_line.percent
+            res.update({
+                'invoice_date': today,
+                'invoice_date_due': today + timedelta(days=payment_line.nb_days),
+                'payment_type': payment_line.payment_type,
+                'payment_percent': payment_line.percent,
+            })
             for line_vals in res['invoice_line_ids']:
                 line_vals[2]['name'] = payment_line.desc if payment_line.desc else dict(payment_line._fields['payment_type']._description_selection(self.env)).get(payment_line.payment_type)
         if self.advance_payment_method == 'fixed':

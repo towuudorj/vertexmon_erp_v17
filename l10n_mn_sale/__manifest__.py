@@ -46,6 +46,7 @@
                 'report/mn_sale_crm_quotation.xml',
                 'report/mn_sale_invoice.xml',
                 'report/mn_sale_expense.xml',
+                'report/mn_sale_expense_stamp.xml',
                 'report/mn_sale_expense_desc.xml',
                 'report/mn_ot_sale_invoice.xml',
                 'report/sale_order_common_report_view.xml',

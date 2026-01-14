@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--
+		<!--  
         <record id="view_account_move_mn_inherit" model="ir.ui.view">
             <field name="name">account.move.form.mn</field>
             <field name="model">account.move</field>
@@ -42,17 +42,18 @@
             </data>
             </field>
         </record>
+        -->
 
          <record id="view_account_move_line_tree_mn_inherit" model="ir.ui.view">
             <field name="name">account.move.line.tree.mn</field>
             <field name="model">account.move.line</field>
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
-            <data>
-                <xpath expr='//tree/field[@name="debit"]' position="before">
-                    <field name="cash_move_type_id"/>
-                </xpath>
-            </data>
+	            <data>
+	                <xpath expr='//tree/field[@name="debit"]' position="before">
+	                    <field name="cash_move_type_id"/>
+	                </xpath>
+	            </data>
             </field>
         </record>
 
@@ -92,5 +93,5 @@
             </field>
         </record>
 	
--->
+
 </odoo>

@@ -57,11 +57,13 @@
                     <table class="width: 100%;" style="margin-left:60px; margin-right:20px;">
                         <t t-set="discount" t-value="false"/>
                         <t class="border-black" t-foreach="o.order_line" t-as="line">
-                            <t t-if="line.discount &gt; 0.0">
-                                <t t-set="discount" t-value="true"/>
-                            </t>
-                            <t t-else="line.discount==0.0">
-                                <t t-set="discount" t-value="false"/>
+                            <t t-if="line.is_downpayment==false">
+                                <t t-if="line.discount &gt; 0.0">
+                                    <t t-set="discount" t-value="true"/>
+                                </t>
+                                <t t-else="line.discount==0.0">
+                                    <t t-set="discount" t-value="false"/>
+                                </t>
                             </t>
                         </t>
                         <t t-if="discount==false">
@@ -79,6 +81,7 @@
                                     <t t-if="o.order_line">
                                         <t t-set="i" t-value="1"/>
                                         <tr t-foreach="o.order_line" t-as="line">
+                                            <t t-if="line.is_downpayment==false">
                                                 <td style="border: 1px solid black; font-size:11px; padding:7px; text-align:center;"><span t-esc="i"/></td>   
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px;"><span t-field="line.product_id.name"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_uom.name"/></td>
@@ -87,7 +90,8 @@
                                                 </td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                            <t t-set="i" t-value="i+1"/>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </t>
                                         </tr>
                                         <tr class="border-black">
                                             <td colspan="3" style="padding: 4px;  font-size:11px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>
@@ -130,6 +134,7 @@
                                     <t t-if="o.order_line">
                                         <t t-set="i" t-value="1"/>
                                         <tr t-foreach="o.order_line" t-as="line">
+                                            <t t-if="line.is_downpayment==false">
                                                 <td style="border: 1px solid black; font-size:11px; padding:7px; text-align:center;"><span t-esc="i"/></td>   
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px;"><span t-field="line.product_id.name"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:center;"><span t-field="line.product_uom.name"/></td>
@@ -139,8 +144,8 @@
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.discount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                            
-                                            <t t-set="i" t-value="i+1"/>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </t>
                                         </tr>
                                         <tr class="border-black">
                                             <td colspan="3" style="padding: 4px;  font-size:11px; border: 1px solid black; font-weight: bold; text-align: center;"> Нийт тоо</td>

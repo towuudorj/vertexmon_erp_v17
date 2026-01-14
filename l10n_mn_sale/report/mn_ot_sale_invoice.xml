@@ -100,11 +100,13 @@
 					<table style="width: 99%; font-size:11px;text-align: center;  border-collapse: collapse; border: transparent 1px solid; margin-left: 15px; padding-top:1px;">
                 		<t t-set="discount" t-value="false"/>
 						<t class="border-black" t-foreach="o.order_line" t-as="line">
-							<t t-if="line.discount &gt; 0.0">
-								<t t-set="discount" t-value="true"/>
-							</t>
-							<t t-else="line.discount==0.0">
-								<t t-set="discount" t-value="false"/>
+							<t t-if="line.is_downpayment==false">
+								<t t-if="line.discount &gt; 0.0">
+									<t t-set="discount" t-value="true"/>
+								</t>
+								<t t-else="line.discount==0.0">
+									<t t-set="discount" t-value="false"/>
+								</t>
 							</t>
 						</t>
 						<t t-if="discount==false">
@@ -119,15 +121,17 @@
                 		</tr>
                 		<t t-set="i" t-value="1"/>
 						<tr class="border-black" t-foreach="o.order_line" t-as="line">
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
-		                        <t t-esc="line.name"/>
-		                    </td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom_qty"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom.name"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-field="line.price_subtotal"/></td>
-							<t t-set="i" t-value="i+1"/>
+							<t t-if="line.is_downpayment==false">
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: left;">
+									<t t-esc="line.name"/>
+								</td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom_qty"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom.name"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-field="line.price_subtotal"/></td>
+								<t t-set="i" t-value="i+1"/>
+							</t>
 		                </tr>
 						<tr style="border:none;">
 							<td rowspan="5" colspan="4" style="padding: 3px; border: none;  text-align: center;"> </td>					
@@ -158,17 +162,19 @@
                 		</tr>
                 		<t t-set="i" t-value="1"/>
 						<tr class="border-black" t-foreach="o.order_line" t-as="line">
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
-		                        <t t-esc="line.product_id.name"/>
-		                    </td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom_qty"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.discount"/></td>
+							<t t-if="line.is_downpayment==false">
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: left;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom_qty"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.product_uom"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+								<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.discount"/></td>
 
-							<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-field="line.price_subtotal"/></td>
-							<t t-set="i" t-value="i+1"/>
+								<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-field="line.price_subtotal"/></td>
+								<t t-set="i" t-value="i+1"/>
+							</t>
 		                </tr>
 						<tr style="border:none;">
 							<td rowspan="5" colspan="5" style="padding: 3px; border: none;  text-align: center;"> </td>					

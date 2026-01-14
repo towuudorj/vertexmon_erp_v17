@@ -10,9 +10,7 @@
                 <data>
                     <xpath expr='//field[@name="partner_shipping_id"]' position="after">
                         <field name="payment_type"/>
-                    </xpath>
-                    <xpath expr='//field[@name="invoice_date"]' position="after">
-                        <field name="payment_date"/>
+                        <field name="ot_po"/>
                     </xpath>
                 </data>
             </field>

@@ -18,6 +18,12 @@ class PurchaseOrder(models.Model):
     dispatch_date = fields.Date(string='Dispatch date')
     freight_type_id = fields.Many2one('freight.type.register', string='Freight type')
     freight_partner_id = fields.Many2one('res.partner', string='Freight partner')
+    crm_code = fields.Char(string=u'CRM Код')
+    freight_status = fields.Selection([('order','Order done'),
+                                       ('manufactur','Manufactur'),
+                                       ('freight','Freight'),
+                                       ('customs','Customs'),
+                                       ('stock','Stock')], string='Freight status')
 
 
     def _prepare_invoice(self):

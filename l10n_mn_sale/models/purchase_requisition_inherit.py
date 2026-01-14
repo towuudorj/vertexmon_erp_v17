@@ -53,6 +53,14 @@ class PurchaseRequisition(models.Model):
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     price_change = fields.Boolean(string='Price change')
+    currency_date = fields.Date(string='Currency date')
+    currency_rate = fields.Float(string='Currency rate')
+    supplier_day = fields.Char(string='Supplier day')
+    supplier_date = fields.Date(string='Supplier date')
+    edit_info_desc = fields.Text(string='Мэдээлэл шинэчлэх дээр тайлбар')
+    
+    
+    
 
 
     @api.depends('line_ids.subtotal', 'line_ids.price_unit')
@@ -67,6 +75,10 @@ class PurchaseRequisition(models.Model):
 
     def quotation_edit_request(self):
         for line in self:
+            if line.edit_info_desc == False:
+                raise UserError(_('Мэдээлэл шинэчлэх тайлбарыг оруулна уу!'))
+            for lines in line.line_ids:
+                lines.line_status = 'unapproved'
             for pur in line.purchase_ids:
                 if pur.state != 'draft':
                     pur.button_cancel()
@@ -152,6 +164,14 @@ class PurchaseRequisition(models.Model):
         if self.currency_id:
             for line in self.line_ids:
                 line.currency_id = self.currency_id.id
+            if self.currency_date:
+                rate = self.env['res.currency.rate'].search([('currency_id','=',self.currency_id.id),('name','=',self.currency_date),('company_id','=',self.company_id.id)])
+                if rate.inverse_company_rate > 0.0:
+                    self.currency_rate = rate.inverse_company_rate
+                else:
+                    raise UserError(_('Сонгосон огнооны ханш оруулаагүй байгаа тул оруулана уу!'))
+            else:
+                raise UserError(_('Ханш татах огноог оруулна уу!'))
 
 
 
@@ -176,6 +196,7 @@ class PurchaseRequisition(models.Model):
                             'user_id': pr.user_id.id,
                             'company_id': pr.company_id.id,
                             'origin': pr.name,
+                            'crm_code':pr.crm_lead_code,
                             'picking_type_id':picking_type_id.id,
                             'state': 'draft',
                             'analytic_id': pr.crm_lead_id.project_id.analytic_account_id.id,
@@ -191,12 +212,14 @@ class PurchaseRequisition(models.Model):
                         pr.purchase_ids = [(4,purchase_order_id.id)]
                         line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
                                                                             ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                         
                         if lines.supplier_id.id == purchase_order_id.partner_id.id:
                             line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
                                                                                  ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                             if not line_ids:
                                 line_data = {
                                             'product_id': lines.product_id.id,
@@ -214,7 +237,8 @@ class PurchaseRequisition(models.Model):
                         if lines.supplier_id.id == purchase_order.partner_id.id:
                             line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order.id),
                                                                                 ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id)])
+                                                                                  ('product_id', '=', lines.product_id.id),
+                                                                                  ('name','=',lines.product_description_variants)])
                             if not line_ids:
                                 line_data = {
                                             'product_id': lines.product_id.id,

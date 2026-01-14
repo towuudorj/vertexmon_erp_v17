@@ -118,6 +118,11 @@
                             <td style="width: 15%; font-weight: bold;  padding: 5px; white-space: nowrap;">Шаардах хуудас бичсэн:</td>
                             <td style="width: 35%; padding-right 25px; padding: 5px;"> __________________ / ___________________ /</td>
                         </tr>
+                        <tr>
+                            <td style="width: 15%; font-weight: bold;  padding: 5px;">Санхүүгийн шинжээч:</td>
+                            <td style="width: 35%; padding-right 25px; padding: 5px;"> ___________________ / ____________________ /</td>
+
+                        </tr>
                     </table>
                     
                 </div>
