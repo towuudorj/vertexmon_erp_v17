@@ -98,6 +98,8 @@ class Employee(models.Model):
     decree_count = fields.Integer(compute='_compute_decree_count')
     contract_count = fields.Integer(compute='_compute_contract_count')
 
+    attendance_id = fields.Integer('Attendance ID')
+
     def _compute_decree_count(self):
         for employee in self:
             employee.decree_count = self.env['hr.decree'].search_count([('employee_id', '=', employee.id)])

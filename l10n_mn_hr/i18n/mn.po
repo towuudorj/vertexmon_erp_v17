@@ -828,6 +828,11 @@ msgid "Phone"
 msgstr "Утасны дугаар"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__attendance_id
+msgid "Attendance ID"
+msgstr "Цаг бүртгэлийн ID"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__interestedly_job_id
 msgid "Interestedly job"
 msgstr "Сонирхож буй албан тушаал"
