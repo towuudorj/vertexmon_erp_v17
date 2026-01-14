@@ -373,8 +373,7 @@
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
                                         <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'default_create_employee_id': id}" widget="many2one_avatar_user"/>
-                                        <field name="attendance_id"
-                                            groups="hr.group_hr_manager"/>
+                                        
                                     </group>
 
                                     <group string='Payroll' name="payroll_group" invisible="1">
