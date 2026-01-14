@@ -98,7 +98,7 @@ class PurchaseOrder(models.Model):
                 )
             self.currency_rate = 1/currency_rate
         else:
-            self.currency_rate = 0.0
+            self.currency_rate = 1.0
 
 
 

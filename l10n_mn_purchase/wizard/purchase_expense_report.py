@@ -18,6 +18,9 @@ class PurchaseExpenseReport(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Product')
     category_id = fields.Many2one('product.category', string='Category')
     is_detailed = fields.Boolean(string='Detailed Report', default=False)
+    purchase_type = fields.Selection([('local', 'Local'),
+                                        ('foreign' , 'Foreign')], string='Purchase type',
+                                        default='local', required=True)
 
     def action_print_xls_report(self):
         data = {
@@ -28,6 +31,7 @@ class PurchaseExpenseReport(models.TransientModel):
             'product_id': self.product_id.id,
             'category_id': self.category_id.id,
             'is_detailed': self.is_detailed,
+            'purchase_type':self.purchase_type
         }
         return {
             'type': 'ir.actions.report',
@@ -117,7 +121,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 ('date_order', '>=', data['start_date']),
                 ('date_order', '<=', data['end_date']),
                 ('state', 'in', ['purchase', 'done']),
-                ('company_id', '=', self.company_id.id)
+                ('company_id', '=', self.company_id.id),
+                ('purchase_type','=',data['purchase_type'])
             ])
 
             if data['product_id']:
@@ -149,9 +154,10 @@ class PurchaseExpenseReport(models.TransientModel):
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND pol.product_id = %s
+                                      AND po.purchase_type = %s
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
-                                      """%(data['start_date'],data['end_date'],data['company_id'], data['product_id']))
+                                      """%(data['start_date'],data['end_date'],data['company_id'], data['product_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif data['category_id']:
                 self._cr.execute("""SELECT
@@ -184,9 +190,10 @@ class PurchaseExpenseReport(models.TransientModel):
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND pp.categ_id = %s
+                                      AND po.purchase_type = %s
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
-                                      """%(data['start_date'],data['end_date'],data['company_id'],data['category_id']))
+                                      """%(data['start_date'],data['end_date'],data['company_id'],data['category_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
             elif not data['product_id'] and not data['category_id']:
                 self._cr.execute("""SELECT
@@ -216,9 +223,10 @@ class PurchaseExpenseReport(models.TransientModel):
                                        AND sm.quantity = pol.product_qty
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
+                                      AND po.purchase_type = %s
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
-                                  """%(data['start_date'],data['end_date'],data['company_id']))
+                                  """%(data['start_date'],data['end_date'],data['company_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
             
             for purchase_data in purchase_data_ids:
@@ -361,7 +369,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 ('date_planned', '>=', data['start_date']),
                 ('date_planned', '<=', data['end_date']),
                 ('state', 'in', ('purchase', 'done')),
-                ('company_id', '=', data['company_id'])
+                ('company_id', '=', data['company_id']),
+                ('purchase_type','=',data['purchase_type'])
             ])
             for purchase_data in purchase_orders:
                 product = self.env['product.product'].browse(purchase_data.product_id.id)

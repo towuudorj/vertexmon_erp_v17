@@ -13,6 +13,7 @@
                         <field name="product_id"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
+                        <field name="purchase_type"/>
                         <field name="is_detailed" />
                    </group>
                    <footer>
