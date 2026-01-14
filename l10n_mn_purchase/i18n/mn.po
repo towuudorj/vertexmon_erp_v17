@@ -37,9 +37,105 @@ msgid "Freight type register"
 msgstr "Тээврийн төрөл"
 
 #. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__invoice_id
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__invoice_amount
+msgid "Invoice amount"
+msgstr "Нэхэмжлэлийн дүн"
+
+#. module: l10n_mn_purchase
+#. odoo-python
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#, python-format
+msgid "Invoice amount is greater than the amount remaining to be invoiced"
+msgstr "Нэхэмжлэлийн дүн нэхэмжлэх дүнгийн хязгаараас давсан байна"
+
+#. module: l10n_mn_purchase
+#: model:ir.actions.act_window,name:l10n_mn_purchase.action_purchase_create_invoice
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+msgid "Invoice create window"
+msgstr "Нэхэмжлэл үүсгэх цонх"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__invoice_created_amount
+msgid "Invoice created amount"
+msgstr "Нэхэмжлэл үүссэн дүн"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__line_ids
+msgid "Invoice list"
+msgstr "Нэхэмжлэлийн мөрүүд"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order_line__is_downpayment
+msgid "Is Down payment"
+msgstr "Урьдчилгаа төлбөр"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__is_created
+msgid "Is created"
+msgstr "Нэхэмжлэх үүссэн"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__is_new_create
+msgid "Is new create"
+msgstr "Нэхэмжлэх үүсгэх"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__guarantee_collateral
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__guarantee_collateral
+msgid "Guarantee and collateral"
+msgstr "Баталгаа барьцаа"
+
+#. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__company_id
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__company_id
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__company_id
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__company_id
 msgid "Company"
 msgstr "Компани"
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.view_purchase_order_mn_form
+msgid "Create Bill"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__payment_method
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+msgid "Create Invoice"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: l10n_mn_purchase
+#: model:ir.model,name:l10n_mn_purchase.model_purchase_create_invoice
+msgid "Create invoice from purchase wizard"
+msgstr "Үнийн саналаас нэхэмжлэх үүсгэх"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__create_date
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__create_date
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__create_date
+msgid "Created on"
+msgstr "Үүссэн огноо"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__currency_id
+msgid "Currency"
+msgstr "Валют"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_freight_type_register__name
@@ -58,9 +154,9 @@ msgid "Active"
 msgstr "Идэвхтэй"
 
 #. module: l10n_mn_purchase
-#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__company_id
-msgid "Company"
-msgstr "Компани"
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__amount_to_invoice_create
+msgid "Amount to invoice create"
+msgstr "Нэхэмжлэл үүсгэх дүн"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__date_from
@@ -71,6 +167,12 @@ msgstr "Эхлэх огноо"
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__date_to
 msgid "Date stop"
 msgstr "Дуусах огноо"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__desc
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__nb_days
+msgid "Description"
+msgstr "Тайлбар"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__purchase_user_id
@@ -84,20 +186,81 @@ msgid "Target move"
 msgstr "Төлөв"
 
 #. module: l10n_mn_purchase
-#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__company_id
-msgid "Company"
-msgstr "Компани"
-
-#. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__is_detailed
 msgid "Detailed Report"
 msgstr "Дэлгэрэнгүй"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__amount
+msgid "Down Payment Amount"
+msgstr "Урьдчилгаа төлбөрийн Дүн"
+
+#. module: l10n_mn_purchase
+#. odoo-python
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__down_payment
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__down_payment
+#, python-format
+msgid "Down payment"
+msgstr "Урьдчилгаа төлбөр"
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+msgid "Draft Invoices"
+msgstr "Ноорог нэхэмжлэл"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__date_from
 msgid "Start date"
 msgstr "Эхлэх огноо"
 
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__target_move
+msgid "States"
+msgstr "Төлөв"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,help:l10n_mn_purchase.field_purchase_create_invoice__invoice_created_amount
+msgid "The amount invoice created = Purchase Order Total - Down Payments."
+msgstr "Нэхэмжлэл үүссэн дүн = Нийт Дүн - Урьдчилсан төлөлт"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,help:l10n_mn_purchase.field_purchase_create_invoice__amount_to_invoice_create
+msgid "The amount to invoice create = Purchase Order Total - Down Payments."
+msgstr "Нэхэмжлэл үүсгэх дүн = Нийт Дүн - Урьдчилсан төлөлт"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,help:l10n_mn_purchase.field_purchase_create_invoice__amount
+msgid "The percentage of amount to be invoiced in advance."
+msgstr "Нэхэмжлэл үүсгэх дүн"
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+msgid "There are existing"
+msgstr "Үнийн санал дээр"
+
+#. module: l10n_mn_purchase
+#. odoo-python
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#, python-format
+msgid ""
+"There is no invoiceable line. If a product has a control policy based on "
+"received quantity, please make sure that a quantity has been received."
+msgstr "Нэхэмжлэх боломжтой мөр алга. Хэрэв бараа нь хүлээж авсан тоо хэмжээнд суурилсан хяналтын бодлоготой бол хүлээж авсан тоо байгаа эсэхийг шалгана уу."
+
+#. module: l10n_mn_purchase
+#. odoo-python
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#: code:addons/l10n_mn_purchase/wizard/create_invoice_from_purchase_wizard.py:0
+#, python-format
+msgid "You cannot create more than one invoice with this payment type."
+msgstr "Энэ төлөлтийн төрөл дээр нэгээс илүү нэхэмжлэл үүсгэх боломжгүй."
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+msgid "for this Purchase Order."
+msgstr "үүссэн байна"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__date_to
@@ -116,6 +279,12 @@ msgstr "Бараа"
 msgid "Category"
 msgstr "Ангилал"
 
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_create_invoice_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_expense_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_order_common_report_view
+msgid "Close"
+msgstr "Хаах"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__freight_partner_id
@@ -134,6 +303,12 @@ msgstr "Худалдагч"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__analytic_id
 msgid "Analytic account"
 msgstr "Шинжилгээний данс"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__barter
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__barter
+msgid "Barter transaction"
+msgstr "Бартер"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__discount
@@ -157,6 +332,16 @@ msgstr "Худалдан авалтын хүсэлт"
 msgid "Export"
 msgstr "Экспорт"
 
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__final_payment
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__final_payment
+msgid "Final payment"
+msgstr "Эцсийн санхүүжилт"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_method__fixed
+msgid "Fixed amount"
+msgstr "Тогтмол дүн"
 
 #. module: l10n_mn_purchase
 #: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.purchase_expense_report_view
@@ -178,6 +363,33 @@ msgstr "Валютын ханш"
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_report__partner_type_id
 msgid "Partner type"
 msgstr "Харилцагчийн төрөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__payment_term_id
+msgid "Payment Term"
+msgstr "Төлбөрийн нөхцөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_method__term
+msgid "Payment term"
+msgstr "Төлбөрийн нөхцөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__payment_type
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__payment_type
+msgid "Payment type"
+msgstr "Төлбөрийн төрөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__penalty
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__penalty
+msgid "Penalty"
+msgstr "Алданги"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__percent
+msgid "Percent"
+msgstr "Хувь"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -247,13 +459,24 @@ msgstr "Сүүлийн жилийн батлагдсан захиалга"
 msgid "Analytic Distribution"
 msgstr "Шинжилгээний тархалт"
 
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__product_id
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_requisition_line__product_id
 msgid "Product"
 msgstr "Бараа"
 
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__progress_payment
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__progress_payment
+msgid "Progress payment"
+msgstr "Дундын санхүүжилт"
+
+#. module: l10n_mn_purchase
+#: model:ir.model,name:l10n_mn_purchase.model_purchase_order
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__purchase_order_id
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.report_purchaseorder_eng
+msgid "Purchase Order"
+msgstr "Худалдан авалтын захиалга"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
@@ -270,6 +493,11 @@ msgstr "End User"
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__purchase_type
 msgid "Purchase type"
 msgstr "Худалдан авалтын төрөл"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_method__remaining
+msgid "Remaining amount"
+msgstr "Үлдэгдэл дүн"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__purchase_type__local

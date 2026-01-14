@@ -20,8 +20,7 @@
                 <group>
                     <field name="payment_type"
                            invisible="new_payment_method == 'term'"
-                           required="new_payment_method != 'term'"
-                           context="{'line_ids': line_ids}"/>
+                           required="new_payment_method != 'term'"/>
                     <field name="invoice_created_amount" invisible="not line_ids"/>
                     <field name="amount_to_invoice_create" invisible="not line_ids"/>
                 </group>

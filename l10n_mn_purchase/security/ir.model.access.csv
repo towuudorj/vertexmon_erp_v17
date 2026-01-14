@@ -5,4 +5,5 @@ access_freight_type_register_user,freight.type.register,model_freight_type_regis
 access_freight_type_register_manager,freight.type.register,model_freight_type_register,purchase.group_purchase_manager,1,1,1,1
 access_purchase_summary_report_user,purchase.summary.report,model_purchase_summary_report,purchase.group_purchase_user,1,1,1,0
 access_purchase_summary_report_manager,purchase.summary.report,model_purchase_summary_report,purchase.group_purchase_manager,1,1,1,1
-
+access_purchase_create_invoice_user,purchase.create.invoice,model_purchase_create_invoice,purchase.group_purchase_user,1,1,1,1
+access_purchase_create_invoice_line_user,purchase.create.invoice.line,model_purchase_create_invoice_line,purchase.group_purchase_user,1,1,1,1

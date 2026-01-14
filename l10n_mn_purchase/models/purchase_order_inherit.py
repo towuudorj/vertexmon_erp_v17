@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-    
+
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
@@ -10,7 +10,7 @@ class PurchaseOrder(models.Model):
     currency_rate = fields.Float(string='Currency rate', digits=(12, 6), compute="_compute_currency_rate")
     sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
     purchase_type = fields.Selection([('local', 'Local'),
-                                        ('foreign' , 'Foreign')], string='Purchase type', 
+                                        ('foreign' , 'Foreign')], string='Purchase type',
                                         default='local', required=True)
     is_expense = fields.Boolean(string='Is Expense', default=False)
     destininatio_id = fields.Char(string='Destination')
@@ -36,7 +36,7 @@ class PurchaseOrder(models.Model):
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
             'partner_id': partner_invoice.id,
-            'invoice_date':self.effective_date,            
+            'invoice_date':self.effective_date,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
             'partner_bank_id': partner_bank_id.id,
@@ -47,9 +47,9 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id,
         }
         return invoice_vals
-    
-    
-    
+
+
+
 
 
     def button_confirm(self):
@@ -93,7 +93,7 @@ class PurchaseOrder(models.Model):
             self.currency_rate = 1/currency_rate
         else:
             self.currency_rate = 0.0
-    
+
 
 
     @api.onchange('requisition_id')
@@ -110,7 +110,7 @@ class PurchaseOrder(models.Model):
             for line in requisition.line_ids:
                 if line.supplier_id and line.line_status == 'approve':
                     partner = line.supplier_id
-                    
+
                 elif not line.supplier_id and line.line_status == 'approve':
                     raise UserError(_('Please select a supplier for the purchase order.'))
         payment_term = partner.property_supplier_payment_term_id
@@ -168,7 +168,7 @@ class PurchaseOrder(models.Model):
                 taxes_ids=taxes_ids)
             order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
-    
+
 
     @api.onchange('partner_id', 'company_id')
     def onchange_partner_id(self):
@@ -188,6 +188,53 @@ class PurchaseOrder(models.Model):
             if self.partner_id.buyer_id:
                 self.user_id = self.partner_id.buyer_id
         return {}
+
+    @api.depends('order_line.price_total')
+    def _amount_all(self):
+        for order in self:
+            order_lines = order.order_line.filtered(lambda x: not x.display_type and not x.is_downpayment)
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = self.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+                totals = tax_results['totals']
+                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+                amount_tax = sum(order_lines.mapped('price_tax'))
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
+
+    @api.depends_context('lang')
+    @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals(self):
+        for order in self:
+            order_lines = order.order_line.filtered(lambda x: not x.display_type and not x.is_downpayment)
+            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+                [x._convert_to_tax_base_line_dict() for x in order_lines],
+                order.currency_id or order.company_id.currency_id,
+            )
+
+    @api.depends('state', 'order_line.qty_to_invoice', 'order_line')
+    def _get_invoiced(self):
+        for obj in self:
+            acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
+                                                            ('state', '!=', 'cancel'),
+                                                            ('partner_id', '=', obj.partner_id.id),
+                                                            ('company_id', '=', obj.company_id.id),
+                                                            ('payment_type', '!=', 'penalty')])
+            if acc_move_ids:
+                total_invoice_created_amount = sum(l.price_unit * l.quantity for l in acc_move_ids.mapped('invoice_line_ids'))
+                amount_to_invoice_create = sum((line.price_unit * line.product_qty) for line in obj.order_line.filtered(lambda x: not x.is_downpayment)) - total_invoice_created_amount
+                if amount_to_invoice_create == 0:
+                    obj.invoice_status = 'invoiced'
+                else:
+                    super(PurchaseOrder, self)._get_invoiced()
+            else:
+                super(PurchaseOrder, self)._get_invoiced()
 
 
 class PurchaseOrderLine(models.Model):
@@ -209,25 +256,47 @@ class PurchaseOrderLine(models.Model):
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
     pre_qty = fields.Float(string='Pre quantity')
-
+    is_downpayment = fields.Boolean(string='Is Down payment')
 
 
     def _prepare_account_move_line(self, move=False):
-        self.ensure_one()
-        aml_currency = move and move.currency_id or self.currency_id
-        date = move and move.date or fields.Date.today()
-        res = {
-            'display_type': self.display_type or 'product',
-            'name': '%s: %s' % (self.order_id.name, self.name),
-            'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom.id,
-            'quantity': self.qty_to_invoice,
-            'month': self.month,
-            'discount': self.discount,
-            'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
-            'tax_ids': [(6, 0, self.taxes_id.ids)],
-            'purchase_line_id': self.id,
-        }
-        if self.analytic_distribution and not self.display_type:
-            res['analytic_distribution'] = self.analytic_distribution
+        res = super(PurchaseOrderLine, self)._prepare_account_move_line(move)
+        res.update({'month': self.month})
+        if self.is_downpayment:
+            res['quantity'] = 1
         return res
+
+    def unlink(self):
+        to_delete_invoice_lines = self.env['account.move.line']
+        to_delete_invoices = self.env['account.move']
+        for obj in self:
+            if obj.invoice_lines:
+                to_delete_invoice_lines |= obj.invoice_lines
+                to_delete_invoices |= obj.invoice_lines.mapped('move_id')
+        super(PurchaseOrderLine, self).unlink()
+        if to_delete_invoice_lines:
+            to_delete_invoice_lines.unlink()
+        to_delete_invoices = to_delete_invoices.filtered(lambda x: not x.invoice_line_ids)
+        if to_delete_invoices:
+            to_delete_invoices.unlink()
+        return
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_purchase_or_done(self):
+        for line in self:
+            if line.order_id.state in ['purchase', 'done'] and not line.is_downpayment:
+                state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
+                raise UserError(_('Cannot delete a purchase order line which is in state %r.', state_description.get(line.state)))
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+
+    def unlink(self):
+        purchase_order_line = self.env['purchase.order.line']
+        for obj in self:
+            if obj.purchase_line_id and obj.purchase_line_id.is_downpayment:
+                purchase_order_line |= obj.purchase_line_id.sudo()
+        super(AccountMoveLine, self).unlink()
+        if purchase_order_line:
+            purchase_order_line.sudo().unlink()

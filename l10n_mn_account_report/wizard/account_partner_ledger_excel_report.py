@@ -279,8 +279,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                        "aml.amount_currency as amount_currency,"
                        "aml.name as ref,"
                        "aml.date as date")
-            order_by.append("aml.date ASC")
-            # group_by += ['aml.account_id']
+
         if group_by:
             group_by = '\nGROUP BY ' + ', '.join(group for group in group_by)
         else:
@@ -289,6 +288,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             order_by.append('partner_id')
         if 'account_id' not in order_by:
             order_by.append('account_id')
+        if data['is_extra']:
+            order_by.append("aml.date ASC")
         order_by = '\nORDER BY ' + ', '.join(order for order in order_by)
 
         if self.account_journal_ids:

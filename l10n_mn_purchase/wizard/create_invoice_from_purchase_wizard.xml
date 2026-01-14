@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_create_invoice_view" model="ir.ui.view">
+            <field name="name">purchase.create.invoice</field>
+            <field name="model">purchase.create.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Invoice create window">
+                    <field name="display_draft_invoice_warning" invisible="1"/>
+                    <div class="alert alert-warning pb-1" role="alert" invisible="not display_draft_invoice_warning">
+                        <p>There are existing <a name="view_draft_invoices" type="object">Draft Invoices</a> for this Purchase Order.</p>
+                    </div>
+                    <group colspan="4">
+                        <field name="payment_method" class="oe_inline" widget="radio"/>
+                        <field name="amount"
+                               invisible="payment_method != 'fixed'"
+                               required="payment_method == 'fixed'"
+                               class="oe_inline"/>
+                        <field name="payment_term_id" invisible="payment_method != 'term'"
+                               required="payment_method == 'term'"/>
+                        <field name="payment_type"
+                               invisible="payment_method == 'term'"
+                               required="payment_method != 'term'"/>
+                        <field name="invoice_created_amount" invisible="not line_ids"/>
+                        <field name="amount_to_invoice_create" invisible="not line_ids"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="line_ids" nolabel="1" colspan="2"
+                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
+                               domain="[('id','=',False)]">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="invoice_id" readonly="1"/>
+                                <field name="payment_type" readonly="is_created == True" required='True'/>
+                                <field name="desc" readonly="is_created == True"/>
+                                <field name="percent" readonly="is_created == True"/>
+                                <field name="nb_days"/>
+                                <field name="invoice_amount"/>
+                                <field name="is_created" readonly="1"/>
+                                <field name="is_new_create" readonly="is_created == True"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="create_invoice" string="Create Invoice" type="object" class="oe_highlight"/>
+
+                        <button string="Close" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_create_invoice" model="ir.actions.act_window">
+            <field name="name">Invoice create window</field>
+            <field name="res_model">purchase.create.invoice</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_create_invoice_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

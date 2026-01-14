@@ -88,25 +88,27 @@
                         <tbody>
                             <t t-set="i" t-value="1"/>
                             <tr t-foreach="o.order_line" t-as="line">
-                                <td style="padding: 5px; text-align: center;">
-                                    <span t-esc="i"/>
-                                    <t t-set="i" t-value="i + 1"/>
-                                </td>
-                                <td style="padding: 5px; text-align: left;">
-                                    <span t-field="line.product_id.default_code"/>
-                                </td>
-                                <td style="padding: 5px; text-align: left;">
-                                    <span t-field="line.name"/>
-                                </td>
-                                <td style="padding: 5px; text-align: left;">
-                                    <span t-field="line.product_qty"/>
-                                </td>
-                                <td style="padding: 5px; text-align: right;">
-                                    <span t-esc="'%.2f' % line.price_unit"/>
-                                </td>
-                                <td style="padding: 5px; text-align: right;">
-                                    <span t-field="line.price_subtotal"/>
-                                </td>
+                                <t t-if="line.is_downpayment==false">
+                                    <td style="padding: 5px; text-align: center;">
+                                        <span t-esc="i"/>
+                                        <t t-set="i" t-value="i + 1"/>
+                                    </td>
+                                    <td style="padding: 5px; text-align: left;">
+                                        <span t-field="line.product_id.default_code"/>
+                                    </td>
+                                    <td style="padding: 5px; text-align: left;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td style="padding: 5px; text-align: left;">
+                                        <span t-field="line.product_qty"/>
+                                    </td>
+                                    <td style="padding: 5px; text-align: right;">
+                                        <span t-esc="'%.2f' % line.price_unit"/>
+                                    </td>
+                                    <td style="padding: 5px; text-align: right;">
+                                        <span t-field="line.price_subtotal"/>
+                                    </td>
+                                </t>
                             </tr>
                         </tbody>
                     </table>
