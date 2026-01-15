@@ -320,6 +320,11 @@ msgid "Order done"
 msgstr "Захиалга хийгдсэн"
 
 #. module: l10n_mn_purchase
+#: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__payment
+msgid "Waiting Payment"
+msgstr "Төлбөр хүлээгдэж байгаа"
+
+#. module: l10n_mn_purchase
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__manufacturer
 msgid "Manufacturer"
 msgstr "Үйлдвэрлэгдэж байгаа"
