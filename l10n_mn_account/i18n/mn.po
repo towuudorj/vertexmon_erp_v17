@@ -382,6 +382,11 @@ msgstr "Харилцагчийн төрөл"
 msgid "Purchase orders"
 msgstr "Баримтын дугаар"
 
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_move__vat_declaration
+msgid "VAT Declaration"
+msgstr "Гаалийн мэдүүлгийн дугаар"
+
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank Address"

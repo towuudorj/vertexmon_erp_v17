@@ -20,7 +20,8 @@ class PurchaseOrder(models.Model):
     freight_partner_id = fields.Many2one('res.partner', string='Freight partner')
     crm_code = fields.Char(string=u'CRM Код')
     freight_status = fields.Selection([('order','Order done'),
-                                       ('manufactur','Manufactur'),
+                                       ('payment','Waiting Payment'),
+                                       ('manufacturer','Manufacturer'),
                                        ('freight','Freight'),
                                        ('customs','Customs'),
                                        ('stock','Stock')], string='Freight status')
