@@ -21,6 +21,7 @@ class CashMovelineReport(models.TransientModel):
     account_ids = fields.Many2many('account.account', 'account_move_report_rel', 'account_id','report_id', 
                                    string='Account', required=True)
     fiscalyear_id = fields.Many2one('account.fiscal.year', string=u'Санхүүгийн жил', required=True)
+    by_currency = fields.Boolean('By Currency')
 
 
     def action_print_xls_report(self):
@@ -30,7 +31,8 @@ class CashMovelineReport(models.TransientModel):
             'start_date': self.date_from,
             'end_date': self.date_to,
             'account_ids': self.account_ids.ids,
-            'fiscalyear_id': self.fiscalyear_id.id
+            'fiscalyear_id': self.fiscalyear_id.id,
+            'by_currency': self.by_currency
         }
         return {
             'type': 'ir.actions.report',
@@ -80,11 +82,11 @@ class CashMovelineReport(models.TransientModel):
         sheet.set_column(1, 1, 30)
         sheet.set_column(2, 2, 15)
         sheet.merge_range('A1:B1', u'НХМаягт МХ-4', head)
-        sheet.merge_range('G1:H1', u'Сангийн сайдын 2018 оны 100 дугаар', head)
-        sheet.merge_range('B2:H2', u'тушаалын хавсралт', head)
-        sheet.merge_range('A3:H3', u'Харилцахын мөнгөн гүйлгээний тайлан', head_title)
+        sheet.merge_range('G1:I1', u'Сангийн сайдын 2018 оны 100 дугаар', head)
+        sheet.merge_range('B2:I2', u'тушаалын хавсралт', head)
+        sheet.merge_range('A3:I3', u'Харилцахын мөнгөн гүйлгээний тайлан', head_title)
         sheet.merge_range('A4:B4', u'Байгууллагын нэр: %s' % data['company_name'], head)
-        sheet.write('H4', u'Он сар өдөр: %s - %s' % (data['start_date'],data['end_date']), head)
+        sheet.write('I4', u'Он сар өдөр: %s - %s' % (data['start_date'],data['end_date']), head)
         fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
 
         rowx = 5
@@ -96,35 +98,31 @@ class CashMovelineReport(models.TransientModel):
         sheet.write('C%s'%(rowx+1), u'Он сар өдөр', txt_center)
         sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Гүйлгээний утга', txt_center)
         sheet.merge_range('E%s:E%s'%(rowx, rowx+1), u'Харилцагч', txt_center)
-        sheet.merge_range('F%s:F%s'%(rowx, rowx+1), u'Орлого', txt_center)
-        sheet.merge_range('G%s:G%s'%(rowx, rowx+1), u'Зарлага', txt_center)
-        sheet.merge_range('H%s:H%s'%(rowx, rowx+1), u'Үлдэгдлийн дүн', txt_center)
+        sheet.merge_range('F%s:F%s'%(rowx, rowx+1), u'Валют', txt_center)
+        sheet.merge_range('G%s:G%s'%(rowx, rowx+1), u'Орлого', txt_center)
+        sheet.merge_range('H%s:H%s'%(rowx, rowx+1), u'Зарлага', txt_center)
+        sheet.merge_range('I%s:I%s'%(rowx, rowx+1), u'Үлдэгдлийн дүн', txt_center)
 
         rowx += 2
         account_obj = self.env['account.account']
-        if len(data['account_ids']) == 1:
-            account_id = account_obj.search([('id','=',data['account_ids'][0]),('company_id','=',data['company_id'])])
-            self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
-            aml.debit, aml.credit, am.name,am.partner_id from account_move_line AS aml \
-            left join account_move AS am ON am.id = aml.move_id \
-            left join res_partner AS sp on sp.id = aml.partner_id \
-            left join account_account AS aa on aa.id = aml.account_id \
-            left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
-            WHERE am.date >= '%s' and am.date <='%s' and aml.account_id = %s and am.state='posted' \
-            order by aml.date asc"%(data['start_date'],data['end_date'],data['account_ids'][0]))
-            all = self._cr.fetchall()
-            
+        account_id = account_obj.search([('id','in', data['account_ids']),('company_id','=',data['company_id'])])
+
+        if data['by_currency']:
+            balance_select = """CASE WHEN aml.debit>0 then abs(aml.amount_currency) ELSE 0 END as debit
+                               ,CASE WHEN aml.credit>0 then abs(aml.amount_currency) ELSE 0 END as credit"""
         else:
-            account_id = account_obj.search([('id','in',tuple(data['account_ids'])),('company_id','=',data['company_id'])])
-            self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
-            aml.debit, aml.credit, am.name,am.partner_id from account_move_line AS aml \
-            left join account_move AS am ON am.id = aml.move_id \
-            left join res_partner AS sp on sp.id = aml.partner_id \
-            left join account_account AS aa on aa.id = aml.account_id \
-            left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type \
-            WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in %s and am.state='posted' \
-            order by aml.date asc"%(data['start_date'],data['end_date'],tuple(data['account_ids'])))
-            all = self._cr.fetchall()
+            balance_select = 'aml.debit, aml.credit'
+        self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
+        %s, am.name,am.partner_id, rc.symbol \
+        from account_move_line AS aml \
+        left join account_move AS am ON am.id = aml.move_id \
+        left join res_partner AS sp on sp.id = aml.partner_id \
+        left join account_account AS aa on aa.id = aml.account_id \
+        left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
+        left join res_currency AS rc on rc.id = aml.currency_id \
+        WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state='posted' \
+        order by aml.date asc"%(balance_select, data['start_date'],data['end_date'], ', '.join(str(a_id) for a_id in data['account_ids'])))
+        all = self._cr.fetchall()
         start_balance = 0.0
         total = 0.0
         number = 1
@@ -133,16 +131,20 @@ class CashMovelineReport(models.TransientModel):
         total_credit = 0.0
         for line in account_id:
             balance = 0.0
-            self.env.cr.execute("""select sum(aml.debit-aml.credit) as balance from account_move_line as aml
+            if data['by_currency']:
+                balance_select = "aml.amount_currency"
+            else:
+                balance_select = 'aml.debit-aml.credit'
+            self.env.cr.execute("""select sum(%s) as balance from account_move_line as aml
                                     left join account_move as am on aml.move_id = am.id where aml.date >= '%s' 
-                                    and aml.date < '%s' and aml.account_id = %s and am.state = 'posted' """%(fiscalyear_id.date_from,data['start_date'],line.id))
+                                    and aml.date < '%s' and aml.account_id = %s and am.state = 'posted' """%(balance_select, fiscalyear_id.date_from,data['start_date'],line.id))
             acc = self._cr.dictfetchall()
             if acc[0]['balance'] !=None:
                 balance = acc[0]['balance']
             sheet.merge_range('A%s:B%s'%(rowx, rowx), u'Дансны №', txt_center)
-            sheet.merge_range('C%s:D%s'%(rowx, rowx), u'%s %s'%(line.code,line.name), txt_center)
-            sheet.merge_range('E%s:G%s'%(rowx, rowx), u'Эхний үлдэгдэл', txt_center)
-            sheet.write('H%s'%(rowx), balance, data_right_bold)
+            sheet.merge_range('C%s:E%s'%(rowx, rowx), u'%s %s'%(line.code,line.name), txt_center)
+            sheet.merge_range('F%s:H%s'%(rowx, rowx), u'Эхний үлдэгдэл', txt_center)
+            sheet.write('I%s'%(rowx), balance, data_right_bold)
             rowx +=1
             for i in all:
                 if line.code==i[4]:
@@ -155,8 +157,9 @@ class CashMovelineReport(models.TransientModel):
                     sheet.write('B%s'%rowx, i[9], data_right)
                     sheet.write('C%s'%rowx, '%s'%i[0], data_right)
                     sheet.write('D%s'%rowx, i[1], data_right)
-                    sheet.write('F%s'%rowx, i[7], data_right)
-                    sheet.write('G%s'%rowx, i[8], data_right)
+                    sheet.write('F%s'%rowx, i[11] if data['by_currency'] else '₮', data_right)
+                    sheet.write('G%s'%rowx, i[7], data_right)
+                    sheet.write('H%s'%rowx, i[8], data_right)
                     if i[7] >0.0:
                         if balance !=None:
                             balance +=float(i[7])
@@ -165,13 +168,13 @@ class CashMovelineReport(models.TransientModel):
                         if balance !=None:
                             balance -=float(i[8])
                             total_credit += float(i[8])
-                    sheet.write('H%s'%rowx, balance, data_right)
+                    sheet.write('I%s'%rowx, balance, data_right)
                     number += 1
                     rowx += 1
-        sheet.merge_range('A%s:E%s'%(rowx, rowx), u'Нийт дүн:', txt_center)
-        sheet.write('F%s'%rowx, total_debit, txt_center)
-        sheet.write('G%s'%rowx, total_credit, txt_center)
-        sheet.write('H%s'%rowx, balance, data_right)
+        sheet.merge_range('A%s:F%s'%(rowx, rowx), u'Нийт дүн:', txt_center)
+        sheet.write('G%s'%rowx, total_debit, txt_center)
+        sheet.write('H%s'%rowx, total_credit, txt_center)
+        sheet.write('I%s'%rowx, balance, data_right)
         rowx += 1
         sheet.write("C%s"%(rowx + 3), u"Нягтлан бодогч: ..................................................../                                            /",)
         sheet.write("C%s"%(rowx + 5), u"Мөнгөний нярав: ..................................................../                                           /")

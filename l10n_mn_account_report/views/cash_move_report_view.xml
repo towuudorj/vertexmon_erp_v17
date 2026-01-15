@@ -12,6 +12,7 @@
                             <field name="fiscalyear_id" />
                         	<field name="date_from"/>
                         	<field name="date_to"/>
+                        	<field name="by_currency"/>
                         </group>
                         <field name="account_ids" />
                         <footer>

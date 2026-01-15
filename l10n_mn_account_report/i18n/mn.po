@@ -141,6 +141,11 @@ msgid "Bank Statement Line"
 msgstr "Банкны хуулгын мөр"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__by_currency
+msgid "By Currency"
+msgstr "Дансны валютаар гаргах"
+
+#. module: l10n_mn_account_report
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.action_excel_output_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
