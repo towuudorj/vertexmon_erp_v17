@@ -154,7 +154,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND pol.product_id = %s
-                                      AND po.purchase_type = %s
+                                      AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                       """%(data['start_date'],data['end_date'],data['company_id'], data['product_id'],data['purchase_type']))
@@ -190,7 +190,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND pp.categ_id = %s
-                                      AND po.purchase_type = %s
+                                      AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                       """%(data['start_date'],data['end_date'],data['company_id'],data['category_id'],data['purchase_type']))
@@ -223,7 +223,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                        AND sm.quantity = pol.product_qty
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
-                                      AND po.purchase_type = %s
+                                      AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                   """%(data['start_date'],data['end_date'],data['company_id'],data['purchase_type']))
