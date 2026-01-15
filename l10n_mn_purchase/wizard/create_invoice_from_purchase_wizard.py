@@ -60,7 +60,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                                                             ('state', '!=', 'cancel'),
                                                             ('partner_id', '=', obj.purchase_order_id.partner_id.id),
                                                             ('company_id', '=', obj.purchase_order_id.company_id.id),
-                                                            ('payment_type', '!=', 'penalty')])
+                                                            ('payment_types', '!=', 'penalty')])
             if acc_move_ids:
                 total_invoice_created_amount = sum(l.price_unit * l.quantity for l in acc_move_ids.mapped('invoice_line_ids'))
                 obj.invoice_created_amount = total_invoice_created_amount
@@ -112,7 +112,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                     'invoice_id': inv.id,
                     'percent': inv.payment_percent,
                     'wizard_id': obj._origin.id,
-                    'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
+                    'payment_type': inv.payment_types if inv.payment_types else 'down_payment',
                 })
                 all_line |= line
             if all_line:
@@ -157,7 +157,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
         if order.invoice_status == 'to invoice':
             order = order.with_company(order.company_id)
             invoice_vals = order._prepare_invoice()
-            invoice_vals['payment_type'] = self.payment_type
+            invoice_vals['payment_types'] = self.payment_type
             for line in order.order_line:
                 if line.display_type == 'line_section':
                     continue
@@ -173,7 +173,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                         payment_percent = term_line.percent
                         price_unit = float(line.price_unit * line.product_qty / 100) * payment_percent
                         invoice_vals['payment_percent'] = payment_percent
-                        invoice_vals['payment_type'] = term_line.payment_type
+                        invoice_vals['payment_types'] = term_line.payment_type
                         down_payment_line = self.create_down_payment_line(price_unit, down_payment_product_id.id, line.taxes_id)
                         line_vals = down_payment_line._prepare_account_move_line()
                         line_vals.update({'name': term_line.desc if term_line.desc else dict(term_line._fields['payment_type']._description_selection(self.env)).get(term_line.payment_type)})

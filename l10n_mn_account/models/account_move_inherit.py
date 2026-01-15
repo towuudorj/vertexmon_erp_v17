@@ -458,6 +458,8 @@ class AccountMoveLine(models.Model):
     
     cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash Move Type')
     country_origin = fields.Many2one('res.country', string='Country of Origin')
+    counterpart_account_name = fields.Char(string='Counterpart Account', compute='_compute_counterpart_account_name',
+                                           store=True)
 
 
     def _prepare_analytic_distribution_line(self, distribution, account_ids, distribution_on_each_plan):
@@ -566,3 +568,15 @@ class AccountMoveLine(models.Model):
                 
             else:
                 line.currency_rate = 1
+
+    @api.depends('move_id.line_ids', 'move_id.line_ids.account_id', 'account_id')
+    def _compute_counterpart_account_name(self):
+        for line in self:
+            if not line.move_id:
+                line.counterpart_account_name = False
+                continue
+            counterpart_lines = line.move_id.line_ids.filtered(lambda l: l.id != line.id)
+            counterpart_name = ', '.join(l.code + ' ' + l.name
+                for l in counterpart_lines.mapped('account_id')
+            )
+            line.counterpart_account_name = counterpart_name

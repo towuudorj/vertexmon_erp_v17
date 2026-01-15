@@ -43,5 +43,15 @@
             </field>
         </record>
 
+        <record id="view_purchase_order_view_tree" model="ir.ui.view">
+            <field name="name">purchase.order.view.tree.inherit.mn</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="sales_partner_id"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

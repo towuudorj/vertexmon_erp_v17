@@ -231,7 +231,7 @@ class PurchaseOrder(models.Model):
                                                             ('state', '!=', 'cancel'),
                                                             ('partner_id', '=', obj.partner_id.id),
                                                             ('company_id', '=', obj.company_id.id),
-                                                            ('payment_type', '!=', 'penalty')])
+                                                            ('payment_types', '!=', 'penalty')])
             if acc_move_ids:
                 total_invoice_created_amount = sum(l.price_unit * l.quantity for l in acc_move_ids.mapped('invoice_line_ids'))
                 amount_to_invoice_create = sum((line.price_unit * line.product_qty) for line in obj.order_line.filtered(lambda x: not x.is_downpayment)) - total_invoice_created_amount
@@ -279,13 +279,13 @@ class PurchaseOrderLine(models.Model):
             if obj.invoice_lines:
                 to_delete_invoice_lines |= obj.invoice_lines
                 to_delete_invoices |= obj.invoice_lines.mapped('move_id')
-        super(PurchaseOrderLine, self).unlink()
+        res = super(PurchaseOrderLine, self).unlink()
         if to_delete_invoice_lines:
             to_delete_invoice_lines.unlink()
         to_delete_invoices = to_delete_invoices.filtered(lambda x: not x.invoice_line_ids)
         if to_delete_invoices:
             to_delete_invoices.unlink()
-        return
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase_or_done(self):
@@ -303,6 +303,7 @@ class AccountMoveLine(models.Model):
         for obj in self:
             if obj.purchase_line_id and obj.purchase_line_id.is_downpayment:
                 purchase_order_line |= obj.purchase_line_id.sudo()
-        super(AccountMoveLine, self).unlink()
+        res = super(AccountMoveLine, self).unlink()
         if purchase_order_line:
             purchase_order_line.sudo().unlink()
+        return res

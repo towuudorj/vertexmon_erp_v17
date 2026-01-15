@@ -171,7 +171,7 @@ msgid "Uom"
 msgstr "Хэмжих нэгж"
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__barter
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__barter
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__barter
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_invoice_payment_term_line__payment_type__barter
 msgid "Barter transaction"
@@ -276,7 +276,7 @@ msgstr "Хаах"
 #. module: l10n_mn_sale
 #. odoo-python
 #: code:addons/l10n_mn_sale/wizard/sale_make_invoice_advance_inherit.py:0
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__down_payment
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__down_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__down_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_invoice_payment_term_line__payment_type__down_payment
 #, python-format
@@ -296,7 +296,7 @@ msgid "Posted"
 msgstr "Батлагдсан"
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__final_payment
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__final_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__final_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_invoice_payment_term_line__payment_type__final_payment
 msgid "Final payment"
@@ -335,7 +335,7 @@ msgid "Total amount"
 msgstr "Нийт дүн"
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__guarantee_collateral
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__guarantee_collateral
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__guarantee_collateral
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_invoice_payment_term_line__payment_type__guarantee_collateral
 msgid "Guarantee and collateral"
@@ -544,7 +544,7 @@ msgstr "Төлбөрийн нөхцөл"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_account_bank_statement_line__payment_type
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_account_move__payment_type
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_account_move__payment_types
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_advance_payment_inv__payment_type
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__payment_type
 msgid "Payment type"
@@ -556,7 +556,7 @@ msgid "Contract type name"
 msgstr "Гэрээний төрлийн нэр"
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__penalty
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__penalty
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__penalty
 msgid "Penalty"
 msgstr "Алданги"
@@ -638,7 +638,7 @@ msgid "Direct"
 msgstr "Шууд борлуулалт"
 
 #. module: l10n_mn_sale
-#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_type__progress_payment
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__account_move__payment_types__progress_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_advance_payment_inv__payment_type__progress_payment
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_invoice_payment_term_line__payment_type__progress_payment
 msgid "Progress payment"
@@ -811,31 +811,11 @@ msgstr "Хүсэлтийн төрөл"
 msgid "Is price request"
 msgstr "Үнэ судлах эсэх"
 
-#. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__supply_day
-msgid "Supply day"
-msgstr "Нийлүүлэх хугацаа"
-
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__status
 msgid "Status"
 msgstr "Төлөв"
-
-#. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__supplier_day
-msgid "Supplier day"
-msgstr "Нийлүүлэх хугацаа"
-
-#. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__currency_date
-msgid "Currency date"
-msgstr "Ханшийн огноо"
-
-#. module: l10n_mn_sale
-#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__currency_rate
-msgid "Currency rate"
-msgstr "Валютын ханш"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__total_amount

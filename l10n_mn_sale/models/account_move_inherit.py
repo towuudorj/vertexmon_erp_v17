@@ -8,7 +8,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     contract_id = fields.Many2one('sales.contract.register', string='Contract')
-    payment_type = fields.Selection([('down_payment', 'Down payment'),
+    payment_types = fields.Selection([('down_payment', 'Down payment'),
                                      ('progress_payment', 'Progress payment'),
                                      ('final_payment', 'Final payment'),
                                      ('barter', 'Barter transaction'),
@@ -25,7 +25,7 @@ class AccountMove(models.Model):
     @api.depends('invoice_line_ids')
     def _compute_line_names(self):
         for obj in self:
-            if obj.invoice_line_ids and obj.payment_type:
+            if obj.invoice_line_ids and obj.payment_types:
                 obj.line_names = ',\n'.join([l.name for l in obj.invoice_line_ids])
             else:
                 obj.line_names = ''

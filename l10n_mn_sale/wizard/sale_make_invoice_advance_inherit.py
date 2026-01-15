@@ -69,7 +69,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'is_created': True,
                 'desc': inv.invoice_line_ids[0].name,
                 'invoice_id': inv.id,
-                'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
+                'payment_type': inv.payment_types if inv.payment_types else 'down_payment',
             }))
         res['line_ids'] = line_data
         res['advance_payment_method'] = 'fixed'
@@ -85,8 +85,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _create_invoices(self, sale_orders):
         self.ensure_one()
-        if self.advance_payment_method == 'delivered':
-            return sale_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
+        if self.amount_to_invoice_create == 0 and not self.line_ids:
+            invoice = sale_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
+            today = fields.Date.today()
+            invoice.write({
+                'invoice_date': today,
+                'invoice_date_due': today,
+                'payment_types': self.payment_type,
+            })
+            return invoice
         else:
             invoice_ids = self.env['account.move']
             if self.advance_payment_method == 'fixed':
@@ -266,13 +273,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
             res.update({
                 'invoice_date': today,
                 'invoice_date_due': today + timedelta(days=payment_line.nb_days),
-                'payment_type': payment_line.payment_type,
+                'payment_types': payment_line.payment_type,
                 'payment_percent': payment_line.percent,
             })
             for line_vals in res['invoice_line_ids']:
                 line_vals[2]['name'] = payment_line.desc if payment_line.desc else dict(payment_line._fields['payment_type']._description_selection(self.env)).get(payment_line.payment_type)
         if self.advance_payment_method == 'fixed':
-            res['payment_type'] = self.payment_type
+            res['payment_types'] = self.payment_type
         return res
 
     @api.onchange('new_payment_method')
@@ -324,7 +331,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'invoice_id': inv.id,
                     'percent': inv.payment_percent,
                     'wizard_id': obj._origin.id,
-                    'payment_type': inv.payment_type if inv.payment_type else 'down_payment',
+                    'payment_type': inv.payment_types if inv.payment_types else 'down_payment',
                 })
                 all_line |= line
             if all_line:
@@ -343,7 +350,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                                    ('state', '!=', 'cancel'),
                                                    ('partner_id', '=', sale_order_id.partner_id.id),
                                                    ('company_id', '=', sale_order_id.company_id.id),
-                                                   ('payment_type', '!=', 'penalty')])
+                                                   ('payment_types', '!=', 'penalty')])
             if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
                 obj.invoice_created_amount = total_invoice_created_amount
@@ -359,6 +366,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if wizard.advance_payment_method == 'percentage':
                 invoice_amount = wizard.amount / 100 * sum(wizard.sale_order_ids.mapped('amount_total'))
             wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice_create
+
+    def _check_amount_is_positive(self):
+        if self.amount_to_invoice_create == 0 and not self.line_ids:
+            return None
+        return super(SaleAdvancePaymentInv, self)._check_amount_is_positive()
 
 
 class SaleOrderInvoicePaymentTermLine(models.TransientModel):
