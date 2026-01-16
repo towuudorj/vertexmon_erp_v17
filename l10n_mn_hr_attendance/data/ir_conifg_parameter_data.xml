@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <data>
+        <record id="attendance_app_key" model="ir.config_parameter">
+            <field name="key">Attendance_APP_KEY</field>
+            <field name="value" eval="'33555647'"/>
+        </record>
+        <record id="attendance_app_secret" model="ir.config_parameter">
+            <field name="key">Attendance_APP_SECRET</field>
+            <field name="value" eval="'abd121zlAiOPwrlhb9z6'"/>
+        </record>
+        <record id="attendance_app_url" model="ir.config_parameter">
+            <field name="key">Attendance_BASE_URL</field>
+            <field name="value" eval="'https://192.168.0.55:443'"/>
+        </record>
+    </data>
+</odoo>
