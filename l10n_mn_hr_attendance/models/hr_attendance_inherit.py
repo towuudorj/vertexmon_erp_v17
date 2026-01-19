@@ -128,7 +128,8 @@ class HrAttendance(models.Model):
                         date = fields.Date.from_string(line['date'])
                         start = datetime.combine(date, dt_time.min)
                         end = datetime.combine(date, dt_time.max)
-                        print(start, end, '\n\n')
+                        check_in = False
+                        check_out = False
                         hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
                                                                              ('check_in', '>=', start),
                                                                              ('check_in', '<=', end)])
@@ -139,21 +140,14 @@ class HrAttendance(models.Model):
                         if line['attendanceBaseInfo']['beginTime'] != "":
                             check_in = fields.Datetime.to_string(
                                 parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
-                        else:
-                            check_in = False
+
                         if line['attendanceBaseInfo']['endTime'] != "":
                             check_out = fields.Datetime.to_string(
                                 parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
-                        else:
-                            check_out = False
+
                         if not hr_attendance_id and (check_in or check_out):
                             self.env['hr.attendance'].create({
                                 'employee_id': attendance_id.id,
-                                'check_in': check_in,
-                                'check_out': check_out,
-                            })
-                        else:
-                            hr_attendance_id.sudo().write({
-                                'check_in': check_in,
-                                'check_out': check_out,
+                                'check_in': check_in if check_in else check_out,
+                                'check_out': check_out if check_out else check_in,
                             })

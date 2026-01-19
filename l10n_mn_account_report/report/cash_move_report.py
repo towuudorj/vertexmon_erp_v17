@@ -22,6 +22,8 @@ class CashMovelineReport(models.TransientModel):
                                    string='Account', required=True)
     fiscalyear_id = fields.Many2one('account.fiscal.year', string=u'Санхүүгийн жил', required=True)
     by_currency = fields.Boolean('By Currency')
+    target_move = fields.Selection([('posted', u'Батлагдсан гүйлгээ'),
+                                    ('all', u'Бүх гүйлгээ')], u'Зорилтот гүйлгээ', required=True, default='posted')
 
 
     def action_print_xls_report(self):
@@ -112,6 +114,10 @@ class CashMovelineReport(models.TransientModel):
                                ,CASE WHEN aml.credit>0 then abs(aml.amount_currency) ELSE 0 END as credit"""
         else:
             balance_select = 'aml.debit, aml.credit'
+        if self.target_move == 'posted':
+            target_move = "('posted')"
+        else:
+            target_move = "('posted', 'draft')"
         self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
         %s, am.name,am.partner_id, rc.symbol \
         from account_move_line AS aml \
@@ -120,8 +126,8 @@ class CashMovelineReport(models.TransientModel):
         left join account_account AS aa on aa.id = aml.account_id \
         left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
         left join res_currency AS rc on rc.id = aml.currency_id \
-        WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state='posted' \
-        order by aml.date asc"%(balance_select, data['start_date'],data['end_date'], ', '.join(str(a_id) for a_id in data['account_ids'])))
+        WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state in %s \
+        order by aml.date asc"%(balance_select, data['start_date'],data['end_date'], ', '.join(str(a_id) for a_id in data['account_ids']), target_move))
         all = self._cr.fetchall()
         start_balance = 0.0
         total = 0.0

@@ -197,5 +197,11 @@
         </field>
     </record>
 
+    <record id="project.open_view_project_all_group_stage_kanban_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+    </record>
+    <record id="project.open_view_project_all_group_stage_tree_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+    </record>
 
 </odoo>

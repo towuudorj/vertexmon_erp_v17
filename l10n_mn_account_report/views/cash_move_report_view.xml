@@ -13,6 +13,7 @@
                         	<field name="date_from"/>
                         	<field name="date_to"/>
                         	<field name="by_currency"/>
+                        	<field name="target_move"/>
                         </group>
                         <field name="account_ids" />
                         <footer>
