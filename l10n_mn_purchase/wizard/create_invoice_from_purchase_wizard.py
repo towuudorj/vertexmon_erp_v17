@@ -83,7 +83,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                 if obj.payment_term_id and obj.payment_method == 'term':
                     for lines in obj.payment_term_id.line_ids:
                         if lines.value == 'percent':
-                            amount = float(sum((line.price_unit * line.product_qty) for line in obj.purchase_order_id.order_line.filtered(lambda x: not x.is_downpayment)) / 100) * lines.value_amount
+                            amount = float(obj.amount_to_invoice_create / 100) * lines.value_amount
                             is_create = False
                             invoice_id = False
                             for inv in acc_move_id:

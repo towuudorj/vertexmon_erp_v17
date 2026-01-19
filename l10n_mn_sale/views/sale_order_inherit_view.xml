@@ -137,6 +137,9 @@
                     <p>There are records existing same OT/PO <a name="see_ot_po_duplicated_orders" type="object">Same OT/PO records</a></p>
                 </div>
             </xpath>
+            <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
+                <attribute name="invisible">state != 'sale'</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

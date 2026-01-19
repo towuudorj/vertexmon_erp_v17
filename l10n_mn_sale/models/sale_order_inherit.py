@@ -934,17 +934,15 @@ class SaleOrder(models.Model):
 
     @api.depends('invoice_ids', 'order_line', 'order_line.invoice_lines')
     def _compute_invoice_status(self):
+        super(SaleOrder, self)._compute_invoice_status()
         for obj in self:
-            acc_move_ids = obj.order_line.invoice_lines
-            if acc_move_ids:
-                acc_move_ids = acc_move_ids.filtered(lambda x: x.move_id.payment_types != 'penalty')
-                total_invoice_created_amount = sum(acc_move_ids.mapped('price_unit'))
+            invoice_ids = obj.invoice_ids
+            if invoice_ids:
+                acc_move_ids = invoice_ids.filtered(lambda x: x.payment_types != 'penalty')
+                total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
+                print(total_invoice_created_amount, obj.amount_total, '\n\n\n')
                 if total_invoice_created_amount == obj.amount_total:
                     obj.invoice_status = 'invoiced'
-                else:
-                    return super(SaleOrder, self)._compute_invoice_status()
-            else:
-                return super(SaleOrder, self)._compute_invoice_status()
 
 class SaleOrderLine(models.Model):
     """Inherits the model sale.order.line to add a field"""

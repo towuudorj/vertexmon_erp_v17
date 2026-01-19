@@ -128,9 +128,14 @@ class HrAttendance(models.Model):
                         date = fields.Date.from_string(line['date'])
                         start = datetime.combine(date, dt_time.min)
                         end = datetime.combine(date, dt_time.max)
+                        print(start, end, '\n\n')
                         hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
                                                                              ('check_in', '>=', start),
                                                                              ('check_in', '<=', end)])
+                        if not hr_attendance_id:
+                            hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
+                                                                                 ('check_out', '>=', start),
+                                                                                 ('check_out', '<=', end)])
                         if line['attendanceBaseInfo']['beginTime'] != "":
                             check_in = fields.Datetime.to_string(
                                 parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))

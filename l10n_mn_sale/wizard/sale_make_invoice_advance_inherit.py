@@ -54,24 +54,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super(SaleAdvancePaymentInv, self).default_get(fields_list)
-        sale_order_id = self.env['sale.order'].browse(self.env.context['active_id'])
-        line_data = []
-        account_move_obj = self.env['account.move']
-        acc_move_id = account_move_obj.search([('invoice_origin', '=', sale_order_id.name),
-                                               ('state', '!=', 'cancel'),
-                                               ('partner_id', '=', sale_order_id.partner_id.id),
-                                               ('company_id', '=', sale_order_id.company_id.id)])
-
-        for inv in acc_move_id:
-            line_data.append((0, 0, {
-                'company_id': sale_order_id.company_id.id,
-                'invoice_amount': inv.amount_total,
-                'is_created': True,
-                'desc': inv.invoice_line_ids[0].name,
-                'invoice_id': inv.id,
-                'payment_type': inv.payment_types if inv.payment_types else 'down_payment',
-            }))
-        res['line_ids'] = line_data
         res['advance_payment_method'] = 'fixed'
         return res
 

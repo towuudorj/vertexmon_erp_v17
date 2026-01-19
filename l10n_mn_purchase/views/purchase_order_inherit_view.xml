@@ -38,7 +38,7 @@
                 <xpath expr="(//button[@name='action_create_invoice'])[2]" position="replace">
                     <button name="%(action_purchase_create_invoice)d" type="action" context="{'create_bill':True}"
                             string="Create Bill" class="oe_highlight"
-                            invisible="state not in ('purchase', 'done') or not order_line or invoice_status=='invoiced'" data-hotkey="w"/>
+                            invisible="state not in ('purchase', 'done') or not order_line" data-hotkey="w"/>
                 </xpath>
             </field>
         </record>
