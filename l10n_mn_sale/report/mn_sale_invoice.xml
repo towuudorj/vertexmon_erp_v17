@@ -72,13 +72,13 @@
 									<tr>
 										<td style="padding: 3px;">Банкны нэр:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
-										<td style="padding: 3px;">Xүчинтэй огноо:</td>
+										<td style="padding: 3px;">Төлбөр төлөх хугацаа:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.validity_date"/></td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Банкны данс:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.acc_number"/></td>
-										<td style="padding: 3px;">Үнийн саналийн огноо:</td>
+										<td style="padding: 3px;">Нэхэмжлэхийн огноо:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.date_order"/></td>
 									</tr>
 									<tr>
