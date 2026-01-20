@@ -75,7 +75,7 @@
                                 <td style="padding: 5px; border: 1px solid black; text-align: center;"><span t-esc="i"/></td>
                                 <td style="padding: 5px; border: 1px solid black; text-align: left;"><t t-esc="line.product_id.name"/></td>
                                 <td style="padding: 5px; border: 1px solid black; text-align: center;"><t t-esc="line.product_id.default_code"/></td>
-                                <td style="padding: 5px; border: 1px solid black; text-align: left;"><t t-esc="line.move_id.description_picking"/></td>
+                                <td style="padding: 5px; border: 1px solid black; text-align: left;"><t t-esc="line.description_picking"/></td>
                                 <td style="padding: 5px; border: 1px solid black; text-align: center;"><t t-esc="line.product_uom.name"/></td>
                                 <td style="padding: 5px; border: 1px solid black; text-align: center;"><t t-esc="line.product_uom_qty"/></td>
                                 <td style="padding: 5px; border: 1px solid black; text-align: center;"><t t-esc="line.product_uom_qty"/></td>
