@@ -72,6 +72,18 @@
         </record>
 
 
+        <record id="report_mn_stock_requisition_desc" model="ir.actions.report">
+            <field name="name">Шаардах хуудас/тайлбартай/</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_requisition_desc_report</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_requisition_desc_report</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
         <record id="report_mn_ot_purchase_receipt" model="ir.actions.report">
             <field name="name">OT Purchase receipt</field>
             <field name="model">stock.picking</field>

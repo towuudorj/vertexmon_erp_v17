@@ -33,11 +33,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         help="A standard invoice is issued with all the order lines ready for invoicing,"
              "according to their invoicing policy (based on ordered or delivered quantity).")
     payment_term_id = fields.Many2one('account.payment.term',  string="Payment Term")
-    invoice_created_amount = fields.Monetary(
+    invoice_created_amount = fields.Float(
         string="Invoice created amount",
         compute="_compute_invoice_create_amounts",
         help="The amount invoice created = Sale Order Total - Down Payments.")
-    amount_to_invoice_create = fields.Monetary(
+    amount_to_invoice_create = fields.Float(
         string="Amount to invoice create",
         compute="_compute_invoice_create_amounts",
         help="The amount to invoice create = Sale Order Total - Down Payments.")
@@ -115,7 +115,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         ).with_user(self.env.uid)
 
         # Ensure the invoice total is exactly the expected fixed amount.
-        delta_amount = (invoice.amount_total - invoice_amount) * (1 if invoice.is_inbound() else -1)
+        delta_amount = (sum(l.price_unit * l.quantity for l in invoice.invoice_line_ids) - invoice_amount) * (1 if invoice.is_inbound() else -1)
         if not order.currency_id.is_zero(delta_amount):
             receivable_line = invoice.line_ids \
                 .filtered(lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
@@ -288,7 +288,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                             is_create = False
                             invoice_id = False
                             for inv in acc_move_id:
-                                if inv.amount_total == amount and inv.payment_percent == lines.value_amount:
+                                if sum(l.price_unit * l.quantity for l in inv.invoice_line_ids) == amount and inv.payment_percent == lines.value_amount:
                                     is_create = True
                                     invoice_id = inv
                                     acc_move_id -= inv
@@ -307,7 +307,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             for inv in acc_move_id:
                 line = line_obj.create({
                     'company_id': sale_order_id.company_id.id,
-                    'invoice_amount': inv.amount_total,
+                    'invoice_amount': sum(l.price_unit * l.quantity for l in inv.mapped('invoice_line_ids')),
                     'is_created': True,
                     'desc': inv.invoice_line_ids[0].name,
                     'invoice_id': inv.id,
@@ -345,8 +345,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_display_invoice_amount_warning(self):
         for wizard in self:
             invoice_amount = wizard.fixed_amount
+            sale_order_id = wizard.sale_order_ids[0]
             if wizard.advance_payment_method == 'percentage':
-                invoice_amount = wizard.amount / 100 * sum(wizard.sale_order_ids.mapped('amount_total'))
+                invoice_amount_total = sum((line.price_unit * line.product_qty) for line in sale_order_id.order_line.filtered(lambda x: not x.is_downpayment))
+                invoice_amount = wizard.amount / 100 * invoice_amount_total
             wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice_create
 
     def _check_amount_is_positive(self):

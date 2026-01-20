@@ -936,12 +936,14 @@ class SaleOrder(models.Model):
     def _compute_invoice_status(self):
         super(SaleOrder, self)._compute_invoice_status()
         for obj in self:
-            invoice_ids = obj.invoice_ids
-            if invoice_ids:
-                acc_move_ids = invoice_ids.filtered(lambda x: x.payment_types != 'penalty')
+            acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
+                                                            ('state', '!=', 'cancel'),
+                                                            ('partner_id', '=', obj.partner_id.id),
+                                                            ('company_id', '=', obj.company_id.id),
+                                                            ('payment_types', '!=', 'penalty')])
+            if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
-                print(total_invoice_created_amount, obj.amount_total, '\n\n\n')
-                if total_invoice_created_amount == obj.amount_total:
+                if obj.amount_total == total_invoice_created_amount:
                     obj.invoice_status = 'invoiced'
 
 class SaleOrderLine(models.Model):

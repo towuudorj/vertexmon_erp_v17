@@ -34,6 +34,7 @@
                 'report/mn_stock_expense.xml',
                 'report/mn_stock_income.xml',
                 'report/mn_stock_requisition_report.xml',
+                'report/mn_stock_requisition_desc.xml',
                 'report/mn_device_handing_act.xml',
                 'report/mn_stock_expense_desc.xml',
                 'report/purchase_add_expense_report.xml',

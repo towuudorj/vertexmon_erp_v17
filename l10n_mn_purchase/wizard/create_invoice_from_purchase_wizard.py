@@ -106,7 +106,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
             for inv in acc_move_id:
                 line = line_obj.create({
                     'company_id': obj.purchase_order_id.company_id.id,
-                    'invoice_amount': inv.amount_total,
+                    'invoice_amount': sum(l.price_unit * l.quantity for l in inv.mapped('invoice_line_ids')),
                     'is_created': True,
                     'desc': inv.invoice_line_ids[0].name if inv.invoice_line_ids else '',
                     'invoice_id': inv.id,
