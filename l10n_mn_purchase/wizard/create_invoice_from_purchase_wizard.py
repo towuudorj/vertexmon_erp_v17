@@ -153,8 +153,8 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoice_vals_list = []
         sequence = 10
-        price_unit = 0
-        if order.invoice_status == 'to invoice':
+        payment_type = self.payment_type if not term_line else term_line.payment_type
+        if order.invoice_status == 'to invoice' or payment_type == 'down_payment' or self.purchase_order_id.purchase_type == 'local':
             order = order.with_company(order.company_id)
             invoice_vals = order._prepare_invoice()
             invoice_vals['payment_types'] = self.payment_type
