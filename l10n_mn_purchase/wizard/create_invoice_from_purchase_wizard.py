@@ -161,7 +161,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
             for line in order.order_line:
                 if line.display_type == 'line_section':
                     continue
-                if not float_is_zero(line.qty_to_invoice, precision_digits=precision) and not line.is_downpayment:
+                if not line.is_downpayment:
                     down_payment_product_id = order.company_id.sudo().sale_down_payment_product_id
                     if self.payment_method == 'fixed':
                         payment_percent = float(self.amount / float(sum((line.price_unit * line.product_qty) for line in self.purchase_order_id.order_line.filtered(lambda x: not x.is_downpayment)) / 100))
