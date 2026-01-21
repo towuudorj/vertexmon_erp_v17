@@ -107,23 +107,23 @@
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
 
-                 <field name="is_license" readonly="state == 'sale'"/>
+                 <field name="is_license"/>
                  <!--<field name="partner_type" />-->
-                 <field name="partner_bank_id" readonly="state == 'sale'"/>
-                 <field name="ot_po" readonly="state == 'sale'"/>
-                 <field name="ot_code" readonly="state == 'sale'"/>
+                 <field name="partner_bank_id"/>
+                 <field name="ot_po"/>
+                 <field name="ot_code"/>
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <!--<field name="sale_order_type" />-->
                 <field name="sales_type" readonly="state == 'sale'"/>
                 <field name="user_id" readonly="state == 'sale'"/>
-                <field name="together_sales_id" widget="many2many_tags" readonly="state == 'sale'"/>
+                <field name="together_sales_id" widget="many2many_tags"/>
                 <field name="team_id" readonly="state == 'sale'"/>
                 <field name="month" string="Сар /Лиценз борлуулалт/" readonly="state == 'sale'"/>
                 <field name="contract_id" readonly="state == 'sale'"/>
-                <field name="expire_day" readonly="state == 'sale'"/>
-                <field name="supply_date" readonly="state == 'sale'"/>
+                <field name="expire_day"/>
+                <field name="supply_date"/>
                 <field name="cancel_reason" readonly="1"/>
             </xpath>
 
