@@ -8,8 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='campaign_id']" position="before">
                  <field name="opportunity_id" string="CRM" readonly="state == 'sale'"/>
-                 <filter string="CRM" name="opportunity_id" domain="[]" context="{'group_by': 'opportunity_id'}"
-                         readonly="state == 'sale'"/>
+                 <filter string="CRM" name="opportunity_id" domain="[]" context="{'group_by': 'opportunity_id'}"/>
             </xpath>
         </field>
     </record>
