@@ -55,9 +55,9 @@ class SaleOrder(models.Model):
             pickings = self.env['stock.picking'].search(
                 [('sale_id', '=', rec.id)])
             orderlines = rec.mapped('order_line').filtered(
-                lambda x: x.product_id.type != 'service')
+                lambda x: x.product_id.type != 'service' and x.is_downpayment == False and x.display_type == False)
             service_orderlines = rec.mapped('order_line').filtered(
-                lambda x: x.product_id.type == 'service')
+                lambda x: x.product_id.type == 'service' and x.is_downpayment == False and x.display_type == False)
 
             if not pickings and not service_orderlines:
                 rec.delivery_status = 'nothing'
