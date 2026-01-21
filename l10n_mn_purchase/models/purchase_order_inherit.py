@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
                 order.write({'state': 'to approve'})
             if order.analytic_id:
                 project_id = self.env['project.project'].search([('analytic_account_id','=',order.analytic_id.id)])
-                crm_manager = project_id.user_id
+                crm_manager = order.requisition_id.crm_lead_id.user_id
                 if crm_manager:
                     # Send email notification
                     purchase_url = f'/web#id={order.id}&model=purchase.order&view_type=form'

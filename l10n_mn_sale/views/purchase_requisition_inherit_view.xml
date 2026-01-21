@@ -72,6 +72,7 @@
                 <xpath expr="//field[@name='origin']" position="replace">
                 	<field name="supplier_day"  readonly="status =='done'"/> 
                 	<field name="edit_info_desc" readonly="status =='done'"/> 
+                	<field name="purchase_date" readonly="status =='done'"/> 
                 </xpath>
 
                 <xpath expr="//field[@name='type_id']" position="replace">
@@ -107,6 +108,7 @@
                     <field name="price_unit" />
                     <!--<field name="line_status" readonly="1" />-->
                     <field name="priority" />
+                    <field name="purchase_date"/>
                     <field name="is_free_pro" />
                     <field name="currency_id"/>
                     <field name="subtotal"/>

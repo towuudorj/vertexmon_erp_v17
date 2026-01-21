@@ -167,6 +167,8 @@
                                 <field name="send_date" readonly="new_status == 'done'"/>
                                 <field name="project_id" readonly="new_status == 'done'"/>
                                 <field name="supply_day" readonly="new_status == 'done'"/>
+                                <field name="invoice_percentage"/>
+                                <field name="invoice_description"/>
                             </group>
                         </xpath>
 
@@ -258,6 +260,7 @@
                                         <field name="uom_id"  required="product_id != False"/>
                                         <field name="purchase_type" optional="show" required="request_type != 'send_quotation' "/>
                                         <field name="priority"  optional="show"/>
+                                        <field name="purchase_date"  optional="show" readonly="1"/>
                                         <field name="pre_qty" readonly="1" optional="show"/>
                                         <field name="qty"/>
                                         <field name="cost_price" readonly="1"/>
