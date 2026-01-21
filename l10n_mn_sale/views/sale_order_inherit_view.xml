@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='campaign_id']" position="before">
-                 <field name="opportunity_id" string="CRM" readonly="state == 'sale'"/>
+                 <field name="opportunity_id" string="CRM"/>
                  <filter string="CRM" name="opportunity_id" domain="[]" context="{'group_by': 'opportunity_id'}"/>
             </xpath>
         </field>
