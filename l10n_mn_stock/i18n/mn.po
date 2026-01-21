@@ -70,6 +70,13 @@ msgstr "Савю баглааг хэсэгчлэн буцаах"
 msgid "Type"
 msgstr "Төрөл"
 
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__is_work_out
+msgid "Is work out"
+msgstr "Ажлаас гарсан"
+
+
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_product__model
 msgid "Model"

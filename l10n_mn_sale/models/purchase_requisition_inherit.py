@@ -35,7 +35,7 @@ class PurchaseRequisition(models.Model):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
 
-
+    purchase_date = fields.Date(string='Purchase date')
     crm_lead_id = fields.Many2one('crm.lead', string='Lead')
     sale_id = fields.Many2one('sale.order', string='Sale order')
     crm_lead_code = fields.Char(related="crm_lead_id.code",string=u'CRM Код')
@@ -110,6 +110,7 @@ class PurchaseRequisition(models.Model):
                 for lines in pr.purchase_ids.order_line:
                     if lines.product_id.id == line.product_id.id:
                         lines.price_unit = line.price_unit
+                        lines.purchase_date = line.purchase_date
 
                 if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == False:
                     if line.supplier_id.id != False:
@@ -152,6 +153,11 @@ class PurchaseRequisition(models.Model):
             pr.status = 'done'
             pr.create_purchase_order()
     
+    @api.onchange('purchase_date')
+    def _onchange_purchase_date(self):
+        if self.purchase_date:
+            for line in self.line_ids:
+                line.purchase_date = self.purchase_date
 
     @api.onchange('vendor_id')
     def _onchange_vendor_id(self):
@@ -280,6 +286,7 @@ class PurchaseRequisitionLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     subtotal = fields.Float(string='Total amount', compute='_compute_subtotal_amount')
     is_free_pro = fields.Boolean(string='Is product free')
+    purchase_date = fields.Date(string='Purchase date')
     
     @api.depends('subtotal', 'product_qty', 'price_unit')
     def _compute_subtotal_amount(self):

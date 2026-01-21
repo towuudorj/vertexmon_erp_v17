@@ -42,6 +42,7 @@ class stock_picking(models.Model):
     ot_contract = fields.Char(string='Purchasing Officer name/contact details', default='Your Reference: IT Goods Our Reference: CW2167225')
     ot_code = fields.Char(string='OT code', default=lambda self:self.env['ir.sequence'].next_by_code('stock.picking.ot'))
     purchase_count = fields.Integer(string='Purchase number', default=1)
+    is_work_out = fields.Boolean(string='Is work out')
 
     
     def _compute_amount(self):
