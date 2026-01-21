@@ -254,6 +254,11 @@ class CrmLead(models.Model):
     sale_currency_id = fields.Many2one('res.currency', string='Sale currency', compute="_get_sale_currency")
     buy_currency_id = fields.Many2one('res.currency', string='Buy currency', compute="_get_buy_currency")
     cost_total_amount = fields.Float(string='Cost total amount', compute="_compute_total_cost")
+
+    invoice_description = fields.Text(string='Invoice Description')
+    invoice_percentage = fields.Float(string='Invoice Percentage')
+    amount_percentage_text = fields.Char(string='Amount text',
+         readonly=True,compute='_compute_amount_percentage')
     
     @api.depends('partner_id')
     def _compute_name(self):
@@ -289,6 +294,13 @@ class CrmLead(models.Model):
                 line.amount_text = verbose_format(line.amount_total, line.pricelist_id.currency_id)
             else:
                 line.amount_text = ''
+
+    def _compute_amount_percentage(self):
+        for line in self:
+            if line.amount_total:
+                line.amount_percentage_text = verbose_format(line.amount_total * line.invoice_percentage / 100, line.pricelist_id.currency_id)
+            else:
+                line.amount_percentage_text = 'test'
 
 
     def action_insert_project(self):

@@ -40,6 +40,7 @@
                 'security/security_view.xml',
                 'report/mn_crm_invoice_not_signature.xml',
                 'report/mn_crm_invoice_signature.xml',
+                'report/mn_crm_invoice_percentage_signature.xml',
                 'report/mn_sale_quotation.xml',
                 'report/mn_sale_quotation_no_sign.xml',
                 'report/mn_sale_crm_quotation_no_sign.xml',

@@ -1190,6 +1190,16 @@ msgstr "Цуцалсан шалтгаан"
 msgid "Break reason"
 msgstr "Хойшлуулсан шалтгаан"
 
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_percentage
+msgid "Invoice Percentage"
+msgstr "Нэхэмжлэх хувь"
+
+#. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__invoice_description
+msgid "Invoice Description"
+msgstr "Нэхэмжлэлийн тайлбар"
+
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__sale_order_type
