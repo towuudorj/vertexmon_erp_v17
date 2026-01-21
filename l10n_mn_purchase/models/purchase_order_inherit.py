@@ -235,8 +235,9 @@ class PurchaseOrder(models.Model):
                                                             ('payment_types', '!=', 'penalty')])
             if acc_move_ids:
                 total_invoice_created_amount = sum(l.price_unit * l.quantity for l in acc_move_ids.mapped('invoice_line_ids'))
-                amount_to_invoice_create = sum((line.price_unit * line.product_qty) for line in obj.order_line.filtered(lambda x: not x.is_downpayment)) - total_invoice_created_amount
-                if amount_to_invoice_create == 0:
+                total_invoice_amount = sum((line.price_unit * line.product_qty) for line in obj.order_line.filtered(lambda x: not x.is_downpayment))
+                print(sum((line.price_unit * line.product_qty) for line in obj.order_line.filtered(lambda x: not x.is_downpayment)), total_invoice_created_amount, '\n\n\n')
+                if round(total_invoice_amount, 2) == round(total_invoice_created_amount, 2):
                     obj.invoice_status = 'invoiced'
                 else:
                     super(PurchaseOrder, self)._get_invoiced()
