@@ -161,8 +161,6 @@ class stock_picking(models.Model):
                 'subject': f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
                 'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
             }).send()
-        if self.purchase_id.invoice_ids:
-            self.purchase_id.action_create_invoice()
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
