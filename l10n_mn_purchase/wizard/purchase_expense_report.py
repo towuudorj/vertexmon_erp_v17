@@ -143,8 +143,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty,
-                                        sp.id as picking_id
+                                        pol.product_qty
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -176,8 +175,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty,
-                                        sp.id as picking_id
+                                        pol.product_qty
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -254,56 +252,60 @@ class PurchaseExpenseReport(models.TransientModel):
                 total_amount = total_price * currency_rate.inverse_company_rate
                 sheet.write("P%s"%rowx, total_amount, text_right)
 
+
+                expense_product_ids = self.env['product.product'].search([('landed_cost_ok', '=', True),('type', '=', 'service')])
+                additional_costs = {}
                 frieght_cost = 0.0
                 custom_tax_cost = 0.0
                 declaration_cost = 0.0
                 clearance_cost = 0.0
                 vat_declaration = []
                 freight_partner = ''
-                self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id, 
-                                           COALESCE(am.vat_declaration, '') as vat_declaration,
-                                           sm.quantity
-                                from stock_valuation_adjustment_lines as ad
-                                left join stock_move sm on sm.id = ad.move_id
-                                left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
-                                left join stock_landed_cost as sc on ad.cost_id = sc.id
-                                left join account_move am on am.id = sc.vendor_bill_id
-                                where sm.purchase_line_id = %s and sm.picking_id = %s
-                                
-                            """%(purchase_data['id'], purchase_data['picking_id']))
-                expense_data_ids = self._cr.dictfetchall()
-                stock_line_obj = self.env['stock.landed.cost.lines']
-                count = 0
-                quantity = 0
-                for exp in expense_data_ids:
-                    quantity = exp['quantity']
-                    if exp['vat_declaration'] not in vat_declaration:
-                        vat_declaration.append(exp['vat_declaration'])
-                    st_line = stock_line_obj.browse(exp['cost_line_id'])
+                for exp_pro in expense_product_ids:
+                    self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id, COALESCE(am.vat_declaration, '') as vat_declaration
+                                    from stock_valuation_adjustment_lines as ad
+                                    left join stock_move sm on sm.id = ad.move_id
+                                    left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
+                                    left join stock_landed_cost as sc on ad.cost_id = sc.id
+                                    left join account_move am on am.id = sc.vendor_bill_id
+                                    where sm.purchase_line_id = %s and sm.picking_id = %s
+                                    group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id, am.vat_declaration
+                                """%(purchase_data['id'], purchase_data['picking_id']))
+                    expense_data_ids = self._cr.dictfetchall()
+                    stock_line_obj = self.env['stock.landed.cost.lines']
+                    count = 0
+                    for exp in expense_data_ids:
+                        if exp['vat_declaration'] not in vat_declaration:
+                            vat_declaration.append(exp['vat_declaration'])
+                        st_line = stock_line_obj.browse(exp['cost_line_id'])
 
-                    if st_line.product_id.name == u'Тээврийн зардал':
-                        count +=1
-                        if count == 1:
-                            frieght_cost += exp['additional_landed_cost']
-                        if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
-                            freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
-                    elif st_line.product_id.name == u'Гаалийн албан татвар':
+                        if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
 
-                        count +=1
-                        if count == 1:
-                            custom_tax_cost += exp['additional_landed_cost']
-                    elif st_line.product_id.name == u'Гаалийн мэдүүлэг':
-                        count +=1
-                        if count == 1:
-                            declaration_cost += exp['additional_landed_cost']
+                            count +=1
+                            if count == 1:
+                                frieght_cost += exp['additional_landed_cost']
+                            if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
+                                freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
+                        elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
 
-                    elif st_line.product_id.name == u'Гаалийн бүрдүүлэлт':
-                        count +=1
-                        if count == 1:
-                            clearance_cost += exp['additional_landed_cost']
+                            count +=1
+                            if count == 1:
+                                custom_tax_cost += exp['additional_landed_cost']
+                        elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
+
+                            count +=1
+                            if count == 1:
+                                declaration_cost += exp['additional_landed_cost']
+                        elif exp_pro.name == u'Гаалийн бүрдүүлэлт'  and st_line.product_id.id == exp_pro.id:
+                            count +=1
+                            if count == 1:
+                                clearance_cost += exp['additional_landed_cost']
+                        #additional_costs['%s'%exp['id']] = exp['additional_landed_cost']
+                
 
                     
                 total_cost = frieght_cost + custom_tax_cost + declaration_cost + clearance_cost
+                fr_partner = self.env['res.partner'].browse(purchase_data['freight_partner_id'])
                 vat_declaration = ', '.join(vat_declaration) if vat_declaration else ''
                 sheet.write("Q%s"%rowx,  total_cost, text_right)
                 sheet.write("R%s"%rowx,  total_cost+total_amount, text_right)
@@ -316,7 +318,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Y%s"%rowx,  total_cost, text_right)
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("AA%s"%rowx, u"%s"%freight_partner, text_right)
-                sheet.write("AB%s"%rowx, quantity, text_right)
+                sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
                 sheet.write("AC%s"%rowx, vat_declaration, text_right)
 
                 
