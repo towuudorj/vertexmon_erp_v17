@@ -24,7 +24,7 @@
                     <field name="crm_lead_code"/>
                 </xpath>
                 <xpath expr="//field[@name='state']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='state']" position="before">
                     <field name="status"/>
@@ -32,6 +32,16 @@
             </field>
         </record>
 
+        <record id="sale_order_inherit_purchase_requisition_search_view" model="ir.ui.view">
+            <field name="name">inherit.sale.purchase.requisition.search</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="attributes">
+                    <attribute name="context">{'group_by': 'status'}</attribute>
+                </xpath>
+            </field>
+        </record>
         
 
         <record id="sale_order_inherit_purchase_requisition_view" model="ir.ui.view">
