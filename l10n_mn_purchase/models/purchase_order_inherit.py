@@ -79,7 +79,7 @@ class PurchaseOrder(models.Model):
                     purchase_url = f'/web#id={order.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({
                         'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Дотоод худалдан авалтын захиалга: {order.name} батлагдсан байна.',
+                        'subject': f'Худалдан авалтын захиалга: {order.name} батлагдсан байна.',
                         'body_html': f'Дэлгэрэнгүй мэдээллийг харна уу. <a href="{purchase_url}">{order.name}</a>'+
                         f'- Төслийн нэр: {project_id.name} \n Төслийн менежер: {project_id.user_id.name}, Нийлүүлэгч: {order.partner_id.name}',
                     }).send()
