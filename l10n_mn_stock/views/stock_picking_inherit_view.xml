@@ -34,6 +34,16 @@
                             <div class="clearfix"/>
                         </group>
                     </xpath>
+
+                    <xpath expr="//button[@name='action_confirm']" position="attributes">
+                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='button_validate' and contains(@class, 'o_btn_validate')]" position="attributes">
+                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="attributes">
+                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                    </xpath>
                 </field>
             </record>
 
