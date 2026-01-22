@@ -81,11 +81,12 @@ class PurchaseExpenseReport(models.TransientModel):
 
         sheet.set_column(0, 26, 20)
         rowx = 1
-        sheet.merge_range("A%s:AB%s"%(rowx,rowx), u'Худалдан авалтын тайлан', title)
+        sheet.merge_range("A%s:AC%s"%(rowx,rowx), u'Худалдан авалтын тайлан', title)
         sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
-        sheet.merge_range("F%s:AB%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        sheet.merge_range("F%s:AC%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
         if data['is_detailed'] == True:
             rowx += 3
+            sheet.set_column(28, 28, 20)
             sheet.write("A%s"%rowx, u'Захиалгын дугаар', header_txt)
             sheet.write("B%s"%rowx, u"Мөр", header_txt)
             sheet.write("C%s"%rowx, u'Нийлүүлэгч №', header_txt)
@@ -114,6 +115,7 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("Z%s"%rowx, u'Нийт зардал+өртөг', header_txt)
             sheet.write("AA%s"%rowx, u'Тээврийн компани', header_txt)
             sheet.write("AB%s"%rowx, u'Хүргэсэн тоо', header_txt)
+            sheet.write("AC%s"%rowx, u'Гаалийн мэдүүлгийн дугаар', header_txt)
             rowx +=1
             
 
@@ -256,21 +258,24 @@ class PurchaseExpenseReport(models.TransientModel):
                 custom_tax_cost = 0.0
                 declaration_cost = 0.0
                 clearance_cost = 0.0
-                total_cost = 0.0
+                vat_declaration = []
                 freight_partner = ''
                 for exp_pro in expense_product_ids:
-                    self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
-                                    stock_valuation_adjustment_lines as ad
+                    self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id, COALESCE(am.vat_declaration, '') as vat_declaration
+                                    from stock_valuation_adjustment_lines as ad
                                     left join stock_move sm on sm.id = ad.move_id
                                     left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
+                                    left join account_move am on am.id = sc.vendor_bill_id
                                     where sm.purchase_line_id = %s
-                                    group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id
+                                    group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id, am.vat_declaration
                                 """%(purchase_data['id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines']
                     count = 0
                     for exp in expense_data_ids:
+                        if exp['vat_declaration'] not in vat_declaration:
+                            vat_declaration.append(exp['vat_declaration'])
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
                         
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
@@ -300,6 +305,7 @@ class PurchaseExpenseReport(models.TransientModel):
                     
                 total_cost = frieght_cost + custom_tax_cost + declaration_cost + clearance_cost
                 fr_partner = self.env['res.partner'].browse(purchase_data['freight_partner_id'])
+                vat_declaration = ', '.join(vat_declaration) if vat_declaration else ''
                 sheet.write("Q%s"%rowx,  total_cost, text_right)
                 sheet.write("R%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("S%s"%rowx,  u"%s"%purchase_data['date_done'], text_right)
@@ -312,6 +318,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("AA%s"%rowx, u"%s"%freight_partner, text_right)
                 sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
+                sheet.write("AC%s"%rowx, vat_declaration, text_right)
 
                 
                 rowx +=1
@@ -335,6 +342,7 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("Z%s"%rowx, '=sum(Z2:Z%s)'%(rowx-1), header_txt)
             sheet.write("AA%s"%rowx, '', header_txt)
             sheet.write("AB%s"%rowx, '=sum(AB2:AB%s)'%(rowx-1), header_txt)
+            sheet.write("AC%s"%rowx, '', header_txt)
 
         else:
             rowx += 3
