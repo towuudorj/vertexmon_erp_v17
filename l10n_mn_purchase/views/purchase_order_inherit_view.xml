@@ -22,7 +22,7 @@
 
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="purchase_type" />
-                    <!--<field name="partner_type" />-->
+                    <field name="partner_type" />
                 </xpath>
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="currency_rate" />

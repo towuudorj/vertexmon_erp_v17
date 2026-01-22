@@ -148,9 +148,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                     LEFT JOIN stock_move as sm
                                         ON sm.picking_id = sp.id
                                     LEFT JOIN purchase_order_line pol
-                                        ON pol.product_id = sm.product_id
-                                       AND date(sp.date_done) = date(pol.date_planned)
-                                       AND sm.quantity = pol.product_qty
+                                        ON pol.id = sm.purchase_line_id
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND pol.product_id = %s
@@ -182,9 +180,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                     LEFT JOIN stock_move as sm
                                         ON sm.picking_id = sp.id
                                     LEFT JOIN purchase_order_line pol
-                                        ON pol.product_id = sm.product_id
-                                       AND date(sp.date_done) = date(pol.date_planned)
-                                       AND sm.quantity = pol.product_qty
+                                        ON pol.id = sm.purchase_line_id
                                     LEFT JOIN product_product as pp
                                         ON pp.id = pol.product_id
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
@@ -218,9 +214,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                     LEFT JOIN stock_move as sm
                                         ON sm.picking_id = sp.id
                                     LEFT JOIN purchase_order_line pol
-                                        ON pol.product_id = sm.product_id
-                                       AND date(sp.date_done) = date(pol.date_planned)
-                                       AND sm.quantity = pol.product_qty
+                                        ON pol.id = sm.purchase_line_id
                                     WHERE date(sp.date_done) >= '%s' AND date(sp.date_done) <= '%s'
                                       AND po.company_id = %s
                                       AND po.purchase_type = '%s'
@@ -267,12 +261,12 @@ class PurchaseExpenseReport(models.TransientModel):
                 for exp_pro in expense_product_ids:
                     self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
                                     stock_valuation_adjustment_lines as ad
+                                    left join stock_move sm on sm.id = ad.move_id
                                     left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
-                                    left join purchase_order_stock_landed_cost_rel as polsc on sc.id = polsc.stock_landed_cost_id
-                                    where polsc.purchase_order_id = %s and ad.product_id = %s and sc.company_id = %s
+                                    where sm.purchase_line_id = %s
                                     group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id
-                                """%(purchase_data['order_id'], product.id, data['company_id']))
+                                """%(purchase_data['id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines']
                     count = 0
@@ -400,6 +394,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 for exp_pro in expense_product_ids:
                     self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
                                     stock_valuation_adjustment_lines as ad
+                                    left join stock_move sm on sm.id = ad.move_id
                                     left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join purchase_order_stock_landed_cost_rel as polsc on sc.id = polsc.stock_landed_cost_id
