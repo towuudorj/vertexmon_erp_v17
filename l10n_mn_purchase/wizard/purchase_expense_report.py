@@ -143,7 +143,9 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty
+                                        pol.product_qty,
+                                        sp.id as picking_id,
+                                        po.currency_rate
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -175,7 +177,9 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty
+                                        pol.product_qty,
+                                        sp.id as picking_id,
+                                        po.currency_rate
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -210,7 +214,8 @@ class PurchaseExpenseReport(models.TransientModel):
                                         po.currency_rate,
                                         po.partner_ref,
                                         pol.product_qty,
-                                        sp.id as picking_id
+                                        sp.id as picking_id,
+                                        po.currency_rate
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -233,6 +238,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 currency = self.env['res.currency'].browse(purchase_data['currency_id'])
                 st_date = datetime.strptime(str(purchase_data['date_done']).split('.')[0],'%Y-%m-%d %H:%M:%S').date()
                 currency_rate = self.env['res.currency.rate'].search([('company_id','=',data['company_id']),('currency_id','=',purchase_data['currency_id']),('name','=',str(st_date))])
+                curr_rate = currency_rate.inverse_company_rate if currency_rate else purchase_data['currency_rate']
                 sheet.write("A%s"%rowx, purchase_data['name'], text_right)
                 sheet.write("B%s"%rowx, purchase_data['id'], text_right)
                 sheet.write("C%s"%rowx, partner.code or '', text_right)
@@ -248,8 +254,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 total_price = purchase_data['product_qty'] * purchase_data['price_unit']
                 sheet.write("M%s"%rowx, total_price, text_right)
                 sheet.write("N%s"%rowx, currency.name or '', text_right)
-                sheet.write("O%s"%rowx, currency_rate.inverse_company_rate, text_right)
-                total_amount = total_price * currency_rate.inverse_company_rate
+                sheet.write("O%s"%rowx, curr_rate, text_right)
+                total_amount = total_price * curr_rate
                 sheet.write("P%s"%rowx, total_amount, text_right)
 
 
@@ -259,6 +265,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 custom_tax_cost = 0.0
                 declaration_cost = 0.0
                 clearance_cost = 0.0
+                quantity = 0
                 vat_declaration = []
                 freight_partner = ''
                 for exp_pro in expense_product_ids:
@@ -269,12 +276,12 @@ class PurchaseExpenseReport(models.TransientModel):
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join account_move am on am.id = sc.vendor_bill_id
                                     where sm.purchase_line_id = %s and sm.picking_id = %s
-                                    group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id, am.vat_declaration
                                 """%(purchase_data['id'], purchase_data['picking_id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines']
                     count = 0
                     for exp in expense_data_ids:
+                        quantity = exp['quantity']
                         if exp['vat_declaration'] not in vat_declaration:
                             vat_declaration.append(exp['vat_declaration'])
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
@@ -318,7 +325,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Y%s"%rowx,  total_cost, text_right)
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("AA%s"%rowx, u"%s"%freight_partner, text_right)
-                sheet.write("AB%s"%rowx, purchase_data['qty_received'], text_right)
+                sheet.write("AB%s"%rowx, quantity, text_right)
                 sheet.write("AC%s"%rowx, vat_declaration, text_right)
 
                 
