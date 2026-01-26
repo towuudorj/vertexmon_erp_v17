@@ -1,263 +1,372 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-			
         <template id="mn_stock_ot_packing_list_data">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="o">
-                    <div class="page">
-                       
-         
-                         <div class="col-xs-8" style="text-align:center; font-size: 18px;  margin-right:20px; padding-right:100px;">
-                             <b>PACKING LIST:</b>
-                         </div>
-                         
-                         <table style="width: 95%; margin-left:50px; margin-right:20px; border:transparent 1px solid; ">
-                             <tr >
-                                <td style="width: 3%;  font-size:11px; padding:3px; ">
-                                    <b>Tick delivery here type</b>
-                                </td>
-                                <td style="width: 3%;  font-size:11px; padding:3px; ">
-                                    
-                                </td>
-                                <td style="width: 3%;  font-size:11px; padding:3px; text-align:right;">
-                                    <b>SUPPLIER NAME:</b>
-                                </td>
-                                <td style="width: 3%;  font-size:16px; padding:3px; text-align:center;">
-                                    <b><span t-field="o.company_id.en_name"/></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-size:8px;">
-                                <input type="checkbox" t-att-checked="'checked' if o.ot_delivery_type=='part_delivery' else None"/>
-                                    Partial Delivery
-                                <input type="checkbox" t-att-checked="'checked' if o.ot_delivery_type=='comp_delivery' else None"/>
-                                    Complete Delivery
-                                <input type="checkbox" t-att-checked="'checked' if o.ot_delivery_type=='final_delivery' else None"/>
-                                    Final Shipment
-                                </td>
-                                    <td></td>
-                                     <td></td>
-                                <td style="text-align:center;font-size:14px;">
-                                    <b><span t-field="o.company_id.street2"/></b>
-                                </td>
-                            </tr>
-                        </table>
+                    <t t-if="o.picking_type_code != 'outgoing'">
+                        <div class="page">
+                            <div class="row mb64">
+                                <div class="col-6">
+                                    <p style="text-align:center;font-size: 30px;margin-left:50px; margin-right:50px;">
+                                        <span>Энэ тайланг зөвхөн хүргэлтийн захиалгуудаас татах боломжтой.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="o.picking_type_code == 'outgoing'">
+                        <div class="page">
+                            <div class="col-xs-8"
+                                 style="text-align:center; font-size: 18px;  margin-right:20px; padding-right:100px;">
+                                <b>PACKING LIST:</b>
+                            </div>
 
-         
-                          <br/>
-                           <br/>
-                         <table style="width: 95%; margin-left:50px; margin-right:20px; padding-right:2%;">
-                            <tr style="border: transparent 1px solid; ">
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                    <b>Packing list number</b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
-                                    <span t-field="o.ot_code"/>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                    <b>DATE</b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
-                                        <span t-esc="o.scheduled_date.strftime('%d/%m/%Y') if o.scheduled_date else ''"/>
-                                </td>
-                                 <td style="width: 3%; border-spacing: 0; font-size:11px; padding:3px;   border: none !important; border-top: none !important;
-  border-bottom: none !important;">
-                                        
-                                </td>
-                                <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
-  border-bottom: none !important;">
-                                        
-                                </td>
-                                <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
-  border-bottom: none !important;">
-                                        
-                                </td>
-                                <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;  border: none !important; border-top: none !important;
-  border-bottom: none !important;">
-                                        
-                                </td>
-                                <td style="width: 3%; border: transparent 1px solid;   border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
-  border-bottom: none !important;">
-                                        
-                                </td>
-                            </tr>
-                            <tr >
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                    <b>Purchase Order No</b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:18px; padding:3px; ">
-                                    <b><span t-field="o.sale_id.ot_po"/></b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                    <b>Delivery information</b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
-                                   OT SITE
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                     <b>Oyu Tolgoi LLC address </b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
-                                    <t t-if="o.ot_address_type=='site'">
-                                         <span t-field="o.partner_id.street"/>
-                                    </t>
-                                    <t t-if="o.ot_address_type=='office'">
-                                        <span t-field="o.partner_id.street2"/><br/>
-                                    </t>
-                                   
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
-                                     <b>Purchasing Officer name/contact details</b>
-                                </td>
-                                <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
-                                    <span t-field="o.ot_contract"/>
-                                </td>
-                            </tr>
-                         </table>
-                            <br/>
-                         <table style="width: 95%; margin-left:50px; margin-right:20px; padding-right:4%;">
-                             <thead>
+                            <table style="width: 95%; margin-left:50px; margin-right:20px; border:transparent 1px solid; ">
                                 <tr>
-                                     <th style="width: 3%; border: 1px solid black; font-size:11px; padding:3px; background-color:#c0c2c0;" colspan="13"><strong>ORDER DETAILS</strong></th>
-                                 </tr>
-                                 <tr>
-                                     <th style="width: 7%; vertical-align: middle; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;"><strong>Line No</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border:1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Product No</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Part number</strong></th>
-                                     <th style="width: 15%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" class="text-right"><strong>Description</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>UOM</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Ordered Qty</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>Delivered Qty</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>Package No</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>Net Weight (kg)</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>Gross Weight (kg)</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>Dimensions</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" rowspan="2"><strong>CBM (m3)</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Qty Back ordered</strong></th>
-                                 </tr>
-                                 <tr>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>(Item line item No)</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border:1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Oyu Tolgoi LLC code (example: Stock code; MR No)</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Insert part number as per purchase order</strong></th>
-                                     <th style="width: 15%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;" class="text-right"><strong>Insert description as per Purchase order</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Unit of Measurement as per Purchase order</strong></th>
-                                     <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Ordered qty as per Purchase ordery</strong></th>
-                                     <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"><strong>Insert how much left to deliver, if it's delivered partially.</strong></th>
-                                 </tr>
-                             </thead>
-                             <tbody>
+                                    <td style="width: 3%;  font-size:11px; padding:3px; ">
+                                        <b>Tick delivery here type</b>
+                                    </td>
+                                    <td style="width: 3%;  font-size:11px; padding:3px; ">
 
-                                     <t t-if="o.move_ids_without_package">
-                                         <t t-set="i" t-value="1"/>
-                                         <t t-foreach="o.move_ids_without_package" t-as="moves">
-                                         <tr t-foreach="moves.move_line_ids" t-as="move">
-                                             <t t-if="move.product_id.type !='service'">
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; text-align:center;"><span t-esc="i"/></td>   
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px;"><span t-field="moves.product_id.ot_code"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; text-align:center;"/>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; "><span t-field="moves.product_id.name"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">ea</td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.move_id.product_uom_qty"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.quantity"  t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2 }"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.package_no"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.net_weight"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.gross_weight"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.dimensions"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; "><span t-field="move.cbm"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">0.00</td>
-                                             </t>
-                                             <t t-set="i" t-value="i+1"/>
-                                             </tr>
-                                         </t>
-                                     </t>
+                                    </td>
+                                    <td style="width: 3%;  font-size:11px; padding:3px; text-align:right;">
+                                        <b>SUPPLIER NAME:</b>
+                                    </td>
+                                    <td style="width: 3%;  font-size:16px; padding:3px; text-align:center;">
+                                        <b>
+                                            <span t-field="o.company_id.en_name"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size:8px;">
+                                        <input type="checkbox"
+                                               t-att-checked="'checked' if o.ot_delivery_type=='part_delivery' else None"/>
+                                        Partial Delivery
+                                        <input type="checkbox"
+                                               t-att-checked="'checked' if o.ot_delivery_type=='comp_delivery' else None"/>
+                                        Complete Delivery
+                                        <input type="checkbox"
+                                               t-att-checked="'checked' if o.ot_delivery_type=='final_delivery' else None"/>
+                                        Final Shipment
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align:center;font-size:14px;">
+                                        <b>
+                                            <span t-field="o.company_id.street2"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
 
-                             </tbody>
-                              <tr>
-                                     <th style="width: 3%; border: 1px solid black; font-size:11px; padding:3px; text-color:red;" colspan="13"><strong>TOTAL</strong></th>
-                                 </tr>
-                         </table>
-         
-                         <table style="width: 95%; padding-right:2%; font-size:11px; margin-left:50px; margin-right:20px; margin-top: 30px; border:transparent 1px solid; ">                    
-                             <tr style="height: 40px;">
-                                <td>
-                                </td>
-                                 <td style="width: 20%; font-weight: bold; padding: 5px;">Delivered By:</td>
-                                 <td style="width: 10%; padding: 5px;"><span t-field="o.sale_id.user_id.name"/></td> 
-                                 <td style="width: 10%; padding: 5px;">
-                                 Signature
-                                </td>
-                                 <td style="width: 25%; font-weight: bold; padding: 5px; text-align:right;">Date:</td>
-                                 <td style="width: 35%; padding: 5px;"><span t-esc="o.date_done.strftime('%d/%m/%Y') if o.date_done else ''"/></td>
-                                 
-                             </tr>
-                             <tr style="height: 40px;">
-                                 <td>
-                                    
-                                </td>
-                                 <td style="width: 20%; padding: 5px;">Received By:</td>
-                                 <td style="width: 10%; padding: 5px;"></td>
-                                 <td style="width: 10%; padding: 5px;">Signature
-                                </td>
-                                 <td style="width: 25%; font-weight: bold; padding: 5px; text-align:right;">Date:</td>
-                                 <td style="width: 35%; padding: 5px;"><span t-esc="o.date_done.strftime('%d/%m/%Y') if o.date_done else ''"/></td>
-                             </tr>
- 
-                             <tr style="height: 40px;">
-                                <td>
-                                </td>
-                                 <td  style="width: 20%; padding: 5px;">Checked by: </td>
-                                 <td  style="width: 10%; padding: 5px;">Date</td>
-                                 <td style="width: 10%; padding: 5px;">
-                                </td>
-                                 <td style="width: 25%; padding: 5px; text-align:right;">  </td>
-                                 <td style="width: 35%; padding: 5px;"></td>
-                             </tr>
-                             <tr>
-                                <td>
-                                    <input type="checkbox"/>
-                                    Inventory
-                                </td>
-                                <td>
-                                    <input type="checkbox"/>
-                                    Operation
-                                </td>
-                                <td>
-                                    
-                                    Normal
-                                </td>
-                             </tr>
-                             <tr>
-                                <td>
-                                    <input type="checkbox"/>
-                                    Direct
-                                </td>
-                                <td>
-                                    <input type="checkbox"/>
-                                    Phase#2
-                                </td>
-                                <td>
-                                    Urgent <br/><br/>
-                                    Superurgent
-                                </td>
-                             </tr>
+                            <br/>
+                            <br/>
+                            <table style="width: 95%; margin-left:50px; margin-right:20px; padding-right:2%;">
+                                <tr style="border: transparent 1px solid; ">
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>Packing list number</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
+                                        <span t-field="o.ot_code"/>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>DATE</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
+                                        <span t-esc="o.scheduled_date.strftime('%d/%m/%Y') if o.scheduled_date else ''"/>
+                                    </td>
+                                    <td style="width: 3%; border-spacing: 0; font-size:11px; padding:3px;   border: none !important; border-top: none !important;
+      border-bottom: none !important;">
 
-                         </table>
-                     </div>
+                                    </td>
+                                    <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
+      border-bottom: none !important;">
+
+                                    </td>
+                                    <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
+      border-bottom: none !important;">
+
+                                    </td>
+                                    <td style="width: 3%; border: transparent 1px solid;  border-spacing: 0; font-size:11px; padding:3px;  border: none !important; border-top: none !important;
+      border-bottom: none !important;">
+
+                                    </td>
+                                    <td style="width: 3%; border: transparent 1px solid;   border-spacing: 0; font-size:11px; padding:3px;   border: none !important;border-top: none !important;
+      border-bottom: none !important;">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>Purchase Order No</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:18px; padding:3px; ">
+                                        <b>
+                                            <span t-field="o.sale_id.ot_po"/>
+                                        </b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>Delivery information</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
+                                        OT SITE
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>Oyu Tolgoi LLC address</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
+                                        <t t-if="o.ot_address_type=='site'">
+                                            <span t-field="o.partner_id.street"/>
+                                        </t>
+                                        <t t-if="o.ot_address_type=='office'">
+                                            <span t-field="o.partner_id.street2"/>
+                                            <br/>
+                                        </t>
+
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                        <b>Purchasing Officer name/contact details</b>
+                                    </td>
+                                    <td style="width: 10%; border: 1px solid black; font-size:11px; padding:3px; ">
+                                        <span t-field="o.ot_contract"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <table style="width: 95%; margin-left:50px; margin-right:20px; padding-right:4%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 3%; border: 1px solid black; font-size:11px; padding:3px; background-color:#c0c2c0;"
+                                            colspan="13">
+                                            <strong>ORDER DETAILS</strong>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 7%; vertical-align: middle; border: 1px solid black; font-size:11px; padding:3px; background-color:#e4f2e4;">
+                                            <strong>Line No</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border:1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Product No</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Part number</strong>
+                                        </th>
+                                        <th style="width: 15%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            class="text-right">
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>UOM</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Ordered Qty</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>Delivered Qty</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>Package No</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>Net Weight (kg)</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>Gross Weight (kg)</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>Dimensions</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            rowspan="2">
+                                            <strong>CBM (m3)</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Qty Back ordered</strong>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>(Item line item No)</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border:1px solid black; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Oyu Tolgoi LLC code (example: Stock code; MR No)</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Insert part number as per purchase order</strong>
+                                        </th>
+                                        <th style="width: 15%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;"
+                                            class="text-right">
+                                            <strong>Insert description as per Purchase order</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Unit of Measurement as per Purchase order</strong>
+                                        </th>
+                                        <th style="width: 5%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Ordered qty as per Purchase ordery</strong>
+                                        </th>
+                                        <th style="width: 7%; vertical-align: middle; border: 1px solid black; text-align: center; font-size:11px; padding:3px;background-color:#e4f2e4;">
+                                            <strong>Insert how much left to deliver, if it's delivered partially.
+                                            </strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <t t-if="o.move_ids_without_package">
+                                        <t t-set="i" t-value="1"/>
+                                        <t t-foreach="o.move_ids_without_package" t-as="moves">
+                                            <tr t-foreach="moves.move_line_ids" t-as="move">
+                                                <t t-if="move.product_id.type !='service'">
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; text-align:center;">
+                                                        <span t-esc="i"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px;">
+                                                        <span t-field="moves.product_id.ot_code"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; text-align:center;"/>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:5px; ">
+                                                        <span t-field="moves.product_id.name"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        ea
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.move_id.product_uom_qty"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.quantity"
+                                                              t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2 }"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.package_no"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.net_weight"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.gross_weight"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.dimensions"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        <span t-field="move.cbm"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; font-size:11px; text-align: center;  padding:4px; ">
+                                                        0.00
+                                                    </td>
+                                                </t>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                </tbody>
+                                <tr>
+                                    <th style="width: 3%; border: 1px solid black; font-size:11px; padding:3px; text-color:red;"
+                                        colspan="13">
+                                        <strong>TOTAL</strong>
+                                    </th>
+                                </tr>
+                            </table>
+
+                            <table style="width: 95%; padding-right:2%; font-size:11px; margin-left:50px; margin-right:20px; margin-top: 30px; border:transparent 1px solid; ">
+                                <tr style="height: 40px;">
+                                    <td>
+                                    </td>
+                                    <td style="width: 20%; font-weight: bold; padding: 5px;">Delivered By:</td>
+                                    <td style="width: 10%; padding: 5px;">
+                                        <span t-field="o.sale_id.user_id.name"/>
+                                    </td>
+                                    <td style="width: 10%; padding: 5px;">
+                                        Signature
+                                    </td>
+                                    <td style="width: 25%; font-weight: bold; padding: 5px; text-align:right;">Date:
+                                    </td>
+                                    <td style="width: 35%; padding: 5px;">
+                                        <span t-esc="o.date_done.strftime('%d/%m/%Y') if o.date_done else ''"/>
+                                    </td>
+
+                                </tr>
+                                <tr style="height: 40px;">
+                                    <td>
+
+                                    </td>
+                                    <td style="width: 20%; padding: 5px;">Received By:</td>
+                                    <td style="width: 10%; padding: 5px;"></td>
+                                    <td style="width: 10%; padding: 5px;">Signature
+                                    </td>
+                                    <td style="width: 25%; font-weight: bold; padding: 5px; text-align:right;">Date:
+                                    </td>
+                                    <td style="width: 35%; padding: 5px;">
+                                        <span t-esc="o.date_done.strftime('%d/%m/%Y') if o.date_done else ''"/>
+                                    </td>
+                                </tr>
+
+                                <tr style="height: 40px;">
+                                    <td>
+                                    </td>
+                                    <td style="width: 20%; padding: 5px;">Checked by:</td>
+                                    <td style="width: 10%; padding: 5px;">Date</td>
+                                    <td style="width: 10%; padding: 5px;">
+                                    </td>
+                                    <td style="width: 25%; padding: 5px; text-align:right;"></td>
+                                    <td style="width: 35%; padding: 5px;"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox"/>
+                                        Inventory
+                                    </td>
+                                    <td>
+                                        <input type="checkbox"/>
+                                        Operation
+                                    </td>
+                                    <td>
+
+                                        Normal
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox"/>
+                                        Direct
+                                    </td>
+                                    <td>
+                                        <input type="checkbox"/>
+                                        Phase#2
+                                    </td>
+                                    <td>
+                                        Urgent
+                                        <br/>
+                                        <br/>
+                                        Superurgent
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
                 </t>
             </t>
         </template>
 
-            <template id="mn_stock_ot_packing_list">
-                <t t-call="web.html_container">
-                    <t t-foreach="doc_ids" t-as="doc_id">
-                        <t t-set="lang"/>
-                        <t t-call="l10n_mn_stock.mn_stock_ot_packing_list_data" t-lang="lang"/>
-                    </t>
+        <template id="mn_stock_ot_packing_list">
+            <t t-call="web.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <t t-set="lang"/>
+                    <t t-call="l10n_mn_stock.mn_stock_ot_packing_list_data" t-lang="lang"/>
                 </t>
-            </template>
+            </t>
+        </template>
 
     </data>
 </odoo>

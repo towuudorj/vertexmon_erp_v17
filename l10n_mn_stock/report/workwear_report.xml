@@ -5,97 +5,104 @@
         <template id="mn_workwear_report_data">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="o">
-                    <div class="page">
-                        <div class="row">
-                            <p style="text-align:center; font-size: 12px; padding-left:65%;">
-                                <span></span>
+                    <t t-if="o.picking_type_code != 'outgoing'">
+                        <div class="page">
+                            <div class="row mb64">
+                                <div class="col-6">
+                                    <p style="text-align:center;font-size: 30px;margin-left:50px; margin-right:50px;">
+                                        <span>Энэ тайланг зөвхөн хүргэлтийн захиалгуудаас татах боломжтой.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="o.picking_type_code == 'outgoing'">
+                        <div class="page">
+                            <div class="row">
+                                <p style="text-align:center; font-size: 12px; padding-left:65%;">
+                                    <span></span>
                                 </p>
-                                </div>
-                                <div class="col-xs-8" style="text-align:center;">
+                            </div>
+                            <div class="col-xs-8" style="text-align:center;">
                                 <h4>Хамгаалах хэрэгсэл эзэмшигчийн карт</h4>
-                                </div>
-                                <table class="table table-condensed">
-
-                                        <tr>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                Ажилтны овог:
-                                            </td>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                Ажилтны нэр:
-                                            </td>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                              
-                                            </td>
-                                            </tr>
-                                            <tr>
-
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                 Ажилтны РД:   
-                                            </td>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                               
-                                            </td>
-                                           
-                                        </tr>
-                                        <tr>
-
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                 Харьяалагдах алба:   
-                                            </td>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                               
-                                            </td>
-                                           
-                                        </tr>
-                                        <tr>
-
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                                 Албан тушаал:   
-                                            </td>
-                                            <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
-                                               
-                                            </td>
-                                           
-                                        </tr>
-                              
-                                    </table>
-                                    <table class="width: 100%; table table-condensed" >
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 50%; border: 3px solid black; font-size:13px; padding:2px;"><strong>Ажлын хувцас</strong></th>
-                                                <th style="width: 10%; border: 3px solid black; font-size:13px; padding:2px;"><strong>Тоо</strong></th>
-                                                <th style=" width: 20%; border: 3px solid black; font-size:13px; padding:2px;" class="text-right"><strong>Хүлээлгэн өгсөн</strong></th>
-                                                <th style=" width: 20%; border: 3px solid black; font-size:13px; padding:2px;" class="text-right"><strong>Хүлээн авсан</strong></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr t-foreach="o.move_line_ids_without_package" t-as="move">
-                                                    <td style="border: 3px solid black; font-size:13px; padding:2px;"><span t-field="move.product_id"/></td> 
-                                                    <td style="border: 3px solid black; font-size:13px; padding:2px;"><span t-field="move.quantity"/></td>  
-                                                    <td style="border: 3px solid black; font-size:13px; padding:2px;"></td>
-                                                    <td style="border: 3px solid black; font-size:13px; padding:2px;" class="text-right">
-                                                        
-                                                    </td>
-                                                
-                                            </tr>
-
-                                                            
-                        
-                                        </tbody>
-                                    </table>
-                    
-                                                                                                                                          
-                    </div>
+                            </div>
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                        Ажилтны овог:
+                                    </td>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                        Ажилтны нэр:
+                                    </td>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                        Ажилтны РД:
+                                    </td>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                        Харьяалагдах алба:
+                                    </td>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                        Албан тушаал:
+                                    </td>
+                                    <td style="width: 50%;border: 3px solid black; font-size:13px; padding:2px;">
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="width: 100%; table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%; border: 3px solid black; font-size:13px; padding:2px;">
+                                            <strong>Ажлын хувцас</strong>
+                                        </th>
+                                        <th style="width: 10%; border: 3px solid black; font-size:13px; padding:2px;">
+                                            <strong>Тоо</strong>
+                                        </th>
+                                        <th style=" width: 20%; border: 3px solid black; font-size:13px; padding:2px;"
+                                            class="text-right">
+                                            <strong>Хүлээлгэн өгсөн</strong>
+                                        </th>
+                                        <th style=" width: 20%; border: 3px solid black; font-size:13px; padding:2px;"
+                                            class="text-right">
+                                            <strong>Хүлээн авсан</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.move_line_ids_without_package" t-as="move">
+                                        <td style="border: 3px solid black; font-size:13px; padding:2px;">
+                                            <span t-field="move.product_id"/>
+                                        </td>
+                                        <td style="border: 3px solid black; font-size:13px; padding:2px;">
+                                            <span t-field="move.quantity"/>
+                                        </td>
+                                        <td style="border: 3px solid black; font-size:13px; padding:2px;"></td>
+                                        <td style="border: 3px solid black; font-size:13px; padding:2px;"
+                                            class="text-right">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
                 </t>
-            </t> 
+            </t>
         </template>
-    
+
         <template id="mn_workwear_report">
             <t t-call="web.html_container">
                 <t t-foreach="doc_ids" t-as="doc_id">

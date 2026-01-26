@@ -43,7 +43,20 @@ class stock_picking(models.Model):
     ot_code = fields.Char(string='OT code', default=lambda self:self.env['ir.sequence'].next_by_code('stock.picking.ot'))
     purchase_count = fields.Integer(string='Purchase number', default=1)
     is_work_out = fields.Boolean(string='Is work out')
+    approve_use_stamp = fields.Boolean('Approve use stamp')
+    stamp_approved_user = fields.Many2one('res.users', string='Stamp Approved User')
+    picking_type_code = fields.Selection(related='picking_type_id.code')
 
+    @api.model
+    def create(self, vals):
+        if vals.get('approve_use_stamp', False):
+            vals['stamp_approved_user'] = self.env.user.id
+        return super(stock_picking, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('approve_use_stamp', False):
+            vals['stamp_approved_user'] = self.env.user.id
+        return super(stock_picking, self).write(vals)
     
     def _compute_amount(self):
         
@@ -164,4 +177,11 @@ class stock_picking(models.Model):
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
-    
+
+    def check_picking_type_code(self):
+        for picking in self:
+            if picking.picking_type_code != 'outgoing':
+                raise UserError(
+                    "This report can only be printed for Outgoing pickings."
+                )
+        return

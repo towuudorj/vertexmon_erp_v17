@@ -129,7 +129,7 @@ msgstr "Жин"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr "Хүргэлтийн жин
+msgstr "Хүргэлтийн жин"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -220,6 +220,11 @@ msgstr "Барааны ангилал"
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__name
 msgid "Name"
 msgstr "Барааны ангилал"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__approve_use_stamp
+msgid "Approve use stamp"
+msgstr "Зардал тамгатай гаргах"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__code

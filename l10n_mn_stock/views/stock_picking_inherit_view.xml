@@ -44,6 +44,9 @@
                     <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="attributes">
                 		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='location_id']" position="after">
+                        <field name="approve_use_stamp" groups="l10n_mn_stock.group_pickin_recieve"/>
+                    </xpath>
                 </field>
             </record>
 
