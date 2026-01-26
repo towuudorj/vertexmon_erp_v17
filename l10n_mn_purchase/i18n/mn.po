@@ -519,6 +519,17 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__purchase_date
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__purchase_date
+msgid "Purchase date"
+msgstr "Бараа хүлээн авах өдөр"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition_line__supplier_id
+msgid "Supplier"
+msgstr "Нийлүүлэгч"
+
+#. module: l10n_mn_purchase
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice__payment_type__progress_payment
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_create_invoice_line__payment_type__progress_payment
 msgid "Progress payment"
@@ -579,6 +590,11 @@ msgstr "Захиалагч"
 msgid "Currency rate"
 msgstr "Валютын ханш"
 
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__partner_type
+msgid "Partner type"
+msgstr "Харилцагчийн төрөл"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order__partner_type

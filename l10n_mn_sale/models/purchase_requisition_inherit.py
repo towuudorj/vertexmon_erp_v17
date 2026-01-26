@@ -350,6 +350,7 @@ class PurchaseRequisitionLine(models.Model):
                         list.cost_price = line.price_unit
                         list.currency_id = line.currency_id.id
                         list.product_id = line.product_id.id
+                        list.purchase_date = line.purchase_date
 
 
             
