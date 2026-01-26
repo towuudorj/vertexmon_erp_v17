@@ -5,8 +5,7 @@ from odoo.exceptions import UserError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    partner_type = fields.Many2one('partner.type.register', string='Partner type',
-                                   required=True)
+    partner_type = fields.Many2one('partner.type.register', string='Partner type')
     currency_rate = fields.Float(string='Currency rate', digits=(12, 6), compute="_compute_currency_rate")
     sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
     purchase_type = fields.Selection([('local', 'Local'),
