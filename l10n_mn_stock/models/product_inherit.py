@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
 
     distributor_id = fields.Many2one('distributor.register', string='Distributer', related="product_tmpl_id.distributor_id")
     distributor_ids = fields.Many2one('res.partner', string='Distributer', domain=[("is_distributor","=",True)])
-    model = fields.Char(string='Model', related="product_tmpl_id.model")
+    model = fields.Char(string='Model', related="product_tmpl_id.model", related_sudo=False, readonly=False)
     default_code = fields.Char('Internal Reference', related="product_tmpl_id.default_code")
     is_quotation = fields.Boolean(string='Is quotation', related="product_tmpl_id.is_quotation")
     ot_code = fields.Char(string='OT code', related="product_tmpl_id.ot_code")
