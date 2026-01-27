@@ -3,6 +3,7 @@
 from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
+from odoo.tools import SQL
 
 
 
@@ -110,11 +111,24 @@ class ProjectProductsLine(models.Model):
         for line in self:
             delivery_cost = 0
             if line.product_id and line.product_id.detailed_type == 'service' and line.project_id.analytic_account_id:
-                analytic_lines = self.env['account.analytic.line'].search([('account_id','=',line.project_id.analytic_account_id.id)])
-                analytic_lines = analytic_lines.filtered(lambda a_line: a_line.move_line_id and
-                    a_line.move_line_id.move_id.move_type == 'in_invoice' and a_line.move_line_id.product_id.id == line.product_id.id)
-                if analytic_lines:
-                    delivery_cost = abs(sum(analytic_lines.mapped('amount')))
+                query = self.env['account.move.line']._search(
+                    [('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())])
+                query.add_where(
+                    SQL(
+                        "%s && %s",
+                        [str(line.project_id.analytic_account_id.id)],
+                        self.env['account.move.line']._query_analytic_accounts(),
+                    )
+                )
+                query_string, query_param = query.select('DISTINCT account_move_line.move_id')
+                self._cr.execute(query_string, query_param)
+                move_ids = [l.get('move_id') for l in self._cr.dictfetchall()]
+                invoice_ids = self.env['account.move'].browse(move_ids)
+                invoice_line_ids = False
+                if invoice_ids:
+                    invoice_line_ids = invoice_ids.mapped('invoice_line_ids').filtered(lambda i_line: i_line.product_id.id == line.product_id.id and i_line.move_id.state == 'posted')
+                if invoice_line_ids:
+                    delivery_cost = abs(sum(invoice_line_ids.mapped('price_total')))
                 else:
                     delivery_cost = 0
             else:
