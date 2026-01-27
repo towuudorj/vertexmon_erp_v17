@@ -109,8 +109,17 @@ class ProjectProductsLine(models.Model):
     def compute_delivery_cost(self):
         for line in self:
             delivery_cost = 0
-            if line.cost_price > 0.0 and line.qty_delivered > 0.0:
-                delivery_cost = line.cost_price * line.qty_delivered
+            if line.product_id and line.product_id.detailed_type == 'service' and line.project_id.analytic_account_id:
+                analytic_lines = self.env['account.analytic.line'].search([('account_id','=',line.project_id.analytic_account_id.id)])
+                analytic_lines = analytic_lines.filtered(lambda a_line: a_line.move_line_id and
+                    a_line.move_line_id.move_id.move_type == 'in_invoice' and a_line.move_line_id.product_id.id == line.product_id.id)
+                if analytic_lines:
+                    delivery_cost = abs(sum(analytic_lines.mapped('amount')))
+                else:
+                    delivery_cost = 0
+            else:
+                if line.cost_price > 0.0 and line.qty_delivered > 0.0:
+                    delivery_cost = line.cost_price * line.qty_delivered
                 
             line.delivery_cost = delivery_cost
         
