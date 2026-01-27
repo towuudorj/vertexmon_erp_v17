@@ -32,8 +32,8 @@ class ProductSalesReport(models.TransientModel):
         data = {
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
+            'date_from': self.start_date,
+            'date_to': self.end_date,
             'warehouse_ids': self.warehouse_ids.ids,
             'categ_id':self.categ_id.id,
             'product_id': self.product_id.id,
@@ -60,8 +60,9 @@ class ProductSalesReport(models.TransientModel):
                                     })
         head_title = workbook.add_format({
                                     'align': 'center', 
-                                    'font_size': 16,
-                                    'bold': True
+                                    'font_size': 14,
+                                    'bold': True,
+                                    'text_wrap': True,
                                     })
         txt_center = workbook.add_format({
                                     'align': 'center',
@@ -84,7 +85,7 @@ class ProductSalesReport(models.TransientModel):
                                     'num_format': '#,##0.00'
                                     })
         
-        data_center = workbook.add_format({
+        total_format = workbook.add_format({
                                     'align': 'center',
                                     'border': 1,
                                     'font_size': 12,
@@ -92,89 +93,149 @@ class ProductSalesReport(models.TransientModel):
                                     'num_format': '#,##0.00'
                                     })
 
-        product_obj = self.env['product.product']
-        category_obj = self.env['product.category']
-        category_id = False
-        product_id = False
-        if data['categ_id']:
-            category_id = data['categ_id']
-        if data['product_id']:
-            product_id = data['product_id']
 
         
         sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), data_left)
         
-        sheet.merge_range('A2:M2', u'Барааны материалын насжилтын тайлан', head_title)
+        sheet.merge_range('A2:M2', u'Барааны материалын эргэцийн тайлан', head_title)
         
-        sheet.merge_range('K3:M3', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']), data_left )
+        sheet.merge_range('H3:J3', u'Тайлант хугацаа: %s - %s'%(data['date_from'],data['date_to']), data_left )
 
         rowx = 4
         sheet.set_column(1, 1, 30)
         sheet.set_column(2, 20, 15)
-        sheet.write('A%s'%(rowx), u'Д/д', data_right)
-        sheet.write('B%s'%(rowx), u'Барааны нэр', data_right)
-        sheet.write('C%s'%(rowx), u'Барааны код', data_right)
-        sheet.write('D%s'%(rowx), u'Агуулах', data_right)
-        sheet.write('E%s'%(rowx), u'Орлого хийсэн огноо', data_right)
-        sheet.write('F%s'%(rowx), u'Зарлага хийсэн огноо', data_right)
-        sheet.write('G%s'%(rowx), u'Орлогын тоо хэмжээ', data_right)
-        sheet.write('H%s'%(rowx), u'Зарлагын тоо хэмжээ', data_right)
-        sheet.write('I%s'%(rowx), u'Дундаж хадгалсан хоног', data_right)
-        sheet.write('J%s'%(rowx), u'Үлдэгдэл тоо хэмжээ', data_right)
-        sheet.write('K%s'%(rowx), u'Нэгж үнэ (₮)', data_right)
-        sheet.write('L%s'%(rowx), u'Нийт үнэ (₮)', data_right)
-        sheet.write('M%s'%(rowx), u'Насжилтын ангилал', data_right)
+        sheet.write_row(3, 0, [
+                            "№",
+                            "Барааны нэр",
+                            "Барааны код",
+                            "Эхний үлдэгдэл (₮)",
+                            "Худалдан авалт (₮)",
+                            "Нийт боломжит дүн (₮)",
+                            "Борлуулсан / хэрэглэсэн дүн (₮)",
+                            "Эцсийн үлдэгдэл (₮)",
+                            "Эргэцийн тоо (удаа)",
+                            "Тайлбар",
+                        ], head_title)
         
         
-        self.env.cr.execute("""
-                            SELECT
-                            pt.name,
-                            pp.default_code,
-                            sw.name as wh_name,
-                            MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
-                            MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
-                            SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
-                            SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
-                            AVG(CURRENT_DATE - sm.date::date)::INT,
-                            SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
-                            svl.unit_cost
-                        FROM stock_move_line sml
-                        JOIN stock_move sm ON sm.id = sml.move_id
-                        JOIN stock_location sl ON sl.id = sml.location_dest_id
-                        JOIN product_product pp ON pp.id = sml.product_id
-                        JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                        LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
-                        LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
-                        WHERE sm.state = 'done' and pp.id = %s
-                        GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
-                            """%(data['product_id']))
-        income = self.env.cr.dictfetchall()
-        rowx +=1
-        row = 3
-        num = 1
-        for i, r in enumerate(income, start=1):
-            total_value = (r['sum'] or 0) * (r['unit_cost'] or 0)
-            total_value = 0
-            print("sssss")
-            age = r['avg'] or 0
-            if age <= 30:
-                bucket = "0–30 хоног"
-            elif age <= 60:
-                bucket = "31–60 хоног"
-            elif age <= 90:
-                bucket = "61–90 хоног"
+        location_obj = self.env['stock.location']
+        location_id = []
+        if data['warehouse_ids']:
+            if len(data['warehouse_ids'])==1:
+                location_ids = location_obj.search([('warehouse_id','=',data['warehouse_ids'][0])])
+                for loc in location_ids:
+                    location_id.append(loc.id)
             else:
-                bucket = "90+ хоног"
-
+                location_id = location_obj.search([('warehouse_id','in',tuple(data['warehouse_ids']))])
+                for loc in location_ids:
+                    location_id.append(loc.id)
+        
+        query = """
+                SELECT
+                    pt.name ->> 'mn_MN' AS name,
+                    pp.default_code AS code,
+            
+                    SUM(CASE
+                        WHEN svl.create_date < %s THEN svl.value
+                        ELSE 0 END
+                    ) AS opening_value,
+            
+                    SUM(CASE
+                        WHEN svl.value > 0
+                         AND svl.create_date BETWEEN %s AND %s
+                        THEN svl.value
+                        ELSE 0 END
+                    ) AS purchase_value,
+            
+                    SUM(CASE
+                        WHEN svl.value < 0
+                         AND svl.create_date BETWEEN %s AND %s
+                        THEN ABS(svl.value)
+                        ELSE 0 END
+                    ) AS out_value
+            
+                FROM stock_valuation_layer svl
+                JOIN stock_move sm on sm.id = svl.stock_move_id
+                JOIN product_product pp ON pp.id = sm.product_id
+                JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                
+                WHERE svl.company_id = %s
+            """
+            
+        params = [
+            data['date_from'],     # эхний үлдэгдэл хүртэл
+            data['date_from'],
+            data['date_to'],
+            data['date_from'],
+            data['date_to'],
+            data['company_id']
+        ]
+        
+        if len(location_id)==1:
+            query += " AND sm.location_id = %s"
+            params.append(location_id[0])
+        elif len(location_id)>1:
+            query += " AND sm.location_id in %s"
+            params.append(tuple(location_id))
+        query += """
+            GROUP BY pt.name, pp.default_code
+        """
+        
+        self.env.cr.execute(query, params)
+        records = self.env.cr.dictfetchall()
+        row = 4
+        total_open = total_buy = total_possible = total_out = total_close = 0
+        
+        for i, r in enumerate(records, start=1):
+            opening = r['opening_value'] or 0
+            purchase = r['purchase_value'] or 0
+            out_val = r['out_value'] or 0
+        
+            possible = opening + purchase
+            closing = possible - out_val
+        
+            turnover = round(out_val / possible, 2) if possible else 0
+        
+            if turnover >= 6:
+                note = "Хурдан эргэлттэй"
+            elif turnover >= 3:
+                note = "Тогтвортой эргэлттэй"
+            else:
+                note = "Эргэлт удаан"
+        
             sheet.write_row(row, 0, [
-                i, r['name']['mn_MN'], r['default_code'], r['wh_name'],
-                r['min'], r['max'],
-                r['sum'],
-                age, r['avg'],
-                r['unit_cost'], total_value, bucket
-            ], data_left)
+                i,
+                r['name'],
+                r['code'],
+                opening,
+                purchase,
+                possible,
+                out_val,
+                closing,
+                turnover,
+                note,
+            ], data_right)
+        
+            total_open += opening
+            total_buy += purchase
+            total_possible += possible
+            total_out += out_val
+            total_close += closing
+        
             row += 1
-            num +=1
+        sheet.write_row(row, 0, [
+                    "",
+                    "Нийт дүн:",
+                    "",
+                    total_open,
+                    total_buy,
+                    total_possible,
+                    total_out,
+                    total_close,
+                    "",
+                    ""
+                ], total_format)
+                
 
        
     

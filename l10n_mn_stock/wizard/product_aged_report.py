@@ -61,7 +61,8 @@ class ProductAgedReport(models.TransientModel):
         head_title = workbook.add_format({
                                     'align': 'center', 
                                     'font_size': 16,
-                                    'bold': True
+                                    'bold': True,
+                                    'text_wrap': True,
                                     })
         txt_center = workbook.add_format({
                                     'align': 'center',
@@ -91,16 +92,6 @@ class ProductAgedReport(models.TransientModel):
                                     'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
-
-        product_obj = self.env['product.product']
-        category_obj = self.env['product.category']
-        category_id = False
-        product_id = False
-        if data['categ_id']:
-            category_id = data['categ_id']
-        if data['product_id']:
-            product_id = data['product_id']
-
         
         sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), data_left)
         
@@ -111,117 +102,137 @@ class ProductAgedReport(models.TransientModel):
         rowx = 4
         sheet.set_column(1, 1, 30)
         sheet.set_column(2, 20, 15)
-        sheet.write('A%s'%(rowx), u'Д/д', data_right)
-        sheet.write('B%s'%(rowx), u'Барааны нэр', data_right)
-        sheet.write('C%s'%(rowx), u'Барааны код', data_right)
-        sheet.write('D%s'%(rowx), u'Агуулах', data_right)
-        sheet.write('E%s'%(rowx), u'Орлого хийсэн огноо', data_right)
-        sheet.write('F%s'%(rowx), u'Зарлага хийсэн огноо', data_right)
-        sheet.write('G%s'%(rowx), u'Орлогын тоо хэмжээ', data_right)
-        sheet.write('H%s'%(rowx), u'Зарлагын тоо хэмжээ', data_right)
-        sheet.write('I%s'%(rowx), u'Дундаж хадгалсан хоног', data_right)
-        sheet.write('J%s'%(rowx), u'Үлдэгдэл тоо хэмжээ', data_right)
-        sheet.write('K%s'%(rowx), u'Нэгж үнэ (₮)', data_right)
-        sheet.write('L%s'%(rowx), u'Нийт үнэ (₮)', data_right)
-        sheet.write('M%s'%(rowx), u'Насжилтын ангилал', data_right)
+        location_obj = self.env['stock.location']
+        location_id = []
+        if data['warehouse_ids']:
+            if len(data['warehouse_ids'])==1:
+                location_ids = location_obj.search([('warehouse_id','=',data['warehouse_ids'][0])])
+                for loc in location_ids:
+                    location_id.append(loc.id)
+            else:
+                location_id = location_obj.search([('warehouse_id','in',tuple(data['warehouse_ids']))])
+                for loc in location_ids:
+                    location_id.append(loc.id)
         
-        if data['product_id']:
-            self.env.cr.execute("""
-                                SELECT
-                                pt.name,
-                                pp.default_code,
-                                sw.name as wh_name,
-                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
-                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
-                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
-                                AVG(CURRENT_DATE - sm.date::date)::INT,
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
-                                svl.unit_cost
-                            FROM stock_move_line sml
-                            JOIN stock_move sm ON sm.id = sml.move_id
-                            JOIN stock_location sl ON sl.id = sml.location_dest_id
-                            JOIN product_product pp ON pp.id = sml.product_id
-                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
-                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
-                            WHERE sm.state = 'done' and pp.id = %s
-                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
-                                """%(data['product_id']))
-            income = self.env.cr.dictfetchall()
-        elif data['categ_id']:
-            self.env.cr.execute("""
-                                SELECT
-                                pt.name,
-                                pp.default_code,
-                                sw.name as wh_name,
-                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
-                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
-                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
-                                AVG(CURRENT_DATE - sm.date::date)::INT,
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
-                                svl.unit_cost
-                            FROM stock_move_line sml
-                            JOIN stock_move sm ON sm.id = sml.move_id
-                            JOIN stock_location sl ON sl.id = sml.location_dest_id
-                            JOIN product_product pp ON pp.id = sml.product_id
-                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
-                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
-                            WHERE sm.state = 'done' and pp.categ_id = %s
-                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
-                                """%(data['categ_id']))
-            income = self.env.cr.dictfetchall()
-        else:
-            self.env.cr.execute("""
-                                SELECT
-                                pt.name,
-                                pp.default_code,
-                                sw.name as wh_name,
-                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
-                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
-                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
-                                AVG(CURRENT_DATE - sm.date::date)::INT,
-                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
-                                svl.unit_cost
-                            FROM stock_move_line sml
-                            JOIN stock_move sm ON sm.id = sml.move_id
-                            JOIN stock_location sl ON sl.id = sml.location_dest_id
-                            JOIN product_product pp ON pp.id = sml.product_id
-                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
-                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
-                            WHERE sm.state = 'done'
-                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
-                                """)
-            income = self.env.cr.dictfetchall()
-        rowx +=1
+        
+        sheet.write_row(3, 0, [
+                        "Д/д",
+                        "Барааны нэр",
+                        "Барааны код",
+                        "Агуулах",
+                        "Орлого хийсэн огноо",
+                        "Зарлага хийсэн огноо",
+                        "Орлогын тоо хэмжээ",
+                        "Зарлагын тоо хэмжээ",
+                        "Дундаж хадгалсан хоног",
+                        "Үлдэгдэл тоо хэмжээ",
+                        "Нэгж үнэ (₮)",
+                        "Нийт үнэ (₮)",
+                        "Насжилтын ангилал"
+                    ], head_title)
+        
+        
+        query = """
+                SELECT
+                    pt.name ->> 'mn_MN' AS name,
+                    pp.default_code AS default_code,
+                    sw.name AS wh_name,
+            
+                    MIN(CASE WHEN src.usage = 'supplier' THEN sm.date::date END) AS first_in,
+                    MAX(CASE WHEN dest.usage = 'customer' THEN sm.date::date END) AS last_out,
+            
+                    SUM(CASE WHEN dest.usage = 'internal' THEN sml.delivered_qty ELSE 0 END) AS qty_in,
+                    SUM(CASE WHEN src.usage = 'internal' THEN sml.delivered_qty ELSE 0 END) AS qty_out,
+            
+                    AVG(CURRENT_DATE - sm.date::date)::INT AS avg_age,
+            
+                    SUM(CASE
+                        WHEN dest.usage = 'internal' THEN sml.delivered_qty
+                        WHEN src.usage = 'internal' THEN -sml.delivered_qty
+                        ELSE 0 END
+                    ) AS balance_qty,
+            
+                    AVG(svl.unit_cost) AS unit_cost
+            
+                FROM stock_move_line sml
+                JOIN stock_move sm ON sm.id = sml.move_id
+            
+                JOIN stock_location src ON src.id = sml.location_id
+                JOIN stock_location dest ON dest.id = sml.location_dest_id
+            
+                JOIN product_product pp ON pp.id = sml.product_id
+                JOIN product_template pt ON pt.id = pp.product_tmpl_id
+            
+                LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = dest.id
+                LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
+            
+                WHERE sm.state = 'done'
+                  AND sml.company_id = %s
+            """
+        params = [data['company_id']]
+        
+        if len(location_id)==1:
+            query += " AND sw.lot_stock_id = %s"
+            params.append(location_id[0])
+        elif len(location_id)>1:
+            query += " AND sw.lot_stock_id in %s"
+            params.append(tuple(location_id))
+        
+        if data.get('product_id'):
+            query += " AND pp.id = %s"
+            params.append(data['product_id'])
+        elif data.get('categ_id'):
+            query += " AND pt.categ_id = %s"
+            params.append(data['categ_id'])
+        
+        
+        query += """
+            GROUP BY
+                pt.name,
+                pp.default_code,
+                sw.name
+        """
+        
+        self.env.cr.execute(query, tuple(params))
+        income = self.env.cr.dictfetchall()
+
         row = 4
-        num = 1
+
         for i, r in enumerate(income, start=1):
-            total_value = (r['sum'] or 0) * (r['unit_cost'] or 0)
-            total_value = 0
-            age = r['avg'] or 0
-            if age <= 30:
+            qty_in = r['qty_in'] or 0
+            qty_out = r['qty_out'] or 0
+            balance_qty = r['balance_qty'] or 0
+        
+            unit_cost = r['unit_cost'] or 0
+            total_value = balance_qty * unit_cost
+        
+            avg_age = r['avg_age'] or 0
+            if avg_age <= 30:
                 bucket = "0–30 хоног"
-            elif age <= 60:
+            elif avg_age <= 60:
                 bucket = "31–60 хоног"
-            elif age <= 90:
+            elif avg_age <= 90:
                 bucket = "61–90 хоног"
             else:
                 bucket = "90+ хоног"
-
+        
             sheet.write_row(row, 0, [
-                i, r['name']['mn_MN'], r['default_code'], r['wh_name'],
-                r['min'], r['max'],
-                r['sum'],
-                age, r['avg'],
-                r['unit_cost'], total_value, bucket
-            ], data_left)
+                i,                    # Д/д
+                r['name'],            # Барааны нэр
+                r['default_code'],    # Барааны код
+                r['wh_name'],         # Агуулах
+                '%s'%r['first_in'],        # Орлого хийсэн огноо
+                '%s'%r['last_out'],        # Зарлага хийсэн огноо
+                qty_in,               # Орлогын тоо хэмжээ
+                qty_out,              # Зарлагын тоо хэмжээ
+                avg_age,              # Дундаж хадгалсан хоног
+                balance_qty,          # Үлдэгдэл тоо хэмжээ
+                unit_cost,            # Нэгж үнэ
+                total_value,          # Нийт үнэ
+                bucket                # Насжилтын ангилал
+            ], data_right)
             row += 1
-            num +=1
+
 
        
     
