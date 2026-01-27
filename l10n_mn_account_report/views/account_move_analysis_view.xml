@@ -13,6 +13,7 @@
                         	<field name="company_id"/>
                         	<field name="fiscalyear_id"/>
                         	<field name="target_move"/>
+                        	<field name="use_currency_amount"/>
                         	<field name="start_date"/>
                         	<field name="end_date"/>
                         </group>

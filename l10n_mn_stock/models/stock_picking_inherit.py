@@ -177,11 +177,3 @@ class stock_picking(models.Model):
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
-
-    def check_picking_type_code(self):
-        for picking in self:
-            if picking.picking_type_code != 'outgoing':
-                raise UserError(
-                    "This report can only be printed for Outgoing pickings."
-                )
-        return

@@ -44,7 +44,7 @@
             <field name="model">account.partner.ledger.excel.report</field>
             <field name="arch" type="xml">
                 <form string="Partner ledger report" class="custom-modal-height" height="100%">
-                    <field name="preview_html" style="height:60%; width:100%"/>
+                    <field name="preview_html" style="height:70%; width:100%"/>
                     <footer>
                         <button name="return_main_view" type="object" string="return" class="btn-primary"/>
                     </footer>
