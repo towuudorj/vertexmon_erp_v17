@@ -125,37 +125,84 @@ class ProductAgedReport(models.TransientModel):
         sheet.write('L%s'%(rowx), u'Нийт үнэ (₮)', data_right)
         sheet.write('M%s'%(rowx), u'Насжилтын ангилал', data_right)
         
-        
-        self.env.cr.execute("""
-                            SELECT
-                            pt.name,
-                            pp.default_code,
-                            sw.name as wh_name,
-                            MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
-                            MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
-                            SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
-                            SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
-                            AVG(CURRENT_DATE - sm.date::date)::INT,
-                            SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
-                            svl.unit_cost
-                        FROM stock_move_line sml
-                        JOIN stock_move sm ON sm.id = sml.move_id
-                        JOIN stock_location sl ON sl.id = sml.location_dest_id
-                        JOIN product_product pp ON pp.id = sml.product_id
-                        JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                        LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
-                        LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
-                        WHERE sm.state = 'done' and pp.id = %s
-                        GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
-                            """%(data['product_id']))
-        income = self.env.cr.dictfetchall()
+        if data['product_id']:
+            self.env.cr.execute("""
+                                SELECT
+                                pt.name,
+                                pp.default_code,
+                                sw.name as wh_name,
+                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
+                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
+                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
+                                AVG(CURRENT_DATE - sm.date::date)::INT,
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
+                                svl.unit_cost
+                            FROM stock_move_line sml
+                            JOIN stock_move sm ON sm.id = sml.move_id
+                            JOIN stock_location sl ON sl.id = sml.location_dest_id
+                            JOIN product_product pp ON pp.id = sml.product_id
+                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
+                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
+                            WHERE sm.state = 'done' and pp.id = %s
+                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
+                                """%(data['product_id']))
+            income = self.env.cr.dictfetchall()
+        elif data['categ_id']:
+            self.env.cr.execute("""
+                                SELECT
+                                pt.name,
+                                pp.default_code,
+                                sw.name as wh_name,
+                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
+                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
+                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
+                                AVG(CURRENT_DATE - sm.date::date)::INT,
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
+                                svl.unit_cost
+                            FROM stock_move_line sml
+                            JOIN stock_move sm ON sm.id = sml.move_id
+                            JOIN stock_location sl ON sl.id = sml.location_dest_id
+                            JOIN product_product pp ON pp.id = sml.product_id
+                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
+                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
+                            WHERE sm.state = 'done' and pp.categ_id = %s
+                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
+                                """%(data['categ_id']))
+            income = self.env.cr.dictfetchall()
+        else:
+            self.env.cr.execute("""
+                                SELECT
+                                pt.name,
+                                pp.default_code,
+                                sw.name as wh_name,
+                                MIN(CASE WHEN sl.usage = 'internal' THEN sm.date::date END),
+                                MAX(CASE WHEN sl.usage != 'internal' THEN sm.date::date END),
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE 0 END),
+                                SUM(CASE WHEN sl.usage != 'internal' THEN sml.quantity ELSE 0 END),
+                                AVG(CURRENT_DATE - sm.date::date)::INT,
+                                SUM(CASE WHEN sl.usage = 'internal' THEN sml.quantity ELSE -sml.quantity END),
+                                svl.unit_cost
+                            FROM stock_move_line sml
+                            JOIN stock_move sm ON sm.id = sml.move_id
+                            JOIN stock_location sl ON sl.id = sml.location_dest_id
+                            JOIN product_product pp ON pp.id = sml.product_id
+                            JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                            LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = sl.id
+                            LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
+                            WHERE sm.state = 'done'
+                            GROUP BY pt.name, pp.default_code, sw.name, svl.unit_cost
+                                """)
+            income = self.env.cr.dictfetchall()
         rowx +=1
-        row = 3
+        row = 4
         num = 1
         for i, r in enumerate(income, start=1):
             total_value = (r['sum'] or 0) * (r['unit_cost'] or 0)
             total_value = 0
-            print("sssss")
             age = r['avg'] or 0
             if age <= 30:
                 bucket = "0–30 хоног"

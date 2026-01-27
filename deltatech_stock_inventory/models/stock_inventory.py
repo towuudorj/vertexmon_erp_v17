@@ -57,6 +57,7 @@ class Inventory(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
+    brand_ids = fields.Many2many('product.brand', string='Brand')
     location_ids = fields.Many2many(
         "stock.location",
         string="Locations",
@@ -298,6 +299,8 @@ class Inventory(models.Model):
             ("inventory_id", "=", self.id),
             ("location_id.usage", "in", ["internal", "transit"]),
         ]
+        
+            
         if self.location_ids:
             context["default_location_id"] = self.location_ids[0].id
             if len(self.location_ids) == 1:
@@ -445,18 +448,29 @@ class Inventory(models.Model):
             package_id,
             owner_id,
         ), quantity in quants_groups.items():
-            line_values = {
-                "inventory_id": self.id,
-                "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
-                "theoretical_qty": quantity,
-                "prod_lot_id": lot_id,
-                "partner_id": owner_id,
-                "product_id": product_id,
-                "location_id": location_id,
-                "package_id": package_id,
-            }
-            product_ids.add(product_id)
-            vals.append(line_values)
+            if self.brand_ids:
+                if len(self.brand_ids) == 1:
+                    print("ddddddddd",self.brand_ids.id)
+                    pro = self.env['product.product'].search([('brand_id','=',self.brand_ids.id)])
+                elif len(self.brand_ids) > 1:
+                    pro = self.env['product.product'].search([('brand_id','in',tuple(self.brand_ids.ids))])
+                else:
+                    pro = self.env['product.product'].search([('id','=',product_id)])
+                for pros in pro:
+                    if pros.id == product_id:
+                        line_values = {
+                            "inventory_id": self.id,
+                            "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
+                            "theoretical_qty": quantity,
+                            "prod_lot_id": lot_id,
+                            "partner_id": owner_id,
+                            "product_id": product_id,
+                            "location_id": location_id,
+                            "package_id": package_id,
+                        }
+                        
+                        product_ids.add(product_id)
+                        vals.append(line_values)
         product_id_to_product = dict(zip(product_ids, self.env["product.product"].browse(product_ids)))
         for val in vals:
             val["product_uom_id"] = product_id_to_product[val["product_id"]].product_tmpl_id.uom_id.id
