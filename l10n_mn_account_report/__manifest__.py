@@ -23,6 +23,7 @@
     'website': 'www.aibi.mn',
     'depends': [
                 'account',
+                'sale',
                 'analytic',
                 'om_account_accountant',
                 'account_statement_base',
