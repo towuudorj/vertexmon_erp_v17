@@ -134,8 +134,8 @@ class ProjectProductsLine(models.Model):
             else:
                 if line.cost_price > 0.0 and line.qty_delivered > 0.0:
                     delivery_cost = line.cost_price * line.qty_delivered
-                
             line.delivery_cost = delivery_cost
+        self.mapped('project_id')._amount_all()
         
     def compute_qty_available_cost(self):
         for line in self:
