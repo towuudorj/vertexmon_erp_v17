@@ -3,9 +3,9 @@ import io
 import json
 import xlsxwriter
 import time
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.tools import date_utils
-
+from lxml import etree
 
 class AccountPartnerLedgerExcelReport(models.TransientModel):
     _name = 'account.partner.ledger.excel.report'
@@ -113,6 +113,22 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'res_id': self.id,
             'res_model': self._name
         }
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form':
+            doc = arch
+            if self.env.user.has_group('l10n_mn_account_report.group_all_partner_report'):
+                domain = "[]"
+            else:
+                self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {self.env.uid} and so.company_id = {self.env.company.id} group by partner_id;")
+                partner_ids = self._cr.dictfetchall()
+                p_ids = [p_id['partner_id'] for p_id in partner_ids]
+                domain = "[('id','in',%s)]" % str(p_ids)
+            for node in doc.xpath("//field[@name='partner_id']"):
+                    node.attrib["domain"] = domain
+        return arch, view
 
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
@@ -297,6 +313,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
         if self.account_id:
             where += f" and aml.account_id = {self.account_id.id}"
+        env_user = self.env.user
+        if not env_user.has_group('l10n_mn_account_report.group_all_partner_report'):
+            self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {env_user.id} and so.company_id = {self.env.company.id} group by partner_id;")
+            partner_ids = self._cr.dictfetchall()
+            where += f" and rp.id in ({', '.join(str(p_id['partner_id']) for p_id in partner_ids)})"
 
         qry = f"""
              select rp.id           as partner_id,

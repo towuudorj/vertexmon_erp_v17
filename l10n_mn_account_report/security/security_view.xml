@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="group_all_partner_report" model="res.groups">
+	        <field name="name">Бүх харилцагчийн тайлан харах</field>
+	    </record>
+
+    </data>
+</odoo>

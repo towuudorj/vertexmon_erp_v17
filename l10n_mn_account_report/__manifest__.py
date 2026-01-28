@@ -32,6 +32,7 @@
             'data/account_balance_type_data.xml',
             'data/account_income_type_data.xml',
             'data/report_group_option_data.xml',
+            'security/security_view.xml',
             'security/ir.model.access.csv',
             'views/print_cash_order.xml',
             'views/bank_and_cash_statement_view.xml',
