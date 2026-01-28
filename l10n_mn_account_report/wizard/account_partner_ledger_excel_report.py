@@ -116,13 +116,14 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
+        print('\n\n\n', 'AAAAAAAAAAAAAAA')
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type == 'form':
             doc = arch
             if self.env.user.has_group('l10n_mn_account_report.group_all_partner_report'):
                 domain = "[]"
             else:
-                self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {self.env.uid} and so.company_id = {self.env.company.id} group by partner_id;")
+                self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {self.env.user.id} and so.company_id = {self.env.company.id} group by partner_id;")
                 partner_ids = self._cr.dictfetchall()
                 p_ids = [p_id['partner_id'] for p_id in partner_ids]
                 domain = "[('id','in',%s)]" % str(p_ids)
