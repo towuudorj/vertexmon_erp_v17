@@ -116,7 +116,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        print('\n\n\n', 'AAAAAAAAAAAAAAA')
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type == 'form':
             doc = arch
@@ -318,7 +317,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         if not env_user.has_group('l10n_mn_account_report.group_all_partner_report'):
             self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {env_user.id} and so.company_id = {self.env.company.id} group by partner_id;")
             partner_ids = self._cr.dictfetchall()
-            where += f" and rp.id in ({', '.join(str(p_id['partner_id']) for p_id in partner_ids)})"
+            partner_ids_str = ', '.join(str(p_id['partner_id']) for p_id in partner_ids)
+            if partner_ids_str:
+                where += f" and rp.id in ({partner_ids_str})"
 
         qry = f"""
              select rp.id           as partner_id,
@@ -333,6 +334,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              left join res_partner rp on aml.partner_id = rp.id
              left join res_currency rc on aml.currency_id = rc.id
              left join account_account aa on aml.account_id = aa.id
+             left join account_journal aj on aj.id = aml.journal_id
              left join
              (
                  select case when eoy.balance is not null
@@ -357,13 +359,14 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                      where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date < '{data['start_date']}'
                  ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id 
                  where am.state = 'posted' 
-                 and aml.company_id = {self.company_id.id} and
-                 (eoy.rank = 1 or eoy.rank is null) and aml.date < '{data['start_date']}' and (eoy.date IS NULL OR aml.date >= eoy.date)
+                 and aml.company_id = {self.company_id.id} and aj.type != 'opening'
+                 and (eoy.rank = 1 or eoy.rank is null) and aml.date < '{data['start_date']}' and (eoy.date IS NULL OR aml.date >= eoy.date)
                  group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
              where
                  aml.date >= '{data['start_date']}'
                  and aml.date <= '{data['end_date']}'
+                 and aj.type != 'opening'
                  and aml.move_id in (select id from account_move where state in ('{"', '".join(str(move) for move in move_state)}'))
                  and aml.company_id = {self.company_id.id} 
                  {where}
