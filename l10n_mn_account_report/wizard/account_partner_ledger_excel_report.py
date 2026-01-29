@@ -336,7 +336,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              left join res_currency rc on aml.currency_id = rc.id
              left join account_account aa on aml.account_id = aa.id
              left join account_journal aj on aj.id = aml.journal_id
-             full join
+             left join
              (
                  select case when eoy.balance is not null then
                              case when eoy.date = '{self.start_date}' then
@@ -369,7 +369,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                  ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
                  where am.state = 'posted'
                  and aml.company_id = {self.company_id.id} and aj.type != 'opening'
-                 and (eoy.rank = 1 or eoy.rank is null) and aml.date <= '{data['start_date']}'
+                 and (eoy.rank = 1 or eoy.rank is null)
                  group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
              where
@@ -382,6 +382,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              {group_by}
              {order_by}
              """
+        print(qry)
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), data_left_no_border)
