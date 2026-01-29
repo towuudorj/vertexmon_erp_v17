@@ -89,6 +89,8 @@ msgstr "Модел"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields.selection,name:l10n_mn_stock.selection__stock_picking__project_type__project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.stock_move_line_view_search
 msgid "Project"
 msgstr "Төсөл"
 
