@@ -338,15 +338,23 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              left join account_journal aj on aj.id = aml.journal_id
              full join
              (
-                 select case when eoy.balance is not null
-                             then eoy.balance + sum(case when aml.date > eoy.date then aml.balance else 0 end)
-                             else sum(aml.balance)
-                             end as balance,
-                        case when eoy.amount_currency is not null
-                              then eoy.amount_currency + sum(case when aml.date > eoy.date then aml.amount_currency else 0 end)
-                              else sum(aml.amount_currency)
-                              end as currency_balance,
-                        aml.account_id , aml.partner_id
+                 select case when eoy.balance is not null then
+                             case when eoy.date = '{self.start_date}' then
+                                  eoy.balance
+                             else 
+                                  eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.balance else 0 end)
+                             end
+                         else sum(case when aml.date < '{self.start_date}' then aml.balance else 0 end)
+                         end as balance,
+                         case when eoy.amount_currency is not null then
+                             case when eoy.date = '{self.start_date}' then
+                                  eoy.amount_currency
+                             else
+                                  eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+                             end
+                         else sum(case when aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+                         end as currency_balance,
+                         aml.account_id , aml.partner_id
                  from account_move_line aml
                  left join account_move am on am.id = aml.move_id
                  left join account_account aa on aa.id = aml.account_id
@@ -358,11 +366,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                      from account_move_line aml
                      left join account_journal aj on aj.id = aml.journal_id
                      where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
-                 ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id 
-                 where am.state = 'posted' 
+                 ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
+                 where am.state = 'posted'
                  and aml.company_id = {self.company_id.id} and aj.type != 'opening'
                  and (eoy.rank = 1 or eoy.rank is null) and aml.date <= '{data['start_date']}'
-                 group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency
+                 group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
              where
                  aml.date >= '{data['start_date']}'
