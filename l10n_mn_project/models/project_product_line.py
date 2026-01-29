@@ -147,10 +147,7 @@ class ProjectProductsLine(models.Model):
     
     def _action_compute_qty(self):
         for line in self:
-            qty = 0 
-            if line.product_qty>0.0 and line.qty_delivered > 0.0:
-                qty = line.product_qty - line.qty_delivered
-            line.last_qty = qty
+            line.last_qty = line.product_qty - line.qty_delivered
             
     @api.onchange('cost_price')
     def onchange_cost_price(self):
