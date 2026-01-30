@@ -538,7 +538,6 @@ msgstr "Дундын санхүүжилт"
 #. module: l10n_mn_purchase
 #: model:ir.model,name:l10n_mn_purchase.model_purchase_order
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice__purchase_order_id
-#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.report_purchaseorder_eng
 msgid "Purchase Order"
 msgstr "Худалдан авалтын захиалга"
 
