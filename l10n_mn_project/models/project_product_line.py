@@ -35,7 +35,7 @@ class ProjectProductsLine(models.Model):
             qty = 0
             for pick in line.project_id.picking_ids:
                 for pur in pick.move_ids_without_package:
-                    if pur.product_id.id == line.product_id.id:
+                    if pur.product_id.id == line.product_id.id and pick.state == 'done':
                         qty +=pur.quantity   
             line.qty_delivered = qty
     
