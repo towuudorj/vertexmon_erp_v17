@@ -294,22 +294,19 @@ class StockMoveLine(models.Model):
     @api.depends('picking_id')
     def _compute_cost_price(self):
         for line in self:
+            cost_price = 0
             if line.location_usage in ['internal','transit'] and line.location_dest_usage not in ['internal','transit']:
                 if line.picking_id.analytic_id and line.picking_id.analytic_id.project_ids and line.picking_id.analytic_id.project_ids[0].products_line:
                     product_line = line.picking_id.analytic_id.project_ids[0].products_line.filtered(lambda p_line: p_line.product_id.id == line.product_id.id)
                     if product_line:
-                        line.cost_price = product_line[0].cost_price
-                        line.total_cost_price = product_line[0].cost_price * line.quantity
-                    else:
-                        line.cost_price = 0.0
-                        line.total_cost_price = 0.0
-                else:
-                    line.cost_price = 0.0
-                    line.total_cost_price = 0.0
+                        cost_price = product_line[0].cost_price
+                if cost_price == 0.0:
+                    cost_price = line.product_id.standard_price
+                line.cost_price = cost_price
+                line.total_cost_price = line.quantity * cost_price
             else:
-                line.cost_price = 0.0
-                line.total_cost_price = 0.0
-
+                line.cost_price = 0
+                line.total_cost_price = 0
 
     price_subtotal=fields.Float(string=u'Нийт үнэ',compute='_compute_all_price')
     sale_price = fields.Float(string=u'Зарах үнэ',compute='_compute_list_price', readonly=False)
