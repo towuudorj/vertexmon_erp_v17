@@ -290,9 +290,24 @@ class StockMoveLine(models.Model):
                         else:
                             discount = lines.discount
             line.discount = discount
-    
-    
-    
+
+    @api.depends('picking_id')
+    def _compute_cost_price(self):
+        for line in self:
+            cost_price = 0
+            if line.location_usage in ['internal','transit'] and line.location_dest_usage not in ['internal','transit']:
+                if line.picking_id.analytic_id and line.picking_id.analytic_id.project_ids and line.picking_id.analytic_id.project_ids[0].products_line:
+                    product_line = line.picking_id.analytic_id.project_ids[0].products_line.filtered(lambda p_line: p_line.product_id.id == line.product_id.id)
+                    if product_line:
+                        cost_price = product_line[0].cost_price
+                if cost_price == 0.0:
+                    cost_price = line.product_id.standard_price
+                line.cost_price = cost_price
+                line.total_cost_price = line.quantity * cost_price
+            else:
+                line.cost_price = 0
+                line.total_cost_price = 0
+
     price_subtotal=fields.Float(string=u'Нийт үнэ',compute='_compute_all_price')
     sale_price = fields.Float(string=u'Зарах үнэ',compute='_compute_list_price', readonly=False)
     sale_prices = fields.Float(string=u'Зарах үнэ')
@@ -306,4 +321,7 @@ class StockMoveLine(models.Model):
     dimensions = fields.Char(string='Dimensions')
     cbm = fields.Float(string='CBM')
     po_origin = fields.Char(related="picking_id.origin", string=u'Баримтын дугаар', store=True)
+    cost_price = fields.Float(string="Өртөг үнэ", compute='_compute_cost_price')
+    total_cost_price = fields.Float('Нийт өртөг', compute='_compute_cost_price')
+    analytic_id = fields.Many2one(related='picking_id.analytic_id', store=True)
 

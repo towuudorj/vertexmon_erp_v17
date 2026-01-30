@@ -26,12 +26,26 @@
             <field name="model">stock.move.line</field>            
             <field name="inherit_id" ref="stock.view_move_line_tree"/>
             <field name="arch" type="xml">                
-                <xpath expr="//field[@name='quantity']" position="after">   
+                <xpath expr="//field[@name='quantity']" position="after">
+                	<field name="total_cost_price" optional="hidden"/>
                 	<field name="po_origin"/>
+                </xpath>
+                <xpath expr="//field[@name='quantity']" position="before">
+                	<field name="cost_price"/>
                 </xpath>
             </field>
 		</record>
-    
+
+        <record id="stock_move_line_view_search" model="ir.ui.view">
+            <field name="name">stock.move.line.search</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search" />
+            <field name="arch" type="xml">
+                <filter name="by_category" position="after">
+                    <filter string="Project" name="by_project" domain="[]" context="{'group_by': 'analytic_id'}"/>
+                </filter>
+            </field>
+        </record>
 
 
     </data>

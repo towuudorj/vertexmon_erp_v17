@@ -12,16 +12,19 @@ from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationE
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    @api.depends('products_line.price_total')
+    @api.depends('products_line.price_total', 'products_line.cost_total', 'products_line.delivery_cost')
     def _amount_all(self):
-        for order in self:  
+        for order in self:
             total_amount = 0
             total_tax_amount = 0
             total_cost = 0
             for line in order.products_line:
                 total_amount += line.price_total
                 total_tax_amount += (line.price_total/100.0)*10.0
-                total_cost += line.cost_total
+                if line.product_id and line.product_id.detailed_type == 'service':
+                    total_cost += line.delivery_cost
+                else:
+                    total_cost += line.cost_total
             order.update({
                 'total_amount': total_amount+total_tax_amount,
                 'total_tax_amount':total_tax_amount,

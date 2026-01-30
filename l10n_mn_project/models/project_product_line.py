@@ -35,7 +35,7 @@ class ProjectProductsLine(models.Model):
             qty = 0
             for pick in line.project_id.picking_ids:
                 for pur in pick.move_ids_without_package:
-                    if pur.product_id.id == line.product_id.id:
+                    if pur.product_id.id == line.product_id.id and pick.state == 'done':
                         qty +=pur.quantity   
             line.qty_delivered = qty
     
@@ -134,8 +134,8 @@ class ProjectProductsLine(models.Model):
             else:
                 if line.cost_price > 0.0 and line.qty_delivered > 0.0:
                     delivery_cost = line.cost_price * line.qty_delivered
-                
             line.delivery_cost = delivery_cost
+        self.mapped('project_id')._amount_all()
         
     def compute_qty_available_cost(self):
         for line in self:
@@ -147,10 +147,7 @@ class ProjectProductsLine(models.Model):
     
     def _action_compute_qty(self):
         for line in self:
-            qty = 0 
-            if line.product_qty>0.0 and line.qty_delivered > 0.0:
-                qty = line.product_qty - line.qty_delivered
-            line.last_qty = qty
+            line.last_qty = line.product_qty - line.qty_delivered
             
     @api.onchange('cost_price')
     def onchange_cost_price(self):

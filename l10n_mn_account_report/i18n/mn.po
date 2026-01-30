@@ -278,6 +278,7 @@ msgstr "Эцэг төрөл"
 #: code:addons/l10n_mn_account_report/wizard/account_partner_ledger_excel_report.py:0
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_partner_ledger_excel_report
 #: model:ir.ui.menu,name:l10n_mn_account_report.action_account_partner_ledger_report_menu
+#: model:ir.ui.menu,name:l10n_mn_account_report.sale_account_partner_ledger_report_menu
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_preview
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_view
 #, python-format

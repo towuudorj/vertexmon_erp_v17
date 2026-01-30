@@ -3,9 +3,10 @@ import io
 import json
 import xlsxwriter
 import time
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.tools import date_utils
-
+from lxml import etree
+from dateutil.relativedelta import relativedelta
 
 class AccountPartnerLedgerExcelReport(models.TransientModel):
     _name = 'account.partner.ledger.excel.report'
@@ -113,6 +114,22 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'res_id': self.id,
             'res_model': self._name
         }
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form':
+            doc = arch
+            if self.env.user.has_group('l10n_mn_account_report.group_all_partner_report'):
+                domain = "[]"
+            else:
+                self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {self.env.user.id} and so.company_id = {self.env.company.id} group by partner_id;")
+                partner_ids = self._cr.dictfetchall()
+                p_ids = [p_id['partner_id'] for p_id in partner_ids]
+                domain = "[('id','in',%s)]" % str(p_ids)
+            for node in doc.xpath("//field[@name='partner_id']"):
+                    node.attrib["domain"] = domain
+        return arch, view
 
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
@@ -297,6 +314,13 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
         if self.account_id:
             where += f" and aml.account_id = {self.account_id.id}"
+        env_user = self.env.user
+        if not env_user.has_group('l10n_mn_account_report.group_all_partner_report'):
+            self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {env_user.id} and so.company_id = {self.env.company.id} group by partner_id;")
+            partner_ids = self._cr.dictfetchall()
+            partner_ids_str = ', '.join(str(p_id['partner_id']) for p_id in partner_ids)
+            if partner_ids_str:
+                where += f" and rp.id in ({partner_ids_str})"
 
         qry = f"""
              select rp.id           as partner_id,
@@ -311,43 +335,54 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              left join res_partner rp on aml.partner_id = rp.id
              left join res_currency rc on aml.currency_id = rc.id
              left join account_account aa on aml.account_id = aa.id
+             left join account_journal aj on aj.id = aml.journal_id
              left join
              (
-                 select case when eoy.balance is not null
-                             then eoy.balance + sum(aml.balance)
-                             else sum(aml.balance)
-                             end as balance,
-                        case when eoy.amount_currency is not null
-                              then eoy.amount_currency + sum(aml.amount_currency)
-                              else sum(aml.amount_currency)
-                              end as currency_balance,
-                        aml.account_id , aml.partner_id
+                 select case when eoy.balance is not null then
+                             case when eoy.date = '{self.start_date}' then
+                                  eoy.balance
+                             else 
+                                  eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.balance else 0 end)
+                             end
+                         else sum(case when aml.date < '{self.start_date}' then aml.balance else 0 end)
+                         end as balance,
+                         case when eoy.amount_currency is not null then
+                             case when eoy.date = '{self.start_date}' then
+                                  eoy.amount_currency
+                             else
+                                  eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+                             end
+                         else sum(case when aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+                         end as currency_balance,
+                         aml.account_id , aml.partner_id
                  from account_move_line aml
                  left join account_move am on am.id = aml.move_id
                  left join account_account aa on aa.id = aml.account_id
                  left join res_partner rp on rp.id = aml.partner_id
                  left join account_journal aj on aj.id = aml.journal_id
-                 left join (
+                 full join (
                      select aml.account_id, aml.partner_id, aml.date, aml.balance, aml.amount_currency,
                      RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
                      from account_move_line aml
                      left join account_journal aj on aj.id = aml.journal_id
-                     where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date < '{data['start_date']}'
-                 ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id 
-                 where am.state = 'posted' 
-                 and aml.company_id = {self.company_id.id} and
-                 (eoy.rank = 1 or eoy.rank is null) and aml.date < '{data['start_date']}' and (eoy.date IS NULL OR aml.date >= eoy.date)
-                 group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency
+                     where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
+                 ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
+                 where am.state = 'posted'
+                 and aml.company_id = {self.company_id.id} and aj.type != 'opening'
+                 and (eoy.rank = 1 or eoy.rank is null)
+                 group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
              ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
              where
                  aml.date >= '{data['start_date']}'
                  and aml.date <= '{data['end_date']}'
+                 and aj.type != 'opening'
                  and aml.move_id in (select id from account_move where state in ('{"', '".join(str(move) for move in move_state)}'))
                  and aml.company_id = {self.company_id.id} 
                  {where}
              {group_by}
              {order_by}
              """
+        print(qry)
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), data_left_no_border)
