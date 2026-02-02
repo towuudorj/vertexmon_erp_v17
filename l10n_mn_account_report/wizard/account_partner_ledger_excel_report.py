@@ -377,7 +377,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         aml.currency_id AS currency_id,
         {select}
     FROM account_move_line aml
-    JOIN account_move am ON am.id = aml.move_id AND am.state IN ('draft', 'posted')
+    JOIN account_move am ON am.id = aml.move_id AND am.state IN ('{"', '".join(move_state)}')
     JOIN account_journal aj ON aj.id = aml.journal_id AND aj.type != 'opening'
     WHERE aml.company_id = {self.company_id.id} AND aml.date BETWEEN '{self.start_date}' AND '{data['end_date']}' {where_aml}
     {group_by}
