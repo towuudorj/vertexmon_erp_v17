@@ -316,14 +316,6 @@ msgstr "Дараалал"
 msgid "Company"
 msgstr "Компани"
 
-
-#. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__fiscalyear_id
-msgid "Fiscal year"
-msgstr "Санхүүгийн жил"
-
-
-
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_partner_ledger_excel_report__target_move
 msgid "State"
@@ -643,7 +635,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__fiscalyear_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report__fiscalyear_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_book_report_two__fiscalyear_id
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_general_journal_report__fiscalyear_id

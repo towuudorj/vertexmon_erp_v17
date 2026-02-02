@@ -15,13 +15,9 @@ class AccountMoveAnalysis(models.TransientModel):
                                  default=lambda self: self.env.user.company_id)
     start_date = fields.Date(string='Start date', required=True)
     end_date = fields.Date(string='End date', required=True)
-    fiscalyear_id = fields.Many2one('account.fiscal.year', string='Fiscal year', required=True)
     target_move = fields.Selection([('posted', 'All Posted Entries'),
                                     ('all', 'All Entries')
                                     ], string='State', required=True, default='posted')
-    use_currency_amount = fields.Boolean(string='Валютаар харах')
-
-
 
 
     def action_print_xls_report(self):
@@ -31,8 +27,6 @@ class AccountMoveAnalysis(models.TransientModel):
             'start_date': self.start_date,
             'end_date': self.end_date,
             'state':self.target_move,
-            'fiscalyear_id': self.fiscalyear_id.id,
-            'use_currency_amount': self.use_currency_amount,
         }
         return {
             'type': 'ir.actions.report',
@@ -65,6 +59,7 @@ class AccountMoveAnalysis(models.TransientModel):
         data_center = workbook.add_format({
                                     'align': 'center',
                                     'border':1,
+                                    'valign': 'vcenter',
                                     'font_size': 12
                                 })
         
@@ -78,6 +73,7 @@ class AccountMoveAnalysis(models.TransientModel):
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border':1,
+                                    'valign': 'vcenter',
                                     'font_size': 12
                                 })
 
@@ -93,16 +89,24 @@ class AccountMoveAnalysis(models.TransientModel):
                                     'bold': True,
                                     'num_format': '#,##0.00'
                                 })
+        text_center_border = workbook.add_format({
+            'border': 1,
+            'font_size': 12,
+            'bold': True,
+            'num_format': '#,##0.00',
+            'valign': 'vcenter',
+            'align': 'center'
+        })
+
         txt_left_no_border = workbook.add_format({
                                     'align': 'left',
-                                    
                                     'font_size': 12
                                 })
         txt_right_no_border = workbook.add_format({
                                     'align': 'right',
                                     'font_size': 12
                                 })
-        sheet.set_column(3, 8, 20)
+        sheet.set_column(3, 9, 20)
         sheet.set_column(2, 2, 40)
         sheet.set_column(1, 1, 10)
         sheet.freeze_panes(7, 4)
@@ -112,13 +116,9 @@ class AccountMoveAnalysis(models.TransientModel):
         sheet.merge_range('A3:J3', u'Гүйлгээ баланс тайлан', head)
         sheet.write('A4', u'Байгууллагын нэр: %s' % data['company_name'], txt_left_no_border)
         sheet.write('J4', u'Он сар өдөр: %s - %s'%(data['start_date'],data['end_date']), txt_right_no_border)
-        
-
-
 
         sheet.merge_range('A6:A7', u'Д/д', txt_left_border)
-        sheet.merge_range('B6:B7', u'Код', txt_center_border)
-        sheet.merge_range('C6:C7', u'Данс', txt_center_border)
+        sheet.merge_range('B6:C7', u'Данс', txt_center_border)
         sheet.merge_range('D6:D7', u'Валют', txt_center_border)
         sheet.merge_range('E6:F6', u'Эхний үлдэгдэл', txt_center_border)
         sheet.write('E7', u'Дт', txt_center_border)
@@ -130,245 +130,217 @@ class AccountMoveAnalysis(models.TransientModel):
         sheet.write('I7', u'Дт', txt_center_border)
         sheet.write('J7', u'Кд', txt_center_border)
 
-        account_obj = self.env['account.account']
-        account_type_obj = self.env['account.account.type']
-        journal_obj = self.env['account.journal']
-        journal_ids = journal_obj.search([('company_id','=',data['company_id'])])
-        f_journals = journal_obj.search([('type','=','opening'),('company_id','=',data['company_id'])])
-        journals = journal_obj.search([('type','!=','opening'),('company_id','=',data['company_id'])])
-
-        f_journal = []
-        states = ''
         if data['state'] == 'posted':
             states = ['posted']
         else:
             states = ['posted','draft']
 
-        for fj in f_journals:
-            f_journal.append(fj.id)
-        journal = []
-        for jour in journals:
-            journal.append(jour.id)
-
-        account_type = account_type_obj.search([('type','!=','view')])
-
-        ty = []
-        for li in account_type:
-            ty.append(li.id)
-        account_ids = account_obj.search([('company_id','=',data['company_id'])])
-        fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
-
-        total_balance = 0.0
         pre_debit_balance = 0.0
         pre_credit_balance = 0.0
-        pre_credit_bal = 0.0
         debit_balance = 0.0
         credit_balance = 0.0
-        total_credit_balance = 0.0
         total_debit_balance = 0.0
+        total_credit_balance = 0.0
+
+        qry = f"""
+        select 
+        	COALESCE(rc.name, 'MNT') as currency,
+        	aa.code||' '|| (aa.name::jsonb->>'mn_MN')::text as account_name,
+        	COALESCE(start_balance.debit, 0) as debit_start_balance,
+        	COALESCE(start_balance.credit, 0) as credit_start_balance,
+        	COALESCE(start_balance.amount_currency_credit, 0) as start_amount_currency_credit,
+        	COALESCE(start_balance.amount_currency_debit, 0) as start_amount_currency_debit,
+        	COALESCE(sum(aml.debit), 0)  as debit, COALESCE(sum(aml.credit), 0) as credit,
+        	COALESCE(sum(case when aml.balance > 0 then aml.amount_currency else 0 end), 0) as amount_currency_debit,
+        	COALESCE(sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end), 0) as amount_currency_credit
+         from 
+         (
+             select 
+                 case when eoy.debit is not null then
+                     case when eoy.date = '{data['start_date']}' then
+                          eoy.debit
+                     else 
+                          eoy.debit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then aml.debit else 0 end)
+                     end
+                 else sum(aml.debit) FILTER (WHERE aml.date < '{data['start_date']}')
+                 end as debit,
+
+                 case when eoy.debit is not null then
+                     case when eoy.date = '{data['start_date']}' then
+                          eoy.credit
+                     else 
+                          eoy.credit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then aml.credit else 0 end)
+                     end
+                 else sum(aml.credit) FILTER (WHERE aml.date < '{data['start_date']}')
+                 end as credit,
+
+                 case when eoy.amount_currency_debit is not null then
+                     case when eoy.date = '{data['start_date']}' then
+                          eoy.amount_currency_debit
+                     else
+                          eoy.amount_currency_debit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then case when aml.balance > 0 then aml.amount_currency else 0 end else 0 end)
+                     end
+                 else sum(case when aml.balance > 0 then aml.amount_currency else 0 end) FILTER (WHERE aml.date < '{data['start_date']}')
+                 end as amount_currency_debit,
+
+                 case when eoy.amount_currency_credit is not null then
+                     case when eoy.date = '{data['start_date']}' then
+                          eoy.amount_currency_credit
+                     else
+                          eoy.amount_currency_credit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then case when aml.balance < 0 then abs(aml.amount_currency) else 0 end else 0 end)
+                     end
+                 else sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) FILTER (WHERE aml.date < '{data['start_date']}')
+                 end as amount_currency_credit,
+                 aml.account_id
+             from account_move_line aml
+             left join account_move am on am.id = aml.move_id
+             left join account_account aa on aa.id = aml.account_id
+             left join account_journal aj on aj.id = aml.journal_id
+             full join (
+                 select aml.account_id, aml.date,
+                         sum(case when aml.debit > 0 then aml.debit else 0 end) as debit,
+                         sum(case when aml.credit > 0 then aml.credit else 0 end) as credit,
+                         sum(case when aml.balance > 0 then aml.amount_currency else 0 end) as amount_currency_debit,
+                         sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit,
+                         RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
+                 from account_move_line aml
+                 left join account_journal aj on aj.id = aml.journal_id
+                 where aj.type ='opening' and aml.company_id = {data['company_id']}  and aml.date <= '{data['start_date']}'
+                 group by aml.account_id, aml.date
+             ) as eoy on eoy.account_id = aa.id
+             where am.state = 'posted'
+             and aml.company_id = {data['company_id']}  and aj.type IS DISTINCT FROM 'opening'
+             and (eoy.rank = 1 or eoy.rank is null)
+             group by eoy.date, eoy.debit, eoy.credit, aml.account_id, eoy.amount_currency_debit, eoy.amount_currency_credit
+         ) as start_balance
+         full join
+         (
+         	select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency
+         	from account_move_line aml 
+         	left join account_move am on am.id = aml.move_id and am.state in ('{"', '".join(states)}'))
+         	left join account_journal aj on aj.id = aml.journal_id AND aj.type != 'opening'
+         	where
+             aml.date between '{data['start_date']}' and '{data['end_date']}'
+             and aml.company_id = {data['company_id']}  
+         ) as aml on start_balance.account_id = aml.account_id
+         left join account_account aa on (aml.account_id = aa.id or start_balance.account_id = aa.id)
+         left join res_currency rc on aa.currency_id = rc.id
+         where (start_balance.debit != 0 or start_balance.credit !=0) or (aml.debit != 0 or aml.credit !=0)
+         GROUP BY rc.name, aml.account_id, aa.code, aa.name, start_balance.debit, start_balance.credit, start_balance.amount_currency_debit, start_balance.amount_currency_credit;
+    """
+
+        self.env.cr.execute(qry)
+        lines = self._cr.dictfetchall()
+
+        currency_total_dict = {}
         number = 0
         rowx = 8
-        for line in account_ids:
-            first_balance  = 0.0
-            last_balance = 0.0
-            number +=1
+        for line in lines:
+            if line['currency'] == 'MNT':
+                sheet.write('A%s' % rowx, number, data_center)
+                sheet.merge_range('B%s:C%s' % (rowx, rowx), line['account_name'], data_left)
+                sheet.write('D%s' % rowx, line['currency'], data_left)
+                sheet.write('E%s' % rowx, line['debit_start_balance'], data_right)
+                sheet.write('F%s' % rowx, line['credit_start_balance'], data_right)
+                sheet.write('G%s' % rowx, line['debit'], data_right)
+                sheet.write('H%s' % rowx, line['credit'], data_right)
+                end_balance = line['debit_start_balance'] - line['credit_start_balance'] + line['debit'] - line['credit']
+                sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
+                sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
 
-            if len(states)==1:
-                if str(fiscalyear_id.date_from) == str(data['start_date']):
-
-                    if len(f_journal)==1:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                                sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                                from account_move_line as aml 
-                                                left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date <= '%s' 
-                                                and aml.account_id = %s and am.state='%s'
-                                                and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,
-                                                data['start_date'],line.id,states[0],f_journal[0],data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
-                    else:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                                sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                                from account_move_line as aml 
-                                                left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date <= '%s' 
-                                                and aml.account_id = %s and am.state='%s'
-                                                and aml.journal_id in %s and am.company_id = %s"""%(fiscalyear_id.date_from,
-                                                data['start_date'],line.id,states[0],tuple(f_journal),data['company_id']))
-                        pre_balance = self._cr.dictfetchall()
+                if 'MNT' not in currency_total_dict:
+                    currency_total_dict['MNT'] = {
+                        'pre_debit_balance':line['debit_start_balance'],
+                        'pre_credit_balance':line['credit_start_balance'],
+                        'debit_balance':line['debit'],
+                        'credit_balance':line['credit'],
+                        'total_debit_balance':end_balance if end_balance > 0 else 0,
+                        'total_credit_balance':abs(end_balance) if end_balance < 0 else 0
+                    }
                 else:
+                    currency_total_dict['MNT']['pre_debit_balance'] += line['debit_start_balance']
+                    currency_total_dict['MNT']['pre_credit_balance'] += line['credit_start_balance']
+                    currency_total_dict['MNT']['debit_balance'] += line['debit']
+                    currency_total_dict['MNT']['credit_balance'] += line['credit']
+                    currency_total_dict['MNT']['total_debit_balance'] += end_balance if end_balance > 0 else 0
+                    currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance) if end_balance < 0 else 0
 
-                    self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                               sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                            from account_move_line as aml 
-                                            left join account_move as am  on am.id = aml.move_id where aml.date >='%s' and aml.date < '%s' 
-                                            and aml.account_id = %s and am.state='%s'
-                                            and am.company_id = %s"""%(fiscalyear_id.date_from,
-                                            data['start_date'],line.id,states[0],data['company_id']))
-                    pre_balance = self._cr.dictfetchall()
+                pre_debit_balance += line['debit_start_balance']
+                pre_credit_balance += line['credit_start_balance']
+                debit_balance += line['debit']
+                credit_balance += line['credit']
+                total_debit_balance += line['debit_start_balance'] + line['debit']
+                total_credit_balance += line['credit_start_balance'] + line['credit']
+                number += 1
+                rowx += 1
             else:
-                if fiscalyear_id.date_from == data['start_date']:
-                    self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit,
-                                                  sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                                  sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit
-                                            from account_move_line as aml
-                                            left join account_move as am on am.id=aml.move_id 
-                                            where aml.date >='%s' and aml.date <= '%s' and aml.account_id = %s 
-                                            and am.state in %s and aml.journal_id = %s and am.company_id = %s"""%(fiscalyear_id.date_from,
-                                            data['start_date'],line.id,tuple(states),f_journal[0],data['company_id']))
-                    pre_balance = self._cr.dictfetchall()
+                sheet.merge_range('A%s:A%s' % (rowx, rowx+1), number, data_center)
+                sheet.merge_range('B%s:C%s' % (rowx, rowx+1), line['account_name'], data_left)
+                sheet.write('D%s' % rowx, 'MNT', data_left)
+                sheet.write('D%s' % str(rowx+1), line['currency'], data_left)
+                sheet.write('E%s' % rowx, line['debit_start_balance'], data_right)
+                sheet.write('E%s' % str(rowx+1), line['start_amount_currency_debit'], data_right)
+                sheet.write('F%s' % rowx, line['credit_start_balance'], data_right)
+                sheet.write('F%s' % str(rowx+1), line['start_amount_currency_credit'], data_right)
+                sheet.write('G%s' % rowx, line['debit'], data_right)
+                sheet.write('G%s' % str(rowx+1), line['amount_currency_debit'], data_right)
+                sheet.write('H%s' % rowx, line['credit'], data_right)
+                sheet.write('H%s' % str(rowx+1), line['amount_currency_credit'], data_right)
+                end_balance = line['debit_start_balance'] - line['credit_start_balance'] + line['debit'] - line['credit']
+                end_balance_currency = line['start_amount_currency_debit'] - line['start_amount_currency_credit'] + line['amount_currency_debit'] - line['amount_currency_credit']
+                sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
+                sheet.write('I%s' % str(rowx+1), end_balance_currency if end_balance_currency > 0 else 0, data_right)
+
+                sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
+                sheet.write('J%s' % str(rowx+1), abs(end_balance_currency) if end_balance_currency < 0 else 0, data_right)
+                if line['currency'] not in currency_total_dict:
+                    currency_total_dict[line['currency']] = {
+                        'pre_debit_balance':line['start_amount_currency_debit'],
+                        'pre_credit_balance':line['start_amount_currency_credit'],
+                        'debit_balance':line['amount_currency_debit'],
+                        'credit_balance':line['amount_currency_credit'],
+                        'total_debit_balance':end_balance_currency if end_balance_currency > 0 else 0,
+                        'total_credit_balance':abs(end_balance_currency) if end_balance_currency < 0 else 0
+                    }
                 else:
-                    self.env.cr.execute("""select sum(debit) as debit, sum(credit) as credit,
-                                                  sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                                  sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit
-                                        from account_move_line as aml
-                                        left join account_move as am on am.id=aml.move_id 
-                                        where aml.date >='%s' and aml.date < '%s' and aml.account_id = %s 
-                                        and am.state in %s and am.company_id = %s """%(fiscalyear_id.date_from,
-                                        data['start_date'],line.id,tuple(states),data['company_id']))
-                    pre_balance = self._cr.dictfetchall()
-            sheet.write('A%s'%rowx, number, data_center)
-            sheet.write('B%s'%rowx, u'%s'%line.code, data_center)
-            sheet.write('C%s'%rowx, u'%s'%line.name, data_left)
-            if data['use_currency_amount']:
-                sheet.write('D%s'%rowx, u'%s'%line.currency_id.name if line.currency_id else 'MNT', data_left)
-            else:
-                sheet.write('D%s' % rowx, u'%s' % 'MNT', data_left)
-            for li in pre_balance:
-                if data['use_currency_amount']:
-                    if li['amount_currency_debit'] != None and li['amount_currency_credit'] != None:
-                        first_balance = li['amount_currency_debit'] - li['amount_currency_credit']
-                    elif li['amount_currency_debit'] != None and li['amount_currency_credit'] == None:
-                        first_balance = li['amount_currency_debit']
-                    elif li['amount_currency_debit'] == None and li['amount_currency_credit'] != None:
-                        first_balance = li['amount_currency_credit']
-                else:
-                    if li['debit'] !=None and li['credit'] !=None:
-                        first_balance = li['debit']-li['credit']
-                    elif li['debit'] !=None and li['credit'] ==None:
-                        first_balance = li['debit']
-                    elif li['debit'] ==None and li['credit'] !=None:
-                        first_balance = li['credit']
-                    
-                
-                if first_balance > 0.0:
-                    sheet.write('E%s'%rowx, first_balance or 0.0, data_right)
-                    sheet.write('F%s'%rowx, 0.0, data_right)
-                    pre_debit_balance +=first_balance
-                else:
-                    sheet.write('E%s'%rowx, 0.0, data_right)
-                    sheet.write('F%s'%rowx, first_balance*(-1), data_right)
-                    pre_credit_balance +=first_balance
-                    
-            if len(states)==1:
-                if self.fiscalyear_id.date_from == self.start_date:
-                    if len(journal)==1:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                               sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                    from account_move_line as aml
-                                    left join account_move as am on am.id=aml.move_id 
-                                    where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state='%s' 
-                                    and am.journal_id = %s and am.company_id = %s
-                                    """%(data['start_date'],data['end_date'],line.id,states[0],journal[0],data['company_id']))
-                        move_balance = self._cr.dictfetchall()
-                    else:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                               sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                    from account_move_line as aml
-                                    left join account_move as am on am.id=aml.move_id 
-                                    where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state='%s' 
-                                    and am.journal_id in %s and am.company_id = %s
-                                    """%(data['start_date'],data['end_date'],line.id,states[0],tuple(journal),data['company_id']))
-                        move_balance = self._cr.dictfetchall()
-                else:
-                    self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                            sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                from account_move_line as aml
-                                left join account_move as am on am.id=aml.move_id 
-                                where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state='%s' 
-                                and am.journal_id in %s and am.company_id = %s
-                                """%(data['start_date'],data['end_date'],line.id,states[0],tuple(journal),data['company_id']))
-                    move_balance = self._cr.dictfetchall()
-            else:
-                if self.fiscalyear_id.date_from == self.start_date:
-                    if len(journal)==1:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                               sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                    from account_move_line as aml
-                                    left join account_move as am on am.id=aml.move_id 
-                                    where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state in %s 
-                                    and am.journal_id = %s and am.company_id = %s"""
-                                    %(data['start_date'],data['end_date'],line.id,tuple(states),journal[0],data['company_id']))
-                        move_balance = self._cr.dictfetchall()
-                    else:
-                        self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                               sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                    from account_move_line as aml
-                                    left join account_move as am on am.id=aml.move_id 
-                                    where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state in %s 
-                                    and am.journal_id in %s and am.company_id = %s"""
-                                    %(data['start_date'],data['end_date'],line.id,tuple(states),tuple(journal),data['company_id']))
-                        move_balance = self._cr.dictfetchall()
-                else:
-                    self.env.cr.execute("""select sum(aml.debit) as debit, sum(aml.credit) as credit, sum(case when aml.amount_currency > 0 then aml.amount_currency else 0 end) as amount_currency_debit, 
-                                           sum(case when aml.amount_currency < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit  
-                                from account_move_line as aml
-                                left join account_move as am on am.id=aml.move_id 
-                                where aml.date >='%s' and aml.date <='%s' and aml.account_id = %s and am.state in %s 
-                                and am.journal_id in %s and am.company_id = %s"""
-                                %(data['start_date'],data['end_date'],line.id,tuple(states),tuple(journal),data['company_id']))
-                    move_balance = self._cr.dictfetchall()
-            for mli in move_balance:
-                if data['use_currency_amount']:
-                    if mli['amount_currency_debit'] != None:
-                        debit_balance += mli['amount_currency_debit']
-                        last_balance = first_balance + mli['amount_currency_debit']
-                    if mli['credit'] != None:
-                        credit_balance += mli['amount_currency_credit']
-                        last_balance = last_balance - mli['amount_currency_credit']
+                    currency_total_dict['MNT']['pre_debit_balance'] += line['start_amount_currency_debit']
+                    currency_total_dict['MNT']['pre_credit_balance'] += line['start_amount_currency_credit']
+                    currency_total_dict['MNT']['debit_balance'] += line['amount_currency_debit']
+                    currency_total_dict['MNT']['credit_balance'] += line['amount_currency_credit']
+                    currency_total_dict['MNT']['total_debit_balance'] += end_balance_currency if end_balance_currency > 0 else 0
+                    currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency < 0 else 0
 
-                    if mli['credit']==None and mli['debit'] ==None:
-                        last_balance = first_balance
+                pre_debit_balance += line['debit_start_balance']
+                pre_credit_balance += line['credit_start_balance']
+                debit_balance += line['debit']
+                credit_balance += line['credit']
+                total_debit_balance += end_balance if end_balance > 0 else 0
+                total_credit_balance += abs(end_balance) if end_balance < 0 else 0
+                number += 1
+                rowx += 2
 
-                    sheet.write('G%s' % rowx, mli['amount_currency_debit'] or 0.0, data_right)
-                    sheet.write('H%s' % rowx, abs(mli['amount_currency_credit'] or 0.0), data_right)
-                else:
-                    if mli['debit'] !=None:
-                        debit_balance +=mli['debit']
-                        last_balance = first_balance+mli['debit']
+        if currency_total_dict:
+            sheet.merge_range('A%s:C%s' % (rowx, rowx+len(currency_total_dict.keys())-1), u'Валютын нийт дүн', text_center_border)
+            for key, value in currency_total_dict.items():
+                sheet.write('D%s' % rowx, key, text_center_border)
+                sheet.write('E%s' % rowx, currency_total_dict[key]['pre_debit_balance'], txt_right_border)
+                sheet.write('F%s' % rowx, currency_total_dict[key]['pre_credit_balance'], txt_right_border)
+                sheet.write('G%s' % rowx, currency_total_dict[key]['debit_balance'], txt_right_border)
+                sheet.write('H%s' % rowx, currency_total_dict[key]['credit_balance'], txt_right_border)
+                sheet.write('I%s' % rowx, currency_total_dict[key]['total_debit_balance'], txt_right_border)
+                sheet.write('J%s' % rowx, currency_total_dict[key]['total_credit_balance'], txt_right_border)
+                rowx += 1
 
-                    if mli['credit'] !=None:
-                        credit_balance +=mli['credit']
-                        last_balance = last_balance-mli['credit']
-
-                    sheet.write('G%s'%rowx, mli['debit'] or 0.0, data_right)
-                    sheet.write('H%s'%rowx, abs(mli['credit'] or 0.0), data_right)
-
-                    if mli['credit']==None and mli['debit'] ==None:
-                        last_balance = first_balance
-                
-            if last_balance > 0.0:
-                sheet.write('I%s'%rowx, last_balance or 0.0, data_right)
-                sheet.write('J%s'%rowx,  0.0, data_right)
-                total_debit_balance +=last_balance
-            else:
-                last_balance = last_balance*(-1)
-                sheet.write('I%s'%rowx,  0.0, data_right)
-                sheet.write('J%s'%rowx, last_balance or 0.0, data_right)
-                total_credit_balance +=last_balance
-            total_balance +=last_balance
-            rowx += 1
-            number +=1
-        sheet.merge_range('A%s:D%s'%(rowx,rowx), u'Дүн', txt_right_border)
-        sheet.write('E%s'%rowx, pre_debit_balance or 0.0, txt_right_border)
-        sheet.write('F%s'%rowx, pre_credit_balance or 0.0, txt_right_border)
-        sheet.write('G%s'%rowx, debit_balance or 0.0, txt_right_border)
-        sheet.write('H%s'%rowx, credit_balance or 0.0, txt_right_border)
-        sheet.write('I%s'%rowx, total_debit_balance or 0.0, txt_right_border)
-        sheet.write('J%s'%rowx, total_credit_balance or 0.0, txt_right_border)
-
-
+        sheet.merge_range('A%s:C%s' % (rowx, rowx), u'Нийт дүн', text_center_border)
+        sheet.write('D%s' % rowx, 'MNT', text_center_border)
+        sheet.write('E%s' % rowx, pre_debit_balance, txt_right_border)
+        sheet.write('F%s' % rowx, pre_credit_balance, txt_right_border)
+        sheet.write('G%s' % rowx, debit_balance, txt_right_border)
+        sheet.write('H%s' % rowx, credit_balance, txt_right_border)
+        sheet.write('I%s' % rowx, total_debit_balance, txt_right_border)
+        sheet.write('J%s' % rowx, total_credit_balance, txt_right_border)
 
         workbook.close()
         output.seek(0)
         response.stream.write(output.read())
         output.close()
-

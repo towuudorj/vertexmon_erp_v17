@@ -232,6 +232,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             move_state = ['posted']
 
         where = "and aa.account_type in ('%s')" % "', '".join(type for type in account_type)
+        where_aml = ""
         order_by = []
         group_by = []
         select = ""
@@ -289,12 +290,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             select += ("sum(aml.debit)  as debit,"
                        "sum(aml.credit) as credit,"
                        "sum(aml.amount_currency) as amount_currency")
-            group_by += ["rp.name", "rp.ref", "rp.id", "rc.name", "aml.account_id", "aa.code", "aa.name", "start_balance.balance", "start_balance.currency_balance"]
+            group_by += ["aml.partner_id", "aml.account_id", "aml.currency_id"]
         else:
             select += ("aml.debit as debit,"
                        "aml.credit as credit,"
                        "aml.amount_currency as amount_currency,"
-                       "aml.name as ref,"
+                       "aml.name as name,"
                        "aml.date as date")
 
         if group_by:
@@ -302,18 +303,18 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         else:
             group_by = ''
         if 'partner_id' not in order_by:
-            order_by.append('partner_id')
+            order_by.append('rp.id')
         if 'account_id' not in order_by:
-            order_by.append('account_id')
+            order_by.append('aa.id')
         if data['is_extra']:
             order_by.append("aml.date ASC")
         order_by = '\nORDER BY ' + ', '.join(order for order in order_by)
 
         if self.account_journal_ids:
-            where += f" and aml.journal_id in ({', '.join(str(j_id.id) for j_id in self.account_journal_ids)})"
+            where_aml += f" and aml.journal_id in ({', '.join(str(j_id.id) for j_id in self.account_journal_ids)})"
 
         if self.account_id:
-            where += f" and aml.account_id = {self.account_id.id}"
+            where += f" and aa.id = {self.account_id.id}"
         env_user = self.env.user
         if not env_user.has_group('l10n_mn_account_report.group_all_partner_report'):
             self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {env_user.id} and so.company_id = {self.env.company.id} group by partner_id;")
@@ -323,66 +324,71 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 where += f" and rp.id in ({partner_ids_str})"
 
         qry = f"""
-             select rp.id           as partner_id,
-                    COALESCE(rp.name, '')||COALESCE('['||rp.code||']', '') as partner_name,
-                    rc.name         as currency,
-                    aml.account_id  as account_id,
-                    aa.code||' '|| (aa.name::jsonb->>'mn_MN')::text as account_name,
-                    COALESCE(start_balance.balance, 0) as start_balance,
-                    COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
-                    {select}
-             from account_move_line aml
-             left join res_partner rp on aml.partner_id = rp.id
-             left join res_currency rc on aml.currency_id = rc.id
-             left join account_account aa on aml.account_id = aa.id
-             left join account_journal aj on aj.id = aml.journal_id
-             left join
-             (
-                 select case when eoy.balance is not null then
-                             case when eoy.date = '{self.start_date}' then
-                                  eoy.balance
-                             else 
-                                  eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.balance else 0 end)
-                             end
-                         else sum(case when aml.date < '{self.start_date}' then aml.balance else 0 end)
-                         end as balance,
-                         case when eoy.amount_currency is not null then
-                             case when eoy.date = '{self.start_date}' then
-                                  eoy.amount_currency
-                             else
-                                  eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
-                             end
-                         else sum(case when aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
-                         end as currency_balance,
-                         aml.account_id , aml.partner_id
-                 from account_move_line aml
-                 left join account_move am on am.id = aml.move_id
-                 left join account_account aa on aa.id = aml.account_id
-                 left join res_partner rp on rp.id = aml.partner_id
-                 left join account_journal aj on aj.id = aml.journal_id
-                 full join (
-                     select aml.account_id, aml.partner_id, aml.date, aml.balance, aml.amount_currency,
-                     RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
-                     from account_move_line aml
-                     left join account_journal aj on aj.id = aml.journal_id
-                     where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
-                 ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
-                 where am.state = 'posted'
-                 and aml.company_id = {self.company_id.id} and aj.type != 'opening'
-                 and (eoy.rank = 1 or eoy.rank is null)
-                 group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
-             ) as start_balance on (start_balance.account_id = aml.account_id and start_balance.partner_id = rp.id)
-             where
-                 aml.date >= '{data['start_date']}'
-                 and aml.date <= '{data['end_date']}'
-                 and aj.type != 'opening'
-                 and aml.move_id in (select id from account_move where state in ('{"', '".join(str(move) for move in move_state)}'))
-                 and aml.company_id = {self.company_id.id} 
-                 {where}
-             {group_by}
-             {order_by}
-             """
-        print(qry)
+ select rp.id           as partner_id,
+        aa.id as account_id,
+        COALESCE(rp.name, '')||COALESCE('['||rp.code||']', '') as partner_name,
+        coalesce(rc.name, 'MNT') as currency,
+        aa.code||' '|| (aa.name::jsonb->>'mn_MN')::text as account_name,
+        COALESCE(start_balance.balance, 0) as start_balance,
+        COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
+        COALESCE(aml.debit, 0) as debit,
+        COALESCE(aml.credit, 0) as credit,
+        aml.amount_currency as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if data['is_extra'] else ''}
+ from (
+     select case when eoy.balance is not null then
+                 case when eoy.date = '{self.start_date}' then
+                      eoy.balance
+                 else 
+                      eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' and aj.type != 'opening' then aml.balance else 0 end)
+                 end
+             else sum(case when aml.date < '{self.start_date}' then aml.balance else 0 end)
+             end as balance,
+             case when eoy.amount_currency is not null then
+                 case when eoy.date = '{self.start_date}' then
+                      eoy.amount_currency
+                 else
+                      eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' and aj.type != 'opening' then aml.amount_currency else 0 end)
+                 end
+             else sum(case when aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+             end as currency_balance,
+             aml.account_id , aml.partner_id
+     from account_move_line aml
+     left join account_move am on am.id = aml.move_id
+     left join account_account aa on aa.id = aml.account_id
+     left join res_partner rp on rp.id = aml.partner_id
+     left join account_journal aj on aj.id = aml.journal_id
+     FULL OUTER join (
+         select aml.account_id, aml.partner_id, aml.date, aml.balance, aml.amount_currency,
+         RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
+         from account_move_line aml
+         left join account_journal aj on aj.id = aml.journal_id
+         where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
+     ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
+     where am.state = 'posted'
+     and aml.company_id = {self.company_id.id}
+     and (eoy.rank = 1 or eoy.rank is null) {where_aml}
+     group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
+ ) as start_balance
+ FULL JOIN 
+ (
+     select
+        aml.partner_id,
+        aml.account_id,
+        aml.currency_id AS currency_id,
+        {select}
+    FROM account_move_line aml
+    JOIN account_move am ON am.id = aml.move_id AND am.state IN ('draft', 'posted')
+    JOIN account_journal aj ON aj.id = aml.journal_id AND aj.type != 'opening'
+    WHERE aml.company_id = {self.company_id.id} AND aml.date BETWEEN '{self.start_date}' AND '{data['end_date']}' {where_aml}
+    {group_by}
+ ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
+ LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
+ LEFT JOIN account_account aa ON aa.id = COALESCE(aml.account_id, start_balance.account_id)
+ LEFT JOIN res_currency rc ON rc.id = aa.currency_id
+ WHERE (start_balance.balance != 0 or (aml.debit != 0 or aml.credit !=0))
+ {where}
+ {order_by}
+"""
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), data_left_no_border)

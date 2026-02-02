@@ -1,49 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<data>
-		
-		
-		
-		   <record model="ir.ui.view" id="account_move_analysis_report_form_view">
-                <field name="name">account.move.analysis.report.new.form</field>
-                <field name="model">account.move.analysis</field>
-                <field name="arch" type="xml">
-                    <form string="Account move analysis">
-                    	<group>
-                        	<field name="company_id"/>
-                        	<field name="fiscalyear_id"/>
-                        	<field name="target_move"/>
-                        	<field name="use_currency_amount"/>
-                        	<field name="start_date"/>
-                        	<field name="end_date"/>
-                        </group>
-                        <footer>
-                            <button name="action_print_xls_report" 
-                                    string="Export" 
-                                    type="object" 
-                                    class="oe_highlight"/>
-                            or
-                            <button string="Cancel" 
-                                    class="oe_link" 
-                                    special="cancel"/>
-                        </footer>
-                    </form>
-                </field>
-            </record>
-            
-            
-            
-            <record id="action_account_move_analysis_report_view" model="ir.actions.act_window">
-                <field name="name">Account move balance report</field>
-                <field name="type">ir.actions.act_window</field>
-                <field name="res_model">account.move.analysis</field>
-                <field name="view_mode">form</field>
-                <field name="view_id" ref="account_move_analysis_report_form_view"/>
-                <field name="target">new</field>
-            </record>
-	    
+    <data>
 
-            
-            
-	</data>
+        <record model="ir.ui.view" id="account_move_analysis_report_form_view">
+            <field name="name">account.move.analysis.report.new.form</field>
+            <field name="model">account.move.analysis</field>
+            <field name="arch" type="xml">
+                <form string="Account move analysis">
+                    <group>
+                        <field name="company_id"/>
+                        <field name="target_move"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_xls_report"
+                                string="Export"
+                                type="object"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel"
+                                class="oe_link"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_move_analysis_report_view" model="ir.actions.act_window">
+            <field name="name">Account move balance report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.move.analysis</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_move_analysis_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
 </odoo>
