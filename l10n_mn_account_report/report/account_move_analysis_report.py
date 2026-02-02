@@ -217,7 +217,7 @@ class AccountMoveAnalysis(models.TransientModel):
          (
          	select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency
          	from account_move_line aml 
-         	left join account_move am on am.id = aml.move_id and am.state in ('{"', '".join(states)}'))
+         	left join account_move am on am.id = aml.move_id and am.state in ('{"', '".join(states)}')
          	left join account_journal aj on aj.id = aml.journal_id AND aj.type != 'opening'
          	where
              aml.date between '{data['start_date']}' and '{data['end_date']}'
@@ -248,7 +248,7 @@ class AccountMoveAnalysis(models.TransientModel):
                 sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
                 sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
 
-                if 'MNT' not in currency_total_dict:
+                if not currency_total_dict.get('MNT', False):
                     currency_total_dict['MNT'] = {
                         'pre_debit_balance':line['debit_start_balance'],
                         'pre_credit_balance':line['credit_start_balance'],
@@ -293,7 +293,7 @@ class AccountMoveAnalysis(models.TransientModel):
 
                 sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
                 sheet.write('J%s' % str(rowx+1), abs(end_balance_currency) if end_balance_currency < 0 else 0, data_right)
-                if line['currency'] not in currency_total_dict:
+                if line['currency'] not in currency_total_dict.keys():
                     currency_total_dict[line['currency']] = {
                         'pre_debit_balance':line['start_amount_currency_debit'],
                         'pre_credit_balance':line['start_amount_currency_credit'],
@@ -303,12 +303,12 @@ class AccountMoveAnalysis(models.TransientModel):
                         'total_credit_balance':abs(end_balance_currency) if end_balance_currency < 0 else 0
                     }
                 else:
-                    currency_total_dict['MNT']['pre_debit_balance'] += line['start_amount_currency_debit']
-                    currency_total_dict['MNT']['pre_credit_balance'] += line['start_amount_currency_credit']
-                    currency_total_dict['MNT']['debit_balance'] += line['amount_currency_debit']
-                    currency_total_dict['MNT']['credit_balance'] += line['amount_currency_credit']
-                    currency_total_dict['MNT']['total_debit_balance'] += end_balance_currency if end_balance_currency > 0 else 0
-                    currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency < 0 else 0
+                    currency_total_dict[line['currency']]['pre_debit_balance'] += line['start_amount_currency_debit']
+                    currency_total_dict[line['currency']]['pre_credit_balance'] += line['start_amount_currency_credit']
+                    currency_total_dict[line['currency']]['debit_balance'] += line['amount_currency_debit']
+                    currency_total_dict[line['currency']]['credit_balance'] += line['amount_currency_credit']
+                    currency_total_dict[line['currency']]['total_debit_balance'] += end_balance_currency if end_balance_currency > 0 else 0
+                    currency_total_dict[line['currency']]['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency < 0 else 0
 
                 pre_debit_balance += line['debit_start_balance']
                 pre_credit_balance += line['credit_start_balance']
