@@ -87,7 +87,7 @@ class CashMovelineReport(models.TransientModel):
         sheet.merge_range('A3:I3', u'Харилцахын мөнгөн гүйлгээний тайлан', head_title)
         sheet.merge_range('A4:B4', u'Байгууллагын нэр: %s' % data['company_name'], head)
         sheet.write('I4', u'Он сар өдөр: %s - %s' % (data['start_date'],data['end_date']), head)
-        sheet.freeze_panes(5, 0)
+        sheet.freeze_panes(6, 0)
         rowx = 5
         
         
@@ -133,6 +133,7 @@ class CashMovelineReport(models.TransientModel):
         partner_obj = self.env['res.partner']
         total_debit = 0.0
         total_credit = 0.0
+        total_balance = 0.0
         for line in account_id:
             balance = 0.0
             if data['by_currency']:
@@ -169,13 +170,13 @@ class CashMovelineReport(models.TransientModel):
             self.env.cr.execute(qry)
             acc = self._cr.dictfetchall()
             if acc:
-                start_balance = acc[0]['balance']
+                balance = acc[0]['balance']
             else:
-                start_balance = 0.0
+                balance = 0.0
             sheet.merge_range('A%s:B%s'%(rowx, rowx), u'Дансны №', txt_center)
             sheet.merge_range('C%s:E%s'%(rowx, rowx), u'%s %s'%(line.code,line.name), txt_center)
             sheet.merge_range('F%s:H%s'%(rowx, rowx), u'Эхний үлдэгдэл', txt_center)
-            sheet.write('I%s'%(rowx), start_balance, data_right_bold)
+            sheet.write('I%s'%(rowx), balance, data_right_bold)
             rowx +=1
             for i in all:
                 if line.code==i[4]:
@@ -202,10 +203,11 @@ class CashMovelineReport(models.TransientModel):
                     sheet.write('I%s'%rowx, balance, data_right)
                     number += 1
                     rowx += 1
+            total_balance += balance
         sheet.merge_range('A%s:F%s'%(rowx, rowx), u'Нийт дүн:', txt_center)
         sheet.write('G%s'%rowx, total_debit, txt_center)
         sheet.write('H%s'%rowx, total_credit, txt_center)
-        sheet.write('I%s'%rowx, balance, data_right)
+        sheet.write('I%s'%rowx, total_balance, data_right)
         rowx += 1
         sheet.write("C%s"%(rowx + 3), u"Нягтлан бодогч: ..................................................../                                            /",)
         sheet.write("C%s"%(rowx + 5), u"Мөнгөний нярав: ..................................................../                                           /")

@@ -244,7 +244,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 if self.group_option_ids[i].code == 'currency':
                     order_by.append("rc.id")
                     if not data['is_extra']:
-                        group_by.append("rc.id")
+                        group_by.append("aml.currency_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
                                          'check_row' : 'currency',
@@ -259,7 +259,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 if self.group_option_ids[i].code == 'partner':
                     order_by.append("rp.id")
                     if not data['is_extra']:
-                        group_by.append("rp.id")
+                        group_by.append("aml.partner_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
                                          'check_row': 'partner_id',
@@ -274,7 +274,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 if self.group_option_ids[i].code == 'account':
                     order_by.append("aa.id")
                     if not data['is_extra']:
-                        group_by.append("aa.id")
+                        group_by.append("aml.account_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
                                          'check_row': 'account_id',
