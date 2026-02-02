@@ -20,7 +20,6 @@ class CashMovelineReport(models.TransientModel):
     date_to = fields.Date(string="End date", required=True)
     account_ids = fields.Many2many('account.account', 'account_move_report_rel', 'account_id','report_id', 
                                    string='Account', required=True)
-    fiscalyear_id = fields.Many2one('account.fiscal.year', string=u'Санхүүгийн жил', required=True)
     by_currency = fields.Boolean('By Currency')
     target_move = fields.Selection([('posted', u'Батлагдсан гүйлгээ'),
                                     ('all', u'Бүх гүйлгээ')], u'Зорилтот гүйлгээ', required=True, default='posted')
@@ -33,7 +32,6 @@ class CashMovelineReport(models.TransientModel):
             'start_date': self.date_from,
             'end_date': self.date_to,
             'account_ids': self.account_ids.ids,
-            'fiscalyear_id': self.fiscalyear_id.id,
             'by_currency': self.by_currency
         }
         return {
@@ -89,8 +87,7 @@ class CashMovelineReport(models.TransientModel):
         sheet.merge_range('A3:I3', u'Харилцахын мөнгөн гүйлгээний тайлан', head_title)
         sheet.merge_range('A4:B4', u'Байгууллагын нэр: %s' % data['company_name'], head)
         sheet.write('I4', u'Он сар өдөр: %s - %s' % (data['start_date'],data['end_date']), head)
-        fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
-
+        sheet.freeze_panes(5, 0)
         rowx = 5
         
         
@@ -119,14 +116,15 @@ class CashMovelineReport(models.TransientModel):
         else:
             target_move = "('posted', 'draft')"
         self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
-        %s, am.name,am.partner_id, rc.symbol \
+        %s, am.name,am.partner_id, COALESCE(rc.symbol, '₮') \
         from account_move_line AS aml \
         left join account_move AS am ON am.id = aml.move_id \
         left join res_partner AS sp on sp.id = aml.partner_id \
         left join account_account AS aa on aa.id = aml.account_id \
         left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
-        left join res_currency AS rc on rc.id = aml.currency_id \
-        WHERE am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state in %s \
+        left join res_currency AS rc on rc.id = aa.currency_id \
+        left join account_journal AS aj on aj.id = aml.journal_id \
+        WHERE aj.type != 'opening' and am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state in %s \
         order by aml.date asc"%(balance_select, data['start_date'],data['end_date'], ', '.join(str(a_id) for a_id in data['account_ids']), target_move))
         all = self._cr.fetchall()
         start_balance = 0.0
@@ -141,16 +139,43 @@ class CashMovelineReport(models.TransientModel):
                 balance_select = "aml.amount_currency"
             else:
                 balance_select = 'aml.debit-aml.credit'
-            self.env.cr.execute("""select sum(%s) as balance from account_move_line as aml
-                                    left join account_move as am on aml.move_id = am.id where aml.date >= '%s' 
-                                    and aml.date < '%s' and aml.account_id = %s and am.state = 'posted' """%(balance_select, fiscalyear_id.date_from,data['start_date'],line.id))
+            qry = f"""
+             select 
+                 coalesce(case when eoy.balance is not null then
+                     case when eoy.date = '{data['start_date']}' then
+                          eoy.balance
+                     else 
+                          eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then {balance_select} else 0 end)
+                     end
+                 else sum({balance_select}) FILTER (WHERE aml.date < '{data['start_date']}')
+                 end, 0) as balance
+             from account_move_line aml
+             left join account_move am on am.id = aml.move_id and am.state = 'posted'
+             left join account_account aa on aa.id = aml.account_id
+             left join account_journal aj on aj.id = aml.journal_id
+             full join (
+                 select aml.account_id, aml.date,
+                         sum({balance_select}) as balance,
+                         RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
+                 from account_move_line aml
+                 left join account_journal aj on aj.id = aml.journal_id
+                 where aj.type ='opening' and aml.company_id = 1  and aml.date <= '{data['start_date']}' and aml.account_id = {line.id}
+                 group by aml.account_id, aml.date
+             ) as eoy on eoy.account_id = aa.id
+             where aml.company_id = {data['company_id']} and aj.type IS DISTINCT FROM 'opening'
+             and (eoy.rank = 1 or eoy.rank is null) and aa.id = {line.id}
+             group by aa.id, eoy.balance, eoy.date
+            """
+            self.env.cr.execute(qry)
             acc = self._cr.dictfetchall()
-            if acc[0]['balance'] !=None:
-                balance = acc[0]['balance']
+            if acc:
+                start_balance = acc[0]['balance']
+            else:
+                start_balance = 0.0
             sheet.merge_range('A%s:B%s'%(rowx, rowx), u'Дансны №', txt_center)
             sheet.merge_range('C%s:E%s'%(rowx, rowx), u'%s %s'%(line.code,line.name), txt_center)
             sheet.merge_range('F%s:H%s'%(rowx, rowx), u'Эхний үлдэгдэл', txt_center)
-            sheet.write('I%s'%(rowx), balance, data_right_bold)
+            sheet.write('I%s'%(rowx), start_balance, data_right_bold)
             rowx +=1
             for i in all:
                 if line.code==i[4]:
