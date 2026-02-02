@@ -218,10 +218,10 @@ class AccountMoveAnalysis(models.TransientModel):
          	select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency
          	from account_move_line aml 
          	left join account_move am on am.id = aml.move_id and am.state in ('{"', '".join(states)}')
-         	left join account_journal aj on aj.id = aml.journal_id AND aj.type != 'opening'
+         	left join account_journal aj on aj.id = aml.journal_id
          	where
              aml.date between '{data['start_date']}' and '{data['end_date']}'
-             and aml.company_id = {data['company_id']}  
+             and aml.company_id = {data['company_id']} and aj.type != 'opening' 
          ) as aml on start_balance.account_id = aml.account_id
          left join account_account aa on (aml.account_id = aa.id or start_balance.account_id = aa.id)
          left join res_currency rc on aa.currency_id = rc.id
