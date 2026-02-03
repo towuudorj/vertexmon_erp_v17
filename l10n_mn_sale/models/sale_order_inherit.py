@@ -748,7 +748,37 @@ class SaleOrder(models.Model):
                     pending_section = None
                 invoiceable_line_ids.append(line.id)
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
-
+    
+    def write(self, values):
+        user_obj = self.env['res.users']
+        if 'date_order' in values:
+            sequence_date = fields.Datetime.to_datetime(values['date_order'])
+            seq_year = str(sequence_date.year)[2:]
+            seq_month = sequence_date.month
+            seq_day = sequence_date.day
+            seq_number = user_obj.browse(self.user_id.id).sq_number
+            seq_qty = 1
+            last_name = self.env['sale.order'].search([('state','!=','cancel'),('user_id','=',self.user_id.id)], order='id desc', limit=1)
+            if last_name:
+                last_name = last_name.name
+                if int(last_name[:2]) == int(str(seq_year)) and int(last_name[2:4]) == int(str(seq_month)) and int(last_name[4:6]) == int(str(seq_day)) and last_name[6:8] == str(seq_number):
+                    seq_qty = int(last_name[8:11])
+                if len(str(seq_month)) == 1:
+                    seq_month = '0' + str(seq_month)
+                if len(str(seq_day)) == 1:
+                    seq_day = '0' + str(seq_day)
+                seq_values = '%s%s%s%s%s' % (seq_year, seq_month, seq_day, seq_number, str(int((seq_qty) + 1)).zfill(3))
+            else:
+                if len(str(seq_month)) == 1:
+                    seq_month = '0' + str(seq_month)
+                if len(str(seq_day)) == 1:
+                    seq_day = '0' + str(seq_day)
+                seq_values = '%s%s%s%s%s' % (seq_year, seq_month, seq_day, seq_number, str(int(seq_qty)).zfill(3))
+            values['name'] = seq_values
+        if 'pricelist_id' in values and any(so.state == 'sale' for so in self):
+            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+        return super().write(values)
+    
 
     @api.model_create_multi
     def create(self, vals_list):
