@@ -233,7 +233,7 @@ class AccountMoveAnalysis(models.TransientModel):
         lines = self._cr.dictfetchall()
 
         currency_total_dict = {}
-        number = 0
+        number = 1
         rowx = 8
         for line in lines:
             if line['currency'] == 'MNT':
