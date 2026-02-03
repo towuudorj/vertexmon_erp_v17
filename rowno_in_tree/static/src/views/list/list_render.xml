@@ -40,4 +40,15 @@
             </td>
         </xpath>
     </t>
+
+    <t
+        t-name="rowno_in_tree.ListRenderer.GroupRow"
+        t-inherit="web.ListRenderer.GroupRow"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//tr/th[@t-on-keydown='(ev) => this.onCellKeydown(ev, group)']" position="attributes">
+            <attribute name="t-att-colspan">getGroupNameCellColSpan(group)+1</attribute>
+        </xpath>
+    </t>
 </template>
