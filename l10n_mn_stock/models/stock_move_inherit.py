@@ -323,5 +323,5 @@ class StockMoveLine(models.Model):
     po_origin = fields.Char(related="picking_id.origin", string=u'Баримтын дугаар', store=True)
     cost_price = fields.Float(string="Өртөг үнэ", compute='_compute_cost_price')
     total_cost_price = fields.Float('Нийт өртөг', compute='_compute_cost_price')
-    analytic_id = fields.Many2one(related='picking_id.analytic_id', store=True)
+    analytic_id = fields.Many2one(related='picking_id.analytic_id', string=u"Төсөл", store=True)
 

@@ -16,6 +16,18 @@ msgstr ""
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. module: stock
+#: model:ir.actions.act_window,name:stock.stock_move_line_action
+#: model:ir.ui.menu,name:stock.stock_move_line_menu
+msgid "Moves History"
+msgstr "Хөдөлгөөний түүх"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.stock_move_action
+#: model:ir.ui.menu,name:stock.stock_move_menu
+msgid "Move Analysis"
+msgstr "Хөдөлгөөний шинжилгээ"
+
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__company_id
 msgid "Company"
