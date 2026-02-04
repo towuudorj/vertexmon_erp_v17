@@ -62,6 +62,10 @@ class CreateProductWizard(models.TransientModel):
                                     'product_id': create_product_id.id,
                                     'uom_id': self.uom_id.id
                                     })
+                if line.requisition_id.crm_lead_id.project_id:
+                    for product_line in line.requisition_id.crm_lead_id.project_id.products_line:
+                        if not product_line.product_id and product_line.name == self.name:
+                            product_line.product_id = create_product_id.id
                 line.product_id = create_product_id.id
 
 
