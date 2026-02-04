@@ -19,7 +19,7 @@ class SaleOrderNewReport(models.TransientModel):
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
     target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
-                                      string='States', default='posted')
+                                      string='States', default='posted', required=True)
     is_license = fields.Boolean(string='License', default=False)
     partner_id = fields.Many2one('res.partner', string='Customer')
     
@@ -131,85 +131,25 @@ class SaleOrderNewReport(models.TransientModel):
 
 
         sale_order_line_obj = self.env['sale.order.line']
-        if data['sales_user_id'] != False and data['partner_id'] != False:
-            if data['target_move'] == 'posted':
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.state', 'in', ['sale']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.user_id', '=', data['sales_user_id']),
-                    ('order_id.partner_id', '=', data['partner_id']),
-                ],order='order_date desc')
-            else:
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.state', 'not in', ['cancel']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.user_id', '=', data['sales_user_id']),
-                    ('order_id.partner_id', '=', data['partner_id']),
-                ],order='order_date desc')
-        elif data['partner_id'] != False and  data['sales_user_id'] == False:
-            if data['target_move'] == 'posted':
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.state', 'in', ['sale']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.partner_id', '=', data['partner_id']),
-                ],order='order_date desc')
-            else:
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.state', 'not in', ['cancel']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.partner_id', '=', data['partner_id'])
-                ],order='order_date desc')
-        elif data['partner_id'] == False and  data['sales_user_id'] != False:
-            if data['target_move'] == 'posted':
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.user_id', '=', data['sales_user_id']),
-                    ('order_id.state', 'in', ['sale'])
-                ],order='order_date desc')
-            else:
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.user_id', '=', data['sales_user_id']),
-                    ('order_id.state', 'not in', ['cancel'])
-                ],order='order_date desc')
-            
-        elif data['partner_id'] == False and  data['sales_user_id'] == False:
-            if data['target_move'] == 'posted':
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.is_license','=', data['is_license']),
-                    ('order_id.state', 'in', ['sale'])
-                ],order='order_date desc')
-            else:
-                sale_order_line_id = sale_order_line_obj.search([
-                    ('order_id.company_id', '=', data['company_id']),
-                    ('order_id.date_order', '>=', data['start_date']),
-                    ('order_id.date_order', '<=', data['end_date']),
-                    ('order_id.state', 'not in', ['cancel'])
-                ],order='order_date desc')
+        domain = [
+            ('order_id.company_id', '=', data['company_id']),
+            ('order_id.date_order', '>=', data['start_date']),
+            ('order_id.date_order', '<=', data['end_date']),
+            ('order_id.is_license','=', data['is_license'])
+        ]
+        if data['target_move'] == 'posted':
+            domain.append(('order_id.state', 'in', ['sale']))
+        else:
+            domain.append(('order_id.state', 'not in', ['cancel']))
+        if data['sales_user_id'] != False:
+            domain.append(('order_id.user_id', '=', data['sales_user_id']))
+        if data['partner_id'] != False:
+            domain.append(('order_id.partner_id', '=', data['partner_id']))
+        sale_order_line_id = sale_order_line_obj.search(domain, order='order_date desc')
         num = 1
 
         for line in sale_order_line_id:
-            margin = line.price_total - (line.purchase_price * line.product_uom_qty)
+            margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
             convert_date = fields.Date.from_string(line.order_id.date_order)
             sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.order_id.name, data_left)
@@ -224,7 +164,7 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("K%s"%rowx, "%s"%line.product_uom.name, data_right)
             sheet.write("L%s"%rowx, line.price_total, data_right)
             sheet.write("M%s"%rowx, line.purchase_price, data_right)
-            sheet.write("N%s"%rowx, line.purchase_price*line.product_uom_qty, data_right)
+            sheet.write("N%s"%rowx, line.purchase_price*line.qty_delivered, data_right)
             sheet.write("O%s"%rowx, margin, data_right)
             sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
             sheet.write("Q%s"%rowx, "%s"%line.qty_delivered, data_right)
