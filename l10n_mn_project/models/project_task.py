@@ -134,6 +134,8 @@ class ProjectTask(models.Model):
                             'picking_id': picking.id,
                             'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                             'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
+                            'sale_prices': line.price_unit,
+                            'price_subtotal': line.price_unit * line.product_qty,
                         }
     
                         move = self.env['stock.move'].create(move_vals)
@@ -147,8 +149,10 @@ class ProjectTask(models.Model):
                             'product_uom_qty': line.product_qty,
                             'product_uom': line.product_id.uom_id.id,
                             'picking_id': out_picking.id,
-                             'location_id': self.project_id.picking_type_id.default_location_src_id.id,
+                            'location_id': self.project_id.picking_type_id.default_location_src_id.id,
                             'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
+                            'sale_prices': line.price_unit,
+                            'price_subtotal': line.price_unit * line.product_qty,
                         }
     
                         move = self.env['stock.move'].create(out_move_vals)
@@ -166,8 +170,10 @@ class ProjectTask(models.Model):
                                 'product_uom_qty': line.product_qty,
                                 'product_uom': line.product_id.uom_id.id,
                                 'picking_id': picking.id,
-                                 'location_id': self.project_id.picking_type_id.default_location_src_id.id,
-                                 'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
+                                'location_id': self.project_id.picking_type_id.default_location_src_id.id,
+                                'location_dest_id':self.project_id.picking_type_id.default_location_dest_id.id,
+                                'sale_prices': line.price_unit,
+                                'price_subtotal': line.price_unit * line.product_qty,
                             }
         
                             move = self.env['stock.move'].create(out_move_vals)
