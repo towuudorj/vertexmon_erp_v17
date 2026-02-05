@@ -164,6 +164,11 @@ msgid "Cash move report"
 msgstr "Мөнгөн гүйлгээний тайлан"
 
 #. module: l10n_mn_account_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_cash_move_line_report_view
+msgid "Cash move report"
+msgstr "Харилцахын мөнгөн гүйлгээний тайлан"
+
+#. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_move_analysis__create_uid
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_cash_move_line_report__create_uid

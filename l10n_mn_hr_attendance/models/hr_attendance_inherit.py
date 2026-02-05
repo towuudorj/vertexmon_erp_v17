@@ -50,7 +50,6 @@ class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
     loss_time = fields.Float(string='Loss time', compute='_compute_loss_time')
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=False, tracking=True)
     
     def create_check_in(self, employee_id, lat, long):
         """

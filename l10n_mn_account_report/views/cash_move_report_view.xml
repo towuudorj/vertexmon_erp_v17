@@ -26,7 +26,7 @@
             
             
             
-            <record id="action_cash_move_report_view" model="ir.actions.act_window">
+            <record id="action_cash_move_line_report_view" model="ir.actions.act_window">
                 <field name="name">Cash move report</field>
                 <field name="type">ir.actions.act_window</field>
                 <field name="res_model">cash.move.line.report</field>

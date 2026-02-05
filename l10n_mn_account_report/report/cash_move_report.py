@@ -146,25 +146,25 @@ class CashMovelineReport(models.TransientModel):
                      case when eoy.date = '{data['start_date']}' then
                           eoy.balance
                      else 
-                          eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' then {balance_select} else 0 end)
+                          eoy.balance + sum({balance_select})
                      end
-                 else sum({balance_select}) FILTER (WHERE aml.date < '{data['start_date']}')
+                 else sum({balance_select})
                  end, 0) as balance
-             from account_move_line aml
-             left join account_move am on am.id = aml.move_id and am.state = 'posted'
-             left join account_account aa on aa.id = aml.account_id
-             left join account_journal aj on aj.id = aml.journal_id
+             from account_account aa 
+             left join account_move_line aml on aa.id = aml.account_id
+             join account_move am on am.id = aml.move_id 
+             left join account_journal aj on aj.id = aml.journal_id 
              full join (
                  select aml.account_id, aml.date,
                          sum({balance_select}) as balance,
                          RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
                  from account_move_line aml
                  left join account_journal aj on aj.id = aml.journal_id
-                 where aj.type ='opening' and aml.company_id = 1  and aml.date <= '{data['start_date']}' and aml.account_id = {line.id}
-                 group by aml.account_id, aml.date
+                 where aj.type ='opening' and aml.company_id = {data['company_id']}  and aml.date <= '{data['start_date']}' and aml.account_id = {line.id}
+                 group by aml.account_id, aml.date 
              ) as eoy on eoy.account_id = aa.id
-             where aml.company_id = {data['company_id']} and aj.type IS DISTINCT FROM 'opening'
-             and (eoy.rank = 1 or eoy.rank is null) and aa.id = {line.id}
+             where aml.company_id = {data['company_id']} and aj.type != 'opening' and aml.parent_state = 'posted'
+             and (eoy.rank = 1 or eoy.rank is null) and aa.id = {line.id} and aml.date >= eoy.date and aml.date < '{data['start_date']}'
              group by aa.id, eoy.balance, eoy.date
             """
             self.env.cr.execute(qry)

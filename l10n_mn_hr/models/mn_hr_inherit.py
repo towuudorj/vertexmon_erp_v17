@@ -3,6 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 import json, requests
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+DATE_FORMAT = "%Y-%m-%d"
 
 
 class HrJob(models.Model):
@@ -361,7 +365,7 @@ class Employee(models.Model):
         if self.accession_date:
             date_from = datetime.strptime(str(self.accession_date), DATE_FORMAT)
             date_to = datetime.today()
-            diff = relativedelta.relativedelta(date_to, date_from)
+            diff = relativedelta(date_to, date_from)
             self.working_year = diff.years
             self.working_year_month = diff.months
         return True
@@ -422,7 +426,7 @@ class Employee(models.Model):
         if  self.birthday:
             date_from = datetime.strptime(str(self.birthday), DATE_FORMAT)
             date_to = datetime.today()
-            diff = relativedelta.relativedelta(date_to, date_from)
+            diff = relativedelta(date_to, date_from)
             now_age = diff.years
         else:
             pass

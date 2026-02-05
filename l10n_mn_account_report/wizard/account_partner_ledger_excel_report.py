@@ -358,11 +358,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
      left join res_partner rp on rp.id = aml.partner_id
      left join account_journal aj on aj.id = aml.journal_id
      FULL OUTER join (
-         select aml.account_id, aml.partner_id, aml.date, aml.balance, aml.amount_currency,
+         select aml.account_id, aml.partner_id, aml.date, sum(aml.balance) as balance, sum(aml.amount_currency) as amount_currency,
          RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
          from account_move_line aml
          left join account_journal aj on aj.id = aml.journal_id
          where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
+         group by aml.date, aml.account_id, aml.partner_id
      ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
      where am.state = 'posted'
      and aml.company_id = {self.company_id.id}
@@ -389,6 +390,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
  {where}
  {order_by}
 """
+
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), data_left_no_border)
@@ -483,10 +485,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     sequence = 1
                     last_line_end_balance = {}
                     rowx += 1
+            is_acc_partner_first_balance = False
             if not last_partner_id or not last_account_id or last_partner_id != line['partner_id'] or last_account_id != line['account_id']:
                 last_line_end_balance = {}
                 last_partner_id = line['partner_id']
                 last_account_id = line['account_id']
+                is_acc_partner_first_balance = True
             coly = 0
             line_sequence = '.'.join(str(group['sequence']) for group in group_values) if group_values else ''
             line_sequence = line_sequence + '.' + str(sequence) if line_sequence != '' else sequence
@@ -516,6 +520,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             last_line_end_balance[line['currency']] = line['start_currency_balance']
                         if 'MNT' not in last_line_end_balance.keys():
                             last_line_end_balance['MNT'] = line['start_balance']
+                        if not group_values and is_acc_partner_first_balance:
+                            total_start_balance += line['start_balance']
                     sheet.write(rowx, coly, last_line_end_balance['MNT'], num_right)
                     sheet.write(rowx+1, coly, last_line_end_balance[line['currency']], num_right)
                     last_line_end_balance['MNT'] += (line['debit'] - line['credit'])
@@ -570,6 +576,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                             group['start_balance'] += line['start_balance']
                         total_start_balance += line['start_balance']
                         last_line_end_balance['MNT'] = line['start_balance']
+                    else:
+                        if not group_values and is_acc_partner_first_balance:
+                            total_start_balance += line['start_balance']
                     for group in group_values:
                         group['debit'] += line['debit']
                         group['credit'] += line['credit']

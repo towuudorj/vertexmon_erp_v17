@@ -30,7 +30,7 @@
     max-width: 100% !important;
     width: 100% !important;
 }
-.o-mail-ChatterContainer{
+.o-mail-ChatterContainer.o-aside{
     max-width: 18% !important;
     width: 18% !important;
 }
