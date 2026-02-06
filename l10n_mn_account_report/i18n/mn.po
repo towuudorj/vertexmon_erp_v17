@@ -166,7 +166,7 @@ msgstr "Мөнгөн гүйлгээний тайлан"
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_cash_move_line_report_view
 #: model:ir.ui.menu,name:l10n_mn_account_report.menu_cash_move_report_sub_view
 msgid "Cash move report"
-msgstr "Харилцахын мөнгөн гүйлгээний тайлан"
+msgstr "Касс харилцахын тайлан"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_abstract_report_excel__create_uid
