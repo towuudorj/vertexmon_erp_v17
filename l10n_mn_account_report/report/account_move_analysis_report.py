@@ -207,8 +207,9 @@ class AccountMoveAnalysis(models.TransientModel):
                          sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit,
                          RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
                  from account_move_line aml
+                 left join account_move am on am.id = aml.move_id 
                  left join account_journal aj on aj.id = aml.journal_id
-                 where aj.type ='opening' and aml.company_id = {data['company_id']}  and aml.date <= '{data['start_date']}'
+                 where aj.type ='opening' and aml.company_id = {data['company_id']} and aml.date <= '{data['start_date']}' and am.state='posted'
                  group by aml.account_id, aml.date
              ) as eoy on eoy.account_id = aa.id
              where 
