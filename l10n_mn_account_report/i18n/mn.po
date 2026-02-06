@@ -159,12 +159,12 @@ msgstr "Хэвлэх"
 
 #. module: l10n_mn_account_report
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_cash_move_report_view
-#: model:ir.ui.menu,name:l10n_mn_account_report.menu_cash_move_report_sub_view
 msgid "Cash move report"
 msgstr "Мөнгөн гүйлгээний тайлан"
 
 #. module: l10n_mn_account_report
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_cash_move_line_report_view
+#: model:ir.ui.menu,name:l10n_mn_account_report.menu_cash_move_report_sub_view
 msgid "Cash move report"
 msgstr "Харилцахын мөнгөн гүйлгээний тайлан"
 

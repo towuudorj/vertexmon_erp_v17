@@ -38,7 +38,7 @@
 				sequence="2" />
 		
 		<menuitem
-				action="action_cash_move_report_view"
+				action="action_cash_move_line_report_view"
 				id="menu_cash_move_report_sub_view"
 				parent="account_mn_reports"
 				name="Cash move report"
