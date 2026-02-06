@@ -310,7 +310,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         fact_amountsd =0.0
                         if fiscalyear_id.date_from == start_date:
                             if line.state=='close':
-                                if line.scrap_date <= start_date:
+                                if line.scrap_date and line.scrap_date <= start_date:
                                     first_value = 0.0
                                 else:
                                     first_value = line.value
@@ -357,7 +357,7 @@ class AccountAssetDetailReport(models.TransientModel):
                     if line.state=='close':
                         act_amounts = 0.0
                         if self.fiscalyear_id.date_from == start_date:
-                            if line.scrap_date <= start_date:
+                            if line.scrap_date and line.scrap_date <= start_date:
                                 for dep in line.depreciation_line_ids:
                                         if dep.depreciation_date<=self.end_date:
                                             act_amounts += dep.amount
@@ -371,7 +371,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             else:
                                 act_amount = act_amountd
                         else:
-                            if line.scrap_date <= self.end_date:
+                            if line.scrap_date and line.scrap_date <= self.end_date:
                                 for dep in line.depreciation_line_ids:
                                     if dep.depreciation_date<=self.end_date:
                                             act_amounts += dep.amount
@@ -416,14 +416,14 @@ class AccountAssetDetailReport(models.TransientModel):
                         #print("aaaaadddddddddddddddddddddddd",line.value, deprecation_amount)
                         act_amountds = line.value - deprecation_amount
                         if int(act_amountds) == 0.0:
-                            if line.scrap_date <=start_date:
+                            if line.scrap_date and line.scrap_date <=start_date:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
                                 deprecation_amount = deprecation_amount
                                 deprecation_amounts = deprecation_amount
                         else:
-                            if line.scrap_date <=start_date:
+                            if line.scrap_date and line.scrap_date <=start_date:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
@@ -495,7 +495,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         
                     
                     if line.state == 'close':
-                        if line.scrap_date <= start_date:
+                        if line.scrap_date and line.scrap_date <= start_date:
                             sheet.write("Q%s"%rowx, 0.0,data_right)
                             #drop_balance = 0.0
                         else:
