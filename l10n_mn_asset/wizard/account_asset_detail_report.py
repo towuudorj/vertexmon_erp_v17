@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from datetime import datetime
 
 class AccountAssetDetailReport(models.TransientModel):
     """
@@ -106,14 +107,14 @@ class AccountAssetDetailReport(models.TransientModel):
         sheet.set_column(1, 1, 30)
         sheet.set_column(2, 2, 40)
         sheet.set_column(3, 19, 15)
-
+        start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         sheet.merge_range("A1:B1", u'Байгууллагын нэр: %s' % (data['company_name']), header_txt)
         sheet.merge_range("A3:S3", u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
         sheet.merge_range("P1:S1",  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
         sheet.merge_range("Q2:S2",  u'191 тоот тушаалаар батлав.', header_txt)
         sheet.merge_range("R4:S4", u'Дэлгэрэнгүй бүртгэл',header_txt)
         sheet.merge_range("S5", u'ҮХ-1 №....', header_txt)
-        sheet.write("H5", u'Тайлант %s - %s'%(data['start_date'],data['end_date']), header_txt)
+        sheet.write("H5", u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
         rowx = 7
 
         sheet.merge_range("A%s:A%s"%(rowx, rowx+1), u'Д/д', title)
@@ -167,11 +168,12 @@ class AccountAssetDetailReport(models.TransientModel):
         fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
         
         asset_capital_obj = self.env['account.asset.asset.capitalization']
-        if self.category_id:
-            asset_id = asset_obj.search([('company_id','=',data['company_id']),('category_id','=',data['category_id']),('state','!=','draft')],order='date asc')
-        else:
-            asset_id = asset_obj.search([('company_id','=',data['company_id']),('state','!=','draft')],order='date asc')
-        
+        domain = [('company_id','=',data['company_id']),('state','!=','draft')]
+        if data['category_id']:
+            domain.append(('category_id','=',data['category_id']))
+        if data['owner_id']:
+            domain.append(('owner_id', '=', data['owner_id']))
+        asset_id = asset_obj.search(domain, order='date asc')
         num = 0
         first_balance = 0.0
         first_qty = 0.0
@@ -209,7 +211,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         sheet.write("E%s"%rowx, '%s'%line.date,data_left)
                         sheet.write("F%s"%rowx, line.method_number/12,data_left)
                         sheet.write("G%s"%rowx, data_left)
-                        if line.date <= data['start_date']:
+                        if line.date <= start_date:
                             sheet.write("H%s"%rowx, line.value,data_right)
                             sheet.write("I%s"%rowx, 0, data_right)
                         else:
@@ -225,7 +227,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         #    for cap in asset_cap_id:
                         #        capital_amount += cap.amount
                         #else:
-                        #    if line.date >= data['start_date']:
+                        #    if line.date >= start_date:
                         #        capital_amount +=line.value
                                 
                         income_balance +=capital_amount
@@ -246,13 +248,13 @@ class AccountAssetDetailReport(models.TransientModel):
                         sheet.write(rowx, 13, total_amount,data_right)
                         for lis in line.depreciation_line_ids:
                             for history in lis.move_id.line_ids:
-                                if history.date < data['start_date']:
+                                if history.date < start_date:
                                     deprecation_amount +=history.debit
                         in_dep_balance +=deprecation_amount
                         sheet.write(rowx, 14, deprecation_amount,data_right)                
                         for dep in line.depreciation_line_ids:
                             if dep.move_check == True:
-                                if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<=self.end_date:
+                                if dep.depreciation_date >= start_date and dep.depreciation_date<=self.end_date:
                                     month_deprecation_amount += dep.amount
                                     
                         month_balance +=month_deprecation_amount
@@ -302,14 +304,13 @@ class AccountAssetDetailReport(models.TransientModel):
                     sheet.write("D%s"%rowx, line.code,data_left)
                     sheet.write("E%s"%rowx, '%s'%line.date,data_left)
                     sheet.write("F%s"%rowx, line.method_number/12,data_left)
-                    print ("aaaaaa",line.date,data['start_date'])
-                    if str(line.date) <= str(data['start_date']):
+                    if str(line.date) <= str(start_date):
                         fact_amounts = 0.0
                         fact_amount = 0.0
                         fact_amountsd =0.0
-                        if fiscalyear_id.date_start == data['start_date']:
+                        if fiscalyear_id.date_from == start_date:
                             if line.state=='close':
-                                if line.scrap_date <= data['start_date']:
+                                if line.scrap_date <= start_date:
                                     first_value = 0.0
                                 else:
                                     first_value = line.value
@@ -317,7 +318,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             else:
                                 #or dep in line.depreciation_line_ids:
                                 #        if dep.move_check == True:
-                                #            if dep.depreciation_date < data['start_date']:
+                                #            if dep.depreciation_date < start_date:
                                 #                fact_amountsd += dep.amount
                                 first_value = line.value
                         else:
@@ -344,7 +345,7 @@ class AccountAssetDetailReport(models.TransientModel):
                     #        capital_amount += cap.amount
                         
                     #else:
-                    if str(line.date) > str(data['start_date']) and str(line.date) <= str(data['end_date']):
+                    if str(line.date) > str(start_date) and str(line.date) <= str(data['end_date']):
                             in_amount +=line.value
                                 
                     income_balance +=capital_amount+in_amount
@@ -355,8 +356,8 @@ class AccountAssetDetailReport(models.TransientModel):
                     
                     if line.state=='close':
                         act_amounts = 0.0
-                        if self.fiscalyear_id.date_start == data['start_date']:
-                            if line.scrap_date <= data['start_date']:
+                        if self.fiscalyear_id.date_from == start_date:
+                            if line.scrap_date <= start_date:
                                 for dep in line.depreciation_line_ids:
                                         if dep.depreciation_date<=self.end_date:
                                             act_amounts += dep.amount
@@ -409,20 +410,20 @@ class AccountAssetDetailReport(models.TransientModel):
                         for lis in line.depreciation_line_ids:
                             if lis.move_check == True:
                                 for history in lis.move_id.line_ids:
-                                    if history.date < data['start_date']:
+                                    if history.date < start_date:
                                         if lis.move_id.state != 'cancel':
                                             deprecation_amount +=history.debit
                         #print("aaaaadddddddddddddddddddddddd",line.value, deprecation_amount)
                         act_amountds = line.value - deprecation_amount
                         if int(act_amountds) == 0.0:
-                            if line.scrap_date <=data['start_date']:
+                            if line.scrap_date <=start_date:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
                                 deprecation_amount = deprecation_amount
                                 deprecation_amounts = deprecation_amount
                         else:
-                            if line.scrap_date <=data['start_date']:
+                            if line.scrap_date <=start_date:
                                 deprecation_amount = 0.0
                                 deprecation_amounts = 0.0
                             else:
@@ -435,7 +436,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             if lis.move_check == True:
                                 for history in lis.move_id.line_ids:
                                     if lis.move_id.state != 'cancel':
-                                        if history.date < data['start_date']:
+                                        if history.date < start_date:
                                             deprecation_amount +=history.debit
                     #print("aaaaaaaaaaaaaaaaaaaa",)
                     if total_amount == 0.0:
@@ -448,7 +449,7 @@ class AccountAssetDetailReport(models.TransientModel):
                     for lis in line.depreciation_line_ids:
                        # for history in lis.move_id.line_ids:
                            # if history.move_id.state =='posted':
-                            if str(lis.depreciation_date) >= str(data['start_date']) and str(lis.depreciation_date) <= str(data['end_date']):
+                            if str(lis.depreciation_date) >= str(start_date) and str(lis.depreciation_date) <= str(data['end_date']):
                                 month_deprecation_amount +=lis.amount
                                 
                     month_balance +=month_deprecation_amount
@@ -479,7 +480,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         else:
                             for dep in line.depreciation_line_ids:
                                 if dep.move_check == True:
-                                    if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<= data['end_date']:
+                                    if dep.depreciation_date >= start_date and dep.depreciation_date<= data['end_date']:
                                             if deprecation_amounts >0.0:
                                                 write_off_amount = month_deprecation_amount + deprecation_amounts
                                             else:
@@ -494,7 +495,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         
                     
                     if line.state == 'close':
-                        if line.scrap_date <= data['start_date']:
+                        if line.scrap_date <= start_date:
                             sheet.write("Q%s"%rowx, 0.0,data_right)
                             #drop_balance = 0.0
                         else:
@@ -514,7 +515,7 @@ class AccountAssetDetailReport(models.TransientModel):
                         bal_amounts = 0.0
                         for dep in line.depreciation_line_ids:
                             if dep.move_check == True:
-                                if dep.depreciation_date >= data['start_date'] and dep.depreciation_date<=data['end_date']:
+                                if dep.depreciation_date >= start_date and dep.depreciation_date<=data['end_date']:
                                     bal_amounts += dep.amount
                         act_amountd = line.value - bal_amounts
                         if act_amountd == 0.0:
