@@ -84,7 +84,7 @@ class CashMovelineReport(models.TransientModel):
         sheet.merge_range('A1:B1', u'НХМаягт МХ-4', head)
         sheet.merge_range('G1:I1', u'Сангийн сайдын 2018 оны 100 дугаар', head)
         sheet.merge_range('B2:I2', u'тушаалын хавсралт', head)
-        sheet.merge_range('A3:I3', u'Харилцахын мөнгөн гүйлгээний тайлан', head_title)
+        sheet.merge_range('A3:I3', u'Касс харилцахын тайлан', head_title)
         sheet.merge_range('A4:B4', u'Байгууллагын нэр: %s' % data['company_name'], head)
         sheet.write('I4', u'Он сар өдөр: %s - %s' % (data['start_date'],data['end_date']), head)
         sheet.freeze_panes(6, 0)
