@@ -240,11 +240,12 @@ class AccountMoveAnalysis(models.TransientModel):
         rowx = 8
         for line in lines:
             if line['currency'] == 'MNT' or not data['by_currency']:
+                start_balance = line['debit_start_balance'] - line['credit_start_balance']
                 sheet.write('A%s' % rowx, number, data_center)
                 sheet.merge_range('B%s:C%s' % (rowx, rowx), line['account_name'], data_left)
                 sheet.write('D%s' % rowx, 'MNT', data_left)
-                sheet.write('E%s' % rowx, line['debit_start_balance'], data_right)
-                sheet.write('F%s' % rowx, line['credit_start_balance'], data_right)
+                sheet.write('E%s' % rowx, start_balance if start_balance > 0 else 0, data_right)
+                sheet.write('F%s' % rowx, abs(start_balance) if start_balance < 0 else 0, data_right)
                 sheet.write('G%s' % rowx, line['debit'], data_right)
                 sheet.write('H%s' % rowx, line['credit'], data_right)
                 end_balance = line['debit_start_balance'] - line['credit_start_balance'] + line['debit'] - line['credit']
@@ -277,14 +278,16 @@ class AccountMoveAnalysis(models.TransientModel):
                 number += 1
                 rowx += 1
             else:
+                start_balance = line['debit_start_balance'] - line['credit_start_balance']
+                currency_start_balance = line['start_amount_currency_debit'] - line['start_amount_currency_credit']
                 sheet.merge_range('A%s:A%s' % (rowx, rowx+1), number, data_center)
                 sheet.merge_range('B%s:C%s' % (rowx, rowx+1), line['account_name'], data_left)
                 sheet.write('D%s' % rowx, 'MNT', data_left)
                 sheet.write('D%s' % str(rowx+1), line['currency'], data_left)
-                sheet.write('E%s' % rowx, line['debit_start_balance'], data_right)
-                sheet.write('E%s' % str(rowx+1), line['start_amount_currency_debit'], data_right)
-                sheet.write('F%s' % rowx, line['credit_start_balance'], data_right)
-                sheet.write('F%s' % str(rowx+1), line['start_amount_currency_credit'], data_right)
+                sheet.write('E%s' % rowx, start_balance if start_balance > 0 else 0, data_right)
+                sheet.write('E%s' % str(rowx+1), currency_start_balance if currency_start_balance > 0 else 0, data_right)
+                sheet.write('F%s' % rowx, abs(start_balance) if start_balance < 0 else 0, data_right)
+                sheet.write('F%s' % str(rowx+1), abs(currency_start_balance) if currency_start_balance < 0 else 0, data_right)
                 sheet.write('G%s' % rowx, line['debit'], data_right)
                 sheet.write('G%s' % str(rowx+1), line['amount_currency_debit'], data_right)
                 sheet.write('H%s' % rowx, line['credit'], data_right)
