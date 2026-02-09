@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from datetime import datetime
 
 class SaleOrderNewReport(models.TransientModel):
     """
@@ -18,7 +19,7 @@ class SaleOrderNewReport(models.TransientModel):
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
-    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
+    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked')],
                                       string='States', default='posted', required=True)
     is_license = fields.Boolean(string='License', default=False)
     partner_id = fields.Many2one('res.partner', string='Customer')
@@ -129,27 +130,51 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.write("Q%s"%rowx, u'Хүргэсэн тоо', title)
         rowx += 1
 
-
+        start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+        end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").date()
         sale_order_line_obj = self.env['sale.order.line']
         domain = [
             ('order_id.company_id', '=', data['company_id']),
             ('order_id.date_order', '>=', data['start_date']),
             ('order_id.date_order', '<=', data['end_date']),
+            ('product_uom_qty', '>', 0),
+            ('is_downpayment', '=', False),
             ('order_id.is_license','=', data['is_license'])
         ]
         if data['target_move'] == 'posted':
             domain.append(('order_id.state', 'in', ['sale']))
-        else:
+        elif data['target_move'] == 'all':
             domain.append(('order_id.state', 'not in', ['cancel']))
+        else:
+            domain = [
+                ('order_id.state', '=', 'sale'),
+                ('is_downpayment', '=', False),
+                ('order_id.company_id', '=', data['company_id']),
+                ('order_id.is_license', '=', data['is_license']),
+                ('qty_delivered', '>', 0)
+            ]
         if data['sales_user_id'] != False:
             domain.append(('order_id.user_id', '=', data['sales_user_id']))
         if data['partner_id'] != False:
             domain.append(('order_id.partner_id', '=', data['partner_id']))
         sale_order_line_id = sale_order_line_obj.search(domain, order='order_date desc')
+        if data['target_move'] == 'picked':
+            stock_move_ids = sale_order_line_id.mapped('move_ids').filtered(lambda m:
+                                                                            m.picking_id.scheduled_date.date() >= start_date
+                                                                            and m.picking_id.scheduled_date.date() <= end_date
+                                                                            )
+            sale_order_line_id = sale_order_line_id.filtered(lambda so: any(ml.id in stock_move_ids.ids for ml in so.move_ids))
         num = 1
 
         for line in sale_order_line_id:
-            margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
+            if data['target_move'] == 'picked':
+                price_total = line.price_unit * line.qty_delivered
+                margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
+                total_purchase_price = line.price_unit * line.qty_delivered
+            else:
+                price_total = line.price_total
+                margin = line.price_total - (line.purchase_price * line.product_uom_qty)
+                total_purchase_price = line.price_unit * line.product_uom_qty
             convert_date = fields.Date.from_string(line.order_id.date_order)
             sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.order_id.name, data_left)
@@ -162,9 +187,9 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("I%s"%rowx, line.price_unit, data_right)
             sheet.write("J%s"%rowx, line.product_uom_qty, data_right)
             sheet.write("K%s"%rowx, "%s"%line.product_uom.name, data_right)
-            sheet.write("L%s"%rowx, line.price_total, data_right)
+            sheet.write("L%s"%rowx, price_total, data_right)
             sheet.write("M%s"%rowx, line.purchase_price, data_right)
-            sheet.write("N%s"%rowx, line.purchase_price*line.qty_delivered, data_right)
+            sheet.write("N%s"%rowx, total_purchase_price, data_right)
             sheet.write("O%s"%rowx, margin, data_right)
             sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
             sheet.write("Q%s"%rowx, "%s"%line.qty_delivered, data_right)
@@ -186,14 +211,3 @@ class SaleOrderNewReport(models.TransientModel):
         output.seek(0)
         response.stream.write(output.read())
         output.close()
-
-
-
-
-
-        
-
-
-
-
-
