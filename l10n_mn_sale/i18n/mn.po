@@ -1354,7 +1354,10 @@ msgstr "Нэхэмжлэх үүсгэх"
 msgid "Percent"
 msgstr "Хувь"
 
-
+#. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_new_report__target_move__picked
+msgid "Picked"
+msgstr "Хүргэгдсэн"
 
 #. module: l10n_mn_sale
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order_invoice_payment_term_line__invoice_amount
