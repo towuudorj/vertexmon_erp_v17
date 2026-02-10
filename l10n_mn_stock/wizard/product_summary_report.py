@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, time
 import xlwt, json
 from odoo.tools import date_utils
 import io
@@ -118,8 +118,24 @@ class ProductSummaryReport(models.TransientModel):
         sheet.merge_range('A2:I2', u'Барааны материалын товчоо тайлан', head_title)
 
         rowx = 4
-        sheet.set_column(1, 1, 30)
+        sheet.set_column(1, 1, 40)
         sheet.set_column(2, 20, 15)
+        
+        location_ids = []            
+        warehouse_ids = data.get('warehouse_ids') or []
+        if isinstance(warehouse_ids, (list, tuple)) and warehouse_ids:
+            locations = self.env['stock.location'].search([
+                ('warehouse_id', 'in', tuple(warehouse_ids))
+            ])
+            location_ids = locations.ids
+        
+        product_obj = self.env['product.product']
+        if data['product_id'] and not data['categ_id']:
+            product_ids = product_obj.search(data['product_id'])
+        elif not data['product_id'] and data['categ_id']:
+            product_ids = product_obj.search([('categ_id','=',data['categ_id'])])
+        elif not data['product_id'] and not data['categ_id']:
+            product_ids = product_obj.search([])
         
         if data['type'] == 'cost':
             sheet.merge_range('J3:M3', u'Тайлант хугацаа: %s - %s'%(data['date_from'],data['date_to']), head_title )
@@ -141,147 +157,430 @@ class ProductSummaryReport(models.TransientModel):
             sheet.write('L%s'%(rowx+1), u'Тоо', data_center_bold)
             sheet.write('M%s'%(rowx+1), u'Нийт өртөг', data_center_bold)
             
-    
-        else:
-            sheet.merge_range('F3:I3', u'Тайлант хугацаа: %s - %s'%(data['date_from'],data['date_to']), head_title )
-            sheet.merge_range('A%s:A%s'%(rowx, rowx+1), u'Д/д', data_center_bold)
-            sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_center_bold)
-            sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_center_bold)
-            sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_center_bold)
-            sheet.merge_range('E%s:E%s'%(rowx, rowx+1), u'Барааны хэмжих нэгж', data_center_bold)
-            sheet.merge_range('F%s:F%s'%(rowx, rowx+1), u'Барааны эхний үлдэгдэл', data_center_bold)
-            sheet.merge_range('G%s:G%s'%(rowx, rowx+1), u'Барааны орлого', data_center_bold)
-            sheet.merge_range('H%s:H%s'%(rowx, rowx+1), u'Барааны зарлага', data_center_bold)
-            sheet.merge_range('I%s:I%s'%(rowx, rowx+1), u'Барааны эцсийн үлдэгдэл', data_center_bold)
             
-            location_obj = self.env['stock.location']
-            location_id = []
-            if data['warehouse_ids']:
-                if len(data['warehouse_ids'])==1:
-                    location_ids = location_obj.search([('warehouse_id','=',data['warehouse_ids'][0])])
-                    for loc in location_ids:
-                        location_id.append(loc.id)
+            count = 0
+            rowx +=2
+            
+            total_f_bal_qty = 0
+            total_f_bal_price = 0
+            total_f_in_qty = 0
+            total_f_in_price = 0
+            total_in_qty = 0
+            total_in_price = 0
+            total_ex_qty = 0
+            total_ex_price = 0
+            total_last_qty = 0
+            total_last_price = 0
+            total_f_ex_qty = 0
+            total_f_ex_price = 0
+            
+            date_from = data['date_from']
+
+            if isinstance(date_from, str):
+                date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+            
+            date_to_dt_max = datetime.combine(date_from, time.max)
+            date_to_dt_min = datetime.combine(date_from, time.min)
+            
+            for pro in product_ids:
+                if location_ids:
+                    f_query_income = """
+                        SELECT
+                            mv.product_id,
+                            SUM(svl.quantity) AS qty,
+                            AVG(svl.unit_cost) AS price
+                        FROM stock_valuation_layer svl
+                        JOIN stock_move mv ON mv.id = svl.stock_move_id
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date <= %s
+                          AND dest.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'inventory'
+                          AND dest.usage = 'internal'
+                          AND svl.product_id = mv.product_id
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        f_query_income,
+                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    f_income = self._cr.dictfetchall()
+                    
+                    
+                    f_query_expense = """
+                        SELECT
+                            mv.product_id,
+                            SUM(svl.quantity) AS qty,
+                            AVG(svl.unit_cost) AS price
+                        FROM stock_valuation_layer svl
+                        JOIN stock_move mv ON mv.id = svl.id
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date <= %s
+                          AND sl.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'internal'
+                          AND dest.usage = 'inventory'
+                          AND svl.product_id = mv.product_id
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        f_query_expense,
+                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    f_expense = self._cr.dictfetchall()
+                    
+                    
+                    query_income = """
+                        SELECT
+                            mv.product_id,
+                            SUM(svl.quantity) AS qty,
+                            AVG(svl.unit_cost) AS price
+                        FROM stock_valuation_layer svl
+                        JOIN stock_move mv ON svl.stock_move_id = mv.id
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date > %s
+                          AND mv.date <= %s
+                          AND dest.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage IN ('supplier','customer','inventory','production','internal')
+                          AND dest.usage = 'internal'
+                          AND svl.product_id = mv.product_id
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        query_income,
+                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    income = self._cr.dictfetchall()
+                    
+                    
+                    query_expense = """
+                        SELECT
+                            mv.product_id,
+                            SUM(svl.quantity) AS qty,
+                            AVG(svl.unit_cost) AS price
+                        FROM stock_valuation_layer svl
+                        JOIN stock_move mv ON svl.stock_move_id = mv.id
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date > %s
+                          AND mv.date <= %s
+                          AND sl.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'internal'
+                          AND dest.usage IN ('customer','supplier','inventory','production','internal')
+                          AND svl.product_id = mv.product_id
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        query_expense,
+                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    expense = self._cr.dictfetchall()
+                
                 else:
-                    location_id = location_obj.search([('warehouse_id','in',tuple(data['warehouse_ids']))])
-                    for loc in location_ids:
-                        location_id.append(loc.id)
-            
-            query = """
-                    SELECT
-                        sw.name AS warehouse,
-                        pt.name ->> 'mn_MN' AS product_name,
-                        pp.default_code AS product_code,
-                        pp.barcode AS internal_code,
-                        uom.name ->> 'mn_MN' AS uom,
-                
-                        SUM(CASE
-                            WHEN sm.date < %s
-                             AND dest.usage = 'internal'
-                            THEN sml.delivered_qty
-                            WHEN sm.date < %s
-                             AND src.usage = 'internal'
-                            THEN -sml.delivered_qty
-                            ELSE 0 END
-                        ) AS opening_qty,
-                
-                        SUM(CASE
-                            WHEN sm.date BETWEEN %s AND %s
-                             AND dest.usage = 'internal'
-                            THEN sml.delivered_qty
-                            ELSE 0 END
-                        ) AS in_qty,
-                
-                        SUM(CASE
-                            WHEN sm.date BETWEEN %s AND %s
-                             AND src.usage = 'internal'
-                            THEN sml.delivered_qty
-                            ELSE 0 END
-                        ) AS out_qty
-                
-                    FROM stock_move_line sml
-                    JOIN stock_move sm ON sm.id = sml.move_id
-                
-                    JOIN stock_location src ON src.id = sml.location_id
-                    JOIN stock_location dest ON dest.id = sml.location_dest_id
-                
-                    JOIN stock_warehouse sw
-                        ON dest.id = sw.lot_stock_id
-                
-                    JOIN product_product pp ON pp.id = sml.product_id
-                    JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                    JOIN uom_uom uom ON uom.id = sml.product_uom_id
-                
-                    WHERE sm.state = 'done'
-                      AND sml.company_id = %s
+                    f_income = []
+                    f_expense = []
+                    income = []
+                    expense = []
                 
                     
-                """
-            params = [
-                data['date_from'],
-                data['date_from'],
-                data['date_from'],
-                data['date_to'],
-                data['date_from'],
-                data['date_to'],
-                data['company_id']
-            ]
+                f_bal_price = 0
+                f_in_qty = 0
+                f_in_price = 0
+                in_qty = 0
+                in_price = 0
+                ex_qty = 0
+                ex_price = 0
+                last_qty = 0
+                last_price = 0
+                f_ex_qty = 0
+                f_ex_price = 0
             
-            if len(location_id)==1:
-                query += " AND sw.lot_stock_id = %s"
-                params.append(location_id[0])
-            elif len(location_id)>1:
-                query += " AND sw.lot_stock_id in %s"
-                params.append(tuple(location_id))
-            
-            query += """
-                GROUP BY
-                        sw.name,
-                        pt.name,
-                        pp.default_code,
-                        pp.barcode,
-                        uom.name
+                for lines in f_income:
+                    if lines['product_id'] == pro.id:
+                        f_in_qty +=lines['qty']
+                        f_in_price +=lines['price']
                 
-                ORDER BY sw.name, pt.name
-            """
+                for lined in f_expense:
+                    if lined['product_id'] == pro.id:
+                        f_ex_qty +=lined['qty']
+                        f_ex_price +=lined['price']
+                        
+                                    
+                for linem in income:
+                    if linem['product_id'] == pro.id:
+                        in_qty +=linem['qty']
+                        in_price +=linem['price']
+                
+                for linex in expense:
+                    if linex['product_id'] == pro.id:
+                        ex_qty +=linex['qty']
+                        ex_price +=linex['price']
+                
+                f_bal_qty = f_in_qty - f_ex_qty
+                f_bal_price = f_in_price - f_ex_price
+                last_qty = f_bal_qty + in_qty - ex_qty
+                last_price = f_bal_price + in_price - ex_price
+                
+                sheet.write(f'A%s'%rowx, count, data_left)
+                sheet.write(f'B%s'%rowx, u'%s'%pro.name, data_left)
+                sheet.write(f'C%s'%rowx, u'%s'%pro.barcode, data_left)
+                sheet.write(f'D%s'%rowx, u'%s'%pro.default_code, data_left)
+                sheet.write(f'E%s'%rowx, u'%s'%pro.uom_id.name, data_left)
+                sheet.write(f'F%s'%rowx, f_bal_qty, data_right)
+                sheet.write(f'G%s'%rowx, f_bal_price, data_right)
+                sheet.write(f'H%s'%rowx, in_qty, data_right)
+                sheet.write(f'I%s'%rowx, in_price, data_right)
+                sheet.write(f'J%s'%rowx, ex_qty, data_right)
+                sheet.write(f'K%s'%rowx, ex_price, data_right)
+                sheet.write(f'L%s'%rowx, last_qty, data_right)
+                sheet.write(f'M%s'%rowx, last_price, data_right)
+    
+                count +=1
+                rowx +=1
+                
+                total_f_bal_qty +=f_bal_qty
+                total_f_bal_price +=f_bal_price
+                total_in_qty +=in_qty
+                total_in_price +=in_price
+                total_ex_qty +=ex_qty
+                total_ex_price +=ex_price
+                total_last_qty +=last_qty
+                total_last_price +=last_price
+                
+            sheet.merge_range(f'A%s:E%s'%(rowx,rowx), u'Нийт', data_center_bold)
+            sheet.write(f'F%s'%rowx, total_f_bal_qty, data_right)
+            sheet.write(f'G%s'%rowx, total_f_bal_price, data_right)
+            sheet.write(f'H%s'%rowx, total_in_qty, data_right)
+            sheet.write(f'I%s'%rowx, total_in_price, data_right)
+            sheet.write(f'J%s'%rowx, total_ex_qty, data_right)
+            sheet.write(f'K%s'%rowx, total_ex_price, data_right)
+            sheet.write(f'L%s'%rowx, total_last_qty, data_right)
+            sheet.write(f'M%s'%rowx, total_last_price, data_right)
             
-            self.env.cr.execute(query, params)
-            rows = self.env.cr.dictfetchall()
+            
+            
+            
+    
+        else:
 
-            row = 5
-            current_wh = None
-            index = 1
+            rowx = 5
             
-            for r in rows:
-                # Warehouse header
-                if r['warehouse'] != current_wh:
-                    sheet.merge_range(
-                        row, 0, row, 8,
-                        f"Агуулах: {r['warehouse']}",
-                        data_left
+            sheet.merge_range(
+                'F3:I3',
+                u'Тайлант хугацаа: %s - %s' % (data.get('date_from'), data.get('date_to')),
+                head_title
+            )
+            
+            sheet.merge_range(f'A{rowx}:A{rowx+1}', u'Д/д', data_center_bold)
+            sheet.merge_range(f'B{rowx}:B{rowx+1}', u'Барааны нэр', data_center_bold)
+            sheet.merge_range(f'C{rowx}:C{rowx+1}', u'Барааны код', data_center_bold)
+            sheet.merge_range(f'D{rowx}:D{rowx+1}', u'Дотоод код', data_center_bold)
+            sheet.merge_range(f'E{rowx}:E{rowx+1}', u'Хэмжих нэгж', data_center_bold)
+            sheet.merge_range(f'F{rowx}:F{rowx+1}', u'Эхний үлдэгдэл', data_center_bold)
+            sheet.merge_range(f'G{rowx}:G{rowx+1}', u'Орлого', data_center_bold)
+            sheet.merge_range(f'H{rowx}:H{rowx+1}', u'Зарлага', data_center_bold)
+            sheet.merge_range(f'I{rowx}:I{rowx+1}', u'Эцсийн үлдэгдэл', data_center_bold)
+            
+            
+            
+            
+            count = 0
+            rowx +=1
+            
+            total_f_bal_qty = 0
+            total_f_in_qty = 0
+            total_in_qty = 0
+            total_ex_qty = 0
+            total_last_qty = 0
+            total_f_ex_qty = 0
+            
+            date_from = data['date_from']
+
+            if isinstance(date_from, str):
+                date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+            
+            date_to_dt_max = datetime.combine(date_from, time.max)
+            date_to_dt_min = datetime.combine(date_from, time.min)
+            
+            
+            for pro in product_ids:
+                
+                f_in_qty = 0
+                in_qty = 0
+                ex_qty = 0
+                last_qty = 0
+                f_ex_qty = 0
+                if location_ids:
+                    f_query_income = """
+                        SELECT
+                            mv.product_id,
+                            SUM(mv.product_uom_qty) AS qty,
+                            AVG(mv.price_unit) AS price
+                        FROM stock_move mv
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date <= %s
+                          AND dest.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'inventory'
+                          AND dest.usage = 'internal'
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        f_query_income,
+                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
-                    row += 1
-                    current_wh = r['warehouse']
-                    index = 1
+                    f_income = self._cr.dictfetchall()
+                    
+                    f_query_expense = """
+                        SELECT
+                            mv.product_id,
+                            SUM(mv.product_uom_qty) AS qty,
+                            AVG(mv.price_unit) AS price
+                        FROM stock_move mv
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date <= %s
+                          AND sl.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'internal'
+                          AND dest.usage = 'inventory'
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        f_query_expense,
+                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    f_expense = self._cr.dictfetchall()
+                    
+                    
+                    
+                    query_income = """
+                        SELECT
+                            mv.product_id,
+                            SUM(mv.product_uom_qty) AS qty,
+                            AVG(mv.price_unit) AS price
+                        FROM stock_move mv
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date > %s
+                          AND mv.date <= %s
+                          AND dest.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage IN ('supplier','customer','inventory','production','internal')
+                          AND dest.usage = 'internal'
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        query_income,
+                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    income = self._cr.dictfetchall()
+                    
+                    
+                    query_expense = """
+                        SELECT
+                            mv.product_id,
+                            SUM(mv.product_uom_qty) AS qty,
+                            AVG(mv.price_unit) AS price
+                        FROM stock_move mv
+                        JOIN stock_location sl ON mv.location_id = sl.id
+                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                        WHERE mv.state = 'done'
+                          AND mv.date > %s
+                          AND mv.date <= %s
+                          AND sl.id IN %s
+                          AND mv.product_id = %s
+                          AND mv.company_id = %s
+                          AND sl.usage = 'internal'
+                          AND dest.usage IN ('customer','supplier','inventory','production','internal')
+                        GROUP BY mv.product_id
+                    """
+                
+                    self._cr.execute(
+                        query_expense,
+                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                    )
+                    expense = self._cr.dictfetchall()
+                    
+                else:
+                    f_income = []
+                    f_expense = []
+                    income = []
+                    expense = []
+    
+
+                    
+                    
+                
+                for lines in f_income:
+                    if lines['product_id'] == pro.id:
+                        f_in_qty +=lines['qty']
+                
+                for lined in f_expense:
+                    if lined['product_id'] == pro.id:
+                        f_ex_qty +=lined['qty']
+                        
+                                    
+                for linem in income:
+                    if linem['product_id'] == pro.id:
+                        in_qty +=linem['qty']
+                
+                for linex in expense:
+                    if linex['product_id'] == pro.id:
+                        ex_qty +=linex['qty']
+                
+                f_bal_qty = f_in_qty - f_ex_qty
+                last_qty = f_bal_qty + in_qty - ex_qty
+                sheet.write(f'A%s'%rowx, count, data_left)
+                sheet.write(f'B%s'%rowx, u'%s'%pro.name, data_left)
+                sheet.write(f'C%s'%rowx, u'%s'%pro.barcode, data_left)
+                sheet.write(f'D%s'%rowx, u'%s'%pro.default_code, data_left)
+                sheet.write(f'E%s'%rowx, u'%s'%pro.uom_id.name, data_left)
+                sheet.write(f'F%s'%rowx, f_bal_qty, data_right)
+                sheet.write(f'G%s'%rowx, in_qty, data_right)
+                sheet.write(f'H%s'%rowx, ex_qty, data_right)
+                sheet.write(f'I%s'%rowx, last_qty, data_right)
+
+                count +=1
+                rowx +=1
+                total_f_bal_qty +=f_bal_qty
+                total_in_qty +=in_qty
+                total_ex_qty +=ex_qty
+                total_last_qty +=last_qty
+                
+            sheet.merge_range(f'A%s:E%s'%(rowx,rowx), u'Нийт', data_center_bold)
+            sheet.write(f'F%s'%rowx, total_f_bal_qty, data_right)
+            sheet.write(f'G%s'%rowx, total_in_qty, data_right)
+            sheet.write(f'H%s'%rowx, total_ex_qty, data_right)
+            sheet.write(f'I%s'%rowx, total_last_qty, data_right)
             
-                opening = r['opening_qty'] or 0
-                incoming = r['in_qty'] or 0
-                outgoing = r['out_qty'] or 0
-                closing = opening + incoming - outgoing
-            
-                sheet.write_row(row, 0, [
-                    f"{index:.2f}",          # Д/д
-                    r['product_name'],       # Барааны нэр
-                    r['product_code'],       # Барааны код
-                    r['internal_code'],      # Дотоод код
-                    r['uom'],                # Хэмжих нэгж
-                    opening,                 # Эхний үлдэгдэл
-                    incoming,                # Орлого
-                    outgoing,                # Зарлага
-                    closing,                 # Эцсийн үлдэгдэл
-                ], data_right)
-            
-                row += 1
-                index += 1
 
 
         workbook.close()
