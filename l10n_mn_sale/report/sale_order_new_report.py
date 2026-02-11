@@ -7,24 +7,23 @@ from odoo import fields, models
 from odoo.tools import date_utils
 from datetime import datetime
 
+
 class SaleOrderNewReport(models.TransientModel):
     """
         Борлуулалтын тайлан
     """
     _name = "sale.order.new.report"
     _description = "Sale order report"
-    
-    company_id=fields.Many2one('res.company', string='Company', required=True, 
-                               default=lambda self: self.env.user.company_id)
-    date_from=fields.Date('Date Start',default=fields.Date.context_today)
-    date_to=fields.Date("Date Stop",default=fields.Date.context_today)
+
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+                                 default=lambda self: self.env.user.company_id)
+    date_from = fields.Date('Date Start', default=fields.Date.context_today)
+    date_to = fields.Date("Date Stop", default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
     target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked')],
-                                      string='States', default='posted', required=True)
+                                   string='States', default='posted', required=True)
     is_license = fields.Boolean(string='License', default=False)
     partner_id = fields.Many2one('res.partner', string='Customer')
-    
-    
 
     def action_print_xls_report(self):
         data = {
@@ -35,7 +34,7 @@ class SaleOrderNewReport(models.TransientModel):
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
-            'partner_id':self.partner_id.id,
+            'partner_id': self.partner_id.id,
         }
         return {
             'type': 'ir.actions.report',
@@ -52,82 +51,82 @@ class SaleOrderNewReport(models.TransientModel):
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
         head = workbook.add_format({
-                                    'align': 'center', 
-                                    'bold': True, 
-                                    'font_size': 16
-                                    })
+            'align': 'center',
+            'bold': True,
+            'font_size': 16
+        })
         txt = workbook.add_format({
-                                    'align': 'center',
-                                    'border': 1,
-                                    'font_size': 12
-                                })
+            'align': 'center',
+            'border': 1,
+            'font_size': 12
+        })
 
         title = workbook.add_format({
-                                    'align': 'center',
-                                    'border': 1,
-                                    'bold': True,
-                                    'font_size': 12,
-                                    'bg_color': '#FBCEB1',
-                                    'color': 'black'
-                                })
+            'align': 'center',
+            'border': 1,
+            'bold': True,
+            'font_size': 12,
+            'bg_color': '#FBCEB1',
+            'color': 'black'
+        })
 
         data_right = workbook.add_format({
-                                    'align': 'right',
-                                    'border': 1,
-                                    'text_wrap': True,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00'
-                                })
+            'align': 'right',
+            'border': 1,
+            'text_wrap': True,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
         data_left = workbook.add_format({
-                                    'align': 'left',
-                                    'border': 1,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00'
-                                })
-
+            'align': 'left',
+            'border': 1,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
 
         data_bold_left = workbook.add_format({
-                                    'align': 'left',
-                                    'bold': True,
-                                    'border': 1,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00'
-                                })
-        
+            'align': 'left',
+            'bold': True,
+            'border': 1,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
+
         data_bold_center = workbook.add_format({
-                                    'align': 'center',
-                                    'bold': True,
-                                    'border': 1,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00'
-                                })
+            'align': 'center',
+            'bold': True,
+            'border': 1,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
 
         sheet.set_column(0, 5, 15)
         sheet.set_column(6, 6, 40)
         sheet.set_column(7, 17, 15)
 
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан дэлгэрэнгүй', title)
-        sheet.merge_range("A%s:E%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
-        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        sheet.merge_range("A%s:H%s" % (rowx, rowx), u'Борлуулалтын тайлан дэлгэрэнгүй', title)
+        sheet.merge_range("A%s:E%s" % (rowx + 1, rowx + 1), u'%s' % (data['company_name']), title)
+        sheet.merge_range("F%s:H%s" % (rowx + 1, rowx + 1), u'Огноо: %s - %s' % (data['start_date'], data['end_date']),
+                          title)
         rowx += 3
-        sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
-        sheet.write('B%s'%rowx, u'Захиалгын №', title)
-        sheet.write("C%s"%rowx, u'Мөр', title)
-        sheet.write("D%s"%rowx, u'Харилцагчийн №', title)
-        sheet.write("E%s"%rowx, u'Харилцагч', title)
-        sheet.write("F%s"%rowx, u'Барааны №', title)
-        sheet.write("G%s"%rowx, u'Барааны бүлэг', title)
-        sheet.write("H%s"%rowx, u'Барааны нэр', title)
-        sheet.write("I%s"%rowx, u'Нэгжийн үнэ', title)
-        sheet.write("J%s"%rowx, u'Тоо', title)
-        sheet.write("K%s"%rowx, u'Нэгж', title)
-        sheet.write("L%s"%rowx, u'Нийт үнэ', title)
-        sheet.write("M%s"%rowx, u'Нэгжийн өртөг', title)
-        sheet.write("N%s"%rowx, u'Нийт өртөг', title)
-        sheet.write("O%s"%rowx, u'Ашиг', title)
-        sheet.write("P%s"%rowx, u'Хэрэглэгч', title)
-        sheet.write("Q%s"%rowx, u'Хүргэсэн тоо', title)
+        sheet.write("A%s" % rowx, u'Батлагдсан огноо', title)
+        sheet.write('B%s' % rowx, u'Захиалгын №', title)
+        sheet.write("C%s" % rowx, u'Мөр', title)
+        sheet.write("D%s" % rowx, u'Харилцагчийн №', title)
+        sheet.write("E%s" % rowx, u'Харилцагч', title)
+        sheet.write("F%s" % rowx, u'Барааны №', title)
+        sheet.write("G%s" % rowx, u'Барааны бүлэг', title)
+        sheet.write("H%s" % rowx, u'Барааны нэр', title)
+        sheet.write("I%s" % rowx, u'Нэгжийн үнэ', title)
+        sheet.write("J%s" % rowx, u'Тоо', title)
+        sheet.write("K%s" % rowx, u'Нэгж', title)
+        sheet.write("L%s" % rowx, u'Нийт үнэ', title)
+        sheet.write("M%s" % rowx, u'Нэгжийн өртөг', title)
+        sheet.write("N%s" % rowx, u'Нийт өртөг', title)
+        sheet.write("O%s" % rowx, u'Ашиг', title)
+        sheet.write("P%s" % rowx, u'Хэрэглэгч', title)
+        sheet.write("Q%s" % rowx, u'Хүргэсэн тоо', title)
         rowx += 1
 
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
@@ -139,7 +138,7 @@ class SaleOrderNewReport(models.TransientModel):
             ('order_id.date_order', '<=', data['end_date']),
             ('product_uom_qty', '>', 0),
             ('is_downpayment', '=', False),
-            ('order_id.is_license','=', data['is_license'])
+            ('order_id.is_license', '=', data['is_license'])
         ]
         if data['target_move'] == 'posted':
             domain.append(('order_id.state', 'in', ['sale']))
@@ -170,42 +169,44 @@ class SaleOrderNewReport(models.TransientModel):
             if data['target_move'] == 'picked':
                 price_total = line.price_unit * line.qty_delivered
                 margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
-                total_purchase_price = line.price_unit * line.qty_delivered
+                total_purchase_price = line.purchase_price * line.qty_delivered
             else:
                 price_total = line.price_total
                 margin = line.price_total - (line.purchase_price * line.product_uom_qty)
-                total_purchase_price = line.price_unit * line.product_uom_qty
+                total_purchase_price = line.purchase_price * line.product_uom_qty
             convert_date = fields.Date.from_string(line.order_id.date_order)
-            sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
-            sheet.write("B%s"%rowx, line.order_id.name, data_left)
-            sheet.write("C%s"%rowx, num, data_right)
-            sheet.write("D%s"%rowx, "%s"%line.order_id.partner_id.code, data_left)
-            sheet.write("E%s"%rowx, "%s"%line.order_id.partner_id.name, data_left)
-            sheet.write("F%s"%rowx, "%s"%line.product_id.default_code, data_left)
-            sheet.write("G%s"%rowx, "%s"%line.product_id.brand_id.name, data_left)
-            sheet.write("H%s"%rowx, "%s"%line.product_id.name, data_left)
-            sheet.write("I%s"%rowx, line.price_unit, data_right)
-            sheet.write("J%s"%rowx, line.product_uom_qty, data_right)
-            sheet.write("K%s"%rowx, "%s"%line.product_uom.name, data_right)
-            sheet.write("L%s"%rowx, price_total, data_right)
-            sheet.write("M%s"%rowx, line.purchase_price, data_right)
-            sheet.write("N%s"%rowx, total_purchase_price, data_right)
-            sheet.write("O%s"%rowx, margin, data_right)
-            sheet.write("P%s"%rowx, "%s"%line.order_id.user_id.name, data_right)
-            sheet.write("Q%s"%rowx, "%s"%line.qty_delivered, data_right)
-            num +=1
-            rowx +=1
-        sheet.merge_range('A%s:K%s' % (rowx,rowx), u'Нийт дүн:', data_bold_left)
-        sheet.write('L%s' % rowx, '=SUM(L2:L%s)' % (rowx-1), data_bold_center)
-        sheet.write('M%s' % rowx, '=SUM(M2:M%s)' % (rowx-1), data_bold_center)
-        sheet.write('N%s' % rowx, '=SUM(N2:N%s)' % (rowx-1), data_bold_center)
-        sheet.write('O%s' % rowx, '=SUM(O2:O%s)' % (rowx-1), data_bold_center)
+            sheet.write("A%s" % rowx, "%s" % convert_date, data_right)
+            sheet.write("B%s" % rowx, line.order_id.name, data_left)
+            sheet.write("C%s" % rowx, num, data_right)
+            sheet.write("D%s" % rowx, "%s" % line.order_id.partner_id.code, data_left)
+            sheet.write("E%s" % rowx, "%s" % line.order_id.partner_id.name, data_left)
+            sheet.write("F%s" % rowx, "%s" % line.product_id.default_code, data_left)
+            sheet.write("G%s" % rowx, "%s" % line.product_id.brand_id.name, data_left)
+            sheet.write("H%s" % rowx, "%s" % line.product_id.name, data_left)
+            sheet.write("I%s" % rowx, line.price_unit, data_right)
+            sheet.write("J%s" % rowx, line.product_uom_qty, data_right)
+            sheet.write("K%s" % rowx, "%s" % line.product_uom.name, data_right)
+            sheet.write("L%s" % rowx, price_total, data_right)
+            sheet.write("M%s" % rowx, line.purchase_price, data_right)
+            sheet.write("N%s" % rowx, total_purchase_price, data_right)
+            sheet.write("O%s" % rowx, margin, data_right)
+            sheet.write("P%s" % rowx, "%s" % line.order_id.user_id.name, data_right)
+            sheet.write("Q%s" % rowx, "%s" % line.qty_delivered, data_right)
+            num += 1
+            rowx += 1
+        sheet.merge_range('A%s:K%s' % (rowx, rowx), u'Нийт дүн:', data_bold_left)
+        sheet.write('L%s' % rowx, '=SUM(L2:L%s)' % (rowx - 1), data_bold_center)
+        sheet.write('M%s' % rowx, '=SUM(M2:M%s)' % (rowx - 1), data_bold_center)
+        sheet.write('N%s' % rowx, '=SUM(N2:N%s)' % (rowx - 1), data_bold_center)
+        sheet.write('O%s' % rowx, '=SUM(O2:O%s)' % (rowx - 1), data_bold_center)
         sheet.write('P%s' % rowx, '', data_bold_center)
-        sheet.write('Q%s' % rowx, '=SUM(Q2:Q%s)' % (rowx-1), data_bold_center)
+        sheet.write('Q%s' % rowx, '=SUM(Q2:Q%s)' % (rowx - 1), data_bold_center)
 
         rowx += 1
-        sheet.write("C%s"%(rowx + 3), u"Хянасан ажилтан: ..................................................../                                            /",)
-        sheet.write("C%s"%(rowx + 4), u"Тайлан гаргасан: ..................................................../                                            /",)
+        sheet.write("C%s" % (rowx + 3),
+                    u"Хянасан ажилтан: ..................................................../                                            /", )
+        sheet.write("C%s" % (rowx + 4),
+                    u"Тайлан гаргасан: ..................................................../                                            /", )
 
         workbook.close()
         output.seek(0)
