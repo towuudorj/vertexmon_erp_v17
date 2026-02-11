@@ -127,18 +127,13 @@ class Employee(models.Model):
         }
 
     def action_create_contract(self):
-        return {
-            'name': _('New Contract'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.contract',
-            'view_mode': 'form',
-            'context': {
-                'default_employee_id': self.id,
-                'default_job_id': self.job_id.id,
-                'default_department_id': self.department_id.id,
-            },
-            'target': 'current',
-        }
+        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.action_hr_contract')
+        action.update({'domain': [('employee_id', '=', self.id)],
+                      'views':  [[False, 'list'], [False, 'kanban'], [False, 'activity'], [False, 'form']],
+                       'context': {'default_employee_id': self.id,
+                                   'default_job_id': self.job_id.id,
+                                   'default_department_id': self.department_id.id,}})
+        return action
 
 
 

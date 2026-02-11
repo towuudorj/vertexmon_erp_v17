@@ -43,6 +43,7 @@
             'data/language_data.xml',
             'data/sequence_data.xml',
             'data/decree_template_data.xml',
+            'data/resource_calendar_data.xml',
             'security/security_view.xml',
             'security/ir.model.access.csv',
             'report/decree_report_view.xml',
