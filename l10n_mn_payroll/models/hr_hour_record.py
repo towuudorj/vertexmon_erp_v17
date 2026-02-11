@@ -73,12 +73,12 @@ class HrHourRecord(models.Model):
         else:
             emp_id = emp_obj.search([('company_id','=',hr_data.company_id.id)], order='department_id')
             
-        start_date = datetime.strptime(str(hr_data.start_date),DATETIME_FORMAT)
-        end_times = datetime.strptime(str(hr_data.end_date),DATETIME_FORMAT)+timedelta(hours=8)
+        start_date = hr_data.start_date
+        end_times = hr_data.end_date + timedelta(hours=8)
         end_time = end_times.replace(minute=59, hour=23, second=59)
         days = []
-        idate = datetime.strptime(str(hr_data.start_date),DATETIME_FORMAT)
-        while idate <= datetime.strptime(str(hr_data.end_date),DATETIME_FORMAT):
+        idate = hr_data.start_date
+        while idate <= hr_data.end_date:
             days.append(idate)
             idate += timedelta(days = 1)
         for line in emp_id:
@@ -106,10 +106,9 @@ class HrHourRecord(models.Model):
             first_hour2 = 0.0
             second_hour2 = 0.0
             second_to2 = 0.0
-            
-            att_id = att_obj.search( [('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
-            
-            
+
+            att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
+
             if att_id:
                 for att_line1 in att_id:
                     contract_id  = contract_obj.search([('employee_id','=',line.id),('state','=','open')])
@@ -117,7 +116,7 @@ class HrHourRecord(models.Model):
                         index3 = 1
                         contract =  contract_id
                         for li in contract.resource_calendar_id.attendance_ids:
-                            if int(datetime.strptime(str(att_line1.check_in), "%Y-%m-%d %H:%M:%S").weekday()+1) == int(li.name):
+                            if int(att_line1.check_in.weekday()) == int(li.dayofweek):
                                 if index3 == 1:
                                     first_hour = float(li.hour_from)
                                     first_to = float(li.hour_to)
@@ -125,107 +124,93 @@ class HrHourRecord(models.Model):
                                     second_to = float(li.hour_to)
                                 index3 +=1
 
-                        atten_time0 = datetime.strptime(str(att_line1.check_in), '%Y-%m-%d %H:%M:%S')
+                        atten_time0 = att_line1.check_in
 
 
-                        d = datetime.strptime(str(att_line1.check_in), '%Y-%m-%d %H:%M:%S')
+                        d = att_line1.check_in
                         dat = d.replace(minute=0, hour=6, second=0)
                         night_time = d.replace(minute=0, hour=0,second=0)
 
-                        datas = datetime.strptime(str(dat), '%Y-%m-%d %H:%M:%S')
+                        datas = dat
                         atten_time01 = atten_time0 + timedelta(hours=mach)
                         parts1 = str(atten_time01).split(' ')
                         hour_parts1 = parts1[1].split(':')
                         hour1 = int(hour_parts1[0])
 
-                        converted_in = datetime.strptime(str(att_line1.check_in), DATETIME_FORMAT).replace(second=0) + timedelta(hours=8)
+                        converted_in = att_line1.check_in.replace(second=0) + timedelta(hours=8)
                         parts12 = str(converted_in).split(' ')
                         hour_parts12 = parts12[1].split(':')
                         login_hour = int(hour_parts12[0])
 
-                        converted_out = datetime.strptime(str(att_line1.check_out), DATETIME_FORMAT).replace(second=0) + timedelta(hours=8)
+                        converted_out = att_line1.check_out.replace(second=0) + timedelta(hours=8)
                         parts13 = str(converted_out).split(' ')
                         hour_parts13 = parts13[1].split(':')
                         logout_hour = int(hour_parts13[0])
 
                         #if float(second_to) <= float(hour1):
-                        if contract.resource_calendar_id.is_factory == True:
-                            in_time +=att_line1.worked_hours
-                        else:
-                            if int(datetime.strptime(str(converted_in), "%Y-%m-%d %H:%M:%S").weekday()+1) == 6 or int(datetime.strptime(str(converted_in), "%Y-%m-%d %H:%M:%S").weekday()+1) == 7:
-                                if contract.resource_calendar_id.is_holiday_time_out == True:
-                                    in_time +=att_line1.worked_hours
-                                else:
-                                    in_time +=att_line1.worked_hours
+                        # if contract.resource_calendar_id.is_factory == True:
+                        #     in_time +=att_line1.worked_hours
+                        # else:
+                        if int(converted_in.weekday()+1) == 6 or int(converted_in.weekday()+1) == 7:
+                            if contract.resource_calendar_id.is_holiday_time_out == True:
+                                in_time +=att_line1.worked_hours
                             else:
-                                if att_line1.worked_hours < 7.0:
-                                    in_time +=att_line1.worked_hours
+                                in_time +=att_line1.worked_hours
+                        else:
+                            if att_line1.worked_hours < 7.0:
+                                in_time +=att_line1.worked_hours
+                            else:
+                                if contract.resource_calendar_id.is_holiday_time_out == True:
+                                    in_time +=att_line1.worked_hours - 1
                                 else:
-                                    if contract.resource_calendar_id.is_holiday_time_out == True:
-                                        in_time +=att_line1.worked_hours - 1
-                                    else:
-                                        in_time +=att_line1.worked_hours
+                                    in_time +=att_line1.worked_hours
 
 
                         if float(22) <=float(hour1) <=float(23):
                             if float(att_line1.worked_hours)<float(9):
-                                ds = datetime.strptime(str(converted_in), '%Y-%m-%d %H:%M:%S')
+                                ds = converted_in
                                 datas = ds.replace(minute=0, hour=22, second=0)
-                                datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                datass = datas
                                 atten_time01 = atten_time0 + timedelta(hours=mach)
                                 att = atten_time01-datass
                                 n_time +=((att.seconds)/60)/60.0
-                                if line.id == 2600:
-                                    print("aldaaaaaa",n_time, hour1,att_line1.check_in)
                             else:
-                                ds = datetime.strptime(str(converted_in), '%Y-%m-%d %H:%M:%S')
+                                ds = converted_in
                                 datas = ds.replace(minute=0, hour=22, second=0)
-                                datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                datass = datas
                                 atten_time01 = atten_time0 + timedelta(hours=mach)
                                 att = atten_time01-datass
                                 n_time +=((att.seconds)/60)/60.0
-                                if line.id == 2600:
-                                    print("aldaaaaaa 1",n_time, hour1,att_line1.check_in)
 
                         elif float(hour1) <=float(login_hour)<=float(23) and float(logout_hour)>=float(22):
                             if float(att_line1.worked_hours)<float(9):
-                                ds = datetime.strptime(str(converted_out), '%Y-%m-%d %H:%M:%S')
+                                ds = converted_out
                                 datas = ds.replace(minute=0, hour=22, second=0)
-                                datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                datass = datas
                                 atten_time01 = atten_time0 + timedelta(hours=mach)
                                 att = ds-datass
                                 n_time +=((att.seconds)/60)/60.0
-                                if line.id == 2600:
-                                    print("aldaaaaaa 0",n_time, atten_time01,ds)
                             else:
-                                ds = datetime.strptime(str(converted_out), '%Y-%m-%d %H:%M:%S')
+                                ds = converted_out
                                 datas = ds.replace(minute=0, hour=22, second=0)
-                                datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                datass = datas
                                 atten_time01 = atten_time0 + timedelta(hours=mach)
                                 att = ds-datass
                                 n_time +=((att.seconds)/60)/60.0
-                                if line.id == 2600:
-                                    print("aldaaaaaa 11",n_time, hour1,att_line1.check_in)
-
-
-
-
 
                         elif float(0) <=float(logout_hour) <=float(13):
                             if float(3)<float(att_line1.worked_hours)<float(9) and str(converted_out)[:10]!=str(converted_in)[:10]:
-                                ds = datetime.strptime(str(converted_out), '%Y-%m-%d %H:%M:%S')
+                                ds = converted_out
                                 datas = ds.replace(minute=0, hour=22, second=0)
-                                datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                datass = datas
                                 atten_time01 = atten_time0 + timedelta(hours=mach)
                                 att = ds-datass
                                 n_time +=((att.seconds)/60)/60.0
-                                if line.id == 2600:
-                                    print("aldaaaaaa 2",n_time, hour1,converted_out)
 
                             elif float(att_line1.worked_hours)>float(9) and str(converted_out)[:10]!=str(converted_in)[:10]:
-                                dst = datetime.strptime(str(converted_out), '%Y-%m-%d %H:%M:%S')
+                                dst = converted_out
                                 datss = dst.replace(minute=0, hour=22, second=0)
-                                datsss = datetime.strptime(str(datss), '%Y-%m-%d %H:%M:%S')
+                                datsss = datss
                                 atten_time02 = atten_time0 + timedelta(hours=mach)
                                 attt = dst - datsss
                                 new_time =((attt.seconds)/60)/60.0
@@ -233,24 +218,22 @@ class HrHourRecord(models.Model):
                                     n_time +=((attt.seconds)/60)/60.0
                                 else:
                                     n_time +=8
-                                if line.id == 2600:
-                                    print("aldaaaaaa 3",n_time, atten_time02,dst,(attt.seconds/3600.0))
                         work_day +=1
-                        
+
                 contract_id  = contract_obj.search([('employee_id','=',line.id)])
                 if contract_id:
                     contract =  contract_id
                     index = 1
                     index2 = 1
                     for att_line in att_id:
-                        atten_time1 = datetime.strptime(str(att_line.check_in), '%Y-%m-%d %H:%M:%S')
+                        atten_time1 = att_line.check_in
                         atten_time = atten_time1 + timedelta(hours=mach)
                         parts = str(atten_time).split(' ')
                         hour_parts = parts[1].split(':')
                         minute = int(hour_parts[1])
                         hour = int(hour_parts[0])
                         for lined in contract.resource_calendar_id.attendance_ids:
-                            if att_line.check_in.weekday() + 1 == int(lined.name):
+                            if att_line.check_in.weekday() == int(lined.dayofweek):
                                 if index == 1:
                                     first_hour = float(lined.hour_from)
                                     first_to = float(lined.hour_to)
@@ -265,14 +248,14 @@ class HrHourRecord(models.Model):
                         if float(second_to) < float(hour):
                             n_time
                     #else:
-                        atten_time2 = datetime.strptime(str(att_line.check_out), '%Y-%m-%d %H:%M:%S')
+                        atten_time2 = att_line.check_out
                         atten_time2 = atten_time2 + timedelta(hours=9)
                         parts2 = str(atten_time2).split(' ')
                         hour_parts2 = parts2[1].split(':')
                         minute2 = int(hour_parts2[1])
                         hour2 = int(hour_parts2[0])
                         for lined2 in contract.resource_calendar_id.attendance_ids:
-                            if int(datetime.strptime(str(att_line.check_out), "%Y-%m-%d %H:%M:%S").weekday()+1) == int(lined2.name):
+                            if int(att_line.check_out.weekday()) == int(lined2.dayofweek):
                                 if index2 == 1:
                                     first_hour2 = float(lined2.hour_from)
                                     first_to2 = float(lined2.hour_to)
@@ -288,14 +271,14 @@ class HrHourRecord(models.Model):
                         n_index = 1
                         for att_line in att_id:
                            # if att_line.action == 'sign_in':
-                                atten_time1 = datetime.strptime(str(att_line.check_in), '%Y-%m-%d %H:%M:%S')
+                                atten_time1 = att_line.check_in
                                 atten_time = atten_time1 + timedelta(hours=9)
                                 parts = str(atten_time).split(' ')
                                 hour_parts = parts[1].split(':')
                                 minute = int(hour_parts[1])
                                 hour = int(hour_parts[0])
-                                for linee in contract.resource_calendar_id.attendance_ids:                                     
-                                    if int(datetime.strptime(att_line.check_in, "%Y-%m-%d %H:%M:%S").weekday()+1) == int(linee.name):
+                                for linee in contract.resource_calendar_id.attendance_ids:
+                                    if int(att_line.check_in.weekday()) == int(linee.dayofweek):
                                         if n_index == 1:
                                             n_first_hour = float(linee.hour_from)
                                             n_first_to = float(linee.hour_to)
@@ -305,7 +288,7 @@ class HrHourRecord(models.Model):
                                         n_index +=1
                                 if n_first_hour <= float(hour) <= n_first_to:
                                     n_lost_minute += float(minute)
-                        
+
             payroll_time = 0.0
             unpayroll_time = 0.0
             shift_time = 0.0
@@ -316,29 +299,27 @@ class HrHourRecord(models.Model):
             lost_time = 0.0
             fr_n_time = 0.0
             free_time1 = 0.0
-            
-            
+
+
             holiday_id1 = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
             if holiday_id1:
                 for lines1 in holiday_id1:
-                    if lines1.holiday_status_id.new_type == 'shift_holiday':
+                    if lines1.holiday_status_id.sub_type == 'public_holiday':
                         shift_time = lines1.number_of_days_temp
-                    
-            
+
+
             holiday_id = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('date_to','<=',end_time),('state','=','validate')])
             if holiday_id:
-                
                 for lines in holiday_id:
-                    
                     if lines.date_from !=False:
-                        from_date = datetime.strptime(str(lines.date_from), '%Y-%m-%d %H:%M:%S')
+                        from_date = lines.date_from
                         ch_from_date = from_date + timedelta(hours=mach)
-                        to_date = datetime.strptime(str(lines.date_to), '%Y-%m-%d %H:%M:%S')
+                        to_date = lines.date_to
                         ch_to_date = to_date + timedelta(hours=mach)
                         diff_day = ch_to_date-ch_from_date
                         diff_time = ch_to_date-ch_from_date
                         parts = str(diff_time).split(',')
-                        
+
                         from_parts = str(ch_from_date).split(' ')
                         if len(from_parts)==1:
                             from_hours = from_parts[0].split(':')
@@ -349,113 +330,105 @@ class HrHourRecord(models.Model):
                             end_hours = end_parts[0].split(':')
                         else:
                             end_hours = end_parts[1].split(':')
-                        
+
                         if len(parts) == 1:
                             hours = parts[0].split(':')
                         else:
                             hours = parts[1].split(':')
-                        if line.id == 2579:
-                            print("aaaaaaaaa",diff_day.days,lines.holiday_status_id.new_type)
                         if int(diff_day.days) >= 1 and int(hours[0]) >= 8:
-                            if lines.holiday_status_id.new_type == 'night_out_work':
+
+                            if lines.holiday_status_id.sub_type == 'night_out_work':
 
                                 if float(22) <=float(from_hours[0]) <=float(23):
-                                    ds = datetime.strptime(str(lines.date_from), '%Y-%m-%d %H:%M:%S')
+                                    ds = lines.date_from
                                     datas = ds.replace(minute=0, hour=22, second=0)
-                                    datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                    datass = datas
                                     atten_time01 = ch_to_date + timedelta(hours=mach)
                                     att = atten_time01-datass
                                     out_n_time +=((att.seconds)/60)/60.0
                                 elif float(0) <=float(from_hours[0]) <=float(9):
-                                    ds = datetime.strptime(str(lines.date_from), '%Y-%m-%d %H:%M:%S')
+                                    ds = lines.date_from
                                     datas = ds.replace(minute=0, hour=22, second=0)
-                                    datass = datetime.strptime(str(datas), '%Y-%m-%d %H:%M:%S')
+                                    datass = datas
                                     atten_time01 = ch_to_date + timedelta(hours=mach)
                                     att = atten_time01-datass
                                     out_n_time +=((att.seconds)/60)/60.0
                                 elif float(22) <=float(end_hours[0]) <=float(23):
-                                    ds2 = datetime.strptime(str(ch_to_date), '%Y-%m-%d %H:%M:%S')
+                                    ds2 = ch_to_date
                                     datas2 = ds2.replace(minute=0, hour=22, second=0)
-                                    datass2 = datetime.strptime(str(datas2), '%Y-%m-%d %H:%M:%S')
+                                    datass2 = datas2
                                     atten_time0114 = to_date.replace(minute=0, hour=0, second=0)
                                     attds2 = atten_time0114-datass2
                                     out_n_time +=((attds2.seconds)/60.0)/60.0
                                 else:
                                     payroll_time += diff_day.days*8
-                                    
-                            elif lines.holiday_status_id.new_type == 'over_time':
+
+                            elif lines.holiday_status_id.sub_type == 'over_time':
                                 over_time += lines.number_of_hours_display
-                                    
-                            elif lines.holiday_status_id.new_type == 'unpayroll_holiday':
-                                
+
+                            elif lines.holiday_status_id.sub_type == 'unpayroll':
+
                                 unpayroll_time += lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'out_work':
+                            elif lines.holiday_status_id.sub_type == 'out_work':
                                 free_time1 +=lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'payroll':
+                            elif lines.holiday_status_id.sub_type == 'payroll':
                                 free_time1 +=lines.number_of_hours_display
-                                
-                            elif lines.holiday_status_id.new_type == 'official_work':
+
+                            elif lines.holiday_status_id.sub_type == 'legal_leave':
                                 official_time +=lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'sick_holiday':
+                            elif lines.holiday_status_id.sub_type == 'sick':
                                 sick_time +=lines.number_of_hours_display
-                                
-                                
+
+
                         else:
-                            if lines.holiday_status_id.new_type == 'night_out_work':
-                                if line.id == 2579:
-                                    print("aaaaaaaaa",diff_day.days)
-                                
+                            if lines.holiday_status_id.sub_type == 'night_out_work':
+
                                 out_n_time +=lines.number_of_hours_display
- 
-                                    
+
                                 if float(10) <=float(end_hours[0]) <=float(18):
-                                    ds1 = datetime.strptime(str(from_date), '%Y-%m-%d %H:%M:%S')
+                                    ds1 = from_date
                                     datas1 = ds1 + timedelta(hours=mach)
-                                    datass1 = datetime.strptime(str(datas1), '%Y-%m-%d %H:%M:%S')
+                                    datass1 = datas1
                                     atten_time0113 = to_date + timedelta(hours=mach)
                                     attds1 = atten_time0113 - datass1
                                     payroll_time +=((attds1.seconds)/3600.0)
                                 else:
                                     if float(22) <=float(end_hours[0]) <=float(23):
-                                        ds3 = datetime.strptime(str(from_date), '%Y-%m-%d %H:%M:%S')
+                                        ds3 = from_date
                                         datas3 = ds3 + timedelta(hours=mach)
-                                        datass3 = datetime.strptime(str(datas3), '%Y-%m-%d %H:%M:%S')
+                                        datass3 = datas3
                                         atten_time0115 = to_date + timedelta(hours=mach)
-                                        datass4 = datetime.strptime(str(atten_time0115), '%Y-%m-%d %H:%M:%S')
+                                        datass4 = atten_time0115
                                         attds3 = datass4-datass3
-                                        
+
                                         payroll_time +=((attds3.seconds)/3600)
-                                        
-                                        
+
+
                                     elif float(0) <=float(end_hours[0]) <=float(6):
-                                        ds2 = datetime.strptime(str(from_date), '%Y-%m-%d %H:%M:%S')
+                                        ds2 = from_date
                                         datas2 = ds2 + timedelta(hours=mach)
-                                        datass2 = datetime.strptime(str(datas2), '%Y-%m-%d %H:%M:%S')
+                                        datass2 = datas2
                                         atten_time0114 = to_date + timedelta(hours=mach)
                                         attds2 = atten_time0114-datass2
                                         payroll_time +=((attds2.seconds)/60.0)/60.0
-                                        
-                                        
-                            elif lines.holiday_status_id.new_type == 'over_time':
-                                over_time += lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'unpayroll_holiday':
-                                
-                                unpayroll_time += lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'out_work':
-                                free_time1 +=lines.number_of_hours_display
-                            
-                            elif lines.holiday_status_id.new_type == 'payroll':
-                                free_time1 +=lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'official_work':
-                                official_time +=lines.number_of_hours_display
-                            elif lines.holiday_status_id.new_type == 'sick_holiday':
-                                sick_time +=lines.number_of_hours_display
-                        
-                    
 
-                
-                
-            
+
+                            elif lines.holiday_status_id.sub_type == 'over_time':
+                                over_time += lines.number_of_hours_display
+                            elif lines.holiday_status_id.sub_type == 'unpayroll':
+
+                                unpayroll_time += lines.number_of_hours_display
+                            elif lines.holiday_status_id.sub_type == 'out_work':
+                                print(lines.number_of_hours_display)
+                                free_time1 +=lines.number_of_hours_display
+
+                            elif lines.holiday_status_id.sub_type == 'payroll':
+                                free_time1 +=lines.number_of_hours_display
+                            elif lines.holiday_status_id.sub_type == 'legal_leave':
+                                official_time +=lines.number_of_hours_display
+                            elif lines.holiday_status_id.sub_type == 'sick':
+                                sick_time +=lines.number_of_hours_display
+
             
             self._cr.execute("select resource_calendar_id from hr_contract where employee_id=%s order by id desc limit 1"%(line.id))
             timetable = self._cr.fetchone()
@@ -472,28 +445,25 @@ class HrHourRecord(models.Model):
                     for worktime in fetched:
                         if line.resource_calendar_id.is_holiday_time_out==True:
                             if line.resource_calendar_id.work_time >0.0:
-                                due_time += line.resource_calendar_id.work_time 
+                                due_time += line.resource_calendar_id.work_time
                             else:
                                 due_time += worktime['hour_to'] - worktime['hour_from']
-                            
                                 due_time -=1
                         else:
                             if line.resource_calendar_id.work_time >0.0:
-                                due_time += line.resource_calendar_id.work_time 
+                                due_time += line.resource_calendar_id.work_time
                             else:
                                 due_time += worktime['hour_to'] - worktime['hour_from']
-                        
-                        
+
+
             if hr_data.holiday_day > 0.0:
                 total_t = due_time/due_day
                 due_day = due_day-hr_data.holiday_day
-                due_time = due_day*total_t 
-                
-            
+                due_time = due_day*total_t
+
+
             total_time = in_time+payroll_time+official_time+sick_time+out_n_time
 
-            
-          
             emp_info.create({
                 'work_day':work_day,
                 'employee_id': line.id,

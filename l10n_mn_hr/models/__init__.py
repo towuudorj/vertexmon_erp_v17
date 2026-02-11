@@ -23,3 +23,4 @@ from . import reference_register_type
 from . import decree_register_type
 from . import hr_job_history
 from . import hr_overtime
+from . import resource_calendar

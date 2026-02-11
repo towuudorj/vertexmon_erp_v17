@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 
 class CreateProductWizard(models.TransientModel):
@@ -65,7 +65,7 @@ class CreateProductWizard(models.TransientModel):
                 if line.requisition_id.crm_lead_id.project_id:
                     for product_line in line.requisition_id.crm_lead_id.project_id.products_line:
                         if not product_line.product_id and product_line.name == self.name:
-                            product_line.product_id = create_product_id.id
+                            product_line.with_user(SUPERUSER_ID).write({'product_id': create_product_id.id})
                 line.product_id = create_product_id.id
 
 
