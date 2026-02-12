@@ -49,7 +49,17 @@ class ResPartner(models.Model):
         for line in self:
             if line.partner_type:
                line.property_account_receivable_id = line.partner_type.payable_account_id.id
-               line.property_account_payable_id = line.partner_type.receivable_account_id.id 
+               line.property_account_payable_id = line.partner_type.receivable_account_id.id
 
-     
+
+     def _get_report_base_filename(self):
+         self.ensure_one()
+         return u'Тооцоо нийлсэн баталгаа-%s' % (self.name)
+
+     def get_payment_consensus_data(self):
+         data = {
+             'company_id': self.env.company,
+             'employee_id': self.env.user.employee_id
+         }
+         return data
      

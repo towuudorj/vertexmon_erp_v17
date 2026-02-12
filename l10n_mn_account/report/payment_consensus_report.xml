@@ -4,20 +4,30 @@
         <template id="report_mn_payment_consensus_data">
         	<t t-call="web.external_layout">
 			<t t-set="o" t-value="o.with_context({'lang':o.lang})"/>
+			<t t-set="data" t-value="o.get_payment_consensus_data()"/>
 			<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px;">
-				<div class="row mb64">
+				<div class="row mb64" style="display:inline;">
 					<div class="col-6">
 						<p style="text-align: left;">
 							<img t-attf-src="data:image/jpg;base64,{{request.env.user.company_id.logo}}" style="width:190px;height:60px;"/>
 						</p>
+
 					</div>
 				</div>
-				
-				<p style="text-align:center; font-size:14px; font-weight: bold; padding-top:20px;">
-					ТООЦОО НИЙЛСЭН БАТАЛГАА №: <t t-esc="o.name"/>
-				</p>
 
-					
+				<div class="col-6">
+					<p style="text-align:right;font-size: 12px;margin-right:5%; margin-top:-70px;">
+					<span>НХМаягт Т-3 Санхүү, Эдийн засгийн сайд,</span>
+					<br/>
+					<span>Үндэсний статистикийн газрийн даргын 2002 оны</span>
+					<br/>
+					<span>6-р сарын 18-ны 171/111 тоот тушаалын хавсралт</span>
+					</p>
+				</div>
+
+				<p style="text-align:center; font-size:14px; font-weight: bold; padding-top:20px; margin-bottom: 40px;">
+					ТООЦОО НИЙЛСЭН АКТ
+				</p>
 					<table style="width: 100%; margin-bottom: 11px; margin-left: 15px; border: transparent 1px solid;">
 						<tr>
 							 <td colspan="2" style="padding:3px; font-size:12px; width: 50%; text-align: left;">Нэхэмжлэгч:</td>
@@ -25,13 +35,13 @@
 						</tr>
 						<tr>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Байгууллагын нэр: </td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><b><t t-esc="o.company_id.name"/></b></td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><b><t t-esc="data.get('company_id').name"/></b></td>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Байгууллагын нэр: </td>
 							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><b><t t-esc="o.name"/></b></td>
 						</tr>
 						<tr>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Хаяг:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.company_id.street"/></td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="data.get('company_id').street"/></td>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px; ">Хаяг:</td>
 							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; ">
 								<t t-esc="', '.join(filter(None, [
@@ -46,44 +56,38 @@
 						</tr>
 						<tr>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Утас:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.company_id.partner_id.phone or o.company_id.phone"/></td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="data.get('company_id').partner_id.phone or data.get('company_id').phone"/></td>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Утас:</td>
 							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.phone or o.mobile"/></td>
 						</tr>
 						<tr>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Банкны нэр:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><b><t t-esc="o.bank_ids.acc_holder_name"/></b></td>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Банкны нэр:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.ref or ''"/></td>
-						</tr>
-						<tr>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Банкны данс:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids.acc_number"/></td>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Банкны данс:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids.acc_number"/></td>
-						</tr>
-						<tr>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">IBAN:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids.iban"/></td>
-							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;  padding-left:11px;">IBAN:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids.iban"/></td>
-						</tr>
-						<tr>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Э-шуудан:</td>
-							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.company_id.email"/></td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="data.get('employee_id').work_email or 'finance@vertexmon.com'"/></td>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Э-шуудан:</td>
 							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.email"/></td>
 						</tr>
+						<tr>
+							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Банкны нэр:</td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="data.get('company_id').bank_ids[0].bank_name"/></td>
+							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Банкны нэр:</td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids[0].bank_name if o.bank_ids else ''"/></td>
+						</tr>
+						<tr>
+							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Банкны данс:</td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="data.get('company_id').bank_ids[0].acc_number"/></td>
+							<td style="width: 15%; padding:3px; font-size:12px; text-align: left; padding-left:11px;">Банкны данс:</td>
+							<td style="width: 35%; padding:3px; font-size:12px; text-align: left; "><t t-esc="o.bank_ids[0].acc_number if o.bank_ids else ''"/></td>
+						</tr>
 					</table>
 
-                <table style="width: 99%; font-size:12px; text-align: center; border: none; margin-left: 15px; padding-top:20px; padding-bottom:20px; border: transparent 1px solid;">
+                <table style="width: 99%; font-size:14px; text-align: left; border: none; margin-left: 15px; padding-top:20px; padding-bottom:20px; border: transparent 1px solid;">
                     <tr>
                         <td style="width: 50%; vertical-align: top; padding-right: 15px;">
-                            <p style="margin-bottom: 15px;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="o.company_id.name"/> -ын Нягтлан бодогч ажилтай
-                                 .................. овогтой .................. нь, төлөгчийн нэрийн өмнөөс <t t-esc="o.name"/>
-                                 ....................ажилтай .................. овогтой ................... тус хоёр байгууллагын хооронд 
-                                 2024 оны 12-р сарын 31-ны байдлаар өгч авалцсан зүйлсээ нэг бүрчлэн нийлж үзэхэд 
-                                 Вертексмон ХХК нь 0 төгрөг / 0 /-ийн авлагатай гарсныг харилцан батлав
+                            <p style="margin-bottom: 15px;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="data.get('company_id').name"/> -ын Нягтлан бодогч ажилтай
+                                 ............................ овогтой ............................ нь, төлөгчийн нэрийн өмнөөс <t t-esc="o.name"/>-ын
+                                 ............................ ажилтай ............................ овогтой ............................ тус хоёр байгууллагын хооронд
+								 хийгдсэн тооцоог <t t-esc="o.date"/>-ны байдлаар өгч авалцсан зүйлсээ нэг бүрчлэн нийлж үзэхэд
+                                 Вертексмон ХХК нь ............................/.........................................../ төгрөгийн <b>авлагатай/өглөгтэй</b> гарсныг харилцан батлав.
                             </p>
                         </td>
                     </tr>
@@ -100,22 +104,16 @@
                         </td>
 					</tr>
                 	<tr>
-						<td style="padding: 5px 0;">Албан тушаал:</td>
-						<td>Нягтлан бодогч</td>
-						<td style="padding: 5px 0;">Албан тушаал:</td>
-							<td>................................</td>
-					</tr>
-					<tr>
-						<td style="padding: 5px 0;">Холбоо барих:</td>
-						<td >...............................<span t-field="o.user_id.phone"/></td>
-						<td style="padding: 5px 0;">Холбоо барих:</td>
-							<td>................................</td>
+						<td style="padding: 5px 0;">Нягтлан бодогч:</td>
+						<td>..................................</td>
+						<td style="padding: 5px 0;">Нягтлан бодогч:</td>
+						<td>..................................</td>
 					</tr>
 					<tr>
 						<td style="padding: 5px 0;">Гарын үсэг:</td>
-						<td>...............................</td>
+						<td>..................................</td>
 						<td style="padding: 5px 0;">Гарын үсэг:</td>
-							<td>................................</td>
+						<td>..................................</td>
 					</tr>
     
                         
