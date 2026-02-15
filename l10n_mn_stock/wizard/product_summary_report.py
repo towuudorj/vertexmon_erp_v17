@@ -194,13 +194,14 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date <= '%s'
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'inventory'
                           AND dest.usage = 'internal'
                           AND svl.product_id = mv.product_id
+                          AND svl.create_date = mv.date
                         GROUP BY mv.product_id
                     """
                 
@@ -221,13 +222,14 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date <= '%s'
                           AND sl.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
                           AND dest.usage = 'inventory'
                           AND svl.product_id = mv.product_id
+                          AND svl.create_date = mv.date
                         GROUP BY mv.product_id
                     """
                 
@@ -248,7 +250,7 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date > '%s'
                           AND mv.date <= %s
                           AND dest.id IN %s
                           AND mv.product_id = %s
@@ -276,7 +278,7 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date > '%s'
                           AND mv.date <= %s
                           AND sl.id IN %s
                           AND mv.product_id = %s
