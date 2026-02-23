@@ -198,7 +198,7 @@ class ProductSummaryReport(models.TransientModel):
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
-                          AND sl.usage = 'inventory'
+                          AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
                           AND svl.product_id = mv.product_id
                           AND svl.create_date = mv.date
@@ -227,7 +227,7 @@ class ProductSummaryReport(models.TransientModel):
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
-                          AND dest.usage = 'inventory'
+                          AND dest.usage IN ('customer','supplier','inventory','production','internal')
                           AND svl.product_id = mv.product_id
                           AND svl.create_date = mv.date
                         GROUP BY mv.product_id
