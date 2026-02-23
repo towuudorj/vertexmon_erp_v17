@@ -97,6 +97,12 @@ class profit_excel_report(models.TransientModel):
                                     'text_wrap': True,
                                 })
         
+        header_txt_right = workbook.add_format({
+                                    'align': 'right',
+                                    'font_size': 12,
+                                    'text_wrap': True,
+                                })
+        
         header_title = workbook.add_format({
                                     'align': 'center',
                                     'border': 1,
@@ -127,6 +133,14 @@ class profit_excel_report(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00; (#,##0.00)'
                                 })
+        
+        data_bold_left = workbook.add_format({
+                                    'align': 'left',
+                                    'border': 1,
+                                    'bold': True,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00; (#,##0.00)'
+                                })
 
         sheet.set_column(0, 0, 10)
         sheet.set_column(1, 1, 60)
@@ -140,7 +154,7 @@ class profit_excel_report(models.TransientModel):
         sheet.merge_range("A2:D2", u'ОРЛОГЫН ДЭЛГЭРЭНГҮЙ ТАЙЛАН', header)
         sheet.merge_range("C3:D3", u"%s" % (data['company_name']), header_txt)
         sheet.merge_range("C4:D4", u'(Аж ахуй нэгж, байгууллагын нэр)', header_txt)
-        sheet.write("D5", u'%s - %s' % (data['start_date'],data['end_date']), header_txt)
+        sheet.merge_range("C5:D5", u'%s - %s' % (data['start_date'],data['end_date']), header_txt_right)
         
         
         account_obj = self.env['account.account']
@@ -221,7 +235,7 @@ class profit_excel_report(models.TransientModel):
                 if sum_prev_balance < 0.0:
                     sum_prev_balance = sum_prev_balance*(-1)
                     
-                sheet.write("C%s"%rowx, sum_prev_balance, data_right)
+                sheet.write("C%s"%rowx, abs(sum_prev_balance), data_right)
                 for ml in move_line_ids:
                     if ml.debit < 0.0 and ml.credit == 0.0:
                         sum_balance -=(ml.debit*(-1))
@@ -234,7 +248,7 @@ class profit_excel_report(models.TransientModel):
                         
                 if sum_balance < 0.0:
                     sum_balance = sum_balance*(-1)
-                sheet.write("D%s"%rowx, sum_balance, data_right)
+                sheet.write("D%s"%rowx, abs(sum_balance), data_right)
 
                 rowx +=1
                 last_number +=1
@@ -245,9 +259,9 @@ class profit_excel_report(models.TransientModel):
 
 
         sheet.write("A%s"%rowx, '%s'%last_number, data_left)
-        sheet.write("B%s"%rowx, u'Нийт ашиг (алдагдал)',data_right)
-        sheet.write_formula("C%s"%rowx, f'=C8-C9', data_right)
-        sheet.write_formula("D%s"%rowx, f'=D8-D9', data_right)
+        sheet.write("B%s"%rowx, u'Нийт ашиг (алдагдал)', data_bold_left)
+        sheet.write_formula(f"C{rowx}", f'=C{rowx-2}-C{rowx-1}', data_bold_right)
+        sheet.write_formula(f"D{rowx}", f'=D{rowx-2}-D{rowx-1}', data_bold_right)
         rowx +=1
         last_number +=1
         for line in profit:
@@ -379,9 +393,9 @@ class profit_excel_report(models.TransientModel):
         
         # ҮНДСЭН ҮЙЛ АЖИЛЛАГААНЫ АШИГ
         sheet.write("A%s"%rowx, '%s'%last_number, data_left)
-        sheet.write("B%s"%rowx, u'Татвар төлөхийн өмнөх ашиг (алдагдал)',data_left)
-        sheet.write_formula("C%s"%rowx, f'=C10+C11+C12+C13+C14+C15-C16-C17-C18-C19+C20+C21+C22+C23+C24', data_right)
-        sheet.write_formula("D%s"%rowx, f'D10+D11+D12+D13+D14+D15-D16-D17-D18-D19+D20+D21+D22+D23+D24', data_right)
+        sheet.write("B%s"%rowx, u'Татвар төлөхийн өмнөх ашиг (алдагдал)',data_bold_left)
+        sheet.write_formula("C%s"%rowx, f'=C10+C11+C12+C13+C14+C15-C16-C17-C18-C19+C20+C21+C22+C23+C24', data_bold_right)
+        sheet.write_formula("D%s"%rowx, f'=D10+D11+D12+D13+D14+D15-D16-D17-D18-D19+D20+D21+D22+D23+D24', data_bold_right)
         rowx +=1
         last_number +=1
         for line in profit:
@@ -457,7 +471,7 @@ class profit_excel_report(models.TransientModel):
                 last_number +=1
         # ТАТВАР ТӨЛӨХИЙН ӨМНӨХ АШИГ
         sheet.write("A%s"%rowx, '%s'%last_number,data_left)
-        sheet.write("B%s"%rowx, u'Татварын дараахь ашиг (алдагдал)', data_left)
+        sheet.write("B%s"%rowx, u'Татварын дараахь ашиг (алдагдал)', data_bold_left)
         sheet.write_formula("C%s"%rowx, f'=C25-C26', data_bold_right)
         sheet.write_formula("D%s"%rowx, f'=D25-D26', data_bold_right)
         rowx +=1
@@ -473,16 +487,16 @@ class profit_excel_report(models.TransientModel):
 
         # ЕРДИЙН АЖИЛЛАГААНЫ АШИГ (АЛДАГДАЛ)
         sheet.write("A%s"%rowx, '%s'%last_number,data_left)
-        sheet.write("B%s"%rowx, u'Тайлант үеийн цэвэр ашиг (алдагдал)',data_left)
-        sheet.write_formula("C%s"%rowx, f'=C27-C28', data_right)
-        sheet.write_formula("D%s"%rowx, f'=D27-D28', data_right)
+        sheet.write("B%s"%rowx, u'Тайлант үеийн цэвэр ашиг (алдагдал)',data_bold_left)
+        sheet.write_formula("C%s"%rowx, f'=C27-C28', data_bold_right)
+        sheet.write_formula("D%s"%rowx, f'=D27-D28', data_bold_right)
         rowx +=1
         last_number +=1
 
 
         # ЦЭВЭР АШИГ
         sheet.write("A%s"%rowx, '%s'%last_number,data_left)
-        sheet.write("B%s"%rowx,  u'Бусад дэлгэрэнгүй орлого', data_left)
+        sheet.write("B%s"%rowx,  u'Бусад дэлгэрэнгүй орлого', data_bold_left)
         sheet.write_formula("C%s"%rowx, f'=C31+C32', data_bold_right)
         sheet.write_formula("D%s"%rowx, f'=D31+D32', data_bold_right)   
         rowx +=1
@@ -550,18 +564,18 @@ class profit_excel_report(models.TransientModel):
 
         # ЦЭВЭР АШИГ
         sheet.write("A%s"%rowx, '%s'%last_number, data_left)
-        sheet.write("B%s"%rowx,  u'Орлогын нийт дүн', data_left)
-        sheet.write("C%s"%rowx, f'=C29+C30', data_right)
-        sheet.write("D%s"%rowx, f'=D29+D30', data_right)
+        sheet.write("B%s"%rowx,  u'Орлогын нийт дүн', data_bold_left)
+        sheet.write("C%s"%rowx, f'=C29+C30', data_bold_right)
+        sheet.write("D%s"%rowx, f'=D29+D30', data_bold_right)
         rowx +=1
         last_number +=1
 
 
         # ЦЭВЭР АШИГ
         sheet.write("A%s"%rowx, '%s'%last_number, data_left)
-        sheet.write("B%s"%rowx,  u'Нэгж хувьцаанд ноогдох суурь ашиг (алдагдал)', data_left)
-        sheet.write("C%s"%rowx, f'=C33', data_right)
-        sheet.write("D%s"%rowx, f'=D33', data_right)
+        sheet.write("B%s"%rowx,  u'Нэгж хувьцаанд ноогдох суурь ашиг (алдагдал)', data_bold_left)
+        sheet.write("C%s"%rowx, f'=C33', data_bold_right)
+        sheet.write("D%s"%rowx, f'=D33', data_bold_right)
         
         
 
