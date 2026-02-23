@@ -194,14 +194,13 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date < %s
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
                           AND svl.product_id = mv.product_id
-                          AND svl.create_date = mv.date
                         GROUP BY mv.product_id
                     """
                 
@@ -222,14 +221,13 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date < %s
                           AND sl.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
                           AND dest.usage IN ('customer','supplier','inventory','production','internal')
                           AND svl.product_id = mv.product_id
-                          AND svl.create_date = mv.date
                         GROUP BY mv.product_id
                     """
                 
@@ -250,7 +248,7 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date >= %s
                           AND mv.date <= %s
                           AND dest.id IN %s
                           AND mv.product_id = %s
@@ -278,7 +276,7 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date >= %s
                           AND mv.date <= %s
                           AND sl.id IN %s
                           AND mv.product_id = %s
@@ -334,7 +332,7 @@ class ProductSummaryReport(models.TransientModel):
                     if linex['product_id'] == pro.id:
                         ex_qty +=linex['qty']
                         ex_price +=linex['price']
-                
+                print("loggggggg",f_in_qty, f_ex_qty)
                 f_bal_qty = f_in_qty - f_ex_qty
                 f_bal_price = f_in_price - f_ex_price
                 last_qty = f_bal_qty + in_qty - ex_qty
@@ -439,12 +437,13 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date < %s
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
+                          AND svl.product_id = mv.product_id
                         GROUP BY mv.product_id
                     """
                 
@@ -463,12 +462,13 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date <= %s
+                          AND mv.date < %s
                           AND sl.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
                           AND dest.usage IN ('customer','supplier','inventory','production','internal')
+                          AND svl.product_id = mv.product_id
                         GROUP BY mv.product_id
                     """
                 
@@ -489,13 +489,14 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date >= %s
                           AND mv.date <= %s
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
+                          AND svl.product_id = mv.product_id
                         GROUP BY mv.product_id
                     """
                 
@@ -515,13 +516,14 @@ class ProductSummaryReport(models.TransientModel):
                         JOIN stock_location sl ON mv.location_id = sl.id
                         JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date > %s
+                          AND mv.date >= %s
                           AND mv.date <= %s
                           AND sl.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
                           AND dest.usage IN ('customer','supplier','inventory','production','internal')
+                          AND svl.product_id = mv.product_id
                         GROUP BY mv.product_id
                     """
                 
