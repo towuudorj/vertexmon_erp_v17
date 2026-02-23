@@ -443,7 +443,7 @@ class ProductSummaryReport(models.TransientModel):
                           AND dest.id IN %s
                           AND mv.product_id = %s
                           AND mv.company_id = %s
-                          AND sl.usage = 'inventory'
+                          AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
                         GROUP BY mv.product_id
                     """
@@ -468,7 +468,7 @@ class ProductSummaryReport(models.TransientModel):
                           AND mv.product_id = %s
                           AND mv.company_id = %s
                           AND sl.usage = 'internal'
-                          AND dest.usage = 'inventory'
+                          AND dest.usage IN ('customer','supplier','inventory','production','internal')
                         GROUP BY mv.product_id
                     """
                 
