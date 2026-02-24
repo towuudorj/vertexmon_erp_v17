@@ -5,7 +5,7 @@
         	<t t-call="web.external_layout">
 			<t t-set="o" t-value="o.with_context({'lang':o.lang})"/>
 			<t t-set="data" t-value="o.get_payment_consensus_data()"/>
-			<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px;">
+			<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px; font-family: Arial, Helvetica, sans-serif;">
 				<div class="row mb64" style="display:inline;">
 					<div class="col-6">
 						<p style="text-align: left;">
@@ -15,8 +15,8 @@
 					</div>
 				</div>
 
-				<div class="col-6">
-					<p style="text-align:right;font-size: 12px;margin-right:5%; margin-top:-70px;">
+				<div class="col-6" style="align:right; right:0px;">
+					<p style="text-align:right; font-size: 12px;margin-right:5%; margin-top:-70px; right:0px;">
 					<span>НХМаягт Т-3 Санхүү, Эдийн засгийн сайд,</span>
 					<br/>
 					<span>Үндэсний статистикийн газрийн даргын 2002 оны</span>
@@ -83,11 +83,11 @@
                 <table style="width: 99%; font-size:14px; text-align: left; border: none; margin-left: 15px; padding-top:20px; padding-bottom:20px; border: transparent 1px solid;">
                     <tr>
                         <td style="width: 50%; vertical-align: top; padding-right: 15px;">
-                            <p style="margin-bottom: 15px;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="data.get('company_id').name"/> -ын Нягтлан бодогч ажилтай
-                                 ............................ овогтой ............................ нь, төлөгчийн нэрийн өмнөөс <t t-esc="o.name"/>-ын
-                                 ............................ ажилтай ............................ овогтой ............................ тус хоёр байгууллагын хооронд
+                            <p style="margin-bottom: 15px; text-align: justify;;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="data.get('company_id').name"/> -ын Нягтлан бодогч ажилтай
+                                 ........................................................ овогтой ........................................................ нь, төлөгчийн нэрийн өмнөөс <t t-esc="o.name"/>-ын
+                                 ........................................................ ажилтай ........................................................ овогтой ........................................................ тус хоёр байгууллагын хооронд
 								 хийгдсэн тооцоог <t t-esc="o.date"/>-ны байдлаар өгч авалцсан зүйлсээ нэг бүрчлэн нийлж үзэхэд
-                                 Вертексмон ХХК нь ............................/.........................................../ төгрөгийн <b>авлагатай/өглөгтэй</b> гарсныг харилцан батлав.
+                                 Вертексмон ХХК нь .............................................................. төгрөгийн <b>авлагатай/өглөгтэй</b> гарсныг харилцан батлав.
                             </p>
                         </td>
                     </tr>
@@ -105,15 +105,15 @@
 					</tr>
                 	<tr>
 						<td style="padding: 5px 0;">Нягтлан бодогч:</td>
-						<td>..................................</td>
+						<td>........................................................</td>
 						<td style="padding: 5px 0;">Нягтлан бодогч:</td>
-						<td>..................................</td>
+						<td>........................................................</td>
 					</tr>
 					<tr>
 						<td style="padding: 5px 0;">Гарын үсэг:</td>
-						<td>..................................</td>
+						<td>........................................................</td>
 						<td style="padding: 5px 0;">Гарын үсэг:</td>
-						<td>..................................</td>
+						<td>........................................................</td>
 					</tr>
     
                         
