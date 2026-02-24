@@ -6,7 +6,7 @@
 			<t t-set="o" t-value="o.with_context({'lang':o.lang})"/>
 			<t t-set="data" t-value="o.get_payment_consensus_data()"/>
 			<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px; font-family: Arial, Helvetica, sans-serif;">
-				<div class="row mb64">
+				<div class="row mb64" style="display:inline; width:50%;">
 					<div class="col-6">
 						<p style="text-align: left;">
 							<img t-attf-src="data:image/jpg;base64,{{request.env.user.company_id.logo}}" style="width:190px;height:60px;"/>
@@ -15,8 +15,8 @@
 					</div>
 				</div>
 
-				<div class="col-6" style="align:right; right:0px;">
-					<p style="text-align:right; font-size: 12px;margin-right:5%; margin-top:-70px; right:0px;">
+				<div class="col-6" style="align:right; display:fixed; position:absolute; right:0px; width:50%; margin-top:-80px;">
+					<p style="text-align:right; font-size: 12px;margin-right:5%; left:0px;">
 					<span>НХМаягт Т-3 Санхүү, Эдийн засгийн сайд,</span>
 					<br/>
 					<span>Үндэсний статистикийн газрийн даргын 2002 оны</span>
