@@ -47,6 +47,7 @@ class LocalPurchaseRequest(models.TransientModel):
     def action_create_purchase(self):
         purchase_obj = self.env['purchase.order']
         purchase_line_obj = self.env['purchase.order.line']
+        employee_obj = self.env['hr.employee']
         for line in self:
             purchase_id = purchase_obj.create({
                                 'partner_id':line.supplier_id.id,
@@ -73,7 +74,8 @@ class LocalPurchaseRequest(models.TransientModel):
                                         'order_id':purchase_id.id
                                         })
                 lines.line_id.pur_qty = lines.line_id.pur_qty + qty
-            crm_manager = self.env.user
+            employee_id = employee_obj.search([('user_id','=',self.env.user.id)])
+            crm_manager = employee_id.parent_id.user_id
             if crm_manager:
                 # Send email notification
                 purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
