@@ -107,6 +107,11 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_move_line__related_partner_id
+msgid "Related Partner"
+msgstr "Холбоотой харилцагч"
+
+#. module: l10n_mn_stock
 #: model:ir.model.fields.selection,name:l10n_mn_stock.selection__stock_picking__project_type__tender
 msgid "Tender"
 msgstr "Тендер"
