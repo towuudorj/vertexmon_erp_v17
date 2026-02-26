@@ -65,13 +65,15 @@ msgid "Account cash move type"
 msgstr "Мөнгөн гүйлгээний төрөл"
 
 #. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line__move_account_names
+msgid "Account names"
+msgstr "Данснууд"
+
+#. module: l10n_mn_account
 #: model:ir.ui.menu,name:l10n_mn_account.action_account_currency_equalization_menu
 #: model:ir.actions.act_window,name:l10n_mn_account.action_account_currency_equalization
 msgid "Currency rate equalization"
 msgstr "Валютийн ханшийн тэгшитгэл"
-
-
-
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
 	            <data>
 	                <xpath expr='//tree/field[@name="debit"]' position="before">
-	                    <field name="cash_move_type_id"/>
+	                    <field name="cash_move_type_id" optional="hidden"/>
 	                </xpath>
                     <xpath expr='//tree/field[@name="analytic_distribution"]' position="after">
 	                    <field name="counterpart_account_name" optional="hidden"/>
