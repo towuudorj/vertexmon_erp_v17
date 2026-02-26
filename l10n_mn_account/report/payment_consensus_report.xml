@@ -25,13 +25,13 @@
 					</p>
 				</div>
 
-				<p style="text-align:center; font-size:14px; font-weight: bold; padding-top:20px; margin-bottom: 40px;">
+				<p style="text-align:center; font-size:18px; font-weight: bold; padding-top:20px; margin-bottom: 40px;">
 					ТООЦОО НИЙЛСЭН АКТ
 				</p>
 					<table style="width: 100%; margin-bottom: 11px; margin-left: 15px; border: transparent 1px solid;">
 						<tr>
-							 <td colspan="2" style="padding:3px; font-size:12px; width: 50%; text-align: left;">Нэхэмжлэгч:</td>
-							 <td colspan="2" style="padding:3px; font-size:12px; width: 50%; text-align: left; padding-left:10px ">Төлөгч:</td>
+							 <td colspan="2" style="padding:3px; font-size:12px; width: 50%; text-align: left;"><b>Нэхэмжлэгч:</b></td>
+							 <td colspan="2" style="padding:3px; font-size:12px; width: 50%; text-align: left; padding-left:10px "><b>Төлөгч:</b></td>
 						</tr>
 						<tr>
 							<td style="width: 15%; padding:3px; font-size:12px; text-align: left;">Байгууллагын нэр: </td>
@@ -80,13 +80,13 @@
 						</tr>
 					</table>
 
-                <table style="width: 99%; font-size:14px; text-align: left; border: none; margin-left: 15px; padding-top:20px; padding-bottom:20px; border: transparent 1px solid;">
+                <table style="width: 99%; font-size:12px; text-align: left; border: none; margin-left: 15px; padding-top:20px; padding-bottom:20px; border: transparent 1px solid;">
                     <tr>
                         <td style="width: 50%; vertical-align: top; padding-right: 15px;">
-                            <p style="margin-bottom: 15px; text-align: justify;;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="data.get('company_id').name"/> -ын Нягтлан бодогч ажилтай
+                            <p style="margin-bottom: 15px; text-align: justify;;">Нэхэмжлэгчийн нэрийн өмнөөс <t t-esc="data.get('company_id').name"/> -ын нягтлан бодогч ажилтай
                                  ........................................................ овогтой ........................................................ нь, төлөгчийн нэрийн өмнөөс <t t-esc="o.name"/>-ын
-                                 ........................................................ ажилтай ........................................................ овогтой ........................................................ тус хоёр байгууллагын хооронд
-								 хийгдсэн тооцоог <t t-esc="o.date"/>-ны байдлаар өгч авалцсан зүйлсээ нэг бүрчлэн нийлж үзэхэд
+                                 ........................................................ ажилтай ........................................................ овогтой ........................................................
+								 нар тус хоёр байгууллагын хооронд хийгдсэн тооцоог 20.....оны ..... сарын ..... өдрөөс 20.....оны ..... сарын ..... өдрийг хүртэлх байдлаар өгч авалцсан зүйлсээ нэг бүрчлэн нийлж үзэхэд
                                  Вертексмон ХХК нь .............................................................. төгрөгийн <b>авлагатай/өглөгтэй</b> гарсныг харилцан батлав.
                             </p>
                         </td>
