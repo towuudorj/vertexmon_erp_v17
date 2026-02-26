@@ -12,6 +12,7 @@
                			<field name="payment_ref" />
                         <field name="partner_id"/>
                			<field name="amount"/>
+               			<field name="company_amount" optional="hidden"/>
                			<field name="move_account_names" optional="hidden"/>
                     </tree>
                 </field>
