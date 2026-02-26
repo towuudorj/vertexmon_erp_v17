@@ -8,12 +8,18 @@
 			<field name="arch" type="xml">
 				<form string="Account asset detail" >
 					<group>
-						<field name="company_id" />
-						<field name="fiscalyear_id"/>
-						<field name="start_date"/>
-						<field name="end_date"/>
-						<field name="category_id"/>
-						<field name="owner_id"/>
+						<group>
+							<field name="company_id"/>
+							<field name="is_extra"/>
+							<field name="group_by" invisible="is_extra == False"/>
+							<field name="group_by_category" invisible="is_extra == True"/>
+						</group>
+						<group>
+							<field name="start_date"/>
+							<field name="end_date"/>
+							<field name="category_id"/>
+							<field name="owner_id"/>
+						</group>
 					</group>
 					<footer>
 						<button name="action_print_xls_report" string="Экспорт" type="object"

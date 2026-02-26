@@ -170,6 +170,8 @@ class HrExpense(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     currency_amount = fields.Float(string='Currency amount', compute='_compute_currency_amount')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
+    accounting_date = fields.Date(string="Accounting Date", compute='_compute_accounting_date',
+                                  default=fields.Date.context_today,  store=True)
 
 
     def _compute_currency_amount(self):

@@ -18,9 +18,11 @@ class AccountAssetDetailReport(models.TransientModel):
                                  default=lambda self: self.env.user.company_id)
     start_date = fields.Date(string='Start date', required=True)
     end_date = fields.Date(string='End date', required=True)
-    fiscalyear_id = fields.Many2one('account.fiscal.year', string='Fiscal year', required=True)
     category_id = fields.Many2one('account.asset.category', string='Asset category')
     owner_id = fields.Many2one('hr.employee', string='Owner')
+    is_extra = fields.Boolean(string=u'Задаргаатай эсэх')
+    group_by = fields.Selection([('category', u'Хөрөнгийн ангилал'), ('location', u'Хөрөнгийн байрлал')], string=u"Бүлэглэх", default=False)
+    group_by_category = fields.Boolean(string=u"Хөрөнгийн ангиллаар бүлэглэх", default=False)
 
 
     def action_print_xls_report(self):
@@ -31,8 +33,9 @@ class AccountAssetDetailReport(models.TransientModel):
             'end_date': self.end_date,
             'category_id': self.category_id.id,
             'owner_id':self.owner_id.id,
-            'fiscalyear_id': self.fiscalyear_id.id,
-            'is_balance':False,
+            'is_extra':self.is_extra,
+            'group_by':self.group_by,
+            'group_by_category':self.group_by_category,
         }
         return {
             'type': 'ir.actions.report',
@@ -83,16 +86,7 @@ class AccountAssetDetailReport(models.TransientModel):
                                     'align': 'center',
                                     'border': 1,
                                     'font_size': 12,
-                                    'num_format': '#,##0.00;(#,##0.00)'
-                                })
-
-
-        data_bold_left = workbook.add_format({
-                                    'align': 'left',
-                                    'bold': True,
-                                    'border': 1,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00;(#,##0.00)'
+                                    'num_format': 'General'
                                 })
         
         data_bold_center = workbook.add_format({
@@ -109,471 +103,335 @@ class AccountAssetDetailReport(models.TransientModel):
         sheet.set_column(3, 19, 15)
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         sheet.merge_range("A1:B1", u'Байгууллагын нэр: %s' % (data['company_name']), header_txt)
-        sheet.merge_range("A3:S3", u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
-        sheet.merge_range("P1:S1",  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
-        sheet.merge_range("Q2:S2",  u'191 тоот тушаалаар батлав.', header_txt)
-        sheet.merge_range("R4:S4", u'Дэлгэрэнгүй бүртгэл',header_txt)
-        sheet.merge_range("S5", u'ҮХ-1 №....', header_txt)
-        sheet.write("H5", u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
+        sheet.merge_range("A3:K3" if data['is_extra'] else 'A3:P3', u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
+        sheet.merge_range("H1:K1" if data['is_extra'] else 'M1:P1',  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
+        sheet.merge_range("I2:K2" if data['is_extra'] else 'N2:P2',  u'191 тоот тушаалаар батлав.', header_txt)
+        sheet.merge_range("J4:K4" if data['is_extra'] else 'O4:P4', u'Дэлгэрэнгүй бүртгэл',header_txt)
+        sheet.write("K5" if data['is_extra'] else 'P5', u'ҮХ-1 №....', header_txt)
+        sheet.write("E5" if data['is_extra'] else 'L5', u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
         rowx = 7
-
-        sheet.merge_range("A%s:A%s"%(rowx, rowx+1), u'Д/д', title)
-        sheet.merge_range("B%s:B%s"%(rowx, rowx+1), u'Дансны дугаар', title)
-        sheet.merge_range("C%s:C%s"%(rowx, rowx+1), u'Үндсэн хөрөнгийн нэр', title)
-        sheet.merge_range("D%s:D%s"%(rowx, rowx+1), u'Хөрөнгийн дугаар', title)
-        sheet.merge_range("E%s:E%s"%(rowx, rowx+1), u'Ашиглалтанд орсон он сар өдөр', title)
-        sheet.merge_range("F%s:F%s"%(rowx, rowx+1), u'Ашиглах жил', title)
-        sheet.merge_range("G%s:H%s"%(rowx, rowx), u'Эхний үлдэгдэл', title)
-        sheet.write("G%s"%(rowx+1), u'Тоо', title)
-        sheet.write("H%s"%(rowx+1), u'Өртөг', title)
-        sheet.merge_range("I%s:J%s"%(rowx, rowx), u'Орлого', title)
-        sheet.write("I%s"%(rowx+1), u'Тоо', title)
-        sheet.write("J%s"%(rowx+1), u'Өртөг', title)
-        sheet.merge_range("K%s:L%s"%(rowx, rowx), u'Зарлага', title)
-        sheet.write("K%s"%(rowx+1), u'Тоо', title)
-        sheet.write("L%s"%(rowx+1), u'Өртөг', title)
-        sheet.merge_range("M%s:N%s"%(rowx, rowx), u'Эцсийн үлдэгдэл', title)
-        sheet.write("M%s"%(rowx+1), u'Тоо', title)
-        sheet.write("N%s"%(rowx+1), u'Өртөг', title)
-        sheet.merge_range("O%s:R%s"%(rowx, rowx), u'Элэгдэл', title)
-        sheet.write("O%s"%(rowx+1), u'Хуримтдлагдсан', title)
-        sheet.write("P%s"%(rowx+1), u'Сарын', title)
-        sheet.write("Q%s"%(rowx+1), u'Хасагдсанд ногдох', title)
-        sheet.write("R%s"%(rowx+1), u'Элэгдлийн дүн', title)
-        sheet.merge_range("S%s:S%s"%(rowx, rowx+1), u'Үлдэгдэл өртөг', title)
-        rowx +=2
-
-        sheet.write("A%s"%rowx, 1,title)
-        sheet.write("B%s"%rowx, 2,title)
-        sheet.write("C%s"%rowx, 3,title)
-        sheet.write("D%s"%rowx, 4,title)
-        sheet.write("E%s"%rowx, 5,title)
-        sheet.write("F%s"%rowx, 6,title)
-        sheet.write("G%s"%rowx, 7,title)
-        sheet.write("H%s"%rowx, 8,title)
-        sheet.write("I%s"%rowx, 9,title)
-        sheet.write("J%s"%rowx, 10,title)
-        sheet.write("K%s"%rowx, 11,title)
-        sheet.write("L%s"%rowx, 12,title)
-        sheet.write("M%s"%rowx, 13,title)
-        sheet.write("N%s"%rowx, 14,title)
-        sheet.write("O%s"%rowx, 15,title)
-        sheet.write("P%s"%rowx, 16,title)
-        sheet.write("Q%s"%rowx, 17,title)
-        sheet.write("R%s"%rowx, 18,title)
-        sheet.write("S%s"%rowx, 19,title)
-
-        rowx = 10
         asset_obj = self.env['account.asset.asset']
-        fiscalyear_id = self.env['account.fiscal.year'].browse(data['fiscalyear_id'])
-        
-        asset_capital_obj = self.env['account.asset.asset.capitalization']
-        domain = [('company_id','=',data['company_id']),('state','!=','draft')]
-        if data['category_id']:
-            domain.append(('category_id','=',data['category_id']))
-        if data['owner_id']:
-            domain.append(('owner_id', '=', data['owner_id']))
-        asset_id = asset_obj.search(domain, order='date asc')
-        num = 0
-        first_balance = 0.0
-        first_qty = 0.0
-        
-        income_balance = 0.0
-        income_qty = 0.0
-        
-        expense_balance = 0.0
-        expense_qty = 0.0
-        
-        last_balance = 0.0
-        last_qty = 0.0
-        
-        in_dep_balance = 0.0
-        month_balance = 0.0
-        drop_balance = 0.0
-        dep_balance = 0.0
-        total_balance_amount = 0.0
+        num = 1
+        last_group_data = {'last_row': False, 'last_id': False, 'seq':0}
+        if data['is_extra']:
+            sheet.merge_range("A%s:A%s" % (rowx, rowx + 1), u'Д/д', title)
+            sheet.merge_range("B%s:B%s" % (rowx, rowx + 1), u'Хөрөнгийн ангилал', title)
+            sheet.merge_range("C%s:C%s" % (rowx, rowx + 1), u'Үндсэн хөрөнгийн нэр', title)
+            sheet.merge_range("D%s:D%s" % (rowx, rowx + 1), u'Хөрөнгийн дугаар', title)
+            sheet.merge_range("E%s:E%s" % (rowx, rowx + 1), u'Ашиглалтанд орсон он сар өдөр', title)
+            sheet.merge_range("F%s:F%s" % (rowx, rowx + 1), u'Ашиглах жил', title)
+            sheet.merge_range("G%s:G%s" % (rowx, rowx + 1), u'Эхний үлдэгдэл', title)
+            sheet.merge_range("H%s:J%s" % (rowx, rowx), u'Элэгдэл', title)
+            sheet.write("H%s" % (rowx + 1), u'Хуримтдлагдсан', title)
+            sheet.write("I%s" % (rowx + 1), u'Сарын', title)
+            sheet.write("J%s" % (rowx + 1), u'Элэгдлийн дүн', title)
+            sheet.merge_range("K%s:K%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
+            rowx = 9
+            domain = [('company_id', '=', data['company_id']), ('state', '!=', 'draft')]
+            if data['category_id']:
+                domain.append(('category_id', '=', data['category_id']))
+            if data['owner_id']:
+                domain.append(('owner_id', '=', data['owner_id']))
+            order_by = ""
+            if data['group_by'] == 'category':
+                order_by = u'category_id asc, '
+            if data['group_by'] == 'location':
+                order_by = u'asset_location_id asc, '
+            order_by += u'name asc, '
+            asset_id = asset_obj.search(domain, order=order_by + 'date asc')
+            if asset_id:
+                total_g = 0
+                total_h = 0
+                total_i = 0
+                total_j = 0
+                total_k = 0
+                for line in asset_id:
+                    if data['group_by']:
+                        if data['group_by'] == 'location':
+                            if not last_group_data['last_row'] or last_group_data['last_id'] != line.asset_location_id.id:
+                                if last_group_data['last_row']:
+                                    sheet.write('G%s' % last_group_data['last_row'],
+                                                "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('H%s' % last_group_data['last_row'],
+                                                "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('I%s' % last_group_data['last_row'],
+                                                "=SUM(I%s:I%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('J%s' % last_group_data['last_row'],
+                                                "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('K%s' % last_group_data['last_row'],
+                                                "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                last_group_data['seq'] += 1
+                                sheet.write("A%s"%rowx, last_group_data['seq'], data_center)
+                                sheet.merge_range("B%s:F%s" % (rowx, rowx), line.asset_location_id.name, title)
+                                last_group_data['last_id'] = line.asset_location_id.id
+                                last_group_data['last_row'] = rowx
+                                rowx += 1
+                                num = 1
 
-        if asset_id:
-            for line in asset_id:
-                if data['is_balance'] == True:
-                    if line.value_residual > 0.0:
-                        balance_amount = 0.0
-                        write_off_amount = 0.0
-                        deprecation_amount = 0.0
-                        month_deprecation_amount = 0.0
-                        act_amount = 0.0
-                        capital_amount = 0.0
-                        num +=1
-                        sheet.write("A%s"%rowx, '%s'%num, data_center)
-                        sheet.write("B%s"%rowx, line.category_id.name,data_left)
-                        sheet.write("C%s"%rowx, line.name,data_left)
-                        sheet.write("D%s"%rowx, line.code,data_left)
-                        sheet.write("E%s"%rowx, '%s'%line.date,data_left)
-                        sheet.write("F%s"%rowx, line.method_number/12,data_left)
-                        sheet.write("G%s"%rowx, data_left)
-                        if line.date <= start_date:
-                            sheet.write("H%s"%rowx, line.value,data_right)
-                            sheet.write("I%s"%rowx, 0, data_right)
-                        else:
-                            sheet.write("H%s"%rowx, 0,data_right)
-                            sheet.write("I%s"%rowx, 0,data_right)
-                        #asset_cap_id = asset_capital_obj.search( [('asset_id','=',line.id)])
-                        
-                        first_balance +=line.value
-                        first_qty +=1
-                        
-                        
-                        #if asset_cap_id:
-                        #    for cap in asset_cap_id:
-                        #        capital_amount += cap.amount
-                        #else:
-                        #    if line.date >= start_date:
-                        #        capital_amount +=line.value
-                                
-                        income_balance +=capital_amount
-                        income_qty +=1
-                        act_amount = line.value_residual
-                        sheet.write(rowx, 9, capital_amount,data_right)
-                        sheet.write(rowx, 10, 1,data_left)
-                        sheet.write(rowx, 11, act_amount,data_right)
-                        
-                        expense_balance +=act_amount
-                        expense_qty +=1
-                        
-                        sheet.write(rowx, 12, 1,data_left)
-                        total_amount = line.value+capital_amount-act_amount
-                        
-                        last_balance +=total_amount
-                        last_qty +=1
-                        sheet.write(rowx, 13, total_amount,data_right)
-                        for lis in line.depreciation_line_ids:
-                            for history in lis.move_id.line_ids:
-                                if history.date < start_date:
-                                    deprecation_amount +=history.debit
-                        in_dep_balance +=deprecation_amount
-                        sheet.write(rowx, 14, deprecation_amount,data_right)                
-                        for dep in line.depreciation_line_ids:
-                            if dep.move_check == True:
-                                if dep.depreciation_date >= start_date and dep.depreciation_date<=self.end_date:
-                                    month_deprecation_amount += dep.amount
-                                    
-                        month_balance +=month_deprecation_amount
-                        sheet.write("P%s"%rowx, month_deprecation_amount,data_right)
-                        if line.state == 'close':
-                            write_off = 0.0
-                            self._cr.execute("""SELECT
-                                   SUM(l.debit-l.credit) AS amount
-                                FROM
-                                    account_move_line l
-                                WHERE
-                                    l.asset_id = %s GROUP BY l.asset_id """, (line.id,))
-                            res=self._cr.dictfetchall()
-                            if res !=[]:
-                                for lines in res:
-                                    write_off = lines['amount']
-                            write_off_amount = line.value_residual
-                        drop_balance +=write_off_amount
-                        sheet.write("Q%s"%rowx, write_off_amount,data_right)
-                        last_amount = deprecation_amount+month_deprecation_amount-write_off_amount
-                        sheet.write("R%s"%rowx, last_amount,data_right)
-                        dep_balance +=last_amount
-                        if line.state=='close':                          
-                            balance_amount = 0.0
-                        else:
-                            balance_amount = total_amount-last_amount
-                        sheet.write("S%s"%rowx, balance_amount,data_right)
-                        total_balance_amount += balance_amount
-                        rowx +=1
-                else:
-                
-                    balance_amount = 0.0
-                    write_off_amount = 0.0
-                    deprecation_amount = 0.0
-                    deprecation_amounts = 0.0
-                    month_deprecation_amount = 0.0
-                    act_amount = 0.0
-                    capital_amount = 0.0
-                    in_amount = 0.0
-                    first_value = 0.0
-                    
-                    
-                    num +=1
-                    sheet.write("A%s"%rowx, '%s'%num,data_center)
-                    sheet.write("B%s"%rowx, line.category_id.name,data_left)
-                    sheet.write("C%s"%rowx, line.name,data_left)
-                    sheet.write("D%s"%rowx, line.code,data_left)
-                    sheet.write("E%s"%rowx, '%s'%line.date,data_left)
-                    sheet.write("F%s"%rowx, line.method_number/12,data_left)
-                    if str(line.date) <= str(start_date):
-                        fact_amounts = 0.0
-                        fact_amount = 0.0
-                        fact_amountsd =0.0
-                        if fiscalyear_id.date_from == start_date:
-                            if line.state=='close':
-                                if line.scrap_date and line.scrap_date <= start_date:
-                                    first_value = 0.0
-                                else:
-                                    first_value = line.value
-                                
-                            else:
-                                #or dep in line.depreciation_line_ids:
-                                #        if dep.move_check == True:
-                                #            if dep.depreciation_date < start_date:
-                                #                fact_amountsd += dep.amount
-                                first_value = line.value
-                        else:
-                            
-                            first_value = line.value
-                        first_balance +=first_value
-                        first_qty +=1
-                        count = 1
-                        sheet.write("G%s"%rowx, count, data_left)
-                        sheet.write("H%s"%rowx, first_value,data_right)
-                        #sheet.write("I%s"%rowx, 0,data_right)
-                    else:
-                        count = 0
-                        sheet.write("G%s"%rowx, count, data_left)
-                        sheet.write("H%s"%rowx, 0,data_right)
-                        #
-                    #asset_cap_id = asset_capital_obj.search([('asset_id','=',line.id)])
-                    
-                    #print ("dddddd",asset_cap_id)
-                    
-                    
-                    #if asset_cap_id:
-                    #    for cap in asset_cap_id:
-                    #        capital_amount += cap.amount
-                        
-                    #else:
-                    if str(line.date) > str(start_date) and str(line.date) <= str(data['end_date']):
-                            in_amount +=line.value
-                                
-                    income_balance +=capital_amount+in_amount
-                    income_qty +=1
+                        if data['group_by'] == 'category':
+                            if not last_group_data['last_row'] or last_group_data['last_id'] != line.category_id.id:
+                                if last_group_data['last_row']:
+                                    sheet.write('G%s' % last_group_data['last_row'],
+                                                "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('H%s' % last_group_data['last_row'],
+                                                "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('I%s' % last_group_data['last_row'],
+                                                "=SUM(I%s:I%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('J%s' % last_group_data['last_row'],
+                                                "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('K%s' % last_group_data['last_row'],
+                                                "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                last_group_data['seq'] += 1
+                                sheet.write("A%s" % rowx, last_group_data['seq'], data_center)
+                                sheet.merge_range("B%s:F%s" % (rowx, rowx), line.category_id.name, title)
+                                last_group_data['last_id'] = line.category_id.id
+                                last_group_data['last_row'] = rowx
+                                rowx += 1
+                                num = 1
 
-                    sheet.write("I%s"%rowx, 1,data_right)
-                    sheet.write("J%s"%rowx, capital_amount+in_amount,data_right)
-                    
-                    if line.state=='close':
-                        act_amounts = 0.0
-                        if self.fiscalyear_id.date_from == start_date:
-                            if line.scrap_date and line.scrap_date <= start_date:
-                                for dep in line.depreciation_line_ids:
-                                        if dep.depreciation_date<=self.end_date:
-                                            act_amounts += dep.amount
-                                act_amountd = line.value - act_amounts
-                            else:
-                                act_amountd = line.value
-                           # print("addddddddddddddddddddfff",act_amountd)
-                            if int(act_amountd) == 0.0:
-                                #if line.is_closed == True:
-                                    act_amount = 0.0
-                            else:
-                                act_amount = act_amountd
-                        else:
-                            if line.scrap_date and line.scrap_date <= self.end_date:
-                                for dep in line.depreciation_line_ids:
-                                    if dep.depreciation_date<=self.end_date:
-                                            act_amounts += dep.amount
-                            act_amountd = line.value - act_amounts
-                            if int(act_amountd) == 0.0:
-                                act_amount = line.value
-                            else:
-                                act_amount = 0.0
-                    if act_amount == 0.0:
-                        sheet.write("K%s"%rowx, 0,data_left)
-                    else:
-                        sheet.write("K%s"%rowx, 1, data_left)
-                        expense_qty +=1
-                    
-                    sheet.write("L%s"%rowx, act_amount,data_right)
-                    
-                    expense_balance +=act_amount
-                    
-                    
-                    sheet.write("M%s"%rowx, 1,data_left)
-                    total_amount = 0.0
-                    if first_value == 0.0:
-                        #print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa dsdssssssssssssssss",in_amount,line.name)
-                        if in_amount == 0.0:
-                            total_amount = 0.0
-                        else:
-                            total_amount = first_value+capital_amount+in_amount-act_amount
-                    else:
-                        total_amount = first_value+capital_amount+in_amount-act_amount
-                    
-                    last_balance +=total_amount
-                    last_qty +=1
-                    #print("aaaaaaaaaaaaaaaaaaaaaaaaaaaadddd",total_amount,line.name)
-                    sheet.write("N%s"%rowx, total_amount,data_right)
-                    if line.state == 'close':
-                        for lis in line.depreciation_line_ids:
-                            if lis.move_check == True:
-                                for history in lis.move_id.line_ids:
-                                    if history.date < start_date:
-                                        if lis.move_id.state != 'cancel':
-                                            deprecation_amount +=history.debit
-                        #print("aaaaadddddddddddddddddddddddd",line.value, deprecation_amount)
-                        act_amountds = line.value - deprecation_amount
-                        if int(act_amountds) == 0.0:
-                            if line.scrap_date and line.scrap_date <=start_date:
-                                deprecation_amount = 0.0
-                                deprecation_amounts = 0.0
-                            else:
-                                deprecation_amount = deprecation_amount
-                                deprecation_amounts = deprecation_amount
-                        else:
-                            if line.scrap_date and line.scrap_date <=start_date:
-                                deprecation_amount = 0.0
-                                deprecation_amounts = 0.0
-                            else:
-                                deprecation_amount = deprecation_amount
-                                deprecation_amounts = deprecation_amount
+                    sequence = num if not data['group_by'] else str(last_group_data['seq']) + '.' + str(num)
+                    sheet.write("A%s"%rowx, sequence, data_center)
+                    sheet.write("B%s"%rowx, line.category_id.name, data_left)
+                    sheet.write("C%s"%rowx, line.name, data_left)
+                    sheet.write("D%s"%rowx, line.code, data_left)
+                    sheet.write("E%s"%rowx, '%s'%line.date, data_left)
+                    sheet.write("F%s"%rowx, line.method_number/12, data_left)
+                    dep_line = line.depreciation_line_ids.search([('depreciation_date', '<', data['start_date']),
+                                                                  ('move_id', '!=', False ),
+                                                                  ('move_id.state', '!=', 'cancel'),
+                                                                  ('asset_id', '=', line.id)], order='depreciation_date desc', limit=1)
+                    sheet.write("G%s"%rowx, dep_line.remaining_value if dep_line else line.value, data_left)
+                    sheet.write("H%s"%rowx, dep_line.depreciated_value if dep_line else 0, data_left)
 
-                            
+                    month_dep = 0
+                    for de in line.depreciation_line_ids:
+                        if de.sequence != 1:
+                            month_dep = de.amount
+                            break
+                    sheet.write("I%s"%rowx, month_dep, data_left)
+
+                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_id and x.move_id.state != 'cancel' and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
+                    if dep_lines:
+                        date_between_dep = sum(dep_lines.mapped('amount'))
                     else:
-                        for lis in line.depreciation_line_ids:
-                            if lis.move_check == True:
-                                for history in lis.move_id.line_ids:
-                                    if lis.move_id.state != 'cancel':
-                                        if history.date < start_date:
-                                            deprecation_amount +=history.debit
-                    #print("aaaaaaaaaaaaaaaaaaaa",)
-                    if total_amount == 0.0:
-                        deprecation_amount = deprecation_amount
-                        in_dep_balance +=deprecation_amount
-                    else:
-                        deprecation_amount = deprecation_amount
-                        in_dep_balance +=deprecation_amount
-                    sheet.write("O%s"%rowx, deprecation_amount,data_right)                
-                    for lis in line.depreciation_line_ids:
-                       # for history in lis.move_id.line_ids:
-                           # if history.move_id.state =='posted':
-                            if str(lis.depreciation_date) >= str(start_date) and str(lis.depreciation_date) <= str(data['end_date']):
-                                month_deprecation_amount +=lis.amount
-                                
-                    month_balance +=month_deprecation_amount
-                    
-                    sheet.write("P%s"%rowx, month_deprecation_amount,data_right)
-                    if line.state == 'close':
-                        write_off = 0.0
-                        self._cr.execute("""SELECT
-                               SUM(l.debit-l.credit) AS amount
-                            FROM
-                                account_move_line l
-                                left join account_move am
-                                on am.id = l.move_id
-                            WHERE
-                                l.asset_id = %s
-                                and am.date <= %s GROUP BY l.asset_id """, (line.id,data['end_date']))
-                        res=self._cr.dictfetchall()
-                        if res !=[]:
-                            for lines in res:
-                                write_off = lines['amount']
-                                
-                        #print("aaaaaaaaaaaaaaaaaaaaaaaaaa",write_off_amount,total_amount,line.name,deprecation_amounts,month_deprecation_amount,deprecation_amount)
-                        if round(write_off_amount,2) == round(total_amount,2):
-                            if deprecation_amounts > 0.0:
-                                write_off_amount = month_deprecation_amount + deprecation_amounts
-                            else:
-                                write_off_amount = month_deprecation_amount + deprecation_amount
-                        else:
-                            for dep in line.depreciation_line_ids:
-                                if dep.move_check == True:
-                                    if dep.depreciation_date >= start_date and dep.depreciation_date<= data['end_date']:
-                                            if deprecation_amounts >0.0:
-                                                write_off_amount = month_deprecation_amount + deprecation_amounts
-                                            else:
-                                                write_off_amount = month_deprecation_amount + deprecation_amount
-                                    else:
-                                            write_off_amount = 0.0
-                                else:
-                                    if deprecation_amounts > 0.0:
-                                        write_off_amount = month_deprecation_amount + deprecation_amount
-                                    else:
-                                        write_off_amount = month_deprecation_amount + deprecation_amount
-                        
-                    
-                    if line.state == 'close':
-                        if line.scrap_date and line.scrap_date <= start_date:
-                            sheet.write("Q%s"%rowx, 0.0,data_right)
-                            #drop_balance = 0.0
-                        else:
-                            sheet.write("Q%s"%rowx, write_off_amount,data_right)
-                            drop_balance += write_off_amount
-                    else:
-                        sheet.write("Q%s"%rowx, write_off_amount,data_right)
-                        drop_balance +=write_off_amount
-                    #print("aaaaaaaaaaaaaaaaaaaaaaaa",write_off_amount,deprecation_amounts,month_deprecation_amount)
-                    if deprecation_amounts >0.0:
-                        last_amount = deprecation_amounts + month_deprecation_amount-write_off_amount
-                    else:
-                        last_amount = deprecation_amount + month_deprecation_amount-write_off_amount
-                    sheet.write("R%s"%rowx, last_amount,data_right)
-                    dep_balance +=last_amount
-                    if line.state == 'close':
-                        bal_amounts = 0.0
-                        for dep in line.depreciation_line_ids:
-                            if dep.move_check == True:
-                                if dep.depreciation_date >= start_date and dep.depreciation_date<=data['end_date']:
-                                    bal_amounts += dep.amount
-                        act_amountd = line.value - bal_amounts
-                        if act_amountd == 0.0:
-                            balance_amount = 0.0
-                        else:
-                            if write_off_amount > 0.0:
-                                balance_amount = total_amount
-                            else:
-                                balance_amount = total_amount-last_amount
-                        
-                    else:
-                        #balance_amount = total_amount-last_amount
-                        if write_off_amount > 0.0:
-                            balance_amount = 0.0
-                        else:
-                            balance_amount = total_amount-last_amount
-                    sheet.write("S%s"%rowx, balance_amount,data_right)
-                    total_balance_amount += balance_amount
-                    rowx +=1
-                
-            sheet.merge_range("A%s:F%s"%(rowx, rowx), 'НИЙТ',data_right)
-            sheet.write("G%s"%rowx, first_qty,data_right)
-            sheet.write("H%s"%rowx, first_balance,data_right)
-            sheet.write("I%s"%rowx, income_qty,data_right)
-            sheet.write("J%s"%rowx, income_balance,data_right)
-            sheet.write("K%s"%rowx, expense_qty,data_right)
-            sheet.write("L%s"%rowx, expense_balance,data_right)
-            sheet.write("M%s"%rowx, last_qty,data_right)
-            sheet.write("N%s"%rowx, last_balance,data_right)
-            sheet.write("O%s"%rowx, in_dep_balance,data_right)
-            sheet.write("P%s"%rowx, month_balance,data_right)
-            sheet.write("Q%s"%rowx, drop_balance,data_right)
-            sheet.write("R%s"%rowx, dep_balance,data_right)
-            sheet.write("S%s"%rowx, total_balance_amount,data_right)
-                
-    
+                        date_between_dep = 0
+                    sheet.write("J%s" % rowx, date_between_dep, data_left)
+
+                    sheet.write("K%s" % rowx, '=G%s-J%s' % (rowx, rowx), data_left)
+                    total_g += dep_line.remaining_value if dep_line and dep_line.move_id.state != 'cancel' else line.value
+                    total_h += dep_line.depreciated_value if dep_line and dep_line.move_id.state != 'cancel' else 0
+                    total_i += month_dep
+                    total_j += date_between_dep
+                    total_k += dep_line.remaining_value if dep_line and dep_line.move_id.state != 'cancel' else line.value - date_between_dep
+                    num += 1
+                    rowx += 1
+                if data['group_by']:
+                    if data['group_by'] == 'location':
+                        if last_group_data['last_row']:
+                            sheet.write('G%s' % last_group_data['last_row'],
+                                        "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('H%s' % last_group_data['last_row'],
+                                        "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('I%s' % last_group_data['last_row'],
+                                        "=SUM(I%s:I%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('J%s' % last_group_data['last_row'],
+                                        "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('K%s' % last_group_data['last_row'],
+                                        "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                    if data['group_by'] == 'category':
+                        if last_group_data['last_row']:
+                            sheet.write('G%s' % last_group_data['last_row'],
+                                        "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('H%s' % last_group_data['last_row'],
+                                        "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('I%s' % last_group_data['last_row'],
+                                        "=SUM(I%s:I%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('J%s' % last_group_data['last_row'],
+                                        "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('K%s' % last_group_data['last_row'],
+                                        "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                sheet.merge_range("A%s:F%s" % (rowx, rowx), u'Нийт', title)
+                sheet.write("G%s" % rowx, total_g, data_left)
+                sheet.write("H%s" % rowx, total_h, data_left)
+                sheet.write("I%s" % rowx, total_i, data_left)
+                sheet.write("J%s" % rowx, total_j, data_left)
+                sheet.write("K%s" % rowx, total_k, data_left)
+        else:
+            where = f"WHERE aaa.state != 'draft' AND aaa.company_id = {data['company_id']} "
+            if data['category_id']:
+                where += f"AND aac.id = '{data['category_id']}' "
+            if data['owner_id']:
+                where += f"AND aaa.owner_id = '{data['owner_id']}' "
+
+            qry = f"""
+                        select
+                        	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
+                        FROM (
+                        	select 
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_id IS NOT NULL THEN aml.debit ELSE 0 END) as acc_dep_balance,
+            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' AND aadl.move_id IS NOT NULL AND am.state != 'cancel'
+            	                                       THEN aml.debit ELSE 0 END), 0) as expense_dep,
+            	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_id IS NOT NULL THEN aml.debit ELSE 0 END) as dep_balance,
+            	                aaa.name,
+            	                aac.id as category_id,
+            	                al.id as location_id,
+            	                aac.name as category,
+            	                al.name as location
+            	            from account_asset_asset aaa
+                            LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
+            	            LEFT JOIN account_move am on am.id = aadl.move_id AND am.state != 'cancel'
+            	            LEFT JOIN account_move_line aml on aml.move_id = aadl.move_id AND aml.debit > 0
+            	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
+            	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
+            	            {where}
+            	            GROUP BY aaa.name, aac.id, al.id
+                        ) as sub
+                        left join (
+                        	select aaa.name,
+            	            	COALESCE(SUM(CASE WHEN aaa.date < '{data['start_date']}' then aaa.value else 0 end), 0) as start_balance,
+            	                COALESCE(count(distinct CASE WHEN aaa.date < '{data['start_date']}' then aaa.id else null end), 0) as start_count,
+            	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN aaa.value else 0 end), 0) as income_balance,
+            	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN 1 ELSE 0 END), 0) as income_count,
+            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN aaa.value ELSE 0 END), 0) as expense_balance,
+            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN 1 ELSE 0 END), 0) as expense_count
+                            from account_asset_asset aaa
+            	            GROUP BY aaa.name
+                        ) as sub1 on sub1.name = sub.name
+                        ORDER BY {'sub.category_id' if data['group_by'] == 'category' else 'sub.location_id'}
+            """
+            self.env.cr.execute(qry)
+            lines = self._cr.dictfetchall()
+            sheet.merge_range("A%s:A%s" % (rowx, rowx + 1), u'Д/д', title)
+            sheet.merge_range("B%s:B%s" % (rowx, rowx + 1), u'Хөрөнгийн ангилал', title)
+            sheet.merge_range("C%s:C%s" % (rowx, rowx + 1), u'Үндсэн хөрөнгийн нэр', title)
+
+            sheet.merge_range("D%s:E%s"%(rowx, rowx), u'Эхний үлдэгдэл', title)
+            sheet.write("D%s"%(rowx+1), u'Тоо', title)
+            sheet.write("E%s"%(rowx+1), u'Өртөг', title)
+            sheet.merge_range("F%s:G%s"%(rowx, rowx), u'Орлого', title)
+            sheet.write("F%s"%(rowx+1), u'Тоо', title)
+            sheet.write("G%s"%(rowx+1), u'Өртөг', title)
+            sheet.merge_range("H%s:I%s"%(rowx, rowx), u'Зарлага', title)
+            sheet.write("H%s"%(rowx+1), u'Тоо', title)
+            sheet.write("I%s"%(rowx+1), u'Өртөг', title)
+            sheet.merge_range("J%s:K%s"%(rowx, rowx), u'Эцсийн үлдэгдэл', title)
+            sheet.write("J%s"%(rowx+1), u'Тоо', title)
+            sheet.write("K%s"%(rowx+1), u'Өртөг', title)
+
+            sheet.merge_range("L%s:O%s"%(rowx, rowx), u'Элэгдэл', title)
+            sheet.write("L%s"%(rowx+1), u'Хуримтдлагдсан', title)
+            sheet.write("M%s"%(rowx+1), u'Сарын', title)
+            sheet.write("N%s"%(rowx+1), u'Хасагдсанд ногдох', title)
+            sheet.write("O%s"%(rowx+1), u'Элэгдлийн дүн', title)
+            sheet.merge_range("P%s:P%s"%(rowx, rowx+1), u'Үлдэгдэл өртөг', title)
+            total_d = 0
+            total_e = 0
+            total_f = 0
+            total_g = 0
+            total_h = 0
+            total_i = 0
+            total_j = 0
+            total_k = 0
+            total_l = 0
+            total_m = 0
+            total_n = 0
+            total_o = 0
+            total_p = 0
+            rowx = 9
+            for line in lines:
+                if data['group_by_category']:
+                    if not last_group_data['last_id'] or last_group_data['last_id'] != line['category_id']:
+                        last_group_data['seq'] += 1
+                        sheet.write("A%s" % rowx, last_group_data['seq'], data_center)
+                        sheet.merge_range("B%s:D%s" % (rowx, rowx), line['category'], title)
+
+                        if last_group_data['last_id']:
+                            sheet.write('D%s' % last_group_data['last_row'], "=SUM(D%s:D%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('E%s' % last_group_data['last_row'], "=SUM(E%s:E%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('F%s' % last_group_data['last_row'], "=SUM(F%s:F%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('G%s' % last_group_data['last_row'], "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('H%s' % last_group_data['last_row'], "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('I%s' % last_group_data['last_row'], "=SUM(I%s:I%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('J%s' % last_group_data['last_row'], "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('K%s' % last_group_data['last_row'], "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('L%s' % last_group_data['last_row'], "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('M%s' % last_group_data['last_row'], "=SUM(M%s:M%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('N%s' % last_group_data['last_row'], "=SUM(N%s:N%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('O%s' % last_group_data['last_row'], "=SUM(O%s:O%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('P%s' % last_group_data['last_row'], "=SUM(P%s:P%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                        last_group_data['last_row'] = rowx
+                        rowx += 1
+                        num = 1
+                        last_group_data['last_id'] = line['category_id']
+
+                sequence = num if not data['group_by_category'] else str(last_group_data['seq']) + '.' + str(num)
+                sheet.write("A%s" % rowx, sequence, data_center)
+                sheet.write("B%s" % rowx, line['category'], data_left)
+                sheet.write("C%s" % rowx, line['name'], data_left)
+                sheet.write("D%s" % rowx, line['start_count'], data_left)
+                sheet.write("E%s" % rowx, line['start_balance'], data_left)
+                sheet.write("F%s" % rowx, line['income_count'], data_left)
+                sheet.write("G%s" % rowx, line['income_balance'], data_left)
+                sheet.write("H%s" % rowx, line['expense_count'], data_left)
+                sheet.write("I%s" % rowx, line['expense_balance'], data_left)
+                sheet.write("J%s" % rowx, '=D%s+F%s-H%s' % (rowx, rowx, rowx), data_left)
+                sheet.write("K%s" % rowx, '=E%s+G%s-I%s' % (rowx, rowx, rowx), data_left)
+                sheet.write("L%s" % rowx, line['acc_dep_balance'], data_left)
+                sheet.write("M%s" % rowx, line['month_dep'], data_left)
+                sheet.write("N%s" % rowx, line['expense_dep'], data_left)
+                sheet.write("O%s" % rowx, line['dep_balance'], data_left)
+                sheet.write("P%s" % rowx, '=K%s-O%s' % (rowx, rowx), data_left)
+                rowx += 1
+                num += 1
+                total_d += line['start_count']
+                total_e += line['start_balance']
+                total_f += line['income_count']
+                total_g += line['income_balance']
+                total_h += line['expense_count']
+                total_i += line['expense_balance']
+                total_j += line['start_count'] + line['income_count'] - line['expense_count']
+                total_k += line['start_balance'] + line['income_balance'] -  line['expense_balance']
+                total_l += line['acc_dep_balance']
+                total_m += line['month_dep']
+                total_n += line['expense_dep']
+                total_o += line['acc_dep_balance'] + line['month_dep'] - line['expense_dep']
+                total_p += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - (line['acc_dep_balance'] + line['month_dep'] - line['expense_dep'])
+            if data['group_by_category'] and last_group_data['last_id']:
+                sheet.write('D%s' % last_group_data['last_row'], "=SUM(D%s:D%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('E%s' % last_group_data['last_row'], "=SUM(E%s:E%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('F%s' % last_group_data['last_row'], "=SUM(F%s:F%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('G%s' % last_group_data['last_row'], "=SUM(G%s:G%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('H%s' % last_group_data['last_row'], "=SUM(H%s:H%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('I%s' % last_group_data['last_row'], "=SUM(I%s:I%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('J%s' % last_group_data['last_row'], "=SUM(J%s:J%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('K%s' % last_group_data['last_row'], "=SUM(K%s:K%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('L%s' % last_group_data['last_row'], "=SUM(L%s:L%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('M%s' % last_group_data['last_row'], "=SUM(M%s:M%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('N%s' % last_group_data['last_row'], "=SUM(N%s:N%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('O%s' % last_group_data['last_row'], "=SUM(O%s:O%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('P%s' % last_group_data['last_row'], "=SUM(P%s:P%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+            sheet.merge_range("A%s:C%s" % (rowx, rowx), u'Нийт', data_center)
+            sheet.write("D%s" % rowx, total_d, data_left)
+            sheet.write("E%s" % rowx, total_e, data_left)
+            sheet.write("F%s" % rowx, total_f, data_left)
+            sheet.write("G%s" % rowx, total_g, data_left)
+            sheet.write("H%s" % rowx, total_h, data_left)
+            sheet.write("I%s" % rowx, total_i, data_left)
+            sheet.write("J%s" % rowx, total_j, data_left)
+            sheet.write("K%s" % rowx, total_k, data_left)
+            sheet.write("L%s" % rowx, total_l, data_left)
+            sheet.write("M%s" % rowx, total_m, data_left)
+            sheet.write("N%s" % rowx, total_n, data_left)
+            sheet.write("O%s" % rowx, total_o, data_left)
+            sheet.write("P%s" % rowx, total_p, data_left)
+
         sheet.write("C%s"%(rowx + 3), u'Хөтөлсөн нягтлан бодогч....................................../\
                                                  /', data_bold_center)
         sheet.write("C%s"%(rowx + 5), u'Хянасан ерөнхий (ахлах) нягтлан бодогч....................................../\
                                                  /', data_bold_center)
-    
-
-
-
 
         workbook.close()
         output.seek(0)
         response.stream.write(output.read())
         output.close()
-
-
-    
-
-        
-        
-        
-        
-        
-        
-
-    
