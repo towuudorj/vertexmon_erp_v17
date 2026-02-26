@@ -233,7 +233,7 @@ class CrmLead(models.Model):
                                   string='Sales type',
                                   default='direct',
                                   required=True, readonly=True)
-    send_date = fields.Date(string='Quotation send date', required=True, default=fields.Date.today())
+    send_date = fields.Date(string='Quotation send date', required=True, default=fields.Date.context_today)
     amount_total = fields.Float(string='Total amount', compute='_compute_amount_total')
     untax_amount = fields.Float(string='Untax amount', compute='_compute_amount_total')
     tax_amount = fields.Float(string='Tax amount', compute='_compute_amount_total')
