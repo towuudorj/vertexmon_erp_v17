@@ -87,6 +87,7 @@ class ProjectProductsLine(models.Model):
                         )
         res =  super().create(vals_list)
         for obj in res:
+            obj.cost_price = obj.product_id.standard_price
             obj.onchange_product_qty()
         return res
     
