@@ -73,7 +73,11 @@
 										<td style="padding: 3px;">Банкны нэр:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
 										<td style="padding: 3px;">Төлбөр төлөх хугацаа:</td>
-										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.validity_date"/></td>
+										<td style="padding: 3px; border-bottom: 1px solid black;">
+											<t t-set="days" t-value="o.expire_day or 0"/>
+											<t t-set="due_date" t-value="(o.date_order + datetime.timedelta(days=days))"/>
+											<t t-esc="due_date.strftime('%Y-%m-%d')"/>
+										</td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Банкны данс:</td>
