@@ -103,11 +103,11 @@ class AccountAssetDetailReport(models.TransientModel):
         sheet.set_column(3, 19, 15)
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         sheet.merge_range("A1:B1", u'Байгууллагын нэр: %s' % (data['company_name']), header_txt)
-        sheet.merge_range("A3:K3" if data['is_extra'] else 'A3:P3', u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
-        sheet.merge_range("H1:K1" if data['is_extra'] else 'M1:P1',  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
-        sheet.merge_range("I2:K2" if data['is_extra'] else 'N2:P2',  u'191 тоот тушаалаар батлав.', header_txt)
-        sheet.merge_range("J4:K4" if data['is_extra'] else 'O4:P4', u'Дэлгэрэнгүй бүртгэл',header_txt)
-        sheet.write("K5" if data['is_extra'] else 'P5', u'ҮХ-1 №....', header_txt)
+        sheet.merge_range("A3:L3" if data['is_extra'] else 'A3:Q3', u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
+        sheet.merge_range("I1:L1" if data['is_extra'] else 'N1:Q1',  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
+        sheet.merge_range("J2:L2" if data['is_extra'] else 'O2:Q2',  u'191 тоот тушаалаар батлав.', header_txt)
+        sheet.merge_range("K4:L4" if data['is_extra'] else 'P4:Q4', u'Дэлгэрэнгүй бүртгэл',header_txt)
+        sheet.write("L5" if data['is_extra'] else 'Q5', u'ҮХ-1 №....', header_txt)
         sheet.write("E5" if data['is_extra'] else 'L5', u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
         rowx = 7
         asset_obj = self.env['account.asset.asset']
@@ -125,7 +125,8 @@ class AccountAssetDetailReport(models.TransientModel):
             sheet.write("H%s" % (rowx + 1), u'Хуримтдлагдсан', title)
             sheet.write("I%s" % (rowx + 1), u'Сарын', title)
             sheet.write("J%s" % (rowx + 1), u'Элэгдлийн дүн', title)
-            sheet.merge_range("K%s:K%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
+            sheet.merge_range("K%s:K%s" % (rowx, rowx + 1), u'Зарлагадсан', title)
+            sheet.merge_range("L%s:L%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
             rowx = 9
             domain = [('company_id', '=', data['company_id']), ('state', '!=', 'draft')]
             if data['category_id']:
@@ -145,6 +146,7 @@ class AccountAssetDetailReport(models.TransientModel):
                 total_i = 0
                 total_j = 0
                 total_k = 0
+                total_l = 0
                 for line in asset_id:
                     if data['group_by']:
                         if data['group_by'] == 'location':
@@ -160,6 +162,8 @@ class AccountAssetDetailReport(models.TransientModel):
                                                 "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('K%s' % last_group_data['last_row'],
                                                 "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('L%s' % last_group_data['last_row'],
+                                                "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                 last_group_data['seq'] += 1
                                 sheet.write("A%s"%rowx, last_group_data['seq'], data_center)
                                 sheet.merge_range("B%s:F%s" % (rowx, rowx), line.asset_location_id.name, title)
@@ -181,6 +185,8 @@ class AccountAssetDetailReport(models.TransientModel):
                                                 "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('K%s' % last_group_data['last_row'],
                                                 "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('L%s' % last_group_data['last_row'],
+                                                "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                 last_group_data['seq'] += 1
                                 sheet.write("A%s" % rowx, last_group_data['seq'], data_center)
                                 sheet.merge_range("B%s:F%s" % (rowx, rowx), line.category_id.name, title)
@@ -197,8 +203,7 @@ class AccountAssetDetailReport(models.TransientModel):
                     sheet.write("E%s"%rowx, '%s'%line.date, data_left)
                     sheet.write("F%s"%rowx, line.method_number/12, data_left)
                     dep_line = line.depreciation_line_ids.search([('depreciation_date', '<', data['start_date']),
-                                                                  ('move_id', '!=', False ),
-                                                                  ('move_id.state', '!=', 'cancel'),
+                                                                  ('move_check', '=', True ),
                                                                   ('asset_id', '=', line.id)], order='depreciation_date desc', limit=1)
                     sheet.write("G%s"%rowx, dep_line.remaining_value if dep_line else line.value, data_left)
                     sheet.write("H%s"%rowx, dep_line.depreciated_value if dep_line else 0, data_left)
@@ -210,19 +215,21 @@ class AccountAssetDetailReport(models.TransientModel):
                             break
                     sheet.write("I%s"%rowx, month_dep, data_left)
 
-                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_id and x.move_id.state != 'cancel' and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
+                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
                     if dep_lines:
                         date_between_dep = sum(dep_lines.mapped('amount'))
                     else:
                         date_between_dep = 0
                     sheet.write("J%s" % rowx, date_between_dep, data_left)
 
-                    sheet.write("K%s" % rowx, '=G%s-J%s' % (rowx, rowx), data_left)
-                    total_g += dep_line.remaining_value if dep_line and dep_line.move_id.state != 'cancel' else line.value
-                    total_h += dep_line.depreciated_value if dep_line and dep_line.move_id.state != 'cancel' else 0
+                    sheet.write("K%s" % rowx, 0, data_left)
+                    sheet.write("L%s" % rowx, '=G%s-J%s-K%s' % (rowx, rowx, rowx), data_left)
+                    total_g += dep_line.remaining_value if dep_line else line.value
+                    total_h += dep_line.depreciated_value if dep_line else 0
                     total_i += month_dep
                     total_j += date_between_dep
-                    total_k += dep_line.remaining_value if dep_line and dep_line.move_id.state != 'cancel' else line.value - date_between_dep
+                    # total_k += 0
+                    total_l += dep_line.remaining_value if dep_line else line.value - date_between_dep
                     num += 1
                     rowx += 1
                 if data['group_by']:
@@ -256,6 +263,7 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write("I%s" % rowx, total_i, data_left)
                 sheet.write("J%s" % rowx, total_j, data_left)
                 sheet.write("K%s" % rowx, total_k, data_left)
+                sheet.write("L%s" % rowx, total_l, data_left)
         else:
             where = f"WHERE aaa.state != 'draft' AND aaa.company_id = {data['company_id']} "
             if data['category_id']:
@@ -268,11 +276,11 @@ class AccountAssetDetailReport(models.TransientModel):
                         	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
                         FROM (
                         	select 
-            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_id IS NOT NULL THEN aml.debit ELSE 0 END) as acc_dep_balance,
-            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' AND aadl.move_id IS NOT NULL AND am.state != 'cancel'
-            	                                       THEN aml.debit ELSE 0 END), 0) as expense_dep,
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_check = True THEN aadl.amount ELSE 0 END) as acc_dep_balance,
+            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' AND aadl.move_check = True
+            	                                       THEN aadl.amount ELSE 0 END), 0) as expense_dep,
             	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
-            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_id IS NOT NULL THEN aml.debit ELSE 0 END) as dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_check = True THEN aadl.amount ELSE 0 END) as dep_balance,
             	                aaa.name,
             	                aac.id as category_id,
             	                al.id as location_id,
@@ -280,8 +288,6 @@ class AccountAssetDetailReport(models.TransientModel):
             	                al.name as location
             	            from account_asset_asset aaa
                             LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
-            	            LEFT JOIN account_move am on am.id = aadl.move_id AND am.state != 'cancel'
-            	            LEFT JOIN account_move_line aml on aml.move_id = aadl.move_id AND aml.debit > 0
             	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
             	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
             	            {where}
@@ -298,7 +304,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             from account_asset_asset aaa
             	            GROUP BY aaa.name
                         ) as sub1 on sub1.name = sub.name
-                        ORDER BY {'sub.category_id' if data['group_by'] == 'category' else 'sub.location_id'}
+                        {'ORDER BY sub.category_id' if data['group_by_category'] else ''}
             """
             self.env.cr.execute(qry)
             lines = self._cr.dictfetchall()

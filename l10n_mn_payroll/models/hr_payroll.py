@@ -8,7 +8,15 @@ class ResourceCalendar(models.Model):
     
     is_holiday_time_out = fields.Boolean(string='Holiday time out')
     work_time = fields.Float(string='Working hour')
-    
+
+
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar')
+    def _compute_hours_per_day(self):
+        super(ResourceCalendar, self)._compute_hours_per_day()
+        for obj in self:
+            if obj.work_time:
+                obj.hours_per_day = obj.work_time
+
 
 class hr_contract(models.Model):
     _inherit = 'hr.contract'

@@ -12,7 +12,15 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M:%S"
 
+class HrLeave(models.Model):
+    _inherit = "hr.leave"
 
+    def _get_duration(self, check_leave_type=True, resource_calendar=None):
+        days, hours = super(HrLeave, self)._get_duration(check_leave_type, resource_calendar)
+        resource_calendar = resource_calendar or self.resource_calendar_id
+        if resource_calendar.work_time and self.holiday_status_id.request_unit == 'day':
+            hours = days * resource_calendar.work_time
+        return (days, hours)
 
 class HrLeaveType(models.Model):
     _inherit = "hr.leave.type"
@@ -89,7 +97,6 @@ class HrHourRecord(models.Model):
             out_time = 0.0
             n_time = 0.00
             out_n_time = 0.0
-            fr_n_time = 0.0
             n_first_hour = 0.0
             n_first_to = 0.0
             n_second_hour = 0.0
@@ -297,7 +304,6 @@ class HrHourRecord(models.Model):
             sick_time = 0.0
             shift_day = 0.0
             lost_time = 0.0
-            fr_n_time = 0.0
             free_time1 = 0.0
 
 
@@ -336,9 +342,7 @@ class HrHourRecord(models.Model):
                         else:
                             hours = parts[1].split(':')
                         if int(diff_day.days) >= 1 and int(hours[0]) >= 8:
-
                             if lines.holiday_status_id.sub_type == 'night_out_work':
-
                                 if float(22) <=float(from_hours[0]) <=float(23):
                                     ds = lines.date_from
                                     datas = ds.replace(minute=0, hour=22, second=0)
@@ -370,7 +374,7 @@ class HrHourRecord(models.Model):
 
                                 unpayroll_time += lines.number_of_hours_display
                             elif lines.holiday_status_id.sub_type == 'out_work':
-                                free_time1 +=lines.number_of_hours_display
+                                out_n_time +=lines.number_of_hours_display
                             elif lines.holiday_status_id.sub_type == 'payroll':
                                 free_time1 +=lines.number_of_hours_display
 
@@ -382,7 +386,6 @@ class HrHourRecord(models.Model):
 
                         else:
                             if lines.holiday_status_id.sub_type == 'night_out_work':
-
                                 out_n_time +=lines.number_of_hours_display
 
                                 if float(10) <=float(end_hours[0]) <=float(18):
@@ -419,8 +422,7 @@ class HrHourRecord(models.Model):
 
                                 unpayroll_time += lines.number_of_hours_display
                             elif lines.holiday_status_id.sub_type == 'out_work':
-                                print(lines.number_of_hours_display)
-                                free_time1 +=lines.number_of_hours_display
+                                out_n_time +=lines.number_of_hours_display
 
                             elif lines.holiday_status_id.sub_type == 'payroll':
                                 free_time1 +=lines.number_of_hours_display
@@ -473,7 +475,7 @@ class HrHourRecord(models.Model):
                 'due_time': due_time,
                 'shift_holiday':shift_time,
                 'outer_night_time':out_n_time,
-                'night_time':n_time+fr_n_time,
+                'night_time':n_time,
                 'sick_time':sick_time,
                 'miss_time':lost_time,
                 'free_time1':free_time1,
