@@ -85,8 +85,10 @@ class ProjectProductsLine(models.Model):
                         raise UserError(
                             "Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу!"
                         )
-    
-        return super().create(vals_list)
+        res =  super().create(vals_list)
+        for obj in res:
+            obj.onchange_product_qty()
+        return res
     
     def write(self, vals):
         for order in self:
