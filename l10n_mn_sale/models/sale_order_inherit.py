@@ -335,7 +335,8 @@ class SaleOrder(models.Model):
     def _compute_payment_amount(self):
         for sale in self:
             payment_amount = 0.0
-            payments = self.env['account.move'].search([('partner_id', '=', sale.partner_id.id),('invoice_origin', '=', sale.name),('sale_order_count','>=',1), ('state', '=', 'posted')])
+            # payments = self.env['account.move'].search([('partner_id', '=', sale.partner_id.id),('invoice_origin', '=', sale.name),('sale_order_count','>=',1), ('state', '=', 'posted')])
+            payments = sale.invoice_ids.filtered(lambda s: s.sale_order_count >= 1 and s.state == 'posted') if sale.invoice_ids else False
             if payments:
                 for pay in payments:
                     payment_amount += pay.amount_residual_signed
@@ -763,10 +764,11 @@ class SaleOrder(models.Model):
                 same_user_day_orders = same_users_order.filtered(lambda order: order.date_order.date() == fields.Datetime.to_datetime(values['date_order']).date() and int(order.name[8:11]) >= 1)
                 if same_user_day_orders:
                     seq_values = same_user_day_orders[0].name[:8] + str(int(same_user_day_orders[0].name[8:11]) + 1).zfill(3)
-                acc_move_id = self.env['account.move'].search([('invoice_origin', '=', obj.name),
-                                                       ('state', '!=', 'cancel'),
-                                                       ('partner_id', '=', values.get('partner_id',obj.partner_id.id)),
-                                                       ('company_id', '=', obj.company_id.id)])
+                # acc_move_id = self.env['account.move'].search([('invoice_origin', '=', obj.name),
+                #                                        ('state', '!=', 'cancel'),
+                #                                        ('partner_id', '=', values.get('partner_id',obj.partner_id.id)),
+                #                                        ('company_id', '=', obj.company_id.id)])
+                acc_move_id = obj.invoice_ids.filtered(lambda x: x.state != 'cancel') if obj.invoice_ids else False
                 if acc_move_id:
                     for acc_move in acc_move_id:
                         acc_move.invoice_origin = seq_values
@@ -949,11 +951,12 @@ class SaleOrder(models.Model):
     def _compute_invoice_status(self):
         super(SaleOrder, self)._compute_invoice_status()
         for obj in self:
-            acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
-                                                            ('state', '!=', 'cancel'),
-                                                            ('partner_id', '=', obj.partner_id.id),
-                                                            ('company_id', '=', obj.company_id.id),
-                                                            ('payment_types', '!=', 'penalty')])
+            # acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
+            #                                                 ('state', '!=', 'cancel'),
+            #                                                 ('partner_id', '=', obj.partner_id.id),
+            #                                                 ('company_id', '=', obj.company_id.id),
+            #                                                 ('payment_types', '!=', 'penalty')])
+            acc_move_ids = obj.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.payment_types != 'penalty') if obj.invoice_ids else False
             if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
                 if obj.amount_total == total_invoice_created_amount:
