@@ -275,11 +275,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             line_obj = self.env['sale.order.invoice.payment.term.line']
             all_line = line_obj
             sale_order_id = obj.sale_order_ids[0]
-            # account_move_obj = self.env['account.move']
-            # acc_move_id = account_move_obj.search([('invoice_origin', '=', sale_order_id.name),
-            #                                        ('state', '!=', 'cancel'),
-            #                                        ('partner_id', '=', sale_order_id.partner_id.id),
-            #                                        ('company_id', '=', sale_order_id.company_id.id)])
             acc_move_id = sale_order_id.invoice_ids.filtered(lambda x: x.state != 'cancel') if sale_order_id.invoice_ids else []
             if obj.amount_to_invoice_create != 0:
                 if obj.payment_term_id and obj.new_payment_method == 'term':
@@ -329,11 +324,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_invoice_create_amounts(self):
         for obj in self:
             sale_order_id = obj.sale_order_ids[0]
-            # acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', sale_order_id.name),
-            #                                        ('state', '!=', 'cancel'),
-            #                                        ('partner_id', '=', sale_order_id.partner_id.id),
-            #                                        ('company_id', '=', sale_order_id.company_id.id),
-            #                                        ('payment_types', '!=', 'penalty')])
             acc_move_ids = sale_order_id.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.payment_types != 'penalty')
             if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))

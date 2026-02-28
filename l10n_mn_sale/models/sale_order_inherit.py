@@ -335,7 +335,6 @@ class SaleOrder(models.Model):
     def _compute_payment_amount(self):
         for sale in self:
             payment_amount = 0.0
-            # payments = self.env['account.move'].search([('partner_id', '=', sale.partner_id.id),('invoice_origin', '=', sale.name),('sale_order_count','>=',1), ('state', '=', 'posted')])
             payments = sale.invoice_ids.filtered(lambda s: s.sale_order_count >= 1 and s.state == 'posted') if sale.invoice_ids else False
             if payments:
                 for pay in payments:
@@ -761,13 +760,10 @@ class SaleOrder(models.Model):
                 seq_number = user_obj.browse(obj.user_id.id).sq_number
                 seq_values = '%s%s%s%s%s' % (seq_year, str(seq_month).zfill(2), str(seq_day).zfill(2), seq_number, '1'.zfill(3))
                 same_users_order = self.search([('user_id', '=', obj.user_id.id), ('state', '!=', 'cancel')], order='name desc')
-                same_user_day_orders = same_users_order.filtered(lambda order: order.date_order.date() == fields.Datetime.to_datetime(values['date_order']).date() and int(order.name[8:11]) >= 1)
+                same_user_day_orders = same_users_order.filtered(lambda order: int(order.name[8:11]) >= 1
+                                                                               and order.name[:8] == seq_values[:8])
                 if same_user_day_orders:
                     seq_values = same_user_day_orders[0].name[:8] + str(int(same_user_day_orders[0].name[8:11]) + 1).zfill(3)
-                # acc_move_id = self.env['account.move'].search([('invoice_origin', '=', obj.name),
-                #                                        ('state', '!=', 'cancel'),
-                #                                        ('partner_id', '=', values.get('partner_id',obj.partner_id.id)),
-                #                                        ('company_id', '=', obj.company_id.id)])
                 acc_move_id = obj.invoice_ids.filtered(lambda x: x.state != 'cancel') if obj.invoice_ids else False
                 if acc_move_id:
                     for acc_move in acc_move_id:
@@ -796,7 +792,8 @@ class SaleOrder(models.Model):
                 seq_values = '%s%s%s%s%s' % (seq_year, str(seq_month).zfill(2), str(seq_day).zfill(2), seq_number, '1'.zfill(3))
                 same_users_order = self.search([('user_id', '=', vals['user_id']), ('state', '!=', 'cancel')], order='name desc')
                 date_order = fields.Datetime.to_datetime(vals['date_order']).date() if 'date_order' in vals else fields.Date.today()
-                same_user_day_orders = same_users_order.filtered(lambda order: order.date_order.date() == date_order and int(order.name[8:11]) >= 1)
+                same_user_day_orders = same_users_order.filtered(lambda order: int(order.name[8:11]) >= 1
+                                                                 and order.name[:8] == seq_values[:8])
                 if same_user_day_orders:
                     seq_values = same_user_day_orders[0].name[:8] + str(int(same_user_day_orders[0].name[8:11]) + 1).zfill(3)
                 vals['name'] = seq_values
@@ -951,11 +948,6 @@ class SaleOrder(models.Model):
     def _compute_invoice_status(self):
         super(SaleOrder, self)._compute_invoice_status()
         for obj in self:
-            # acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
-            #                                                 ('state', '!=', 'cancel'),
-            #                                                 ('partner_id', '=', obj.partner_id.id),
-            #                                                 ('company_id', '=', obj.company_id.id),
-            #                                                 ('payment_types', '!=', 'penalty')])
             acc_move_ids = obj.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.payment_types != 'penalty') if obj.invoice_ids else False
             if acc_move_ids:
                 total_invoice_created_amount = sum(acc_move_ids.mapped('amount_total'))
