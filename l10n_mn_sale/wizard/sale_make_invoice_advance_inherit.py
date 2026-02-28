@@ -280,7 +280,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             #                                        ('state', '!=', 'cancel'),
             #                                        ('partner_id', '=', sale_order_id.partner_id.id),
             #                                        ('company_id', '=', sale_order_id.company_id.id)])
-            acc_move_id = sale_order_id.invoice_ids.filtered(lambda x: x.state != 'cancel') if sale_order_id.invoice_ids else False
+            acc_move_id = sale_order_id.invoice_ids.filtered(lambda x: x.state != 'cancel') if sale_order_id.invoice_ids else []
             if obj.amount_to_invoice_create != 0:
                 if obj.payment_term_id and obj.new_payment_method == 'term':
                     for lines in obj.payment_term_id.line_ids:
