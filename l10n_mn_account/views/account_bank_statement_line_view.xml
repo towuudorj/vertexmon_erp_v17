@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
+		
+		<record id="view_account_bank_statement_line_mn_inherit" model="ir.ui.view">
+			<field name="name">account.bank.statement.line.form.mn</field>
+			<field name="model">account.bank.statement.line</field>
+			<field name="inherit_id" ref="account_statement_base.account_bank_statement_line_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr='//field[@name="payment_ref"]' position="after">
+					<field name="cash_move_type_id"/>
+				</xpath>
+			</field>
+		</record>
 
         <record model="ir.ui.view" id="account_bank_statement_line_tree_view">
                 <field name="name">account.bank.statement.line.tree</field>
