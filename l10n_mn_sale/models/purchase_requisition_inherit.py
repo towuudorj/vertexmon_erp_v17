@@ -214,49 +214,38 @@ class PurchaseRequisition(models.Model):
                             'requisition_id': pr.id,
                         }
                         purchase_order_id = self.env['purchase.order'].create(datas)
-
                         pr.purchase_ids = [(4,purchase_order_id.id)]
-                        line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
-                                                                            ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id),
-                                                                                  ('name','=',lines.product_description_variants)])
-                        
+
                         if lines.supplier_id.id == purchase_order_id.partner_id.id:
-                            line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order_id.id), 
-                                                                                 ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id),
-                                                                                  ('name','=',lines.product_description_variants)])
-                            if not line_ids:
+                            if not lines.purchase_order_line_id:
                                 line_data = {
-                                            'product_id': lines.product_id.id,
-                                            'name': lines.product_description_variants,
-                                            'product_qty': lines.product_qty,
-                                            'product_uom': lines.product_id.uom_id.id,
-                                            'price_unit': lines.price_unit,
-                                            'currency_id': pr.currency_id.id,
-                                            'date_planned':datetime.now(),
-                                            'order_id': purchase_order_id.id,
-                                            }
+                                    'product_id': lines.product_id.id,
+                                    'name': lines.product_description_variants,
+                                    'product_qty': lines.product_qty,
+                                    'product_uom': lines.product_id.uom_id.id,
+                                    'price_unit': lines.price_unit,
+                                    'currency_id': pr.currency_id.id,
+                                    'date_planned':datetime.now(),
+                                    'order_id': purchase_order_id.id,
+                                }
                                 line_ids.create(line_data)
+                                lines.purchase_order_line_id = line_ids.id
                     else:
                         pr.purchase_ids = [(4,purchase_order.id)]
                         if lines.supplier_id.id == purchase_order.partner_id.id:
-                            line_ids = self.env['purchase.order.line'].search([('order_id', '=', purchase_order.id),
-                                                                                ('price_unit', '=', lines.price_unit),
-                                                                                  ('product_id', '=', lines.product_id.id),
-                                                                                  ('name','=',lines.product_description_variants)])
-                            if not line_ids:
+                            if not lines.purchase_order_line_id:
                                 line_data = {
-                                            'product_id': lines.product_id.id,
-                                            'name': lines.product_description_variants,
-                                            'product_qty': lines.product_qty,
-                                            'product_uom': lines.product_id.uom_id.id,
-                                            'price_unit': lines.price_unit,
-                                            'order_id': purchase_order.id,
-                                            'date_planned':datetime.now(),
-                                            'currency_id': pr.currency_id.id,
-                                            }
+                                    'product_id': lines.product_id.id,
+                                    'name': lines.product_description_variants,
+                                    'product_qty': lines.product_qty,
+                                    'product_uom': lines.product_id.uom_id.id,
+                                    'price_unit': lines.price_unit,
+                                    'order_id': purchase_order.id,
+                                    'date_planned':datetime.now(),
+                                    'currency_id': pr.currency_id.id,
+                                }
                                 line_ids.create(line_data)
+                                lines.purchase_order_line_id = line_ids.id
                 else:
                     raise UserError(_('Supplier сонгоогүй байгаа тул сонгоно уу!'))
             #else:
@@ -287,6 +276,7 @@ class PurchaseRequisitionLine(models.Model):
     subtotal = fields.Float(string='Total amount', compute='_compute_subtotal_amount')
     is_free_pro = fields.Boolean(string='Is product free')
     purchase_date = fields.Date(string='Purchase date')
+    purchase_order_line_id = fields.Many2one('purchase.order.line', string='Order line')
     
     @api.depends('subtotal', 'product_qty', 'price_unit')
     def _compute_subtotal_amount(self):
