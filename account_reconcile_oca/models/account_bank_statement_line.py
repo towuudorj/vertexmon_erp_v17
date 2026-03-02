@@ -61,7 +61,7 @@ class AccountBankStatementLine(models.Model):
             "Percentage Analytic"
         ),
     )
-    manual_cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash Move Type', store=False, prefetch=False)
+    #manual_cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash Move Type', store=False, prefetch=False)
     manual_in_currency = fields.Boolean(
         readonly=True, store=False, prefetch=False, string="Manual In Currency?"
     )
@@ -366,7 +366,7 @@ class AccountBankStatementLine(models.Model):
             "manual_in_currency_id": False,
             "manual_in_currency": False,
             "manual_name": False,
-            "manual_cash_move_type_id":False,
+            #"manual_cash_move_type_id":False,
             "manual_partner_id": False,
             "manual_line_id": False,
             "manual_move_id": False,
@@ -388,7 +388,7 @@ class AccountBankStatementLine(models.Model):
         self.manual_amount_in_currency = line.get("currency_amount")
         self.manual_name = line["name"]
         self.manual_exchange_counterpart = line.get("is_exchange_counterpart", False)
-        self.manual_cash_move_type_id = line.get("cash_move_type_id")
+        #self.manual_cash_move_type_id = line.get("cash_move_type_id")
         self.manual_partner_id = line.get("partner_id") and line["partner_id"][0]
         manual_line = self.env["account.move.line"].browse(line["id"]).exists()
         self.manual_line_id = manual_line
@@ -462,7 +462,7 @@ class AccountBankStatementLine(models.Model):
                 else [False, _("Undefined")]
             ),
             "amount": self.manual_amount,
-            "cash_move_type_id": (self.manual_cash_move_type_id and [self.manual_cash_move_type_id.id, self.manual_cash_move_type_id.display_name] or False),
+            #"cash_move_type_id": (self.manual_cash_move_type_id and [self.manual_cash_move_type_id.id, self.manual_cash_move_type_id.display_name] or False),
             "credit": -self.manual_amount if self.manual_amount < 0 else 0.0,
             "debit": self.manual_amount if self.manual_amount > 0 else 0.0,
             "analytic_distribution": self.analytic_distribution,
@@ -486,7 +486,7 @@ class AccountBankStatementLine(models.Model):
         "manual_partner_id",
         "manual_name",
         "manual_amount",
-        "manual_cash_move_type_id",
+       # "manual_cash_move_type_id",
         "analytic_distribution",
     )
     def _onchange_manual_reconcile_vals(self):
@@ -529,7 +529,7 @@ class AccountBankStatementLine(models.Model):
             #if partner_data.partner_type.cash_move_id.id:
             #    line.update({"cash_move_type_id" :partner_data.partner_type.cash_move_id.id})
             #else:
-            line.update({"cash_move_type_id" :self.manual_cash_move_type_id.id})
+           #line.update({"cash_move_type_id" :self.manual_cash_move_type_id.id})
             new_data.append(line)
         self.reconcile_data_info = self._recompute_suspense_line(
             new_data,
@@ -542,7 +542,7 @@ class AccountBankStatementLine(models.Model):
         if self.partner_id == self.manual_partner_id:
             return
         self.partner_id = self.manual_partner_id
-        self.cash_move_type_id = self.manual_cash_move_type_id
+        #self.cash_move_type_id = self.manual_cash_move_type_id
 
     @api.depends("reconcile_data", "is_reconciled")
     def _compute_reconcile_data_info(self):
@@ -753,7 +753,7 @@ class AccountBankStatementLine(models.Model):
                 reconcile_auxiliary_id, lines = self._get_reconcile_line(
                     line, "other", from_unreconcile=False
                 )
-                lines[0]["cash_move_type_id"]=line.cash_move_type_id.id
+                #lines[0]["cash_move_type_id"]=line.cash_move_type_id.id
                 data += lines
         return self._recompute_suspense_line(
             data,
@@ -789,10 +789,9 @@ class AccountBankStatementLine(models.Model):
         result = getattr(self, "_reconcile_bank_line_%s" % self.reconcile_mode)(
             self._prepare_reconcile_line_data(self.reconcile_data_info["data"])
         )
-        for dt in self.reconcile_data_info['data']:
-            print ("ddddddddddd", dt['cash_move_type_id'] )
-            if dt['cash_move_type_id'] == False:
-                raise UserError(u"Мөнгөн гүйлгээний төрөл сонгоогүй байгаа тул сонгоно уу")
+        #for dt in self.reconcile_data_info['data']:
+        #    if dt['cash_move_type_id'] == False:
+        #        raise UserError(u"Мөнгөн гүйлгээний төрөл сонгоогүй байгаа тул сонгоно уу")
         self.reconcile_data = False
         return result
 
@@ -943,7 +942,7 @@ class AccountBankStatementLine(models.Model):
             "partner_id": line.get("partner_id") and line["partner_id"][0],
             "credit": line["credit"],
             "debit": line["debit"],
-            'cash_move_type_id':line.get('cash_move_type_id'),
+            #'cash_move_type_id':line.get('cash_move_type_id'),
             "currency_id": line.get("line_currency_id", self.company_id.currency_id.id),
             "tax_ids": line.get("tax_ids", []),
             "tax_tag_ids": line.get("tax_tag_ids", []),
@@ -1035,7 +1034,7 @@ class AccountBankStatementLine(models.Model):
             for field_name in (
                 "payment_ref",
                 "amount",
-                "cash_move_type_id",
+                #"cash_move_type_id",
                 "amount_currency",
                 "foreign_currency_id",
                 "currency_id",
@@ -1063,7 +1062,7 @@ class AccountBankStatementLine(models.Model):
             for field_name in (
                 "payment_ref",
                 "amount",
-                "cash_move_type_id",
+                #"cash_move_type_id",
                 "amount_currency",
                 "foreign_currency_id",
                 "currency_id",

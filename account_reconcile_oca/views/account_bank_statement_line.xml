@@ -275,11 +275,11 @@
                                     string="Partner"
                                     modifiers="{'readonly': ['|', '|', '|', ('manual_exchange_counterpart', '=', True),('manual_reference', '=', False), ('is_reconciled', '=', True), '&amp;', ('manual_line_id', '!=', False), ('manual_kind', '!=', 'liquidity')]}"
                                 />
-                                <field
+                                <!-- <field
                                     name="manual_cash_move_type_id"
                                     string="Мөнгөн гүйлгээний төрөл"
                                     modifiers="{ 'readonly': ['|', '|', '|', ('manual_exchange_counterpart', '=', True),('manual_reference', '=', False), ('is_reconciled', '=', True), ('manual_line_id', '!=', False)]}"
-                                />
+                                /> -->
                                 <field
                                     name="analytic_distribution"
                                     widget="analytic_distribution"
