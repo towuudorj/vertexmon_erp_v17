@@ -394,6 +394,7 @@ class AccountAssetAsset(models.Model):
                     'remaining_value': 0,
                     'depreciated_value': asset.value - asset.salvage_value,  # the asset is completely depreciated
                     'depreciation_date': today,
+                    'is_sale_line': True,
                 }
                 commands.append((0, False, vals))
                 asset.write({'depreciation_line_ids': commands, 'method_end': today, 'method_number': sequence})
@@ -546,6 +547,7 @@ class AccountAssetDepreciationLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency',
                                   related='asset_id.currency_id',
                                   readonly=True)
+    is_sale_line = fields.Boolean(string='Is Sale Line', default=False)
 
     @api.depends('move_id')
     def _get_move_check(self):

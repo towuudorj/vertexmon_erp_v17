@@ -92,7 +92,6 @@ class AccountAssetDetailReport(models.TransientModel):
         data_bold_center = workbook.add_format({
                                     'align': 'center',
                                     'bold': True,
-                                    'border': 1,
                                     'font_size': 12,
                                     'num_format': '#,##0.00;(#,##0.00)'
                                 })
@@ -221,8 +220,10 @@ class AccountAssetDetailReport(models.TransientModel):
                     else:
                         date_between_dep = 0
                     sheet.write("J%s" % rowx, date_between_dep, data_left)
-
-                    sheet.write("K%s" % rowx, 0, data_left)
+                    sale_line = False
+                    if line.state=='close':
+                        sale_line = line.depreciation_line_ids.filtered(lambda x: x.is_sale_line)
+                    sheet.write("K%s" % rowx, sale_line.amount if sale_line else 0, data_left)
                     sheet.write("L%s" % rowx, '=G%s-J%s-K%s' % (rowx, rowx, rowx), data_left)
                     total_g += dep_line.remaining_value if dep_line else line.value
                     total_h += dep_line.depreciated_value if dep_line else 0
@@ -276,11 +277,11 @@ class AccountAssetDetailReport(models.TransientModel):
                         	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
                         FROM (
                         	select 
-            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_check = True THEN aadl.amount ELSE 0 END) as acc_dep_balance,
-            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' AND aadl.move_check = True
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_check = True AND aaa.state != 'close' THEN aadl.amount ELSE 0 END) as acc_dep_balance,
+            	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' and aadl.is_sale_line = True
             	                                       THEN aadl.amount ELSE 0 END), 0) as expense_dep,
             	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
-            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_check = True THEN aadl.amount ELSE 0 END) as dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_check = True AND aaa.state != 'close' THEN aadl.amount ELSE 0 END) as dep_balance,
             	                aaa.name,
             	                aac.id as category_id,
             	                al.id as location_id,
@@ -299,8 +300,8 @@ class AccountAssetDetailReport(models.TransientModel):
             	                COALESCE(count(distinct CASE WHEN aaa.date < '{data['start_date']}' then aaa.id else null end), 0) as start_count,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN aaa.value else 0 end), 0) as income_balance,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN 1 ELSE 0 END), 0) as income_count,
-            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN aaa.value ELSE 0 END), 0) as expense_balance,
-            	                COALESCE(SUM(CASE WHEN CASE WHEN aaa.method_time = 'end' THEN aaa.method_end else (aaa.first_depreciation_manual_date + (aaa.method_period || ' months')::interval) end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN 1 ELSE 0 END), 0) as expense_count
+            	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN aaa.value ELSE 0 END), 0) as expense_balance,
+            	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN 1 ELSE 0 END), 0) as expense_count
                             from account_asset_asset aaa
             	            GROUP BY aaa.name
                         ) as sub1 on sub1.name = sub.name
@@ -324,13 +325,13 @@ class AccountAssetDetailReport(models.TransientModel):
             sheet.merge_range("J%s:K%s"%(rowx, rowx), u'Эцсийн үлдэгдэл', title)
             sheet.write("J%s"%(rowx+1), u'Тоо', title)
             sheet.write("K%s"%(rowx+1), u'Өртөг', title)
-
-            sheet.merge_range("L%s:O%s"%(rowx, rowx), u'Элэгдэл', title)
-            sheet.write("L%s"%(rowx+1), u'Хуримтдлагдсан', title)
-            sheet.write("M%s"%(rowx+1), u'Сарын', title)
-            sheet.write("N%s"%(rowx+1), u'Хасагдсанд ногдох', title)
-            sheet.write("O%s"%(rowx+1), u'Элэгдлийн дүн', title)
-            sheet.merge_range("P%s:P%s"%(rowx, rowx+1), u'Үлдэгдэл өртөг', title)
+            sheet.merge_range("L%s:P%s"%(rowx, rowx), u'Элэгдэл', title)
+            sheet.write("L%s"%(rowx+1), u'Элэгдээгүй дүн', title)
+            sheet.write("M%s"%(rowx+1), u'Хуримтдлагдсан элэгдэл', title)
+            sheet.write("N%s"%(rowx+1), u'Сарын', title)
+            sheet.write("O%s"%(rowx+1), u'Хасагдсанд ногдох', title)
+            sheet.write("P%s"%(rowx+1), u'Элэгдлийн дүн', title)
+            sheet.merge_range("Q%s:Q%s"%(rowx, rowx+1), u'Үлдэгдэл өртөг', title)
             total_d = 0
             total_e = 0
             total_f = 0
@@ -344,6 +345,7 @@ class AccountAssetDetailReport(models.TransientModel):
             total_n = 0
             total_o = 0
             total_p = 0
+            total_q = 0
             rowx = 9
             for line in lines:
                 if data['group_by_category']:
@@ -366,6 +368,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             sheet.write('N%s' % last_group_data['last_row'], "=SUM(N%s:N%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('O%s' % last_group_data['last_row'], "=SUM(O%s:O%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('P%s' % last_group_data['last_row'], "=SUM(P%s:P%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('Q%s' % last_group_data['last_row'], "=SUM(Q%s:Q%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                         last_group_data['last_row'] = rowx
                         rowx += 1
                         num = 1
@@ -383,11 +386,12 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write("I%s" % rowx, line['expense_balance'], data_left)
                 sheet.write("J%s" % rowx, '=D%s+F%s-H%s' % (rowx, rowx, rowx), data_left)
                 sheet.write("K%s" % rowx, '=E%s+G%s-I%s' % (rowx, rowx, rowx), data_left)
-                sheet.write("L%s" % rowx, line['acc_dep_balance'], data_left)
-                sheet.write("M%s" % rowx, line['month_dep'], data_left)
-                sheet.write("N%s" % rowx, line['expense_dep'], data_left)
-                sheet.write("O%s" % rowx, line['dep_balance'], data_left)
-                sheet.write("P%s" % rowx, '=K%s-O%s' % (rowx, rowx), data_left)
+                sheet.write("L%s" % rowx, '=K%s-M%s'  % (rowx, rowx), data_left)
+                sheet.write("M%s" % rowx, line['acc_dep_balance'], data_left)
+                sheet.write("N%s" % rowx, line['month_dep'], data_left)
+                sheet.write("O%s" % rowx, line['expense_dep'], data_left)
+                sheet.write("P%s" % rowx, line['dep_balance'], data_left)
+                sheet.write("Q%s" % rowx, '=L%s-P%s' % (rowx, rowx), data_left)
                 rowx += 1
                 num += 1
                 total_d += line['start_count']
@@ -398,11 +402,12 @@ class AccountAssetDetailReport(models.TransientModel):
                 total_i += line['expense_balance']
                 total_j += line['start_count'] + line['income_count'] - line['expense_count']
                 total_k += line['start_balance'] + line['income_balance'] -  line['expense_balance']
-                total_l += line['acc_dep_balance']
-                total_m += line['month_dep']
-                total_n += line['expense_dep']
-                total_o += line['acc_dep_balance'] + line['month_dep'] - line['expense_dep']
-                total_p += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - (line['acc_dep_balance'] + line['month_dep'] - line['expense_dep'])
+                total_l += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - line['acc_dep_balance']
+                total_m += line['acc_dep_balance']
+                total_n += line['month_dep']
+                total_o += line['expense_dep']
+                total_p += line['acc_dep_balance'] + line['month_dep'] - line['expense_dep']
+                total_q += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - (line['acc_dep_balance'] + line['month_dep'] - line['expense_dep'])
             if data['group_by_category'] and last_group_data['last_id']:
                 sheet.write('D%s' % last_group_data['last_row'], "=SUM(D%s:D%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
                 sheet.write('E%s' % last_group_data['last_row'], "=SUM(E%s:E%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
@@ -417,6 +422,7 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write('N%s' % last_group_data['last_row'], "=SUM(N%s:N%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
                 sheet.write('O%s' % last_group_data['last_row'], "=SUM(O%s:O%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
                 sheet.write('P%s' % last_group_data['last_row'], "=SUM(P%s:P%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
+                sheet.write('Q%s' % last_group_data['last_row'], "=SUM(Q%s:Q%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
             sheet.merge_range("A%s:C%s" % (rowx, rowx), u'Нийт', data_center)
             sheet.write("D%s" % rowx, total_d, data_left)
             sheet.write("E%s" % rowx, total_e, data_left)
@@ -431,10 +437,11 @@ class AccountAssetDetailReport(models.TransientModel):
             sheet.write("N%s" % rowx, total_n, data_left)
             sheet.write("O%s" % rowx, total_o, data_left)
             sheet.write("P%s" % rowx, total_p, data_left)
+            sheet.write("Q%s" % rowx, total_q, data_left)
 
-        sheet.write("C%s"%(rowx + 3), u'Хөтөлсөн нягтлан бодогч....................................../\
+        sheet.merge_range("B%s:E%s"%(rowx + 3, rowx + 3), u'Хөтөлсөн нягтлан бодогч....................................../\
                                                  /', data_bold_center)
-        sheet.write("C%s"%(rowx + 5), u'Хянасан ерөнхий (ахлах) нягтлан бодогч....................................../\
+        sheet.merge_range("B%s:E%s"%(rowx + 5, rowx + 5), u'Хянасан ерөнхий (ахлах) нягтлан бодогч....................................../\
                                                  /', data_bold_center)
 
         workbook.close()

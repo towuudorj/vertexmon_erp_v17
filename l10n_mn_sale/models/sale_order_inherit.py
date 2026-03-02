@@ -791,7 +791,6 @@ class SaleOrder(models.Model):
                 seq_number = user_obj.browse(vals['user_id']).sq_number
                 seq_values = '%s%s%s%s%s' % (seq_year, str(seq_month).zfill(2), str(seq_day).zfill(2), seq_number, '1'.zfill(3))
                 same_users_order = self.search([('user_id', '=', vals['user_id']), ('state', '!=', 'cancel')], order='name desc')
-                date_order = fields.Datetime.to_datetime(vals['date_order']).date() if 'date_order' in vals else fields.Date.today()
                 same_user_day_orders = same_users_order.filtered(lambda order: int(order.name[8:11]) >= 1
                                                                  and order.name[:8] == seq_values[:8])
                 if same_user_day_orders:
