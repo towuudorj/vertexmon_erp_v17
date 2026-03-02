@@ -15,7 +15,6 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 import json,requests
 from requests.auth import HTTPBasicAuth 
 import base64
-from openerp.osv import fields, osv
 
 class payment_order(osv.osv):
     _inherit = 'payment.order'

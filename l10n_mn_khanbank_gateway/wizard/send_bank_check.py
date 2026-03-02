@@ -1,4 +1,4 @@
-from openerp import models, api, fields
+from odoo import api, fields, models, _
 
 
 class AccountBankCheck(models.TransientModel):

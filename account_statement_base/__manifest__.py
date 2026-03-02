@@ -12,8 +12,9 @@
     "maintainers": ["alexis-via"],
     "development_status": "Mature",
     "website": "https://github.com/OCA/account-reconcile",
-    "depends": ["account",
-    		"l10n_mn_account"],
+    "depends": [
+                "account",
+                ],
     "data": [
         "views/account_bank_statement_line.xml",
         "views/account_bank_statement.xml",  # Keep order

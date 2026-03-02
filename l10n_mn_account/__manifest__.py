@@ -25,6 +25,7 @@
                 'account',
                 'om_account_accountant',
                 'product',
+                'account_statement_base'
                 ],
     'data': [
             'security/ir.model.access.csv',
@@ -33,6 +34,7 @@
             'data/cash_move_type_data.xml',
             'data/sequence_data.xml',
             'wizard/account_currency_equalization_view.xml',
+            'wizard/generate_opening_entries.xml',
             'report/account_invoice_report_view.xml',
             'report/invoice_percentage.xml',
             'report/payment_consensus_report.xml',
@@ -48,6 +50,7 @@
             'views/account_account_inherit_view.xml',
             'views/account_bank_statement_line_view.xml',
             'views/res_partner_bank_inherit_view.xml',
+            
             'views/menu_view.xml',
             
 
