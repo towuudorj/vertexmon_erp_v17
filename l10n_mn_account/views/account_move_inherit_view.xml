@@ -43,6 +43,20 @@
             </field>
         </record>
         -->
+        
+        <record id="view_account_move_mn_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.mn</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr='//sheet/notebook/page[@id="aml_tab"]/field[@name="line_ids"]/tree/field[@name="currency_id"]' position="before">
+                    <field name="cash_move_type_id" string="Мөнгөн гүйлгээний төрөл"/>
+                </xpath>
+
+            </data>
+            </field>
+        </record>
 
          <record id="view_account_move_line_tree_mn_inherit" model="ir.ui.view">
             <field name="name">account.move.line.tree.mn</field>
