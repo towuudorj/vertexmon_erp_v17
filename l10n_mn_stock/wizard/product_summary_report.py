@@ -179,15 +179,22 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
             
-            date_to_dt_max = datetime.combine(date_from, time.max)
-            date_to_dt_min = datetime.combine(date_from, time.min)
+            date_from_dt_max = datetime.combine(date_from, time.max)
+            date_from_dt_min = datetime.combine(date_from, time.min)
             
+            date_to = data['date_to']
+
+            if isinstance(date_to, str):
+                date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+            
+            date_to_dt_max = datetime.combine(date_to, time.max)
+            date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
                 if location_ids:
                     f_query_income = """
                         SELECT
                             mv.product_id,
-                            SUM(svl.quantity) AS qty,
+                            SUM(mv.product_uom_qty) AS qty,
                             AVG(svl.unit_cost) AS price
                         FROM stock_valuation_layer svl
                         JOIN stock_move mv ON mv.id = svl.stock_move_id
@@ -206,7 +213,7 @@ class ProductSummaryReport(models.TransientModel):
                 
                     self._cr.execute(
                         f_query_income,
-                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_income = self._cr.dictfetchall()
                     
@@ -214,7 +221,7 @@ class ProductSummaryReport(models.TransientModel):
                     f_query_expense = """
                         SELECT
                             mv.product_id,
-                            SUM(svl.quantity) AS qty,
+                            SUM(mv.product_uom_qty) AS qty,
                             AVG(svl.unit_cost) AS price
                         FROM stock_valuation_layer svl
                         JOIN stock_move mv ON mv.id = svl.id
@@ -233,7 +240,7 @@ class ProductSummaryReport(models.TransientModel):
                 
                     self._cr.execute(
                         f_query_expense,
-                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_expense = self._cr.dictfetchall()
                     
@@ -241,7 +248,7 @@ class ProductSummaryReport(models.TransientModel):
                     query_income = """
                         SELECT
                             mv.product_id,
-                            SUM(svl.quantity) AS qty,
+                            SUM(mv.product_uom_qty) AS qty,
                             AVG(svl.unit_cost) AS price
                         FROM stock_valuation_layer svl
                         JOIN stock_move mv ON svl.stock_move_id = mv.id
@@ -256,12 +263,13 @@ class ProductSummaryReport(models.TransientModel):
                           AND sl.usage IN ('supplier','customer','inventory','production','internal')
                           AND dest.usage = 'internal'
                           AND svl.product_id = mv.product_id
+                               
                         GROUP BY mv.product_id
                     """
                 
                     self._cr.execute(
                         query_income,
-                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     income = self._cr.dictfetchall()
                     
@@ -269,7 +277,7 @@ class ProductSummaryReport(models.TransientModel):
                     query_expense = """
                         SELECT
                             mv.product_id,
-                            SUM(svl.quantity) AS qty,
+                            SUM(mv.product_uom_qty) AS qty,
                             AVG(svl.unit_cost) AS price
                         FROM stock_valuation_layer svl
                         JOIN stock_move mv ON svl.stock_move_id = mv.id
@@ -289,7 +297,7 @@ class ProductSummaryReport(models.TransientModel):
                 
                     self._cr.execute(
                         query_expense,
-                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     expense = self._cr.dictfetchall()
                 
@@ -315,24 +323,35 @@ class ProductSummaryReport(models.TransientModel):
                 for lines in f_income:
                     if lines['product_id'] == pro.id:
                         f_in_qty +=lines['qty']
-                        f_in_price +=lines['price']
+                        if lines['price']!=None:
+                            f_in_price +=lines['price']
                 
                 for lined in f_expense:
                     if lined['product_id'] == pro.id:
-                        f_ex_qty +=lined['qty']
-                        f_ex_price +=lined['price']
+                        if lined['qty'] < 0:
+                            f_ex_qty +=lined['qty']*(-1)
+                        else:
+                            f_ex_qty +=lined['qty']
+                        if lined['price']!=None:
+                            f_ex_price +=lined['price']
                         
                                     
                 for linem in income:
                     if linem['product_id'] == pro.id:
                         in_qty +=linem['qty']
-                        in_price +=linem['price']
+                        if linem['price']!=None:
+                            in_price +=linem['price']
                 
                 for linex in expense:
                     if linex['product_id'] == pro.id:
-                        ex_qty +=linex['qty']
-                        ex_price +=linex['price']
-                print("loggggggg",f_in_qty, f_ex_qty)
+                        if linex['qty'] < 0:
+                            ex_qty +=linex['qty']*(-1)
+                        else:
+                            ex_qty +=linex['qty']
+                        if linex['price']!=None:
+                            ex_price +=linex['price']
+                if pro.id==47733:
+                    print("loggggggg",f_in_qty, f_ex_qty, in_qty, ex_qty,date_from_dt_min, date_to_dt_max,)
                 f_bal_qty = f_in_qty - f_ex_qty
                 f_bal_price = f_in_price - f_ex_price
                 last_qty = f_bal_qty + in_qty - ex_qty
