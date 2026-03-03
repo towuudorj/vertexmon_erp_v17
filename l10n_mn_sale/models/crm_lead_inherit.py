@@ -397,7 +397,7 @@ class CrmLead(models.Model):
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
                         crm_manager = self.team_id.user_id
-                        if crm_manager:
+                        if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
                             self.env['mail.mail'].create({
@@ -413,7 +413,7 @@ class CrmLead(models.Model):
                     else:
                         line.new_status = 'confirm'
                         crm_manager = self.team_id.user_id
-                        if crm_manager:
+                        if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
                             self.env['mail.mail'].create({
@@ -430,7 +430,7 @@ class CrmLead(models.Model):
                     if line.crm_type == 'stock':
                         line.new_status = 'confirm'
                         crm_manager = self.team_id.user_id
-                        if crm_manager:
+                        if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
                             self.env['mail.mail'].create({
@@ -447,7 +447,7 @@ class CrmLead(models.Model):
                     else:
                         line.new_status = 'confirm'
                         crm_manager = self.team_id.user_id
-                        if crm_manager:
+                        if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
                             self.env['mail.mail'].create({
@@ -494,7 +494,7 @@ class CrmLead(models.Model):
                 sale_order_id.action_confirm()
                 purchase_id = self.env['purchase.order'].search([('requisition_id','in',lead.purchase_request_ids.ids)],limit=1)
                 crm_manager = self.user_id
-                if crm_manager:
+                if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     
                     sale_url = f'/web#id={sale_order_id.id}&model=sale.order&view_type=form'

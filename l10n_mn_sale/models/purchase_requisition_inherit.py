@@ -125,7 +125,7 @@ class PurchaseRequisition(models.Model):
                         raise UserError(_('Үнэ судлуулах хүсэлтэнд үнэ, валют болон үнийн зөвшөөрлийг оруулаагүй байгаа тул оруулна уу!'))
             if pr.price_change == False:
                 crm_manager = self.user_id
-                if crm_manager:
+                if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
                     self.env['mail.mail'].create({
@@ -135,7 +135,7 @@ class PurchaseRequisition(models.Model):
                     }).send()
             else:
                 crm_manager = self.user_id
-                if crm_manager:
+                if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
                     self.env['mail.mail'].create({
