@@ -34,7 +34,8 @@ class ForeignPurchaseRequest(models.TransientModel):
                 line_id.append((0,0,{
                             'product_id':li.product_id.id,
                             'desc':li.name,
-                            'qty':qty,
+                            #'qty':qty,
+                            'qty':li.product_qty, # түр бүх qty авдаг болгов
                             'price_unit':li.price_unit,
                             'uom_id':li.product_uom.id,
                             'purchase_user_id':li.purchase_manager_id.id,
