@@ -227,7 +227,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         elif data['result_selection']=='supplier':
             account_type = ['liability_payable']
         else:
-            account_type = ['asset_receivable','liability_payable']
+            account_type = ['asset_receivable','liability_payable', 'asset_prepayments']
         if data['target_move'] == 'posted':
             move_state = ['posted']
 
