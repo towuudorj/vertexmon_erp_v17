@@ -77,8 +77,11 @@ class ProjectProject(models.Model):
                               ('done','Done')],string='State', default='planned')
     product_count = fields.Integer(sttring='Product count', compute="compute_product_count")
     journal_id = fields.Many2one('account.journal',string='Journal', domain=[("type",'=',"general")])
+    invoice_journal_id = fields.Many2one('account.journal', string='Journal', domain=[("type",'=',"sale")])
     close_move_id = fields.Many2one('account.move', string='Close move entry')
+    invoice_id = fields.Many2one('account.move',string='Invoice')
     close_date = fields.Date(string='Close date')
+    invoice_product_id = fields.Many2one('product.product',string='Invoice product', domain=[("type",'=',"service")])
     
     
     def write(self, vals):
@@ -178,7 +181,32 @@ class ProjectProject(models.Model):
     def action_done(self):
         account_move_obj = self.env['account.move']
         for line in self:
-            move_vals = []
+            tax_ids = self.env['account.tax'].search([('company_id','=',line.company_id.id),('type_tax_use','=','sale'),('price_include','=',True)],limit=1)
+            analytic_account_1 = line.analytic_account_id
+            invoice_vals = {
+                            'invoice_date':line.close_date,
+                            'journal_id':line.invoice_journal_id.id,
+                            'partner_id':line.partner_id.id,
+                            'state':'draft',
+                            'move_type':'out_invoice',
+                            'invoice_line_ids':[],
+                            'company_id':line.company_id.id,
+                            'invoice_origin':'%s'%line.name
+                            }
+            invoice_line = {
+                            'name':u'%s'%line.invoice_product_id.name,
+                            'quantity':1.0,
+                            'product_id':line.invoice_product_id.id,
+                            'product_uom_id':line.invoice_product_id.uom_id.id,
+                            'price_unit':line.contract_amount,
+                            'tax_ids':[(6,0,tax_ids.ids)],
+                            'analytic_distribution': {
+                                analytic_account_1.id: 100.0,
+                            },
+                            'account_id':line.invoice_journal_id.default_account_id.id,
+                            }
+            invoice_vals['invoice_line_ids'].append((0,0,invoice_line))
+            invoice_id = account_move_obj.create(invoice_vals)
             move_value = {
                             'date':line.close_date,
                             'journal_id':line.journal_id.id,
@@ -190,8 +218,9 @@ class ProjectProject(models.Model):
                             'line_ids':[]
                             }
             
+            
             for lines in line.products_line:
-                analytic_account_1 = line.analytic_account_id
+                
                 amount = lines.qty_delivered * lines.cost_price
                 mv_debit_lines = {    
                             'product_id':lines.product_id.id,
@@ -219,6 +248,7 @@ class ProjectProject(models.Model):
             move_id = account_move_obj.create(move_value)
             move_id.action_post()
             line.close_move_id = move_id.id
+            line.invoice_id = invoice_id.id
             line.state = 'done'
     
     
