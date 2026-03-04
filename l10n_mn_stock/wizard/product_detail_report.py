@@ -44,7 +44,8 @@ class product_detail_report(models.TransientModel):
             'categ_id':self.categ_id.id,
             'product_id': self.product_id.id,
             'is_transection':self.is_transection,
-            'is_warehouse':self.is_warehouse
+            'is_warehouse':self.is_warehouse,
+            'type':self.type
 
         }
         return {
@@ -177,21 +178,20 @@ class product_detail_report(models.TransientModel):
                         for li in wh_id:
                             loc_ids.append(li.lot_stock_id.id)
                 
-                loc_id = wh_id.lot_stock_id.id
+                loc_id = wh_id.lot_stock_id
                 if len(str(loc_id))==1:
                     loc_ids.append(loc_id)
                 else:
                     if loc_id:
-                        for line in loc_id:
-                            loc_ids.append(line.id)
-                            if line.child_ids:
-                                for lin in line.child_ids:
-                                    loc_ids.append(lin.id)
-                                    if lin.child_ids:
-                                        for lins in lin.child_ids:
-                                            loc_ids.append(lins.id)
+                        loc_ids.append(loc_id.id)
+                        if loc_id.child_ids:
+                            for lin in loc_id.child_ids:
+                                loc_ids.append(lin.id)
+                                if lin.child_ids:
+                                    for lins in lin.child_ids:
+                                        loc_ids.append(lins.id)
             else:
-                loc_ids.append(data['location_ids'])
+                loc_ids = data['location_ids']
             if product_id !=False and loc_ids !=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
@@ -311,6 +311,7 @@ class product_detail_report(models.TransientModel):
                 if len(loc_ids)==1:
                     #Эхний үлдэгдэл
                     # Барааны орлого
+                    print(loc_ids)
                     self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
                                 stock_move as mv 
                                 left join stock_location as sl on mv.location_id=sl.id
@@ -422,7 +423,7 @@ class product_detail_report(models.TransientModel):
                     
                     
                     
-                else:
+                elif len(loc_ids)>1:
                     #Эхний үлдэгдэл
                     # Барааны орлого
                     self._cr.execute("""select mv.product_id,sum(mv.product_qty), avg(mv.price_unit) as price from 
@@ -678,14 +679,14 @@ class product_detail_report(models.TransientModel):
                                 int_income_qty += int_income['sum']
                             if int_income['price'] !=None:
                                 int_income_price += int_income['price']
-                                
-                if qty_income!=[]:
-                    for qt_income in qty_income:
-                        if line.id==qt_income['product_id']:
-                            if qt_income['sum'] !=None:
-                                qty_income_qty += qt_income['sum']
-                            if qt_income['price'] !=None:
-                                qty_income_price += qt_income['price']
+                if len(loc_ids)>1:
+                    if qty_income!=[]:
+                        for qt_income in qty_income:
+                            if line.id==qt_income['product_id']:
+                                if qt_income['sum'] !=None:
+                                    qty_income_qty += qt_income['sum']
+                                if qt_income['price'] !=None:
+                                    qty_income_price += qt_income['price']
                                 
                 if manu_income!=[]:
                     for manu_inc in manu_income:
@@ -705,14 +706,14 @@ class product_detail_report(models.TransientModel):
                                 sale_expense_qty +=sale_expen['sum']
                             if sale_expen['price'] !=None:
                                 sale_expense_price +=sale_expen['price']
-                                
-                if pur_ret !=[]:
-                    for sale_exp in pur_ret:
-                        if line.id==sale_exp['product_id']:
-                            if sale_exp['sum'] !=None:
-                                expo_qty +=sale_exp['sum']
-                            if sale_exp['price'] !=None:
-                                expo_price +=sale_exp['price']
+                if len(loc_ids)>1:
+                    if pur_ret !=[]:
+                        for sale_exp in pur_ret:
+                            if line.id==sale_exp['product_id']:
+                                if sale_exp['sum'] !=None:
+                                    expo_qty +=sale_exp['sum']
+                                if sale_exp['price'] !=None:
+                                    expo_price +=sale_exp['price']
                                 
                 if internal_expense !=[]:
                     for inter_exp in internal_expense:
@@ -721,14 +722,15 @@ class product_detail_report(models.TransientModel):
                                 expense_int_qty +=inter_exp['sum']
                             if inter_exp['price'] !=None:
                                 expense_int_price +=inter_exp['price']
-                                
-                if qty_expense !=[]:
-                    for qty_exp in qty_expense:
-                        if line.id==qty_exp['product_id']:
-                            if qty_exp['sum'] !=None:
-                                qty_expense_qty +=qty_exp['sum']
-                            if qty_exp['price'] !=None:
-                                qty_expense_price +=qty_exp['price']
+
+                if len(loc_ids) > 1:
+                    if qty_expense !=[]:
+                        for qty_exp in qty_expense:
+                            if line.id==qty_exp['product_id']:
+                                if qty_exp['sum'] !=None:
+                                    qty_expense_qty +=qty_exp['sum']
+                                if qty_exp['price'] !=None:
+                                    qty_expense_price +=qty_exp['price']
                                 
                             
                 first_qty = f_income_qty - f_expense_qty
@@ -838,7 +840,7 @@ class product_detail_report(models.TransientModel):
                                         for lins in lin.child_ids:
                                             loc_ids.append(lins.id)
             else:
-                loc_ids.append(data['location_ids'])
+                loc_ids = data['location_ids']
             if product_id !=False and loc_ids !=False:          
                 #Эхний үлдэгдэл
                 # Барааны орлого
