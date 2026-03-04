@@ -76,6 +76,9 @@ class ProjectProject(models.Model):
                               ('process','Process'),
                               ('done','Done')],string='State', default='planned')
     product_count = fields.Integer(sttring='Product count', compute="compute_product_count")
+    journal_id = fields.Many2one('account.journal',string='Journal', domain=[("type",'=',"general")])
+    close_move_id = fields.Many2one('account.move', string='Close move entry')
+    close_date = fields.Date(string='Close date')
     
     
     def write(self, vals):
@@ -173,7 +176,49 @@ class ProjectProject(models.Model):
             line.state = 'process'
         
     def action_done(self):
+        account_move_obj = self.env['account.move']
         for line in self:
+            move_vals = []
+            move_value = {
+                            'date':line.close_date,
+                            'journal_id':line.journal_id.id,
+                            'partner_id':line.partner_id.id,
+                            'company_id':line.company_id.id,
+                            'ref':'%s'%line.name,
+                            'state':'draft',
+                            'move_type':'entry',
+                            'line_ids':[]
+                            }
+            
+            for lines in line.products_line:
+                analytic_account_1 = line.analytic_account_id
+                amount = lines.qty_delivered * lines.cost_price
+                mv_debit_lines = {    
+                            'product_id':lines.product_id.id,
+                            'debit':amount,
+                            'credit':0.0,
+                            'date':line.close_date,
+                            'journal_id':line.journal_id.id,
+                            'company_id':line.company_id.id,
+                            'account_id':lines.product_id.categ_id.property_stock_account_output_categ_id.id,
+                            }
+                mv_credit_lines = {    
+                            'product_id':lines.product_id.id,
+                            'debit':0.0,
+                            'credit':amount,
+                            'date':line.close_date,
+                            'journal_id':line.journal_id.id,
+                            'company_id':line.company_id.id,
+                            'analytic_distribution': {
+                                analytic_account_1.id: 100.0,
+                            },
+                            'account_id':line.journal_id.default_account_id.id,
+                            }
+                move_value['line_ids'].append((0, 0, mv_debit_lines))
+                move_value['line_ids'].append((0, 0, mv_credit_lines))              
+            move_id = account_move_obj.create(move_value)
+            move_id.action_post()
+            line.close_move_id = move_id.id
             line.state = 'done'
     
     

@@ -104,6 +104,9 @@
 
             <xpath expr="//field[@name='partner_id']" position="replace">
             	<field name="partner_id" readonly="state in ('confirm','done')" />
+            	<field name="journal_id" string="Журнал"/>
+            	<field name="close_date" string="Хаасан огноо"/>
+            	<field name="close_move_id" readonly="1"/>
                 <field name="contract_number" readonly="state in ('confirm','done')" />
                 <field name="contract_amount" readonly="state in ('confirm','done')"/>
                 <field name="warehouse_id" readonly="state in ('confirm','done')"/>
