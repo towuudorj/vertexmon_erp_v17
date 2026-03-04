@@ -64,8 +64,8 @@ class ProjectProject(models.Model):
         compute="_compute_purchase_requisition", string="# Purchase requisition"
     )
     purchase_ids = fields.Many2many('purchase.order', string='Purchase order')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse' , required=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type', required=True)
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager',)
     crm_count = fields.Integer(string='Crm count', compute="_get_crm_count")
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
