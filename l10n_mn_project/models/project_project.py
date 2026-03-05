@@ -220,9 +220,11 @@ class ProjectProject(models.Model):
             
             
             for lines in line.products_line:
-                
-                amount = lines.qty_delivered * lines.cost_price
-                mv_debit_lines = {    
+                if lines.product_id.detailed_type == 'service':
+                    amount = lines.cost_price
+                else:
+                    amount = lines.qty_delivered * lines.cost_price
+                mv_debit_lines = {
                             'product_id':lines.product_id.id,
                             'debit':amount,
                             'credit':0.0,
