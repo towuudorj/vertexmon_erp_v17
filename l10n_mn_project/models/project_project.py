@@ -82,8 +82,9 @@ class ProjectProject(models.Model):
     invoice_id = fields.Many2one('account.move',string='Invoice')
     close_date = fields.Date(string='Close date')
     invoice_product_id = fields.Many2one('product.product',string='Invoice product', domain=[("type",'=',"service")])
-    
-    
+    project_total_cost = fields.Monetary(string='Project Total Cost', compute='_compute_cost_profit')
+    project_total_profit = fields.Monetary(string='Project Total Profit', compute='_compute_cost_profit')
+
     def write(self, vals):
         if vals.get('access_token'):
             self.ensure_one()  # We are not supposed to add a single access token to multiple project
@@ -583,3 +584,13 @@ class ProjectProject(models.Model):
             "view_mode": "tree,form",
             "res_model": "purchase.requisition",
         }
+
+    def _compute_cost_profit(self):
+        for obj in self:
+            if obj.state == 'done' and obj.close_move_id:
+                obj.project_total_cost = sum(obj.close_move_id.line_ids.mapped('debit'))
+                obj.project_total_profit = obj.contract_amount - sum(obj.close_move_id.line_ids.mapped('debit'))
+            else:
+                obj.project_total_cost = 0
+                obj.project_total_profit = 0
+

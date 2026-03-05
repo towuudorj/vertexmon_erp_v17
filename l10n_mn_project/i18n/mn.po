@@ -400,6 +400,16 @@ msgid "Project Task"
 msgstr "Даалгавар"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__project_total_cost
+msgid "Project Total Cost"
+msgstr "Төслийн нийт зардал"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__project_total_profit
+msgid "Project Total Profit"
+msgstr "Төслийн нийт ашиг"
+
+#. module: l10n_mn_project
 #: model:ir.model,name:l10n_mn_project.model_purchase_requisition
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.project_project_view_form
