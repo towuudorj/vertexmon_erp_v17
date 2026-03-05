@@ -244,7 +244,37 @@ class ProjectProject(models.Model):
                             'account_id':line.journal_id.default_account_id.id,
                             }
                 move_value['line_ids'].append((0, 0, mv_debit_lines))
-                move_value['line_ids'].append((0, 0, mv_credit_lines))              
+                move_value['line_ids'].append((0, 0, mv_credit_lines))
+            product_ids = line.products_line.mapped('product_id')
+            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
+            project_analytic_line_ids = project_analytic_line_ids.filtered(lambda aal: aal.move_line_id.product_id and aal.move_line_id.product_id.id not in product_ids.ids)
+
+            if project_analytic_line_ids:
+                project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
+                for am_line in project_aml_ids:
+                    mv_debit_lines = {
+                        'product_id': am_line.product_id.id,
+                        'debit': abs(am_line.balance),
+                        'credit': 0.0,
+                        'date': line.close_date,
+                        'journal_id': am_line.journal_id.id,
+                        'company_id': am_line.company_id.id,
+                        'account_id': am_line.product_id.categ_id.property_stock_account_output_categ_id.id,
+                    }
+                    mv_credit_lines = {
+                        'product_id': am_line.product_id.id,
+                        'debit': 0.0,
+                        'credit': abs(am_line.balance),
+                        'date': line.close_date,
+                        'journal_id': am_line.journal_id.id,
+                        'company_id': am_line.company_id.id,
+                        'analytic_distribution': {
+                            analytic_account_1.id: 100.0,
+                        },
+                        'account_id': line.journal_id.default_account_id.id,
+                    }
+                    move_value['line_ids'].append((0, 0, mv_debit_lines))
+                    move_value['line_ids'].append((0, 0, mv_credit_lines))
             move_id = account_move_obj.create(move_value)
             move_id.action_post()
             line.close_move_id = move_id.id
