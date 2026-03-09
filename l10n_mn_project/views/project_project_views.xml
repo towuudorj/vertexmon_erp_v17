@@ -157,6 +157,17 @@
                     <field name="product_notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                     <div class="oe_clear"/>
                 </page>
+                <page string="Шинжилгээний бичилт">
+                	<field name="account_analytic_line_ids" readonly="1">
+                		<tree >
+                			<field name="name"/>
+                			<field name="partner_id"/>
+                			<field name="account_id"/>
+                			<field name="date"/>
+                			<field name="amount"/>
+                		</tree>
+                	</field>
+                </page>
             </xpath>        
         </field>
     </record>

@@ -756,7 +756,7 @@ msgstr "Мөнгөн гүйлгээний тайлан"
 #: model:ir.actions.act_window,name:l10n_mn_account_report.action_balance_sheet_excel
 #: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_balance_sheet_report
 msgid "Balance sheet report"
-msgstr "Баланс тайлан"
+msgstr "Санхүүгийн байдлын тайлан"
 
 
 

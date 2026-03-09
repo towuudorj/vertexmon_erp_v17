@@ -84,6 +84,7 @@ class ProjectProject(models.Model):
     invoice_product_id = fields.Many2one('product.product',string='Invoice product', domain=[("type",'=',"service")])
     project_total_cost = fields.Monetary(string='Project Total Cost', compute='_compute_cost_profit')
     project_total_profit = fields.Monetary(string='Project Total Profit', compute='_compute_cost_profit')
+    account_analytic_line_ids = fields.Many2many('account.analytic.line', string='Account analytic')
 
     def write(self, vals):
         if vals.get('access_token'):
@@ -251,7 +252,7 @@ class ProjectProject(models.Model):
             product_ids = line.products_line.mapped('product_id')
             project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
             project_analytic_line_ids = project_analytic_line_ids.filtered(lambda aal: aal.move_line_id.product_id and aal.move_line_id.product_id.id not in product_ids.ids)
-
+            analytic_ids = []
             if project_analytic_line_ids:
                 project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
                 for am_line in project_aml_ids:
@@ -278,10 +279,16 @@ class ProjectProject(models.Model):
                     }
                     move_value['line_ids'].append((0, 0, mv_debit_lines))
                     move_value['line_ids'].append((0, 0, mv_credit_lines))
+            
+            project_analytic_line_idss = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
+            for acc_line in project_analytic_line_idss:
+                analytic_ids.append(acc_line.id)
+            line.account_analytic_line_ids = [(6,0, analytic_ids)]
             move_id = account_move_obj.create(move_value)
             move_id.action_post()
             line.close_move_id = move_id.id
             line.invoice_id = invoice_id.id
+            
             line.state = 'done'
     
     
