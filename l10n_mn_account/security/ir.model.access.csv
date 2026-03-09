@@ -5,3 +5,4 @@ access_account_currency_equalization_user,account.currency.equalization,model_ac
 access_account_currency_equalization_manager,account.currency.equalization,model_account_currency_equalization,account.group_account_manager,1,1,1,1
 access_partner_type_register_user,partner.type.register,model_partner_type_register,account.group_account_user,1,1,0,0
 access_partner_type_register_manager,partner.type.register,model_partner_type_register,account.group_account_manager,1,1,1,1
+access_generate_opening_entries_manager,generate.opening.entries,model_generate_opening_entries,account.group_account_manager,1,1,1,1
