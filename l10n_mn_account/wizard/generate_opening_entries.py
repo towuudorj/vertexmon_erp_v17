@@ -10,223 +10,187 @@ class GenerateOpeningEntries(models.TransientModel):
     _name = 'generate.opening.entries'
     _description = "Generate Opening Entries"
 
-    name = fields.Char("Name of new entries", required=True,
+    name = fields.Char("Нээлтийн гүйлгээний утга", required=True,
                        default='End of Fiscal Year Entry')
     old_fiscal_year_id = fields.Many2one(
-        'account.fiscal.year', string="Fiscal Year to close", required=True)
+        'account.fiscal.year', string="Хаах санхүүгийн жил", required=True)
     new_fiscal_year_id = fields.Many2one(
-        'account.fiscal.year', string="New Fiscal Year", required=True)
-    journal_id = fields.Many2one('account.journal', string="Opening Entries Journal",
+        'account.fiscal.year', string="Шинэ санхүүгийн жил", required=True)
+    journal_id = fields.Many2one('account.journal', string="Нээлтийн журнал",
                                  required=True, domain=[('type', '=', 'opening')])
     
-    def action_year_open_create(self):
-        obj_acc_move = self.env['account.move']
-        obj_acc_move_line = self.env['account.move.line']
-        account_obj = self.env['account.account']
-        partner_obj = self.env['res.partner']
-        account_liquidity_ids = account_obj.search([('deprecated','=',False),('account_type','=','asset_cash'),('company_id','=',self.journal_id.company_id.id)])
-        account_asset_ids = account_obj.search([('deprecated','=',False),('account_type','=','asset_fixed'),('company_id','=',self.journal_id.company_id.id)])
-        account_pay_rec_ids = account_obj.search([('deprecated','=',False),('account_type','in',('asset_receivable','liability_payable','asset_non_current','asset_prepayments','liability_credit_card','liability_current','liability_non_current')),('company_id','=',self.journal_id.company_id.id)])
-        account_product_ids = account_obj.search([('deprecated','=',False),('account_type','=','asset_current'),('company_id','=',self.journal_id.company_id.id)])
-        account_equity_ids = account_obj.search([('deprecated','=',False),('account_type','in',('equity','equity_unaffected')),('company_id','=',self.journal_id.company_id.id)])
-        
-        self.action_year_close()
-        
-        move_vals = {
-            'ref': self.name,
-            'date': self.new_fiscal_year_id.date_from or False,
-            'journal_id': self.journal_id.id,
-             'state':'draft',
-            'line_ids':[],
-        }
-        in_invoice_vals_list = []
-        
-        total_balance = 0.0
-        if account_liquidity_ids:
-            for liq in account_liquidity_ids:
-                debit = 0.0
-                credit = 0.0
-                balance = 0.0
-                amount_currency = 0.0
-                liquidity_ids = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id),('move_id.state','=','posted'),('account_id','=',liq.id),('move_id.date','>=',self.old_fiscal_year_id.date_from),('move_id.date','<=',self.old_fiscal_year_id.date_to)])
-                for lin in liquidity_ids:
-                    if lin.debit > 0.0 and lin.credit == 0.0:
-                        debit +=lin.debit
-                        amount_currency += lin.amount_currency
-                    else:
-                        credit +=lin.credit
-                        amount_currency -=lin.amount_currency
-                    
-                balance = round(credit - debit,2)
-                if balance != 0.0:
-                    if balance < 0.0:
-                        total_balance += balance*(-1)
-                    else:
-                        total_balance -= balance
-                        
-
-                    if liq.currency_id.id == False:
-                        amount_currency = 0
-                        currency = self.journal_id.company_id.currency_id.id
-                    else:
-                        currency = liq.currency_id.id
-                    liq_data_value = {
-                                        'name':self.name,
-                                        'debit':0.0 if balance > 0 else -balance,
-                                        'credit':balance if balance > 0 else 0.0,
-                                        'account_id':liq.id,
-                                        'date':self.new_fiscal_year_id.date_from,
-                                        'journal_id':self.journal_id.id,
-                                        'amount_currency':-amount_currency if balance > 0 else amount_currency,
-                                        'currency_id':currency,
-                                        }
-                    move_vals['line_ids'].append((0, 0, liq_data_value))
-                    
-        if account_asset_ids:
-            for asset in account_asset_ids:
-                asset_debit = 0.0
-                asset_credit = 0.0
-                asset_balance = 0.0
-                if asset.account_type !=u'Урьдчилсан төлбөр':
-                    asset_ids = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id),('move_id.state','=','posted'),('product_id','=',False),('account_id','=',asset.id),('move_id.date','>=',self.old_fiscal_year_id.date_from),('move_id.date','<=',self.old_fiscal_year_id.date_to)])
-                    for asst in asset_ids:
-                        if asst.debit > 0.0 and asst.credit == 0.0:
-                            asset_debit +=asst.debit
-                        else:
-                            asset_credit +=asst.credit
-                        
-                    asset_balance = round(asset_credit - asset_debit,2)
-                     
-                    if asset_balance != 0.0:
-                        if asset_balance < 0.0:
-                            total_balance += asset_balance*(-1)
-                        else:
-                            total_balance -= asset_balance
-                        asset_data_value = {
-                                            'name':self.name,
-                                            'debit':0.0 if asset_balance > 0 else -asset_balance,
-                                            'credit':asset_balance if asset_balance > 0 else 0.0,
-                                            'account_id':asset.id,
-                                            'date':self.new_fiscal_year_id.date_from,
-                                            'journal_id':self.journal_id.id,
-                                            }
-                        move_vals['line_ids'].append((0, 0, asset_data_value))
-                    
-        if account_equity_ids:
-            
-            for eq in account_equity_ids:
-                eq_debit = 0.0
-                eq_credit = 0.0
-                eq_balance = 0.0
-                eq_ids = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id),('move_id.state','=','posted'),('account_id','=',eq.id),('move_id.date','>=',self.old_fiscal_year_id.date_from),('move_id.date','<=',self.old_fiscal_year_id.date_to)])
-                for eqt in eq_ids:
-                    if eqt.debit > 0.0 and eqt.credit == 0.0:
-                        eq_debit +=eqt.debit
-                    else:
-                        eq_credit +=eqt.credit
-                    
-                eq_balance = round(eq_credit - eq_debit,2)
-                
-                if eq_balance != 0.0:
-                    if eq_balance < 0.0:
-                        total_balance += eq_balance*(-1)
-                    else:
-                        total_balance -= eq_balance
-                    eq_data_value = {
-                                        'name':self.name,
-                                        'debit':0.0 if eq_balance > 0 else -eq_balance,
-                                        'credit':eq_balance if eq_balance > 0 else 0.0,
-                                        'account_id':eq.id,
-                                        'date':self.new_fiscal_year_id.date_from,
-                                        'journal_id':self.journal_id.id,
-                                        }
-                    move_vals['line_ids'].append((0, 0, eq_data_value))
-                    
-        if account_product_ids:
-            product_obj = self.env['product.product']
-            product_ids = product_obj.search([])
-            for pro in product_ids:
-                if pro.categ_id.property_stock_valuation_account_id.id !=False:
-                    self._cr.execute('''select ml.product_id, sum(ml.debit - ml.credit) as balance, sum(ml.quantity) as quantity
-                                        from account_move as am left join
-                                        account_move_line as ml on ml.move_id=am.id
-                                        where ml.account_id = %s and am.state = 'posted'
-                                        and am.date >= '%s' and am.date <='%s' and ml.product_id = %s
-                                        and am.company_id = %s
-                                        group by ml.product_id '''%(pro.categ_id.property_stock_valuation_account_id.id,self.old_fiscal_year_id.date_from,self.old_fiscal_year_id.date_to,pro.id, self.journal_id.company_id.id))                    
-                    product_balance = self._cr.dictfetchall()
-                    for prod in product_balance:
-                        prod_balance = 0.0
-                        if prod['balance'] !=0.0 and prod['balance']!=None:
-                            prod_balance = round(prod['balance'],2)
-                            if prod_balance > 0.0:
-                                total_balance += prod_balance
-                                prod_account_id = pro.categ_id.property_stock_valuation_account_id 
-                                prod_data_value = {
-                                                    'name':self.name,
-                                                    'credit':0.0 if prod_balance > 0 else -prod_balance,
-                                                    'debit':prod_balance if prod_balance > 0 else 0.0,
-                                                    'account_id':prod_account_id.id,
-                                                    'date':self.new_fiscal_year_id.date_from,
-                                                    'journal_id':self.journal_id.id,
-                                                    'product_id':pro.id,
-                                                    'quantity':prod['quantity'],
-                                                    }
-                                move_vals['line_ids'].append((0, 0, prod_data_value))
-                    
-        if account_pay_rec_ids:
-            self._cr.execute('''select ml.partner_id, sum(ml.debit - ml.credit) as balance, ml.account_id,
-                                ml.currency_id
-                                from account_move as am left join
-                                account_move_line as ml on ml.move_id=am.id
-                                where ml.account_id in %s and am.state = 'posted'
-                                and am.date >= '%s' and am.date <='%s' and ml.product_id is null
-                                and am.company_id = %s
-                                group by ml.partner_id,ml.account_id, ml.currency_id'''%(tuple(account_pay_rec_ids.ids),self.old_fiscal_year_id.date_from,self.old_fiscal_year_id.date_to, self.journal_id.company_id.id))                    
-            partner_balance = self._cr.dictfetchall()
-            for part in partner_balance:
-                account_obj = self.env['account.account']
-                part_acc = account_obj.browse(part['account_id'])
-                if part_acc.account_type !=u'Үндсэн хөрөнгө':
-                    part_balance = 0.0
-                    if part['balance'] != 0.0 and part['balance'] !=None:
-                        partner = partner_obj.browse(part['partner_id'])
-                        part_balance = round(part['balance'],2)
     
-                        if partner.id !=False:
-                            if part_balance < 0.0:
-                                total_balance -= part_balance*(-1)
-                                part_account_id = partner.property_account_payable_id
-                            else:
-                                total_balance += part_balance
-                                part_account_id = partner.property_account_receivable_id
-                            part_data_value = {
-                                                'name':self.name,
-                                                'credit':0.0 if part_balance > 0 else -part_balance,
-                                                'debit':part_balance if part_balance > 0 else 0.0,
-                                                'account_id':part['account_id'],
-                                                'date':self.new_fiscal_year_id.date_from,
-                                                'journal_id':self.journal_id.id,
-                                                'partner_id':partner.id,
-                                                'currency_id':part['currency_id'] or False,
-                                                }
-                            move_vals['line_ids'].append((0, 0, part_data_value))
+
+
+    def action_year_open_create(self):
+
+        Move = self.env['account.move']
+        MoveLine = self.env['account.move.line']
+        Account = self.env['account.account']
+    
+        company_id = self.journal_id.company_id.id
+    
+        if not self.journal_id.default_debit_account_id or not self.journal_id.default_credit_account_id:
+            raise UserError("Opening journal must have default debit and credit accounts.")
+    
+        self.action_year_close()
+    
+        move_vals = {
+            "date": self.new_fiscal_year_id.date_from,
+            "ref": self.name,
+            "journal_id": self.journal_id.id,
+            "line_ids": [],
+        }
+    
+        total_debit = 0
+        total_credit = 0
+    
+        accounts = Account.search([
+            ('company_id', '=', company_id),
+            ('deprecated', '=', False),
+            ('account_type', 'in', [
+                'asset_receivable',
+                'asset_cash',
+                'asset_current',
+                'asset_non_current',
+                'liability_payable',
+                'liability_current',
+                'liability_non_current',
+                'equity'
+            ])
+        ])
+    
+        for account in accounts:
+    
+            # PARTNER REQUIRED ACCOUNTS
+            if account.account_type in ('asset_receivable', 'liability_payable'):
+    
+                self.env.cr.execute("""
+                    SELECT partner_id,
+                           SUM(debit) as debit,
+                           SUM(credit) as credit
+                    FROM account_move_line
+                    WHERE account_id=%s
+                    AND company_id=%s
+                    AND parent_state='posted'
+                    AND date >= %s
+                    AND date <= %s
+                    GROUP BY partner_id
+                """, (
+                    account.id,
+                    company_id,
+                    self.old_fiscal_year_id.date_from,
+                    self.old_fiscal_year_id.date_to
+                ))
+    
+                results = self.env.cr.dictfetchall()
+    
+                for row in results:
+    
+                    balance = (row['debit'] or 0) - (row['credit'] or 0)
+    
+                    if float_is_zero(balance, precision_digits=2):
+                        continue
+    
+                    debit = balance if balance > 0 else 0
+                    credit = -balance if balance < 0 else 0
+    
+                    line_vals = {
+                        "name": self.name,
+                        "account_id": account.id,
+                        "partner_id": row['partner_id'],
+                        "debit": debit,
+                        "credit": credit,
+                        "date": self.new_fiscal_year_id.date_from,
+                        "company_id": company_id,
+                    }
+    
+                    if account.currency_id:
+                        line_vals.update({
+                            "currency_id": account.currency_id.id,
+                            "amount_currency": balance
+                        })
+    
+                    move_vals["line_ids"].append((0, 0, line_vals))
+    
+                    total_debit += debit
+                    total_credit += credit
+    
+            else:
+                # NORMAL ACCOUNT BALANCE
+    
+                self.env.cr.execute("""
+                    SELECT SUM(debit) as debit, SUM(credit) as credit
+                    FROM account_move_line
+                    WHERE account_id=%s
+                    AND company_id=%s
+                    AND parent_state='posted'
+                    AND date >= %s
+                    AND date <= %s
+                """, (
+                    account.id,
+                    company_id,
+                    self.old_fiscal_year_id.date_from,
+                    self.old_fiscal_year_id.date_to
+                ))
+    
+                result = self.env.cr.fetchone()
+    
+                balance = (result[0] or 0) - (result[1] or 0)
+    
+                if float_is_zero(balance, precision_digits=2):
+                    continue
+    
+                debit = balance if balance > 0 else 0
+                credit = -balance if balance < 0 else 0
+    
+                line_vals = {
+                    "name": self.name,
+                    "account_id": account.id,
+                    "debit": debit,
+                    "credit": credit,
+                    "date": self.new_fiscal_year_id.date_from,
+                    "company_id": company_id,
+                }
+    
+                if account.currency_id:
+                    line_vals.update({
+                        "currency_id": account.currency_id.id,
+                        "amount_currency": balance
+                    })
+    
+                move_vals["line_ids"].append((0, 0, line_vals))
+    
+                total_debit += debit
+                total_credit += credit
+    
+        difference = total_debit - total_credit
+    
+        if not float_is_zero(difference, precision_digits=2):
+    
+            move_vals["line_ids"].append((0, 0, {
+                "name": "Opening Balance Adjustment",
+                "account_id": self.journal_id.default_credit_account_id.id if difference > 0 else self.journal_id.default_debit_account_id.id,
+                "credit": difference if difference > 0 else 0,
+                "debit": -difference if difference < 0 else 0,
+                "date": self.new_fiscal_year_id.date_from,
+                "company_id": company_id,
+            }))
+    
+        move = Move.create(move_vals)
+    
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Opening Entry",
+            "res_model": "account.move",
+            "view_mode": "form",
+            "res_id": move.id,
+        }
+
+
+    
+
         
-        diff_balance = {
-                        'name':self.name,
-                        'debit':0.0 if total_balance > 0 else -total_balance,
-                        'credit':total_balance if total_balance > 0 else 0.0,
-                        'account_id':self.journal_id.default_credit_account_id.id,
-                        'date':self.new_fiscal_year_id.date_from,
-                        'journal_id':self.journal_id.id,
-            }
-        move_vals['line_ids'].append((0, 0, diff_balance))
-        
-        in_invoice_vals_list.append(move_vals)
-        print("dddddddddddddd",diff_balance)
-        #print ("dddddddddddd",in_invoice_vals_list)
-        moves = self.env['account.move'].with_context().create(in_invoice_vals_list)
-        return 
     
     def action_year_close(self):
         obj_acc_move = self.env['account.move']
