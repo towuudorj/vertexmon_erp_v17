@@ -85,6 +85,7 @@ class ProjectProject(models.Model):
     project_total_cost = fields.Monetary(string='Project Total Cost', compute='_compute_cost_profit')
     project_total_profit = fields.Monetary(string='Project Total Profit', compute='_compute_cost_profit')
     account_analytic_line_ids = fields.Many2many('account.analytic.line', string='Account analytic')
+    bbo_account_id = fields.Many2one('account.account', string=u'Данс')
 
     def write(self, vals):
         if vals.get('access_token'):
@@ -250,35 +251,35 @@ class ProjectProject(models.Model):
                 move_value['line_ids'].append((0, 0, mv_debit_lines))
                 move_value['line_ids'].append((0, 0, mv_credit_lines))
             product_ids = line.products_line.mapped('product_id')
-            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
-            project_analytic_line_ids = project_analytic_line_ids.filtered(lambda aal: aal.move_line_id.product_id and aal.move_line_id.product_id.id not in product_ids.ids)
+            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id),('product_id','not in', product_ids.ids)])
             analytic_ids = []
             if project_analytic_line_ids:
                 project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
                 for am_line in project_aml_ids:
-                    mv_debit_lines = {
-                        'product_id': am_line.product_id.id,
-                        'debit': abs(am_line.balance),
-                        'credit': 0.0,
-                        'date': line.close_date,
-                        'journal_id': am_line.journal_id.id,
-                        'company_id': am_line.company_id.id,
-                        'account_id': am_line.product_id.categ_id.property_stock_account_output_categ_id.id,
-                    }
-                    mv_credit_lines = {
-                        'product_id': am_line.product_id.id,
-                        'debit': 0.0,
-                        'credit': abs(am_line.balance),
-                        'date': line.close_date,
-                        'journal_id': am_line.journal_id.id,
-                        'company_id': am_line.company_id.id,
-                        'analytic_distribution': {
-                            analytic_account_1.id: 100.0,
-                        },
-                        'account_id': line.journal_id.default_account_id.id,
-                    }
-                    move_value['line_ids'].append((0, 0, mv_debit_lines))
-                    move_value['line_ids'].append((0, 0, mv_credit_lines))
+                    if am_line.balance < 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
+                        mv_debit_lines = {
+                            #'product_id': am_line.product_id.id,
+                            'debit': abs(am_line.balance),
+                            'credit': 0.0,
+                            'date': line.close_date,
+                            'journal_id': am_line.journal_id.id,
+                            'company_id': am_line.company_id.id,
+                            'account_id': line.bbo_account_id.id,
+                        }
+                        mv_credit_lines = {
+                            #'product_id': am_line.product_id.id,
+                            'debit': 0.0,
+                            'credit': abs(am_line.balance),
+                            'date': line.close_date,
+                            'journal_id': am_line.journal_id.id,
+                            'company_id': am_line.company_id.id,
+                            'analytic_distribution': {
+                                analytic_account_1.id: 100.0,
+                            },
+                            'account_id': line.journal_id.default_account_id.id,
+                        }
+                        move_value['line_ids'].append((0, 0, mv_debit_lines))
+                        move_value['line_ids'].append((0, 0, mv_credit_lines))
             
             project_analytic_line_idss = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
             for acc_line in project_analytic_line_idss:
