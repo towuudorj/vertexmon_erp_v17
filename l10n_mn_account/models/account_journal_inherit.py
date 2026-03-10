@@ -13,6 +13,7 @@ class AccountJournal(models.Model):
                                         ('cash', 'Cash'),
                                         ('bank', 'Bank'),
                                         ('general', 'Miscellaneous'),
-                                        ('opening','Opening/close'),
+                                        ('opening','Opening'),
+                                        ('closing','Closing'),
                                         ('salary', 'Salary'),
                                         ('asset','Asset')])

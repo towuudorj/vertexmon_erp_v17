@@ -18,6 +18,9 @@ class GenerateOpeningEntries(models.TransientModel):
         'account.fiscal.year', string="Шинэ санхүүгийн жил", required=True)
     journal_id = fields.Many2one('account.journal', string="Нээлтийн журнал",
                                  required=True, domain=[('type', '=', 'opening')])
+
+    close_journal_id = fields.Many2one('account.journal', string="Хаалтын журнал",
+                                 required=True, domain=[('type', '=', 'closing')])
     
     
 
@@ -260,7 +263,7 @@ class GenerateOpeningEntries(models.TransientModel):
                 move_valse = {
                     'ref': self.name,
                     'date': self.old_fiscal_year_id.date_to or False,
-                    'journal_id': self.journal_id.id,
+                    'journal_id': self.close_journal_id.id,
                      'state':'draft',
                      'company_id':self.journal_id.company_id.id,
                     'line_ids':[],
@@ -301,7 +304,7 @@ class GenerateOpeningEntries(models.TransientModel):
                                         'credit':balance if balance > 0 else 0.0,
                                         'account_id':acc_in.id,
                                         'date':self.old_fiscal_year_id.date_to,
-                                        'journal_id':self.journal_id.id,
+                                        'journal_id':self.close_journal_id.id,
                                         
                                         }
                     move_valse['line_ids'].append((0, 0, income_data_value))
@@ -310,9 +313,9 @@ class GenerateOpeningEntries(models.TransientModel):
                                     'name':self.name,
                                     'debit':0.0 if balance < 0 else balance,
                                     'credit':-balance if balance < 0 else 0.0,
-                                    'account_id':self.journal_id.default_debit_account_id.id,
+                                    'account_id':self.close_journal_id.default_debit_account_id.id,
                                     'date':self.old_fiscal_year_id.date_to,
-                                    'journal_id':self.journal_id.id,
+                                    'journal_id':self.close_journal_id.id,
                         }
                     move_valse['line_ids'].append((0, 0, diff_balance))
                 in_invoice_vals_liste.append(move_valse)
@@ -324,7 +327,7 @@ class GenerateOpeningEntries(models.TransientModel):
                 move_vals = {
                     'ref': self.name,
                     'date': self.old_fiscal_year_id.date_to or False,
-                    'journal_id': self.journal_id.id,
+                    'journal_id': self.close_journal_id.id,
                      'state':'draft',
                      'company_id':self.journal_id.company_id.id,
                     'line_ids':[],
@@ -366,7 +369,7 @@ class GenerateOpeningEntries(models.TransientModel):
                                         'credit':balance_ex if balance_ex > 0 else 0.0,
                                         'account_id':acc_exp.id,
                                         'date':self.old_fiscal_year_id.date_to,
-                                        'journal_id':self.journal_id.id,
+                                        'journal_id':self.close_journal_id.id,
                                         }
                     move_vals['line_ids'].append((0, 0, expense_data_value))
 
@@ -374,9 +377,9 @@ class GenerateOpeningEntries(models.TransientModel):
                                     'name':self.name,
                                     'debit':0.0 if balance_ex < 0 else balance_ex,
                                     'credit':-balance_ex if balance_ex < 0 else 0.0,
-                                    'account_id':self.journal_id.default_debit_account_id.id,
+                                    'account_id':self.close_journal_id.default_debit_account_id.id,
                                     'date':self.old_fiscal_year_id.date_to,
-                                    'journal_id':self.journal_id.id,
+                                    'journal_id':self.close_journal_id.id,
                         }
                     move_vals['line_ids'].append((0, 0, diff_balance))
                 in_invoice_vals_list.append(move_vals)

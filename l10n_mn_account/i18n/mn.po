@@ -224,8 +224,13 @@ msgstr "Цалин"
 
 #. module: l10n_mn_account
 #: model:ir.model.fields.selection,name:l10n_mn_account.selection__account_journal__type__opening
-msgid "Opening/close"
-msgstr "Нээлт/хаалт"
+msgid "Opening"
+msgstr "Нээлт"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields.selection,name:l10n_mn_account.selection__account_journal__type__closing
+msgid "Closing"
+msgstr "Хаалт"
 
 
 #. module: l10n_mn_account

@@ -9,6 +9,7 @@
                     <field name="old_fiscal_year_id" />
                     <field name="new_fiscal_year_id"  />
                     <field name="journal_id" />
+                    <field name="close_journal_id" />
                     <field name="name" />
                 </group>
                 <footer>

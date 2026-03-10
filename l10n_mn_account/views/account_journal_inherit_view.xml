@@ -10,8 +10,8 @@
                     <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
                         <field name="is_po_return"/>
                         <field name="is_so_return"/>
-                        <field name="default_debit_account_id" invisible="type != 'opening'"/>
-                        <field name="default_credit_account_id"  invisible="type != 'opening'"/>
+                        <field name="default_debit_account_id" invisible="type not in ('opening', 'closing')"/>
+                        <field name="default_credit_account_id"  invisible="type not in ('opening', 'closing')"/>
                     </xpath>
                 </field>
             </record>
