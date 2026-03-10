@@ -63,8 +63,8 @@ class GenerateOpeningEntries(models.TransientModel):
         for account in accounts:
     
             # PARTNER REQUIRED ACCOUNTS
-            if account.account_type in ('asset_receivable', 'liability_payable'):
-    
+            if account.account_type in ('asset_receivable','liability_payable', 'asset_prepayments'):
+
                 self.env.cr.execute("""
                     SELECT partner_id,
                            SUM(debit) as debit,
@@ -86,8 +86,33 @@ class GenerateOpeningEntries(models.TransientModel):
                 results = self.env.cr.dictfetchall()
     
                 for row in results:
-    
-                    balance = (row['debit'] or 0) - (row['credit'] or 0)
+                    balance = 0
+                    opening_move_line = MoveLine.search(
+                        [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
+                         ('account_id', '=', account.id), ('move_id.date', '<', self.old_fiscal_year_id.date_from),
+                         ('journal_id.type', '=', 'opening'), ('partner_id', '=', row['partner_id'] or False)],
+                    order='date desc', limit=1)
+                    if opening_move_line:
+                        balance += opening_move_line.balance
+                        opening_line_ids =  MoveLine.search([
+                            ('company_id', '=', self.journal_id.company_id.id),
+                            ('move_id.state', '=', 'posted'),
+                            ('account_id', '=', account.id), ('move_id.date', '>', opening_move_line.date),
+                            ('move_id.date', '<', self.old_fiscal_year_id.date_from),
+                            ('partner_id', '=', row['partner_id'] or False)])
+                        if opening_line_ids:
+                            balance += sum(opening_line_ids.mapped('balance'))
+                    else:
+                        opening_line_ids = MoveLine.search([
+                            ('company_id', '=', self.journal_id.company_id.id),
+                            ('move_id.state', '=', 'posted'),
+                            ('account_id', '=', account.id),
+                            ('move_id.date', '<', self.old_fiscal_year_id.date_from),
+                            ('partner_id', '=', row['partner_id'] or False)])
+                        if opening_line_ids:
+                            balance += sum(opening_line_ids.mapped('balance'))
+
+                    balance += (row['debit'] or 0) - (row['credit'] or 0)
     
                     if float_is_zero(balance, precision_digits=2):
                         continue
@@ -135,8 +160,31 @@ class GenerateOpeningEntries(models.TransientModel):
                 ))
     
                 result = self.env.cr.fetchone()
-    
-                balance = (result[0] or 0) - (result[1] or 0)
+
+                balance = 0
+                opening_move_line = MoveLine.search(
+                    [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
+                     ('account_id', '=', account.id), ('move_id.date', '<', self.old_fiscal_year_id.date_from),
+                     ('journal_id.type', '=', 'opening')], order='date desc', limit=1)
+                if opening_move_line:
+                    balance += opening_move_line.balance
+                    opening_line_ids = MoveLine.search([
+                        ('company_id', '=', self.journal_id.company_id.id),
+                        ('move_id.state', '=', 'posted'),
+                        ('account_id', '=', account.id), ('move_id.date', '>', opening_move_line.date),
+                        ('move_id.date', '<', self.old_fiscal_year_id.date_from)])
+                    if opening_line_ids:
+                        balance += sum(opening_line_ids.mapped('balance'))
+                else:
+                    opening_line_ids = MoveLine.search([
+                        ('company_id', '=', self.journal_id.company_id.id),
+                        ('move_id.state', '=', 'posted'),
+                        ('account_id', '=', account.id),
+                        ('move_id.date', '<', self.old_fiscal_year_id.date_from)])
+                    if opening_line_ids:
+                        balance += sum(opening_line_ids.mapped('balance'))
+
+                balance += (result[0] or 0) - (result[1] or 0)
     
                 if float_is_zero(balance, precision_digits=2):
                     continue
@@ -219,7 +267,21 @@ class GenerateOpeningEntries(models.TransientModel):
                 debit = 0.0
                 credit = 0.0
                 balance = 0.0
-                income_ids = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id),('move_id.state','=','posted'),('account_id','=',acc_in.id),('move_id.date','>=',self.old_fiscal_year_id.date_from),('move_id.date','<=',self.old_fiscal_year_id.date_to)])
+                opening_move_line = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id),('move_id.state','=','posted'),('account_id','=',acc_in.id),('move_id.date','<',self.old_fiscal_year_id.date_from), ('journal_id.type', '=', 'opening')], order='date desc', limit=1)
+                if opening_move_line:
+                    income_ids = obj_acc_move_line.search(
+                        [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
+                         ('account_id', '=', acc_in.id), ('move_id.date', '>=', opening_move_line.date)
+                         ('move_id.date', '<=', self.old_fiscal_year_id.date_to)])
+                    debit += opening_move_line.debit
+                    credit += opening_move_line.credit
+                else:
+                    income_ids = obj_acc_move_line.search(
+                        [('company_id', '=', self.journal_id.company_id.id),
+                         ('move_id.state', '=', 'posted'),
+                         ('account_id', '=', acc_in.id),
+                         ('move_id.date', '<=', self.old_fiscal_year_id.date_to)])
+
                 for inc in income_ids:
                     if inc.debit >0.0 and inc.credit == 0.0:
                         debit +=inc.debit
@@ -269,7 +331,23 @@ class GenerateOpeningEntries(models.TransientModel):
                 debit_ex = 0.0
                 credit_ex = 0.0
                 balance_ex = 0.0
-                expense_ids = obj_acc_move_line.search([('company_id','=',self.journal_id.company_id.id,),('move_id.state','=','posted'),('account_id','=',acc_exp.id),('move_id.date','>=',self.old_fiscal_year_id.date_from),('move_id.date','<=',self.old_fiscal_year_id.date_to)])
+                opening_move_line = obj_acc_move_line.search(
+                    [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
+                     ('account_id', '=', acc_exp.id), ('move_id.date', '<', self.old_fiscal_year_id.date_from),
+                     ('journal_id.type', '=', 'opening')], order='date desc', limit=1)
+                if opening_move_line:
+                    expense_ids = obj_acc_move_line.search(
+                        [('company_id', '=', self.journal_id.company_id.id,), ('move_id.state', '=', 'posted'),
+                         ('account_id', '=', acc_exp.id), ('move_id.date', '>', opening_move_line.date),
+                         ('move_id.date', '<=', self.old_fiscal_year_id.date_to)])
+                    debit_ex += opening_move_line.debit
+                    credit_ex += opening_move_line.credit
+
+                else:
+                    expense_ids = obj_acc_move_line.search(
+                        [('company_id', '=', self.journal_id.company_id.id,), ('move_id.state', '=', 'posted'),
+                         ('account_id', '=', acc_exp.id), ('move_id.date', '<=', self.old_fiscal_year_id.date_to)])
+
                 for exp in expense_ids:
                     if exp.debit >0.0 and exp.credit == 0.0:
                         debit_ex +=exp.debit
