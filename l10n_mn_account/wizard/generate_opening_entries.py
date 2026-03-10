@@ -56,7 +56,8 @@ class GenerateOpeningEntries(models.TransientModel):
                 'liability_payable',
                 'liability_current',
                 'liability_non_current',
-                'equity'
+                'equity',
+                'asset_prepayments'
             ])
         ])
     
