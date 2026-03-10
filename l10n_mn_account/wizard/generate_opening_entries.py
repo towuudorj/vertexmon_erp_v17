@@ -340,6 +340,7 @@ class GenerateOpeningEntries(models.TransientModel):
                 debit_ex = 0.0
                 credit_ex = 0.0
                 balance_ex = 0.0
+
                 opening_move_line = obj_acc_move_line.search(
                     [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
                      ('account_id', '=', acc_exp.id), ('move_id.date', '<=', self.old_fiscal_year_id.date_from),
