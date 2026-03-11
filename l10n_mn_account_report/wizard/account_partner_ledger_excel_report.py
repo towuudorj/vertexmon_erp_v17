@@ -333,7 +333,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
         COALESCE(aml.debit, 0) as debit,
         COALESCE(aml.credit, 0) as credit,
-        aml.amount_currency as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if data['is_extra'] else ''}
+        COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if data['is_extra'] else ''}
  from (
      select case when eoy.balance is not null then
                  case when eoy.date = '{self.start_date}' then
@@ -353,7 +353,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
              end as currency_balance,
              aml.account_id , aml.partner_id
      from account_move_line aml
-     left join account_move am on am.id = aml.move_id
      left join account_account aa on aa.id = aml.account_id
      left join res_partner rp on rp.id = aml.partner_id
      left join account_journal aj on aj.id = aml.journal_id
@@ -362,10 +361,10 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
          RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
          from account_move_line aml
          left join account_journal aj on aj.id = aml.journal_id
-         where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}'
+         where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}' and aml.parent_state = 'posted'
          group by aml.date, aml.account_id, aml.partner_id
      ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
-     where am.state = 'posted'
+     where aml.parent_state = 'posted'
      and aml.company_id = {self.company_id.id}
      and (eoy.rank = 1 or eoy.rank is null) {where_aml}
      group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
@@ -378,9 +377,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         aml.currency_id AS currency_id,
         {select}
     FROM account_move_line aml
-    JOIN account_move am ON am.id = aml.move_id AND am.state IN ('{"', '".join(move_state)}')
     JOIN account_journal aj ON aj.id = aml.journal_id AND aj.type != 'opening'
-    WHERE aml.company_id = {self.company_id.id} AND aml.date BETWEEN '{self.start_date}' AND '{data['end_date']}' {where_aml}
+    WHERE aml.company_id = {self.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
+    AND aml.date BETWEEN '{self.start_date}' AND '{data['end_date']}' {where_aml}
     {group_by}
  ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
  LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
