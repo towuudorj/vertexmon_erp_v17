@@ -3,7 +3,7 @@
     "version": "17.0.0.0.0",
     "summary": "Show row number in tree/list view.",
     "category": "Other",
-    "depends": ["web"],
+    "depends": ["web", "stock", "hr_skills", "purchase_requisition"],
     "data": [],
     "assets": {
         "web.assets_backend": [
