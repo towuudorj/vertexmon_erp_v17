@@ -51,17 +51,18 @@ class GenerateOpeningEntries(models.TransientModel):
         accounts = Account.search([
             ('company_id', '=', company_id),
             ('deprecated', '=', False)
-            # ('account_type', 'in', [
-            #     'asset_receivable',
-            #     'asset_cash',
-            #     'asset_current',
-            #     'asset_non_current',
-            #     'liability_payable',
-            #     'liability_current',
-            #     'liability_non_current',
-            #     'equity',
-            #     'asset_prepayments'
-            # ])
+            ('account_type', 'in', [
+                'asset_receivable',
+                'asset_cash',
+                'asset_current',
+                'asset_non_current',
+                'liability_payable',
+                'liability_current',
+                'liability_non_current',
+                'equity',
+                'asset_prepayments',
+                'asset_fixed'
+            ])
         ])
     
         for account in accounts:
