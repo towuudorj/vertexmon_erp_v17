@@ -256,7 +256,7 @@ class ProjectProject(models.Model):
             if project_analytic_line_ids:
                 project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
                 for am_line in project_aml_ids:
-                    if am_line.balance < 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
+                    if am_line.balance > 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
                         mv_debit_lines = {
                             #'product_id': am_line.product_id.id,
                             'debit': abs(am_line.balance),
