@@ -50,7 +50,7 @@ class GenerateOpeningEntries(models.TransientModel):
     
         accounts = Account.search([
             ('company_id', '=', company_id),
-            ('deprecated', '=', False)
+            ('deprecated', '=', False),
             ('account_type', 'in', [
                 'asset_receivable',
                 'asset_cash',
@@ -75,17 +75,17 @@ class GenerateOpeningEntries(models.TransientModel):
                            SUM(debit) as debit,
                            SUM(credit) as credit
                     FROM account_move_line
-                    WHERE account_id=%s
-                    AND company_id=%s
-                    AND parent_state='posted'
+                    WHERE account_id = %s
+                    AND company_id = %s
+                    AND parent_state = 'posted'
                     AND date >= %s
-                    AND date <= %s
+                    AND date < %s
                     GROUP BY partner_id
                 """, (
                     account.id,
                     company_id,
                     self.old_fiscal_year_id.date_from,
-                    self.old_fiscal_year_id.date_to
+                    self.new_fiscal_year_id.date_from
                 ))
     
                 results = self.env.cr.dictfetchall()
@@ -157,12 +157,12 @@ class GenerateOpeningEntries(models.TransientModel):
                     AND company_id=%s
                     AND parent_state='posted'
                     AND date >= %s
-                    AND date <= %s
+                    AND date < %s
                 """, (
                     account.id,
                     company_id,
                     self.old_fiscal_year_id.date_from,
-                    self.old_fiscal_year_id.date_to
+                    self.new_fiscal_year_id.date_from
                 ))
     
                 result = self.env.cr.fetchone()
