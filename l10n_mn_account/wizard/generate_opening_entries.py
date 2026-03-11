@@ -50,18 +50,18 @@ class GenerateOpeningEntries(models.TransientModel):
     
         accounts = Account.search([
             ('company_id', '=', company_id),
-            ('deprecated', '=', False),
-            ('account_type', 'in', [
-                'asset_receivable',
-                'asset_cash',
-                'asset_current',
-                'asset_non_current',
-                'liability_payable',
-                'liability_current',
-                'liability_non_current',
-                'equity',
-                'asset_prepayments'
-            ])
+            ('deprecated', '=', False)
+            # ('account_type', 'in', [
+            #     'asset_receivable',
+            #     'asset_cash',
+            #     'asset_current',
+            #     'asset_non_current',
+            #     'liability_payable',
+            #     'liability_current',
+            #     'liability_non_current',
+            #     'equity',
+            #     'asset_prepayments'
+            # ])
         ])
     
         for account in accounts:
@@ -280,7 +280,7 @@ class GenerateOpeningEntries(models.TransientModel):
                     opening_move_line = opening_move_line.filtered(lambda x: x.date == opening_date)
                     income_ids = obj_acc_move_line.search(
                         [('company_id', '=', self.journal_id.company_id.id), ('move_id.state', '=', 'posted'),
-                         ('account_id', '=', acc_in.id), ('move_id.date', '>=', opening_date)
+                         ('account_id', '=', acc_in.id), ('move_id.date', '>', opening_date)
                          ('move_id.date', '<=', self.old_fiscal_year_id.date_to)])
                     debit += sum(opening_move_line.mapped('debit'))
                     credit += sum(opening_move_line.mapped('credit'))

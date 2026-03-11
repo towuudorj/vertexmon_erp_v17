@@ -158,7 +158,7 @@ class AccountMoveAnalysis(models.TransientModel):
          from 
          account_account aa
          left join (
-                          select 
+                 select 
                  case when eoy.debit is not null then
                      case when eoy.date = '{data['start_date']}' then
                           eoy.debit
@@ -197,7 +197,6 @@ class AccountMoveAnalysis(models.TransientModel):
                  aml.account_id
              from account_account aa
              left join account_move_line aml on aml.account_id = aa.id
-             left join account_move am on am.id = aml.move_id 
              left join account_journal aj on aj.id = aml.journal_id
              left join (
                  select aml.account_id, aml.date,
@@ -207,13 +206,12 @@ class AccountMoveAnalysis(models.TransientModel):
                          sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit,
                          RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
                  from account_move_line aml
-                 left join account_move am on am.id = aml.move_id 
                  left join account_journal aj on aj.id = aml.journal_id
-                 where aj.type ='opening' and aml.company_id = {data['company_id']} and aml.date <= '{data['start_date']}' and am.state='posted'
+                 where aj.type ='opening' and aml.company_id = {data['company_id']} and aml.date <= '{data['start_date']}' and aml.parent_state='posted'
                  group by aml.account_id, aml.date
              ) as eoy on eoy.account_id = aa.id
              where 
-             am.state = 'posted' and aa.company_id = {data['company_id']}
+             aml.parent_state = 'posted' and aa.company_id = {data['company_id']}
              and (eoy.rank = 1 or eoy.rank is null)
              group by eoy.date, eoy.debit, eoy.credit, aml.account_id, eoy.amount_currency_debit, eoy.amount_currency_credit
          ) as start_balance on start_balance.account_id = aa.id
@@ -221,10 +219,9 @@ class AccountMoveAnalysis(models.TransientModel):
          (
                 select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency, aml.date
                 from account_move_line aml 
-                left join account_move am on am.id = aml.move_id
                 left join account_journal aj on aj.id = aml.journal_id
                 where
-             aml.date between '{data['start_date']}' and '{data['end_date']}' and am.state in ('{"', '".join(states)}')
+             aml.date between '{data['start_date']}' and '{data['end_date']}' and aml.parent_state in ('{"', '".join(states)}')
              and aml.company_id = {data['company_id']} and aj.type != 'opening'
          ) as aml on aa.id = aml.account_id
          left join res_currency rc on aa.currency_id = rc.id
