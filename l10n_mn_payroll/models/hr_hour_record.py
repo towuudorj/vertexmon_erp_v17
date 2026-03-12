@@ -111,7 +111,6 @@ class HrHourRecord(models.Model):
             shift_day = 0.0
             lost_time = 0.0
             free_time1 = 0.0
-            lost_time_dict = {}
             work_day = start_date
             att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
             contract_id = contract_obj.search([('employee_id', '=', line.id), ('state', '=', 'open')])
@@ -157,14 +156,15 @@ class HrHourRecord(models.Model):
 
                                 work_start = work_start + timedelta(hours=lunch_hour)
                                 delta = work_end - work_start
-                                worked_hour = delta.total_seconds() / 60 / 60
+                                worked_hour = float(delta.total_seconds() / 60 / 60)
                                 if worked_hour > 0:
                                     in_time += worked_hour
                                     worked_day += 1
-                        if not worked_hour > 0:
-                            must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
-                            lost_time += must_work_hour - worked_hour
-                            lost_time_dict[work_day] = must_work_hour - worked_hour
+                        must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
+                        if worked_hour > 0:
+                            lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
+                        else:
+                            lost_time += must_work_hour
                     work_day = work_day + timedelta(days=1)
 
             holiday_id1 = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
