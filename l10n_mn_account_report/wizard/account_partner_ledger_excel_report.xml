@@ -39,19 +39,6 @@
             </field>
         </record>
 
-        <record id="account_partner_ledger_excel_report_preview" model="ir.ui.view">
-            <field name="name">Partner Ledger preview</field>
-            <field name="model">account.partner.ledger.excel.report</field>
-            <field name="arch" type="xml">
-                <form string="Partner ledger report" class="custom-modal-height" height="100%">
-                    <field name="preview_html" style="height:70%; width:100%"/>
-                    <footer>
-                        <button name="return_main_view" type="object" string="return" class="btn-primary"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <record id="action_account_partner_ledger_excel_report" model="ir.actions.act_window">
             <field name="name">Partner ledger report</field>
             <field name="res_model">account.partner.ledger.excel.report</field>

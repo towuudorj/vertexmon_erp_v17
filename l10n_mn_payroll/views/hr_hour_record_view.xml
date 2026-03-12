@@ -43,6 +43,10 @@
                             <button name="action_compute" string="Тооцоолох" 
                                     invisible="state != 'draft'" type="object" 
                                     groups="l10n_mn_payroll.group_hr_confirm" />
+
+                            <button name="action_print_xls_report" string="Тайлан татах" type="object"
+                                    invisible="state == 'draft'" groups="l10n_mn_payroll.group_hr_confirm"/>
+
                             <!--
                             <button name="%(action_hr_attendace_excel_report)d" string="Тайлан" type="action" />
                             -->  
@@ -65,16 +69,16 @@
                             <button name="hour_record" string="Hour record"  type="object" 
                                     invisible="state not in ('draft','confirmed')" />
 
-	                     	<field name="line_id" readonly ="state == 'confirmed'">
+	                     	<field name="line_id" readonly="state != 'draft'">
 								<tree editable="medium">
                                     <field name="employee_id" readonly="True" />
                                     <field name="position" readonly="True" />
                                     <field name="due_day" />
                                     <field name="due_time" />
                                     <field name="work_day" editable="True" />
+                                    <field name="work_time" editable="True" widget="float_time" />
                                     <field name="night_time" editable="True" widget="float_time" />
                                     <field name="outer_night_time" editable="True" widget="float_time" />
-                                    <field name="work_time" editable="True" widget="float_time" />
                                     <field name="sick_time" editable="True" widget="float_time" />
                                     <field name="shift_holiday" editable="True" />
                                     <field name="miss_time" editable="True" widget="float_time" />

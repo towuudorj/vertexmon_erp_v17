@@ -191,14 +191,14 @@ class ProductSummaryReport(models.TransientModel):
                             mv.product_id,
                             SUM(mv.product_uom_qty) AS qty,
                             AVG(svl.price) AS price
-                        FROM 
-                        (   
+                        FROM
+                        (
                             SELECT sum(svl.unit_cost) AS price, mv.id as stock_move_id
                             FROM stock_valuation_layer svl 
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                             WHERE mv.product_id = {pro.id}
                             GROUP BY mv.id
-                        ) AS svl 
+                        ) AS svl
                         LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                         LEFT JOIN stock_location sl ON mv.location_id = sl.id
                         LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id

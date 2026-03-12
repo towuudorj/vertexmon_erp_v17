@@ -12,4 +12,5 @@ from . import res_partner_bank_inherit
 from . import insurance_type
 from . import work_category
 from . import vat_income_type
+from . import hr_employee
 #from . import res_company_inherit

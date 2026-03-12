@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
             if order.analytic_id:
                 project_id = self.env['project.project'].search([('analytic_account_id','=',order.analytic_id.id)])
                 crm_manager = order.requisition_id.crm_lead_id.user_id
-                if crm_manager:
+                if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     purchase_url = f'/web#id={order.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({

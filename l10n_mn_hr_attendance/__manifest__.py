@@ -31,7 +31,6 @@
             'data/cron_data.xml',
             'data/ir_conifg_parameter_data.xml',
             'views/hr_attendance_inherit_view.xml',
-            'views/resource_calendar_inherit_view.xml',
             'views/menu_view.xml',
     ],
     'test': [],

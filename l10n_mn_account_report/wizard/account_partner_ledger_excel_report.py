@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 class AccountPartnerLedgerExcelReport(models.TransientModel):
     _name = 'account.partner.ledger.excel.report'
+    _inherit = ['xls.report.base']
     _description = 'account partner ledger excel report'
     
 
@@ -37,7 +38,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     end_date = fields.Date(u'Дуусах огноо',default=lambda *a: time.strftime('%Y-%m-%d'))
     account_journal_ids = fields.Many2many('account.journal', 'account_partner_new_ledger_excel_journal_rel', 'account_id', 'journal_id',
                                           string='Journals', domain="[('type', '!=', 'opening'), ('company_id', '=', company_id)]")
-    preview_html = fields.Html(compute="_compute_preview_html", sanitize=False)
     group_option_ids = fields.Many2many('ledger.report.group.option', 'ledger_report_group_option_re', 'report_id', 'group_id', string="Group options")
 
 
@@ -65,55 +65,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                      'report_name': 'Account balance report'}
         }
 
-    def get_report_data(self):
-        return {
-            'company_name': self.company_id.name,
-            'company_id': self.company_id.id,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-            'target_move': self.target_move,
-            'result_selection': self.result_selection,
-            'account_id': self.account_id.id,
-            'partner_id': self.partner_id.id,
-            'is_extra': self.is_extra,
-            'res_id': self.id,
-            'account_journal_ids': self.account_journal_ids.ids
-        }
-
-    def return_main_view(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Partner ledger report'),
-            'view_mode': 'form',
-            'view_id': self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_view').id,
-            'target': 'new',
-            'res_id': self.id,
-            'res_model': self._name
-        }
-
-    def _compute_preview_html(self):
-        for rec in self:
-            rec.preview_html = f"""
-                <iframe
-                    src={f"/partner_ledger/report/pdf/{rec.id}"}
-                    style="width:100%; height:100%; border:none;"
-                    scrolling="true"
-                    allow="autoplay; fullscreen; picture-in-picture" allowFullScreen="true"
-                    frameborder="0"
-                ></iframe>
-            """
-
-    def action_preview_report(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('PDF View'),
-            'view_mode': 'form',
-            'view_id':  self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_preview').id,
-            'target': 'new',
-            'res_id': self.id,
-            'res_model': self._name
-        }
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -221,14 +172,15 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             2: {'str': group_2_str, 'num': group_2_num},
             3: {'str': group_3_str, 'num': group_3_num}
         }
+        self_obj = self.browse(data['res_id'])
         move_state = ['draft', 'posted']
-        if data['result_selection'] == 'customer':
+        if self_obj.result_selection == 'customer':
             account_type = ['asset_receivable']
-        elif data['result_selection']=='supplier':
+        elif self_obj.result_selection == 'supplier':
             account_type = ['liability_payable']
         else:
             account_type = ['asset_receivable','liability_payable', 'asset_prepayments']
-        if data['target_move'] == 'posted':
+        if self_obj.target_move == 'posted':
             move_state = ['posted']
 
         where = "and aa.account_type in ('%s')" % "', '".join(type for type in account_type)
@@ -236,14 +188,14 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         order_by = []
         group_by = []
         select = ""
-        if data['partner_id']:
-            where += f" and rp.id = {data['partner_id']}"
-        self = self.browse(data['res_id'])
-        if self.group_option_ids:
-            for i in range(len(self.group_option_ids)):
-                if self.group_option_ids[i].code == 'currency':
+        if self_obj.partner_id:
+            where += f" and rp.id = {self_obj.partner_id.id}"
+
+        if self_obj.group_option_ids:
+            for i in range(len(self_obj.group_option_ids)):
+                if self_obj.group_option_ids[i].code == 'currency':
                     order_by.append("rc.id")
-                    if not data['is_extra']:
+                    if not self_obj.is_extra:
                         group_by.append("aml.currency_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
@@ -256,9 +208,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                          'debit': 0,
                                          'credit': 0,
                                          })
-                if self.group_option_ids[i].code == 'partner':
+                if self_obj.group_option_ids[i].code == 'partner':
                     order_by.append("rp.id")
-                    if not data['is_extra']:
+                    if not self_obj.is_extra:
                         group_by.append("aml.partner_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
@@ -271,9 +223,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                          'debit': 0,
                                          'credit': 0,
                                          })
-                if self.group_option_ids[i].code == 'account':
+                if self_obj.group_option_ids[i].code == 'account':
                     order_by.append("aa.id")
-                    if not data['is_extra']:
+                    if not self_obj.is_extra:
                         group_by.append("aml.account_id")
                     group_values.append({'last_value': False,
                                          'sequence': 0,
@@ -286,7 +238,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                          'debit': 0,
                                          'credit': 0,
                                          })
-        if not data['is_extra']:
+        if not self_obj.is_extra:
             select += ("sum(aml.debit)  as debit,"
                        "sum(aml.credit) as credit,"
                        "sum(aml.amount_currency) as amount_currency")
@@ -306,15 +258,15 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             order_by.append('rp.id')
         if 'account_id' not in order_by:
             order_by.append('aa.id')
-        if data['is_extra']:
+        if self_obj.is_extra:
             order_by.append("aml.date ASC")
         order_by = '\nORDER BY ' + ', '.join(order for order in order_by)
 
-        if self.account_journal_ids:
-            where_aml += f" and aml.journal_id in ({', '.join(str(j_id.id) for j_id in self.account_journal_ids)})"
+        if self_obj.account_journal_ids:
+            where_aml += f" and aml.journal_id in ({', '.join(str(j_id.id) for j_id in self_obj.account_journal_ids)})"
 
-        if self.account_id:
-            where += f" and aa.id = {self.account_id.id}"
+        if self_obj.account_id:
+            where += f" and aa.id = {self_obj.account_id.id}"
         env_user = self.env.user
         if not env_user.has_group('l10n_mn_account_report.group_all_partner_report'):
             self._cr.execute(f"SELECT partner_id from sale_order so  where so.user_id = {env_user.id} and so.company_id = {self.env.company.id} group by partner_id;")
@@ -333,23 +285,23 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
         COALESCE(aml.debit, 0) as debit,
         COALESCE(aml.credit, 0) as credit,
-        COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if data['is_extra'] else ''}
+        COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if self_obj.is_extra else ''}
  from (
      select case when eoy.balance is not null then
-                 case when eoy.date = '{self.start_date}' then
+                 case when eoy.date = '{self_obj.start_date}' then
                       eoy.balance
                  else 
-                      eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' and aj.type != 'opening' then aml.balance else 0 end)
+                      eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self_obj.start_date}' and aj.type != 'opening' then aml.balance else 0 end)
                  end
-             else sum(case when aml.date < '{self.start_date}' then aml.balance else 0 end)
+             else sum(case when aml.date < '{self_obj.start_date}' then aml.balance else 0 end)
              end as balance,
              case when eoy.amount_currency is not null then
-                 case when eoy.date = '{self.start_date}' then
+                 case when eoy.date = '{self_obj.start_date}' then
                       eoy.amount_currency
                  else
-                      eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self.start_date}' and aj.type != 'opening' then aml.amount_currency else 0 end)
+                      eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self_obj.start_date}' and aj.type != 'opening' then aml.amount_currency else 0 end)
                  end
-             else sum(case when aml.date < '{self.start_date}' then aml.amount_currency else 0 end)
+             else sum(case when aml.date < '{self_obj.start_date}' then aml.amount_currency else 0 end)
              end as currency_balance,
              aml.account_id , aml.partner_id
      from account_move_line aml
@@ -361,11 +313,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
          RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
          from account_move_line aml
          left join account_journal aj on aj.id = aml.journal_id
-         where aj.type ='opening' and aml.company_id = {self.company_id.id} and aml.date <= '{self.start_date}' and aml.parent_state = 'posted'
+         where aj.type ='opening' and aml.company_id = {self_obj.company_id.id} and aml.date <= '{self_obj.start_date}' and aml.parent_state = 'posted'
          group by aml.date, aml.account_id, aml.partner_id
      ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
      where aml.parent_state = 'posted'
-     and aml.company_id = {self.company_id.id}
+     and aml.company_id = {self_obj.company_id.id}
      and (eoy.rank = 1 or eoy.rank is null) {where_aml}
      group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
  ) as start_balance
@@ -378,8 +330,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         {select}
     FROM account_move_line aml
     JOIN account_journal aj ON aj.id = aml.journal_id AND aj.type != 'opening'
-    WHERE aml.company_id = {self.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
-    AND aml.date BETWEEN '{self.start_date}' AND '{data['end_date']}' {where_aml}
+    WHERE aml.company_id = {self_obj.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
+    AND aml.date BETWEEN '{self_obj.start_date}' AND '{self_obj.end_date}' {where_aml}
     {group_by}
  ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
  LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
@@ -392,28 +344,28 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
-        sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (data['company_name']), data_left_no_border)
+        sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (self_obj.company_id.name), data_left_no_border)
 
-        if data['result_selection'] == 'customer' and data['is_extra'] == False:
+        if self_obj.result_selection == 'customer' and self_obj.is_extra == False:
             report_name =  u'Авлагын товчоо тайлан'
-        elif data['result_selection'] == 'customer' and data['is_extra'] == True:
+        elif self_obj.result_selection == 'customer' and self_obj.is_extra == True:
             report_name =  u'Авлагын дэлгэрэнгүй тайлан'
-        elif data['result_selection'] == 'supplier' and data['is_extra'] == False:
+        elif self_obj.result_selection == 'supplier' and self_obj.is_extra == False:
             report_name =  u'Өглөгийн товчоо тайлан'
-        elif data['result_selection'] == 'supplier' and data['is_extra'] == True:
+        elif self_obj.result_selection == 'supplier' and self_obj.is_extra == True:
             report_name =  u'Өглөгийн дэлгэрэнгүй тайлан'
-        elif data['result_selection'] == 'customer_supplier' and data['is_extra'] == False:
+        elif self_obj.result_selection == 'customer_supplier' and self_obj.is_extra == False:
             report_name =  u'Өглөг, авлагын товчоо тайлан'
         else:
             report_name =  u'Өглөг, авлагийн дэлгэрэнгүй тайлан'
 
-        if self.is_extra:
+        if self_obj.is_extra:
             sheet.merge_range(1, 0, 1, 9, report_name, head)
-            sheet.merge_range(2, 8, 2, 9, u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']) ,
+            sheet.merge_range(2, 8, 2, 9, u'Тайлант хугацаа: %s - %s'%(self_obj.start_date,self_obj.end_date) ,
                               data_left_no_border)
         else:
             sheet.merge_range(1, 0, 1, 7, report_name, head)
-            sheet.merge_range(2, 6, 2, 7, u'Тайлант хугацаа: %s - %s' % (data['start_date'], data['end_date']),
+            sheet.merge_range(2, 6, 2, 7, u'Тайлант хугацаа: %s - %s' % (self_obj.start_date, self_obj.end_date),
                               data_left_no_border)
         rowx = 3
         coly = 0
@@ -425,7 +377,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         coly += 1
         sheet.merge_range(rowx, coly, rowx+1, coly, u'Валют', title)
         coly += 1
-        if self.is_extra:
+        if self_obj.is_extra:
             sheet.merge_range(rowx, coly, rowx + 1, coly, u'Огноо', title)
             coly += 1
             sheet.merge_range(rowx, coly, rowx + 1, coly, u'Гүйлгээний утга', title)
@@ -503,7 +455,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 sheet.write(rowx, coly, 'MNT', txt)
                 sheet.write(rowx+1, coly, line['currency'], txt)
                 coly += 1
-                if self.is_extra:
+                if self_obj.is_extra:
                     sheet.merge_range(rowx, coly, rowx+1, coly, line['date'], format_date)
                     coly += 1
                     sheet.merge_range(rowx, coly, rowx+1, coly, line['ref'], txt_left)
@@ -547,7 +499,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 sheet.write(rowx, coly, line['credit'], num_right)
                 sheet.write(rowx + 1, coly, abs(line['amount_currency']) if line['amount_currency'] < 0 else 0, num_right)
                 coly += 1
-                if self.is_extra:
+                if self_obj.is_extra:
                     sheet.write(rowx, coly, last_line_end_balance['MNT'], num_right)
                     sheet.write(rowx+1, coly, last_line_end_balance[line['currency']], num_right)
                 else:
@@ -565,7 +517,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 coly += 1
                 sheet.write(rowx, coly, 'MNT', txt)
                 coly += 1
-                if self.is_extra:
+                if self_obj.is_extra:
                     sheet.write(rowx, coly, line['date'], format_date)
                     coly += 1
                     sheet.write(rowx, coly, line['ref'], txt_left)
@@ -601,7 +553,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 coly += 1
                 sheet.write(rowx, coly, line['credit'], num_right)
                 coly += 1
-                if self.is_extra:
+                if self_obj.is_extra:
                     sheet.write(rowx, coly, last_line_end_balance['MNT'], num_right)
                 else:
                     sheet.write(rowx, coly, line['start_balance'] + line['debit'] - line['credit'], num_right)

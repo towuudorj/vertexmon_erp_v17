@@ -6,9 +6,10 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 class ResourceCalendar(models.Model): 
     _inherit = 'resource.calendar'
     
-    is_holiday_time_out = fields.Boolean(string='Holiday time out')
+    # is_holiday_time_out = fields.Boolean(string='Holiday time out')
     work_time = fields.Float(string='Working hour')
-
+    lunchtime_start = fields.Float(string='Lunch time start')
+    lunchtime_end = fields.Float(string='Lunch time end', compute='_compute_lunchtime_end')
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar')
     def _compute_hours_per_day(self):
@@ -16,6 +17,14 @@ class ResourceCalendar(models.Model):
         for obj in self:
             if obj.work_time:
                 obj.hours_per_day = obj.work_time
+
+    @api.onchange('lunchtime_start')
+    def _compute_lunchtime_end(self):
+        for obj in self:
+            if obj.lunchtime_start:
+                obj.lunchtime_end = obj.lunchtime_start + 1
+            else:
+                obj.lunchtime_end = None
 
 
 class hr_contract(models.Model):

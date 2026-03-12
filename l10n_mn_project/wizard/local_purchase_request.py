@@ -76,7 +76,7 @@ class LocalPurchaseRequest(models.TransientModel):
                 lines.line_id.pur_qty = lines.line_id.pur_qty + qty
             employee_id = employee_obj.search([('user_id','=',self.env.user.id)])
             crm_manager = employee_id.parent_id.user_id
-            if crm_manager:
+            if crm_manager and crm_manager.mapped('email'):
                 # Send email notification
                 purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
                 self.env['mail.mail'].create({

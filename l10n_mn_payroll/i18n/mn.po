@@ -103,7 +103,10 @@ msgstr "Код"
 msgid "Parent category"
 msgstr "Дэд ангилал"
 
-
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__payroll
+msgid "Payroll"
+msgstr "Цалинтай чөлөө"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__company_id
@@ -203,6 +206,11 @@ msgid "Ndsh percent"
 msgstr "НДШ Хувь"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__night_out_work
+msgid "Night out work"
+msgstr "Шөнийн ажил"
+
+#. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__ndsh_amount
 msgid "Ndsh amount"
 msgstr "НДШ Дүн"
@@ -227,6 +235,11 @@ msgstr "Нийт өдөр"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__shift_start_date
 msgid "Shift start date"
 msgstr "Ээлжийн амралт эхлэх огноо"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__sick
+msgid "Sick"
+msgstr "Өвчний чөлөө"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__company_id
@@ -459,6 +472,10 @@ msgid "Out work"
 msgstr "Гадуур ажил"
 
 
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__over_time
+msgid "Over time"
+msgstr "Илүү цаг"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__draft
@@ -562,6 +579,11 @@ msgstr "Илүү цаг"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__more_time1
 msgid "Legal holiday"
 msgstr "Албан ёсны амралтын өдөр ажилласан цаг"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__legal_leave
+msgid "Legal leave"
+msgstr "Албан ёсны амралтын өдөр ажиллсан цаг"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__late_minut
@@ -674,6 +696,16 @@ msgstr "Цуцлах"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
 msgid "Print"
 msgstr "Хэвлэх"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__public_holiday
+msgid "Public holiday"
+msgstr "Ээлжийн амралт"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__international_holiday
+msgid "International holiday"
+msgstr "Бүх нийтийн амралт"
 
 #. module: l10n_mn_payroll
 #: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
@@ -995,6 +1027,11 @@ msgstr "Хэвийн бус нөхцөлийн нэмэгдэл"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__trial_end_date
 msgid "Trial End Date"
 msgstr "Туршилтын гэрээ дуусах хугацаа"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__unpayroll
+msgid "Unpayroll"
+msgstr "Цалингүй чөлөө"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.hr_contract_cash_inherit_form__type_id
