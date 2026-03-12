@@ -161,13 +161,11 @@ class HrHourRecord(models.Model):
                                 if worked_hour > 0:
                                     in_time += worked_hour
                                     worked_day += 1
-
                         if not worked_hour > 0:
                             must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
                             lost_time += must_work_hour - worked_hour
                             lost_time_dict[work_day] = must_work_hour - worked_hour
-                        work_day = work_day + timedelta(days=1)
-
+                    work_day = work_day + timedelta(days=1)
 
             holiday_id1 = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
             if holiday_id1 and not str(line.timely_id) in timely_worker_ids:
