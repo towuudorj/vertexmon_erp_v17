@@ -125,15 +125,23 @@ class HrHourRecord(models.Model):
                         due_time += mach
                         for att_line1 in att_id:
                             if att_line1.check_in.date() == work_day.date():
-                                work_start = att_line1.check_in
-                                work_end = att_line1.check_out
+                                check_in = att_line1.check_in
+                                check_out = att_line1.check_out
                                 tz = company.partner_id.tz if company.partner_id.tz else 'Asia/Ulaanbaatar'
                                 company_tz = timezone(tz)
-                                work_start = work_start.astimezone(company_tz)
-                                work_end = work_end.astimezone(company_tz)
+                                check_in = check_in.astimezone(company_tz)
+                                check_out = check_out.astimezone(company_tz)
                                 lunch_hour = 1
-                                lunch_start_time = work_start
-                                lunch_end_time = work_start
+                                lunch_start_time = check_in
+                                lunch_end_time = check_in
+                                work_start_time = check_in
+                                work_end_time = check_in
+                                contract_att_line = contract_id.resource_calendar_id.attendance_ids.filtered(
+                                    lambda x: x.dayofweek == str(work_day.weekday()))[0]
+                                work_start_time = work_start_time.replace(hour=int(round(contract_att_line.hour_from, 0)),
+                                                                          minute=int(contract_att_line.hour_from%1*60), second=0, microsecond=0)
+                                work_end_time = work_end_time.replace(hour=int(round(contract_att_line.hour_to, 0)),
+                                                                          minute=int(contract_att_line.hour_to%1*60), second=0, microsecond=0)
                                 if contract_id.resource_calendar_id.lunchtime_start:
                                     lunch_start_time = lunch_start_time.replace(hour=int(round(contract_id.resource_calendar_id.lunchtime_start, 0)),
                                                                           minute=int(contract_id.resource_calendar_id.lunchtime_start%1*60), second=0, microsecond=0)
@@ -143,25 +151,27 @@ class HrHourRecord(models.Model):
                                     lunch_start_time = lunch_start_time.replace(hour=12, minute=0, second=0, microsecond=0)
                                     lunch_end_time = lunch_end_time.replace(hour=13, minute=0, second=0, microsecond=0)
 
-                                if lunch_start_time < work_start < lunch_end_time:
-                                    delta = work_start - lunch_start_time
+                                if lunch_start_time < check_in < lunch_end_time:
+                                    delta = check_in - lunch_start_time
                                     lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
-                                if lunch_start_time < work_end < lunch_end_time:
-                                    delta = lunch_end_time - work_end
+                                if lunch_start_time < check_out < lunch_end_time:
+                                    delta = lunch_end_time - check_out
                                     lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
-                                if work_start >= lunch_end_time or work_end <= lunch_start_time:
+                                if check_in >= lunch_end_time or check_out <= lunch_start_time:
                                     lunch_hour = 0
                                 if lunch_hour < 0:
                                     lunch_hour = 0
 
-                                work_start = work_start + timedelta(hours=lunch_hour)
-                                delta = work_end - work_start
-                                worked_hour = float(delta.total_seconds() / 60 / 60)
-                                if worked_hour > 0:
-                                    in_time += worked_hour
-                                    worked_day += 1
+                                delta = check_out - check_in
+                                if work_start_time < check_in:
+                                    delta = (work_end_time if work_end_time <= check_out else check_out) - check_in
+                                if work_end_time > check_out:
+                                    delta = check_out - (check_in if check_in < work_start_time else work_start_time)
+                                worked_hour = float(delta.total_seconds() / 60 / 60) - lunch_hour
                         must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
                         if worked_hour > 0:
+                            in_time += worked_hour
+                            worked_day += 1
                             lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
                         else:
                             lost_time += must_work_hour
