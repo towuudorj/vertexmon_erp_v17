@@ -111,19 +111,19 @@
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
@@ -171,17 +171,17 @@
                             </tr>
                              <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:14px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:14px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:14px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                              <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                              <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                         </t>
@@ -226,15 +226,15 @@
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                             </t>
                             </t>
@@ -280,17 +280,17 @@
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="6" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             </t>
@@ -335,17 +335,17 @@
                             </tr>
                             <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                                 <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"/>
                             </tr>
                             </t>
@@ -388,15 +388,15 @@
                             </tr>
                              <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ-гүй дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                              <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> 10% НӨАТ</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                              <tr class="border-black">
                                 <td colspan="5" style="padding: 3px; font-size:11px; font-weight: bold; border: 1px solid black;  text-align: right;"> НӨАТ орсон дүн</td>
-                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+                                <td style="padding: 3px; font-size:11px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
                             </tr>
                         </t>
                         </t>

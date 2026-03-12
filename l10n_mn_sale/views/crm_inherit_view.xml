@@ -167,6 +167,7 @@
                                 <field name="send_date" readonly="new_status == 'done'"/>
                                 <field name="project_id" readonly="new_status == 'done'"/>
                                 <field name="supply_day" readonly="new_status == 'done'"/>
+                                <field name="expire_day"/>
                                 <field name="invoice_percentage"/>
                                 <field name="invoice_description"/>
                             </group>

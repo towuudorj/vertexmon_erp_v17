@@ -73,7 +73,11 @@
 										<td style="padding: 3px;">Банкны нэр:</td>
 										<td style="padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
 										<td style="padding: 3px;">Төлбөр төлөх хугацаа:</td>
-										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.send_date"/></td>
+										<td style="padding: 3px; border-bottom: 1px solid black;">
+											<t t-set="days" t-value="o.expire_day or 0"/>
+											<t t-set="due_date" t-value="(o.send_date + datetime.timedelta(days=days))"/>
+											<t t-esc="due_date.strftime('%Y-%m-%d')"/>
+										</td>
 									</tr>
 									<tr>
 										<td style="padding: 3px;">Банкны данс:</td>
@@ -132,16 +136,16 @@
 						<tr style="border:none;">
 							<td rowspan="5" colspan="4" style="padding: 3px; border: none;  text-align: center;"> </td>					
 							<td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Дүн</td>
-							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 							<br/>
 		                </tr>
                 		<tr class="border-black">
 		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> НӨАТ 10%</td>
-							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 		                </tr>
 						<tr class="border-black">
 		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Нийт дүн</td>
-							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 		                	<br/>
 		                </tr>
 						</t>
@@ -173,16 +177,16 @@
 						<tr style="border:none;">
 							<td rowspan="5" colspan="5" style="padding: 3px; border: none;  text-align: center;"> </td>					
 							<td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Дүн</td>
-							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount"/></td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 							
 		                </tr>
                 		<tr class="border-black">
 		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> НӨАТ 10%</td>
-							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount"/></td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 		                </tr>
 						<tr class="border-black">
 		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Нийт дүн</td>
-							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total"/></td>
+							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
 		                	<br/>
 		                </tr>
 						</t>

@@ -112,9 +112,10 @@
             	<field name="close_move_id" readonly="1"/>
             	<field name="invoice_id" readonly="1"/>
                 <field name="contract_number" readonly="state in ('confirm','done')" />
-                <field name="contract_amount" readonly="state in ('confirm','done')"/>
-                <field name="project_total_cost" invisible="state != 'done'"/>
-                <field name="project_total_profit" invisible="state != 'done'"/>
+                <field name="contract_amount" widget="monetary" readonly="state in ('confirm','done')"/>
+                <field name="quality_amount" widget="monetary" readonly="state in ('confirm','done')"/>
+                <field name="project_total_cost" widget="monetary" invisible="state != 'done'"/>
+                <field name="project_total_profit" widget="monetary" invisible="state != 'done'"/>
                 <field name="warehouse_id" readonly="state in ('confirm','done')"/>
                 <field name="picking_type_id" readonly="state in ('confirm','done')"/>
                 <field name="purchase_manager_id" readonly="state in ('confirm','done')"/>
@@ -142,8 +143,8 @@
                             <field name="qty_delivered" string="Зарлага хийгдсэн тоо"/>
                             <field name="delivery_cost" string="Нийт зарлагын өртөг"/>
                             <field name="last_qty" string="Үлдэгдэл тоо"/>
-                            <field name="cost_price"/>
-                            <field name="price_unit"/>
+                            <field name="cost_price" widget="monetary"/>
+                            <field name="price_unit" widget="monetary"/>
                             <field name="change_cost" readonly="1"/>
                             <field name="cost_total" sum="Total Cost" force_save="1"/>
                             <field name="price_total" sum="Total Price" force_save="1"/>
