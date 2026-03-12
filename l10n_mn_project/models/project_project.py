@@ -46,6 +46,7 @@ class ProjectProject(models.Model):
     sequence_name = fields.Char("Sequence", copy=False)
     contract_number = fields.Char(string='Contract Number', copy=False)
     contract_amount = fields.Float(string='Contract Amount', digits='Product Price')
+    quality_amount = fields.Float(string='Quality Amount')
     products_line = fields.One2many('project.products.line', 'project_id', string='Products Line', copy=True,)
     total_amount = fields.Monetary(string='Total Amount', store=True, readonly=True, compute='_amount_all')
     untax_amount = fields.Monetary(string='Untax Amount', store=True, readonly=True, compute='_amount_all')

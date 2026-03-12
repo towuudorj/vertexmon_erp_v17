@@ -113,6 +113,7 @@
             	<field name="invoice_id" readonly="1"/>
                 <field name="contract_number" readonly="state in ('confirm','done')" />
                 <field name="contract_amount" widget="monetary" readonly="state in ('confirm','done')"/>
+                <field name="quality_amount" widget="monetary" readonly="state in ('confirm','done')"/>
                 <field name="project_total_cost" widget="monetary" invisible="state != 'done'"/>
                 <field name="project_total_profit" widget="monetary" invisible="state != 'done'"/>
                 <field name="warehouse_id" readonly="state in ('confirm','done')"/>
