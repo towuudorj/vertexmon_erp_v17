@@ -183,7 +183,7 @@ class SaleOrder(models.Model):
     ot_po = fields.Char(string='OT/PO')
     ot_code = fields.Char(string='OT Code')
     expire_day = fields.Integer(string="Expire day", 
-                                default=14)
+                                default=10)
     supply_date = fields.Char(string='Supply date',
                               default=u'14-28 хоног')
     cancel_reason = fields.Char(string='Cancel reason')
