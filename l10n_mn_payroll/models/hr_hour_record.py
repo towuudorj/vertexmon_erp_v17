@@ -259,7 +259,7 @@ class HrHourRecord(models.Model):
                                     sick_time +=lines.number_of_hours_display
 
             if str(line.timely_id) in timely_worker_ids:
-                emp_hour_balance = timely_data[str(line.attendance_id)]
+                emp_hour_balance = timely_data[str(line.timely_id)]
                 due_day += emp_hour_balance['attd']['work']['day']
                 due_time += emp_hour_balance['attd']['work']['time']
                 worked_day += emp_hour_balance['attd']['total_worked']['day']
