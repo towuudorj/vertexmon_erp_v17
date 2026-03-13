@@ -78,7 +78,6 @@ class HrHourRecord(models.Model):
         att_obj = self.env['hr.attendance']
         contract_obj = self.env['hr.contract']
         holiday_obj = self.env['hr.leave']
-        mach = 8
         self.delete_lines()
         emp_id = []
         company = hr_data.company_id
@@ -86,10 +85,14 @@ class HrHourRecord(models.Model):
             emp_id = emp_obj.search([('company_id','=',company.id),('department_id','=',hr_data.department.id)], order='department_id')
         else:
             emp_id = emp_obj.search([('company_id','=',company.id)], order='department_id')
-            
-        start_date = hr_data.start_date
-        end_times = hr_data.end_date + timedelta(hours=mach)
+
+        start_date = hr_data.start_date + timedelta(hours=8)
+        end_times = hr_data.end_date + timedelta(hours=8)
         end_time = end_times.replace(minute=59, hour=23, second=59)
+
+        tz = company.partner_id.tz if company.partner_id.tz else 'Asia/Ulaanbaatar'
+        company_tz = timezone(tz)
+
         emp_attendance_ids = emp_id.mapped('timely_id')
         timely_data = self.get_timely_data(emp_attendance_ids)
         timely_worker_ids = timely_data.keys() if timely_data else []
@@ -116,19 +119,18 @@ class HrHourRecord(models.Model):
             contract_id = contract_obj.search([('employee_id', '=', line.id), ('state', '=', 'open')])
             if not contract_id or not contract_id.resource_calendar_id and (not str(line.timely_id) in timely_worker_ids):
                 raise UserError(u"%s энэ ажилтаны гэрээ үүсээгүй эсвэл гэрээ нь дээр цагийн хуваарь оруулаагүй байна !" % line.name)
+            must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
             if att_id and not str(line.timely_id) in timely_worker_ids:
                 work_weekdays = contract_id.resource_calendar_id.attendance_ids.mapped('dayofweek')
                 while work_day <= end_time:
                     worked_hour = 0
                     if str(work_day.weekday()) in work_weekdays:
                         due_day += 1
-                        due_time += mach
+                        due_time += must_work_hour
                         for att_line1 in att_id:
                             if att_line1.check_in.date() == work_day.date():
                                 check_in = att_line1.check_in
                                 check_out = att_line1.check_out
-                                tz = company.partner_id.tz if company.partner_id.tz else 'Asia/Ulaanbaatar'
-                                company_tz = timezone(tz)
                                 check_in = check_in.astimezone(company_tz)
                                 check_out = check_out.astimezone(company_tz)
                                 lunch_hour = 1
@@ -162,15 +164,15 @@ class HrHourRecord(models.Model):
                                 if lunch_hour < 0:
                                     lunch_hour = 0
 
-                                delta = check_out - check_in
                                 if work_start_time < check_in:
                                     delta = (work_end_time if work_end_time <= check_out else check_out) - check_in
-                                if work_end_time > check_out:
-                                    delta = check_out - (check_in if check_in < work_start_time else work_start_time)
+                                else:
+                                    delta = (check_in + timedelta(hours=must_work_hour+1) if check_in + timedelta(hours=must_work_hour+1) < check_out else check_out) - check_in
                                 worked_hour = float(delta.total_seconds() / 60 / 60) - lunch_hour
-                        must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
+
                         if worked_hour > 0:
                             in_time += worked_hour
+
                             worked_day += 1
                             lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
                         else:
@@ -210,25 +212,25 @@ class HrHourRecord(models.Model):
 
                         if lines.number_of_days_display >= 1:
                             if lines.holiday_status_id.sub_type == 'night_out_work':
-                                n_time += holiday_days*mach
+                                n_time += holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'over_time':
-                                over_time += holiday_days*mach
+                                over_time += holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'unpayroll':
-                                unpayroll_time += holiday_days*mach
+                                unpayroll_time += holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'out_work':
-                                out_n_time +=holiday_days*mach
+                                out_n_time +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type in ['payroll', 'international_holiday']:
-                                free_time1 +=holiday_days*mach
+                                free_time1 +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'legal_leave':
-                                official_time +=holiday_days*mach
+                                official_time +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'sick':
-                                sick_time +=holiday_days*mach
+                                sick_time +=holiday_days*must_work_hour
 
                         else:
                             if lines.date_to <= end_time:
@@ -271,7 +273,7 @@ class HrHourRecord(models.Model):
                 over_time += emp_hour_balance['attd']['overtime_subtraction']['time']
                 official_time += emp_hour_balance['attd']['holiday_worked']['time']
             total_time = in_time + official_time + sick_time + out_n_time + n_time
-            lost_time = lost_time - (shift_time*8) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
+            lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
 
             emp_info.create({
                 'work_day':worked_day,
