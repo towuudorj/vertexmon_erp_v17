@@ -1,0 +1,21 @@
+<odoo>
+
+    <record id="account_move_line_search_reconcile_view_inherit_year" model="ir.ui.view">
+        <field name="name">account.move.line.search.reconcile.year</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_reconcile_oca.account_move_line_search_reconcile_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="inside">
+
+                <filter name="current_year"
+                        string="This Year"
+                        domain="[('date','&gt;=', context_today().strftime('%Y-01-01')),
+                                 ('date','&lt;=', context_today().strftime('%Y-12-31'))]"/>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

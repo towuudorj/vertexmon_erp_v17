@@ -480,3 +480,8 @@ msgstr "Татвар"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_line_filter_mn_inherit
 msgid "Cash move type"
 msgstr "Мөнгөн гүйлгээний төрөл"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.account_move_line_search_reconcile_view_inherit_year
+msgid "This Year"
+msgstr "Тухайн жил"
