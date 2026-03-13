@@ -11,6 +11,7 @@ class CashMovelineReport(models.TransientModel):
         Бэлэн мөнгө болон харилцахын гүйлгээний тайлан
     """
     _name = "cash.move.line.report"
+    _inherit = 'xls.report.base'
     _description = "Account move line report"
     
     
@@ -24,16 +25,21 @@ class CashMovelineReport(models.TransientModel):
     target_move = fields.Selection([('posted', u'Батлагдсан гүйлгээ'),
                                     ('all', u'Бүх гүйлгээ')], u'Зорилтот гүйлгээ', required=True, default='posted')
 
-
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(CashMovelineReport, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
             'account_ids': self.account_ids.ids,
             'by_currency': self.by_currency
-        }
+        })
+        return data
+
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -44,7 +50,7 @@ class CashMovelineReport(models.TransientModel):
                      'report_name': 'cash_and_bank_report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -78,6 +84,9 @@ class CashMovelineReport(models.TransientModel):
                                     'num_format': '#,##0.00;(#,##0.00)'
                                     })
 
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(3, 8, 20)
         sheet.set_column(1, 1, 30)
         sheet.set_column(2, 2, 15)
@@ -166,7 +175,6 @@ class CashMovelineReport(models.TransientModel):
              and (eoy.rank = 1 or eoy.rank is null) and aa.id = {line.id} 
              group by aa.id, eoy.balance, eoy.date
             """
-            print(qry)
             self.env.cr.execute(qry)
             acc = self._cr.dictfetchall()
             if acc:
@@ -214,8 +222,11 @@ class CashMovelineReport(models.TransientModel):
         
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return None
 
 
         

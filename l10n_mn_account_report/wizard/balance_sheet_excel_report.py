@@ -11,6 +11,7 @@ class balance_sheet_excel(models.TransientModel):
         Санхүүгийн байдлын тайлан
     """
     _name = "balance.sheet.excel"
+    _inherit = 'xls.report.base'
     _description = "Balance Sheet Report - Mongolia"
     
     company_id=fields.Many2one('res.company', string='Company', required=True, 
@@ -21,17 +22,21 @@ class balance_sheet_excel(models.TransientModel):
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
                                         ], string='State', required=True, default='posted')
-    
-    
 
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(balance_sheet_excel, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
             'target_move': self.target_move
-        }
+        })
+        return data
+    
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -42,7 +47,7 @@ class balance_sheet_excel(models.TransientModel):
                      'report_name': 'Account balance report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -92,7 +97,9 @@ class balance_sheet_excel(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00;(#,##0.00)'
                                 })
-
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 10)
         sheet.set_column(1, 1, 60)
         sheet.set_column(2, 4, 20)
@@ -376,8 +383,12 @@ class balance_sheet_excel(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return None
+
 
 
 

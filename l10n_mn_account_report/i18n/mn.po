@@ -297,6 +297,8 @@ msgstr "Харилцагчийн тайлан"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.multi_company_balance_sheet_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.profit_excel_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.statement_cashflow_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.balance_sheet_excel_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.cash_move_report_form_view
 msgid "Preview"
 msgstr "Харах"
 

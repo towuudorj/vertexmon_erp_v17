@@ -13,6 +13,7 @@ class SaleOrderNewReport(models.TransientModel):
         Борлуулалтын тайлан
     """
     _name = "sale.order.new.report"
+    _inherit = 'xls.report.base'
     _description = "Sale order report"
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
@@ -25,17 +26,22 @@ class SaleOrderNewReport(models.TransientModel):
     is_license = fields.Boolean(string='License', default=False)
     partner_id = fields.Many2one('res.partner', string='Customer')
 
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(SaleOrderNewReport, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.date_from,
-            'end_date': self.date_to,
+            'start_date': str(self.date_from),
+            'end_date': str(self.date_to),
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
             'partner_id': self.partner_id.id,
-        }
+        })
+        return data
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -46,7 +52,7 @@ class SaleOrderNewReport(models.TransientModel):
                      'report_name': 'Sale order report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -100,6 +106,9 @@ class SaleOrderNewReport(models.TransientModel):
             'num_format': '#,##0.00'
         })
 
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 5, 15)
         sheet.set_column(6, 6, 40)
         sheet.set_column(7, 17, 15)
@@ -210,5 +219,8 @@ class SaleOrderNewReport(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return None

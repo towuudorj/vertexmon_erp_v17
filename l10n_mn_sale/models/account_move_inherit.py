@@ -20,7 +20,7 @@ class AccountMove(models.Model):
     payment_percent = fields.Float(string='Payment percent')
     line_names = fields.Text(string='Line names', compute='_compute_line_names')
     payment_date = fields.Date(string='Payment date')
-    ot_po = fields.Char(string='OT/PO', compute='_compute_ot_po')
+    ot_po = fields.Char(string='OT/PO', compute='_compute_ot_po', store=True)
 
     @api.depends('invoice_line_ids')
     def _compute_line_names(self):

@@ -1007,6 +1007,7 @@ msgstr "Урьдчилан таамагласан тоо"
 
 #. module: l10n_mn_sale
 #: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_common_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_sale.sale_order_new_report_view
 msgid "Preview"
 msgstr "Харах"
 

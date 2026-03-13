@@ -24,6 +24,7 @@
                 <data>
                     <xpath expr='//field[@name="date"]' position="after">
                         <field name="payment_date"/>
+                        <field name="ot_po"/>
                     </xpath>
                 </data>
             </field>
@@ -37,6 +38,7 @@
                 <data>
                     <xpath expr='//field[@name="invoice_date"]' position="after">
                         <field name="line_names"/>
+                        <field name="ot_po" optional="show"/>
                     </xpath>
                 </data>
             </field>
