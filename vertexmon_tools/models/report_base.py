@@ -22,7 +22,7 @@ class Model(models.AbstractModel):
     def return_main_view(self):
         action = {
             'type': 'ir.actions.act_window',
-            'name': _('Partner ledger report'),
+            'name': _('Report view'),
             'view_mode': 'form',
             'view_id': self.env.ref('l10n_mn_account_report.account_partner_ledger_excel_report_view').id,
             'target': 'new',
@@ -49,6 +49,4 @@ class Model(models.AbstractModel):
 
     def get_report_data(self):
         data = {'res_id': self.id}
-        for field in self.fields_get():
-            data[field] = getattr(self, field)
         return data

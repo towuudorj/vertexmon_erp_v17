@@ -11,6 +11,7 @@ class MultiCompanyBalanceSheet(models.TransientModel):
         Санхүүгийн байдлын тайлан
     """
     _name = "multi.company.balance.sheet"
+    _inherit = ['xls.report.base']
     _description = "Balance Sheet Report - Mongolia"
     
     company_id=fields.Many2one('res.company', string='Company', required=True, 
@@ -23,15 +24,19 @@ class MultiCompanyBalanceSheet(models.TransientModel):
                                         ], string='State', required=True, default='posted')
     
 
-
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(MultiCompanyBalanceSheet, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
             'target_move': self.target_move
-        }
+        })
+        return data
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -43,7 +48,7 @@ class MultiCompanyBalanceSheet(models.TransientModel):
         }
 
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -93,7 +98,9 @@ class MultiCompanyBalanceSheet(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00;(#,##0.00)'
                                 })
-
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 10)
         sheet.set_column(1, 1, 60)
         sheet.set_column(2, 10, 20)
@@ -959,5 +966,8 @@ class MultiCompanyBalanceSheet(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return

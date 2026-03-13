@@ -1,6 +1,6 @@
 <odoo noupdate="0">
     <record id="ir_cron_edi_network" model="ir.cron">
-        <field name="name">Attendance: Perform web services operations</field>
+        <field name="name">ИРЦ: Нүүр таних төхөөрөмжөөс ирц татах</field>
         <field name="model_id" ref="model_hr_attendance"/>
         <field name="state">code</field>
         <field name="code">model.get_attendance_data()</field>

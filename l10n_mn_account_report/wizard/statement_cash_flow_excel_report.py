@@ -11,6 +11,7 @@ class statement_cashflow_report(models.TransientModel):
         МӨНГӨН ГҮЙЛГЭЭНИЙ ТАЙЛАН
     """
     _name = "statement.cashflow.report"
+    _inherit = ['xls.report.base']
     _description = "Statement of cash flows"
     
     company_id= fields.Many2one('res.company', string='Company', required=True,
@@ -21,16 +22,21 @@ class statement_cashflow_report(models.TransientModel):
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                      ('all', 'All Entries'),
                                     ], string='State', required=True,default='posted')
-        
-    def action_print_xls_report(self):
-        data = {
+
+    def get_report_data(self):
+        data = super(statement_cashflow_report, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
             'fiscalyear_id': self.fiscalyear_id.id,
             'target_move': self.target_move,
-        }
+        })
+        return data
+        
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -41,7 +47,7 @@ class statement_cashflow_report(models.TransientModel):
                      'report_name': 'Cash and bank report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -84,9 +90,11 @@ class statement_cashflow_report(models.TransientModel):
                                 })
         
 
-
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 10)
-        sheet.set_column(1, 1, 60)
+        sheet.set_column(1, 1, 80)
         sheet.set_column(2, 4, 25)
 
 
@@ -463,5 +471,8 @@ class statement_cashflow_report(models.TransientModel):
         
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return

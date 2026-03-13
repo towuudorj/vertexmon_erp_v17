@@ -291,6 +291,16 @@ msgid "Partner ledger report"
 msgstr "Харилцагчийн тайлан"
 
 #. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_move_analysis_report_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_partner_ledger_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.equity_changes_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.multi_company_balance_sheet_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.profit_excel_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.statement_cashflow_report_view
+msgid "Preview"
+msgstr "Харах"
+
+#. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_type__company_id
 msgid "Company"
 msgstr "Компани"

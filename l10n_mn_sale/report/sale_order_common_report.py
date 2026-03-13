@@ -11,6 +11,7 @@ class SaleOrderCommonReport(models.TransientModel):
         Борлуулалтын тайлан хураангуй
     """
     _name = "sale.order.common.report"
+    _inherit = 'xls.report.base'
     _description = "Sale order common report"
     
     company_id=fields.Many2one('res.company', string='Company', required=True, 
@@ -22,11 +23,9 @@ class SaleOrderCommonReport(models.TransientModel):
                                       string='States', default='posted')
     is_license = fields.Boolean(string='License', default=False)
 
-    
-    
-
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(SaleOrderCommonReport, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
@@ -34,7 +33,12 @@ class SaleOrderCommonReport(models.TransientModel):
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
-        }
+        })
+        return data
+    
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -45,14 +49,14 @@ class SaleOrderCommonReport(models.TransientModel):
                      'report_name': 'Sale order common report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
-                                    'font_size': 16
+                                    'font_size': 12
                                     })
         txt = workbook.add_format({
                                     'align': 'center',
@@ -66,7 +70,7 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'bold': True,
                                     'font_size': 12,
                                     'bg_color': '#FBCEB1',
-                                    'color': 'white'
+                                    'color': 'black'
                                 })
 
         data_right = workbook.add_format({
@@ -99,14 +103,16 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00'
                                 })
-
-        sheet.set_column(0, 5, 15)
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
+        sheet.set_column(0, 5, 18)
         sheet.set_column(6, 6, 40)
-        sheet.set_column(7, 17, 15)
+        sheet.set_column(7, 17, 18)
         rowx = 1
         sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
-        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
-        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), head)
+        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), head)
         rowx += 3
         sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
         sheet.write('B%s'%rowx, u'Захиалгын №', title)
@@ -190,8 +196,11 @@ class SaleOrderCommonReport(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return
 
 
 

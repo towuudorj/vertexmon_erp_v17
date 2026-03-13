@@ -13,6 +13,7 @@ class ProductSummaryReport(models.TransientModel):
         Барааны материалын хураангуй тайлан
     """
     _name = "product.summary.report"
+    _inherit = 'xls.report.base'
     _description = "Stock summary Report - Mongolia"
 
     company_id = fields.Many2one('res.company', string=u'Компани', readonly=True,
@@ -29,8 +30,9 @@ class ProductSummaryReport(models.TransientModel):
     type = fields.Selection([('quantity', u'Тоогоор'),
                              ('cost', u'Өртгөөр')], string=u'Төрөл', required=True)
 
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(ProductSummaryReport, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'date_from': self.start_date,
@@ -40,8 +42,11 @@ class ProductSummaryReport(models.TransientModel):
             'categ_id': self.categ_id.id,
             'product_id': self.product_id.id,
             'type': self.type,
+        })
+        return data
 
-        }
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -53,7 +58,7 @@ class ProductSummaryReport(models.TransientModel):
                 'report_name': 'account_move'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -84,7 +89,7 @@ class ProductSummaryReport(models.TransientModel):
             'align': 'left',
             'border': 1,
             'font_size': 12,
-            'text_wrap': True,
+            'valign': 'vcenter',
             'num_format': '#,##0.00'
         })
         data_left_bold = workbook.add_format({
@@ -114,7 +119,10 @@ class ProductSummaryReport(models.TransientModel):
         sheet.merge_range('A2:I2', u'Барааны материалын товчоо тайлан', head_title)
 
         rowx = 4
-        sheet.set_column(1, 1, 40)
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
+        sheet.set_column(1, 1, 60)
         sheet.set_column(2, 20, 15)
 
         location_ids = []
@@ -603,8 +611,11 @@ class ProductSummaryReport(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return
 
 
 

@@ -30,7 +30,8 @@
                  'rt_product_brand',
                  'project',
                  'crm',
-                 'mail'
+                 'mail',
+                 'l10n_mn_account'
                  ],
     "data" : [ 
                 'security/ir.model.access.csv',

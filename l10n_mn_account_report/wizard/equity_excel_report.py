@@ -14,6 +14,7 @@ class EquityChanges(models.TransientModel):
         Statement of stockholder's equity
     """
     _name = "equity.changes"
+    _inherit = ['xls.report.base']
     _description = "Statement of stockholder's equity"
     
     company_id = fields.Many2one('res.company', string='Company', 
@@ -24,16 +25,21 @@ class EquityChanges(models.TransientModel):
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                      ('all', 'All Entries'),
                                     ], string='State', required=True, default='posted')
-    
-    def action_print_xls_report(self):
-        data = {
+
+    def get_report_data(self):
+        data = super(EquityChanges, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
             'fiscalyear_id': self.fiscalyear_id.id,
             'target_move': self.target_move,
-        }
+        })
+        return data
+    
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -44,7 +50,7 @@ class EquityChanges(models.TransientModel):
                      'report_name': 'Cash and bank report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -96,9 +102,11 @@ class EquityChanges(models.TransientModel):
         sheet.write('J4', u'%s - %s' % (data['start_date'],data['end_date']), header_txt)
         sheet.write('J6', u'(төгрөгөөр)', header_txt)
     
-
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 5)
-        sheet.set_column(1, 1, 40)
+        sheet.set_column(1, 1, 60)
         sheet.set_column(2, 9, 20)
         rowx = 7
         sheet.write("A%s"%rowx, u'Д/д', title)
@@ -388,8 +396,11 @@ class EquityChanges(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return
         
 
 

@@ -1,0 +1,46 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* vertexmon_tools
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20241202\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 07:48+0000\n"
+"PO-Revision-Date: 2026-03-13 07:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: vertexmon_tools
+#. odoo-python
+#: code:addons/vertexmon_tools/models/report_base.py:0
+#, python-format
+msgid "PDF View"
+msgstr "FDF Харагдац"
+
+#. module: vertexmon_tools
+#. odoo-python
+#: code:addons/vertexmon_tools/models/report_base.py:0
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.xls_report_base_preview
+#, python-format
+msgid "Report view"
+msgstr "Тайлан"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_xls_report_base__preview_html
+msgid "Preview Html"
+msgstr ""
+
+#. module: vertexmon_tools
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.xls_report_base_preview
+msgid "return"
+msgstr "Буцах"
+
+#. module: vertexmon_tools
+#: model:ir.model,name:vertexmon_tools.model_xls_report_base
+msgid "xls.report.base"
+msgstr ""

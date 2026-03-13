@@ -26,7 +26,8 @@
                  'base',
                  'stock',
                  'stock_delivery',
-                 'stock_landed_costs'
+                 'stock_landed_costs',
+                 'l10n_mn_account'
                  ],
     "data" : [
                 'data/sequence_data.xml',

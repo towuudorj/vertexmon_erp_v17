@@ -261,7 +261,11 @@ msgstr "Идэвхтэй"
 msgid "Parent Category"
 msgstr "Эцэг ангилал"
 
-
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_detail_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
+msgid "Preview"
+msgstr "Харах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
@@ -313,6 +317,10 @@ msgstr "Бараа материалын эргэцийн тайлан"
 msgid "Stock summary report"
 msgstr "Бараа материалын товчоо тайлан"
 
+#. module: l10n_mn_stock
+#: model:ir.ui.menu,name:l10n_mn_stock.stock_detail_report_mn_menu
+msgid "Stock detail report"
+msgstr "Бараа материалын дэлгэрэнгүй тайлан"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.inventory_aging_action
@@ -325,6 +333,17 @@ msgstr "Агуулахын насжилт"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
 msgstr "Дуусгасан ажилтан"
+
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_aged_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_detail_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_quantity_page_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_require_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_sales_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.purchase_product_income_report_view
+msgid "Export"
+msgstr "Татах"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category

@@ -8,6 +8,7 @@ from odoo.tools import date_utils
 
 class AccountMoveAnalysis(models.TransientModel):
     _name = 'account.move.analysis'
+    _inherit = ['xls.report.base']
     _description = 'Account move analysis'
    
     
@@ -20,16 +21,21 @@ class AccountMoveAnalysis(models.TransientModel):
                                     ], string='State', required=True, default='posted')
     by_currency = fields.Boolean(u'Валютаар харах')
 
-
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(AccountMoveAnalysis, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.start_date,
             'end_date': self.end_date,
             'state':self.target_move,
-            'by_currency':self.by_currency,
-        }
+            'by_currency':self.by_currency
+        })
+        return data
+
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -42,7 +48,7 @@ class AccountMoveAnalysis(models.TransientModel):
         }
     
     
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -112,6 +118,9 @@ class AccountMoveAnalysis(models.TransientModel):
         sheet.set_column(2, 2, 40)
         sheet.set_column(1, 1, 10)
         sheet.freeze_panes(7, 4)
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
         sheet.write('A1', u'НХМаягт МХ-4', txt_left_no_border)
         sheet.write('J1', u'Сангийн сайдын 2018 оны 100 дугаар', txt_right_no_border)
         sheet.write('J2', u'тушаалын хавсралт',txt_right_no_border)
@@ -345,5 +354,8 @@ class AccountMoveAnalysis(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return

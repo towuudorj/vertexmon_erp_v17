@@ -12,9 +12,9 @@ class product_detail_report(models.TransientModel):
         Барааны материалын дэлгэрэнгүй тайлан
     """
     _name = "product.detail.report"
+    _inherit = 'xls.report.base'
     _description = "Stock expense Report - Mongolia"
-    
-    
+
     
     company_id = fields.Many2one('res.company', string=u'Компани', readonly=True,
                                 default=lambda self: self.env.user.company_id)
@@ -31,10 +31,9 @@ class product_detail_report(models.TransientModel):
     type = fields.Selection([('quantity',u'Тоогоор'),
                              ('cost',u'Өртгөөр')], string=u'Төрөл', required=True)
     
-
-
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(product_detail_report, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
             'start_date': self.start_date,
@@ -46,8 +45,11 @@ class product_detail_report(models.TransientModel):
             'is_transection':self.is_transection,
             'is_warehouse':self.is_warehouse,
             'type':self.type
+        })
+        return data
 
-        }
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -59,7 +61,7 @@ class product_detail_report(models.TransientModel):
                      'report_name': 'account_move'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -89,7 +91,6 @@ class product_detail_report(models.TransientModel):
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
-                                    'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
         
@@ -111,14 +112,17 @@ class product_detail_report(models.TransientModel):
             product_id = data['product_id']
 
         
-        sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), data_left)
+        sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), head)
         
         sheet.merge_range('A2:T2', u'Барааны материалын дэлгэрэнгүй тайлан', head_title)
         
-        sheet.merge_range('R3:T3', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']), data_left )
+        sheet.merge_range('R3:T3', u'Тайлант хугацаа: %s - %s'%(data['start_date'],data['end_date']), head)
 
         rowx = 4
-        sheet.set_column(1, 1, 30)
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
+        sheet.set_column(1, 1, 50)
         sheet.set_column(2, 20, 15)
         
         if data['type'] == 'cost':
@@ -1430,8 +1434,11 @@ class product_detail_report(models.TransientModel):
 
         workbook.close()
         output.seek(0)
+        if get_file:
+            return output.read()
         response.stream.write(output.read())
         output.close()
+        return
 
 
 
