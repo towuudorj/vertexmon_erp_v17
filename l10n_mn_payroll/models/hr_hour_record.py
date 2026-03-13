@@ -88,11 +88,15 @@ class HrHourRecord(models.Model):
 
         start_date = hr_data.start_date + timedelta(hours=8)
         end_times = hr_data.end_date + timedelta(hours=8)
+
         end_time = end_times.replace(minute=59, hour=23, second=59)
+        start_date = start_date.replace(minute=00, hour=00, second=00)
+
 
         tz = company.partner_id.tz if company.partner_id.tz else 'Asia/Ulaanbaatar'
         company_tz = timezone(tz)
 
+        start_date = start_date.replace(minute=00, hour=00, second=00)
         emp_attendance_ids = emp_id.mapped('timely_id')
         timely_data = self.get_timely_data(emp_attendance_ids)
         timely_worker_ids = timely_data.keys() if timely_data else []
@@ -224,7 +228,7 @@ class HrHourRecord(models.Model):
                                 out_n_time +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type in ['payroll', 'international_holiday']:
-                                free_time1 +=holiday_days*must_work_hour
+                                free_time1 +=holiday_days*mach
 
                             elif lines.holiday_status_id.sub_type == 'legal_leave':
                                 official_time +=holiday_days*must_work_hour
@@ -323,12 +327,17 @@ class HrHourRecord(models.Model):
 
             have_value = True
             page = 1
-
+            tz = self.company_id.partner_id.tz if self.company_id.partner_id.tz else 'Asia/Ulaanbaatar'
+            company_tz = timezone(tz)
+            work_start = self.start_date
+            work_end = self.end_date
+            work_start = work_start.astimezone(company_tz)
+            work_end = work_end.astimezone(company_tz)
             while have_value:
                 data = {
                     'company_register': self.company_id.vat,
-                    'dateFrom': str(self.start_date.date()),
-                    'dateTo': str(self.end_date.date()),
+                    'dateFrom': str(work_start.date()),
+                    'dateTo': str(work_end.date()),
                     'page': page,
                     'limit': 100
                 }
