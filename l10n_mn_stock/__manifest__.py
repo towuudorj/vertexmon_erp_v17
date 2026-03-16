@@ -27,7 +27,8 @@
                  'stock',
                  'stock_delivery',
                  'stock_landed_costs',
-                 'l10n_mn_account'
+                 'l10n_mn_account',
+                 'vertexmon_tools'
                  ],
     "data" : [
                 'data/sequence_data.xml',
