@@ -138,7 +138,7 @@ class GenerateOpeningEntries(models.TransientModel):
 
                     partner_id = self.env['res.partner'].browse(row['partner_id'])
                     if account.currency_id or partner_id.property_purchase_currency_id:
-                        currency = account.currency_id if account.currency_id else partner_id.property_purchase_currency_id
+                        currency = partner_id.property_purchase_currency_id if partner_id.property_purchase_currency_id else account.currency_id
                         currency_rate = 1.0
                         if currency != self.journal_id.company_id.currency_id:
                             currency_rate = self.env['res.currency']._get_conversion_rate(
