@@ -135,11 +135,20 @@ class GenerateOpeningEntries(models.TransientModel):
                         "date": self.new_fiscal_year_id.date_from,
                         "company_id": company_id,
                     }
-    
+
                     if account.currency_id:
+                        currency_rate = 1.0
+                        if account.currency_id != self.journal_id.company_id.currency_id:
+                            currency_rate = self.env['res.currency']._get_conversion_rate(
+                                from_currency=self.journal_id.company_id.currency_id,
+                                to_currency=account.currency_id,
+                                company=self.journal_id.company_id,
+                                date=self.new_fiscal_year_id.date_from,
+                            )
+
                         line_vals.update({
                             "currency_id": account.currency_id.id,
-                            "amount_currency": balance
+                            "amount_currency": balance * currency_rate
                         })
     
                     move_vals["line_ids"].append((0, 0, line_vals))
@@ -210,11 +219,20 @@ class GenerateOpeningEntries(models.TransientModel):
                 }
     
                 if account.currency_id:
+                    currency_rate = 1.0
+                    if account.currency_id != self.journal_id.company_id.currency_id:
+                        currency_rate = self.env['res.currency']._get_conversion_rate(
+                            from_currency=self.journal_id.company_id.currency_id,
+                            to_currency=account.currency_id,
+                            company=self.journal_id.company_id,
+                            date=self.new_fiscal_year_id.date_from,
+                        )
+
                     line_vals.update({
                         "currency_id": account.currency_id.id,
-                        "amount_currency": balance
+                        "amount_currency": balance * currency_rate
                     })
-    
+
                 move_vals["line_ids"].append((0, 0, line_vals))
     
                 total_debit += debit
@@ -223,15 +241,31 @@ class GenerateOpeningEntries(models.TransientModel):
         difference = total_debit - total_credit
     
         if not float_is_zero(difference, precision_digits=2):
-    
-            move_vals["line_ids"].append((0, 0, {
+            acc = self.journal_id.default_credit_account_id if difference > 0 else self.journal_id.default_debit_account_id
+            vals = {
                 "name": "Opening Balance Adjustment",
-                "account_id": self.journal_id.default_credit_account_id.id if difference > 0 else self.journal_id.default_debit_account_id.id,
+                "account_id": acc.id,
                 "credit": difference if difference > 0 else 0,
                 "debit": -difference if difference < 0 else 0,
                 "date": self.new_fiscal_year_id.date_from,
                 "company_id": company_id,
-            }))
+            }
+
+            if acc.currency_id:
+                currency_rate = 1.0
+                if acc.currency_id != self.journal_id.company_id.currency_id:
+                    currency_rate = self.env['res.currency']._get_conversion_rate(
+                        from_currency=self.journal_id.company_id.currency_id,
+                        to_currency=acc.currency_id,
+                        company=self.journal_id.company_id,
+                        date=self.new_fiscal_year_id.date_from,
+                    )
+
+                vals.update({
+                    "currency_id": acc.currency_id.id,
+                    "amount_currency": -difference * currency_rate
+                })
+            move_vals["line_ids"].append((0, 0, vals))
     
         move = Move.create(move_vals)
     
@@ -311,8 +345,23 @@ class GenerateOpeningEntries(models.TransientModel):
                                         'account_id':acc_in.id,
                                         'date':self.old_fiscal_year_id.date_to,
                                         'journal_id':self.close_journal_id.id,
-                                        
                                         }
+
+                    if acc_in.currency_id:
+                        currency_rate = 1.0
+                        if account.currency_id != self.journal_id.company_id.currency_id:
+                            currency_rate = self.env['res.currency']._get_conversion_rate(
+                                from_currency=self.journal_id.company_id.currency_id,
+                                to_currency=acc_in.currency_id,
+                                company=self.journal_id.company_id,
+                                date=self.old_fiscal_year_id.date_to,
+                            )
+
+                        income_data_value.update({
+                            "currency_id": acc_in.currency_id.id,
+                            "amount_currency": -balance * currency_rate
+                        })
+
                     move_valse['line_ids'].append((0, 0, income_data_value))
                     
                     diff_balance = {
@@ -323,6 +372,22 @@ class GenerateOpeningEntries(models.TransientModel):
                                     'date':self.old_fiscal_year_id.date_to,
                                     'journal_id':self.close_journal_id.id,
                         }
+
+                    if self.close_journal_id.default_debit_account_id.currency_id:
+                        currency_rate = 1.0
+                        if account.currency_id != self.journal_id.company_id.currency_id:
+                            currency_rate = self.env['res.currency']._get_conversion_rate(
+                                from_currency=self.journal_id.company_id.currency_id,
+                                to_currency=self.close_journal_id.default_debit_account_id.currency_id,
+                                company=self.journal_id.company_id,
+                                date=self.old_fiscal_year_id.date_to,
+                            )
+
+                        diff_balance.update({
+                            "currency_id": self.close_journal_id.default_debit_account_id.currency_id.id,
+                            "amount_currency": balance * currency_rate
+                        })
+
                     move_valse['line_ids'].append((0, 0, diff_balance))
                 in_invoice_vals_liste.append(move_valse)
                 moves = self.env['account.move'].with_context().create(in_invoice_vals_liste)
@@ -380,6 +445,22 @@ class GenerateOpeningEntries(models.TransientModel):
                                         'date':self.old_fiscal_year_id.date_to,
                                         'journal_id':self.close_journal_id.id,
                                         }
+
+                    if acc_exp.currency_id:
+                        currency_rate = 1.0
+                        if account.currency_id != self.journal_id.company_id.currency_id:
+                            currency_rate = self.env['res.currency']._get_conversion_rate(
+                                from_currency=self.journal_id.company_id.currency_id,
+                                to_currency=acc_exp.currency_id,
+                                company=self.journal_id.company_id,
+                                date=self.old_fiscal_year_id.date_to,
+                            )
+
+                        expense_data_value.update({
+                            "currency_id": acc_exp.currency_id.id,
+                            "amount_currency": -balance_ex * currency_rate
+                        })
+
                     move_vals['line_ids'].append((0, 0, expense_data_value))
 
                     diff_balance = {
@@ -390,6 +471,21 @@ class GenerateOpeningEntries(models.TransientModel):
                                     'date':self.old_fiscal_year_id.date_to,
                                     'journal_id':self.close_journal_id.id,
                         }
+
+                    if self.close_journal_id.default_debit_account_id.currency_id:
+                        currency_rate = 1.0
+                        if account.currency_id != self.journal_id.company_id.currency_id:
+                            currency_rate = self.env['res.currency']._get_conversion_rate(
+                                from_currency=self.journal_id.company_id.currency_id,
+                                to_currency=self.close_journal_id.default_debit_account_id.currency_id,
+                                company=self.journal_id.company_id,
+                                date=self.old_fiscal_year_id.date_to,
+                            )
+
+                        diff_balance.update({
+                            "currency_id": self.close_journal_id.default_debit_account_id.currency_id.id,
+                            "amount_currency": balance_ex * currency_rate
+                        })
                     move_vals['line_ids'].append((0, 0, diff_balance))
                 in_invoice_vals_list.append(move_vals)
                 moves = self.env['account.move'].with_context().create(in_invoice_vals_list)
