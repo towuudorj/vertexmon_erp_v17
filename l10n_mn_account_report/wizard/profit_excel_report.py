@@ -171,7 +171,7 @@ class profit_excel_report(models.TransientModel):
         profit_obj = self.env['account.income.type']
         move_line_obj = self.env['account.move.line']
         journal_obj = self.env['account.journal']
-        journal_ids = journal_obj.search([('company_id','=',data['company_id']),('type','!=','opening')]).ids
+        journal_ids = journal_obj.search([('company_id','=',data['company_id']),('type','not in',('opening','closing'))]).ids
 
         rowx = 7
         sheet.write("A%s"%rowx, u'Мөрийн дугаар', header_title)
