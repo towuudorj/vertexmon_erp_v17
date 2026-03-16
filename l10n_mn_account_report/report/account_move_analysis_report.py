@@ -168,70 +168,24 @@ class AccountMoveAnalysis(models.TransientModel):
          account_account aa
          left join (
                  select 
-                 case when eoy.debit is not null then
-                     case when eoy.date = '{data['start_date']}' then
-                          eoy.debit
-                     else 
-                          eoy.debit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' and aj.type != 'opening' then aml.debit else 0 end)
-                     end
-                 else sum(aml.debit) FILTER (WHERE aml.date < '{data['start_date']}')
-                 end as debit,
-
-                 case when eoy.debit is not null then
-                     case when eoy.date = '{data['start_date']}' then
-                          eoy.credit
-                     else 
-                          eoy.credit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' and aj.type != 'opening' then aml.credit else 0 end)
-                     end
-                 else sum(aml.credit) FILTER (WHERE aml.date < '{data['start_date']}')
-                 end as credit,
-
-                 case when eoy.amount_currency_debit is not null then
-                     case when eoy.date = '{data['start_date']}' then
-                          eoy.amount_currency_debit
-                     else
-                          eoy.amount_currency_debit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' and aj.type != 'opening' then case when aml.balance > 0 then aml.amount_currency else 0 end else 0 end)
-                     end
-                 else sum(case when aml.balance > 0 then aml.amount_currency else 0 end) FILTER (WHERE aml.date < '{data['start_date']}')
-                 end as amount_currency_debit,
-
-                 case when eoy.amount_currency_credit is not null then
-                     case when eoy.date = '{data['start_date']}' then
-                          eoy.amount_currency_credit
-                     else
-                          eoy.amount_currency_credit + sum(case when aml.date >= eoy.date and aml.date < '{data['start_date']}' and aj.type != 'opening' then case when aml.balance < 0 then abs(aml.amount_currency) else 0 end else 0 end)
-                     end
-                 else sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) FILTER (WHERE aml.date < '{data['start_date']}')
-                 end as amount_currency_credit,
+                 sum(aml.debit) as debit,
+                 sum(aml.credit) as credit,
+                 sum(case when aml.balance > 0 then aml.amount_currency else 0 end) as amount_currency_debit,
+                 sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit,
                  aml.account_id
              from account_account aa
              left join account_move_line aml on aml.account_id = aa.id
-             left join account_journal aj on aj.id = aml.journal_id
-             left join (
-                 select aml.account_id, aml.date,
-                         sum(case when aml.debit > 0 then aml.debit else 0 end) as debit,
-                         sum(case when aml.credit > 0 then aml.credit else 0 end) as credit,
-                         sum(case when aml.balance > 0 then aml.amount_currency else 0 end) as amount_currency_debit,
-                         sum(case when aml.balance < 0 then abs(aml.amount_currency) else 0 end) as amount_currency_credit,
-                         RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
-                 from account_move_line aml
-                 left join account_journal aj on aj.id = aml.journal_id
-                 where aj.type ='opening' and aml.company_id = {data['company_id']} and aml.date <= '{data['start_date']}' and aml.parent_state='posted'
-                 group by aml.account_id, aml.date
-             ) as eoy on eoy.account_id = aa.id
-             where 
-             aml.parent_state = 'posted' and aa.company_id = {data['company_id']}
-             and (eoy.rank = 1 or eoy.rank is null)
-             group by eoy.date, eoy.debit, eoy.credit, aml.account_id, eoy.amount_currency_debit, eoy.amount_currency_credit
+             where
+             aml.parent_state = 'posted' and aa.company_id = {data['company_id']} and aml.date < '{data['start_date']}'
+             group by aml.account_id
          ) as start_balance on start_balance.account_id = aa.id
          full join
          (
-                select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency, aml.date
-                from account_move_line aml 
-                left join account_journal aj on aj.id = aml.journal_id
-                where
+            select aml.account_id, aml.balance, aml.debit, aml.credit, aml.amount_currency, aml.date
+            from account_move_line aml 
+            where
              aml.date between '{data['start_date']}' and '{data['end_date']}' and aml.parent_state in ('{"', '".join(states)}')
-             and aml.company_id = {data['company_id']} and aj.type != 'opening'
+             and aml.company_id = {data['company_id']}
          ) as aml on aa.id = aml.account_id
          left join res_currency rc on aa.currency_id = rc.id
          where aa.company_id = {data['company_id']} and aa.deprecated = False
