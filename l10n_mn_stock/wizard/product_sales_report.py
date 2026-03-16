@@ -126,7 +126,7 @@ class ProductSalesReport(models.TransientModel):
                 for loc in location_ids:
                     location_id.append(loc.id)
             else:
-                location_id = location_obj.search([('warehouse_id','in',tuple(data['warehouse_ids']))])
+                location_ids = location_obj.search([('warehouse_id','in',tuple(data['warehouse_ids']))])
                 for loc in location_ids:
                     location_id.append(loc.id)
         
