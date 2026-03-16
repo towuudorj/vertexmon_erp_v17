@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-
+from odoo.exceptions import UserError
 
 class ProductBrand(models.Model):
     _name = 'product.brand'
@@ -10,6 +10,7 @@ class ProductBrand(models.Model):
     code = fields.Char('Brand Code', required=True)
     manufacturer_id = fields.Many2one('res.partner', string='Manufacturer')
     products_count = fields.Integer(string='Number of products', compute='_compute_products_count')
+    is_barcode_required = fields.Boolean(string='Is barcode required')
 
 
     
