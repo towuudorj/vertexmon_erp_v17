@@ -276,71 +276,46 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 where += f" and rp.id in ({partner_ids_str})"
 
         qry = f"""
- select rp.id           as partner_id,
-        aa.id as account_id,
-        COALESCE(rp.name, '')||COALESCE('['||rp.code||']', '') as partner_name,
-        coalesce(rc.name, 'MNT') as currency,
-        aa.code||' '|| (aa.name::jsonb->>'mn_MN')::text as account_name,
-        COALESCE(start_balance.balance, 0) as start_balance,
-        COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
-        COALESCE(aml.debit, 0) as debit,
-        COALESCE(aml.credit, 0) as credit,
-        COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if self_obj.is_extra else ''}
- from (
-     select case when eoy.balance is not null then
-                 case when eoy.date = '{self_obj.start_date}' then
-                      eoy.balance
-                 else 
-                      eoy.balance + sum(case when aml.date >= eoy.date and aml.date < '{self_obj.start_date}' and aj.type != 'opening' then aml.balance else 0 end)
-                 end
-             else sum(case when aml.date < '{self_obj.start_date}' then aml.balance else 0 end)
-             end as balance,
-             case when eoy.amount_currency is not null then
-                 case when eoy.date = '{self_obj.start_date}' then
-                      eoy.amount_currency
-                 else
-                      eoy.amount_currency + sum(case when aml.date >= eoy.date and aml.date < '{self_obj.start_date}' and aj.type != 'opening' then aml.amount_currency else 0 end)
-                 end
-             else sum(case when aml.date < '{self_obj.start_date}' then aml.amount_currency else 0 end)
-             end as currency_balance,
-             aml.account_id , aml.partner_id
-     from account_move_line aml
-     left join account_account aa on aa.id = aml.account_id
-     left join res_partner rp on rp.id = aml.partner_id
-     left join account_journal aj on aj.id = aml.journal_id
-     FULL OUTER join (
-         select aml.account_id, aml.partner_id, aml.date, sum(aml.balance) as balance, sum(aml.amount_currency) as amount_currency,
-         RANK() OVER (PARTITION BY aml.account_id, aml.partner_id ORDER BY aml.date DESC) as rank
+     select rp.id           as partner_id,
+            aa.id as account_id,
+            COALESCE(rp.name, '')||COALESCE('['||rp.code||']', '') as partner_name,
+            coalesce(rc.name, 'MNT') as currency,
+            aa.code||' '|| (aa.name::jsonb->>'mn_MN')::text as account_name,
+            COALESCE(start_balance.balance, 0) as start_balance,
+            COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
+            COALESCE(aml.debit, 0) as debit,
+            COALESCE(aml.credit, 0) as credit,
+            COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if self_obj.is_extra else ''}
+     from (
+         select sum(aml.balance) as balance,
+                sum(aml.amount_currency) as currency_balance,
+                 aml.account_id , aml.partner_id
          from account_move_line aml
-         left join account_journal aj on aj.id = aml.journal_id
-         where aj.type ='opening' and aml.company_id = {self_obj.company_id.id} and aml.date <= '{self_obj.start_date}' and aml.parent_state = 'posted'
-         group by aml.date, aml.account_id, aml.partner_id
-     ) as eoy on eoy.account_id = aa.id and eoy.partner_id = rp.id
-     where aml.parent_state = 'posted'
-     and aml.company_id = {self_obj.company_id.id}
-     and (eoy.rank = 1 or eoy.rank is null) {where_aml}
-     group by eoy.balance, aml.account_id , aml.partner_id, eoy.amount_currency, eoy.date
- ) as start_balance
- FULL JOIN 
- (
-     select
-        aml.partner_id,
-        aml.account_id,
-        aml.currency_id AS currency_id,
-        {select}
-    FROM account_move_line aml
-    JOIN account_journal aj ON aj.id = aml.journal_id AND aj.type != 'opening'
-    WHERE aml.company_id = {self_obj.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
-    AND aml.date BETWEEN '{self_obj.start_date}' AND '{self_obj.end_date}' {where_aml}
-    {group_by}
- ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
- LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
- LEFT JOIN account_account aa ON aa.id = COALESCE(aml.account_id, start_balance.account_id)
- LEFT JOIN res_currency rc ON rc.id = aa.currency_id
- WHERE (start_balance.balance != 0 or (aml.debit != 0 or aml.credit !=0))
- {where}
- {order_by}
-"""
+         left join account_account aa on aa.id = aml.account_id
+         left join res_partner rp on rp.id = aml.partner_id
+         where aml.parent_state = 'posted' and aml.date < '{self_obj.start_date}'
+         and aml.company_id = {self_obj.company_id.id} {where_aml}
+         group by aml.account_id , aml.partner_id
+     ) as start_balance
+     FULL JOIN 
+     (
+         select
+            aml.partner_id,
+            aml.account_id,
+            aml.currency_id AS currency_id,
+            {select}
+        FROM account_move_line aml
+        WHERE aml.company_id = {self_obj.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
+        AND aml.date BETWEEN '{self_obj.start_date}' AND '{self_obj.end_date}' {where_aml}
+        {group_by}
+     ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
+     LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
+     LEFT JOIN account_account aa ON aa.id = COALESCE(aml.account_id, start_balance.account_id)
+     LEFT JOIN res_currency rc ON rc.id = aa.currency_id
+     WHERE (start_balance.balance != 0 or (aml.debit != 0 or aml.credit !=0))
+     {where}
+     {order_by}
+    """
 
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
