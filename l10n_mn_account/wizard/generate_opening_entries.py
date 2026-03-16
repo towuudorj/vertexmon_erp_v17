@@ -71,7 +71,7 @@ class GenerateOpeningEntries(models.TransientModel):
             if account.account_type in ('asset_receivable','liability_payable', 'asset_prepayments'):
 
                 self.env.cr.execute("""
-                    SELECT partner_id,
+                    SELECT partner_id, 
                            SUM(debit) as debit,
                            SUM(credit) as credit
                     FROM account_move_line
@@ -136,18 +136,20 @@ class GenerateOpeningEntries(models.TransientModel):
                         "company_id": company_id,
                     }
 
-                    if account.currency_id:
+                    partner_id = self.env['res.partner'].browse(row['partner_id'])
+                    if account.currency_id or partner_id.property_purchase_currency_id:
+                        currency = account.currency_id if account.currency_id else partner_id.property_purchase_currency_id
                         currency_rate = 1.0
-                        if account.currency_id != self.journal_id.company_id.currency_id:
+                        if currency != self.journal_id.company_id.currency_id:
                             currency_rate = self.env['res.currency']._get_conversion_rate(
                                 from_currency=self.journal_id.company_id.currency_id,
-                                to_currency=account.currency_id,
+                                to_currency=currency,
                                 company=self.journal_id.company_id,
                                 date=self.new_fiscal_year_id.date_from,
                             )
 
                         line_vals.update({
-                            "currency_id": account.currency_id.id,
+                            "currency_id": currency.id,
                             "amount_currency": balance * currency_rate
                         })
     
