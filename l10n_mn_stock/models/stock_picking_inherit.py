@@ -46,6 +46,27 @@ class stock_picking(models.Model):
     approve_use_stamp = fields.Boolean('Approve use stamp')
     stamp_approved_user = fields.Many2one('res.users', string='Stamp Approved User')
     picking_type_code = fields.Selection(related='picking_type_id.code')
+    
+
+
+    def create_account_entry_move(self):
+       for move in self.move_ids:
+        for ml in move.move_line_ids:
+            svl = self.env['stock.valuation.layer'].sudo().create({
+                'stock_move_id': move.id,
+                'product_id': move.product_id.id,
+                'quantity': ml.quantity,
+                'unit_cost': move.price_unit,
+                'value': ml.quantity * move.price_unit,
+                'company_id': move.company_id.id,
+            })
+    
+            move._account_entry_move(
+                qty=svl.quantity,
+                description=move.name,
+                svl_id=svl.id,   # ✅ FIX HERE
+                cost=svl.value
+            )
 
     @api.model
     def create(self, vals):
