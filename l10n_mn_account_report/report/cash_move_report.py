@@ -113,7 +113,10 @@ class CashMovelineReport(models.TransientModel):
 
         rowx += 2
         account_obj = self.env['account.account']
-        account_id = account_obj.search([('id','in', data['account_ids']),('company_id','=',data['company_id'])])
+        domain = [('company_id','=',data['company_id'])]
+        if data['account_ids']:
+            domain.append(('id','in', data['account_ids']))
+        account_id = account_obj.search(domain)
 
         if data['by_currency']:
             balance_select = """CASE WHEN aml.debit>0 then abs(aml.amount_currency) ELSE 0 END as debit
@@ -124,17 +127,20 @@ class CashMovelineReport(models.TransientModel):
             target_move = "('posted')"
         else:
             target_move = "('posted', 'draft')"
-        self.env.cr.execute("select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name, \
-        %s, am.name,am.partner_id, COALESCE(rc.symbol, '₮') \
-        from account_move_line AS aml \
-        left join account_move AS am ON am.id = aml.move_id \
-        left join res_partner AS sp on sp.id = aml.partner_id \
-        left join account_account AS aa on aa.id = aml.account_id \
-        left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id \
-        left join res_currency AS rc on rc.id = aa.currency_id \
-        left join account_journal AS aj on aj.id = aml.journal_id \
-        WHERE aj.type != 'opening' and am.date >= '%s' and am.date <='%s' and aml.account_id in (%s) and am.state in %s \
-        order by aml.date asc"%(balance_select, data['start_date'],data['end_date'], ', '.join(str(a_id) for a_id in data['account_ids']), target_move))
+        self.env.cr.execute(f"""
+        select am.date, aml.name, aml.ref, sp.name, aa.code, aa.name, acmt.name,
+             {balance_select}, am.name,am.partner_id, COALESCE(rc.symbol, '₮')
+        from account_move_line AS aml
+        left join account_move AS am ON am.id = aml.move_id
+        left join res_partner AS sp on sp.id = aml.partner_id
+        left join account_account AS aa on aa.id = aml.account_id
+        left join account_cash_move_type AS acmt on acmt.id = aml.cash_move_type_id
+        left join res_currency AS rc on rc.id = aa.currency_id
+        WHERE am.date >= '{data['start_date']}' and am.date <='{data['end_date']}' 
+        {'and aml.account_id in (%s)' % ', '.join(str(a_id) for a_id in data['account_ids']) if data['account_ids'] else ''}
+         and am.state in {target_move}
+        order by aml.date asc"""
+        )
         all = self._cr.fetchall()
         start_balance = 0.0
         total = 0.0
@@ -150,30 +156,13 @@ class CashMovelineReport(models.TransientModel):
             else:
                 balance_select = 'aml.debit-aml.credit'
             qry = f"""
-             select 
-                 coalesce(case when eoy.balance is not null then
-                     case when eoy.date = '{data['start_date']}' then
-                          eoy.balance
-                     else 
-                          eoy.balance + sum(case when aj.type != 'opening' and aml.parent_state = 'posted' and aml.date >= eoy.date and aml.date < '{data['start_date']}' then {balance_select} else 0 end)
-                     end
-                 else sum({balance_select})
-                 end, 0) as balance
-             from account_account aa 
+             select
+                 COALESCE(SUM({balance_select}), 0) as balance
+             from account_account aa
              left join account_move_line aml on aa.id = aml.account_id
-             left join account_journal aj on aj.id = aml.journal_id 
-             full join (
-                 select aml.account_id, aml.date,
-                         sum({balance_select}) as balance,
-                         RANK() OVER (PARTITION BY aml.account_id ORDER BY aml.date DESC) as rank
-                 from account_move_line aml
-                 left join account_journal aj on aj.id = aml.journal_id
-                 where aj.type ='opening' and aml.company_id = {data['company_id']}  and aml.date <= '{data['start_date']}' and aml.account_id = {line.id}
-                 group by aml.account_id, aml.date 
-             ) as eoy on eoy.account_id = aa.id
              where aml.company_id = {data['company_id']}
-             and (eoy.rank = 1 or eoy.rank is null) and aa.id = {line.id} 
-             group by aa.id, eoy.balance, eoy.date
+             and aa.id = {line.id}
+             group by aa.id
             """
             self.env.cr.execute(qry)
             acc = self._cr.dictfetchall()
