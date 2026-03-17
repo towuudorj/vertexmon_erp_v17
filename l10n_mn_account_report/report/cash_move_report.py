@@ -160,7 +160,7 @@ class CashMovelineReport(models.TransientModel):
                  COALESCE(SUM({balance_select}), 0) as balance
              from account_account aa
              left join account_move_line aml on aa.id = aml.account_id
-             where aml.company_id = {data['company_id']}
+             where aml.company_id = {data['company_id']} and aml.parent_state = 'posted'
              and aa.id = {line.id} and aml.date < '{data['start_date']}'
              group by aa.id
             """
