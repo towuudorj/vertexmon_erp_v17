@@ -7,7 +7,7 @@ from odoo.tools.float_utils import float_is_zero, float_round
 
 
 class ReturnPicking(models.TransientModel):
-    _name = 'stock.return.picking'
+    _inherit = 'stock.return.picking'
     _description = 'Return Picking'
     
     
