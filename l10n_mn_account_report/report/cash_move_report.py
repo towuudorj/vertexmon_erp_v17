@@ -161,7 +161,7 @@ class CashMovelineReport(models.TransientModel):
              from account_account aa
              left join account_move_line aml on aa.id = aml.account_id
              where aml.company_id = {data['company_id']}
-             and aa.id = {line.id}
+             and aa.id = {line.id} and aml.date < '{data['start_date']}'
              group by aa.id
             """
             self.env.cr.execute(qry)
