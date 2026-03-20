@@ -15,6 +15,7 @@ class StockLandedCost(models.Model):
         copy=False)
     
     
+    
     def button_validate(self):
         self._check_can_validate()
         cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
@@ -22,8 +23,6 @@ class StockLandedCost(models.Model):
             cost_without_adjusment_lines.compute_landed_cost()
         if not self._check_sum():
             raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
-        
-        
 
         for cost in self:
             cost = cost.with_company(cost.company_id)
@@ -47,7 +46,18 @@ class StockLandedCost(models.Model):
                 move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
                 cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
-                    valuation_layer = line._create_in_landed_costs_svl(cost_to_add, linked_layer)
+                    valuation_layer = self.env['stock.valuation.layer'].create({
+                        'value': cost_to_add,
+                        'unit_cost': 0,
+                        'quantity': 0,
+                        'remaining_qty': 0,
+                        'stock_valuation_layer_id': linked_layer.id,
+                        'description': cost.name,
+                        'stock_move_id': line.move_id.id,
+                        'product_id': line.move_id.product_id.id,
+                        'stock_landed_cost_id': cost.id,
+                        'company_id': cost.company_id.id,
+                    })
                     linked_layer.remaining_value += cost_to_add
                     valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO/FIFO
@@ -83,6 +93,9 @@ class StockLandedCost(models.Model):
                 move._post()
             cost.reconcile_landed_cost()
         return True
+    
+    
+    
 
     
     #def _compute_picking_ids(self):
@@ -102,10 +115,7 @@ class StockValuationAdjustmentLines(models.Model):
     _inherit = 'stock.valuation.adjustment.lines'
 
     unit_price =  fields.Float(string=u'Шингэсэн нэгж өртөг', compute="_compute_unit_price")
-    
-    def _create_in_landed_costs_svl(self, cost_to_add, linked_layer):
-        values = self._prepare_in_landed_costs_svl_values(cost_to_add, linked_layer)
-        return self.env['stock.valuation.layer'].create(values)
+
     
     
     
