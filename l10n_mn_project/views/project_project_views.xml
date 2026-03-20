@@ -166,7 +166,7 @@
                 			<field name="partner_id"/>
                 			<field name="account_id"/>
                 			<field name="date"/>
-                			<field name="amount"/>
+                			<field name="amount" sum="Total amount"/>
                 		</tree>
                 	</field>
                 </page>

@@ -29,7 +29,7 @@
                                 <field name="line_ids">
                                     <tree editable="bottom">
                                         <field name="name" width="70%"/>
-                                        <field name="weight_percentage" widget="percentage" SUM="Total Weight Percentage"/>
+                                        <field name="weight_percentage" widget="percentage" sum="Total Weight Percentage"/>
                                     </tree>
                                 </field>
                             </page>

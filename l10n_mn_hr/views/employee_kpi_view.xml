@@ -52,8 +52,8 @@
                                     <tree editable="bottom" create="false" delete="false" open_form_view="false">
                                         <field name="template_line_id" invisible="1" force_save="1"/>
                                         <field name="name" readonly="1" force_save="1" options="{'no_open': True}"/>
-                                        <field name="weight_percentage" readonly="1" force_save="1" SUM="Total Weight Percentage" widget="percentage"/>
-                                        <field name="achieved_percentage" SUM="Total Achieved Percentage" widget="percentage"/>
+                                        <field name="weight_percentage" readonly="1" force_save="1" sum="Total Weight Percentage" widget="percentage"/>
+                                        <field name="achieved_percentage" sum="Total Achieved Percentage" widget="percentage"/>
                                     </tree>
                                 </field>
                             </page>
