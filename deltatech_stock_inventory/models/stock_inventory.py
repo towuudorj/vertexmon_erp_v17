@@ -450,12 +450,28 @@ class Inventory(models.Model):
         ), quantity in quants_groups.items():
             if self.brand_ids:
                 if len(self.brand_ids) == 1:
-                    print("ddddddddd",self.brand_ids.id)
-                    pro = self.env['product.product'].search([('brand_id','=',self.brand_ids.id)])
+                    pro = self.env['product.product'].search([('brand_id','=',self.brand_ids.id),('detailed_type','=','product')])
                 elif len(self.brand_ids) > 1:
-                    pro = self.env['product.product'].search([('brand_id','in',tuple(self.brand_ids.ids))])
+                    pro = self.env['product.product'].search([('brand_id','in',tuple(self.brand_ids.ids)),('detailed_type','=','product')])
                 else:
-                    pro = self.env['product.product'].search([('id','=',product_id)])
+                    pro = self.env['product.product'].search([('id','=',product_id),('detailed_type','=','product')])
+                for pros in pro:
+                    if pros.id == product_id:
+                        line_values = {
+                            "inventory_id": self.id,
+                            "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
+                            "theoretical_qty": quantity,
+                            "prod_lot_id": lot_id,
+                            "partner_id": owner_id,
+                            "product_id": product_id,
+                            "location_id": location_id,
+                            "package_id": package_id,
+                        }
+                        
+                        product_ids.add(product_id)
+                        vals.append(line_values)
+            else:
+                pro = self.env['product.product'].search([('detailed_type','=','product')])
                 for pros in pro:
                     if pros.id == product_id:
                         line_values = {
