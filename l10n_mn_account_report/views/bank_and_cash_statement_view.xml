@@ -11,12 +11,14 @@
                <button name="print_line_report"
                     type="object"
                     string="Хэвлэх"
-                    icon="fa-file-document-o" />
+                    icon="fa-file-document-o" 
+                    invisible="1" />
 
                 <button name="print_line_report_transport"
                     type="object"
                     string="Хэвлэх/Тээвэр/"
-                    icon="fa-file-document-o" />
+                    icon="fa-file-document-o"
+                    invisible="1" />
                 
             </xpath>
         </field>
