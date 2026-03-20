@@ -44,6 +44,7 @@
             'data/ndd_type_data.xml',
             'data/vat_income_type_data.xml',
             'data/ir_config_parameter.xml',
+            'data/cron_data.xml',
             'security/security_view.xml',
             'security/ir.model.access.csv',
             'views/sequence_view.xml',

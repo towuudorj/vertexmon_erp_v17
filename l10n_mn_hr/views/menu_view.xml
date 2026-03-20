@@ -17,6 +17,10 @@
 		<menuitem id="menu_employee_request_register" name="Employee Request Register" parent="hr.menu_hr_employee_payroll" action="action_employee_request_register" sequence="30"/>
 		<menuitem id="menu_job_appointment_register" name="Vacancy Order Register" parent="hr.menu_hr_employee_payroll" action="action_job_appointment_register" sequence="35"/>
 		<menuitem id="menu_reference_register" name="Reference Register" parent="hr.menu_hr_employee_payroll" action="action_reference_register"/>
+
+		<menuitem id="menu_kpi_root" name="KPI" parent="hr.menu_hr_root" sequence="70"/>
+		<menuitem id="menu_kpi_template" name="KPI Template" parent="menu_kpi_root" action="action_kpi_template" sequence="10"/>
+		<menuitem id="menu_employee_kpi" name="Employee KPI" parent="menu_kpi_root" action="action_employee_kpi" sequence="20"/>
 		<menuitem id="hr.menu_human_resources_configuration" name="Configuration" parent="hr.menu_hr_root" groups="hr.group_hr_manager" sequence="300"/>
 		<menuitem id="hr.menu_expense" name="Expense" parent="hr.menu_hr_root" sequence="50"/>
 		<menuitem id="hr.menu_holidays" name="Holidays" parent="hr.menu_hr_root" sequence="60"/>

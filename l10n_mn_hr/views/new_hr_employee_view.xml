@@ -165,6 +165,18 @@
                                             <field name="id" invisible="1"/>
                                             <field name="tz" required="id"/>
                                         </group>
+                                        <group string="Worked Time">
+                                            <group>
+                                                <field name="other_company_work_month"/>
+                                                <field name="last_annual_leave_date"/>
+                                                <field name="company_gap_month"/>
+                                            </group>
+                                            <group>
+                                                <field name="total_ndsh_month"/>
+                                                <field name="worked_month_in_company"/>
+                                                <field name="annual_leave_day"/>
+                                            </group>
+                                        </group>
                                     </div>
                                 </div>
                             </page>

@@ -654,6 +654,67 @@ msgstr "Журнал"
 
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_abstract_report_excel__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_give_bank_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлд шинэчилсэн этгээд"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_abstract_report_excel__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_give_bank_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__write_date
+msgid "Last Updated on"
+msgstr "Сүүлд шинэчилсэн огноо"
+
+#. module: l10n_mn_payroll
+#. odoo-python
+#: code:addons/l10n_mn_payroll/models/hr_hour_record.py:0
+#, python-format
+msgid "Leave cannot be created more than 2 days in advance."
+msgstr "Чөлөөг 2-оос дээш хоногийн өмнө үүсгэх боломжгүй"
+
+#. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__name
 msgid "Employee name"
 msgstr "Ажилтны нэр"
@@ -703,9 +764,9 @@ msgid "Public holiday"
 msgstr "Ээлжийн амралт"
 
 #. module: l10n_mn_payroll
-#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__international_holiday
-msgid "International holiday"
-msgstr "Бүх нийтийн амралт"
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_leave_type__sub_type__maternity_leave
+msgid "Maternity leave"
+msgstr "Жирэмсний амралт"
 
 #. module: l10n_mn_payroll
 #: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_form_view
@@ -1012,6 +1073,11 @@ msgstr "Эрүүл мэндийн даатгал"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__accident_insurance
 msgid "Accident insurance"
 msgstr "Гэнэтийн ослын даатгал"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__active_time
+msgid "Active time"
+msgstr "Идэвхийн цаг"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__voucher

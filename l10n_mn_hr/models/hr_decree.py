@@ -533,6 +533,13 @@ class HrDecree(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    other_company_work_month = fields.Integer('Worked Month In Other Company', tracking=True)
+    last_annual_leave_date = fields.Date('Last Annual Leave Date', tracking=True)
+    company_gap_month = fields.Integer('Company Gap Month', default=0, tracking=True)
+    total_ndsh_month = fields.Integer('Total NDSH Month', compute='_compute_annual_leave')
+    worked_month_in_company = fields.Integer('Worked Month In Company', compute='_compute_annual_leave')
+    annual_leave_day = fields.Integer('Annual Leave Day', compute='_compute_annual_leave')
+
     def get_department_mn(self):
         self.ensure_one()
         return self.with_context(lang='mn_MN').department_id.name or ''
@@ -540,6 +547,106 @@ class HrEmployee(models.Model):
     def get_job_mn(self):
         self.ensure_one()
         return self.with_context(lang='mn_MN').job_id.name or ''
+
+    def _compute_annual_leave(self):
+        today = fields.Date.today()
+        for obj in self:
+            total_ndsh_month = 0
+            if obj.other_company_work_month:
+                total_ndsh_month = obj.other_company_work_month
+            if obj.accession_date:
+                worked_month_in_company = (today.year - obj.accession_date.year) * 12 + (today.month - obj.accession_date.month)
+                obj.worked_month_in_company = worked_month_in_company - obj.company_gap_month
+                total_ndsh_month += worked_month_in_company
+
+                can_get_annual_leave = False
+                if obj.worked_month_in_company >= 6:
+                    can_get_annual_leave = True
+                if obj.last_annual_leave_date:
+                    can_get_annual_leave = False
+                    if (today.year - obj.last_annual_leave_date.year) * 12 + (today.month - obj.last_annual_leave_date.month) >= 6:
+                        can_get_annual_leave = True
+
+                if can_get_annual_leave:
+                    if total_ndsh_month < 72:
+                        obj.annual_leave_day = 15
+                    elif 72 <= total_ndsh_month < 132:
+                        obj.annual_leave_day = 18
+                    elif 132 <= total_ndsh_month < 192:
+                        obj.annual_leave_day = 20
+                    elif 192 <= total_ndsh_month < 252:
+                        obj.annual_leave_day = 22
+                    elif 252 <= total_ndsh_month < 312:
+                        obj.annual_leave_day = 24
+                    elif 312 <= total_ndsh_month < 384:
+                        obj.annual_leave_day = 26
+                    else:
+                        obj.annual_leave_day = 29
+                else:
+                    obj.annual_leave_day = 0
+            else:
+                obj.worked_month_in_company = 0
+                obj.annual_leave_day = 0
+            obj.total_ndsh_month = total_ndsh_month
+
+    def _cron_create_annual_leave_allocation(self):
+        employees = self.env['hr.employee'].search([])
+        year_start = fields.Date.today().replace(month=1, day=1)
+        year_end = fields.Date.today().replace(month=12, day=31)
+        today = fields.Date.today()
+        leave_allocation_obj = self.env['hr.leave.allocation']
+        annual_allocation_ids = leave_allocation_obj
+        annual_leave_type = self.env['hr.leave.type'].search([('sub_type', '=', 'public_holiday')], limit=1)
+        if not annual_leave_type:
+            return
+        leave_allocation_ids = leave_allocation_obj.search([('date_from', '>=', year_start), ('holiday_status_id', '=', annual_leave_type.id)])
+        if leave_allocation_ids:
+            with_allocation_employee_ids = leave_allocation_ids.mapped('employee_id').ids
+            for leave_allocation in leave_allocation_ids:
+                employee_id = leave_allocation.employee_id
+                if employee_id.last_annual_leave_date:
+                    start = employee_id.last_annual_leave_date
+                else:
+                    start = employee_id.accession_date
+                if start:
+                    months = (today.year - start.year) * 12 + (today.month - start.month)
+                else:
+                    months = 0
+                days = 0
+                if employee_id.annual_leave_day and months > 0:
+                    days = employee_id.annual_leave_day / 12 * months
+                if leave_allocation.number_of_days < days:
+                    leave_allocation.number_of_days = min(days, employee_id.annual_leave_day)
+        else:
+            with_allocation_employee_ids = []
+
+        if annual_leave_type:
+            for employee in employees:
+                if employee.last_annual_leave_date:
+                    start = employee.last_annual_leave_date
+                else:
+                    start = employee.accession_date
+                months = (today.year - start.year) * 12 + (today.month - start.month)
+                days = 0
+                if employee.annual_leave_day:
+                    days = employee.annual_leave_day / 12 * months
+                if days > 0:
+                    if employee.id not in with_allocation_employee_ids:
+                        annual_allocation_id = leave_allocation_obj.create({
+                            'employee_id': employee.id,
+                            'holiday_status_id': annual_leave_type.id,
+                            'date_from': year_start,
+                            'date_to': year_end,
+                            'holiday_type': 'employee',
+                            'allocation_type': 'regular',
+                            'type_request_unit': 'day',
+                            'number_of_days': min(employee.annual_leave_day, days),
+                            'name': u'Ээлжийн амралт - %s ' % str(year_start.year) + employee.name,
+                        })
+                        annual_allocation_ids |= annual_allocation_id
+        if annual_allocation_ids:
+            annual_allocation_ids.with_user(SUPERUSER_ID).action_validate()
+
 
 class HrDecreeReport(models.Model):
     _inherit = 'hr.decree'

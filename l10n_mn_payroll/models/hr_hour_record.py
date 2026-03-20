@@ -20,12 +20,129 @@ TIME_FORMAT = "%H:%M:%S"
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
+    maternity_leave_notification_date = fields.Date(copy=False)
+
     def _get_duration(self, check_leave_type=True, resource_calendar=None):
         days, hours = super(HrLeave, self)._get_duration(check_leave_type, resource_calendar)
         resource_calendar = resource_calendar or self.resource_calendar_id
-        if resource_calendar.work_time and (self.holiday_status_id.request_unit == 'day' or self.number_of_days_display >= 1):
+        if resource_calendar.work_time and (self.holiday_status_id.request_unit == 'day' or days >= 1 or (self.request_date_from == self.request_date_to and hours > 8)):
             hours = days * resource_calendar.work_time
+        if self.request_unit_half:
+            hours = resource_calendar.work_time / 2
         return (days, hours)
+
+    @api.model
+    def create(self, vals):
+        today = fields.Date.today()
+        if vals.get('request_date_from', False):
+            request_date_from = datetime.strptime(vals.get('request_date_from'), DATE_FORMAT).date()
+            if (today - request_date_from).days > 2:
+                raise UserError(_("Leave cannot be created more than 2 days in advance."))
+        return super(HrLeave, self).create(vals)
+
+
+    def _get_maternity_leave_notification_email(self):
+        self.ensure_one()
+        return self.employee_id.work_email or self.employee_id.user_id.partner_id.email or False
+
+    def _get_maternity_leave_notification_cc(self):
+        self.ensure_one()
+        cc_emails = []
+
+        manager_candidates = [
+            self.employee_id.parent_id,
+            self.employee_id.department_id.manager_id,
+            self.employee_id.leave_manager_id,
+        ]
+        for manager in manager_candidates:
+            email = manager and (manager.work_email or manager.user_id.partner_id.email)
+            if email and email not in cc_emails:
+                cc_emails.append(email)
+
+        hr_group = self.env.ref('hr.group_hr_manager', raise_if_not_found=False)
+        if hr_group:
+            for user in hr_group.users:
+                email = user.partner_id.email or user.email
+                if email and email not in cc_emails:
+                    cc_emails.append(email)
+
+        return ','.join(cc_emails)
+
+    def _get_next_maternity_work_start_date(self):
+        self.ensure_one()
+        if not self.request_date_to:
+            return False
+
+        next_date = self.request_date_to + timedelta(days=1)
+        contract = self.env['hr.contract'].search([
+            ('employee_id', '=', self.employee_id.id),
+            ('state', '=', 'open'),
+        ], limit=1)
+        calendar = contract.resource_calendar_id
+        if not calendar:
+            return next_date
+
+        work_weekdays = set(calendar.attendance_ids.mapped('dayofweek'))
+        if not work_weekdays:
+            return next_date
+
+        for _day in range(31):
+            if str(next_date.weekday()) not in work_weekdays:
+                next_date += timedelta(days=1)
+                continue
+
+            day_start = fields.Datetime.to_string(datetime.combine(next_date, datetime.min.time()))
+            day_end = fields.Datetime.to_string(datetime.combine(next_date, datetime.max.time()))
+            holiday_exists = self.env['resource.calendar.leaves'].search_count([
+                ('calendar_id', '=', calendar.id),
+                ('date_from', '<=', day_end),
+                ('date_to', '>=', day_start),
+            ])
+            if holiday_exists:
+                next_date += timedelta(days=1)
+                continue
+            return next_date
+
+        return next_date
+
+    @api.model
+    def _cron_send_maternity_leave_notifications(self):
+        today = fields.Date.today()
+        reminder_date = today + timedelta(days=2)
+        leaves = self.search([
+            ('state', 'in', ['validate', 'validate1']),
+            ('holiday_status_id.sub_type', '=', 'maternity_leave'),
+            ('request_date_to', '=', reminder_date),
+        ])
+        for leave in leaves:
+            if leave.maternity_leave_notification_date == today:
+                continue
+            email_to = leave._get_maternity_leave_notification_email()
+            if not email_to:
+                continue
+            email_cc = leave._get_maternity_leave_notification_cc()
+            email_from = leave.company_id.email or leave.employee_id.company_id.email or self.env.company.email or 'odoo@example.com'
+            work_start_date = leave._get_next_maternity_work_start_date()
+            mail_values = {
+                'subject': _('Жирэмсний амралт дуусах тухай мэдэгдэл'),
+                'email_to': email_to,
+                'email_cc': email_cc,
+                'email_from': email_from,
+                'body_html': _(
+                    '<p>Сайн байна уу, %(employee)s.</p>'
+                    '<p>Таны жирэмсний амралт %(date_to)s-нд дуусах гэж байна.</p>'
+                    '<p>Таны ажил эхлэх огноо: %(work_start_date)s</p>'
+                    '<p>Шаардлагатай бол хүний нөөц болон удирдлагатайгаа холбогдоно уу.</p>'
+                    '<p>Баярлалаа.</p>'
+                ) % {
+                    'employee': leave.employee_id.name or '',
+                    'date_to': leave.request_date_to or '',
+                    'work_start_date': work_start_date or '',
+                },
+                'auto_delete': True,
+            }
+            self.env['mail.mail'].sudo().create(mail_values).send()
+            leave.sudo().write({'maternity_leave_notification_date': today})
 
 class HrLeaveType(models.Model):
     _inherit = "hr.leave.type"
@@ -39,7 +156,7 @@ class HrLeaveType(models.Model):
                         ('unpayroll', 'Unpayroll'),
                         ('over_time','Over time'),
                         ('public_holiday', 'Public holiday'),
-                        ('international_holiday', 'International holiday'),
+                        ('maternity_leave', 'Maternity leave')
                     ], string='Sub type', required=True)
     
 
@@ -100,6 +217,7 @@ class HrHourRecord(models.Model):
         emp_attendance_ids = emp_id.mapped('timely_id')
         timely_data = self.get_timely_data(emp_attendance_ids)
         timely_worker_ids = timely_data.keys() if timely_data else []
+        public_holiday_ids = self.env['resource.calendar.leaves'].search([('date_from', '>=', start_date), ('date_to', '<=', end_time)])
         for line in emp_id:
             due_time=0
             due_day=0
@@ -118,15 +236,25 @@ class HrHourRecord(models.Model):
             shift_day = 0.0
             lost_time = 0.0
             free_time1 = 0.0
+            total_active_time = 0.0
             work_day = start_date
             att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
             contract_id = contract_obj.search([('employee_id', '=', line.id), ('state', '=', 'open')])
             if not contract_id or not contract_id.resource_calendar_id and (not str(line.timely_id) in timely_worker_ids):
                 raise UserError(u"%s энэ ажилтаны гэрээ үүсээгүй эсвэл гэрээ нь дээр цагийн хуваарь оруулаагүй байна !" % line.name)
             must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
+
+            emp_public_holiday_ids = public_holiday_ids.filtered(lambda x: x.calendar_id.id == contract_id.resource_calendar_id.id)
+            public_holiday = []
+            for p_holiday in emp_public_holiday_ids:
+                public_holiday.append(p_holiday.date_from.date())
+
             if att_id and not str(line.timely_id) in timely_worker_ids:
                 work_weekdays = contract_id.resource_calendar_id.attendance_ids.mapped('dayofweek')
                 while work_day <= end_time:
+                    if work_day.date() in public_holiday:
+                        work_day = work_day + timedelta(days=1)
+                        continue
                     worked_hour = 0
                     if str(work_day.weekday()) in work_weekdays:
                         due_day += 1
@@ -137,6 +265,8 @@ class HrHourRecord(models.Model):
                                 check_out = att_line1.check_out
                                 check_in = check_in.astimezone(company_tz)
                                 check_out = check_out.astimezone(company_tz)
+                                delta = check_out - check_in
+                                total_active_time += (delta.total_seconds() / 60 / 60)
                                 lunch_hour = 1
                                 lunch_start_time = check_in
                                 lunch_end_time = check_in
@@ -227,7 +357,7 @@ class HrHourRecord(models.Model):
                             elif lines.holiday_status_id.sub_type == 'out_work':
                                 out_n_time +=holiday_days*must_work_hour
 
-                            elif lines.holiday_status_id.sub_type in ['payroll', 'international_holiday']:
+                            elif lines.holiday_status_id.sub_type == 'payroll':
                                 free_time1 +=holiday_days*mach
 
                             elif lines.holiday_status_id.sub_type == 'legal_leave':
@@ -249,7 +379,7 @@ class HrHourRecord(models.Model):
                                 elif lines.holiday_status_id.sub_type == 'out_work':
                                     out_n_time +=lines.number_of_hours_display
 
-                                elif lines.holiday_status_id.sub_type in ['payroll', 'international_holiday']:
+                                elif lines.holiday_status_id.sub_type == 'payroll':
                                     free_time1 +=lines.number_of_hours_display
 
                                 elif lines.holiday_status_id.sub_type == 'legal_leave':
@@ -296,6 +426,7 @@ class HrHourRecord(models.Model):
                 'more_time':over_time,
                 'more_time1':official_time,
                 'work_time':in_time,
+                'active_time':total_active_time,
                 'total_time':total_time
             })
 
@@ -665,6 +796,7 @@ class hr_hour_record_line(models.Model):
     free_time2 = fields.Float('free time2')
     more_time = fields.Float('more time')
     more_time1 = fields.Float('Legal holiday')
+    active_time = fields.Float('Active time')
     late_minut = fields.Float('late minut')
     total_time = fields.Float('Total compute time')
     fine_size = fields.Integer('Attendance  bonus')

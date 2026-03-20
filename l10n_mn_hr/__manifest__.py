@@ -44,6 +44,7 @@
             'data/sequence_data.xml',
             'data/decree_template_data.xml',
             'data/resource_calendar_data.xml',
+            'data/cron_data.xml',
             'security/security_view.xml',
             'security/ir.model.access.csv',
             'report/decree_report_view.xml',
@@ -79,6 +80,8 @@
             'views/reference_register_type_view.xml',
             'views/decree_register_type_view.xml',
             'views/hr_overtime_view.xml',
+            'views/kpi_template_view.xml',
+            'views/employee_kpi_view.xml',
             'views/menu_view.xml',
     ],
     'test': [

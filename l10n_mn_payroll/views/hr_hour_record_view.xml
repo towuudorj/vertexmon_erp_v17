@@ -77,6 +77,7 @@
                                     <field name="due_time" />
                                     <field name="work_day" editable="True" />
                                     <field name="work_time" editable="True" widget="float_time" />
+                                    <field name="active_time" editable="True" widget="float_time" />
                                     <field name="night_time" editable="True" widget="float_time" />
                                     <field name="outer_night_time" editable="True" widget="float_time" />
                                     <field name="sick_time" editable="True" widget="float_time" />
