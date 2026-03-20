@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     def _compute_line_names(self):
         for obj in self:
             if obj.invoice_line_ids and obj.payment_types:
-                obj.line_names = ',\n'.join([l.name for l in obj.invoice_line_ids])
+                obj.line_names = ',\n'.join([l.name or '' for l in obj.invoice_line_ids])
             else:
                 obj.line_names = ''
 
