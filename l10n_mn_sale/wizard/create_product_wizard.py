@@ -16,6 +16,7 @@ class CreateProductWizard(models.TransientModel):
     name = fields.Char(string='Product name')
     uom_id = fields.Many2one('uom.uom', string='Uom')
     model = fields.Char(string='Model', required=True)
+    barcode = fields.Char(string='Barcode')
     brand_id = fields.Many2one('product.brand', string='Brand')
     categ_id = fields.Many2one('product.category', string='Item group')
     distrubitor_id = fields.Many2one('distributor.register', string='Distributor')
@@ -38,6 +39,9 @@ class CreateProductWizard(models.TransientModel):
             if product_id:
                 raise UserError(_('%s Ийм бараа үүссэн байгаа тул та сонгоно уу!'% self.name))
             else:
+                if line.brand_id.is_barcode_required == True and line.barcode == False:
+                    raise UserError(_("Заавал баркод талбарыг бөглөнө үү."))
+                    
                 create_product_id = self.env['product.product'].create({
                     'name': self.name,
                     'uom_id': self.uom_id.id,
@@ -45,6 +49,7 @@ class CreateProductWizard(models.TransientModel):
                     'brand_id': self.brand_id.id,
                     'categ_id': self.categ_id.id,
                     'model':self.model,
+                    'barcode':self.barcode,
                     'distributor_ids': self.distributor_ids.id,
                     'company_id': False,
                     'supplier_taxes_id': [(6, 0, self.supplier_tax_ids.ids)],
