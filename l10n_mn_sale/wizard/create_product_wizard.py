@@ -39,7 +39,7 @@ class CreateProductWizard(models.TransientModel):
             if product_id:
                 raise UserError(_('%s Ийм бараа үүссэн байгаа тул та сонгоно уу!'% self.name))
             else:
-                if line.brand_id.is_barcode_required == True and line.barcode == False:
+                if self.brand_id.is_barcode_required == True and line.barcode == False:
                     raise UserError(_("Заавал баркод талбарыг бөглөнө үү."))
                     
                 create_product_id = self.env['product.product'].create({
