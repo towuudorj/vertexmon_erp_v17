@@ -283,6 +283,7 @@ class AccountBankStatementLine(models.Model):
                     }
                 )
             else:
+               
                 account = self.journal_id.suspense_account_id
                 if self.partner_id and total_amount > 0:
                     can_reconcile = True
@@ -299,7 +300,7 @@ class AccountBankStatementLine(models.Model):
                     or (self.partner_name and (False, self.partner_name))
                     or False,
                     "date": fields.Date.to_string(self.date),
-                    "name": self.payment_ref or self.name,
+                    "name": "%s, %s"%(self.payment_ref , self.name),
                     "amount": -total_amount,
                     "credit": total_amount if total_amount > 0 else 0.0,
                     "debit": -total_amount if total_amount < 0 else 0.0,
@@ -850,6 +851,7 @@ class AccountBankStatementLine(models.Model):
         _liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
         container = {"records": move, "self": move}
         to_reconcile = defaultdict(lambda: self.env["account.move.line"])
+
         with move._check_balanced(container):
             for line in suspense_lines | other_lines:
                 to_reconcile[line.account_id.id] |= line
@@ -949,7 +951,7 @@ class AccountBankStatementLine(models.Model):
             "group_tax_id": line.get("group_tax_id"),
             "tax_repartition_line_id": line.get("tax_repartition_line_id"),
             "analytic_distribution": line.get("analytic_distribution"),
-            "name": line.get("name"),
+            "name": "%s, %s"%(line.get("name"), self.name),
             "reconcile_model_id": line.get("reconcile_model_id"),
         }
         if line.get("line_currency_id") and line["currency_id"] != line.get(
@@ -1080,6 +1082,12 @@ class AccountBankStatementLine(models.Model):
         new_lines = []
         reverse_lines = {}
         for line in lines:
+            if line.get('id') and line.get('move')==False:
+                move_line_obj = self.env['account.move.line']
+                move_line = move_line_obj.browse(line.get('id'))
+                move_line.write({
+                                'name':'%s, %s'%(line.get('name'), self.name),
+                                })
             if not line.get("id") and not line.get("original_exchange_line_id"):
                 new_lines.append(line)
 
