@@ -103,6 +103,10 @@ class StockValuationAdjustmentLines(models.Model):
 
     unit_price =  fields.Float(string=u'Шингэсэн нэгж өртөг', compute="_compute_unit_price")
     
+    def _create_in_landed_costs_svl(self, cost_to_add, linked_layer):
+        values = self._prepare_in_landed_costs_svl_values(cost_to_add, linked_layer)
+        return self.env['stock.valuation.layer'].create(values)
+    
     
     
     

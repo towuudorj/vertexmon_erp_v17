@@ -28,6 +28,7 @@
                  'stock',
                  'product',
                  'stock_landed_costs',
+                 'stock_account'
                  ],
     "data" : [
                 "views/stock_landed_cost_inherit_view.xml",
