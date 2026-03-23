@@ -1077,12 +1077,15 @@ class AccountBankStatementLine(models.Model):
         for st_line in self:
             if st_line._check_reconcile_data_changed():
                 st_line.reconcile_data_info = st_line._default_reconcile_data()
-
+    
     def _prepare_reconcile_line_data(self, lines):
         new_lines = []
         reverse_lines = {}
+        account_obj = self.env['account.account']
         for line in lines:
-            if line.get('id') and line.get('move')==False:
+            #print ("loggggggggg",line.get('move'),line.get('name'),line)
+            account_id = account_obj.browse(line.get('account_id')[0])
+            if line.get('id') and account_id.account_type!='asset_cash':
                 move_line_obj = self.env['account.move.line']
                 move_line = move_line_obj.browse(line.get('id'))
                 move_line.write({
