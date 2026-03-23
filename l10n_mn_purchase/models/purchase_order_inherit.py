@@ -189,7 +189,10 @@ class PurchaseOrder(models.Model):
         else:
             self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+            if self.partner_id.partner_group == '006':
+                self.currency_id =  self.partner_id.property_purchase_currency_id.id
+            else:
+                self.currency_id = self.env.company.currency_id.id
             self.partner_type = self.partner_id.partner_type
             if self.partner_id.buyer_id:
                 self.user_id = self.partner_id.buyer_id
