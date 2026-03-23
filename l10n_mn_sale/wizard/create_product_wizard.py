@@ -39,8 +39,9 @@ class CreateProductWizard(models.TransientModel):
             if product_id:
                 raise UserError(_('%s Ийм бараа үүссэн байгаа тул та сонгоно уу!'% self.name))
             else:
-                if self.brand_id.is_barcode_required == True and line.barcode == False:
-                    raise UserError(_("Заавал баркод талбарыг бөглөнө үү."))
+                print("ddddddddd",self.barcode)
+                if self.brand_id.is_barcode_required == True and self.barcode == False:
+                    raise UserError(_("Заавал баркод талбарыг бөглөнө үү. 1"))
                     
                 create_product_id = self.env['product.product'].create({
                     'name': self.name,
@@ -57,6 +58,7 @@ class CreateProductWizard(models.TransientModel):
                 })
                 create_product_id.product_tmpl_id.write({'distributor_ids': self.distributor_ids.id,
                                                         'model': self.model,
+                                                        'barcode':self.barcode
                                                         })
                 crm_line_id = self.env['crm.lead.line'].search([('id', '=', line.lead_line_id.id)])
                 if crm_line_id.lead_id.order_ids:

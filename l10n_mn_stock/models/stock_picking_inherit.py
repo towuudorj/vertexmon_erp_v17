@@ -128,7 +128,15 @@ class stock_picking(models.Model):
             if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) and\
                not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                 move.quantity = move.product_uom_qty
-
+        stock_landed_cost_obj = self.env['']
+        if self.sale_order_id:
+            if self.sale_id.opportunity_id.purchase_order_ids:
+                for pur in self.sale_id.opportunity_id.purchase_order_ids:
+                    if pur.is_expense == True:
+                        stock_landed_id = stock_landed_cost_obj.search([('po_ids','in',[pur.id])])
+                        if len (stock_landed_id) == 0:
+                            raise UserError(_("Зардал бүртгэгдээгүй байгаа тул батлах боломжгүйг анхаарна уу!"))
+            
         # Sanity checks.
         if not self.env.context.get('skip_sanity_check', False):
             self._sanity_check()
