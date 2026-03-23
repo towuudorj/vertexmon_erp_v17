@@ -128,14 +128,14 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.write("G%s" % rowx, u'Барааны бүлэг', title)
         sheet.write("H%s" % rowx, u'Барааны нэр', title)
         sheet.write("I%s" % rowx, u'Нэгжийн үнэ', title)
-        sheet.write("J%s" % rowx, u'Тоо', title)
+        sheet.write("J%s" % rowx, u'Хүргэсэн тоо', title)
         sheet.write("K%s" % rowx, u'Нэгж', title)
         sheet.write("L%s" % rowx, u'Нийт үнэ', title)
         sheet.write("M%s" % rowx, u'Нэгжийн өртөг', title)
         sheet.write("N%s" % rowx, u'Нийт өртөг', title)
         sheet.write("O%s" % rowx, u'Ашиг', title)
         sheet.write("P%s" % rowx, u'Хэрэглэгч', title)
-        sheet.write("Q%s" % rowx, u'Хүргэсэн тоо', title)
+        sheet.write("Q%s" % rowx, u'Тоо', title)
         rowx += 1
 
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
@@ -143,12 +143,14 @@ class SaleOrderNewReport(models.TransientModel):
         sale_order_line_obj = self.env['sale.order.line']
         domain = [
             ('order_id.company_id', '=', data['company_id']),
-            ('order_id.date_order', '>=', data['start_date']),
-            ('order_id.date_order', '<=', data['end_date']),
             ('product_uom_qty', '>', 0),
             ('is_downpayment', '=', False),
             ('order_id.is_license', '=', data['is_license'])
         ]
+        if data['target_move'] != 'picked':
+            domain.append(('order_id.date_order', '>=', data['start_date']))
+            domain.append(('order_id.date_order', '<=', data['end_date']))
+
         if data['target_move'] == 'posted':
             domain.append(('order_id.state', 'in', ['sale']))
         elif data['target_move'] == 'all':
@@ -168,15 +170,18 @@ class SaleOrderNewReport(models.TransientModel):
         sale_order_line_id = sale_order_line_obj.search(domain, order='order_date desc')
         if data['target_move'] == 'picked':
             stock_move_ids = sale_order_line_id.mapped('move_ids').filtered(lambda m:
-                                                                            m.picking_id.scheduled_date.date() >= start_date
-                                                                            and m.picking_id.scheduled_date.date() <= end_date
+                                                                            start_date <= m.picking_id.scheduled_date.date() <= end_date
                                                                             )
             sale_order_line_id = sale_order_line_id.filtered(lambda so: any(ml.id in stock_move_ids.ids for ml in so.move_ids))
         num = 1
 
         for line in sale_order_line_id:
             if data['target_move'] == 'picked':
-                price_total = line.price_unit * line.qty_delivered
+                if line.discount:
+                    price_unit = (line.price_unit / 100) * (100 - line.discount)
+                else:
+                    price_unit = line.price_unit
+                price_total = price_unit * line.qty_delivered
                 margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
                 total_purchase_price = line.purchase_price * line.qty_delivered
             else:

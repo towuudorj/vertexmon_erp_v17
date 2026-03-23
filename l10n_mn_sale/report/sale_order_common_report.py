@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from datetime import datetime
 
 class SaleOrderCommonReport(models.TransientModel):
     """
@@ -19,8 +20,8 @@ class SaleOrderCommonReport(models.TransientModel):
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
-    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
-                                      string='States', default='posted')
+    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked')],
+                                    required=True, string='States', default='posted')
     is_license = fields.Boolean(string='License', default=False)
 
     def get_report_data(self):
@@ -28,8 +29,8 @@ class SaleOrderCommonReport(models.TransientModel):
         data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.date_from,
-            'end_date': self.date_to,
+            'start_date': str(self.date_from),
+            'end_date': str(self.date_to),
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
@@ -123,63 +124,71 @@ class SaleOrderCommonReport(models.TransientModel):
         sheet.write("G%s"%rowx, u'Нийт үнэ НӨАТ', title)
         sheet.write("H%s"%rowx, u'Хэрэглэгч', title)
         rowx += 1
-
-
+        is_picked = data['target_move'] == 'picked'
+        start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+        end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").date()
         sale_order_obj = self.env['sale.order']
+        domain = [
+            ('company_id', '=', data['company_id']),
+            ('is_license','=', data['is_license'])
+        ]
+
+        if not is_picked:
+            domain.append(('date_order', '>=', data['start_date']))
+            domain.append(('date_order', '<=', data['end_date']))
+
         if data['sales_user_id']:
-            if data['target_move'] == 'posted':
-                sale_order_id = sale_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
-                    ('state', 'in', ['sale']),
-                    ('is_license','=', data['is_license']),
-                    ('user_id', '=', data['sales_user_id']),
-                ],order='date_order asc')
-            else:
-                sale_order_id = sale_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel']),
-                    ('is_license','=', data['is_license']),
-                    ('user_id', '=', data['sales_user_id'])
-                ],order='date_order asc')
-        else:
-            if data['target_move'] == 'posted':
-                sale_order_id = sale_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
-                    ('is_license','=', data['is_license']),
-                    ('state', 'in', ['sale'])
-                ],order='date_order asc')
-            else:
-                sale_order_id = sale_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_order', '>=', data['start_date']),
-                    ('date_order', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel']),
-                    ('is_license','=', data['is_license'])
-                ],order='date_order asc')
+            domain.append(('user_id', '=', data['sales_user_id']))
+
+        if data['target_move'] in ['posted', 'picked']:
+            domain.append(('state', '=', 'sale'))
+
+        sale_order_id = sale_order_obj.search(domain, order='date_order asc')
+
+        if is_picked:
+            picking_ids = sale_order_id.mapped('picking_ids').filtered(lambda p: start_date <= p.scheduled_date.date() <= end_date)
+            sale_order_id = sale_order_id.filtered(lambda so: any(pi.id in picking_ids.ids for pi in so.picking_ids))
+
         num = 1
 
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
         for line in sale_order_id:
+            amount_untaxed = 0
+            amount_tax = 0
+            amount_total = 0
+            if is_picked:
+                order_lines = line.order_line.filtered(lambda x: not x.display_type
+                                                                and not x.is_downpayment
+                                                                and x.qty_delivered > 0
+                                                                and any(start_date <= m.picking_id.scheduled_date.date() <= end_date for m in x.move_ids))
+                amount_value = self.env['account.tax']._prepare_tax_totals(
+                    [x._convert_to_tax_base_line_dict() for x in order_lines],
+                    line.currency_id or line.company_id.currency_id
+                )
+                amount_untaxed = amount_value['amount_untaxed']
+                amount_tax = amount_value['amount_total'] - amount_value['amount_untaxed']
+                amount_total =  amount_value['amount_total']
+                if amount_total != sum(l.price_unit * l.qty_delivered for l in order_lines):
+                    print(amount_total, sum(l.price_unit * l.qty_delivered for l in order_lines), line)
             convert_date = fields.Date.from_string(line.date_order)
             sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
             sheet.write("B%s"%rowx, line.name, data_left)
             sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
             sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
-            sheet.write("E%s"%rowx, line.amount_untaxed, data_right)
-            sheet.write("F%s"%rowx, line.amount_tax, data_right)
-            sheet.write("G%s"%rowx, line.amount_total, data_right)
+            sheet.write("E%s"%rowx, line.amount_untaxed if not is_picked else amount_untaxed, data_right)
+            sheet.write("F%s"%rowx, line.amount_tax if not is_picked else amount_tax, data_right)
+            sheet.write("G%s"%rowx, line.amount_total if not is_picked else amount_total, data_right)
             sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
-            total_amount_untaxed +=line.amount_untaxed
-            total_amount_tax +=line.amount_tax
-            total_amount_total +=line.amount_total
+            if not is_picked:
+                total_amount_untaxed +=line.amount_untaxed
+                total_amount_tax +=line.amount_tax
+                total_amount_total +=line.amount_total
+            else:
+                total_amount_untaxed += amount_untaxed
+                total_amount_tax += amount_tax
+                total_amount_total += amount_total
             num +=1
             rowx +=1
         sheet.merge_range("A%s:D%s"%(rowx,rowx), u'Нийт дүн:', data_bold_left)

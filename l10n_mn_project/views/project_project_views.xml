@@ -161,7 +161,7 @@
                 </page>
                 <page string="Шинжилгээний бичилт">
                 	<field name="account_analytic_line_ids" readonly="1">
-                		<tree >
+                		<tree>
                 			<field name="name"/>
                 			<field name="partner_id"/>
                 			<field name="account_id"/>

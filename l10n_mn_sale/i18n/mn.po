@@ -1366,6 +1366,7 @@ msgid "Percent"
 msgstr "Хувь"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_common_report__target_move__picked
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sale_order_new_report__target_move__picked
 msgid "Picked"
 msgstr "Хүргэгдсэн"
