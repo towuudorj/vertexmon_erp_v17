@@ -25,3 +25,4 @@ class AccounAnalyticLine(models.Model):
                                 ('10','10'),
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
+    currency_id = fields.Many2one(related="company_id.currency_id", string="Currency")

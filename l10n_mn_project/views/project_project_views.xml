@@ -167,6 +167,7 @@
                 			<field name="account_id"/>
                 			<field name="date"/>
                 			<field name="amount" sum="Total amount"/>
+                			<field name="currency_id" optional="hide"/>
                 		</tree>
                 	</field>
                 </page>
