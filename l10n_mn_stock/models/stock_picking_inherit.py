@@ -137,6 +137,11 @@ class stock_picking(models.Model):
                         stock_landed_id = stock_landed_cost_obj.search([('po_ids','in',[pur.id])])
                         if len (stock_landed_id) == 0:
                             raise UserError(_("Зардал бүртгэгдээгүй байгаа тул батлах боломжгүйг анхаарна уу!"))
+                        else:
+                            for cost in stock_landed_id:
+                                if cost.state == 'draft':
+                                    raise UserError(_("Зардал батлагдаагүй байгаа тул батлах боломжгүйг анхаарна уу!"))
+                                    
             
         # Sanity checks.
         if not self.env.context.get('skip_sanity_check', False):
