@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 from odoo.tools import (
     date_utils,
     email_re,
@@ -128,8 +129,8 @@ class stock_picking(models.Model):
             if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) and\
                not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                 move.quantity = move.product_uom_qty
-        stock_landed_cost_obj = self.env['']
-        if self.sale_order_id:
+        stock_landed_cost_obj = self.env['stock.landed.cost']
+        if self.sale_id:
             if self.sale_id.opportunity_id.purchase_order_ids:
                 for pur in self.sale_id.opportunity_id.purchase_order_ids:
                     if pur.is_expense == True:
