@@ -431,16 +431,29 @@ class Inventory(models.Model):
                     )
         return vals
 
-    def _get_inventory_lines_values(self):
-        """Return the values of the inventory lines to create for this inventory.
 
-        :return: a list containing the `stock.inventory.line` values to create
-        :rtype: list
-        """
+
+    def _get_inventory_lines_values(self):
         self.ensure_one()
+
         quants_groups = self._get_quantities()
         vals = []
         product_ids = OrderedSet()
+
+        # 🔹 Step 1: Prepare product domain
+        domain = [('detailed_type', '=', 'product')]
+
+        if self.brand_ids:
+            if len(self.brand_ids) == 1:
+                domain.append(('brand_id', '=', self.brand_ids.id))
+            else:
+                domain.append(('brand_id', 'in', self.brand_ids.ids))
+
+        # 🔹 Step 2: Get all products (925 expected)
+        all_products = self.env['product.product'].search(domain)
+        allowed_product_ids = set(all_products.ids)
+
+        # 🔹 Step 3: Create lines from quants (existing stock → 808)
         for (
             product_id,
             location_id,
@@ -448,50 +461,63 @@ class Inventory(models.Model):
             package_id,
             owner_id,
         ), quantity in quants_groups.items():
-            if self.brand_ids:
-                if len(self.brand_ids) == 1:
-                    pro = self.env['product.product'].search([('brand_id','=',self.brand_ids.id),('detailed_type','=','product')])
-                elif len(self.brand_ids) > 1:
-                    pro = self.env['product.product'].search([('brand_id','in',tuple(self.brand_ids.ids)),('detailed_type','=','product')])
-                else:
-                    pro = self.env['product.product'].search([('id','=',product_id),('detailed_type','=','product')])
-                for pros in pro:
-                    if pros.id == product_id:
-                        line_values = {
-                            "inventory_id": self.id,
-                            "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
-                            "theoretical_qty": quantity,
-                            "prod_lot_id": lot_id,
-                            "partner_id": owner_id,
-                            "product_id": product_id,
-                            "location_id": location_id,
-                            "package_id": package_id,
-                        }
-                        
-                        product_ids.add(product_id)
-                        vals.append(line_values)
-            else:
-                pro = self.env['product.product'].search([('detailed_type','=','product')])
-                for pros in pro:
-                    if pros.id == product_id:
-                        line_values = {
-                            "inventory_id": self.id,
-                            "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
-                            "theoretical_qty": quantity,
-                            "prod_lot_id": lot_id,
-                            "partner_id": owner_id,
-                            "product_id": product_id,
-                            "location_id": location_id,
-                            "package_id": package_id,
-                        }
-                        
-                        product_ids.add(product_id)
-                        vals.append(line_values)
-        product_id_to_product = dict(zip(product_ids, self.env["product.product"].browse(product_ids)))
+
+            # 🚀 Filter by brand
+            if self.brand_ids and product_id not in allowed_product_ids:
+                continue
+
+            line_values = {
+                "inventory_id": self.id,
+                "product_qty": 0 if self.prefill_counted_quantity == "zero" else quantity,
+                "theoretical_qty": quantity,
+                "prod_lot_id": lot_id,
+                "partner_id": owner_id,
+                "product_id": product_id,
+                "location_id": location_id,
+                "package_id": package_id,
+            }
+
+            product_ids.add(product_id)
+            vals.append(line_values)
+
+        # 🔹 Step 4: Add missing products (NO STOCK → remaining 117)
+        existing_product_ids = set(product_ids)
+
+        #default_location = self.location_ids[:1].id if self.location_ids else False
+
+        for product in all_products:
+            if product.id not in existing_product_ids:
+                vals.append({
+                    "inventory_id": self.id,
+                    "product_qty": 0,
+                    "theoretical_qty": 0,
+                    "prod_lot_id": False,
+                    "partner_id": False,
+                    "product_id": product.id,
+                    "location_id": location_id,
+                    "package_id": False,
+                    "product_uom_id": product.uom_id.id,
+                })
+
+                product_ids.add(product.id)
+
+        # 🔹 Step 5: Add UOM for all lines
+        product_id_to_product = dict(
+            zip(product_ids, self.env["product.product"].browse(product_ids))
+        )
+
         for val in vals:
-            val["product_uom_id"] = product_id_to_product[val["product_id"]].product_tmpl_id.uom_id.id
+            if not val.get("product_uom_id"):
+                val["product_uom_id"] = product_id_to_product[
+                    val["product_id"]
+                ].product_tmpl_id.uom_id.id
+
+        # 🔹 Step 6: Exhausted logic (Odoo default)
         if self.exhausted:
-            vals += self._get_exhausted_inventory_lines_vals({(loc["product_id"], loc["location_id"]) for loc in vals})
+            vals += self._get_exhausted_inventory_lines_vals({
+                (loc["product_id"], loc["location_id"]) for loc in vals
+            })
+
         return vals
 
 
