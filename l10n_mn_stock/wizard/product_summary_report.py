@@ -369,8 +369,6 @@ class ProductSummaryReport(models.TransientModel):
                             ex_qty += linex['qty']
                         if linex['price'] != None:
                             ex_price += linex['price']
-                if pro.id == 47733:
-                    print("loggggggg", f_in_qty, f_ex_qty, in_qty, ex_qty, date_from_dt_min, date_to_dt_max, )
                 f_bal_qty = f_in_qty - f_ex_qty
                 f_bal_price = f_in_price - f_ex_price
                 last_qty = f_bal_qty + in_qty - ex_qty
@@ -477,7 +475,6 @@ class ProductSummaryReport(models.TransientModel):
                                        AND mv.company_id = %s
                                        AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
                                        AND dest.usage = 'internal'
-                                       AND svl.product_id = mv.product_id
                                      GROUP BY mv.product_id \
                                      """
 
@@ -502,7 +499,6 @@ class ProductSummaryReport(models.TransientModel):
                                         AND sl.usage = 'internal'
                                         AND \
                                           dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
-                                        AND svl.product_id = mv.product_id
                                       GROUP BY mv.product_id \
                                       """
 
@@ -527,7 +523,6 @@ class ProductSummaryReport(models.TransientModel):
                                      AND mv.company_id = %s
                                      AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
                                      AND dest.usage = 'internal'
-                                     AND svl.product_id = mv.product_id
                                    GROUP BY mv.product_id \
                                    """
 
@@ -552,7 +547,6 @@ class ProductSummaryReport(models.TransientModel):
                                       AND mv.company_id = %s
                                       AND sl.usage = 'internal'
                                       AND dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
-                                      AND svl.product_id = mv.product_id
                                     GROUP BY mv.product_id \
                                     """
 

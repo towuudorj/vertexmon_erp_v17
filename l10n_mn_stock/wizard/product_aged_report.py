@@ -62,7 +62,7 @@ class ProductAgedReport(models.TransientModel):
                                     'align': 'center', 
                                     'font_size': 16,
                                     'bold': True,
-                                    'text_wrap': True,
+                                    'text_wrap': True
                                     })
         txt_center = workbook.add_format({
                                     'align': 'center',
@@ -74,14 +74,12 @@ class ProductAgedReport(models.TransientModel):
                                     'align': 'right',
                                     'border': 1,
                                     'font_size': 12,
-                                    'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
-                                    'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
         
@@ -89,7 +87,6 @@ class ProductAgedReport(models.TransientModel):
                                     'align': 'center',
                                     'border': 1,
                                     'font_size': 12,
-                                    'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
         
@@ -101,7 +98,8 @@ class ProductAgedReport(models.TransientModel):
 
         rowx = 4
         sheet.set_column(1, 1, 30)
-        sheet.set_column(2, 20, 15)
+        sheet.set_column(2, 20, 25)
+        sheet.set_row(3, 60)
         location_obj = self.env['stock.location']
         location_id = []
         if data['warehouse_ids']:
@@ -141,14 +139,14 @@ class ProductAgedReport(models.TransientModel):
                     MIN(CASE WHEN src.usage = 'supplier' THEN sm.date::date END) AS first_in,
                     MAX(CASE WHEN dest.usage = 'customer' THEN sm.date::date END) AS last_out,
             
-                    SUM(CASE WHEN dest.usage = 'internal' THEN sml.delivered_qty ELSE 0 END) AS qty_in,
-                    SUM(CASE WHEN src.usage = 'internal' THEN sml.delivered_qty ELSE 0 END) AS qty_out,
+                    SUM(CASE WHEN dest.usage = 'internal' THEN sml.quantity ELSE 0 END) AS qty_in,
+                    SUM(CASE WHEN src.usage = 'internal' THEN sml.quantity ELSE 0 END) AS qty_out,
             
                     AVG(CURRENT_DATE - sm.date::date)::INT AS avg_age,
             
                     SUM(CASE
-                        WHEN dest.usage = 'internal' THEN sml.delivered_qty
-                        WHEN src.usage = 'internal' THEN -sml.delivered_qty
+                        WHEN dest.usage = 'internal' THEN sml.quantity
+                        WHEN src.usage = 'internal' THEN -sml.quantity
                         ELSE 0 END
                     ) AS balance_qty,
             
@@ -201,7 +199,7 @@ class ProductAgedReport(models.TransientModel):
         for i, r in enumerate(income, start=1):
             qty_in = r['qty_in'] or 0
             qty_out = r['qty_out'] or 0
-            balance_qty = r['balance_qty'] or 0
+            balance_qty = qty_in - qty_out
         
             unit_cost = r['unit_cost'] or 0
             total_value = balance_qty * unit_cost

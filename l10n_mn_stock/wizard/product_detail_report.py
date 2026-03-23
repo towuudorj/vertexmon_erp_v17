@@ -934,7 +934,7 @@ class product_detail_report(models.TransientModel):
                         left join stock_location as dest_id on mv.location_dest_id = dest_id.id
                         left join stock_location as src_id on mv.location_id = src_id.id
                         where mv.state='done' and 
-                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage='supplier' 
+                        date(mv.date) >='%s' and date(mv.date) <='%s' and dest_id.usage = 'supplier' 
                         and src_id.usage='internal' and mv.product_id=%s and src_id.id = %s group by mv.product_id """%(data['start_date'],data['end_date'],product_id,loc_ids[0]))
                 pur_ret = self.env.cr.dictfetchall()
                 
