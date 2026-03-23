@@ -15,6 +15,7 @@ class StockQuant(models.Model):
     inventory_id = fields.Many2one("stock.inventory", "Inventory")
     inventory_line_id = fields.Many2one("stock.inventory.line", "Inventory Line")
     inventory_note = fields.Char()
+    inventory_quantity_auto_apply = fields.Float(groups='stock.group_stock_user')
 
     @api.model
     def _get_inventory_fields_write(self):
