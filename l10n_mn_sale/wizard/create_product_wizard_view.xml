@@ -13,6 +13,7 @@
 						<field name="name"/>
 						<field name="brand_id" options="{'no_create': True, 'no_open': True}" />
                         <field name="model"/>
+                        <field name="barcode"/>
 						<field name="uom_id" options="{'no_create': True, 'no_open': True}" />
 						<field name="categ_id" options="{'no_create': True, 'no_open': True}" />
                         <field name="supplier_tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" />
