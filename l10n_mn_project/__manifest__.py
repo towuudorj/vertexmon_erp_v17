@@ -27,7 +27,8 @@
                  'stock',
                  'purchase_requisition',
                  'purchase',
-                 'l10n_mn_sale'
+                 'l10n_mn_sale',
+                 'l10n_mn_account'
                  ],
     "data" : [ 
             'security/ir.model.access.csv',
