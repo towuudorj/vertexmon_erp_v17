@@ -211,7 +211,7 @@ class ProductSummaryReport(models.TransientModel):
                         LEFT JOIN stock_location sl ON mv.location_id = sl.id
                         LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date < '{date_to_dt_min}'
+                          AND mv.date < '{date_from_dt_min}'
                           AND dest.id IN {tuple(location_ids)}
                           AND mv.product_id = {pro.id}
                           AND mv.company_id = {data['company_id']}
@@ -250,7 +250,7 @@ class ProductSummaryReport(models.TransientModel):
                     """
                     self._cr.execute(
                         f_query_expense,
-                        (date_to_dt_min, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_expense = self._cr.dictfetchall()
 
