@@ -30,7 +30,7 @@ class AccountMove(models.Model):
             else:
                 obj.line_names = ''
 
-    @api.onchange('line_ids')
+    @api.depends('line_ids', 'line_ids.sale_line_ids.order_id.ot_po')
     def _compute_ot_po(self):
         for obj in self:
             if obj.sale_order_count == 1:
