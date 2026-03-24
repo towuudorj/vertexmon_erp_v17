@@ -182,7 +182,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_from_dt_max = datetime.combine(date_from, time.max)
+            date_from_dt_max = datetime.combine(date_from, time.min)
             date_from_dt_min = datetime.combine(date_from, time.min)
 
             date_to = data['date_to']
@@ -190,7 +190,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_to, str):
                 date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_to, time.max)
+            date_to_dt_max = datetime.combine(date_to, time.min)
             date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
                 if location_ids:
@@ -449,7 +449,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_from, time.max)
+            date_to_dt_max = datetime.combine(date_from, time.min)
             date_to_dt_min = datetime.combine(date_from, time.min)
 
             for pro in product_ids:
