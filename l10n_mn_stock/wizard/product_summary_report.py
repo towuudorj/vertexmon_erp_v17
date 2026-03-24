@@ -449,8 +449,16 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_from, time.max)
-            date_to_dt_min = datetime.combine(date_from, time.min)
+            date_from_dt_max = datetime.combine(date_from, time.min)
+            date_from_dt_min = datetime.combine(date_from, time.min)
+
+            date_to = data['date_to']
+
+            if isinstance(date_to, str):
+                date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+
+            date_to_dt_max = datetime.combine(date_to, time.max)
+            date_to_dt_min = datetime.combine(date_to, time.min)
 
             for pro in product_ids:
 
@@ -479,7 +487,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         f_query_income,
-                        (date_to_dt_min, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_income = self._cr.dictfetchall()
 
@@ -503,7 +511,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         f_query_expense,
-                        (date_to_dt_min, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_expense = self._cr.dictfetchall()
 
@@ -527,7 +535,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         query_income,
-                        (date_to_dt_max, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_to_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     income = self._cr.dictfetchall()
 
@@ -551,7 +559,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         query_expense,
-                        (date_to_dt_max, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_to_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     expense = self._cr.dictfetchall()
 
