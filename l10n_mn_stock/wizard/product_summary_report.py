@@ -135,11 +135,11 @@ class ProductSummaryReport(models.TransientModel):
 
         product_obj = self.env['product.product']
         if data['product_id'] and not data['categ_id']:
-            product_ids = product_obj.search([('id', '=', data['product_id'])])
+            product_ids = product_obj.search([('id', '=', data['product_id']),('detailed_type','=','product')])
         elif not data['product_id'] and data['categ_id']:
-            product_ids = product_obj.search([('categ_id', '=', data['categ_id'])])
+            product_ids = product_obj.search([('categ_id', '=', data['categ_id']),('detailed_type','=','product')])
         elif not data['product_id'] and not data['categ_id']:
-            product_ids = product_obj.search([])
+            product_ids = product_obj.search([('detailed_type','=','product')])
 
         if data['type'] == 'cost':
             sheet.merge_range('J3:M3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head_title)
@@ -182,7 +182,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_from_dt_max = datetime.combine(date_from, time.max)
+            date_from_dt_max = datetime.combine(date_from, time.min)
             date_from_dt_min = datetime.combine(date_from, time.min)
 
             date_to = data['date_to']
@@ -190,7 +190,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_to, str):
                 date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_to, time.max)
+            date_to_dt_max = datetime.combine(date_to, time.min)
             date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
                 if location_ids:
@@ -248,7 +248,6 @@ class ProductSummaryReport(models.TransientModel):
                           AND dest.usage IN ('customer','supplier','inventory','production','internal')
                         GROUP BY mv.product_id
                     """
-                    print(f_query_expense, '\n\n')
                     self._cr.execute(
                         f_query_expense,
                         (date_from_dt_max, tuple(location_ids), pro.id, data['company_id'])
@@ -450,7 +449,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_from, time.max)
+            date_to_dt_max = datetime.combine(date_from, time.min)
             date_to_dt_min = datetime.combine(date_from, time.min)
 
             for pro in product_ids:
@@ -463,7 +462,7 @@ class ProductSummaryReport(models.TransientModel):
                 if location_ids:
                     f_query_income = """
                                      SELECT mv.product_id, \
-                                            SUM(mv.product_uom_qty) AS qty, \
+                                            SUM(mv.quantity) AS qty, \
                                             AVG(mv.price_unit)      AS price
                                      FROM stock_move mv
                                               JOIN stock_location sl ON mv.location_id = sl.id
@@ -486,7 +485,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     f_query_expense = """
                                       SELECT mv.product_id, \
-                                             SUM(mv.product_uom_qty) AS qty, \
+                                             SUM(mv.quantity) AS qty, \
                                              AVG(mv.price_unit)      AS price
                                       FROM stock_move mv
                                                JOIN stock_location sl ON mv.location_id = sl.id
@@ -510,7 +509,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     query_income = """
                                    SELECT mv.product_id, \
-                                          SUM(mv.product_uom_qty) AS qty, \
+                                          SUM(mv.quantity) AS qty, \
                                           AVG(mv.price_unit)      AS price
                                    FROM stock_move mv
                                             JOIN stock_location sl ON mv.location_id = sl.id
@@ -534,7 +533,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     query_expense = """
                                     SELECT mv.product_id, \
-                                           SUM(mv.product_uom_qty) AS qty, \
+                                           SUM(mv.quantity) AS qty, \
                                            AVG(mv.price_unit)      AS price
                                     FROM stock_move mv
                                              JOIN stock_location sl ON mv.location_id = sl.id

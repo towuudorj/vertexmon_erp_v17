@@ -552,11 +552,11 @@ class product_detail_report(models.TransientModel):
                                     categ_idss = category_obj.search( [('parent_id','=',cats.id)])
                                     if categ_idss:
                                         for catss in categ_idss:
-                                            product_ids = product_obj.search([('categ_id','=',catss.id)],order='name asc')
+                                            product_ids = product_obj.search([('categ_id','=',catss.id),('detailed_type','=','product')],order='name asc')
                                             for pr in product_ids:
                                                 product.append(pr.id)
                     else:
-                        product_ids = product_obj.search([('categ_id','=',category_id)],order='name asc')
+                        product_ids = product_obj.search([('categ_id','=',category_id),('detailed_type','=','product')],order='name asc')
                         for pr in product_ids:
                             product.append(pr.id)
                 else:
@@ -574,7 +574,7 @@ class product_detail_report(models.TransientModel):
                                 where src_id.id in %s  or dest_id.id in %s group by mv.product_id"""%(tuple(loc_ids),tuple(loc_ids)))
                             products = self._cr.dictfetchall()
                     else:
-                        product_ids = product_obj.search([],order='name asc')
+                        product_ids = product_obj.search([('detailed_type','=','product')],order='name asc')
                         for pr in product_ids:
                             product.append(pr.id)
                         
