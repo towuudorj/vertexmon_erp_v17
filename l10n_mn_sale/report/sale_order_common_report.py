@@ -59,11 +59,6 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'bold': True, 
                                     'font_size': 12
                                     })
-        txt = workbook.add_format({
-                                    'align': 'center',
-                                    'border': 1,
-                                    'font_size': 12
-                                })
 
         title = workbook.add_format({
                                     'align': 'center',
@@ -87,15 +82,6 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00'
                                 })
-
-
-        data_bold_left = workbook.add_format({
-                                    'align': 'left',
-                                    'bold': True,
-                                    'border': 1,
-                                    'font_size': 12,
-                                    'num_format': '#,##0.00'
-                                })
         
         data_bold_center = workbook.add_format({
                                     'align': 'center',
@@ -104,25 +90,31 @@ class SaleOrderCommonReport(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00'
                                 })
+        data_center = workbook.add_format({
+            'align': 'center',
+            'border': 1,
+            'font_size': 12,
+        })
         sheet.set_paper(9)
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0.5)
-        sheet.set_column(0, 5, 18)
-        sheet.set_column(6, 6, 40)
-        sheet.set_column(7, 17, 18)
+        sheet.set_column(0, 0, 5)
+        sheet.set_column(1, 8, 18)
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
+        sheet.merge_range("A%s:I%s"%(rowx,rowx), u'Борлуулалтын тайлан хураангуй', title)
         sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), head)
-        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), head)
+        sheet.merge_range("H%s:I%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), head)
         rowx += 3
-        sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
-        sheet.write('B%s'%rowx, u'Захиалгын №', title)
-        sheet.write("C%s"%rowx, u'Харилцагчийн №', title)
-        sheet.write("D%s"%rowx, u'Харилцагч', title)
-        sheet.write("E%s"%rowx, u'Нийт үнэ', title)
-        sheet.write("F%s"%rowx, u'НӨАТ', title)
-        sheet.write("G%s"%rowx, u'Нийт үнэ НӨАТ', title)
-        sheet.write("H%s"%rowx, u'Хэрэглэгч', title)
+
+        sheet.write("A%s"%rowx, u'Мөр', title)
+        sheet.write('B%s'%rowx, u'Батлагдсан огноо', title)
+        sheet.write("C%s"%rowx, u'Захиалгын №', title)
+        sheet.write("D%s"%rowx, u'Харилцагчийн №', title)
+        sheet.write("E%s"%rowx, u'Харилцагч', title)
+        sheet.write("F%s"%rowx, u'Хэрэглэгч', title)
+        sheet.write("G%s"%rowx, u'Нийт үнэ', title)
+        sheet.write("H%s"%rowx, u'НӨАТ', title)
+        sheet.write("I%s"%rowx, u'Нийт үнэ (НӨАТ-тай)', title)
         rowx += 1
         is_picked = data['target_move'] == 'picked'
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
@@ -148,12 +140,12 @@ class SaleOrderCommonReport(models.TransientModel):
         if is_picked:
             picking_ids = sale_order_id.mapped('picking_ids').filtered(lambda p: start_date <= p.scheduled_date.date() <= end_date)
             sale_order_id = sale_order_id.filtered(lambda so: any(pi.id in picking_ids.ids for pi in so.picking_ids))
-
-        num = 1
+            sale_order_id = sale_order_id.sorted(key=lambda r: r.date_order, reverse=False)
 
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
+        num = 1
         for line in sale_order_id:
             amount_untaxed = 0
             amount_tax = 0
@@ -170,32 +162,33 @@ class SaleOrderCommonReport(models.TransientModel):
                 amount_untaxed = amount_value['amount_untaxed']
                 amount_tax = amount_value['amount_total'] - amount_value['amount_untaxed']
                 amount_total =  amount_value['amount_total']
-                if amount_total != sum(l.price_unit * l.qty_delivered for l in order_lines):
-                    print(amount_total, sum(l.price_unit * l.qty_delivered for l in order_lines), line)
+                if amount_untaxed == 0 and amount_total == 0:
+                    continue
+
             convert_date = fields.Date.from_string(line.date_order)
-            sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
-            sheet.write("B%s"%rowx, line.name, data_left)
-            sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
-            sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
-            sheet.write("E%s"%rowx, line.amount_untaxed if not is_picked else amount_untaxed, data_right)
-            sheet.write("F%s"%rowx, line.amount_tax if not is_picked else amount_tax, data_right)
-            sheet.write("G%s"%rowx, line.amount_total if not is_picked else amount_total, data_right)
-            sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
-            if not is_picked:
-                total_amount_untaxed +=line.amount_untaxed
-                total_amount_tax +=line.amount_tax
-                total_amount_total +=line.amount_total
-            else:
+            sheet.write("A%s"%rowx, num, data_center)
+            sheet.write("B%s"%rowx, "%s"%convert_date, data_left)
+            sheet.write("C%s"%rowx, line.name, data_left)
+            sheet.write("D%s"%rowx, line.partner_id.code, data_left)
+            sheet.write("E%s"%rowx, line.partner_id.name, data_left)
+            sheet.write("F%s"%rowx, line.user_id.name, data_left)
+            sheet.write("G%s"%rowx, line.amount_untaxed if not is_picked else amount_untaxed, data_right)
+            sheet.write("H%s"%rowx, line.amount_tax if not is_picked else amount_tax, data_right)
+            sheet.write("I%s"%rowx, line.amount_total if not is_picked else amount_total, data_right)
+            if is_picked:
                 total_amount_untaxed += amount_untaxed
                 total_amount_tax += amount_tax
                 total_amount_total += amount_total
+            else:
+                total_amount_untaxed +=line.amount_untaxed
+                total_amount_tax +=line.amount_tax
+                total_amount_total +=line.amount_total
             num +=1
             rowx +=1
-        sheet.merge_range("A%s:D%s"%(rowx,rowx), u'Нийт дүн:', data_bold_left)
-        sheet.write("E%s"%rowx, total_amount_untaxed, data_bold_center)
-        sheet.write("F%s"%rowx, total_amount_tax, data_bold_center)
-        sheet.write("G%s"%rowx, total_amount_total, data_bold_center)
-        sheet.write("H%s"%rowx, '', data_bold_center)
+        sheet.merge_range("A%s:F%s"%(rowx,rowx), u'Нийт дүн:', data_bold_center)
+        sheet.write("G%s"%rowx, total_amount_untaxed, data_bold_center)
+        sheet.write("H%s"%rowx, total_amount_tax, data_bold_center)
+        sheet.write("I%s"%rowx, total_amount_total, data_bold_center)
 
 
         rowx += 1
