@@ -190,7 +190,7 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_to, str):
                 date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_to, time.min)
+            date_to_dt_max = datetime.combine(date_to, time.max)
             date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
                 if location_ids:
@@ -211,7 +211,7 @@ class ProductSummaryReport(models.TransientModel):
                         LEFT JOIN stock_location sl ON mv.location_id = sl.id
                         LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
                         WHERE mv.state = 'done'
-                          AND mv.date < '{date_from_dt_max}'
+                          AND mv.date < '{date_from_dt_min}'
                           AND dest.id IN {tuple(location_ids)}
                           AND mv.product_id = {pro.id}
                           AND mv.company_id = {data['company_id']}
@@ -250,7 +250,7 @@ class ProductSummaryReport(models.TransientModel):
                     """
                     self._cr.execute(
                         f_query_expense,
-                        (date_from_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_expense = self._cr.dictfetchall()
 
@@ -449,8 +449,16 @@ class ProductSummaryReport(models.TransientModel):
             if isinstance(date_from, str):
                 date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
 
-            date_to_dt_max = datetime.combine(date_from, time.min)
-            date_to_dt_min = datetime.combine(date_from, time.min)
+            date_from_dt_max = datetime.combine(date_from, time.min)
+            date_from_dt_min = datetime.combine(date_from, time.min)
+
+            date_to = data['date_to']
+
+            if isinstance(date_to, str):
+                date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+
+            date_to_dt_max = datetime.combine(date_to, time.max)
+            date_to_dt_min = datetime.combine(date_to, time.min)
 
             for pro in product_ids:
 
@@ -479,7 +487,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         f_query_income,
-                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_income = self._cr.dictfetchall()
 
@@ -503,7 +511,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         f_query_expense,
-                        (date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
                     )
                     f_expense = self._cr.dictfetchall()
 
@@ -527,7 +535,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         query_income,
-                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     income = self._cr.dictfetchall()
 
@@ -551,7 +559,7 @@ class ProductSummaryReport(models.TransientModel):
 
                     self._cr.execute(
                         query_expense,
-                        (date_to_dt_min, data['date_to'], tuple(location_ids), pro.id, data['company_id'])
+                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
                     )
                     expense = self._cr.dictfetchall()
 
