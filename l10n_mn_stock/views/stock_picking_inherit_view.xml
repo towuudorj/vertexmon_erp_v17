@@ -36,16 +36,32 @@
                     </xpath>
 
                     <xpath expr="//button[@name='action_confirm']" position="attributes">
-                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                		<attribute name="groups">l10n_mn_stock.group_picking_receive</attribute>
                     </xpath>
                     <xpath expr="//button[@name='button_validate' and contains(@class, 'o_btn_validate')]" position="attributes">
-                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                		<attribute name="groups">l10n_mn_stock.group_picking_receive</attribute>
                     </xpath>
                     <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="attributes">
-                		<attribute name="groups">l10n_mn_stock.group_pickin_recieve</attribute>
+                		<attribute name="groups">l10n_mn_stock.group_picking_receive</attribute>
                     </xpath>
                     <xpath expr="//field[@name='location_id']" position="after">
-                        <field name="approve_use_stamp" groups="l10n_mn_stock.group_pickin_recieve"/>
+                        <field name="approve_use_stamp" groups="l10n_mn_stock.group_picking_receive"/>
+                    </xpath>
+
+                    <xpath expr="//notebook/page[@name='operations']" position="after">
+                		<page string="Signature approves">
+                            <field name="signature_user_ids" readonly="1">
+                                <tree>
+                                    <field name="user_id"/>
+                                    <field name="type"/>
+                                    <field name="is_approve_signature"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                    <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="after">
+                        <field name="can_approve_signature" invisible="1"/>
+                		<button name="link_signature" type="object" string="Link signature" invisible="not can_approve_signature"/>
                     </xpath>
                 </field>
             </record>

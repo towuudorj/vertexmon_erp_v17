@@ -34,6 +34,38 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_item_group__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_aged_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_detail_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_quantity_page__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_require_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_sales_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_stock_account_detail_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_summary_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_purchase_product_income_report__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_item_group__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_aged_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_detail_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_quantity_page__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_require_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_sales_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_stock_account_detail_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_summary_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_purchase_product_income_report__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_distributor_register__name
 msgid "Distributer name"
 msgstr "Дистрибутерийн нэр"
@@ -78,6 +110,8 @@ msgstr "Савю баглааг хэсэгчлэн буцаах"
 
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__type
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_purchase_product_income_report__type
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__project_type
 msgid "Type"
 msgstr "Төрөл"
@@ -131,6 +165,16 @@ msgstr "Төсөл"
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__sale_price
 msgid "Sale price"
 msgstr "Зарах үнэ"
+
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_ot_packing_list_data
+msgid "Signature"
+msgstr "Гарын үсэг"
+
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
+msgid "Signature approves"
+msgstr "Гарын үсгийн зөвшөөрөл"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__total_amount
@@ -187,6 +231,11 @@ msgstr "Трак дугаар"
 msgid "Unit Value"
 msgstr "Нэгж үнэ"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__user_id
+msgid "User"
+msgstr "Хэрэглэгч"
+
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
@@ -197,6 +246,10 @@ msgstr "Шилжсэн тоо"
 msgid "Last Count Date"
 msgstr "Тооллогын огноо"
 
+#. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
+msgid "Link signature"
+msgstr "Гарын үсэг зурах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -246,10 +299,19 @@ msgid "Approve use stamp"
 msgstr "Зардал тамгатай гаргах"
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__approved
+msgid "Approved"
+msgstr "Зөвшөөрсөн"
+
+#. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__code
 msgid "Code"
 msgstr "Ангилалын код"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__accountant
+msgid "Accountant"
+msgstr "Нягтлан бодогч"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__active
@@ -345,6 +407,11 @@ msgstr "Дуусгасан ажилтан"
 msgid "Export"
 msgstr "Татах"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__financial_analyst
+msgid "Financial Analyst"
+msgstr "Санхүүгийн шинжээч"
+
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
 #: model:ir.model.fields,field_description:stock.field_stock_location__storage_category_id
@@ -356,3 +423,23 @@ msgstr "Татах"
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Storage Category"
 msgstr "Агуулахын ангилал"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__head
+msgid "Head"
+msgstr "Дарга"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__is_approve_signature
+msgid "Is Approve Signature"
+msgstr "Зөвшөөрсөн эсэх"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__issued_cashier
+msgid "Issued Cashier"
+msgstr "Олгосон нярав"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__picking_created
+msgid "Picking Created"
+msgstr "Үүсгэсэн"

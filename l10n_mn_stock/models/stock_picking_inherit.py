@@ -47,7 +47,8 @@ class stock_picking(models.Model):
     approve_use_stamp = fields.Boolean('Approve use stamp')
     stamp_approved_user = fields.Many2one('res.users', string='Stamp Approved User')
     picking_type_code = fields.Selection(related='picking_type_id.code')
-    
+    signature_user_ids = fields.One2many('picking.signature.users', 'picking_id', string="Users signature")
+    can_approve_signature = fields.Boolean(compute='_compute_signature_approval')
 
 
     def create_account_entry_move(self):
@@ -73,7 +74,67 @@ class stock_picking(models.Model):
     def create(self, vals):
         if vals.get('approve_use_stamp', False):
             vals['stamp_approved_user'] = self.env.user.id
-        return super(stock_picking, self).create(vals)
+        res = super(stock_picking, self).create(vals)
+        signature_user_obj = self.env['picking.signature.users']
+        employee_obj = self.env['hr.employee']
+        job_obj = self.env['hr.job']
+
+        for obj in res:
+            env_user = self.env.user
+            if obj.sale_id:
+                env_user = obj.sale_id.user_id
+            env_employee = env_user.employee_id
+            signature_user_obj.create({
+                'user_id': env_user.id,
+                'type': 'picking_created', # Шаардах хуудас бичсэн
+                'picking_id': obj.id,
+            })
+
+            signature_user_obj.create({
+                'user_id': env_employee.parent_id.user_id.id,
+                'type': 'approved', # Зөвшөөрсөн
+                'picking_id': obj.id,
+            })
+
+            job_id = job_obj.search([('name', 'like', 'нягтлан бодогч')])
+            head = False
+            if job_id:
+                accountants = employee_obj.search([('job_id', 'in', job_id.ids)], order='create_date asc')
+                for accountant in accountants:
+                    if not head:
+                        head = accountant.parent_id.user_id
+                    signature_user_obj.create({
+                        'user_id': accountant.user_id.id if accountant else False,
+                        'type': 'accountant', # нягтлан бодогч
+                        'picking_id': obj.id,
+                    })
+
+            signature_user_obj.create({
+                'user_id': head.id,
+                'type': 'head', # Дарга
+                'picking_id': obj.id,
+            })
+
+            job_id = job_obj.search([('name', '=', 'Нярав')])
+            cashier = False
+            if job_id:
+                cashier = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
+            signature_user_obj.create({
+                'user_id': cashier.user_id.id,
+                'type': 'issued_cashier', # Олгосон нярав
+                'picking_id': obj.id,
+            })
+
+            job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
+            financial_analyst = False
+            if job_id:
+                financial_analyst = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
+            signature_user_obj.create({
+                'user_id': financial_analyst.user_id.id,
+                'type': 'financial_analyst', # Санхүүгийн шинжээч
+                'picking_id': obj.id,
+            })
+        return res
 
     def write(self, vals):
         if vals.get('approve_use_stamp', False):
@@ -212,3 +273,45 @@ class stock_picking(models.Model):
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
+
+    def _compute_signature_approval(self):
+        env_user = self.env.user
+        for obj in self:
+            user_line = obj.signature_user_ids.filtered(lambda s: s.user_id.id == env_user.id)
+            if obj.signature_user_ids and user_line:
+                same_type_unapprove_line = obj.signature_user_ids.filtered(lambda s: s.type in user_line.mapped('type') and not s.is_approve_signature)
+                obj.can_approve_signature = True if same_type_unapprove_line else False
+            else:
+                obj.can_approve_signature = False
+
+    def link_signature(self):
+        env_user = self.env.user
+        for obj in self:
+            signature_user_line = obj.signature_user_ids.filtered(lambda s: s.user_id.id == env_user.id and
+                                                                          not s.is_approve_signature)
+            if signature_user_line:
+                signature_user_line.is_approve_signature = True
+
+    def get_signature_users(self):
+        self.ensure_one()
+        user_dict = {}
+        for line in self.signature_user_ids:
+            if line.is_approve_signature:
+                user_dict[line.type] = line.user_id
+        return user_dict
+
+
+class PickingSignatureUsers(models.Model):
+    _name = 'picking.signature.users'
+
+    user_id = fields.Many2one('res.users', 'User')
+    type = fields.Selection([
+            ('approved', 'Approved'),
+            ('issued_cashier', 'Issued Cashier'),
+            ('accountant', 'Accountant'),
+            ('picking_created', 'Picking Created'),
+            ('financial_analyst', 'Financial Analyst'),
+            ('head', 'Head'),
+    ])
+    is_approve_signature = fields.Boolean(default=False)
+    picking_id = fields.Many2one('stock.picking', 'Picking', ondelete='cascade')

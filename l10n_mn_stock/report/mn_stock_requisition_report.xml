@@ -152,44 +152,98 @@
                             </table>
 
                             <br/>
-
+                            <t t-set="sig_dict" t-value="o.get_signature_users()"/>
                             <table style="width: 100%; font-size:11px;">
                                 <tr>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px;">Зөвшөөрсөн:</td>
                                     <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ___________________ /
+                                        <t t-if="sig_dict.get('approved', None) != None and sig_dict.get('approved').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('approved').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('approved').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                     <td style="width: 15%; font-weight: bold; padding: 5px;">Олгосон нярав:</td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">__________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ___________________ /
+                                        <t t-if="sig_dict.get('issued_cashier', None) != None and sig_dict.get('issued_cashier').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('issued_cashier').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('issued_cashier').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px;">Дарга:</td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">___________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ____________________ /
+                                        <t t-if="sig_dict.get('head', None) != None and sig_dict.get('head').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('head').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('head').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px;">Хүлээн авсан:</td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">__________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ___________________ /
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px;">Нягтлан бодогч:</td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">___________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ____________________ /
+                                        <t t-if="sig_dict.get('accountant', None) != None and sig_dict.get('accountant').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('accountant').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('accountant').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px; white-space: nowrap;">
                                         Шаардах хуудас бичсэн:
                                     </td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">__________________ /
-                                        ___________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
+                                        ____________________ /
+                                        <t t-if="sig_dict.get('picking_created', None) != None and sig_dict.get('picking_created').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('picking_created').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('picking_created').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 15%; font-weight: bold;  padding: 5px;">Санхүүгийн шинжээч:</td>
-                                    <td style="width: 35%; padding-right 25px; padding: 5px;">___________________ /
+                                    <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ____________________ /
+                                        <t t-if="sig_dict.get('financial_analyst', None) != None and sig_dict.get('financial_analyst').signature_image">
+                                            <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('financial_analyst').signature_image}}"
+                                                     style="width:80px;"/>
+                                            </div>
+                                            <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                               <t t-esc="sig_dict.get('financial_analyst').signature"/>
+                                            </div>
+                                        </t>
                                     </td>
                                 </tr>
                             </table>
