@@ -254,7 +254,7 @@
                                     </td>
                                     <t t-if="sig_dict.get('coach') and sig_dict.get('coach').signature_image">
                                         <td style="width: 15%; font-weight: bold;  padding: 5px; white-space: nowrap;">
-                                            Дадлагажуулагч:
+                                            Хянасан:
                                         </td>
                                         <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                             ____________________ /

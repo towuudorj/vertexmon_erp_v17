@@ -285,7 +285,7 @@ msgstr "Компани"
 #. module: l10n_mn_stock
 #: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__coach
 msgid "Coach"
-msgstr "Дадлагажуулагч"
+msgstr "Хянасан"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_product_category_new__name

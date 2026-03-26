@@ -109,7 +109,7 @@ class stock_picking(models.Model):
             job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
             financial_analyst = False
             if job_id:
-                financial_analyst = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
+                financial_analyst = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
             signature_user_obj.create({
                 'user_id': financial_analyst.user_id.id,
                 'type': 'financial_analyst', # Санхүүгийн шинжээч
@@ -117,10 +117,10 @@ class stock_picking(models.Model):
                 'sequence': 4,
             })
 
-            job_id = job_obj.search([('name', 'like', 'нягтлан бодогч')])
+            job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч')])
             head = False
             if job_id:
-                accountants = employee_obj.search([('job_id', 'in', job_id.ids)], order='create_date asc')
+                accountants = employee_obj.search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
                 for accountant in accountants:
                     if not head:
                         head = accountant.parent_id.user_id
@@ -141,7 +141,7 @@ class stock_picking(models.Model):
             job_id = job_obj.search([('name', '=', 'Нярав')])
             cashier = False
             if job_id:
-                cashier = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
+                cashier = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
             signature_user_obj.create({
                 'user_id': cashier.user_id.id,
                 'type': 'issued_cashier', # Олгосон нярав
