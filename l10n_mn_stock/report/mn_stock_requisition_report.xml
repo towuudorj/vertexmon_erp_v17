@@ -183,7 +183,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 15%; font-weight: bold;  padding: 5px;">Дарга:</td>
+                                    <td style="width: 15%; font-weight: bold;  padding: 5px;">Санхүү эрхэлсэн захирал:</td>
                                     <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
                                         ____________________ /
                                         <t t-if="sig_dict.get('head', None) != None and sig_dict.get('head').signature_image">
