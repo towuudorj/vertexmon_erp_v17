@@ -161,7 +161,7 @@
                                         <t t-if="sig_dict.get('approved', None) != None and sig_dict.get('approved').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('approved').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('approved').signature"/>
@@ -174,7 +174,7 @@
                                         <t t-if="sig_dict.get('issued_cashier', None) != None and sig_dict.get('issued_cashier').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('issued_cashier').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('issued_cashier').signature"/>
@@ -189,7 +189,7 @@
                                         <t t-if="sig_dict.get('head', None) != None and sig_dict.get('head').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('head').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('head').signature"/>
@@ -208,7 +208,7 @@
                                         <t t-if="sig_dict.get('accountant', None) != None and sig_dict.get('accountant').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('accountant').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('accountant').signature"/>
@@ -223,7 +223,7 @@
                                         <t t-if="sig_dict.get('picking_created', None) != None and sig_dict.get('picking_created').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('picking_created').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('picking_created').signature"/>
@@ -238,7 +238,7 @@
                                         <t t-if="sig_dict.get('financial_analyst', None) != None and sig_dict.get('financial_analyst').signature_image">
                                             <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                 <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('financial_analyst').signature_image}}"
-                                                     style="width:80px;"/>
+                                                     style="height:30px;"/>
                                             </div>
                                             <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                <t t-esc="sig_dict.get('financial_analyst').signature"/>
@@ -254,7 +254,7 @@
                                             <t t-if="sig_dict.get('coach', None) != None and sig_dict.get('coach').signature_image">
                                                 <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
                                                     <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('coach').signature_image}}"
-                                                         style="width:80px;"/>
+                                                         style="height:30px;"/>
                                                 </div>
                                                 <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
                                                    <t t-esc="sig_dict.get('coach').signature"/>
