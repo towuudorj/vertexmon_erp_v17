@@ -93,14 +93,14 @@ class stock_picking(models.Model):
 
             if env_employee.parent_id.id != env_employee.coach_id.id:
                 signature_user_obj.create({
-                    'user_id': env_employee.coach_id.user_id.id,
+                    'user_id': env_employee.coach_id.user_id.id if env_employee.coach_id else False,
                     'type': 'coach',  # Дадлагажуулагч
                     'picking_id': obj.id,
                     'sequence': 2,
                 })
 
             signature_user_obj.create({
-                'user_id': env_employee.parent_id.user_id.id,
+                'user_id': env_employee.parent_id.user_id.id if env_employee.parent_id else False,
                 'type': 'approved', # Зөвшөөрсөн
                 'picking_id': obj.id,
                 'sequence': 3,
@@ -111,7 +111,7 @@ class stock_picking(models.Model):
             if job_id:
                 financial_analyst = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
             signature_user_obj.create({
-                'user_id': financial_analyst.user_id.id,
+                'user_id': financial_analyst.user_id.id if financial_analyst else False,
                 'type': 'financial_analyst', # Санхүүгийн шинжээч
                 'picking_id': obj.id,
                 'sequence': 4,
@@ -132,7 +132,7 @@ class stock_picking(models.Model):
                     })
 
             signature_user_obj.create({
-                'user_id': head.id,
+                'user_id': head.id if head else False,
                 'type': 'head', # Дарга
                 'picking_id': obj.id,
                 'sequence': 6,
@@ -143,7 +143,7 @@ class stock_picking(models.Model):
             if job_id:
                 cashier = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
             signature_user_obj.create({
-                'user_id': cashier.user_id.id,
+                'user_id': cashier.user_id.id if cashier else False,
                 'type': 'issued_cashier', # Олгосон нярав
                 'picking_id': obj.id,
                 'sequence': 7,
@@ -307,13 +307,13 @@ class stock_picking(models.Model):
             if signature_user_line:
                 for line in signature_user_line:
                     if line.type in ['picking_created']:
-                        if line.user_id.employee_id.job_id and 'захирал' in line.user_id.employee_id.job_id.name:
+                        approval_user_id = obj.signature_user_ids.filtered(lambda s: s.type == 'approved').user_id
+                        if line.user_id.employee_id.job_id and 'захирал' in line.user_id.employee_id.job_id.name or not approval_user_id:
                             notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and not s.is_approve_signature)
                             if notif_line:
                                 self.send_notif_mail(notif_line.mapped('user_id'))
                             continue
-                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type in ['approved', 'coach'] and
-                                                                                        not s.is_approve_signature)
+                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type in ['approved', 'coach'] and not s.is_approve_signature)
                         if notif_line:
                             self.send_notif_mail(notif_line.mapped('user_id'))
                     if line.type == 'approved':
