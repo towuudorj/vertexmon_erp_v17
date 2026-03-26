@@ -307,6 +307,11 @@ class stock_picking(models.Model):
             if signature_user_line:
                 for line in signature_user_line:
                     if line.type in ['picking_created']:
+                        if line.user_id.employee_id.job_id and 'захирал' in line.user_id.employee_id.job_id.name:
+                            notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and not s.is_approve_signature)
+                            if notif_line:
+                                self.send_notif_mail(notif_line.mapped('user_id'))
+                            continue
                         notif_line = obj.signature_user_ids.filtered(lambda s: s.type in ['approved', 'coach'] and
                                                                                         not s.is_approve_signature)
                         if notif_line:
@@ -315,7 +320,6 @@ class stock_picking(models.Model):
                         notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and
                                                                                         not s.is_approve_signature)
                         if notif_line:
-                            print(notif_line.mapped('user_id'), '\n\n\n')
                             self.send_notif_mail(notif_line.mapped('user_id'))
 
                 signature_user_line.is_approve_signature = True
