@@ -252,6 +252,23 @@
                                             </div>
                                         </t>
                                     </td>
+                                    <t t-if="sig_dict.get('coach') and sig_dict.get('coach').signature_image">
+                                        <td style="width: 15%; font-weight: bold;  padding: 5px; white-space: nowrap;">
+                                            Дадлагажуулагч:
+                                        </td>
+                                        <td style="width: 35%; padding-right 25px; padding: 5px;">____________________ /
+                                            ____________________ /
+                                            <t t-if="sig_dict.get('coach', None) != None and sig_dict.get('coach').signature_image">
+                                                <div style="margin-left: 12px; margin-top: -30px; position: fixed; border:none; z-index:2;">
+                                                    <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('coach').signature_image}}"
+                                                         style="width:80px;"/>
+                                                </div>
+                                                <div style="margin-left: 120px; margin-top: -15px; position: fixed; border:none; z-index:2;">
+                                                   <t t-esc="sig_dict.get('coach').signature"/>
+                                                </div>
+                                            </t>
+                                        </td>
+                                    </t>
                                 </tr>
                             </table>
                         </div>

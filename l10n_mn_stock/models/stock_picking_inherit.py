@@ -88,12 +88,33 @@ class stock_picking(models.Model):
                 'user_id': env_user.id,
                 'type': 'picking_created', # Шаардах хуудас бичсэн
                 'picking_id': obj.id,
+                'sequence': 1,
             })
+
+            if env_employee.parent_id.id != env_employee.coach_id.id:
+                signature_user_obj.create({
+                    'user_id': env_employee.coach_id.user_id.id,
+                    'type': 'coach',  # Дадлагажуулагч
+                    'picking_id': obj.id,
+                    'sequence': 2,
+                })
 
             signature_user_obj.create({
                 'user_id': env_employee.parent_id.user_id.id,
                 'type': 'approved', # Зөвшөөрсөн
                 'picking_id': obj.id,
+                'sequence': 3,
+            })
+
+            job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
+            financial_analyst = False
+            if job_id:
+                financial_analyst = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
+            signature_user_obj.create({
+                'user_id': financial_analyst.user_id.id,
+                'type': 'financial_analyst', # Санхүүгийн шинжээч
+                'picking_id': obj.id,
+                'sequence': 4,
             })
 
             job_id = job_obj.search([('name', 'like', 'нягтлан бодогч')])
@@ -107,12 +128,14 @@ class stock_picking(models.Model):
                         'user_id': accountant.user_id.id if accountant else False,
                         'type': 'accountant', # нягтлан бодогч
                         'picking_id': obj.id,
+                        'sequence': 5,
                     })
 
             signature_user_obj.create({
                 'user_id': head.id,
                 'type': 'head', # Дарга
                 'picking_id': obj.id,
+                'sequence': 6,
             })
 
             job_id = job_obj.search([('name', '=', 'Нярав')])
@@ -123,17 +146,9 @@ class stock_picking(models.Model):
                 'user_id': cashier.user_id.id,
                 'type': 'issued_cashier', # Олгосон нярав
                 'picking_id': obj.id,
+                'sequence': 7,
             })
 
-            job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
-            financial_analyst = False
-            if job_id:
-                financial_analyst = employee_obj.search([('job_id', '=', job_id.id)], limit=1, order='create_date asc')
-            signature_user_obj.create({
-                'user_id': financial_analyst.user_id.id,
-                'type': 'financial_analyst', # Санхүүгийн шинжээч
-                'picking_id': obj.id,
-            })
         return res
 
     def write(self, vals):
@@ -290,7 +305,52 @@ class stock_picking(models.Model):
             signature_user_line = obj.signature_user_ids.filtered(lambda s: s.user_id.id == env_user.id and
                                                                           not s.is_approve_signature)
             if signature_user_line:
+                for line in signature_user_line:
+                    if line.type in ['picking_created']:
+                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type in ['approved', 'coach'] and
+                                                                                        not s.is_approve_signature)
+                        if notif_line:
+                            self.send_notif_mail(notif_line.mapped('user_id'))
+                    if line.type == 'approved':
+                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and
+                                                                                        not s.is_approve_signature)
+                        if notif_line:
+                            print(notif_line.mapped('user_id'), '\n\n\n')
+                            self.send_notif_mail(notif_line.mapped('user_id'))
+
                 signature_user_line.is_approve_signature = True
+
+    def send_notif_mail(self, user_ids):
+        emails = []
+        for user in user_ids:
+            if user.employee_id.work_email:
+                emails.append(user.employee_id.work_email)
+                continue
+
+            if user.partner_id.email:
+                emails.append(user.partner_id.email)
+                continue
+
+            if user.login:
+                emails.append(user.login)
+                continue
+        if emails:
+            picking_url = f'/web#id={self.id}&model=stock.picking&view_type=form'
+            created = self.signature_user_ids.filtered(lambda s: s.type == 'picking_created').user_id
+            self.env['mail.mail'].create({
+                'email_to': ','.join(emails),
+                'subject': f'Хүргэлтийн баримт {self.name} -ын гарын үсэг зуруулах хүсэлт илгээсэн байна.',
+                'body_html': f"""<br>
+                            Хүргэлтийн баримт: {self.name} <br>
+                            Борлуулалтын ажилтан: {created.name} <br>
+                            Доорх товчоор дамжин орж зурна уу
+                            <br><br>
+                             <a href="{picking_url}" style="box-sizing:border-box;background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                 Хүргэлтийн баримт
+                             </a><br><br>
+                             """
+
+            }).send()
 
     def get_signature_users(self):
         self.ensure_one()
@@ -303,10 +363,12 @@ class stock_picking(models.Model):
 
 class PickingSignatureUsers(models.Model):
     _name = 'picking.signature.users'
+    _order = 'sequence asc'
 
     user_id = fields.Many2one('res.users', 'User')
     type = fields.Selection([
             ('approved', 'Approved'),
+            ('coach', 'Coach'),
             ('issued_cashier', 'Issued Cashier'),
             ('accountant', 'Accountant'),
             ('picking_created', 'Picking Created'),
@@ -315,3 +377,4 @@ class PickingSignatureUsers(models.Model):
     ])
     is_approve_signature = fields.Boolean(default=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', ondelete='cascade')
+    sequence = fields.Integer('Sequence')
