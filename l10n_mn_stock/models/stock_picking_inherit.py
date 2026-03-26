@@ -76,7 +76,7 @@ class stock_picking(models.Model):
             vals['stamp_approved_user'] = self.env.user.id
         res = super(stock_picking, self).create(vals)
         signature_user_obj = self.env['picking.signature.users']
-        employee_obj = self.env['hr.employee']
+        employee_obj = self.env['hr.employee'].sudo()
         job_obj = self.env['hr.job']
 
         for obj in res:
@@ -339,14 +339,14 @@ class stock_picking(models.Model):
             created = self.signature_user_ids.filtered(lambda s: s.type == 'picking_created').user_id
             self.env['mail.mail'].create({
                 'email_to': ','.join(emails),
-                'subject': f'Хүргэлтийн баримт {self.name} -ын гарын үсэг зуруулах хүсэлт илгээсэн байна.',
+                'subject': f'Шаардах хуудас {self.name} -ын гарын үсэг зуруулах хүсэлт илгээсэн байна.',
                 'body_html': f"""<br>
-                            Хүргэлтийн баримт: {self.name} <br>
+                            Шаардах хуудас: {self.name} <br>
                             Борлуулалтын ажилтан: {created.name} <br>
                             Доорх товчоор дамжин орж зурна уу
                             <br><br>
                              <a href="{picking_url}" style="box-sizing:border-box;background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                                 Хүргэлтийн баримт
+                                 Шаардах хуудас
                              </a><br><br>
                              """
 
