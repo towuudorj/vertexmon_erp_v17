@@ -135,12 +135,21 @@ class SaleOrderCommonReport(models.TransientModel):
         if data['target_move'] in ['posted', 'picked']:
             domain.append(('state', '=', 'sale'))
 
-        sale_order_id = sale_order_obj.search(domain, order='date_order asc')
+        sale_order_id = sale_order_obj.search(domain, order='date_order asc, name asc')
 
         if is_picked:
             picking_ids = sale_order_id.mapped('picking_ids').filtered(lambda p: start_date <= p.scheduled_date.date() <= end_date)
-            sale_order_id = sale_order_id.filtered(lambda so: any(pi.id in picking_ids.ids for pi in so.picking_ids))
-            sale_order_id = sale_order_id.sorted(key=lambda r: r.date_order, reverse=False)
+            picking_ids = picking_ids.ids if picking_ids else []
+            temp_sale_order = sale_order_obj
+            if picking_ids:
+                for sale_line in sale_order_id:
+                    for picking_id in sale_line.picking_ids:
+                        if picking_id.id in picking_ids:
+                            temp_sale_order |= sale_line
+                            break
+                sale_order_id = temp_sale_order
+            else:
+                sale_order_id = []
 
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
