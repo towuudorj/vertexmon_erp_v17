@@ -6,6 +6,7 @@ import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
 from xlwt import Workbook, Formula
+from datetime import datetime
 
 class profit_excel_report(models.TransientModel):
     """
@@ -28,8 +29,8 @@ class profit_excel_report(models.TransientModel):
         data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.date_from,
-            'end_date': self.date_to,
+            'start_date': str(self.date_from),
+            'end_date': str(self.date_to),
             'target_move': self.target_move,
         })
         return data
@@ -149,11 +150,11 @@ class profit_excel_report(models.TransientModel):
         sheet.set_paper(9)
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0.5)
-        sheet.set_column(0, 0, 10)
+        sheet.set_column(0, 0, 5)
         sheet.set_column(1, 1, 60)
-        sheet.set_column(2, 4, 20)
+        sheet.set_column(2, 4, 25)
 
-        
+        self = self.env[self._name]
 
         sheet.write("D1", u'Маягт CT-3', header)
         
@@ -161,7 +162,7 @@ class profit_excel_report(models.TransientModel):
         sheet.merge_range("A2:D2", u'ОРЛОГЫН ДЭЛГЭРЭНГҮЙ ТАЙЛАН', header)
         sheet.merge_range("C3:D3", u"%s" % (data['company_name']), header_txt)
         sheet.merge_range("C4:D4", u'(Аж ахуй нэгж, байгууллагын нэр)', header_txt)
-        sheet.merge_range("C5:D5", u'%s - %s' % (data['start_date'],data['end_date']), header_txt_right)
+        sheet.merge_range("C5:D5", u'%s - %s' % (data['start_date'], data['end_date']), header_txt_right)
         
         
         account_obj = self.env['account.account']
@@ -171,11 +172,15 @@ class profit_excel_report(models.TransientModel):
         journal_obj = self.env['account.journal']
         journal_ids = journal_obj.search([('company_id','=',data['company_id']),('type','not in',('opening','closing'))]).ids
 
+        last_year_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+        last_year_date = last_year_date.replace(year=last_year_date.year - 1, month=12, day=31)
+        last_year_date = str(last_year_date)
+
         rowx = 7
         sheet.write("A%s"%rowx, u'Мөрийн дугаар', header_title)
         sheet.write("B%s"%rowx, u'Үзүүлэлт', header_title)
-        sheet.write("C%s"%rowx, u'', header_title)
-        sheet.write("D%s"%rowx, u'%s'%data['end_date'], header_title)
+        sheet.write("C%s"%rowx, u'%s' % last_year_date, header_title)
+        sheet.write("D%s"%rowx, u'%s - %s'%(data['start_date'], data['end_date']), header_title)
         rowx += 1
 
         if data['target_move'] =='posted':
@@ -185,9 +190,6 @@ class profit_excel_report(models.TransientModel):
         
         profit = profit_obj.search([('company_id','=',data['company_id'])])
 
-
-        last_year_date = data['start_date']
-        last_year_date = last_year_date.replace(year=last_year_date.year-1, month=12, day=31)
 
         last_number = 1
         for line in profit:

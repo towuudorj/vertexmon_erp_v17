@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from datetime import datetime
 
 class balance_sheet_excel(models.TransientModel):
     """
@@ -16,8 +17,7 @@ class balance_sheet_excel(models.TransientModel):
     
     company_id=fields.Many2one('res.company', string='Company', required=True, 
                                default=lambda self: self.env.user.company_id)
-    date_from=fields.Date('Date Start',default=fields.Date.context_today)
-    date_to=fields.Date("Date Stop",default=fields.Date.context_today)
+    date = fields.Date("Date",default=fields.Date.context_today)
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
                                         ], string='State', required=True, default='posted')
@@ -27,8 +27,7 @@ class balance_sheet_excel(models.TransientModel):
         data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.date_from,
-            'end_date': self.date_to,
+            'date': str(self.date),
             'target_move': self.target_move
         })
         return data
@@ -107,13 +106,17 @@ class balance_sheet_excel(models.TransientModel):
         sheet.merge_range('A2:B2', u"%s" % (data['company_name']), head)
 
         sheet.merge_range('A3:B3', u'(Аж ахуй нэгж, байгууллагын нэр)', head)
-        sheet.merge_range('C2:D2', u'%s - %s' % (data['start_date'],data['end_date']), head)
+        sheet.merge_range('C2:D2', u'%s' % data['date'], head)
         sheet.write('D5', u'(төгрөгөөр)', head)
+
+        last_year_date = datetime.strptime(data['date'], "%Y-%m-%d").date()
+        last_year_date = str(last_year_date.replace(year=last_year_date.year - 1, month=12, day=31))
+
         rowx = 6
         sheet.write('A%s'%rowx, u'Д/д', title)
         sheet.write("B%s"%rowx, u'Үзүүлэлт', title)
-        sheet.write("C%s"%rowx, u'%s'%(data['start_date']), title)
-        sheet.write("D%s"%rowx, u'%s'%(data['end_date']), title)
+        sheet.write("C%s"%rowx, u'%s'%last_year_date, title)
+        sheet.write("D%s"%rowx, u'%s'%(data['date']), title)
         rowx += 1
 
         account_move_obj = self.env['account.move']
@@ -128,9 +131,6 @@ class balance_sheet_excel(models.TransientModel):
             state = ['posted']
         else:
             state = ['posted','draft']
-
-        last_year_date = data['start_date']
-        last_year_date = last_year_date.replace(year=last_year_date.year - 1, month=12, day=31)
 
         num = 1
         for line in balance_report_id:
@@ -147,8 +147,8 @@ class balance_sheet_excel(models.TransientModel):
                     account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                     if len(account_ids)>1:
                         accounts = account_ids.ids
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
+                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
+                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
 
                         for mlines in move_line_ids:
                             debit +=mlines.debit
@@ -195,7 +195,7 @@ class balance_sheet_excel(models.TransientModel):
                                 account_ids.append(fli.id)
                     
                     if account_ids!=[]:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',account_ids),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',account_ids),('date','<=',data['date']),('parent_state','in',state)])
                         pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',account_ids),('date','<=',last_year_date),('parent_state','in',state)])
 
                         for mlines in move_line_ids:
@@ -231,7 +231,7 @@ class balance_sheet_excel(models.TransientModel):
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                 if len(account_ids)>1:
                     accounts = account_ids.ids
-                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                     pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
 
                     for mlines in move_line_ids:
@@ -261,7 +261,7 @@ class balance_sheet_excel(models.TransientModel):
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                 if len(account_ids)>1:
                     accounts = account_ids.ids
-                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                     pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
 
                 for mlines in move_line_ids:
