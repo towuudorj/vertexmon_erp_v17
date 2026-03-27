@@ -10,7 +10,6 @@
                 <form string="Report Options">
                     <group colspan="4">
                         <field name="company_id" widget='selection'/>
-                        <field name="fiscalyear_id" widget='selection'/>
                         <field name="target_move"/>
                         <field name="date_from"/>
                         <field name="date_to"/>

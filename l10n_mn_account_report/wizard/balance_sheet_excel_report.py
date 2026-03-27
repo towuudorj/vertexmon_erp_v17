@@ -18,7 +18,6 @@ class balance_sheet_excel(models.TransientModel):
                                default=lambda self: self.env.user.company_id)
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
-    fiscalyear_id = fields.Many2one('account.fiscal.year',string='Fiscal year', required=True)
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
                                         ], string='State', required=True, default='posted')
@@ -129,8 +128,11 @@ class balance_sheet_excel(models.TransientModel):
             state = ['posted']
         else:
             state = ['posted','draft']
+
+        last_year_date = data['start_date']
+        last_year_date = last_year_date.replace(year=last_year_date.year - 1, month=12, day=31)
+
         num = 1
-        print ("journal_id",f_journal_ids)
         for line in balance_report_id:
             sheet.write("A%s"%rowx, num, data_right)
             if line.level == 'level1':
@@ -141,53 +143,26 @@ class balance_sheet_excel(models.TransientModel):
                 pcredit = 0.0
                 pre_total = 0.0
                 sheet.write("B%s"%rowx, u'%s'%line.name, data_bold_left)
-                if line.parent_id.id==False:
+                if not line.parent_id:
                     account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                     if len(account_ids)>1:
-                        accounts = tuple(ac.id for ac in account_ids)
-                        if len(state)==1:
-                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                            pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','=',state)])
+                        accounts = account_ids.ids
+                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
 
-                        else:
-                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                            pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','in',state)])
-
-                    else:
-                        if len(state)==1:
-                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                            pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','<=',data['end_date']),('parent_state','=',state)])
-                           
-                        else:
-                            move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                            pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',self.company_id.id),('account_id','=',account_ids.id),('date','<=',data['start_date']),('parent_state','in',state)])
-                    
-                    if len(move_line_ids)==1:
                         for mlines in move_line_ids:
                             debit +=mlines.debit
                         for mlines in move_line_ids:
                             credit += mlines.credit
-                    else:
-                        for mlines in move_line_ids:
-                            credit += mlines.credit
-                        for mlines in move_line_ids:
-                            debit +=mlines.debit
-                    
-                    
-                    total = debit - credit
-                    if len(pre_move_line_ids)==1:
+
+                        total = debit - credit
+
                         for pmlines in pre_move_line_ids:
                             pdebit +=pmlines.debit
                         for pmlines in pre_move_line_ids:
                             pcredit += pmlines.credit
-                    else:
-                        for pmlines in pre_move_line_ids:
-                            pcredit += pmlines.credit
-                        for pmlines in pre_move_line_ids:
-                            pdebit +=pmlines.debit
-                    
-                    
-                    pre_total = pdebit - pcredit
+
+                        pre_total = pdebit - pcredit
                     
                     sheet.write("C%s"%rowx, pre_total,data_right)
                     sheet.write("D%s"%rowx, total,data_right)
@@ -220,42 +195,18 @@ class balance_sheet_excel(models.TransientModel):
                                 account_ids.append(fli.id)
                     
                     if account_ids!=[]:
-                        if len(account_ids)>1:
-                            if len(state)==1:
-                                move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','=',state)])
-                            else:
-                                move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',tuple(account_ids)),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                                pre_move_line_ids = account_move_line_obj.search(('journal_id','=',f_journal_ids.id),[('company_id','=',data['company_id']),('account_id','in',tuple(account_ids)),('date','<=',data['start_date']),('parent_state','in',state)])
-                        else:
-                            if len(state)==1:
-                                move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','=',account_ids[0]),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',data['start_date']),('parent_state','=',state)])
-                            else:
-                                move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','=',account_ids[0]),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                                pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids[0]),('date','<=',data['start_date']),('parent_state','in',state)])
-                            
-                        if len(move_line_ids)==1:
-                            for mlines in move_line_ids:
-                                debit +=mlines.debit
-                            for mlines in move_line_ids:
-                                credit += mlines.credit
-                        else:
-                            for mlines in move_line_ids:
-                                debit +=mlines.debit
-                            for mlines in move_line_ids:
-                                credit += mlines.credit
-                                
-                        if len(pre_move_line_ids)==1:
-                            for pmlines in pre_move_line_ids:
-                                pdebit +=pmlines.debit
-                            for pmlines in pre_move_line_ids:
-                                pcredit += pmlines.credit
-                        else:
-                            for pmlines in pre_move_line_ids:
-                                pdebit +=pmlines.debit
-                            for pmlines in pre_move_line_ids:
-                                pcredit += pmlines.credit
+                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',self.company_id.id),('account_id','in',account_ids),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',account_ids),('date','<=',last_year_date),('parent_state','in',state)])
+
+                        for mlines in move_line_ids:
+                            debit +=mlines.debit
+                        for mlines in move_line_ids:
+                            credit += mlines.credit
+
+                        for pmlines in pre_move_line_ids:
+                            pdebit +=pmlines.debit
+                        for pmlines in pre_move_line_ids:
+                            pcredit += pmlines.credit
                             
                     total = debit - credit
                     pre_total = pdebit - pcredit
@@ -279,45 +230,22 @@ class balance_sheet_excel(models.TransientModel):
                 pre_total = 0.0
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                 if len(account_ids)>1:
-                    accounts = tuple(ac.id for ac in account_ids)
-                    if len(state)==1:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','=',state)])
-                    else:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','in',state)])
-                else:
-                    if len(state)==1:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','<=',data['start_date']),('parent_state','=',state)])
-                    else:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','<=',data['start_date']),('parent_state','in',state)])
-                    
-                if len(move_line_ids)==1:
+                    accounts = account_ids.ids
+                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
+
                     for mlines in move_line_ids:
                         credit +=mlines.credit
                     for mlines in move_line_ids:
                         debit +=mlines.debit
-                else:
-                    for mlines in move_line_ids:
-                        debit += mlines.debit
-                    for mlines in move_line_ids:
-                        credit +=mlines.credit
 
-                if len(pre_move_line_ids)==1:
                     for pmlines in pre_move_line_ids:
                         pcredit +=pmlines.credit
                     for pmlines in pre_move_line_ids:
                         pdebit +=pmlines.debit
-                else:
-                    for pmlines in pre_move_line_ids:
-                        pdebit += pmlines.debit
-                    for pmlines in pre_move_line_ids:
-                        pcredit +=pmlines.credit
-                        
-                total = debit - credit
-                pre_total = pdebit - pcredit
+
+                    total = debit - credit
+                    pre_total = pdebit - pcredit
                 sheet.write("C%s"%rowx, pre_total,data_right)
                 sheet.write("D%s"%rowx, total,data_right)
                 num +=1
@@ -332,46 +260,21 @@ class balance_sheet_excel(models.TransientModel):
                 sheet.write("B%s"%rowx, u'%s'%line.name,data_left)
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
                 if len(account_ids)>1:
-                    accounts = tuple(ac.id for ac in account_ids)
-                    if len(state)==1:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','=',state)])
-                    else:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['start_date']),('parent_state','in',state)])
-                else:
-                    if len(state)==1:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','<=',data['start_date']),('parent_state','=',state)])
-                    else:
-                        move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
-                        pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','=',account_ids.id),('date','<=',data['start_date']),('parent_state','in',state)])
-                    
-                if len(move_line_ids)==1:
-                    for mlines in move_line_ids:
-                        debit +=mlines.debit
-                        
-                    for mlines in move_line_ids:
-                        credit += mlines.credit
-                else:
-                    for mlines in move_line_ids:
-                        credit += mlines.credit
-                    for mlines in move_line_ids:
-                        debit +=mlines.debit
-                        
-                        
-                
-                if len(pre_move_line_ids)==1:
-                    for pmlines in pre_move_line_ids:
-                        pdebit +=pmlines.debit
-                        
-                    for mlines in pre_move_line_ids:
-                        pcredit += pmlines.credit
-                else:
-                    for pmlines in pre_move_line_ids:
-                        pcredit += pmlines.credit
-                    for pmlines in pre_move_line_ids:
-                        pdebit +=pmlines.debit
+                    accounts = account_ids.ids
+                    move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
+
+                for mlines in move_line_ids:
+                    debit +=mlines.debit
+
+                for mlines in move_line_ids:
+                    credit += mlines.credit
+
+                for pmlines in pre_move_line_ids:
+                    pdebit +=pmlines.debit
+
+                for pmlines in pre_move_line_ids:
+                    pcredit += pmlines.credit
                                                 
                 total = debit - credit
                 pre_total = pdebit - pcredit
