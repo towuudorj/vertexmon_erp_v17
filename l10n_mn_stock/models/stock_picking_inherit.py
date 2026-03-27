@@ -75,9 +75,9 @@ class stock_picking(models.Model):
         if vals.get('approve_use_stamp', False):
             vals['stamp_approved_user'] = self.env.user.id
         res = super(stock_picking, self).create(vals)
-        signature_user_obj = self.env['picking.signature.users']
+        signature_user_obj = self.env['picking.signature.users'].sudo()
         employee_obj = self.env['hr.employee'].sudo()
-        job_obj = self.env['hr.job']
+        job_obj = self.env['hr.job'].sudo()
 
         for obj in res:
             env_user = self.env.user
