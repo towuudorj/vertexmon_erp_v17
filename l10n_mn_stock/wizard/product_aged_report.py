@@ -132,40 +132,91 @@ class ProductAgedReport(models.TransientModel):
         
         query = """
                 SELECT
-                    pt.name ->> 'mn_MN' AS name,
-                    pp.default_code AS default_code,
-                    sw.name AS wh_name,
+                pt.id AS product_tmpl_id,
+                pt.name ->> 'mn_MN' AS name,
+                pt.default_code AS default_code,
             
-                    MIN(CASE WHEN src.usage = 'supplier' THEN sm.date::date END) AS first_in,
-                    MAX(CASE WHEN dest.usage = 'customer' THEN sm.date::date END) AS last_out,
+                sw.id AS warehouse_id,
+                sw.name AS wh_name,
             
-                    SUM(CASE WHEN dest.usage = 'internal' THEN sml.quantity ELSE 0 END) AS qty_in,
-                    SUM(CASE WHEN src.usage = 'internal' THEN sml.quantity ELSE 0 END) AS qty_out,
+                -- First incoming (supplier → internal)
+                MIN(CASE 
+                    WHEN src.usage = 'supplier' AND dest.usage = 'internal'
+                    THEN sm.date::date 
+                END) AS first_in,
             
-                    AVG(CURRENT_DATE - sm.date::date)::INT AS avg_age,
+                -- Last outgoing (internal → customer)
+                MAX(CASE 
+                    WHEN src.usage = 'internal' AND dest.usage = 'customer'
+                    THEN sm.date::date 
+                END) AS last_out,
             
-                    SUM(CASE
-                        WHEN dest.usage = 'internal' THEN sml.quantity
-                        WHEN src.usage = 'internal' THEN -sml.quantity
-                        ELSE 0 END
-                    ) AS balance_qty,
+                -- Qty IN (to internal)
+                SUM(CASE 
+                    WHEN dest.usage = 'internal' THEN sml.quantity 
+                    ELSE 0 
+                END) AS qty_in,
             
-                    AVG(svl.unit_cost) AS unit_cost
+                -- Qty OUT (from internal)
+                SUM(CASE 
+                    WHEN src.usage = 'internal' THEN sml.quantity 
+                    ELSE 0 
+                END) AS qty_out,
             
-                FROM stock_move_line sml
-                JOIN stock_move sm ON sm.id = sml.move_id
+                -- Balance
+                SUM(CASE
+                    WHEN dest.usage = 'internal' THEN sml.quantity
+                    WHEN src.usage = 'internal' THEN -sml.quantity
+                    ELSE 0
+                END) AS balance_qty,
             
-                JOIN stock_location src ON src.id = sml.location_id
-                JOIN stock_location dest ON dest.id = sml.location_dest_id
+                -- Average age
+                AVG(
+                    CASE 
+                        WHEN dest.usage = 'internal'
+                        THEN CURRENT_DATE - sm.date::date
+                    END
+                )::INT AS avg_age,
             
-                JOIN product_product pp ON pp.id = sml.product_id
-                JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                -- Unit cost (NO DUPLICATION)
+                svl.unit_cost
             
-                LEFT JOIN stock_warehouse sw ON sw.lot_stock_id = dest.id
-                LEFT JOIN stock_valuation_layer svl ON svl.product_id = pp.id
+            FROM stock_move_line sml
             
-                WHERE sm.state = 'done'
-                  AND sml.company_id = %s
+            JOIN stock_move sm 
+                ON sm.id = sml.move_id
+            
+            JOIN stock_location src 
+                ON src.id = sml.location_id
+            
+            JOIN stock_location dest 
+                ON dest.id = sml.location_dest_id
+            
+            JOIN product_product pp 
+                ON pp.id = sml.product_id
+            
+            JOIN product_template pt 
+                ON pt.id = pp.product_tmpl_id
+            
+            -- Warehouse mapping (better logic)
+            LEFT JOIN stock_warehouse sw 
+                ON dest.id = sw.lot_stock_id 
+                OR src.id = sw.lot_stock_id
+            
+            -- ✅ FIX: aggregated valuation layer
+            LEFT JOIN (
+                SELECT 
+                    product_id, 
+                    AVG(unit_cost) AS unit_cost
+                FROM stock_valuation_layer
+                GROUP BY product_id
+            ) svl 
+                ON svl.product_id = pp.id
+            
+            WHERE sm.state = 'done'
+              AND sml.company_id = %s
+            
+            
             """
         params = [data['company_id']]
         
@@ -186,9 +237,12 @@ class ProductAgedReport(models.TransientModel):
         
         query += """
             GROUP BY
+                pt.id,
                 pt.name,
-                pp.default_code,
-                sw.name
+                pt.default_code,
+                sw.id,
+                sw.name,
+                svl.unit_cost
         """
         
         self.env.cr.execute(query, tuple(params))

@@ -25,6 +25,7 @@ class ProductSummaryReport(models.TransientModel):
                            default=fields.Date.context_today)
     categ_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
+    is_transaction = fields.Boolean(string='Is transaction')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_warehouse_product_summary_rel', 'report_id',
                                      'warehouse_ids', string=u'Агуулах')
     type = fields.Selection([('quantity', u'Тоогоор'),
@@ -42,6 +43,7 @@ class ProductSummaryReport(models.TransientModel):
             'categ_id': self.categ_id.id,
             'product_id': self.product_id.id,
             'type': self.type,
+            'is_transaction':self.is_transaction
         })
         return data
 
@@ -137,9 +139,22 @@ class ProductSummaryReport(models.TransientModel):
         if data['product_id'] and not data['categ_id']:
             product_ids = product_obj.search([('id', '=', data['product_id']),('detailed_type','=','product')])
         elif not data['product_id'] and data['categ_id']:
-            product_ids = product_obj.search([('categ_id', '=', data['categ_id']),('detailed_type','=','product')])
+            if data['is_transaction'] == True:
+                product_ids = self.env['product.product'].search([('id', 'in', self.env['stock.move'].search([('state', '=', 'done'),
+                                                                                                            ('company_id', '=', data['company_id']),'|',('location_id','in', tuple(location_ids)),('location_dest_id','in', tuple(location_ids))]).mapped('product_id').ids),
+                                                                  ('detailed_type', '=', 'product'),
+                                                                  ('categ_id', '=', data['categ_id'])])
+            else:
+                product_ids = self.env['product.product'].search([('detailed_type', '=', 'product'),
+                                                                  ('categ_id', '=', data['categ_id'])])
         elif not data['product_id'] and not data['categ_id']:
-            product_ids = product_obj.search([('detailed_type','=','product')])
+            if data['is_transaction'] == True:
+                product_ids = self.env['product.product'].search([('id', 'in', self.env['stock.move'].search([
+                                                                 ('state', '=', 'done'),
+                                                                 ('company_id', '=', data['company_id']),'|',('location_id','in', tuple(location_ids)),('location_dest_id','in', tuple(location_ids))]).mapped('product_id').ids),
+                                                                 ('detailed_type', '=', 'product')])
+            else:
+                product_ids = self.env['product.product'].search([('detailed_type', '=', 'product')])
 
         if data['type'] == 'cost':
             sheet.merge_range('J3:M3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head_title)
@@ -201,7 +216,7 @@ class ProductSummaryReport(models.TransientModel):
                             AVG(svl.price) AS price
                         FROM
                         (
-                            SELECT sum(svl.unit_cost) AS price, mv.id as stock_move_id
+                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
                             FROM stock_valuation_layer svl 
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                             WHERE mv.product_id = {pro.id}
@@ -230,7 +245,7 @@ class ProductSummaryReport(models.TransientModel):
                             AVG(svl.price) AS price
                         FROM
                         (   
-                            SELECT sum(svl.unit_cost) AS price, mv.id as stock_move_id
+                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
                             FROM stock_valuation_layer svl 
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                             WHERE mv.product_id = {pro.id}
@@ -261,7 +276,7 @@ class ProductSummaryReport(models.TransientModel):
                             AVG(svl.price) AS price
                         FROM 
                         (   
-                            SELECT sum(svl.unit_cost) AS price, mv.id as stock_move_id
+                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
                             FROM stock_valuation_layer svl 
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                             WHERE mv.product_id = {pro.id}
@@ -295,7 +310,7 @@ class ProductSummaryReport(models.TransientModel):
                             AVG(svl.price) AS price
                         FROM 
                         (   
-                            SELECT sum(svl.unit_cost) AS price, mv.id as stock_move_id
+                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
                             FROM stock_valuation_layer svl 
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
                             WHERE mv.product_id = {pro.id}

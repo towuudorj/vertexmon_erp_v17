@@ -132,41 +132,83 @@ class ProductSalesReport(models.TransientModel):
         
         query = """
                 SELECT
-                    pt.name ->> 'mn_MN' AS name,
-                    pp.default_code AS code,
+                pt.id AS product_tmpl_id,
+                pt.name ->> 'mn_MN' AS name,
+                pp.default_code AS code,
             
-                    SUM(CASE
-                        WHEN svl.create_date < %s THEN svl.value
-                        ELSE 0 END
-                    ) AS opening_value,
+                -- Opening
+                COALESCE(SUM(svl.quantity) FILTER (
+                    WHERE svl.create_date < %s
+                ), 0) AS opening_qty,
             
-                    SUM(CASE
-                        WHEN svl.value > 0
-                         AND svl.create_date BETWEEN %s AND %s
-                        THEN svl.value
-                        ELSE 0 END
-                    ) AS purchase_value,
+                COALESCE(SUM(svl.value) FILTER (
+                    WHERE svl.create_date < %s
+                ), 0) AS opening_value,
             
-                    SUM(CASE
-                        WHEN svl.value < 0
-                         AND svl.create_date BETWEEN %s AND %s
-                        THEN ABS(svl.value)
-                        ELSE 0 END
-                    ) AS out_value
+                -- Purchase (IN)
+                COALESCE(SUM(svl.quantity) FILTER (
+                    WHERE svl.quantity > 0
+                    AND svl.create_date BETWEEN %s AND %s
+                ), 0) AS purchase_qty,
             
-                FROM stock_valuation_layer svl
-                JOIN stock_move sm on sm.id = svl.stock_move_id
-                JOIN product_product pp ON pp.id = sm.product_id
-                JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                
-                WHERE svl.company_id = %s
+                COALESCE(SUM(svl.value) FILTER (
+                    WHERE svl.value > 0
+                    AND svl.create_date BETWEEN %s AND %s
+                ), 0) AS purchase_value,
+            
+                -- Outgoing (OUT)
+                COALESCE(SUM(ABS(svl.quantity)) FILTER (
+                    WHERE svl.quantity < 0
+                    AND svl.create_date BETWEEN %s AND %s
+                ), 0) AS out_qty,
+            
+                COALESCE(SUM(ABS(svl.value)) FILTER (
+                    WHERE svl.value < 0
+                    AND svl.create_date BETWEEN %s AND %s
+                ), 0) AS out_value,
+            
+                -- Closing
+                COALESCE(SUM(svl.quantity) FILTER (
+                    WHERE svl.create_date <= %s
+                ), 0) AS closing_qty,
+            
+                COALESCE(SUM(svl.value) FILTER (
+                    WHERE svl.create_date <= %s
+                ), 0) AS closing_value
+            
+            FROM stock_valuation_layer svl
+            
+            JOIN stock_move sm
+                ON sm.id = svl.stock_move_id
+            
+            JOIN product_product pp
+                ON pp.id = svl.product_id
+            
+            JOIN product_template pt
+                ON pt.id = pp.product_tmpl_id
+            
+            WHERE svl.company_id = %s
+              AND sm.state = 'done'
+            
+            
+            
+            
             """
             
         params = [
+
             data['date_from'],     # эхний үлдэгдэл хүртэл
+            data['date_from'],
             data['date_from'],
             data['date_to'],
             data['date_from'],
+            data['date_to'],
+            data['date_from'],
+            data['date_to'],
+            data['date_from'],
+            data['date_to'],
+            
+            data['date_to'],
             data['date_to'],
             data['company_id']
         ]
@@ -178,7 +220,13 @@ class ProductSalesReport(models.TransientModel):
             query += " AND sm.location_id in %s"
             params.append(tuple(location_id))
         query += """
-            GROUP BY pt.name, pp.default_code
+            GROUP BY
+                pt.id,
+                pt.name,
+                pp.default_code
+            
+            ORDER BY
+                pp.default_code;
         """
         
         self.env.cr.execute(query, params)
@@ -187,7 +235,10 @@ class ProductSalesReport(models.TransientModel):
         total_open = total_buy = total_possible = total_out = total_close = 0
         
         for i, r in enumerate(records, start=1):
-            opening = r['opening_value'] or 0
+            if r['opening_value'] < 0.0:
+                opening = r['opening_value']*(-1) or 0
+            else:
+                opening = r['opening_value'] or 0
             purchase = r['purchase_value'] or 0
             out_val = r['out_value'] or 0
         
