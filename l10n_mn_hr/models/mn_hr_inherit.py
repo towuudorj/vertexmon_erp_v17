@@ -460,8 +460,9 @@ class EmployeePublic(models.Model):
                                         ('abnormal', 'Abnormal')] , string='Workplace environment') #ажлын байрны нөхцөл
     abnormal_id = fields.Many2one('abnormal.register',string='Abnormal') 
     disabled_employee = fields.Boolean(string='Employee with disability') #Хөгжлийн бэрхшээлтэй эсэх
+    disability_percentage = fields.Integer(string='Disability Percentage', related='employee_id.disability_percentage', compute_sudo=True)  # 2025.01.31-нд нэмсэн шинэ талбар
     two_jobs = fields.Boolean(string='Currently employed by another company') #Өөр компанид ажиллаж байгаа эсэх
-
+    company_name = fields.Char(string='Company', related='employee_id.company_name', compute_sudo=True)  # 2025.01.31-нд нэмсэн шинэ талбар
     interestedly_job_id = fields.Many2many('hr.job',string='Interestedly job') #Сонирхож буй албан тушаал
     workplace_id = fields.Many2one('workplace.register', string="Workplace")
     which_section = fields.Char(string='Which section') #Хэн, аль хэлтэст
@@ -512,6 +513,7 @@ class EmployeePublic(models.Model):
 
     decree_count = fields.Integer(compute='_compute_decree_count')
     contract_count = fields.Integer(compute='_compute_contract_count')
+    attendance_id = fields.Integer('Attendance ID', related='employee_id.attendance_id', compute_sudo=True)
 
 
 

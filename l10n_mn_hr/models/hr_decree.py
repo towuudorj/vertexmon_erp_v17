@@ -647,6 +647,15 @@ class HrEmployee(models.Model):
         if annual_allocation_ids:
             annual_allocation_ids.with_user(SUPERUSER_ID).action_validate()
 
+class EmployeePublic(models.Model):
+    _inherit = "hr.employee.public"
+
+    other_company_work_month = fields.Integer('Worked Month In Other Company', related='employee_id.other_company_work_month', compute_sudo=True)
+    last_annual_leave_date = fields.Date('Last Annual Leave Date', related='employee_id.last_annual_leave_date', compute_sudo=True)
+    company_gap_month = fields.Integer('Company Gap Month', related='employee_id.company_gap_month', compute_sudo=True)
+    total_ndsh_month = fields.Integer('Total NDSH Month', related='employee_id.total_ndsh_month', compute_sudo=True)
+    worked_month_in_company = fields.Integer('Worked Month In Company', related='employee_id.worked_month_in_company', compute_sudo=True)
+    annual_leave_day = fields.Integer('Annual Leave Day', related='employee_id.annual_leave_day', compute_sudo=True)
 
 class HrDecreeReport(models.Model):
     _inherit = 'hr.decree'
