@@ -135,7 +135,6 @@ class balance_sheet_excel(models.TransientModel):
         num = 1
         for line in balance_report_id:
             sheet.write("A%s"%rowx, num, data_right)
-            print(line.name, line.level, '\n\n\n')
             if line.level == 'level1':
                 debit = 0.0
                 credit = 0.0
@@ -146,7 +145,7 @@ class balance_sheet_excel(models.TransientModel):
                 sheet.write("B%s"%rowx, u'%s'%line.name, data_bold_left)
                 if not line.parent_id:
                     account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
-                    if len(account_ids)>1:
+                    if len(account_ids)>=1:
                         accounts = account_ids.ids
                         move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                         pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
@@ -230,7 +229,7 @@ class balance_sheet_excel(models.TransientModel):
                 pcredit = 0.0
                 pre_total = 0.0
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
-                if len(account_ids)>1:
+                if len(account_ids)>=1:
                     accounts = account_ids.ids
                     move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                     pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
@@ -260,7 +259,7 @@ class balance_sheet_excel(models.TransientModel):
                 pre_total = 0.0
                 sheet.write("B%s"%rowx, u'%s'%line.name,data_left)
                 account_ids = account_obj.search([('balance_id','=',line.id),('company_id','=',data['company_id'])])
-                if len(account_ids)>1:
+                if len(account_ids)>=1:
                     accounts = account_ids.ids
                     move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                     pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
