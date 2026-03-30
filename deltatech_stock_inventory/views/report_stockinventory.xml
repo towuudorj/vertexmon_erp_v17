@@ -206,7 +206,7 @@
         </tr>
     </template>
     <template id="report_inventory_line">
-        <t t-if="line.theoretical_qty > 0 and line.product_qty > 0">
+        <t t-if="line.theoretical_qty > 0 or line.product_qty > 0">
             <tr>
                 <td>
                     <span t-field="line.product_id" />
