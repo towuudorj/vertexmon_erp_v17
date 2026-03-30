@@ -330,9 +330,20 @@ msgid "Difference"
 msgstr "Зөрүү"
 
 #. module: deltatech_stock_inventory
+#: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory_line__difference_price
+msgid "Difference Price"
+msgstr "Зөрүүний өртөг"
+
+#. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_search
 msgid "Difference different than zero"
 msgstr "Зөрүү 0 оос их"
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory_line__diff_type
+#: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_search
+msgid "Difference type"
+msgstr "Зөрүүний төрөл"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_product_warehouse_location__display_name
@@ -1073,6 +1084,31 @@ msgid ""
 "There is already one inventory adjustment line for this product, you should "
 "rather modify this one instead of creating a new one."
 msgstr ""
+
+#. module: deltatech_stock_inventory
+#: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
+msgid "Total"
+msgstr "Нийт"
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__total_greater_price
+msgid "Total Greater Price"
+msgstr "Илүүдсэн нийт өртөг"
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__total_less_price
+msgid "Total Less Price"
+msgstr "Дутсан нийт өртөг"
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__total_theoretical_price
+msgid "Total Theoretical Price"
+msgstr "Тэнцсэн нийт өртөг"
+
+#. module: deltatech_stock_inventory
+#: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.stock_inventory_line_tree
+msgid "Total difference price"
+msgstr "Зөрүүний нийт өртөг"
 
 #. module: deltatech_stock_inventory
 #. odoo-python

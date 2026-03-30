@@ -69,7 +69,7 @@ class StockInventoryLine(models.Model):
 
     categ_id = fields.Many2one("product.category", string="Category", related="product_id.categ_id", store=True)
     standard_price = fields.Float(string="Price")
-
+    difference_price = fields.Float(string="Difference Price", compute='_compute_difference_price', store=True)
     loc_rack = fields.Char("Rack Name", size=16, compute="_compute_loc", store=True)
     loc_row = fields.Char("Row Name", size=16, compute="_compute_loc", store=True)
     loc_case = fields.Char("Case Name", size=16, compute="_compute_loc", store=True)
@@ -159,3 +159,8 @@ class StockInventoryLine(models.Model):
     @api.onchange("product_qty")
     def onchange_product_qty(self):
         self.is_ok = True
+
+    @api.depends('standard_price', 'difference_qty')
+    def _compute_difference_price(self):
+        for obj in self:
+            obj.difference_price = obj.standard_price * obj.difference_qty

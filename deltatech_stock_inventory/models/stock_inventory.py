@@ -88,6 +88,10 @@ class Inventory(models.Model):
     )
     can_archive_svl = fields.Boolean(compute="_compute_archive_svl")
     archive_svl = fields.Boolean(string="Clear old valuation")
+    total_theoretical_price = fields.Float("Total Theoretical Price", compute="_compute_total_price")
+    total_greater_price = fields.Float("Total Greater Price", compute="_compute_total_price")
+    total_less_price = fields.Float("Total Less Price", compute="_compute_total_price")
+
 
     def _compute_archive_svl(self):
         get_param = self.env["ir.config_parameter"].sudo().get_param
@@ -520,6 +524,29 @@ class Inventory(models.Model):
 
         return vals
 
+    @api.depends("line_ids.product_qty", "line_ids.theoretical_qty", "line_ids.standard_price")
+    def _compute_total_price(self):
+        for obj in self:
+            if obj.line_ids:
+                total_theoretical_price = 0
+                total_greater_price = 0
+                total_less_price = 0
+                for line in obj.line_ids:
+                    if line.diff_type == 'equal':
+                        total_theoretical_price += line.theoretical_qty * line.standard_price
+                    elif line.diff_type == 'greater':
+                        total_greater_price += (line.product_qty - line.theoretical_qty) * line.standard_price
+                    else:
+                        total_less_price += (line.theoretical_qty - line.product_qty) * line.standard_price
+                obj.total_theoretical_price = total_theoretical_price
+                obj.total_greater_price = total_greater_price
+                obj.total_less_price = total_less_price
+
+            else:
+                obj.total_theoretical_price = 0
+                obj.total_greater_price = 0
+                obj.total_less_price = 0
+
 
 class InventoryLine(models.Model):
     _name = "stock.inventory.line"
@@ -603,6 +630,10 @@ class InventoryLine(models.Model):
         digits="Product Unit of Measure",
         search="_search_difference_qty",
     )
+    diff_type = fields.Selection([('greater', 'Greater'),
+                                  ('less', 'Lesser'),
+                                  ('equal', 'Equal')], string="Difference type",
+                                 compute="_compute_difference", store=True)
     inventory_date = fields.Datetime(
         "Inventory Date",
         readonly=True,
@@ -613,10 +644,16 @@ class InventoryLine(models.Model):
     product_tracking = fields.Selection(string="Tracking", related="product_id.tracking", readonly=True)
     quant_id = fields.Many2one("stock.quant")
 
-    @api.depends("product_qty", "theoretical_qty")
+    @api.depends("product_qty", "theoretical_qty", "standard_price")
     def _compute_difference(self):
         for line in self:
             line.difference_qty = line.product_qty - line.theoretical_qty
+            if line.product_qty == line.theoretical_qty:
+                line.diff_type = 'equal'
+            elif line.product_qty < line.theoretical_qty:
+                line.diff_type = 'less'
+            else:
+                line.diff_type = 'greater'
 
     @api.depends(
         "inventory_date",

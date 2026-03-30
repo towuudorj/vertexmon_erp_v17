@@ -787,7 +787,6 @@ msgstr "Өмчийн өөрчлөлтийн тайлан"
 
 
 #. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__date_from
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__date_from
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__date_from
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__date_from
@@ -795,12 +794,16 @@ msgid "Date Start"
 msgstr "Эхлэх огноо"
 
 #. module: l10n_mn_account_report
-#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__date_to
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_statement_cashflow_report__date_to
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_profit_excel_report__date_to
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_equity_changes__date_to
 msgid "Date Stop"
 msgstr "Дуусах огноо"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__date
+msgid "Date"
+msgstr "Огноо"
 
 #. module: l10n_mn_account_report
 #: model:ir.model.fields,field_description:l10n_mn_account_report.field_balance_sheet_excel__target_move

@@ -9,8 +9,9 @@
                 default_order="location_id,product_id"
                 editable="top"
                 js_class="inventory_validate_button"
-                decoration-danger="product_qty != theoretical_qty"
-                decoration-muted="product_qty == theoretical_qty"
+                decoration-danger="diff_type == 'less'"
+                decoration-muted="diff_type == 'equal'"
+                decoration-success="diff_type == 'greater'"
                 decoration-bf="is_editable"
             >
                 <field name="company_id" column_invisible="1" />
@@ -18,6 +19,7 @@
                 <field name="is_editable" column_invisible="1" />
                 <field name="is_price_editable" column_invisible="1" />
                 <field name="outdated" column_invisible="1" />
+                <field name="diff_type" column_invisible="1" />
                 <field
                     name="product_id"
                     width="1.6"
@@ -74,6 +76,7 @@
                 <field name="inventory_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
                 <field name="standard_price" readonly="not is_editable or state != 'confirm'" />
+                <field name="difference_price" sum="Total difference price" optional="show"/>
                 <field name="is_ok" readonly="not is_editable or state != 'confirm'" />
             </tree>
         </field>
@@ -112,6 +115,7 @@
                     <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}" />
                     <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'package_id'}" />
                     <filter string='Product' name="product" domain="[]" context="{'group_by' : 'product_id'}" />
+                    <filter string='Difference type' name="diff_type" domain="[]" context="{'group_by' : 'diff_type'}" />
                     <filter
                         string='Product Category'
                         name="product_category"
@@ -333,6 +337,13 @@
 
                             <field name="company_id" options="{'no_create': True}" readonly="state!='draft'" />
                             <field name="prefill_counted_quantity" widget="radio" invisible="state != 'draft'" />
+                        </group>
+                    </group>
+                    <group string="Total">
+                        <group>
+                            <field name="total_theoretical_price"/>
+                            <field name="total_greater_price"/>
+                            <field name="total_less_price"/>
                         </group>
                     </group>
                     <field name="line_ids" readonly="state=='done'" />
