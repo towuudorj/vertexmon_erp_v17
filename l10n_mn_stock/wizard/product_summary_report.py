@@ -213,7 +213,7 @@ class ProductSummaryReport(models.TransientModel):
                         SELECT
                             mv.product_id,
                             SUM(mv.product_uom_qty) AS qty,
-                            AVG(svl.price) AS price
+                            SUM(svl.price) AS price
                         FROM
                         (
                             SELECT sum(svl.value) AS price, mv.id as stock_move_id
@@ -242,7 +242,7 @@ class ProductSummaryReport(models.TransientModel):
                         SELECT
                             mv.product_id,
                             SUM(mv.product_uom_qty) AS qty,
-                            AVG(svl.price) AS price
+                            SUM(svl.price) AS price
                         FROM
                         (   
                             SELECT sum(svl.value) AS price, mv.id as stock_move_id
@@ -273,7 +273,7 @@ class ProductSummaryReport(models.TransientModel):
                         SELECT
                             mv.product_id,
                             SUM(mv.product_uom_qty) AS qty,
-                            AVG(svl.price) AS price
+                            sum(svl.price) AS price
                         FROM 
                         (   
                             SELECT sum(svl.value) AS price, mv.id as stock_move_id
@@ -307,7 +307,7 @@ class ProductSummaryReport(models.TransientModel):
                         SELECT
                             mv.product_id,
                             SUM(mv.product_uom_qty) AS qty,
-                            AVG(svl.price) AS price
+                            sum(svl.price) AS price
                         FROM 
                         (   
                             SELECT sum(svl.value) AS price, mv.id as stock_move_id
@@ -367,7 +367,10 @@ class ProductSummaryReport(models.TransientModel):
                         else:
                             f_ex_qty += lined['qty']
                         if lined['price'] != None:
-                            f_ex_price += lined['price']
+                            if lined['price'] < 0.0:
+                                f_ex_price += lined['price']*(-1)
+                            else:
+                                f_ex_price += lined['price']
 
                 for linem in income:
                     if linem['product_id'] == pro.id:
@@ -382,13 +385,24 @@ class ProductSummaryReport(models.TransientModel):
                         else:
                             ex_qty += linex['qty']
                         if linex['price'] != None:
-                            ex_price += linex['price']
+                            if linex['price'] < 0.0:
+                                ex_price += linex['price']*(-1)
+                            else:
+                                ex_price += linex['price']
                 f_bal_qty = f_in_qty - f_ex_qty
-                f_bal_price = f_in_price - f_ex_price
+                if f_bal_qty == 0.0:
+                    f_bal_price  = 0.0
+                else:
+                    f_bal_price = f_in_price - f_ex_price
+                    if f_bal_price == 0.0:
+                        f_bal_price = f_bal_qty * pro.standard_price
+                
                 last_qty = f_bal_qty + in_qty - ex_qty
-                last_price = f_bal_price + in_price - ex_price
-                last_price = last_qty * pro.standard_price
-
+                if last_qty == 0:
+                    last_price = 0.0
+                else:
+                    last_price = last_qty * pro.standard_price
+                
                 sheet.write(f'A%s' % rowx, count, data_left)
                 sheet.write(f'B%s' % rowx, u'%s' % pro.name, data_left)
                 sheet.write(f'C%s' % rowx, u'%s' % pro.barcode, data_left)
