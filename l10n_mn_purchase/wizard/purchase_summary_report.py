@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
+from datetime import datetime
 
 class PurchaseOrderCommonReport(models.TransientModel):
     """
@@ -18,7 +19,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
     purchase_user_id = fields.Many2one('res.users', string='Purchase manager')
-    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All')],
+    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('delivered', 'Delivered')],
                                       string='States', default='posted')
 
     
@@ -116,64 +117,125 @@ class PurchaseOrderCommonReport(models.TransientModel):
         sheet.write("H%s"%rowx, u'Хэрэглэгч', title)
         rowx += 1
 
+        start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+        end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").date()
 
+        is_picked = data['target_move'] == 'delivered'
         purchase_order_obj = self.env['purchase.order']
+
+        domain = [
+                    ('company_id', '=', data['company_id']),
+                    ('state', 'in', ['purchase']),
+                    ('receipt_status', '!=', 'pending')
+                ]
+        if not is_picked:
+            domain.append(('date_approve', '>=', data['start_date']))
+            domain.append(('date_approve', '<=', data['end_date']))
+
         if data['purchase_user_id']:
-            if data['target_move'] == 'posted':
-                purchase_order_id = purchase_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_approve', '>=', data['start_date']),
-                    ('date_approve', '<=', data['end_date']),
-                    ('state', 'in', ['purchase']),
-                    ('user_id', '=', data['purchase_user_id']),
-                    ('receipt_status', '!=', 'pending')
-                ],order='date_approve asc')
-            else:
-                purchase_order_id = purchase_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_approve', '>=', data['start_date']),
-                    ('date_approve', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel']),
-                    ('user_id', '=', data['purchase_user_id']),
-                    ('receipt_status', '!=', 'pending')
-                ],order='date_approve asc')
+            domain.append(('user_id', '=', data['purchase_user_id']))
+        if data['target_move'] in ['posted', 'delivered']:
+            domain.append(('state', 'in', ['purchase']))
         else:
-            if data['target_move'] == 'posted':
-                purchase_order_id = purchase_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_approve', '>=', data['start_date']),
-                    ('date_approve', '<=', data['end_date']),
-                    ('state', 'in', ['purchase']),
-                    ('receipt_status', '!=', 'pending')
-                ],order='date_approve asc')
-            else:
-                purchase_order_id = purchase_order_obj.search([
-                    ('company_id', '=', data['company_id']),
-                    ('date_approve', '>=', data['start_date']),
-                    ('date_approve', '<=', data['end_date']),
-                    ('state', 'not in', ['cancel']),
-                    ('receipt_status', '!=', 'pending')
-                ],order='date_approve asc')
+            domain.append(('state', 'not in', ['cancel']))
+
+        purchase_order_id = purchase_order_obj.search(domain, order='date_approve asc')
+        picking_total_value_dict = {}
+        if is_picked:
+            temp_purchase_order = purchase_order_obj
+            for purchase in purchase_order_id:
+                for picking_id in purchase.picking_ids:
+                    if start_date <= picking_id.scheduled_date.date() <= end_date and picking_id.state == 'done':
+                        temp_purchase_order |= purchase
+                        picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
+                        total_without_noat = 0
+                        total_noat = 0
+                        total_with_noat = 0
+                        for line in picking_purchase_line_id:
+                            price_unit = line.price_unit
+                            if line.discount:
+                                price_unit -= price_unit / 100 * line.discount
+                            if line.taxes_id:
+                                res = line.taxes_id.compute_all(
+                                    price_unit,
+                                    currency=purchase.currency_id,
+                                    quantity=sum(line.move_ids.filtered(lambda m: m.picking_id == picking_id).mapped('quantity')),
+                                    product=line.product_id,
+                                    partner=purchase.partner_id,
+                                )
+                                total_without_noat += res['total_excluded']
+                                total_with_noat += res['total_included']
+                                total_noat += res['total_included'] - res['total_excluded']
+                            else:
+                                total = price_unit * sum(line.move_ids.filtered(lambda m: m.picking_id == picking_id).mapped('quantity'))
+                                total_without_noat += total
+                                total_with_noat += total
+                                total_noat += 0
+
+                        if purchase.id not in picking_total_value_dict.keys():
+                            picking_total_value_dict.update(
+                                {
+                                    purchase.id: {
+                                        picking_id.id: {
+                                            'total_without_noat' : total_without_noat,
+                                            'total_noat': total_noat,
+                                            'total_with_noat': total_with_noat,
+                                            'date_dont': picking_id.date_done.date()
+                                        }
+                                    }
+                                }
+                            )
+                        else:
+                            picking_total_value_dict[purchase.id].update(
+                                {
+                                    picking_id.id: {
+                                        'total_without_noat': total_without_noat,
+                                        'total_noat': total_noat,
+                                        'total_with_noat': total_with_noat,
+                                        'date_dont': picking_id.date_done.date()
+                                    }
+                                }
+                            )
+                        purchase_order_id = temp_purchase_order
+                    else:
+                        purchase_order_id = []
+
         num = 1
         
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
         for line in purchase_order_id:
-            convert_date = fields.Date.from_string(line.date_approve)
-            sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
-            sheet.write("B%s"%rowx, line.name, data_left)
-            sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
-            sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
-            sheet.write("E%s"%rowx, line.amount_untaxed, data_right)
-            sheet.write("F%s"%rowx, line.amount_tax, data_right)
-            sheet.write("G%s"%rowx, line.amount_total, data_right)
-            sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
-            total_amount_untaxed +=line.amount_untaxed
-            total_amount_tax +=line.amount_tax
-            total_amount_total +=line.amount_total
-            num +=1
-            rowx +=1
+            if is_picked:
+                for key in picking_total_value_dict[line.id].keys():
+                    sheet.write("A%s" % rowx, "%s" % picking_total_value_dict[line.id][key]['date_dont'], data_right)
+                    sheet.write("B%s" % rowx, line.name, data_left)
+                    sheet.write("C%s" % rowx, "%s" % line.partner_id.code, data_left)
+                    sheet.write("D%s" % rowx, "%s" % line.partner_id.name, data_left)
+                    sheet.write("E%s" % rowx, picking_total_value_dict[line.id][key]['total_without_noat'], data_right)
+                    sheet.write("F%s" % rowx, picking_total_value_dict[line.id][key]['total_noat'], data_right)
+                    sheet.write("G%s" % rowx, picking_total_value_dict[line.id][key]['total_with_noat'], data_right)
+                    sheet.write("H%s" % rowx, "%s" % line.user_id.name, data_right)
+                    total_amount_untaxed += picking_total_value_dict[line.id][key]['total_without_noat']
+                    total_amount_tax += picking_total_value_dict[line.id][key]['total_noat']
+                    total_amount_total += picking_total_value_dict[line.id][key]['total_with_noat']
+                    num += 1
+                    rowx += 1
+            else:
+                convert_date = fields.Date.from_string(line.date_approve)
+                sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
+                sheet.write("B%s"%rowx, line.name, data_left)
+                sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
+                sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
+                sheet.write("E%s"%rowx, line.amount_untaxed, data_right)
+                sheet.write("F%s"%rowx, line.amount_tax, data_right)
+                sheet.write("G%s"%rowx, line.amount_total, data_right)
+                sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
+                total_amount_untaxed +=line.amount_untaxed
+                total_amount_tax +=line.amount_tax
+                total_amount_total +=line.amount_total
+                num +=1
+                rowx +=1
         sheet.merge_range("A%s:D%s"%(rowx,rowx), u'Нийт дүн:', data_bold_left)
         sheet.write("E%s"%rowx, total_amount_untaxed, data_bold_center)
         sheet.write("F%s"%rowx, total_amount_tax, data_bold_center)
