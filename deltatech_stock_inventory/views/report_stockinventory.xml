@@ -206,46 +206,48 @@
         </tr>
     </template>
     <template id="report_inventory_line">
-        <tr>
-            <td>
-                <span t-field="line.product_id" />
-            </td>
-            <td>
-                <span t-field="line.prod_lot_id" />
-            </td>
-            <td>
-                <span t-field="line.package_id" />
-            </td>
-            <td class="text-right">
-                <span t-field="line.theoretical_qty" />
-            </td>
-            <td class="text-right">
-                <t t-if="line.state == 'done'">
-                    <span t-field="line.product_qty" />
-                </t>
-            </td>
-            <td>
-                <span t-field="line.product_uom_id" groups="uom.group_uom" />
-            </td>
-            <td class="text-right">
-                <span t-esc="round(line.product_qty*price,2)" t-options='{"widget": "float", "precision": 2}' />
-            </td>
-            <td class="text-right">
-                <t t-if='dif!=0'>
-                    <span t-esc="round(dif)" t-options='{"widget": "float", "precision": 0}' />
-                </t>
-            </td>
-            <td class="text-right">
-                <t t-if='dif&gt;0'>
-                    <span t-esc="round(dif*price,2)" t-options='{"widget": "float", "precision": 2}' />
-                </t>
-            </td>
-            <td class="text-right">
-                <t t-if='dif&lt;0'>
-                    <span t-esc="round(-1*dif*price,2)" t-options='{"widget": "float", "precision": 2}' />
-                </t>
-            </td>
-        </tr>
+        <t t-if="line.theoretical_qty > 0 and line.product_qty > 0">
+            <tr>
+                <td>
+                    <span t-field="line.product_id" />
+                </td>
+                <td>
+                    <span t-field="line.prod_lot_id" />
+                </td>
+                <td>
+                    <span t-field="line.package_id" />
+                </td>
+                <td class="text-right">
+                    <span t-field="line.theoretical_qty" />
+                </td>
+                <td class="text-right">
+                    <t t-if="line.state == 'done'">
+                        <span t-field="line.product_qty" />
+                    </t>
+                </td>
+                <td>
+                    <span t-field="line.product_uom_id" groups="uom.group_uom" />
+                </td>
+                <td class="text-right">
+                    <span t-esc="round(line.product_qty*price,2)" t-options='{"widget": "float", "precision": 2}' />
+                </td>
+                <td class="text-right">
+                    <t t-if='dif!=0'>
+                        <span t-esc="round(dif)" t-options='{"widget": "float", "precision": 0}' />
+                    </t>
+                </td>
+                <td class="text-right">
+                    <t t-if='dif&gt;0'>
+                        <span t-esc="round(dif*price,2)" t-options='{"widget": "float", "precision": 2}' />
+                    </t>
+                </td>
+                <td class="text-right">
+                    <t t-if='dif&lt;0'>
+                        <span t-esc="round(-1*dif*price,2)" t-options='{"widget": "float", "precision": 2}' />
+                    </t>
+                </td>
+            </tr>
+        </t>
     </template>
 
     <template id="report_inventory_total">

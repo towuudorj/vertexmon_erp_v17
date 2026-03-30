@@ -366,6 +366,11 @@ msgid "Empty Inventory"
 msgstr "Хоосон тооллого"
 
 #. module: deltatech_stock_inventory
+#: model:ir.model.fields.selection,name:deltatech_stock_inventory.selection__stock_inventory_line__diff_type__equal
+msgid "Equal"
+msgstr "Тэнцүү"
+
+#. module: deltatech_stock_inventory
 #: model:ir.model.fields,help:deltatech_stock_inventory.field_stock_inventory_line__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
@@ -384,6 +389,11 @@ msgstr ""
 #: model:ir.model.fields,help:deltatech_stock_inventory.field_stock_inventory__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields.selection,name:deltatech_stock_inventory.selection__stock_inventory_line__diff_type__greater
+msgid "Greater"
+msgstr "Илүүдсэн"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_product_replenish__group_id
@@ -614,6 +624,11 @@ msgstr "Сүүлд зассан этгээд"
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory_merge__write_date
 msgid "Last Updated on"
 msgstr "Сүүлд зассан огноо"
+
+#. module: deltatech_stock_inventory
+#: model:ir.model.fields.selection,name:deltatech_stock_inventory.selection__stock_inventory_line__diff_type__less
+msgid "Lesser"
+msgstr "Дутсан"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,help:deltatech_stock_inventory.field_stock_inventory_line__inventory_date
