@@ -135,6 +135,7 @@ class balance_sheet_excel(models.TransientModel):
         num = 1
         for line in balance_report_id:
             sheet.write("A%s"%rowx, num, data_right)
+            print(line.name, line.level, '\n\n\n')
             if line.level == 'level1':
                 debit = 0.0
                 credit = 0.0
@@ -208,8 +209,8 @@ class balance_sheet_excel(models.TransientModel):
                         for pmlines in pre_move_line_ids:
                             pcredit += pmlines.credit
                             
-                    total = debit - credit
-                    pre_total = pdebit - pcredit
+                        total = debit - credit
+                        pre_total = pdebit - pcredit
                 
                 if total < 0.0:
                     total = total*(-1)
@@ -264,20 +265,20 @@ class balance_sheet_excel(models.TransientModel):
                     move_line_ids = account_move_line_obj.search([('journal_id','in',tuple(journal_ids.ids)),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',data['date']),('parent_state','in',state)])
                     pre_move_line_ids = account_move_line_obj.search([('journal_id','=',f_journal_ids.id),('company_id','=',data['company_id']),('account_id','in',accounts),('date','<=',last_year_date),('parent_state','in',state)])
 
-                for mlines in move_line_ids:
-                    debit +=mlines.debit
+                    for mlines in move_line_ids:
+                        debit +=mlines.debit
 
-                for mlines in move_line_ids:
-                    credit += mlines.credit
+                    for mlines in move_line_ids:
+                        credit += mlines.credit
 
-                for pmlines in pre_move_line_ids:
-                    pdebit +=pmlines.debit
+                    for pmlines in pre_move_line_ids:
+                        pdebit +=pmlines.debit
 
-                for pmlines in pre_move_line_ids:
-                    pcredit += pmlines.credit
-                                                
-                total = debit - credit
-                pre_total = pdebit - pcredit
+                    for pmlines in pre_move_line_ids:
+                        pcredit += pmlines.credit
+
+                    total = debit - credit
+                    pre_total = pdebit - pcredit
                 
                 sheet.write("C%s"%rowx, pre_total,data_right)
                 sheet.write("D%s"%rowx, total,data_right)
