@@ -292,7 +292,8 @@ class stock_picking(models.Model):
     def _compute_signature_approval(self):
         env_user = self.env.user
         for obj in self:
-            user_line = obj.signature_user_ids.filtered(lambda s: s.user_id.id == env_user.id)
+            user_line = obj.signature_user_ids.filtered(lambda s: (s.user_id.id == env_user.id and not s.substitute_user)
+                                                                  or s.substitute_user.id == env_user.id)
             if obj.signature_user_ids and user_line:
                 same_type_unapprove_line = obj.signature_user_ids.filtered(lambda s: s.type in user_line.mapped('type') and not s.is_approve_signature)
                 obj.can_approve_signature = True if same_type_unapprove_line else False
@@ -301,9 +302,11 @@ class stock_picking(models.Model):
 
     def link_signature(self):
         env_user = self.env.user
+        user_obj = self.env['res.users']
         for obj in self:
-            signature_user_line = obj.signature_user_ids.filtered(lambda s: s.user_id.id == env_user.id and
-                                                                          not s.is_approve_signature)
+            signature_user_line = obj.signature_user_ids.filtered(lambda s: ((s.user_id.id == env_user.id and not s.substitute_user)
+                                                                             or s.substitute_user.id == env_user.id)
+                                                                             and not s.is_approve_signature)
             if signature_user_line:
                 for line in signature_user_line:
                     if line.type in ['picking_created', 'coach']:
@@ -311,7 +314,10 @@ class stock_picking(models.Model):
                         if line.user_id.sudo().employee_id.job_id and 'захирал' in line.user_id.sudo().employee_id.job_id.name or not approval_user_id:
                             notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and not s.is_approve_signature)
                             if notif_line:
-                                self.send_notif_mail(notif_line.mapped('user_id'))
+                                users = user_obj
+                                for n_line in notif_line:
+                                    users |= n_line.user_id if not n_line.substitute_user else n_line.substitute_user
+                                self.send_notif_mail(users)
                             continue
                         if line.type == 'picking_created':
                             domain = ['approved', 'coach']
@@ -319,12 +325,18 @@ class stock_picking(models.Model):
                             domain = ['approved']
                         notif_line = obj.signature_user_ids.filtered(lambda s: s.type in domain and not s.is_approve_signature)
                         if notif_line:
-                            self.send_notif_mail(notif_line.mapped('user_id'))
+                            users = user_obj
+                            for n_line in notif_line:
+                                users |= n_line.user_id if not n_line.substitute_user else n_line.substitute_user
+                            self.send_notif_mail(users)
                     if line.type == 'approved':
                         notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and
                                                                                         not s.is_approve_signature)
                         if notif_line:
-                            self.send_notif_mail(notif_line.mapped('user_id'))
+                            users = user_obj
+                            for n_line in notif_line:
+                                users |= n_line.user_id if not n_line.substitute_user else n_line.substitute_user
+                            self.send_notif_mail(users)
 
                 signature_user_line.is_approve_signature = True
 
@@ -365,7 +377,7 @@ class stock_picking(models.Model):
         user_dict = {}
         for line in self.signature_user_ids:
             if line.is_approve_signature:
-                user_dict[line.type] = line.user_id
+                user_dict[line.type] = line.user_id if not line.substitute_user else line.substitute_user
         return user_dict
 
 
@@ -374,6 +386,8 @@ class PickingSignatureUsers(models.Model):
     _order = 'sequence asc'
 
     user_id = fields.Many2one('res.users', 'User')
+    substitute_user = fields.Many2one('res.users', 'Substitute User')
+    parent_create_user = fields.Many2one(related='picking_id.create_uid')
     type = fields.Selection([
             ('approved', 'Approved'),
             ('coach', 'Coach'),

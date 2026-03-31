@@ -384,6 +384,11 @@ msgid "Stock summary report"
 msgstr "Бараа материалын товчоо тайлан"
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_picking_signature_users__substitute_user
+msgid "Substitute User"
+msgstr "Орлох хэрэглэгч"
+
+#. module: l10n_mn_stock
 #: model:ir.ui.menu,name:l10n_mn_stock.stock_detail_report_mn_menu
 msgid "Stock detail report"
 msgstr "Бараа материалын дэлгэрэнгүй тайлан"
