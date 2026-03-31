@@ -306,14 +306,18 @@ class stock_picking(models.Model):
                                                                           not s.is_approve_signature)
             if signature_user_line:
                 for line in signature_user_line:
-                    if line.type in ['picking_created']:
+                    if line.type in ['picking_created', 'coach']:
                         approval_user_id = obj.signature_user_ids.filtered(lambda s: s.type == 'approved').user_id
                         if line.user_id.sudo().employee_id.job_id and 'захирал' in line.user_id.sudo().employee_id.job_id.name or not approval_user_id:
                             notif_line = obj.signature_user_ids.filtered(lambda s: s.type not in ['approved', 'coach', 'picking_created'] and not s.is_approve_signature)
                             if notif_line:
                                 self.send_notif_mail(notif_line.mapped('user_id'))
                             continue
-                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type in ['approved', 'coach'] and not s.is_approve_signature)
+                        if line.type == 'picking_created':
+                            domain = ['approved', 'coach']
+                        else:
+                            domain = ['approved']
+                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type in domain and not s.is_approve_signature)
                         if notif_line:
                             self.send_notif_mail(notif_line.mapped('user_id'))
                     if line.type == 'approved':
