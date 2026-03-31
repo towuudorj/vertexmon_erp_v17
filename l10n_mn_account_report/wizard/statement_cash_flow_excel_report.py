@@ -265,7 +265,11 @@ class statement_cashflow_report(models.TransientModel):
                             now_amount -=now_lines.credit
                 sheet.write("A%s"%rowx, u'%s'%type_line_exp.sequence,data_left)
                 sheet.write("B%s"%rowx, u'%s'%type_line_exp.name,data_left)
+                if pre_amount < 0.0:
+                    pre_amount = pre_amount*(-1)
                 sheet.write("C%s"%rowx, pre_amount, data_right)
+                if now_amount < 0.0:
+                    now_amount = now_amount*(-1)
                 sheet.write("D%s"%rowx, now_amount,data_right)
                 inv_pre_amount +=pre_amount
                 inv_now_amount +=now_amount
@@ -365,7 +369,11 @@ class statement_cashflow_report(models.TransientModel):
                             now_amount -=now_lines.credit
                 sheet.write("A%s"%rowx, u'%s'%type_fi_exp.sequence,data_left)
                 sheet.write("B%s"%rowx, u'%s'%type_fi_exp.name,data_left)
+                if pre_amount < 0.0:
+                    pre_amount = pre_amount*(-1)
                 sheet.write("C%s"%rowx, pre_amount, data_right)
+                if now_amount < 0.0:
+                    now_amount = now_amount*(-1)
                 sheet.write("D%s"%rowx, now_amount,data_right)
                 fi_pre_amount +=pre_amount
                 fi_now_amount +=now_amount
@@ -378,7 +386,7 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("B%s"%rowx, u'Санхүүгийн үйл ажиллагааны мөнгөн зарлагын дүн',data_bold_left)
         fie_pre_amount = 0.0
         fie_now_amount = 0.0
-        #rowx += 1
+        rowx += 1
         counts = 1
         for type_fie_exp in cash_ids:
             if type_fie_exp.group == 'financing_expense':
@@ -436,6 +444,26 @@ class statement_cashflow_report(models.TransientModel):
         fiscalyear_obj = self.env['account.fiscal.year']
         nyear = fiscalyear_obj.browse(now_fiscalyear)
         account_ids = account_obj.search([('account_type','=','asset_cash')])
+
+        for acc in account_ids:
+                accounts.append(acc.id)
+        if len(accounts) == 1:
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            if nowmove_line_ids !=[]:
+                for lines in nowmove_line_ids:
+                    if lines.debit >0.0:
+                        pre_pre_balance +=lines.debit
+                    else:
+                        pre_pre_balance -=lines.credit
+        else:
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            if nowmove_line_ids !=[]:
+                for lines in nowmove_line_ids:
+                    if lines.debit >0.0:
+                        pre_pre_balance +=lines.debit
+                    else:
+                        pre_pre_balance -=lines.credit
+
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
