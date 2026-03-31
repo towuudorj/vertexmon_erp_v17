@@ -480,28 +480,39 @@ class profit_excel_report(models.TransientModel):
                     move_line_ids = []
                 
                 for pre_account in pre_move_line_ids:
-                    if pre_account.debit < 0.0 and pre_account.credit == 0.0:
-                        pre_other_income_balance +=(pre_account.debit*(-1))
-                    elif pre_account.credit == 0.0 and pre_account.debit > 0.0:
-                        pre_other_income_balance +=pre_account.debit
-                    elif pre_account.credit < 0.0 and pre_account.debit == 0.0:
-                        pre_other_income_balance -=pre_account.credit*(-1)
+                    if ml.account_id.account_type == 'income':
+                        pre_other_income_balance += pre_account.credit - pre_account.debit   # income
+                    elif ml.account_id.account_type == 'expense':
+                        pre_other_income_balance -= (pre_account.debit - pre_account.credit) # expense
+                    #if pre_account.debit < 0.0 and pre_account.credit == 0.0:
+                    #    pre_other_income_balance +=(pre_account.debit*(-1))
+                    #elif pre_account.credit == 0.0 and pre_account.debit > 0.0:
+                    #    pre_other_income_balance +=pre_account.debit
+                    #elif pre_account.credit < 0.0 and pre_account.debit == 0.0:
+                    #    pre_other_income_balance -=pre_account.credit*(-1)
                     
-                    elif pre_account.credit > 0.0 and pre_account.debit == 0.0:
-                        pre_other_income_balance -=pre_account.credit
+                    #elif pre_account.credit > 0.0 and pre_account.debit == 0.0:
+                    #    pre_other_income_balance -=pre_account.credit
                         
                         
                 
                 sheet.write("C%s"%rowx, pre_other_income_balance, data_right)
+
+                other_income_balance = 0.0
+
                 for ml in move_line_ids:
-                    if ml.debit < 0.0 and ml.credit == 0.0:
-                        other_income_balance +=(ml.debit*(-1))
-                    elif ml.credit == 0.0 and ml.debit > 0.0:
-                        other_income_balance +=ml.debit
-                    elif ml.credit < 0.0 and ml.debit == 0.0:
-                        other_income_balance -=ml.credit*(-1)
-                    elif ml.credit > 0.0 and ml.debit == 0.0:
-                        other_income_balance -=ml.credit
+                    if ml.account_id.account_type == 'income':
+                        other_income_balance += ml.credit - ml.debit   # income
+                    elif ml.account_id.account_type == 'expense':
+                        other_income_balance -= (ml.debit - ml.credit) # expense
+                    #if ml.debit < 0.0 and ml.credit == 0.0:
+                    #    other_income_balance +=(ml.debit*(-1))
+                    #elif ml.credit == 0.0 and ml.debit > 0.0:
+                    #    other_income_balance +=ml.debit
+                    #elif ml.credit < 0.0 and ml.debit == 0.0:
+                    #    other_income_balance -=ml.credit*(-1)
+                    #elif ml.credit > 0.0 and ml.debit == 0.0:
+                    #    other_income_balance -=ml.credit
                 sheet.write("D%s"%rowx, other_income_balance, data_right)
                 rowx +=1
         last_number +=1
