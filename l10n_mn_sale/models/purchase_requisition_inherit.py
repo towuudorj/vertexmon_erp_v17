@@ -107,11 +107,6 @@ class PurchaseRequisition(models.Model):
         team_obj = self.env['crm.team']
         for pr in self:
             for line in pr.line_ids:
-                for lines in pr.purchase_ids.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        lines.price_unit = line.price_unit
-                        lines.purchase_date = line.purchase_date
-
                 if line.price_unit > 0.0 and line.currency_id.id != False and line.is_free_pro == False:
                     if line.supplier_id.id != False:
                         line.action_approve()
@@ -336,7 +331,7 @@ class PurchaseRequisitionLine(models.Model):
             #    raise UserError(_('Бараа оруулаагүй байгаа тул оруулана уу!'))
             else:
                 for list in line.requisition_id.crm_lead_id.lead_line_ids:
-                    if list.product_id.id == line.product_id.id or list.name == line.product_description_variants or list.id == line.lead_line_id.id:
+                    if (list.product_id and line.product_id and list.product_id.id == line.product_id.id ) or list.name == line.product_description_variants or list.id == line.lead_line_id.id:
                         list.cost_price = line.price_unit
                         list.currency_id = line.currency_id.id
                         list.product_id = line.product_id.id
