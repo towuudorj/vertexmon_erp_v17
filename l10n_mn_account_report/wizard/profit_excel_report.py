@@ -295,7 +295,8 @@ class profit_excel_report(models.TransientModel):
                     elif pre_account.credit > 0.0 and pre_account.debit == 0.0:
                         pre_income_balance +=pre_account.credit
                         
-
+                if line.is_value_negative:
+                    pre_income_balance *= -1
                 sheet.write("C%s"%rowx, pre_income_balance, data_right)
                 for ml in move_line_ids:
                     if ml.debit < 0.0 and ml.credit == 0.0:
@@ -342,6 +343,8 @@ class profit_excel_report(models.TransientModel):
                     elif pre_account.credit > 0.0 and pre_account.debit == 0.0:
                         pre_expense_balance -=pre_account.credit
 
+                if line.is_value_negative:
+                    pre_expense_balance *= -1
                 sheet.write("C%s"%rowx, pre_expense_balance, data_right)
                 for ml in move_line_ids:
                     if ml.debit < 0.0 and ml.credit == 0.0:
@@ -412,6 +415,8 @@ class profit_excel_report(models.TransientModel):
                     elif ml.credit > 0.0 and ml.debit == 0.0:
                         sum_balance -=ml.credit
                # sheet.write(rowx, 3, sum_balance, data_right)
+                if line.is_value_negative:
+                    sum_prev_balance *= -1
                 sheet.write("C%s"%rowx, sum_prev_balance, data_right)
                 #for account in account_id:
                 #    print("loggg",account.balance)
@@ -487,7 +492,8 @@ class profit_excel_report(models.TransientModel):
                     elif pre_account.credit > 0.0 and pre_account.debit == 0.0:
                         pre_other_income_balance -=pre_account.credit
                         
-
+                if line.is_value_negative:
+                    pre_other_income_balance *= -1
                 sheet.write("C%s"%rowx, pre_other_income_balance, data_right)
 
                 other_income_balance = 0.0

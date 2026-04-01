@@ -19,5 +19,5 @@ class account_income_type(models.Model):
                              ('expense','Expense'),
                              ('tax','Vat'),
                              ('other','Other')],string=u'Type')
-
+    is_value_negative = fields.Boolean(string=u'Сөрөг дүнгээр нэмэгдэх эсэх')
 
