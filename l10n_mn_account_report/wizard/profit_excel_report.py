@@ -240,9 +240,7 @@ class profit_excel_report(models.TransientModel):
                         sum_balance +=ml.credit*(-1)
                     elif ml.credit > 0.0 and ml.debit == 0.0:
                         sum_balance +=ml.credit
-                        
-                if sum_balance < 0.0:
-                    sum_balance = sum_balance*(-1)
+
                 sheet.write("D%s"%rowx, abs(sum_balance), data_right)
 
                 rowx +=1
@@ -307,7 +305,9 @@ class profit_excel_report(models.TransientModel):
                         income_balance +=ml.credit*(-1)
                     elif ml.credit > 0.0 and ml.debit == 0.0:
                         income_balance +=ml.credit
-                        
+
+                if line.is_value_negative:
+                    income_balance *= -1
                 sheet.write("D%s"%rowx, income_balance, data_right)
 
                 last_number +=1
@@ -355,6 +355,8 @@ class profit_excel_report(models.TransientModel):
                         expense_balance -=ml.credit*(-1)
                     elif ml.credit > 0.0 and ml.debit == 0.0:
                         expense_balance -=ml.credit
+                if line.is_value_negative:
+                    expense_balance *= -1
                 sheet.write("D%s"%rowx, expense_balance, data_right)
                 last_number +=1
                 rowx +=1
@@ -424,6 +426,8 @@ class profit_excel_report(models.TransientModel):
                 #        expense_balance +=(account.balance*(-1))
                 #    else:
                 #        expense_balance +=account.balance
+                if line.is_value_negative:
+                    sum_balance *= -1
                 sheet.write("D%s"%rowx, sum_balance, data_right)
                 rowx +=1
                 last_number +=1
@@ -507,6 +511,8 @@ class profit_excel_report(models.TransientModel):
                         other_income_balance -=ml.credit*(-1)
                     elif ml.credit > 0.0 and ml.debit == 0.0:
                         other_income_balance -=ml.credit
+                if line.is_value_negative:
+                    other_income_balance *= -1
                 sheet.write("D%s"%rowx, other_income_balance, data_right)
                 rowx +=1
         last_number +=1
