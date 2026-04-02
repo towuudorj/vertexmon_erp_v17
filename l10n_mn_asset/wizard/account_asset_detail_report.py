@@ -142,8 +142,9 @@ class AccountAssetDetailReport(models.TransientModel):
             if data['group_by'] == 'location':
                 order_by = u'asset_location_id asc, '
             order_by += u'name asc, '
-            print(domain, '\n\n\n')
+
             asset_id = asset_obj.search(domain, order=order_by + 'date asc')
+
             if asset_id:
                 total_g = 0
                 total_h = 0
