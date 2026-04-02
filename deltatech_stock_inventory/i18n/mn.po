@@ -800,7 +800,7 @@ msgstr "Өртөг"
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Print Count Sheet"
-msgstr ""
+msgstr "Тооллогын баримт хэвлэх"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model,name:deltatech_stock_inventory.model_product_template
@@ -980,7 +980,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Show Lines"
-msgstr ""
+msgstr "Мөрүүд харах"
 
 #. module: deltatech_stock_inventory
 #. odoo-python
