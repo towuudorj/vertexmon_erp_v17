@@ -18,6 +18,14 @@
                                 string="Scrap" type="object" invisible="state != 'open'"
                                 confirm="The asset will be scrapped permanently. Continue?"/>
                     </xpath>
+                    <xpath expr='//button[@name="set_to_close"]' position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+                    <xpath expr='//button[@name="set_to_close"]' position="after" >
+                        <button name="set_to_close" invisible="state != 'open'" string="Sell or Dispose" type="object"
+                            confirm="The asset will be closed permanently. Continue?"
+                            class="oe_highlight"/>
+                    </xpath>
                     <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
                         <field name="write_up"/>
                     </xpath>

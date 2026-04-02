@@ -1066,11 +1066,6 @@ msgid "Status"
 msgstr ""
 
 #. module: om_account_asset
-#: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_asset_form
-msgid "The asset will be closed permanently. Continue?"
-msgstr "Хөрөнгө бүрмөсөн хаагдана. Үргэлжлүүлэх үү?"
-
-#. module: om_account_asset
 #: model:ir.model.fields,help:om_account_asset.field_account_asset_asset__method_period
 msgid "The amount of time between two depreciations, in months"
 msgstr ""

@@ -37,6 +37,10 @@ msgstr "Хөрөнгө актлах огноо"
 msgid "Scrap move"
 msgstr "Актын бичилт"
 
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "Sell or Dispose"
+msgstr "Зарах эсвэл Хаах"
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__asset_qty
@@ -300,6 +304,11 @@ msgstr "Гарах байршил"
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__state
 msgid "State"
 msgstr "Төлөв"
+
+#. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "The asset will be closed permanently. Continue?"
+msgstr "Хөрөнгө бүрмөсөн хаагдана. Үргэлжлүүлэх үү?"
 
 #. module: l10n_mn_asset
 #: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
