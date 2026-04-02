@@ -20,8 +20,11 @@
                     <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
                         <field name="write_up"/>
                     </xpath>
+                    <xpath expr='//field[@name="state"]' position="replace">
+                        <field name="state" widget="statusbar"/>
+                    </xpath>
                     <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
-                        <field name="scrap_id" invisible="1"/>
+                        <field name="scrap_id" invisible="state != 'scrap'" readonly="1"/>
                         <field name="scrap_date"/>
                         <field name="uom_id" readonly="state != 'draft'"/>
                         <field name="asset_location_id" readonly="state != 'draft'"/>

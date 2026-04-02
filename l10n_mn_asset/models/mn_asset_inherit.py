@@ -91,56 +91,91 @@ class AccountAssetAsset(models.Model):
     scrap_date = fields.Date(string='Scrap date')
     scrap_id = fields.Many2one('account.move', string='Scrap move')
     asset_location_id = fields.Many2one('asset.location', string='Asset location')
+    state = fields.Selection(selection_add=[('scrap', 'Scrap')], ondelete={'scrap': 'cascade'},)
     
     
     def action_asset_scrap(self):
-        account_move_line_obj = self.env['account.move.line']
-        for line in self:
-            in_invoice_vals_list = []
-            if not line.scrap_date:
+        account_move_obj = self.env['account.move']
+        depreciation_line_obj = self.env['account.asset.depreciation.line']
+
+        for asset in self:
+            if not asset.scrap_date:
                 raise ValidationError(_(
                     "Хөрөнгө актлах огноог оруулж өгнө үү."
                 ))
-            else:
-                move_id = {
-                            'journal_id':line.category_id.journal_id.id,
-                            'date':line.scrap_date,
-                            'ref':line.name,
-                            'company_id':line.company_id.id,
-                            'currency_id':line.company_id.currency_id.id,
-                            'amount_total':line.value,
-                            'state':'draft',
-                            'line_ids': [],
-                            }
-                debit_line = {
-                            'account_id':line.category_id.account_depreciation_id.id,
-                            'debit':line.value,
-                            'journal_id':line.category_id.journal_id.id,
-                            'date':line.scrap_date,
-                            'credit':0,
-                            'company_id':line.company_id.id,
-                            'name':line.name,
-                            'amount_currency':0,
-                            }
-                credit_line ={
-                            'account_id':line.category_id.account_asset_id.id,
-                            'credit':line.value,
-                            'journal_id':line.category_id.journal_id.id,
-                            'date':line.scrap_date,
-                            #'asset_id':line.id,
-                            'debit':0,
-                            'company_id':line.company_id.id,
-                            'name':line.name,
-                            'amount_currency':0,
-                            }
-                
-                move_id['line_ids'].append((0, 0, debit_line))
-                move_id['line_ids'].append((0, 0, credit_line))
-                in_invoice_vals_list.append(move_id)
-                moves = self.env['account.move'].with_context().create(in_invoice_vals_list)
-                line.scrap_id = moves.id
-                line.scrap_date =  fields.Datetime.now()
-    
+
+            unposted_depreciation_lines = asset.depreciation_line_ids.filtered(lambda dep_line: not dep_line.move_check)
+            if unposted_depreciation_lines:
+                old_values = {
+                    'method_end': asset.method_end,
+                    'method_number': asset.method_number,
+                }
+
+                move_vals = {
+                    'journal_id': asset.category_id.journal_id.id,
+                    'date': asset.scrap_date,
+                    'ref': asset.name,
+                    'move_type': 'entry',
+                    'line_ids': [
+                        (0, 0, {
+                            'name': asset.name,
+                            'account_id': asset.category_id.account_depreciation_id.id,
+                            'debit': asset.value_residual,
+                            'credit': 0.0,
+                        }),
+                        (0, 0, {
+                            'name': asset.name,
+                            'account_id': asset.category_id.account_asset_id.id,
+                            'debit': 0.0,
+                            'credit': asset.value_residual,
+                        })
+                    ]
+                }
+
+                move = account_move_obj.create(move_vals)
+
+                sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_lines) + 1
+                residual_value = asset.value_residual
+                asset_value = asset.value
+                salvage_value = asset.salvage_value
+                asset_code = asset.code
+                scrap_date = asset.scrap_date
+                asset_id = asset.id
+
+                unposted_depreciation_lines.unlink()
+                depreciation_line_obj.create({
+                    'amount': residual_value,
+                    'asset_id': asset_id,
+                    'sequence': sequence,
+                    'move_id': move.id,
+                    'name': (asset_code or '') + '/' + str(sequence),
+                    'remaining_value': 0,
+                    'depreciated_value': asset_value - salvage_value,
+                    'depreciation_date': scrap_date,
+                })
+
+                fresh_asset = self.browse(asset_id)
+                fresh_asset.write({
+                    'scrap_id': move.id,
+                    'method_end': scrap_date,
+                    'method_number': sequence,
+                })
+                tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
+                changes, tracking_value_ids = fresh_asset._mail_track(tracked_fields, old_values)
+                if changes:
+                    fresh_asset.message_post(
+                        subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'),
+                        tracking_value_ids=tracking_value_ids)
+
+            self.browse(asset.id).write({'state': 'scrap'})
+
+        return True
+
+    def set_to_close(self):
+        res = super(AccountAssetAsset, self).set_to_close()
+        self.state = 'close'
+        return res
+
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount','write_up')
     def _amount_residual(self):
         for rec in self:
