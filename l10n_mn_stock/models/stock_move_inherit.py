@@ -332,7 +332,7 @@ class StockMoveLine(models.Model):
     dimensions = fields.Char(string='Dimensions')
     cbm = fields.Float(string='CBM')
     po_origin = fields.Char(related="picking_id.origin", string=u'Баримтын дугаар', store=True)
-    cost_price = fields.Float(string="Өртөг үнэ", compute='_compute_cost_price')
+    cost_price = fields.Float(string="Одоогийн Өртөг үнэ", compute='_compute_cost_price')
     total_cost_price = fields.Float('Нийт өртөг', compute='_compute_cost_price')
     analytic_id = fields.Many2one(related='picking_id.analytic_id', string=u"Төсөл", store=True)
     related_partner_id = fields.Many2one('res.partner', compute='_compute_related_partner_id')
