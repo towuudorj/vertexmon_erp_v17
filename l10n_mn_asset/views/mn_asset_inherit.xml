@@ -28,7 +28,7 @@
                         <field name="scrap_date"/>
                         <field name="uom_id" readonly="state != 'draft'"/>
                         <field name="asset_location_id" readonly="state != 'draft'"/>
-                        <field name="owner_id" readonly="state != 'draft'"/>
+                        <field name="owner_id"/>
                         <field name="asset_qty" readonly="state != 'draft'"/>
                     </xpath>
                 </data>

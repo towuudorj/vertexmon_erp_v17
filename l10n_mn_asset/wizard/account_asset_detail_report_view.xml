@@ -13,6 +13,7 @@
 							<field name="is_extra"/>
 							<field name="group_by" invisible="is_extra == False"/>
 							<field name="group_by_category" invisible="is_extra == True"/>
+							<field name="see_closed_scraped" invisible="is_extra == False"/>
 						</group>
 						<group>
 							<field name="start_date"/>

@@ -32,6 +32,11 @@ msgstr "Хэмжих нэгж"
 msgid "Scrap date"
 msgstr "Хөрөнгө актлах огноо"
 
+#. module: l10n_mn_asset
+#: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__scrap_id
+msgid "Scrap move"
+msgstr "Актын бичилт"
+
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__asset_qty

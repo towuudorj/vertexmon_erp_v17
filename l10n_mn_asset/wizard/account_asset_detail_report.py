@@ -23,6 +23,7 @@ class AccountAssetDetailReport(models.TransientModel):
     is_extra = fields.Boolean(string=u'Задаргаатай эсэх')
     group_by = fields.Selection([('category', u'Хөрөнгийн ангилал'), ('location', u'Хөрөнгийн байрлал')], string=u"Бүлэглэх", default=False)
     group_by_category = fields.Boolean(string=u"Хөрөнгийн ангиллаар бүлэглэх", default=False)
+    see_closed_scraped = fields.Boolean(string=u"Хаагдсан акталсан хөрөнгийг харах", default=False)
 
 
     def action_print_xls_report(self):
@@ -35,6 +36,7 @@ class AccountAssetDetailReport(models.TransientModel):
             'owner_id':self.owner_id.id,
             'is_extra':self.is_extra,
             'group_by':self.group_by,
+            'see_closed_scraped':self.see_closed_scraped,
             'group_by_category':self.group_by_category,
         }
         return {
@@ -132,12 +134,15 @@ class AccountAssetDetailReport(models.TransientModel):
                 domain.append(('category_id', '=', data['category_id']))
             if data['owner_id']:
                 domain.append(('owner_id', '=', data['owner_id']))
+            if not data['see_closed_scraped']:
+                domain.append(('state', 'not in', ['close', 'scrap']))
             order_by = ""
             if data['group_by'] == 'category':
                 order_by = u'category_id asc, '
             if data['group_by'] == 'location':
                 order_by = u'asset_location_id asc, '
             order_by += u'name asc, '
+            print(domain, '\n\n\n')
             asset_id = asset_obj.search(domain, order=order_by + 'date asc')
             if asset_id:
                 total_g = 0
@@ -214,7 +219,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             break
                     sheet.write("I%s"%rowx, month_dep, data_left)
 
-                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
+                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and not x.is_sale_line and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
                     if dep_lines:
                         date_between_dep = sum(dep_lines.mapped('amount'))
                     else:

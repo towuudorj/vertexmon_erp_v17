@@ -9,6 +9,14 @@ import calendar
 class AccountAssetDepreciationLine(models.Model):
     _inherit = 'account.asset.depreciation.line'
     _description = 'Asset depreciation line'
+
+    is_scrap_line = fields.Boolean(string='Scrap line')
+
+    def post_lines_and_close_asset(self):
+        asset = self.asset_id
+        if asset.depreciation_line_ids.filtered(lambda x: x.is_scrap_line):
+            return None
+        return super(AccountAssetDepreciationLine, self).post_lines_and_close_asset()
     
     #-------------------------------------------- def _prepare_move(self, line):
         #------------------------------- category_id = line.asset_id.category_id
@@ -82,7 +90,7 @@ class AccountAssetAsset(models.Model):
                 record.write_up = 0.0
             
 
-    owner_id = fields.Many2one('hr.employee', string='Asset owner')
+    owner_id = fields.Many2one('hr.employee', string='Asset owner', tracking=True)
     is_closed = fields.Boolean(string='Asset account remove')
     uom_id = fields.Many2one('uom.uom', string='Uom')
     asset_qty = fields.Float(string='Asset qty', default=1.0)
@@ -148,6 +156,7 @@ class AccountAssetAsset(models.Model):
                     'asset_id': asset_id,
                     'sequence': sequence,
                     'move_id': move.id,
+                    'is_scrap_line': True,
                     'name': (asset_code or '') + '/' + str(sequence),
                     'remaining_value': 0,
                     'depreciated_value': asset_value - salvage_value,
