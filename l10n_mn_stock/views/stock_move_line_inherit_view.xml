@@ -47,10 +47,26 @@
             <field name="arch" type="xml">
                 <filter name="by_category" position="after">
                     <filter string="Project" name="by_project" domain="[]" context="{'group_by': 'analytic_id'}"/>
+                    <filter string="By Customer" name="by_partner" domain="[]" context="{'group_by':'partner_id'}"/>
                 </filter>
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="partner_id"/>
+                </xpath>
             </field>
         </record>
 
+        <record id="mn_stock_move_line_tree_inherit_view" model="ir.ui.view">
+            <field name="name">inherit.mn.stock.move.line.trees</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="partner_id"/>
+                </xpath>
+
+            </field>
+        </record>
 
     </data>
 </odoo>
