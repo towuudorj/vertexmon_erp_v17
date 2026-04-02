@@ -1039,7 +1039,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.report_inventory_position
 msgid "Stock Inventory by position"
-msgstr ""
+msgstr "Агуулахын тооллого /Байршил/"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model,name:deltatech_stock_inventory.model_stock_move
