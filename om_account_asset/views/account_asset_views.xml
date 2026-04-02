@@ -11,6 +11,7 @@
                     <button type="object" name="compute_depreciation_board" string="Compute Depreciation"
                             invisible="state != 'draft'"/>
                     <button name="set_to_close" invisible="state != 'open'" string="Sell or Dispose" type="object"
+                            confirm="The asset will be closed permanently. Continue?"
                             class="oe_highlight"/>
                     <button name="set_to_draft" string="Set to Draft" type="object"
                             invisible="entry_count != 0 or state != 'open'"/>

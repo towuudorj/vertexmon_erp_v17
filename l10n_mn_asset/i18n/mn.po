@@ -302,6 +302,11 @@ msgid "State"
 msgstr "Төлөв"
 
 #. module: l10n_mn_asset
+#: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
+msgid "The asset will be scrapped permanently. Continue?"
+msgstr "Хөрөнгө бүрмөсөн актлагдана. Үргэлжлүүлэх үү?"
+
+#. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_move__note
 msgid "Note"
 msgstr "Тэмдэглэл"

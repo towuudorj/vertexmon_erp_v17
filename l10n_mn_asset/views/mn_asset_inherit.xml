@@ -15,7 +15,8 @@
                         <button name="%(action_account_asset_writeoff)d"
                                 string="Write Off" type="action" invisible="state != 'open'" />
                         <button name="action_asset_scrap" 
-                                string="Scrap" type="object"   invisible="state != 'open'"/>
+                                string="Scrap" type="object" invisible="state != 'open'"
+                                confirm="The asset will be scrapped permanently. Continue?"/>
                     </xpath>
                     <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
                         <field name="write_up"/>
