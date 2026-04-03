@@ -7,6 +7,12 @@ class AccountBankStatementLine(models.Model):
     cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash move type')
     move_account_names = fields.Char(compute='_compute_counterpart_account_name', string='Account names')
     company_amount = fields.Float(compute='_compute_company_amount', string='Company amount')
+    tax_ids = fields.Many2many(
+        'account.tax',
+        string='Taxes',
+        help='Taxes applied to this bank statement line.'
+    )
+
 
 
     def _synchronize_to_moves(self, changed_fields):
@@ -50,6 +56,19 @@ class AccountBankStatementLine(models.Model):
                 st_line_vals['partner_id'] = st_line.partner_id.id
             st_line.move_id.write(st_line_vals)
         
+    def _create_counterpart_move_line_vals(self, counterpart_vals):
+        """
+        Ensure taxes are added during reconciliation as well
+        """
+        vals = super()._create_counterpart_move_line_vals(counterpart_vals)
+
+        if self.tax_ids:
+            vals['tax_ids'] = [(6, 0, self.tax_ids.ids)]
+
+        return vals
+    
+    
+    
     def _prepare_move_line_default_vals(self, counterpart_account_id=None):
         """ Prepare the dictionary to create the default account.move.lines for the current account.bank.statement.line
         record.

@@ -10,6 +10,9 @@
 				<xpath expr='//field[@name="payment_ref"]' position="after">
 					<field name="cash_move_type_id" string="Мөнгөн гүйлгээний төрөл"/>
 				</xpath>
+				<xpath expr="//field[@name='amount']" position="after">
+	                <field name="tax_ids" widget="many2many_tags"/>
+	            </xpath>
 			</field>
 		</record>
 
