@@ -70,6 +70,11 @@ msgid "Account names"
 msgstr "Данснууд"
 
 #. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line__tax_ids
+msgid "Taxes"
+msgstr "Татвар"
+
+#. module: l10n_mn_account
 #: model:ir.ui.menu,name:l10n_mn_account.action_account_currency_equalization_menu
 #: model:ir.actions.act_window,name:l10n_mn_account.action_account_currency_equalization
 msgid "Currency rate equalization"
