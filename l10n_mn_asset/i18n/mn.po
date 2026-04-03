@@ -50,12 +50,12 @@ msgstr "Тоо"
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset__write_up
 msgid "Write Up"
-msgstr "Капиталжуулсан дүн"
+msgstr "Дахин үнэлсэн дүн"
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__capital_amount
 msgid "Capital Amount"
-msgstr "Капиталжуулалтын дүн"
+msgstr "Дахин үнэлгээний дүн"
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_capitalization__account_id
@@ -76,7 +76,7 @@ msgstr "Тэмдэглэл"
 #. module: l10n_mn_asset
 #: model_terms:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
 msgid "Asset Capital"
-msgstr "Хөрөнгө капиталжуулах"
+msgstr "Дахин үнэлгээ"
 
 
 #. module: l10n_mn_asset
@@ -87,7 +87,7 @@ msgstr "Хаах"
 #. module: l10n_mn_asset
 #: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_capitalization_new_form
 msgid "Capitalization"
-msgstr "Капиталжуулах"
+msgstr "Дахин үнэлэх"
 
 #. module: l10n_mn_asset
 #: model:ir.model.fields,field_description:l10n_mn_asset.field_account_asset_asset_dep_date
@@ -104,7 +104,7 @@ msgstr "Одоогийн дүн"
 #: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_capitalization
 #: model:ir.ui.view,arch_db:l10n_mn_asset.view_account_asset_asset_mn_inherit
 msgid "Asset capital"
-msgstr "Хөрөнгийн капиталжуулалт"
+msgstr "Хөрөнгийн дахин үнэлгээ"
 
 #. module: l10n_mn_asset
 #: model:ir.actions.act_window,name:l10n_mn_asset.action_account_asset_writeoff__writeoff_account
