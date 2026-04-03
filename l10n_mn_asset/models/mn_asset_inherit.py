@@ -180,11 +180,6 @@ class AccountAssetAsset(models.Model):
 
         return True
 
-    def set_to_close(self):
-        res = super(AccountAssetAsset, self).set_to_close()
-        self.state = 'close'
-        return res
-
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount','write_up')
     def _amount_residual(self):
         for rec in self:

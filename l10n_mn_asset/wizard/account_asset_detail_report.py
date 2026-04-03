@@ -306,13 +306,21 @@ class AccountAssetDetailReport(models.TransientModel):
             	                COALESCE(count(distinct CASE WHEN aaa.date < '{data['start_date']}' then aaa.id else null end), 0) as start_count,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN aaa.value else 0 end), 0) as income_balance,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN 1 ELSE 0 END), 0) as income_count,
-            	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN aaa.value ELSE 0 END), 0) as expense_balance,
-            	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN 1 ELSE 0 END), 0) as expense_count
+            	                COALESCE(SUM(CASE WHEN line.dep_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN aaa.value ELSE 0 END), 0) as expense_balance,
+            	                COALESCE(SUM(CASE WHEN line.dep_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' THEN 1 ELSE 0 END), 0) as expense_count
                             from account_asset_asset aaa
+                            left join (
+                                select depreciation_date as dep_date, asset_id, RANK() OVER (PARTITION BY asset_id ORDER BY depreciation_date DESC) AS rank
+                                from account_asset_depreciation_line
+                                where is_scrap_line = True or is_sale_line = True
+                            ) as line on line.asset_id = aaa.id
+                            where line.rank = 1 or line.rank is null
             	            GROUP BY aaa.name
                         ) as sub1 on sub1.name = sub.name
                         {'ORDER BY sub.category_id' if data['group_by_category'] else ''}
             """
+            # Philips screen 24 inch monitor
+
             self.env.cr.execute(qry)
             lines = self._cr.dictfetchall()
             sheet.merge_range("A%s:A%s" % (rowx, rowx + 1), u'Д/д', title)
