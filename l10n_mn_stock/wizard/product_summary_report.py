@@ -209,64 +209,105 @@ class ProductSummaryReport(models.TransientModel):
             date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
                 if location_ids:
-                    f_query_income = f"""
-                        SELECT
-                            mv.product_id,
-                            SUM(mv.product_uom_qty) AS qty,
-                            SUM(svl.price) AS price
-                        FROM
-                        (
-                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
-                            FROM stock_valuation_layer svl 
+                    
+                    f_query_income = """
+                        WITH qty_data AS (
+                            SELECT
+                                mv.product_id,
+                                SUM(mv.product_uom_qty) AS qty
+                            FROM stock_move mv
+                            LEFT JOIN stock_location sl ON mv.location_id = sl.id
+                            LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
+                            WHERE mv.state = 'done'
+                              AND mv.date < %s
+                              AND dest.id = ANY(%s)
+                              AND mv.product_id = %s
+                              AND mv.company_id = %s
+                              AND sl.usage IN ('customer','supplier','inventory','production','internal')
+                              AND dest.usage = 'internal'
+                            GROUP BY mv.product_id
+                        ),
+            
+                        price_data AS (
+                            SELECT
+                                mv.product_id,
+                                SUM(svl.value) AS price
+                            FROM stock_valuation_layer svl
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
-                            WHERE mv.product_id = {pro.id}
-                            GROUP BY mv.id
-                        ) AS svl
-                        LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
-                        LEFT JOIN stock_location sl ON mv.location_id = sl.id
-                        LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
-                        WHERE mv.state = 'done'
-                          AND mv.date < '{date_from_dt_min}'
-                          AND dest.id IN {tuple(location_ids)}
-                          AND mv.product_id = {pro.id}
-                          AND mv.company_id = {data['company_id']}
-                          AND sl.usage IN ('supplier','customer','inventory','production','internal')
-                          AND dest.usage = 'internal'
-                        GROUP BY mv.product_id
+                            LEFT JOIN stock_location sl ON mv.location_id = sl.id
+                            WHERE mv.state = 'done'
+                              AND mv.date < %s
+                              AND sl.id = ANY(%s)
+                              AND mv.product_id = %s
+                              AND mv.company_id = %s
+                            GROUP BY mv.product_id
+                        )
+            
+                        SELECT
+                            q.product_id,
+                            COALESCE(q.qty, 0) AS qty,
+                            COALESCE(p.price, 0) AS price
+                        FROM qty_data q
+                        LEFT JOIN price_data p ON q.product_id = p.product_id
                     """
-
-                    self._cr.execute(f_query_income)
+            
+                    params = (
+                        date_from_dt_min, location_ids, pro.id, data['company_id'],
+                        date_from_dt_min, location_ids, pro.id, data['company_id']
+                    )
+            
+                    self._cr.execute(f_query_income, params)
                     f_income = self._cr.dictfetchall()
 
-                    f_query_expense = f"""
-                        SELECT
-                            mv.product_id,
-                            SUM(mv.product_uom_qty) AS qty,
-                            SUM(svl.price) AS price
-                        FROM
-                        (   
-                            SELECT sum(svl.value) AS price, mv.id as stock_move_id
-                            FROM stock_valuation_layer svl 
+                    
+                    
+                    f_query_expense = """
+                        WITH qty_data AS (
+                            SELECT
+                                mv.product_id,
+                                SUM(mv.product_uom_qty) AS qty
+                            FROM stock_move mv
+                            LEFT JOIN stock_location sl ON mv.location_id = sl.id
+                            LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
+                            WHERE mv.state = 'done'
+                              AND mv.date < %s
+                              AND sl.id = ANY(%s)
+                              AND mv.product_id = %s
+                              AND mv.company_id = %s
+                              AND sl.usage = 'internal'
+                              AND dest.usage IN ('customer','supplier','inventory','production','internal')
+                            GROUP BY mv.product_id
+                        ),
+            
+                        price_data AS (
+                            SELECT
+                                mv.product_id,
+                                SUM(svl.value) AS price
+                            FROM stock_valuation_layer svl
                             LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
-                            WHERE mv.product_id = {pro.id}
-                            GROUP BY mv.id
-                        ) AS svl 
-                        LEFT JOIN stock_move mv ON mv.id = svl.stock_move_id
-                        LEFT JOIN stock_location sl ON mv.location_id = sl.id
-                        LEFT JOIN stock_location dest ON mv.location_dest_id = dest.id
-                        WHERE mv.state = 'done'
-                          AND mv.date < %s
-                          AND sl.id IN %s
-                          AND mv.product_id = %s
-                          AND mv.company_id = %s
-                          AND sl.usage = 'internal'
-                          AND dest.usage IN ('customer','supplier','inventory','production','internal')
-                        GROUP BY mv.product_id
+                            LEFT JOIN stock_location sl ON mv.location_id = sl.id
+                            WHERE mv.state = 'done'
+                              AND mv.date < %s
+                              AND sl.id = ANY(%s)
+                              AND mv.product_id = %s
+                              AND mv.company_id = %s
+                            GROUP BY mv.product_id
+                        )
+            
+                        SELECT
+                            q.product_id,
+                            COALESCE(q.qty, 0) AS qty,
+                            COALESCE(p.price, 0) AS price
+                        FROM qty_data q
+                        LEFT JOIN price_data p ON q.product_id = p.product_id
                     """
-                    self._cr.execute(
-                        f_query_expense,
-                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
+            
+                    params = (
+                        date_from_dt_min, location_ids, pro.id, data['company_id'],
+                        date_from_dt_min, location_ids, pro.id, data['company_id']
                     )
+            
+                    self._cr.execute(f_query_expense, params)
                     f_expense = self._cr.dictfetchall()
 
                     
@@ -393,7 +434,7 @@ class ProductSummaryReport(models.TransientModel):
                 last_price = 0
                 f_ex_qty = 0
                 f_ex_price = 0
-
+                print("ggggggggggg",f_income, f_expense)
                 for lines in f_income:
                     if lines['product_id'] == pro.id:
                         f_in_qty += lines['qty']
