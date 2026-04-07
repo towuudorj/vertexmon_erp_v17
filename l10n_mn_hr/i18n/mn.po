@@ -1776,6 +1776,11 @@ msgid "End date"
 msgstr "Ажлаас гарсан огноо"
 
 #. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.routing_slip_form
+msgid "End routing"
+msgstr "Тойрох хуудас бөглөгдсөн"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_education__ending_year
 msgid "Ending year"
 msgstr "Дуусcан огноо"

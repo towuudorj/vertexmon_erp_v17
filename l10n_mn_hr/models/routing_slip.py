@@ -2,6 +2,8 @@
 from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from datetime import date, datetime, time
 
+from odoo.exceptions import ValidationError
+
 
 class routing_slip(models.Model):
     _name = 'routing.slip'
@@ -18,7 +20,7 @@ class routing_slip(models.Model):
     accession_date = fields.Date('Accession date')
     left_date = fields.Date('Left date')
     last_name = fields.Char('Last name')
-    out_reason_id = fields.Many2one('out.reason', 'Out reason')
+    out_reason_id = fields.Many2one('hr.departure.reason', 'Out reason')
     routing_date = fields.Date('Routing date', default = datetime.today())
     slip_line_id = fields.One2many('routing.slip.line', 'routing_slip_id', 'Line')
     state = fields.Selection([('draft', 'Draft'),  # Ноорог
@@ -43,6 +45,27 @@ class routing_slip(models.Model):
 
     def action_send(self):
         self.state = 'send_routing'
+        partner = False
+        if self.employee_id.user_id:
+            partner = self.env['res.partner'].search([('user_id', '=', self.employee_id.user_id.id)])
+
+        if not partner:
+            partner = self.env['res.partner'].search([('email', '=', self.employee_id.work_email),
+                                                      ('name', '=', self.employee_id.name)], order='id', limit=1)
+
+        self.survey_id.check_validity()
+
+        template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
+        survey_wizard = self.env['survey.invite'].create({'partner_ids': partner.ids if partner else False,
+                                                          'emails': '',
+                                                          'send_email': True,
+                                                          'survey_id': self.survey_id.id,
+                                                          'template_id': template and template.id or False,
+                                                          'subject': u'Ажлаас гарах үеийн асуумж'})
+
+        survey_wizard.with_context(default_email_layout_xmlid='mail.mail_notification_light').action_invite()
+        mails = self.env['mail.mail'].sudo().search([('state', '=', 'outgoing'), ('subject', '=', 'Ажлаас гарах үеийн асуумж')])
+        mails.sudo().send()
     
     def action_cancel(self):
         self.state = 'cancel'
@@ -54,17 +77,18 @@ class routing_slip(models.Model):
     def action_to_workhandover_create(self):
         handact_obj = self.env['work.handover.act']
         for line in self:
-            hand_id = handact_obj.create({
-                                'employee_id': line.employee_id.id,
-                                'company_id': line.company_id.id,
-                                'routing_slip_id': line.id
-                                })
-            line.work_handover_act_id = hand_id.id
+            if not line.work_handover_act_id:
+                hand_id = handact_obj.create({
+                                    'employee_id': line.employee_id.id,
+                                    'company_id': line.company_id.id,
+                                    'routing_slip_id': line.id
+                                    })
+                line.work_handover_act_id = hand_id.id
 
 
     def action_to_workhandover_list(self, handact=False):
         if not handact:
-            handact = self.mapped('work_handover_act_id')
+            handact = self.env['work.handover.act'].search([('routing_slip_id', '=', self.id)])
         action = self.env['ir.actions.actions']._for_xml_id('l10n_mn_hr.action_work_handover_act')
         if len(handact) > 1:
             action['domain'] = [('id', 'in', handact.ids)]
@@ -88,8 +112,6 @@ class routing_slip(models.Model):
         action['context'] = context
         return action
 
-
-
     def confirm_quit(self):
         self.ensure_one()
         if self.employee_id:
@@ -97,12 +119,24 @@ class routing_slip(models.Model):
             for contract in employee.contract_ids:
                 contract.write({'state': 'cancelled'})
                 contract.active = False
-            employee.active = False
+            partner = False
+            if self.employee_id.user_id:
+                partner = self.env['res.partner'].search([('user_id', '=', self.employee_id.user_id.id)])
+
+            if not partner:
+                partner = self.env['res.partner'].search([('email', '=', self.employee_id.work_email),
+                                                          ('name', '=', self.employee_id.name)], order='id', limit=1)
+            if partner:
+                survey_result = self.env['survey.user_input'].search([('survey_id', '=', self.survey_id.id), ('partner_id', '=', partner.id)])
+                if not survey_result:
+                    raise ValidationError(u'Ажилтан ажлаас гарах үеийн асуумж бөглөөгүй байна.')
+            employee.write({'active': False,
+                            'departure_reason_id': self.out_reason_id.id,
+                            'departure_date': self.left_date})
             if employee.user_id:
                 employee.user_id.active = False
         self.state = 'left_job'
         return True
-    
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):
@@ -126,23 +160,19 @@ class routing_slip(models.Model):
             
         return {'value':res}
 
-
     def refresh_page(self):
         return { 'type': 'ir.actions.client', 'tag': 'reload'}
-    
-    
-    def unlink(self):
-        line_obj = self.env['routing.slip.line']
-        for line in self.slip_line_id:
-            line.unlink()
-        return super(routing_slip, self).unlink()
+
+    def end_routing(self):
+        for obj in self:
+            obj.state = 'routing_ended'
 
 
 class routing_slip_line(models.Model):
     _name = 'routing.slip.line'
     _description = 'Routing slip line'
     
-    routing_slip_id = fields.Many2one('routing.slip', 'Routing slip')
+    routing_slip_id = fields.Many2one('routing.slip', 'Routing slip', ondelete='cascade')
     code = fields.Integer('Code')
     company_id = fields.Many2one('res.company', 'Company')
     job_id = fields.Many2one('hr.job', 'Job')
@@ -157,7 +187,6 @@ class routing_slip_line(models.Model):
 
     @api.onchange('job_id')
     def onchange_job_id(self):
-        obj = self.browse()
         res = {}
         if self.job_id:
             job_obj = self.env['hr.job']
@@ -165,15 +194,12 @@ class routing_slip_line(models.Model):
             if job_id:
                 res['company_id'] = job_id.company_id.id
                 res['code'] = job_id.job_code
-                # print 'nnnnnnnnnn', job_id
                 employee_obj = self.env['hr.employee']
                 emp_id = employee_obj.search([('job_id', '=', job_id.id)])
                 emp = employee_obj.browse(emp_id)
                 if len(emp_id) == 1:
                     res['employee_id'] = emp.id
-                    
-                # emp = employee_obj.browse(cr, uid, emp_id)
-            
+
         return {'value':res}
 
 
@@ -221,7 +247,6 @@ class routing_master_line(models.Model):
     
     @api.onchange('job_id')
     def onchange_job_id(self):
-        obj = self.browse()
         res = {}
         if self.job_id:
             job_obj = self.env['hr.job']
@@ -229,7 +254,6 @@ class routing_master_line(models.Model):
             if job_id:
                 res['company_id'] = job_id.company_id.id
                 res['code'] = job_id.job_code
-                # print 'nnnnnnnnnn', job_id
                 employee_obj = self.env['hr.employee']
                 emp_id = employee_obj.search([('job_id', '=', job_id.id)])
                 emp = employee_obj.browse(emp_id)
@@ -244,16 +268,6 @@ class Job(models.Model):
     _inherit = 'hr.job'
     
     job_code = fields.Char('Job code')
-
-    
-class out_reason(models.Model):
-    _name = 'out.reason'
-    _description = 'Left reason'
-    
-    name = fields.Char('Left reason')
-    left_type = fields.Selection([('company_decision', 'Company decision'), ('own_decision', 'Own decision')], 'Left type')
-    left_reason_code = fields.Integer('Left reason code')
-    hr_employee_id = fields.Many2one('hr.employee', 'Hr employee')
 
 
 class routing_category(models.Model):

@@ -111,14 +111,14 @@ class WorkHandoverAct(models.Model):
     
     
     def unlink(self):
-        if self.state=='work_handover_act_draft':
-            for line in self.slip_line_id:
-                line.unlink()
-            return super(WorkHandoverAct, self).unlink()
-        else:
-            raise UserError((u"Батлагдсан байгаа тул устахгүйг анхаарна уу!"))
-    
-    
+        for obj in self:
+            if obj.state=='work_handover_act_draft':
+                for line in obj.slip_line_id:
+                    line.unlink()
+            else:
+                raise UserError((u"Батлагдсан байгаа тул устахгүйг анхаарна уу!"))
+        return super(WorkHandoverAct, self).unlink()
+
     def _compute_routing_slip_count(self):
         for rec in self:
             rec.routing_slip_count = self.env['routing.slip'].search_count([('work_handover_act_id', '=', rec.id)

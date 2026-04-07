@@ -70,7 +70,16 @@
                 <field name="number_next">1</field>
                 <field name="number_increment">1</field>
         </record>
-        
+
+
+        <record id="routing_slip_sequence" model="ir.sequence">
+                <field name="name">routing.slip</field>
+                <field name="code">routing.slip</field>
+                <field name="prefix">ТХ/</field>
+                <field name="padding">9</field>
+                <field name="number_next">1</field>
+                <field name="number_increment">1</field>
+        </record>
         
 
     </data>
