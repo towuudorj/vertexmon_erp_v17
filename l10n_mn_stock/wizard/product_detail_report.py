@@ -20,7 +20,6 @@ class product_detail_report(models.TransientModel):
                                 default=lambda self: self.env.user.company_id)
     is_transection = fields.Boolean(string=u'Гүйлгээтэй эсэх')
     is_warehouse = fields.Boolean(string=u'Агуулахаар татах')
-    location_ids = fields.Many2one('stock.location', string=u'Байрлал')
     start_date = fields.Date(string=u'Эхлэх огноо', required=True,
                                     default=fields.Date.context_today)
     end_date = fields.Date(string=u'Дуусах огноо', required=True,
@@ -87,11 +86,26 @@ class product_detail_report(models.TransientModel):
                                     'text_wrap': True,
                                     'num_format': '#,##0.00'
                                     })
+        data_right_bold = workbook.add_format({
+                                    'align': 'right',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'text_wrap': True,
+                                    'num_format': '#,##0.00',
+                                    'bold': True
+                                    })
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border': 1,
                                     'font_size': 12,
                                     'num_format': '#,##0.00'
+                                    })
+        data_left_bold = workbook.add_format({
+                                    'align': 'left',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'num_format': '#,##0.00',
+                                    'bold': True
                                     })
         
         data_center = workbook.add_format({
@@ -100,6 +114,15 @@ class product_detail_report(models.TransientModel):
                                     'font_size': 12,
                                     'text_wrap': True,
                                     'num_format': '#,##0.00'
+                                    })
+        
+        data_center_bold = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 1,
+                                    'font_size': 12,
+                                    'text_wrap': True,
+                                    'num_format': '#,##0.00',
+                                    'bold': True
                                     })
 
         product_obj = self.env['product.product']
@@ -127,34 +150,34 @@ class product_detail_report(models.TransientModel):
         
         if data['type'] == 'cost':
 
-            sheet.merge_range('A%s:A%s'%(rowx, rowx+1), u'Д/д', data_right)
-            sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_right)
-            sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_right)
-            sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_right)
-            sheet.merge_range('E%s:F%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center)
-            sheet.write('E%s'%(rowx+1), u'Барааны хэмжих нэгж', data_left)
-            sheet.write('F%s'%(rowx+1), u'Тоо', data_left)
+            sheet.merge_range('A%s:A%s'%(rowx, rowx+1), u'Д/д', data_right_bold)
+            sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_right_bold)
+            sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_right_bold)
+            sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_right_bold)
+            sheet.merge_range('E%s:F%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center_bold)
+            sheet.write('E%s'%(rowx+1), u'Барааны хэмжих нэгж', data_left_bold)
+            sheet.write('F%s'%(rowx+1), u'Тоо', data_left_bold)
             
     
-            sheet.merge_range('G%s:L%s'%(rowx, rowx), u'Барааны орлого', data_center)
-            sheet.write('G%s'%(rowx+1), u'Худалдан авалт', data_left)
-            sheet.write('H%s'%(rowx+1), u'Захиалагчаас', data_left)
-            sheet.write('I%s'%(rowx+1), u'Дотоод', data_left)
-            sheet.write('J%s'%(rowx+1), u'Үйлдвэрлэлийн', data_left)
-            sheet.write('K%s'%(rowx+1), u'Тооллогоос', data_left)
-            sheet.write('L%s'%(rowx+1), u'Нийт', data_left)
+            sheet.merge_range('G%s:L%s'%(rowx, rowx), u'Барааны орлого', data_center_bold)
+            sheet.write('G%s'%(rowx+1), u'Худалдан авалт', data_left_bold)
+            sheet.write('H%s'%(rowx+1), u'Захиалагчаас', data_left_bold)
+            sheet.write('I%s'%(rowx+1), u'Дотоод', data_left_bold)
+            sheet.write('J%s'%(rowx+1), u'Үйлдвэрлэлийн', data_left_bold)
+            sheet.write('K%s'%(rowx+1), u'Тооллогоос', data_left_bold)
+            sheet.write('L%s'%(rowx+1), u'Нийт', data_left_bold)
     
     
-            sheet.merge_range('M%s:Q%s'%(rowx, rowx), u'Барааны зарлага', data_center)
-            sheet.write('M%s'%(rowx+1), u'Захиалагчийн', data_left)
-            sheet.write('N%s'%(rowx+1), u'Худалдан авалт', data_left)
-            sheet.write('O%s'%(rowx+1), u'Дотоод', data_left)
-            sheet.write('P%s'%(rowx+1), u'Тооллогоос', data_left)
-            sheet.write('Q%s'%(rowx+1), u'Нийт', data_left)
-            sheet.merge_range('R%s:T%s'%(rowx, rowx), u'Барааны эцсийн үлдэгдэл', data_center)
-            sheet.write('R%s'%(rowx+1), u'Тоо', data_left)
-            sheet.write('S%s'%(rowx+1), u'Нэгж өртөг', data_left)
-            sheet.write('T%s'%(rowx+1), u'Нийт өртөг', data_left)
+            sheet.merge_range('M%s:Q%s'%(rowx, rowx), u'Барааны зарлага', data_center_bold)
+            sheet.write('M%s'%(rowx+1), u'Захиалагчийн', data_left_bold)
+            sheet.write('N%s'%(rowx+1), u'Худалдан авалт', data_left_bold)
+            sheet.write('O%s'%(rowx+1), u'Дотоод', data_left_bold)
+            sheet.write('P%s'%(rowx+1), u'Тооллогоос', data_left_bold)
+            sheet.write('Q%s'%(rowx+1), u'Нийт', data_left_bold)
+            sheet.merge_range('R%s:T%s'%(rowx, rowx), u'Барааны эцсийн үлдэгдэл', data_center_bold)
+            sheet.write('R%s'%(rowx+1), u'Тоо', data_left_bold)
+            sheet.write('S%s'%(rowx+1), u'Нэгж өртөг', data_left_bold)
+            sheet.write('T%s'%(rowx+1), u'Нийт өртөг', data_left_bold)
         
 
             rowx += 2
@@ -793,16 +816,16 @@ class product_detail_report(models.TransientModel):
                 total_manu_income_qty +=manu_income_qty
                 rowx +=1
         else:
-            sheet.merge_range('A%s:A%s'%(rowx, rowx+1), u'Д/д', data_right)
-            sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_right)
-            sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_right)
-            sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_right)
-            sheet.merge_range('E%s:F%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center)
-            sheet.write('E%s'%(rowx+1), u'Барааны хэмжих нэгж', data_left)
-            sheet.write('F%s'%(rowx+1), u'Тоо', data_left)
-            sheet.write('G%s'%(rowx), u'Барааны орлого', data_center)
-            sheet.write('H%s'%(rowx), u'Барааны зарлага', data_center)
-            sheet.write('I%s'%(rowx), u'Барааны эцсийн үлдэгдэл', data_center)
+            sheet.merge_range('A%s:A%s'%(rowx, rowx+1), u'Д/д', data_right_bold)
+            sheet.merge_range('B%s:B%s'%(rowx, rowx+1), u'Барааны нэр', data_right_bold)
+            sheet.merge_range('C%s:C%s'%(rowx, rowx+1), u'Барааны код', data_right_bold)
+            sheet.merge_range('D%s:D%s'%(rowx, rowx+1), u'Дотоод код', data_right_bold)
+            sheet.merge_range('E%s:F%s'%(rowx, rowx), u'Барааны эхний үлдэгдэл', data_center_bold)
+            sheet.write('E%s'%(rowx+1), u'Барааны хэмжих нэгж', data_left_bold)
+            sheet.write('F%s'%(rowx+1), u'Тоо', data_left_bold)
+            sheet.write('G%s'%(rowx), u'Барааны орлого', data_center_bold)
+            sheet.write('H%s'%(rowx), u'Барааны зарлага', data_center_bold)
+            sheet.write('I%s'%(rowx), u'Барааны эцсийн үлдэгдэл', data_center_bold)
         
 
             rowx += 2

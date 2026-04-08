@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from datetime import datetime, time
+from datetime import datetime, time, date
 
 
 PURCHASE_REQUISITION_STATES = [
@@ -53,7 +53,7 @@ class PurchaseRequisition(models.Model):
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     price_change = fields.Boolean(string='Price change')
-    currency_date = fields.Date(string='Currency date')
+    currency_date = fields.Date(string='Currency date', default=fields.Date.today)
     currency_rate = fields.Float(string='Currency rate')
     supplier_day = fields.Char(string='Supplier day')
     supplier_date = fields.Date(string='Supplier date')
