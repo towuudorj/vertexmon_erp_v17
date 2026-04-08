@@ -1,0 +1,1 @@
+from . import hik_central_add_person

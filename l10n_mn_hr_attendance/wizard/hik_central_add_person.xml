@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+    	<record id="hik_central_add_person_view" model="ir.ui.view">
+			<field name="name">hik.central.add.person</field>
+			<field name="model">hik.central.add.person</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="employee_id" readonly="1"/>
+							<field name="hik_central_org_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+							<field name="employee_has_picture" invisible="1"/>
+							<field name="add_picture" invisible="not employee_has_picture"/>
+						</group>
+					</group>
+					<footer>
+						<button name="add_person_to_hik_central" string="Нэмэх" type="object"
+							class="oe_highlight" />
+
+						<button string="Хаах" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+    </data>
+</odoo>

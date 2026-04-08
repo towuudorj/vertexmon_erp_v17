@@ -16,10 +16,41 @@ msgstr ""
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. module: l10n_mn_hr_attendance
+#: model:ir.model.fields,field_description:l10n_mn_hr_attendance.field_hik_central_add_person__add_picture
+msgid "Add Picture"
+msgstr "Зураг оруулах эсэх"
+
+#. module: l10n_mn_hr_attendance
+#: model:ir.model,name:l10n_mn_hr_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:l10n_mn_hr_attendance.field_hik_central_add_person__employee_id
+msgid "Employee"
+msgstr "Ажилтан"
+
 #. module: l10n_mn_attendance
 #: model:ir.model.fields,field_description:l10n_mn_attendance.field_hr_attendance__loss_time
 msgid "Loss time"
 msgstr "Хоцролт"
+
+#. module: l10n_mn_hr_attendance
+#: model:ir.model.fields,field_description:l10n_mn_hr_attendance.field_hik_central_org__org_code
+msgid "Org Code"
+msgstr "Албаны код"
+
+#. module: l10n_mn_hr_attendance
+#: model:ir.model.fields,field_description:l10n_mn_hr_attendance.field_hik_central_add_person__hik_central_org_id
+msgid "Organization"
+msgstr "Алба"
+
+#. module: l10n_mn_hr_attendance
+#: model:ir.model.fields,field_description:l10n_mn_hr_attendance.field_hik_central_org__name
+msgid "Organization Name"
+msgstr "Албаны нэр"
+
+#. module: l10n_mn_hr_attendance
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr_attendance.hr_hr_employee_view_form2
+msgid "Sync to hik central"
+msgstr "Нүүр уншуулагчид нэмэх"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form

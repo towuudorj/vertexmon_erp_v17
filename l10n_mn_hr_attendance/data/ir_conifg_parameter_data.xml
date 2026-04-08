@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="attendance_app_key" model="ir.config_parameter">
             <field name="key">Attendance_APP_KEY</field>
             <field name="value" eval="'33555647'"/>

@@ -19,8 +19,23 @@ def sign(app_secret, string_to_sign):
     signature = base64.b64encode(h.digest()).decode('utf-8')
     return signature
 
+def get_params(self, method=None, accept=None, content_type=None, APP_KEY=None, APP_SECRET=None, BASE_URL=None):
+    if not method:
+        method = 'POST'
+    if not accept:
+        accept = "*/*"
+    if not content_type:
+        content_type = "application/json"
+    if not APP_KEY:
+        APP_KEY = self.env['ir.config_parameter'].sudo().get_param('Attendance_APP_KEY')
+    if not APP_SECRET:
+        APP_SECRET = self.env['ir.config_parameter'].sudo().get_param('Attendance_APP_SECRET')
+    if not BASE_URL:
+        BASE_URL = self.env['ir.config_parameter'].sudo().get_param('Attendance_BASE_URL')
+    return method, accept, content_type, APP_KEY, APP_SECRET, BASE_URL
 
-def build_headers(method, accept, content_type, APP_KEY, APP_SECRET):
+
+def build_headers(method, accept, content_type, APP_KEY, APP_SECRET, PATH):
     timestamp = str(int(time.time() * 1000))
 
     # -------- Signature String --------
@@ -30,7 +45,7 @@ def build_headers(method, accept, content_type, APP_KEY, APP_SECRET):
         f"{content_type}\n"
         f"x-ca-key:{APP_KEY}\n"
         f"x-ca-timestamp:{timestamp}\n"
-        f"{API_PATH}"
+        f"{PATH}"
     )
 
     signature = sign(APP_SECRET, string_to_sign)
@@ -89,13 +104,8 @@ class HrAttendance(models.Model):
                     attendance.color = 1
 
     def get_attendance_data(self):
-        employees_with_attendance_id = self.env['hr.employee'].search([('attendance_id','!=',0)])
-        method = "POST"
-        accept = "*/*"
-        content_type = "application/json"
-        APP_KEY = self.env['ir.config_parameter'].sudo().get_param('Attendance_APP_KEY')
-        APP_SECRET = self.env['ir.config_parameter'].sudo().get_param('Attendance_APP_SECRET')
-        BASE_URL = self.env['ir.config_parameter'].sudo().get_param('Attendance_BASE_URL')
+        employees_with_attendance_id = self.env['hr.employee'].search([('attendance_id','!=','')])
+        method, accept, content_type, APP_KEY, APP_SECRET, BASE_URL = get_params(self)
 
         url = BASE_URL + API_PATH
         today = fields.Date.today()
@@ -108,7 +118,7 @@ class HrAttendance(models.Model):
                         "pageNo": page_num,
                         "pageSize": 100,
                         "queryInfo": {
-                            "personCode": str(attendance_id.attendance_id),
+                            "personCode": attendance_id.attendance_id,
                             "beginTime": "2024-01-01T00:00:00 08:00",
                             "endTime": f"{str(today)}T23:59:59 08:00",
                             "sortInfo": {
@@ -119,7 +129,7 @@ class HrAttendance(models.Model):
                     }
                 }
                 page_num += 1
-                headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET)
+                headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET, API_PATH)
                 response = requests.post(url, json=body, headers=headers, verify=False)
                 response_json = response.json()
                 if 'record' in response_json['data']:
@@ -144,9 +154,15 @@ class HrAttendance(models.Model):
                             check_out = fields.Datetime.to_string(
                                 parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
 
-                        if not hr_attendance_id and (check_in or check_out):
-                            self.env['hr.attendance'].create({
-                                'employee_id': attendance_id.id,
-                                'check_in': check_in if check_in else check_out,
-                                'check_out': check_out if check_out else check_in,
-                            })
+                        if check_in or check_out:
+                            if not hr_attendance_id:
+                                self.env['hr.attendance'].create({
+                                    'employee_id': attendance_id.id,
+                                    'check_in': check_in if check_in else check_out,
+                                    'check_out': check_out if check_out else check_in,
+                                })
+                            else:
+                                hr_attendance_id.sudo().write({
+                                    'check_in': check_in if check_in else check_out,
+                                    'check_out': check_out if check_out else check_in
+                                })

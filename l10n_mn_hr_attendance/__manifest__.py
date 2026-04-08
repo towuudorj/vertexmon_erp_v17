@@ -25,12 +25,16 @@
                  'base',
                  'hr',
                  'hr_attendance',
+                 'l10n_mn_hr',
                  'resource'
                 ],
-    'data': [ 
+    'data': [
+            'security/ir.model.access.csv',
             'data/cron_data.xml',
             'data/ir_conifg_parameter_data.xml',
             'views/hr_attendance_inherit_view.xml',
+            'wizard/hik_central_add_person.xml',
+            'views/hr_employee.xml',
             'views/menu_view.xml',
     ],
     'test': [],

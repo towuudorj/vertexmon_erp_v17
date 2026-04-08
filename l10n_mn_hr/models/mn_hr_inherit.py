@@ -102,7 +102,7 @@ class Employee(models.Model):
     decree_count = fields.Integer(compute='_compute_decree_count')
     contract_count = fields.Integer(compute='_compute_contract_count')
 
-    attendance_id = fields.Integer('Attendance ID')
+    attendance_id = fields.Char('Attendance ID')
 
     def _compute_decree_count(self):
         for employee in self:
@@ -513,7 +513,7 @@ class EmployeePublic(models.Model):
 
     decree_count = fields.Integer(compute='_compute_decree_count')
     contract_count = fields.Integer(compute='_compute_contract_count')
-    attendance_id = fields.Integer('Attendance ID', related='employee_id.attendance_id', compute_sudo=True)
+    attendance_id = fields.Char('Attendance ID', related='employee_id.attendance_id', compute_sudo=True)
 
 
 
