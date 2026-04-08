@@ -217,8 +217,12 @@ class AccountMoveAnalysis(models.TransientModel):
                 sheet.write('G%s' % rowx, line['debit'], data_right)
                 sheet.write('H%s' % rowx, line['credit'], data_right)
                 end_balance = line['debit_start_balance'] - line['credit_start_balance'] + line['debit'] - line['credit']
-                sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
-                sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
+                if account_id.account_type == 'asset_fixed' and end_balance < 0.0:
+                    sheet.write('I%s' % rowx, end_balance if end_balance < 0 else 0, data_right)
+                    sheet.write('J%s' % rowx, abs(end_balance) if end_balance > 0 else 0, data_right)
+                else:
+                    sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
+                    sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
                 if data['by_currency']:
                     if not currency_total_dict.get('MNT', False):
                         
@@ -239,8 +243,12 @@ class AccountMoveAnalysis(models.TransientModel):
                             currency_total_dict['MNT']['pre_credit_balance'] += abs(start_balance) if start_balance < 0 else 0
                         currency_total_dict['MNT']['debit_balance'] += line['debit']
                         currency_total_dict['MNT']['credit_balance'] += line['credit']
-                        currency_total_dict['MNT']['total_debit_balance'] += end_balance if end_balance > 0 else 0
-                        currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance) if end_balance < 0 else 0
+                        if account_id.account_type == 'asset_fixed' and end_balance < 0.0:
+                            currency_total_dict['MNT']['total_debit_balance'] += end_balance if end_balance < 0 else 0
+                            currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance) if end_balance > 0 else 0
+                        else:
+                            currency_total_dict['MNT']['total_debit_balance'] += end_balance if end_balance > 0 else 0
+                            currency_total_dict['MNT']['total_credit_balance'] += abs(end_balance) if end_balance < 0 else 0
                 if account_id.account_type == 'asset_fixed' and start_balance < 0.0:
                     pre_debit_balance += start_balance if start_balance < 0 else 0
                     pre_credit_balance += abs(start_balance) if start_balance > 0 else 0
@@ -249,8 +257,12 @@ class AccountMoveAnalysis(models.TransientModel):
                     pre_credit_balance += abs(start_balance) if start_balance < 0 else 0
                 debit_balance += line['debit']
                 credit_balance += line['credit']
-                total_debit_balance += end_balance if end_balance > 0 else 0
-                total_credit_balance += abs(end_balance) if end_balance < 0 else 0
+                if account_id.account_type == 'asset_fixed' and end_balance < 0.0:
+                    total_debit_balance += end_balance if end_balance < 0 else 0
+                    total_credit_balance += abs(end_balance) if end_balance > 0 else 0
+                else:
+                    total_debit_balance += end_balance if end_balance > 0 else 0
+                    total_credit_balance += abs(end_balance) if end_balance < 0 else 0
                 number += 1
                 rowx += 1
             else:
@@ -276,12 +288,19 @@ class AccountMoveAnalysis(models.TransientModel):
                 sheet.write('G%s' % str(rowx+1), line['amount_currency_debit'], data_right)
                 sheet.write('H%s' % rowx, line['credit'], data_right)
                 sheet.write('H%s' % str(rowx+1), line['amount_currency_credit'], data_right)
+
                 end_balance = line['debit_start_balance'] - line['credit_start_balance'] + line['debit'] - line['credit']
                 end_balance_currency = line['start_amount_currency_debit'] - line['start_amount_currency_credit'] + line['amount_currency_debit'] - line['amount_currency_credit']
-                sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
-                sheet.write('I%s' % str(rowx+1), end_balance_currency if end_balance_currency > 0 else 0, data_right)
-                sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
-                sheet.write('J%s' % str(rowx+1), abs(end_balance_currency) if end_balance_currency < 0 else 0, data_right)
+                if account_id.account_type == 'asset_fixed' and end_balance_currency < 0.0:
+                    sheet.write('I%s' % rowx, end_balance if end_balance < 0 else 0, data_right)
+                    sheet.write('I%s' % str(rowx + 1), end_balance_currency if end_balance_currency < 0 else 0, data_right)
+                    sheet.write('J%s' % rowx, abs(end_balance) if end_balance > 0 else 0, data_right)
+                    sheet.write('J%s' % str(rowx + 1), abs(end_balance_currency) if end_balance_currency > 0 else 0, data_right)
+                else:
+                    sheet.write('I%s' % rowx, end_balance if end_balance > 0 else 0, data_right)
+                    sheet.write('I%s' % str(rowx+1), end_balance_currency if end_balance_currency > 0 else 0, data_right)
+                    sheet.write('J%s' % rowx, abs(end_balance) if end_balance < 0 else 0, data_right)
+                    sheet.write('J%s' % str(rowx+1), abs(end_balance_currency) if end_balance_currency < 0 else 0, data_right)
                 if line['currency'] not in currency_total_dict.keys():
                     currency_total_dict[line['currency']] = {
                         'pre_debit_balance': currency_start_balance if currency_start_balance > 0 else 0,
@@ -300,8 +319,12 @@ class AccountMoveAnalysis(models.TransientModel):
                         currency_total_dict[line['currency']]['pre_credit_balance'] += abs(currency_start_balance) if currency_start_balance < 0 else 0
                     currency_total_dict[line['currency']]['debit_balance'] += line['amount_currency_debit']
                     currency_total_dict[line['currency']]['credit_balance'] += line['amount_currency_credit']
-                    currency_total_dict[line['currency']]['total_debit_balance'] += end_balance_currency if end_balance_currency > 0 else 0
-                    currency_total_dict[line['currency']]['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency < 0 else 0
+                    if account_id.account_type == 'asset_fixed' and end_balance_currency < 0.0:
+                        currency_total_dict[line['currency']]['total_debit_balance'] += end_balance_currency if end_balance_currency < 0 else 0
+                        currency_total_dict[line['currency']]['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency > 0 else 0
+                    else:
+                        currency_total_dict[line['currency']]['total_debit_balance'] += end_balance_currency if end_balance_currency > 0 else 0
+                        currency_total_dict[line['currency']]['total_credit_balance'] += abs(end_balance_currency) if end_balance_currency < 0 else 0
                 if account_id.account_type == 'asset_fixed' and start_balance < 0.0:
                     pre_debit_balance += start_balance if start_balance < 0 else 0
                     pre_credit_balance += abs(start_balance) if start_balance > 0 else 0
@@ -310,8 +333,12 @@ class AccountMoveAnalysis(models.TransientModel):
                     pre_credit_balance += abs(start_balance) if start_balance < 0 else 0
                 debit_balance += line['debit']
                 credit_balance += line['credit']
-                total_debit_balance += end_balance if end_balance > 0 else 0
-                total_credit_balance += abs(end_balance) if end_balance < 0 else 0
+                if account_id.account_type == 'asset_fixed' and end_balance < 0.0:
+                    total_debit_balance += end_balance if end_balance < 0 else 0
+                    total_credit_balance += abs(end_balance) if end_balance > 0 else 0
+                else:
+                    total_debit_balance += end_balance if end_balance > 0 else 0
+                    total_credit_balance += abs(end_balance) if end_balance < 0 else 0
                 number += 1
                 rowx += 2
 
