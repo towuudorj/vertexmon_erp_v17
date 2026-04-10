@@ -47,8 +47,8 @@ class ResPartner(models.Model):
             if return_data.status_code == 200:
                 json_data = return_data.json()
                 tin_value_ids = self.search([('tin_code', '=', json_data['data'])])
-                if tin_value_ids:
-                    raise UserError(_(u'Татвар төлөгчийн дугаар орсон байгаа тул шалгана уу.'))
+                if json_data['data'] == None:
+                    raise UserError(_(u'Татвар төлөгчийн дугаар буруу байгаа тул шалгана уу.'))
                 else:
                     self.tin_code = json_data['data']
             else:

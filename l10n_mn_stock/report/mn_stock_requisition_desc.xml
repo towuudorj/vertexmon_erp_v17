@@ -4,7 +4,7 @@
         <template id="report_requisition_desc_data">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="o">
-                    <t t-if="o.picking_type_code != 'outgoing'">
+                    <t t-if="o.picking_type_code == 'incoming'">
                         <div class="page">
                             <div class="row mb64">
                                 <div class="col-6">
@@ -15,7 +15,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-else="o.picking_type_code == 'outgoing'">
+                    <t t-else="o.picking_type_code != 'incoming'">
                         <div class="page" style="margin-left:50px; margin-right:30px;">
                             <table style="width: 100%; text-align: center; border: transparent 1px solid;">
                                 <tr style="border: none;">

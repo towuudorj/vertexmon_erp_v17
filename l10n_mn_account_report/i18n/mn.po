@@ -134,6 +134,11 @@ msgstr "Гүйлгээ балансын тайлан"
 msgid "Account move line report"
 msgstr "Касс харилцахын тайлан"
 
+#. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_move_analysis
+msgid "Account Move Analysis Report"
+msgstr "Гүйлгээ балансын тайлан"
+
 
 #. module: l10n_mn_account_report
 #: model:ir.model,name:l10n_mn_account_report.model_account_bank_statement_line
