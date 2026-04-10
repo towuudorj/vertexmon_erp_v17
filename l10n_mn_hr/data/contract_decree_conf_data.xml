@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="contract_decree_conf1" model="contract.decree.conf">
+            <field name="name">Үндсэн ажилтний хөдөлмөрийн гэрээ</field>
+            <field name="code">permanent_employee</field>
+            <field name="model_char">hr.contract</field>
+        </record>
+
+        <record id="contract_decree_conf2" model="contract.decree.conf">
+            <field name="name">Туршилтийн хугацааны хөдөлмөрийн гэрээ</field>
+            <field name="code">probationary_employee</field>
+            <field name="model_char">hr.contract</field>
+        </record>
+    </data>
+</odoo>

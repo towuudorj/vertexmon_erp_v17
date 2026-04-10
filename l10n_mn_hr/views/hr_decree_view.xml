@@ -281,6 +281,8 @@
             <field name="arch" type="xml">
 					<xpath expr="//header" position="inside">
                     	<button name="action_create_decree" string="Create Decree" type="object" class="btn-primary" invisible="decree_id != False"/>
+						<button name="export_permanent_employee_contract" string="Export permanent contract" type="object"/>
+						<button name="export_probationary_employee_contract" string="Export probationary contract" type="object"/>
                 	</xpath>
 					<xpath expr="//sheet/div[@class='oe_button_box']" position="inside">
 						<button name="action_to_decree" 

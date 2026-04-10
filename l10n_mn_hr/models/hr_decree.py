@@ -10,6 +10,19 @@ class HrContract(models.Model):
     decree_id = fields.Many2one('hr.decree',string='Decree')
     decree_count = fields.Integer('Decree count', compute='_compute_decree_count')
 
+    def export_permanent_employee_contract(self):
+        self.ensure_one()
+        conf = self.env['contract.decree.conf'].search([('code', '=', 'permanent_employee')], limit=1)
+        if conf and conf.file and conf.line_ids:
+            return conf.action_download_docx(self.id)
+        return None
+
+    def export_probationary_employee_contract(self):
+        self.ensure_one()
+        conf = self.env['contract.decree.conf'].search([('code', '=', 'probationary_employee')], limit=1)
+        if conf and conf.file and conf.line_ids:
+            return conf.action_download_docx(self.id)
+        return None
 
     def _compute_decree_count(self):
         for rec in self:

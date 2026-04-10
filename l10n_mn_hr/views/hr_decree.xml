@@ -172,34 +172,6 @@
 			</field>
 		</record>
 
-		<record id="hr_contract_inherit_form" model="ir.ui.view">
-            <field name="name">hr.contract.inherit.form</field>
-            <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
-            <field name="arch" type="xml">
-					<xpath expr="//header" position="inside">
-                    	<button name="action_create_decree" string="Create Decree" type="object" class="btn-primary" invisible="decree_id != False"/>
-                	</xpath>
-					<xpath expr="//sheet/div[@class='oe_button_box']" position="inside">
-						<button name="action_to_decree" 
-									string="Decree" 
-									type="object" 
-									class="oe_stat_button" 
-									icon="fa-pencil-square-o">
-									<field name="decree_count" widget="statinfo" string="Decree"/>
-						</button>
-					</xpath>
-					<data>
-						<field name="employee_id" position="before">
-							<field name="contract_number" readonly="1"/>
-							<field name="decree_id" required="0"/>
-						</field>
-					</data>
-					<xpath expr="//field[@name='type_id']" position="attributes">
-						<attribute name="invisible">1</attribute>
-					</xpath>
-			</field>
-		</record>
 	</data>
 </odoo>
 		
