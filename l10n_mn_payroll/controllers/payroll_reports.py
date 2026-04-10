@@ -24,6 +24,9 @@ from odoo import http
 from odoo.http import content_disposition, request
 from odoo.http import serialize_exception as _serialize_exception
 from odoo.tools import html_escape
+from datetime import datetime
+from odoo import _
+from odoo import fields
 
 
 class XLSXReportController(http.Controller):
@@ -37,6 +40,13 @@ class XLSXReportController(http.Controller):
         uid = request.session.uid
         report_obj = request.env[model].with_user(uid)
         options = json.loads(options)
+
+        user = request.env.user
+        report_name = _(report_obj._description)
+        now = fields.Datetime.context_timestamp(user, fields.Datetime.now())
+        date_str = now.strftime("%Y%m%d_%H-%M")
+        filename = f"{report_name}_{date_str}.xlsx"
+
         token = 'dummy-because-api-expects-one'
         try:
             if output_format == 'xlsx':
@@ -44,8 +54,7 @@ class XLSXReportController(http.Controller):
                     None,
                     headers=[
                         ('Content-Type', 'application/vnd.ms-excel'),
-                        ('Content-Disposition',
-                         content_disposition('Excel Report' + '.xlsx'))
+                        ('Content-Disposition', content_disposition(filename))
                     ]
                 )
                 report_obj.get_xlsx_report(options, response)
