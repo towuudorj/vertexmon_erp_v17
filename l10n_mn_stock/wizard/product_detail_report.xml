@@ -10,7 +10,6 @@
 					<group>
 						<field name="company_id" />
 						<field name="is_transection"/>
-						<field name="is_warehouse"/>
 						<field name="product_id"/>
 						<field name="categ_id"/>
 						<field name="type"/>
