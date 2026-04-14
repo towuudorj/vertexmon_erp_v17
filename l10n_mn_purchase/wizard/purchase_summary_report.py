@@ -145,7 +145,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
             temp_purchase_order = purchase_order_obj
             for purchase in purchase_order_id:
                 for picking_id in purchase.picking_ids:
-                    if start_date <= picking_id.scheduled_date.date() <= end_date and picking_id.state == 'done':
+                    if start_date <= picking_id.scheduled_date.date() <= end_date and picking_id.state == 'done' and not picking_id.return_id:
                         temp_purchase_order |= purchase
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
@@ -180,7 +180,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                             'total_without_noat' : total_without_noat,
                                             'total_noat': total_noat,
                                             'total_with_noat': total_with_noat,
-                                            'date_dont': picking_id.date_done.date()
+                                            'date_done': picking_id.date_done.date()
                                         }
                                     }
                                 }
@@ -192,13 +192,11 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                         'total_without_noat': total_without_noat,
                                         'total_noat': total_noat,
                                         'total_with_noat': total_with_noat,
-                                        'date_dont': picking_id.date_done.date()
+                                        'date_done': picking_id.date_done.date()
                                     }
                                 }
                             )
-                        purchase_order_id = temp_purchase_order
-                    else:
-                        purchase_order_id = []
+            purchase_order_id = temp_purchase_order
 
         num = 1
         
@@ -208,7 +206,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
         for line in purchase_order_id:
             if is_picked:
                 for key in picking_total_value_dict[line.id].keys():
-                    sheet.write("A%s" % rowx, "%s" % picking_total_value_dict[line.id][key]['date_dont'], data_right)
+                    sheet.write("A%s" % rowx, "%s" % picking_total_value_dict[line.id][key]['date_done'], data_right)
                     sheet.write("B%s" % rowx, line.name, data_left)
                     sheet.write("C%s" % rowx, "%s" % line.partner_id.code, data_left)
                     sheet.write("D%s" % rowx, "%s" % line.partner_id.name, data_left)
