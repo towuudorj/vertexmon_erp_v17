@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
+from odoo import Command
 
 
 class PurchaseCreateInvoiceWizard(models.TransientModel):
@@ -163,6 +164,20 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                     continue
                 if not line.is_downpayment:
                     down_payment_product_id = order.company_id.sudo().sale_down_payment_product_id
+                    if line.product_template_id and line.product_template_id.categ_id and 'хангамж' in line.product_template_id.categ_id.name.lower():
+                        if not order.company_id.sudo().purchase_down_payment_product_id:
+                            order.company_id.purchase_down_payment_product_id = self.env['product.product'].sudo().create(
+                                {
+                                    'name': u'Нэхэмжлэл/Хангамжийн/',
+                                    'type': 'service',
+                                    'invoice_policy': 'order',
+                                    'company_id': self.env.company.id,
+                                    'detailed_type': 'consu',
+                                    'categ_id': line.product_template_id.categ_id.id,
+                                    'taxes_id': [Command.set(line.product_template_id.taxes_id.ids)],
+                                }
+                            )
+                        down_payment_product_id = order.company_id.sudo().purchase_down_payment_product_id
                     if self.payment_method == 'fixed':
                         payment_percent = float(self.amount / float(sum((line.price_unit * line.product_qty) for line in self.purchase_order_id.order_line.filtered(lambda x: not x.is_downpayment)) / 100))
                         price_unit = float(line.price_unit * line.product_qty * payment_percent /  100)
