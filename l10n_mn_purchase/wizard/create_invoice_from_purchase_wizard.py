@@ -172,7 +172,6 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                                     'type': 'service',
                                     'invoice_policy': 'order',
                                     'company_id': self.env.company.id,
-                                    'detailed_type': 'consu',
                                     'categ_id': line.product_template_id.categ_id.id,
                                     'taxes_id': [Command.set(line.product_template_id.taxes_id.ids)],
                                 }
