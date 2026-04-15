@@ -269,17 +269,18 @@ class PurchaseExpenseReport(models.TransientModel):
                 vat_declaration = []
                 freight_partner = ''
                 for exp_pro in expense_product_ids:
-                    self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id, 
+                    self._cr.execute("""select ad.id, COALESCE(ad.additional_landed_cost, 0) as additional_landed_cost,  
+                                        ad.product_id, ad.cost_line_id, 
                                         COALESCE(am.vat_declaration, '') as vat_declaration, sm.quantity
                                     from stock_valuation_adjustment_lines as ad
                                     left join stock_move sm on sm.id = ad.move_id
-                                    left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
+                                    left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join account_move am on am.id = sc.vendor_bill_id
                                     where sm.purchase_line_id = %s and sm.picking_id = %s
                                 """%(purchase_data['id'], purchase_data['picking_id']))
                     expense_data_ids = self._cr.dictfetchall()
-                    stock_line_obj = self.env['stock.landed.cost.lines']
+                    stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
                     count = 0
                     for exp in expense_data_ids:
                         quantity = exp['quantity']
@@ -409,17 +410,18 @@ class PurchaseExpenseReport(models.TransientModel):
                 total_cost = 0.0
                 freight_partner = ''
                 for exp_pro in expense_product_ids:
-                    self._cr.execute("""select ad.id, ad.additional_landed_cost,  ad.product_id, ad.cost_line_id from 
+                    self._cr.execute("""select ad.id, COALESCE(ad.additional_landed_cost, 0) as additional_landed_cost,
+                                    ad.product_id, ad.cost_line_id from
                                     stock_valuation_adjustment_lines as ad
                                     left join stock_move sm on sm.id = ad.move_id
-                                    left join stock_landed_cost_lines as sc_lines on ad.additional_landed_cost = sc_lines.id
+                                    left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join purchase_order_stock_landed_cost_rel as polsc on sc.id = polsc.stock_landed_cost_id
                                     where polsc.purchase_order_id = %s and ad.product_id = %s and sc.company_id = %s
                                     group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id
                                 """%(purchase_data.id, product.id, data['company_id']))
                     expense_data_ids = self._cr.dictfetchall()
-                    stock_line_obj = self.env['stock.landed.cost.lines']
+                    stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
                     for exp in expense_data_ids:
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
                         if exp_pro.name == u'Тээврийн зардал' or exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
