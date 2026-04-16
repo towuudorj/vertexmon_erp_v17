@@ -9,4 +9,15 @@
         <field name="numbercall">-1</field>
         <field name="active">True</field>
     </record>
+
+    <record id="ir_cron_microsoft_push_data" model="ir.cron">
+        <field name="name">Microsoft: Өгөгдөл шинэчилэх API</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model.push_hr_info_to_microsoft()</field>
+        <field name="interval_number">100</field>
+        <field name="interval_type">weeks</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+    </record>
 </odoo>

@@ -1,0 +1,14 @@
+<odoo noupdate="0">
+        <record id="attendance_app_key_data" model="microsoft.api.value">
+            <field name="name">Microsoft API Values</field>
+            <field name="client_id">278f40db-e253-4a26-9020-8e2ecb624d7f</field>
+            <field name="client_secret">W418Q~qSALgxiovwYChv7mdBAP5kAJRfiNCuvb1S</field>
+            <field name="tenant_id">71789bb6-9340-4dc2-bfa2-76f22aedc265</field>
+            <field name="sharepoint_url">vertexmonllc.sharepoint.com</field>
+            <field name="site_name">OdooERP-PowerApps</field>
+            <field name="employee_list_name">AttendanceEmployee</field>
+            <field name="leave_list_name">Attendance</field>
+            <field name="job_list_name">AttendanceJob</field>
+            <field name="department_list_name">AttendanceDepartment</field>
+        </record>
+</odoo>

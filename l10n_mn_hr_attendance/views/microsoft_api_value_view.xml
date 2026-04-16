@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="microsoft_api_value_form" model="ir.ui.view">
+        <field name="name">hr.microsoft.api.value</field>
+        <field name="model">microsoft.api.value</field>
+        <field name="arch" type="xml">
+            <form>
+                <h2>
+                    <field name="name"/>
+                </h2>
+                <group>
+                    <group>
+                        <field name="client_id"/>
+                        <field name="client_secret"/>
+                        <field name="tenant_id"/>
+                        <field name="sharepoint_url"/>
+                    </group>
+                    <group>
+                        <field name="site_name"/>
+                        <field name="employee_list_name"/>
+                        <field name="job_list_name"/>
+                        <field name="department_list_name"/>
+                        <field name="leave_list_name"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="microsoft_api_value_action">
+        <field name="name">Microsoft API Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">microsoft.api.value</field>
+        <field name="view_mode">form</field>
+        <field name="res_id">1</field>
+        <field name="view_id" ref="microsoft_api_value_form" />
+    </record>
+
+    <menuitem
+        id="menu_api_value_action"
+        parent="hr.menu_human_resources_configuration"
+        sequence="3"
+        action="microsoft_api_value_action"
+        groups="base.group_system"
+    />
+
+</odoo>
