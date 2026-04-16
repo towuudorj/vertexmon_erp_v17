@@ -99,9 +99,9 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                     'num_format': '#,##0.00'
                                 })
 
-        sheet.set_column(0, 5, 15)
-        sheet.set_column(6, 6, 40)
-        sheet.set_column(7, 17, 15)
+        sheet.set_column(0, 17, 18)
+        sheet.set_column(3, 3, 25)
+        sheet.set_column(6, 6, 20)
         rowx = 1
         sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Худалдан авалтын тайлан хураангуй', title)
         sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
@@ -140,7 +140,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
             domain.append(('state', 'not in', ['cancel']))
 
         purchase_order_id = purchase_order_obj.search(domain, order='date_approve asc')
-        picking_total_value_dict = {}
+        picking_total_value_dict = []
         if is_picked:
             temp_purchase_order = purchase_order_obj
             for purchase in purchase_order_id:
@@ -172,30 +172,14 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                 total_with_noat += total
                                 total_noat += 0
 
-                        if purchase.id not in picking_total_value_dict.keys():
-                            picking_total_value_dict.update(
-                                {
-                                    purchase.id: {
-                                        picking_id.id: {
-                                            'total_without_noat' : total_without_noat,
-                                            'total_noat': total_noat,
-                                            'total_with_noat': total_with_noat,
-                                            'date_done': picking_id.date_done.date()
-                                        }
-                                    }
-                                }
-                            )
-                        else:
-                            picking_total_value_dict[purchase.id].update(
-                                {
-                                    picking_id.id: {
-                                        'total_without_noat': total_without_noat,
-                                        'total_noat': total_noat,
-                                        'total_with_noat': total_with_noat,
-                                        'date_done': picking_id.date_done.date()
-                                    }
-                                }
-                            )
+                        picking_total_value_dict.append({
+                            'total_without_noat' : total_without_noat,
+                            'total_noat': total_noat,
+                            'total_with_noat': total_with_noat,
+                            'date_done': picking_id.date_done.date(),
+                            'order_id': purchase
+                        })
+
             purchase_order_id = temp_purchase_order
 
         num = 1
@@ -203,23 +187,26 @@ class PurchaseOrderCommonReport(models.TransientModel):
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
-        for line in purchase_order_id:
-            if is_picked:
-                for key in picking_total_value_dict[line.id].keys():
-                    sheet.write("A%s" % rowx, "%s" % picking_total_value_dict[line.id][key]['date_done'], data_right)
-                    sheet.write("B%s" % rowx, line.name, data_left)
-                    sheet.write("C%s" % rowx, "%s" % line.partner_id.code, data_left)
-                    sheet.write("D%s" % rowx, "%s" % line.partner_id.name, data_left)
-                    sheet.write("E%s" % rowx, picking_total_value_dict[line.id][key]['total_without_noat'], data_right)
-                    sheet.write("F%s" % rowx, picking_total_value_dict[line.id][key]['total_noat'], data_right)
-                    sheet.write("G%s" % rowx, picking_total_value_dict[line.id][key]['total_with_noat'], data_right)
-                    sheet.write("H%s" % rowx, "%s" % line.user_id.name, data_right)
-                    total_amount_untaxed += picking_total_value_dict[line.id][key]['total_without_noat']
-                    total_amount_tax += picking_total_value_dict[line.id][key]['total_noat']
-                    total_amount_total += picking_total_value_dict[line.id][key]['total_with_noat']
-                    num += 1
-                    rowx += 1
-            else:
+        if is_picked:
+            sorted_data = []
+            if picking_total_value_dict:
+                sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
+            for item in sorted_data:
+                sheet.write("A%s" % rowx, "%s" % item['date_done'], data_right)
+                sheet.write("B%s" % rowx, item['order_id'].name, data_left)
+                sheet.write("C%s" % rowx, "%s" % item['order_id'].partner_id.code, data_left)
+                sheet.write("D%s" % rowx, "%s" % item['order_id'].partner_id.name, data_left)
+                sheet.write("E%s" % rowx, item['total_without_noat'], data_right)
+                sheet.write("F%s" % rowx, item['total_noat'], data_right)
+                sheet.write("G%s" % rowx, item['total_with_noat'], data_right)
+                sheet.write("H%s" % rowx, "%s" % item['order_id'].user_id.name, data_right)
+                total_amount_untaxed += item['total_without_noat']
+                total_amount_tax += item['total_noat']
+                total_amount_total += item['total_with_noat']
+                num += 1
+                rowx += 1
+        else:
+            for line in purchase_order_id:
                 convert_date = fields.Date.from_string(line.date_approve)
                 sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
                 sheet.write("B%s"%rowx, line.name, data_left)
