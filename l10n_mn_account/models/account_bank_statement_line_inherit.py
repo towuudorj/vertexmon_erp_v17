@@ -16,6 +16,138 @@ class AccountBankStatementLine(models.Model):
     )
     
     
+    def _prepare_move_line_default_vals(self, counterpart_account_id=None):
+        self.ensure_one()
+
+        if not counterpart_account_id:
+            counterpart_account_id = self.journal_id.suspense_account_id.id
+
+        if not counterpart_account_id:
+            raise UserError(_(
+                "You must configure a Suspense Account on journal %s.",
+                self.journal_id.display_name
+            ))
+
+        company = self.company_id
+        company_currency = company.currency_id
+        journal = self.journal_id
+        journal_currency = journal.currency_id or company_currency
+
+        amount = self.amount
+        is_inbound = amount > 0
+
+        # Company currency amount
+        if journal_currency == company_currency:
+            company_amount = amount
+        else:
+            company_amount = journal_currency._convert(
+                amount, company_currency, company, self.date
+            )
+
+        abs_amount = abs(company_amount)
+        sign = 1 if company_amount > 0 else -1
+
+        # =====================================================
+        # 1️⃣ LIQUIDITY LINE (BANK)
+        # =====================================================
+        liquidity_vals = {
+            'name': self.payment_ref,
+            'move_id': self.move_id.id,
+            'partner_id': self.partner_id.id,
+            'account_id': journal.default_account_id.id,
+            'currency_id': journal_currency.id,
+            'cash_move_type_id': self.cash_move_type_id.id,
+            'amount_currency': abs_amount * sign,
+            'debit': abs_amount if is_inbound else 0.0,
+            'credit': abs_amount if not is_inbound else 0.0,
+        }
+
+        # =====================================================
+        # NO TAX → NORMAL BEHAVIOR
+        # =====================================================
+        if not self.tax_ids:
+            counterpart_vals = {
+                'name': self.payment_ref,
+                'account_id': counterpart_account_id,
+                'move_id': self.move_id.id,
+                'partner_id': self.partner_id.id,
+                'debit': abs_amount if not is_inbound else 0.0,
+                'credit': abs_amount if is_inbound else 0.0,
+                'amount_currency': -abs_amount * sign
+            }
+            return [liquidity_vals, counterpart_vals]
+
+        # =====================================================
+        # TAX SPLIT
+        # =====================================================
+        tax = self.tax_ids[0]  # single tax support
+
+        tax_result = tax.compute_all(
+            abs_amount,
+            currency=company_currency,
+            quantity=1.0,
+            partner=self.partner_id,
+        )
+
+        net_amount = tax_result['total_excluded']
+        tax_amount = tax_result['taxes'][0]['amount']
+
+        # =====================================================
+        # 2️⃣ NET LINE
+        # =====================================================
+        net_vals = {
+            'name': self.payment_ref,
+            'account_id': counterpart_account_id,
+            'move_id': self.move_id.id,
+            'partner_id': self.partner_id.id,
+            'debit': net_amount if not is_inbound else 0.0,
+            'credit': net_amount if is_inbound else 0.0,
+            'amount_currency': -net_amount * sign,
+        }
+
+        # =====================================================
+        # 3️⃣ TAX LINE
+        # =====================================================
+        tax_account = tax.invoice_repartition_line_ids.filtered(
+            lambda x: x.repartition_type == 'tax'
+        )[0].account_id
+
+        tax_vals = {
+            'name': u'Татвар',
+            'account_id': tax_account.id,
+            'move_id': self.move_id.id,
+            'partner_id': self.partner_id.id,
+            'debit': tax_amount if not is_inbound else 0.0,
+            'credit': tax_amount if is_inbound else 0.0,
+            'amount_currency': -tax_amount * sign,
+        }
+
+        # =====================================================
+        # FINAL SAFETY CHECK (100% BALANCED)
+        # =====================================================
+        total_debit = (
+            liquidity_vals['debit'] +
+            net_vals['debit'] +
+            tax_vals['debit']
+        )
+
+        total_credit = (
+            liquidity_vals['credit'] +
+            net_vals['credit'] +
+            tax_vals['credit']
+        )
+
+        diff = round(total_debit - total_credit, 2)
+
+        if diff != 0:
+            # adjust tax line automatically to force balance
+            if diff > 0:
+                tax_vals['credit'] += diff
+            else:
+                tax_vals['debit'] += abs(diff)
+
+        return [liquidity_vals, net_vals, tax_vals]
+    
 
     def _synchronize_to_moves(self, changed_fields):
         if self._context.get('skip_account_move_synchronization'):
@@ -30,8 +162,7 @@ class AccountBankStatementLine(models.Model):
     
         for st_line in self.with_context(skip_account_move_synchronization=True):
     
-            liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
-            
+            liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()            
             journal = st_line.journal_id
             company_currency = journal.company_id.currency_id
             journal_currency = journal.currency_id or company_currency
