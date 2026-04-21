@@ -4,3 +4,4 @@ from . import account_stock_product_detail_report
 from . import product_aged_report
 from . import product_sales_report
 from . import stock_picking_return_inherit
+from . import stock_move_update_wizard

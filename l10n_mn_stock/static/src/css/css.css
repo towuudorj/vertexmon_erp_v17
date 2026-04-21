@@ -1,0 +1,3 @@
+.min_height_many2many .ui-sortable tr:has(td[colspan]) {
+    display: none !important;
+}

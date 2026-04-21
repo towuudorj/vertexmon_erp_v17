@@ -7,6 +7,31 @@ from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    @api.model
+    def default_get(self, fields_list):
+        result = super(StockMove, self).default_get(fields_list)
+        context = self.env.context
+        main_line = context.get('main_id', False)
+        if main_line:
+            main_line = self.env['stock.move'].browse(main_line)
+            if 'location_id' in fields_list:
+                result['location_id'] = main_line.location_id.id
+            if 'location_dest_id' in fields_list:
+                result['location_dest_id'] = main_line.location_dest_id.id
+            if 'description_picking' in fields_list:
+                result['description_picking'] = main_line.description_picking
+            if 'product_uom' in fields_list:
+                result['product_uom'] = main_line.product_uom.id
+            if 'date' in fields_list:
+                result['date'] = main_line.date
+            if 'date_deadline' in fields_list:
+                result['date_deadline'] = main_line.date_deadline
+            if 'name' in fields_list:
+                result['name'] = main_line.name
+            if 'sale_prices' in fields_list:
+                result['sale_prices'] = main_line.sale_prices
+        return result
+
 
     def product_price_update_before_done(self, forced_qty=None):
         tmpl_dict = defaultdict(lambda: 0.0)
@@ -194,12 +219,17 @@ class StockMove(models.Model):
     tax_amount = fields.Float(string=u'Татваргүй үнэ',compute='_compute_tax_amount')
     discount = fields.Float(string=u'Хөнгөлөлт', compute='_compute_discount')
     
-
-
-
-
-        
-        
+    def update_line(self):
+        self.ensure_one()
+        if self.picking_id.state not in ['done', 'cancel']:
+            return {
+                'name': u'Хүлээн авсан бараа засварлах',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'stock.move.update',
+                'target': 'new',
+            }
+        return None
 
 
 class StockMoveLine(models.Model):

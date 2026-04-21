@@ -49,6 +49,7 @@
                 'wizard/product_summary_report.xml',
                 'wizard/product_aged_report_view.xml',
                 'wizard/product_sales_report_view.xml',
+                'wizard/stock_move_update_wizard.xml',
                 'views/distributor_register_view.xml',
                 'views/product_inherit_view.xml',
                 'views/item_group_view.xml',
@@ -61,6 +62,11 @@
                 'views/menu_view.xml',
                 'views/report_view.xml',
                 ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mn_stock/static/src/css/*.css'
+        ]
+    },
     "auto_install": False,
     "installable": True,
 }

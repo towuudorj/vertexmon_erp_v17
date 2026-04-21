@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+		<record id="stock_move_update_view" model="ir.ui.view">
+			<field name="name">stock.move.update</field>
+			<field name="model">stock.move.update</field>
+			<field name="arch" type="xml">
+				<form string="Stock Move Update" >
+					<group>
+						<div class="min_height_many2many" colspan="2">
+							<field name="move_id" readonly="1" colspan="2" nolabel="1">
+								<tree editable="bottom" >
+									<field name="company_id" column_invisible="True"/>
+									<field name="product_id"/>
+									<field name="description_picking"/>
+									<field name="date"/>
+									<field name="date_deadline"/>
+									<field name="product_uom_qty"/>
+									<field name="quantity"/>
+									<field name="picked"/>
+								</tree>
+							</field>
+						</div>
+					</group>
+					<group>
+						<label for="new_line_ids" string="New Moves"/>
+						<field name="new_line_ids" domain="[('id', '=', 0)]" nolabel="1" colspan="2"
+							   context="{'main_id': move_id}">
+							<tree editable="bottom">
+								<field name="company_id" column_invisible="True"/>
+								<field name="product_id"/>
+								<field name="description_picking"/>
+								<field name="date"/>
+								<field name="date_deadline"/>
+								<field name="product_uom_qty"/>
+								<field name="quantity"/>
+								<field name="picked"/>
+							</tree>
+							<form>
+								<group>
+									<field name="company_id" invisible="1"/>
+									<field name="product_id"/>
+									<field name="quantity"/>
+								</group>
+							</form>
+						</field>
+					</group>
+					<footer>
+						<button name="update" string="Update" type="object" class="oe_highlight"/>
+						<button string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+    </data>
+</odoo>
