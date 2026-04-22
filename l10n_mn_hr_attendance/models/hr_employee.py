@@ -173,6 +173,11 @@ class Employee(models.Model):
                 except Exception as e:
                     ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
 
+class EmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    is_sync_microsoft = fields.Boolean(related='employee_id.is_sync_microsoft', compute_sudo=True)
+
 
 class HrJob(models.Model):
     _inherit = 'hr.job'
