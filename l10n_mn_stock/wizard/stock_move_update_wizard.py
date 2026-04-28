@@ -31,6 +31,12 @@ class StockMoveUpdate(models.TransientModel):
                 except TypeError:
                     continue
 
+    def _run_project_line_onchange(self, record):
+        for method_name in ('onchange_product_id', 'onchange_product_qty'):
+            onchange = getattr(record, method_name, None)
+            if onchange:
+                onchange()
+
     def _prepare_purchase_order_line_vals(self, purchase_line, new_product, quantity):
         purchase_line_vals = purchase_line.copy_data()[0]
         for field_name in (
@@ -144,6 +150,83 @@ class StockMoveUpdate(models.TransientModel):
         })
         return move_vals
 
+    def _prepare_project_product_line_vals(self, project_line, new_product, quantity):
+        project_line_vals = project_line.copy_data()[0]
+        for field_name in (
+                'qty_available', 'qty_delivered', 'price_total', 'cost_total', 'delivery_cost',
+                'qty_available_cost', 'last_qty', 'change_cost', 'picking_ids'):
+            project_line_vals.pop(field_name, None)
+        new_project_line = self.env['project.products.line'].new(project_line_vals)
+        new_project_line.project_id = project_line.project_id
+        new_project_line.product_id = new_product
+        new_project_line.product_qty = quantity
+        self._run_project_line_onchange(new_project_line)
+        new_project_line.project_id = project_line.project_id
+        new_project_line.product_id = new_product
+        new_project_line.product_qty = quantity
+        project_line_vals = new_project_line._convert_to_write(new_project_line._cache)
+        for field_name in (
+                'qty_available', 'qty_delivered', 'price_total', 'cost_total', 'delivery_cost',
+                'qty_available_cost', 'last_qty', 'change_cost', 'picking_ids'):
+            project_line_vals.pop(field_name, None)
+        project_line_vals.update({
+            'project_id': project_line.project_id.id,
+            'product_id': new_product.id,
+            'product_qty': quantity,
+            'product_uom': (new_project_line.product_uom or new_product.uom_po_id or new_product.uom_id).id,
+        })
+        return project_line_vals
+
+    def _prepare_project_stock_move_vals(self, source_move, wizard_line):
+        move_vals = source_move.copy_data()[0]
+        move_vals.update({
+            'location_id': source_move.location_id.id if source_move.location_id else False,
+            'location_dest_id': source_move.location_dest_id.id if source_move.location_dest_id else False,
+            'description_picking': wizard_line.description_picking or wizard_line.product_id.display_name,
+            'product_uom': wizard_line.product_uom.id if wizard_line.product_uom else wizard_line.product_id.uom_id.id,
+            'date': source_move.date,
+            'date_deadline': source_move.date_deadline,
+            'name': wizard_line.name or wizard_line.product_id.display_name,
+            'product_uom_qty': wizard_line.quantity,
+            'quantity': wizard_line.quantity,
+            'product_id': wizard_line.product_id.id,
+            'company_id': source_move.company_id.id if source_move.company_id else False,
+            'sequence': source_move.sequence + 1 if source_move.sequence else 0,
+            'partner_id': source_move.partner_id.id if source_move.partner_id else False,
+            'scrap_id': source_move.scrap_id.id if source_move.scrap_id else False,
+            'group_id': source_move.group_id.id if source_move.group_id else False,
+            'rule_id': source_move.rule_id.id if source_move.rule_id else False,
+            'picking_type_id': source_move.picking_type_id.id if source_move.picking_type_id else False,
+            'restrict_partner_id': source_move.restrict_partner_id.id if source_move.restrict_partner_id else False,
+            'warehouse_id': source_move.warehouse_id.id if source_move.warehouse_id else False,
+            'package_level_id': source_move.package_level_id.id if source_move.package_level_id else False,
+            'state': source_move.state,
+            'origin': source_move.origin,
+            'procure_method': source_move.procure_method,
+            'reference': source_move.reference,
+            'reservation_date': source_move.reservation_date,
+            'price_unit': source_move.price_unit,
+            'sale_prices': source_move.sale_prices,
+            'inventory_id': source_move.inventory_id.id if source_move.inventory_id else False,
+            'picking_id': source_move.picking_id.id,
+            'sale_line_id': False,
+            'purchase_line_id': False,
+        })
+        return move_vals
+
+    def _get_related_crm_lead(self, move, purchase_id=False):
+        purchase_order = purchase_id or move.purchase_line_id.order_id
+        if purchase_order and purchase_order.requisition_id and purchase_order.requisition_id.crm_lead_id:
+            return purchase_order.requisition_id.crm_lead_id
+        return self.env['crm.lead']
+
+    def _get_project_picking_ids(self, project):
+        if not project:
+            return self.env['stock.picking']
+        return project.picking_ids.filtered(
+            lambda picking: not getattr(picking, 'is_dropship', False) and picking.state not in ['cancel', 'done']
+        )
+
     def _get_related_sale_move(self, move, purchase_id=False):
         sale_moves = (
             move.move_dest_ids
@@ -154,8 +237,8 @@ class StockMoveUpdate(models.TransientModel):
         if len(same_product_sale_moves) == 1:
             return same_product_sale_moves[:1]
 
-        if purchase_id and purchase_id.requisition_id and purchase_id.requisition_id.crm_lead_id:
-            lead_id = purchase_id.requisition_id.crm_lead_id
+        lead_id = self._get_related_crm_lead(move, purchase_id)
+        if lead_id:
             sale_orders = lead_id.order_ids.filtered_domain(lead_id._get_lead_sale_order_domain())
             if sale_orders and len(sale_orders) == 1:
                 sale_picking_ids = sale_orders.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
@@ -165,6 +248,20 @@ class StockMoveUpdate(models.TransientModel):
                 if len(same_product_lines) == 1:
                     return same_product_lines[:1]
         return self.env['stock.move']
+
+    def _get_related_project_records(self, move, purchase_id=False):
+        project = self.env['project.project']
+        lead_id = self._get_related_crm_lead(move, purchase_id)
+        if lead_id and lead_id.crm_type == 'stock' and lead_id.project_id:
+            project = lead_id.project_id
+        if not project:
+            return project, self.env['project.products.line'], self.env['stock.move']
+        project_product_line = project.products_line.filtered(lambda line: line.product_id.id == move.product_id.id)[:1]
+        project_picking_ids = self._get_project_picking_ids(project)
+        project_stock_move = project_picking_ids.mapped('move_ids_without_package').filtered(
+            lambda line: line.product_id.id == move.product_id.id
+        )[:1]
+        return project, project_product_line, project_stock_move
 
     def update(self):
         for obj in self:
@@ -239,58 +336,81 @@ class StockMoveUpdate(models.TransientModel):
             if new_lines_to_unlink:
                 new_lines_to_unlink.sudo().unlink()
 
-            same_product_sale_move = self._get_related_sale_move(move, purchase_id)
-            if quantity_delta and (
-                    len(same_product_sale_move) != 1 or
-                    float_compare(same_product_sale_move.quantity + quantity_delta, 0.0,
-                                  precision_rounding=rounding) < 0):
-                raise ValidationError(u'Борлуулалтын хүргэлтийн мөрөөс шалтгаалж салгах боломжгүй байна')
-            if quantity_delta and same_product_sale_move:
-                updated_sale_qty = same_product_sale_move.quantity + quantity_delta
-                sale_message_body = (
-                    f'<ul><li>{same_product_sale_move.product_id.name}:{same_product_sale_move.quantity}</li><li>→</li>'
-                )
-                same_product_sale_move.sudo().write({
-                    'quantity': updated_sale_qty,
-                    'product_uom_qty': same_product_sale_move.product_uom_qty + quantity_delta,
-                })
-                sale_message_body += (
-                    f'<li>{same_product_sale_move.product_id.name}:{updated_sale_qty}</li></ul>'
-                )
-                if same_product_sale_move.sale_line_id:
-                    same_product_sale_move.sale_line_id.with_context(
-                        skip_split_stock_rule=True
-                    ).write({
-                        'product_uom_qty': same_product_sale_move.sale_line_id.product_uom_qty + quantity_delta,
+            project_id, project_product_line, project_stock_move = self._get_related_project_records(move, purchase_id)
+            if project_id:
+                if quantity_delta and project_product_line:
+                    project_product_line.sudo().write({
+                        'product_qty': project_product_line.product_qty + quantity_delta,
                     })
-                same_product_sale_move.picking_id.message_post(
-                    author_id=self.env.user.partner_id.id,
-                    body=Markup(sale_message_body))
 
-            source_sale_line = same_product_sale_move.sale_line_id[:1]
-            if obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id) and not source_sale_line:
-                raise ValidationError(u'Үндсэн бараатай холбоотой борлуулалтын мөр олдсонгүй.')
+                if quantity_delta and project_stock_move:
+                    project_stock_move.sudo().write({
+                        'product_uom_qty': project_stock_move.product_uom_qty + quantity_delta,
+                    })
 
-            for new_line in obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id):
-                if len(same_product_sale_move) != 1:
+                for new_line in obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id):
+                    if project_product_line:
+                        self.env['project.products.line'].sudo().create(
+                            self._prepare_project_product_line_vals(
+                                project_product_line, new_line.product_id, new_line.quantity
+                            )
+                        )
+                    if project_stock_move:
+                        self.env['stock.move'].sudo().create(
+                            self._prepare_project_stock_move_vals(project_stock_move, new_line)
+                        )
+            else:
+                same_product_sale_move = self._get_related_sale_move(move, purchase_id)
+                if quantity_delta and (
+                        len(same_product_sale_move) != 1 or
+                        float_compare(same_product_sale_move.product_uom_qty + quantity_delta, 0.0,
+                                      precision_rounding=rounding) < 0):
                     raise ValidationError(u'Борлуулалтын хүргэлтийн мөрөөс шалтгаалж салгах боломжгүй байна')
-
-                sale_picking_id = same_product_sale_move.picking_id
-                sale_order_line_vals = self._prepare_sale_order_line_vals(
-                    source_sale_line, new_line.product_id, new_line.quantity
-                )
-                sale_order_line_id = self.env['sale.order.line'].with_context(
-                    skip_split_stock_rule=True
-                ).sudo().create(sale_order_line_vals)
-                self.env['stock.move'].sudo().create(
-                    self._prepare_sale_stock_move_vals(
-                        same_product_sale_move, new_line, sale_order_line_id
+                if quantity_delta and same_product_sale_move:
+                    updated_sale_qty = same_product_sale_move.quantity + quantity_delta
+                    sale_message_body = (
+                        f'<ul><li>{same_product_sale_move.product_id.name}:{same_product_sale_move.quantity}</li><li>→</li>'
                     )
-                )
-                sale_message_body = f'<ul><li>{new_line.product_id.name}:{new_line.quantity}</li></ul>'
-                sale_picking_id.message_post(
-                    author_id=self.env.user.partner_id.id,
-                    body=Markup(sale_message_body))
+                    same_product_sale_move.sudo().write({
+                        'product_uom_qty': same_product_sale_move.product_uom_qty + quantity_delta,
+                    })
+                    sale_message_body += (
+                        f'<li>{same_product_sale_move.product_id.name}:{updated_sale_qty}</li></ul>'
+                    )
+                    if same_product_sale_move.sale_line_id:
+                        same_product_sale_move.sale_line_id.with_context(
+                            skip_split_stock_rule=True
+                        ).write({
+                            'product_uom_qty': same_product_sale_move.sale_line_id.product_uom_qty + quantity_delta,
+                        })
+                    same_product_sale_move.picking_id.message_post(
+                        author_id=self.env.user.partner_id.id,
+                        body=Markup(sale_message_body))
+
+                source_sale_line = same_product_sale_move.sale_line_id[:1]
+                if obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id) and not source_sale_line:
+                    raise ValidationError(u'Үндсэн бараатай холбоотой борлуулалтын мөр олдсонгүй.')
+
+                for new_line in obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id):
+                    if len(same_product_sale_move) != 1:
+                        raise ValidationError(u'Борлуулалтын хүргэлтийн мөрөөс шалтгаалж салгах боломжгүй байна')
+
+                    sale_picking_id = same_product_sale_move.picking_id
+                    sale_order_line_vals = self._prepare_sale_order_line_vals(
+                        source_sale_line, new_line.product_id, new_line.quantity
+                    )
+                    sale_order_line_id = self.env['sale.order.line'].with_context(
+                        skip_split_stock_rule=True
+                    ).sudo().create(sale_order_line_vals)
+                    self.env['stock.move'].sudo().create(
+                        self._prepare_sale_stock_move_vals(
+                            same_product_sale_move, new_line, sale_order_line_id
+                        )
+                    )
+                    sale_message_body = f'<ul><li>{new_line.product_id.name}:{new_line.quantity}</li></ul>'
+                    sale_picking_id.message_post(
+                        author_id=self.env.user.partner_id.id,
+                        body=Markup(sale_message_body))
         return {'type': 'ir.actions.act_window_close'}
 
     def cancel(self):
