@@ -6,3 +6,5 @@ from . import product_category_inherit
 from . import item_group
 from . import product_category_new
 from . import stock_quant_inherit
+from . import sale_order_line_inherit
+from . import purchase_order_line_inherit

@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from markupsafe import Markup
 
+from odoo.exceptions import ValidationError
+from odoo.tools.float_utils import float_compare
+
 
 class StockMoveUpdate(models.TransientModel):
     _name = 'stock.move.update'
@@ -19,62 +22,275 @@ class StockMoveUpdate(models.TransientModel):
     new_line_ids = fields.Many2many('stock.move', 'move_update_new_line', 'move_update_wizard_id', 'new_move_id')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
 
+    def _run_product_onchange(self, record):
+        for method_name in ('_onchange_product_id', 'product_id_change'):
+            onchange = getattr(record, method_name, None)
+            if onchange:
+                try:
+                    onchange()
+                except TypeError:
+                    continue
+
+    def _prepare_purchase_order_line_vals(self, purchase_line, new_product, quantity):
+        purchase_line_vals = purchase_line.copy_data()[0]
+        for field_name in (
+                'move_ids', 'move_dest_ids', 'move_source_ids', 'invoice_lines',
+                'qty_received', 'qty_invoiced', 'qty_to_invoice'):
+            purchase_line_vals.pop(field_name, None)
+        purchase_order_line = self.env['purchase.order.line'].new(purchase_line_vals)
+        purchase_order_line.order_id = purchase_line.order_id
+        purchase_order_line.product_id = new_product
+        if 'product_uom' in purchase_order_line._fields and new_product.uom_po_id:
+            purchase_order_line.product_uom = new_product.uom_po_id
+        if 'product_qty' in purchase_order_line._fields:
+            purchase_order_line.product_qty = quantity
+        self._run_product_onchange(purchase_order_line)
+        purchase_order_line.order_id = purchase_line.order_id
+        purchase_order_line.product_id = new_product
+        if 'product_uom' in purchase_order_line._fields and new_product.uom_po_id:
+            purchase_order_line.product_uom = new_product.uom_po_id
+        if 'product_qty' in purchase_order_line._fields:
+            purchase_order_line.product_qty = quantity
+        purchase_order_line_vals = purchase_order_line._convert_to_write(purchase_order_line._cache)
+        for field_name in (
+                'move_ids', 'move_dest_ids', 'move_source_ids', 'invoice_lines',
+                'qty_received', 'qty_invoiced', 'qty_to_invoice'):
+            purchase_order_line_vals.pop(field_name, None)
+        purchase_order_line_vals.update({
+            'order_id': purchase_line.order_id.id,
+            'product_id': new_product.id,
+            'product_qty': quantity,
+            'product_uom': new_product.uom_po_id.id if new_product.uom_po_id else False,
+        })
+        return purchase_order_line_vals
+
+    def _prepare_purchase_stock_move_vals(self, wizard_line, purchase_line_id):
+        return {
+            'product_uom_qty': wizard_line.quantity,
+            'quantity': wizard_line.quantity,
+            'purchase_line_id': purchase_line_id.id if purchase_line_id else False,
+            'product_uom': wizard_line.product_uom.id if wizard_line.product_uom else wizard_line.product_id.uom_po_id.id,
+            'description_picking': wizard_line.description_picking or wizard_line.product_id.display_name,
+            'name': wizard_line.name or wizard_line.product_id.display_name,
+            'date': wizard_line.date,
+            'date_deadline': wizard_line.date_deadline,
+            'sale_prices': wizard_line.sale_prices,
+        }
+
+    def _prepare_sale_order_line_vals(self, sale_order_line, new_product, quantity):
+        sale_line_vals = sale_order_line.copy_data()[0]
+        for field_name in (
+                'move_ids', 'invoice_lines', 'qty_delivered', 'qty_invoiced',
+                'qty_to_invoice', 'untaxed_amount_invoiced', 'untaxed_amount_to_invoice'):
+            sale_line_vals.pop(field_name, None)
+        new_sale_order_line = self.env['sale.order.line'].new(sale_line_vals)
+        new_sale_order_line.order_id = sale_order_line.order_id
+        new_sale_order_line.product_id = new_product
+        if 'product_uom' in new_sale_order_line._fields and new_product.uom_id:
+            new_sale_order_line.product_uom = new_product.uom_id
+        new_sale_order_line.product_uom_qty = quantity
+        self._run_product_onchange(new_sale_order_line)
+        new_sale_order_line.order_id = sale_order_line.order_id
+        new_sale_order_line.product_id = new_product
+        if 'product_uom' in new_sale_order_line._fields and new_product.uom_id:
+            new_sale_order_line.product_uom = new_product.uom_id
+        new_sale_order_line.product_uom_qty = quantity
+        sale_order_line_vals = new_sale_order_line._convert_to_write(new_sale_order_line._cache)
+        for field_name in (
+                'move_ids', 'invoice_lines', 'qty_delivered', 'qty_invoiced',
+                'qty_to_invoice', 'untaxed_amount_invoiced', 'untaxed_amount_to_invoice'):
+            sale_order_line_vals.pop(field_name, None)
+        sale_order_line_vals.update({
+            'order_id': sale_order_line.order_id.id,
+            'product_id': new_product.id,
+            'product_uom_qty': quantity,
+            'product_uom': new_product.uom_id.id if new_product.uom_id else False,
+        })
+        return sale_order_line_vals
+
+    def _prepare_sale_stock_move_vals(self, source_move, wizard_line, sale_order_line=False):
+        move_vals = source_move.copy_data()[0]
+        move_vals.update({
+            'location_id': source_move.location_id.id if source_move.location_id else False,
+            'location_dest_id': source_move.location_dest_id.id if source_move.location_dest_id else False,
+            'description_picking': wizard_line.description_picking or wizard_line.product_id.display_name,
+            'product_uom': wizard_line.product_uom.id if wizard_line.product_uom else wizard_line.product_id.uom_id.id,
+            'date': source_move.date,
+            'date_deadline': source_move.date_deadline,
+            'name': wizard_line.name or wizard_line.product_id.display_name,
+            'product_uom_qty': wizard_line.quantity,
+            'quantity': wizard_line.quantity,
+            'product_id': wizard_line.product_id.id,
+            'company_id': source_move.company_id.id if source_move.company_id else False,
+            'sequence': source_move.sequence + 1 if source_move.sequence else 0,
+            'partner_id': source_move.partner_id.id if source_move.partner_id else False,
+            'scrap_id': source_move.scrap_id.id if source_move.scrap_id else False,
+            'group_id': source_move.group_id.id if source_move.group_id else False,
+            'rule_id': source_move.rule_id.id if source_move.rule_id else False,
+            'picking_type_id': source_move.picking_type_id.id if source_move.picking_type_id else False,
+            'restrict_partner_id': source_move.restrict_partner_id.id if source_move.restrict_partner_id else False,
+            'warehouse_id': source_move.warehouse_id.id if source_move.warehouse_id else False,
+            'package_level_id': source_move.package_level_id.id if source_move.package_level_id else False,
+            'state': source_move.state,
+            'origin': source_move.origin,
+            'procure_method': source_move.procure_method,
+            'reference': source_move.reference,
+            'reservation_date': source_move.reservation_date,
+            'price_unit': source_move.price_unit,
+            'sale_prices': source_move.sale_prices,
+            'inventory_id': source_move.inventory_id.id if source_move.inventory_id else False,
+            'picking_id': source_move.picking_id.id,
+            'sale_line_id': sale_order_line.id if sale_order_line else False,
+        })
+        return move_vals
+
+    def _get_related_sale_move(self, move, purchase_id=False):
+        sale_moves = (
+            move.move_dest_ids
+            | move.purchase_line_id.move_dest_ids
+            | move.move_dest_ids.move_dest_ids
+        ).filtered(lambda line: line.sale_line_id and line.state not in ['cancel', 'done'])
+        same_product_sale_moves = sale_moves.filtered(lambda line: line.product_id.id == move.product_id.id)
+        if len(same_product_sale_moves) == 1:
+            return same_product_sale_moves[:1]
+
+        if purchase_id and purchase_id.requisition_id and purchase_id.requisition_id.crm_lead_id:
+            lead_id = purchase_id.requisition_id.crm_lead_id
+            sale_orders = lead_id.order_ids.filtered_domain(lead_id._get_lead_sale_order_domain())
+            if sale_orders and len(sale_orders) == 1:
+                sale_picking_ids = sale_orders.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
+                same_product_lines = sale_picking_ids.mapped('move_ids_without_package').filtered(
+                    lambda line: line.product_id.id == move.product_id.id
+                )
+                if len(same_product_lines) == 1:
+                    return same_product_lines[:1]
+        return self.env['stock.move']
+
     def update(self):
         for obj in self:
-            picking_id = obj.move_id.picking_id
-            obj.move_id.sudo().write({'quantity': 0})
-            message_body = f'<ul><li>{obj.move_id.product_id.name}:{obj.move_id.quantity}</li><li>→</li>'
-            for new_line in obj.new_line_ids:
-                for line in picking_id.move_ids_without_package:
-                    if line.product_id == new_line.product_id:
-                        line.sudo().write({'quantity': line.quantity + new_line.quantity})
-                        message_body += f'<li>{obj.move_id.product_id.name}:{line.quantity + new_line.quantity}</li>'
+            move = obj.move_id[:1]
+            if not move:
+                continue
 
-                if new_line.product_id not in picking_id.move_ids_without_package.mapped('product_id'):
-                    new_line.write({
-                        'picking_id': picking_id.id,
-                    })
-                    message_body += f'<li>{new_line.product_id.name}:{new_line.quantity}</li>'
-            message_body += '</ul>'
-            picking_id.message_post(author_id=self.env.user.partner_id.id,
-                                    body=Markup(message_body))
+            rounding = move.product_uom.rounding or move.product_id.uom_id.rounding or 0.01
+            original_qty = move.quantity
+            if not obj.new_line_ids:
+                raise ValidationError(_('Шинэ мөр оруулсны дараа хадгална уу.'))
+
+            if any(float_compare(line.quantity, 0.0, precision_rounding=rounding) <= 0 for line in obj.new_line_ids):
+                raise ValidationError(_('Тоо хэмжээ 0-ээс их байх ёстой.'))
+
+            total_new_qty = sum(obj.new_line_ids.mapped('quantity'))
+            if float_compare(total_new_qty, original_qty, precision_rounding=rounding) != 0:
+                raise ValidationError(_('Салгасан мөрүүдийн нийт тоо нь эх мөрийн тоотой тэнцүү байх ёстой.'))
+
+            picking_id = move.picking_id
             purchase_id = self.env['purchase.order'].search([
                 ('partner_id', '=', picking_id.partner_id.id),
                 ('name', '=', picking_id.origin),
                 ('picking_type_id', '=', picking_id.picking_type_id.id)
             ], limit=1)
-            if purchase_id:
-                if purchase_id.requisition_id and purchase_id.requisition_id.crm_lead_id:
-                    lead_id = purchase_id.requisition_id.crm_lead_id
-                    sale_orders = lead_id.order_ids.filtered_domain(lead_id._get_lead_sale_order_domain())
-                    if sale_orders and len(sale_orders) == 1:
-                        sale_picking_ids = sale_orders.picking_ids
-                        lines = sale_picking_ids.mapped('move_ids_without_package').filtered(lambda l: l.product_id.id == obj.move_id.product_id.id)
-                        if lines:
-                            lines.sudo().write({'quantity': 0})
-                            message_body = f'<ul><li>{lines[len(lines) - 1].product_id.name}:{lines[len(lines) - 1].quantity}</li><li>→</li>'
-                            for new_line in obj.new_line_ids:
-                                same_product_lines = sale_picking_ids.mapped('move_ids_without_package').filtered(lambda l: l.product_id.id == new_line.product_id.id)
-                                if same_product_lines:
-                                    same_product_lines[len(same_product_lines)-1].sudo().write({'quantity': same_product_lines[len(same_product_lines)-1].quantity + new_line.quantity})
-                                    message_body += f'<li>{lines[len(lines)-1].product_id.name}:{new_line.quantity}</li>'
-                                else:
-                                    self.env['stock.move'].sudo().create({
-                                        'picking_id': lines[len(lines)-1].picking_id.id,
-                                        'location_id': lines[len(lines)-1].location_id.id,
-                                        'product_id': new_line.product_id.id,
-                                        'location_dest_id': lines[len(lines)-1].location_dest_id.id,
-                                        'description_picking': lines[len(lines)-1].description_picking,
-                                        'date': lines[len(lines)-1].date,
-                                        'name': lines[len(lines)-1].name,
-                                        'quantity': new_line.quantity,
-                                        'sale_prices': lines[len(lines)-1].sale_prices,
-                                    })
-                                    message_body += f'<li>{new_line.product_id.name}:{new_line.quantity}</li>'
-                            message_body += '</ul>'
-                            lines[len(lines)-1].picking_id.message_post(
-                                author_id=self.env.user.partner_id.id,
-                                body=Markup(message_body))
+            same_product_new_lines = obj.new_line_ids.filtered(lambda line: line.product_id == move.product_id)
+            same_product_qty = sum(same_product_new_lines.mapped('quantity'))
+            quantity_delta = same_product_qty - original_qty
+
+            move.sudo().write({
+                'quantity': same_product_qty,
+                'product_uom_qty': same_product_qty,
+            })
+            if move.purchase_line_id:
+                move.purchase_line_id.with_context(
+                    skip_split_purchase_picking=True
+                ).sudo().write({
+                    'product_qty': move.purchase_line_id.product_qty + quantity_delta,
+                })
+
+            message_body = f'<ul><li>{move.product_id.name}:{original_qty}</li><li>→</li>'
+            new_lines_to_unlink = self.env['stock.move']
+            for new_line in obj.new_line_ids:
+                if move.product_id != new_line.product_id:
+                    purchase_line_id = False
+                    purchase_move_id = False
+                    if move.purchase_line_id:
+                        purchase_order_line_vals = self._prepare_purchase_order_line_vals(
+                            move.purchase_line_id, new_line.product_id, new_line.quantity
+                        )
+                        purchase_line_id = self.env['purchase.order.line'].with_context(
+                            skip_split_purchase_picking=True
+                        ).sudo().create(purchase_order_line_vals)
+                        purchase_move_id = purchase_line_id.move_ids.filtered(
+                            lambda line: line.picking_id == picking_id and line.state not in ['done', 'cancel']
+                        )[:1]
+                    if purchase_move_id:
+                        purchase_move_id.sudo().write(
+                            self._prepare_purchase_stock_move_vals(new_line, purchase_line_id)
+                        )
+                        new_lines_to_unlink |= new_line
+                    else:
+                        new_line.sudo().write({
+                            'picking_id': picking_id.id,
+                            'product_uom_qty': new_line.quantity,
+                            'purchase_line_id': purchase_line_id.id if purchase_line_id else False,
+                        })
+                message_body += f'<li>{new_line.product_id.name}:{new_line.quantity}</li>'
+            message_body += '</ul>'
+            picking_id.message_post(author_id=self.env.user.partner_id.id,
+                                    body=Markup(message_body))
+            if new_lines_to_unlink:
+                new_lines_to_unlink.sudo().unlink()
+
+            same_product_sale_move = self._get_related_sale_move(move, purchase_id)
+            if quantity_delta and (
+                    len(same_product_sale_move) != 1 or
+                    float_compare(same_product_sale_move.quantity + quantity_delta, 0.0,
+                                  precision_rounding=rounding) < 0):
+                raise ValidationError(u'Борлуулалтын хүргэлтийн мөрөөс шалтгаалж салгах боломжгүй байна')
+            if quantity_delta and same_product_sale_move:
+                updated_sale_qty = same_product_sale_move.quantity + quantity_delta
+                sale_message_body = (
+                    f'<ul><li>{same_product_sale_move.product_id.name}:{same_product_sale_move.quantity}</li><li>→</li>'
+                )
+                same_product_sale_move.sudo().write({
+                    'quantity': updated_sale_qty,
+                    'product_uom_qty': same_product_sale_move.product_uom_qty + quantity_delta,
+                })
+                sale_message_body += (
+                    f'<li>{same_product_sale_move.product_id.name}:{updated_sale_qty}</li></ul>'
+                )
+                if same_product_sale_move.sale_line_id:
+                    same_product_sale_move.sale_line_id.with_context(
+                        skip_split_stock_rule=True
+                    ).write({
+                        'product_uom_qty': same_product_sale_move.sale_line_id.product_uom_qty + quantity_delta,
+                    })
+                same_product_sale_move.picking_id.message_post(
+                    author_id=self.env.user.partner_id.id,
+                    body=Markup(sale_message_body))
+
+            source_sale_line = same_product_sale_move.sale_line_id[:1]
+            if obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id) and not source_sale_line:
+                raise ValidationError(u'Үндсэн бараатай холбоотой борлуулалтын мөр олдсонгүй.')
+
+            for new_line in obj.new_line_ids.filtered(lambda line: line.product_id != move.product_id):
+                if len(same_product_sale_move) != 1:
+                    raise ValidationError(u'Борлуулалтын хүргэлтийн мөрөөс шалтгаалж салгах боломжгүй байна')
+
+                sale_picking_id = same_product_sale_move.picking_id
+                sale_order_line_vals = self._prepare_sale_order_line_vals(
+                    source_sale_line, new_line.product_id, new_line.quantity
+                )
+                sale_order_line_id = self.env['sale.order.line'].with_context(
+                    skip_split_stock_rule=True
+                ).sudo().create(sale_order_line_vals)
+                self.env['stock.move'].sudo().create(
+                    self._prepare_sale_stock_move_vals(
+                        same_product_sale_move, new_line, sale_order_line_id
+                    )
+                )
+                sale_message_body = f'<ul><li>{new_line.product_id.name}:{new_line.quantity}</li></ul>'
+                sale_picking_id.message_post(
+                    author_id=self.env.user.partner_id.id,
+                    body=Markup(sale_message_body))
         return {'type': 'ir.actions.act_window_close'}
 
     def cancel(self):

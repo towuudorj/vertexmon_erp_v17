@@ -25,6 +25,8 @@
                  'product',
                  'base',
                  'stock',
+                 'sale_stock',
+                 'purchase_stock',
                  'stock_delivery',
                  'stock_landed_costs',
                  'l10n_mn_account',

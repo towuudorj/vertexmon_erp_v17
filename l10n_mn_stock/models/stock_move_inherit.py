@@ -14,22 +14,33 @@ class StockMove(models.Model):
         main_line = context.get('main_id', False)
         if main_line:
             main_line = self.env['stock.move'].browse(main_line)
-            if 'location_id' in fields_list:
-                result['location_id'] = main_line.location_id.id
-            if 'location_dest_id' in fields_list:
-                result['location_dest_id'] = main_line.location_dest_id.id
-            if 'description_picking' in fields_list:
-                result['description_picking'] = main_line.description_picking
-            if 'product_uom' in fields_list:
-                result['product_uom'] = main_line.product_uom.id
-            if 'date' in fields_list:
-                result['date'] = main_line.date
-            if 'date_deadline' in fields_list:
-                result['date_deadline'] = main_line.date_deadline
-            if 'name' in fields_list:
-                result['name'] = main_line.name
-            if 'sale_prices' in fields_list:
-                result['sale_prices'] = main_line.sale_prices
+            result.update({
+                'location_id': main_line.location_id.id if main_line.location_id else False,
+                'location_dest_id': main_line.location_dest_id.id if main_line.location_dest_id else False,
+                'description_picking': main_line.description_picking,
+                'product_uom': main_line.product_uom.id if main_line.product_uom else False,
+                'date': main_line.date,
+                'date_deadline': main_line.date_deadline,
+                'name': main_line.name,
+                'company_id': main_line.company_id.id if main_line.company_id else False,
+                'sequence': main_line.sequence + 1 if main_line.sequence else 0,
+                'partner_id': main_line.partner_id.id if main_line.partner_id else False,
+                'scrap_id': main_line.scrap_id.id if main_line.scrap_id  else False,
+                'group_id': main_line.group_id.id if main_line.group_id  else False,
+                'rule_id': main_line.rule_id.id if main_line.rule_id  else False,
+                'picking_type_id': main_line.picking_type_id.id if main_line.picking_type_id  else False,
+                'restrict_partner_id': main_line.restrict_partner_id.id if main_line.restrict_partner_id  else False,
+                'warehouse_id': main_line.warehouse_id.id if main_line.warehouse_id  else False,
+                'package_level_id': main_line.package_level_id.id if main_line.package_level_id  else False,
+                'state': main_line.state,
+                'origin': main_line.origin,
+                'procure_method': main_line.procure_method,
+                'reference': main_line.reference,
+                'reservation_date': main_line.reservation_date,
+                'price_unit': main_line.price_unit,
+                'sale_prices': main_line.sale_prices,
+                'inventory_id': main_line.inventory_id.id if main_line.inventory_id else False,
+            })
         return result
 
 
