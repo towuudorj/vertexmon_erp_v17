@@ -219,7 +219,11 @@ class ProductAgedReport(models.TransientModel):
             
             """
         params = [data['company_id']]
-        
+        if data['start_date'] and data['end_date']:
+            query += " AND sml.date >= %s"
+            params.append(data['start_date'])
+            query +=" AND sml.date <= %s "
+            params.append(data['end_date'])
         if len(location_id)==1:
             query += " AND sw.lot_stock_id = %s"
             params.append(location_id[0])
