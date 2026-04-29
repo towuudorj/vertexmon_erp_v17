@@ -70,7 +70,7 @@ class AccountBankStatement(models.Model):
                                                     'date':str(dline['VALUEDATE']),
                                                     'branchId':dline['TRN_REF_NO'],
                                                     'amount':amount_value,
-                                                    'currency_id':currency_id.id,
+                                                    #'currency_id':currency_id.id,
                                                     'payment_ref':dline['DESCRIPTION'],
                                                     'partner_id':partner_bank_id.partner_id.id
                                                     })
@@ -85,7 +85,7 @@ class AccountBankStatement(models.Model):
                                                     'date':str(dline['VALUEDATE']),
                                                     'branchId':dline['TRN_REF_NO'],
                                                     'amount':amount_value,
-                                                    'currency_id':currency_id.id,
+                                                    #'currency_id':currency_id.id,
                                                     'payment_ref':dline['DESCRIPTION'],
                                                     'partner_id':partner_bank_id.partner_id.id
                                                     })
