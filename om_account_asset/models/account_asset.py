@@ -183,6 +183,7 @@ class AccountAssetAsset(models.Model):
         help='Note that this date does not alter the computation of the first '
              'journal entry in case of prorata temporis assets. It simply changes its accounting date'
     )
+    serial_number = fields.Char('Serial Number')
 
     def unlink(self):
         for asset in self:

@@ -171,7 +171,7 @@ msgstr "Дуусах огноо"
 #. module: l10n_mn_purchase
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_summary_report__target_move__delivered
 msgid "Delivered"
-msgstr "Хүргэгдсэн"
+msgstr "Хүлээн авсан"
 
 #. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_create_invoice_line__desc

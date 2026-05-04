@@ -36,7 +36,7 @@
                         <field name="scrap_id" invisible="state != 'scrap'" readonly="1"/>
                         <field name="scrap_date"/>
                         <field name="uom_id" readonly="state != 'draft'"/>
-                        <field name="asset_location_id" readonly="state != 'draft'"/>
+                        <field name="asset_location_id" invisible="1"/>
                         <field name="owner_id"/>
                         <field name="asset_qty" readonly="state != 'draft'"/>
                     </xpath>
@@ -53,7 +53,7 @@
                 <data>
                     <xpath expr='//field[@name="partner_id"]' position="after">
                         <field name="owner_id" />
-                        <field name="asset_location_id" />
+                        <field name="asset_location_id" optional="hidden"/>
                     </xpath>
                 </data>
             </field>

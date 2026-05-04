@@ -36,6 +36,7 @@
                                    readonly="state != 'draft'"
                                    context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code" readonly="state != 'draft'"/>
+                            <field name="serial_number" readonly="state != 'draft'"/>
                             <field name="date" help="Date of asset" readonly="state != 'draft'"/>
                             <field name="date_first_depreciation" readonly="state != 'draft'"/>
                             <field name="first_depreciation_manual_date"

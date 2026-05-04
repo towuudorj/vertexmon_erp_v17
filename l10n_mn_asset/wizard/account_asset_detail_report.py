@@ -272,7 +272,7 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write("K%s" % rowx, total_k, data_left)
                 sheet.write("L%s" % rowx, total_l, data_left)
         else:
-            where = f"WHERE aaa.state != 'draft' AND aaa.company_id = {data['company_id']} "
+            where = f"WHERE (aaa.invoice_id is not null OR aaa.state!='draft') AND aaa.active=True AND aaa.company_id = {data['company_id']} "
             if data['category_id']:
                 where += f"AND aac.id = '{data['category_id']}' "
             if data['owner_id']:
@@ -283,11 +283,11 @@ class AccountAssetDetailReport(models.TransientModel):
                         	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
                         FROM (
                         	select 
-            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_check = True AND aaa.state != 'close' THEN aadl.amount ELSE 0 END) as acc_dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_id is not null AND am.state='posted' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as acc_dep_balance,
             	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' and aadl.is_sale_line = True
             	                                       THEN aadl.amount ELSE 0 END), 0) as expense_dep,
             	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
-            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_check = True AND aaa.state != 'close' THEN aadl.amount ELSE 0 END) as dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_id is not null AND am.state='posted' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as dep_balance,
             	                aaa.name,
             	                aac.id as category_id,
             	                al.id as location_id,
@@ -297,6 +297,7 @@ class AccountAssetDetailReport(models.TransientModel):
                             LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
             	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
             	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
+            	            LEFT JOIN account_move am on am.id = aadl.move_id
             	            {where}
             	            GROUP BY aaa.name, aac.id, al.id
                         ) as sub
@@ -319,7 +320,6 @@ class AccountAssetDetailReport(models.TransientModel):
                         ) as sub1 on sub1.name = sub.name
                         {'ORDER BY sub.category_id' if data['group_by_category'] else ''}
             """
-            # Philips screen 24 inch monitor
 
             self.env.cr.execute(qry)
             lines = self._cr.dictfetchall()
