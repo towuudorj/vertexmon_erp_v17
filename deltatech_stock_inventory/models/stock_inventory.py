@@ -452,7 +452,8 @@ class Inventory(models.Model):
                 domain.append(('brand_id', '=', self.brand_ids.id))
             else:
                 domain.append(('brand_id', 'in', self.brand_ids.ids))
-
+        else:
+            domain.append(('id', 'in', self.product_ids.ids))
         # 🔹 Step 2: Get all products (925 expected)
         all_products = self.env['product.product'].search(domain)
         allowed_product_ids = set(all_products.ids)
