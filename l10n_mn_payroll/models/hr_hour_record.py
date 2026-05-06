@@ -31,15 +31,6 @@ class HrLeave(models.Model):
             hours = resource_calendar.work_time / 2
         return (days, hours)
 
-    @api.model
-    def create(self, vals):
-        today = fields.Date.today()
-        if vals.get('request_date_from', False):
-            request_date_from = datetime.strptime(vals.get('request_date_from'), DATE_FORMAT).date()
-            if (today - request_date_from).days > 2:
-                raise UserError(_("Leave cannot be created more than 2 days in advance."))
-        return super(HrLeave, self).create(vals)
-
 
     def _get_maternity_leave_notification_email(self):
         self.ensure_one()
@@ -188,7 +179,7 @@ class HrHourRecord(models.Model):
 
     
 
-    def hour_record(self):
+    def hour_record(self, employee_ids=False):
         hr_data = self
         emp_info = self.env['hr.hour.record.line']
         emp_obj = self.env['hr.employee']
@@ -196,13 +187,14 @@ class HrHourRecord(models.Model):
         contract_obj = self.env['hr.contract']
         holiday_obj = self.env['hr.leave']
         self.delete_lines()
-        emp_id = []
+        line_vals = []
         company = hr_data.company_id
         if hr_data.department.id !=[]:
             emp_id = emp_obj.search([('company_id','=',company.id),('department_id','=',hr_data.department.id)], order='department_id')
         else:
             emp_id = emp_obj.search([('company_id','=',company.id)], order='department_id')
-
+        if employee_ids:
+            emp_id = employee_ids
         start_date = hr_data.start_date + timedelta(hours=8)
         end_times = hr_data.end_date + timedelta(hours=8)
 
@@ -408,8 +400,7 @@ class HrHourRecord(models.Model):
                 official_time += emp_hour_balance['attd']['holiday_worked']['time']
             total_time = in_time + official_time + sick_time + out_n_time + n_time
             lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
-
-            emp_info.create({
+            vals = {
                 'work_day':worked_day,
                 'employee_id': line.id,
                 'parentd_id': self.id,
@@ -428,7 +419,11 @@ class HrHourRecord(models.Model):
                 'work_time':in_time,
                 'active_time':total_active_time,
                 'total_time':total_time
-            })
+            }
+            if employee_ids:
+                line_vals.append((0, 0, vals))
+            else:
+                emp_info.create(vals)
 
     def get_timely_data(self, emp_attendance_ids):
         emp_hour_balance = {}
@@ -589,12 +584,6 @@ class HrHourRecord(models.Model):
             'text_wrap': True,
             'bold': True
         })
-        txt_center = workbook.add_format({
-            'align': 'center',
-            'border': 1,
-            'font_size': 12,
-            'bold': True
-        })
         data_right = workbook.add_format({
             'align': 'right',
             'border': 1,
@@ -608,21 +597,6 @@ class HrHourRecord(models.Model):
             'font_size': 12,
             'text_wrap': True,
             'num_format': '#0'
-        })
-        data_left_bold = workbook.add_format({
-            'align': 'left',
-            'border': 1,
-            'font_size': 12,
-            'text_wrap': True,
-            'bold': True,
-        })
-
-        data_center = workbook.add_format({
-            'align': 'center',
-            'border': 1,
-            'font_size': 12,
-            'text_wrap': True,
-            'num_format': '#,##0.00'
         })
         data_center_bold = workbook.add_format({
             'align': 'center',

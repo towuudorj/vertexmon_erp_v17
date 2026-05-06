@@ -25,6 +25,7 @@
                  'base',
                  'hr',
                  'hr_attendance',
+                 'hr_holidays',
                  'l10n_mn_hr',
                  'resource'
                 ],
@@ -33,6 +34,7 @@
             'data/cron_data.xml',
             'data/ir_conifg_parameter_data.xml',
             'data/microsoft_api_value_data.xml',
+            'data/leave_type_data.xml',
             'views/hr_attendance_inherit_view.xml',
             'views/microsoft_api_value_view.xml',
             'wizard/hik_central_add_person.xml',

@@ -13,6 +13,10 @@
                             invisible="attendance_id"
                             groups="hr.group_hr_manager"
                             type="object"/>
+                    <button name="update_hik_central_photo" string="Update hik central photo"
+                            invisible="not attendance_id or not image_1920"
+                            groups="hr.group_hr_manager"
+                            type="object"/>
                 </xpath>
             </data>
         </field>

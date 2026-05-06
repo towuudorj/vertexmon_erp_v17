@@ -2,14 +2,17 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 import requests
 import json
+import logging
 from odoo.addons.l10n_mn_hr_attendance.models.hr_attendance_inherit import build_headers, get_params
 from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
 
+_logger = logging.getLogger(__name__)
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
     is_sync_microsoft = fields.Boolean(default=False)
+    powerpoint_id = fields.Integer("Powerpoint ID")
 
     def sync_user_ti_hik_central(self):
         self.ensure_one()
@@ -61,8 +64,8 @@ class Employee(models.Model):
 
     def push_hr_info_to_microsoft(self):
         department_ids = self.env['hr.department'].sudo().search([])
-        job_ids = self.env['hr.job'].sudo().search([])
-        employee_ids = self.env['hr.employee'].sudo().search([])
+        job_ids = self.env['hr.job'].sudo().search([('is_sync_microsoft', '=', False)])
+        employee_ids = self.env['hr.employee'].sudo().search([('is_sync_microsoft', '=', False)])
         microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
         token = get_token(microsoft_value_obj)
         if token['token_type'] and token['access_token']:
@@ -97,27 +100,26 @@ class Employee(models.Model):
 
         job_list_id = get_list_id(microsoft_value_obj, site_id, token, 'job_list_name', 'job_list_id')
         for job in job_ids:
-            if not job.is_sync_microsoft:
-                url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{job_list_id}/items"
+            url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{job_list_id}/items"
 
-                headers = {
-                    "Authorization": token,
-                    "Content-Type": "application/json"
-                }
+            headers = {
+                "Authorization": token,
+                "Content-Type": "application/json"
+            }
 
-                body = {
-                    "fields": {
-                        "job_id": job.id,
-                        "Title": job.name,
-                    }
+            body = {
+                "fields": {
+                    "job_id": job.id,
+                    "Title": job.name,
                 }
-                try:
-                    response = requests.post(url, headers=headers, json=body)
-                    response_json = response.json()
-                    if response_json.get('id', False):
-                        job.is_sync_microsoft = True
-                except Exception as e:
-                    ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+            }
+            try:
+                response = requests.post(url, headers=headers, json=body)
+                response_json = response.json()
+                if response_json.get('id', False):
+                    job.is_sync_microsoft = True
+            except Exception as e:
+                ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
         employee_ids.push_to_microsoft(token=token)
 
 
@@ -136,42 +138,70 @@ class Employee(models.Model):
 
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'employee_list_name', 'employee_list_id')
         for employee in self:
-            if not employee.is_sync_microsoft:
-                slices = employee.name.split(".")
-                name = employee.name
-                max = 0
-                for slice in slices:
-                    if len(slice) > max:
-                        max = len(slice)
-                        name = slice
+            slices = employee.name.split(".")
+            name = employee.name
+            max = 0
+            for slice in slices:
+                if len(slice) > max:
+                    max = len(slice)
+                    name = slice
 
-                url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
-                headers = {
-                    "Authorization": token,
-                    "Content-Type": "application/json"
-                }
+            url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
+            headers = {
+                "Authorization": token,
+                "Content-Type": "application/json"
+            }
 
-                body = {
-                    "fields": {
-                        "odoo_id": employee.id, #last_name
-                        "Title": employee.last_name, #last_name
-                        "firstName": name,
-                        "register": employee.ssnid, #ssnid
-                        "companyName": employee.company_id.id, #company_id
-                        "emailAddress": employee.work_email, #work_email
-                        "department_id": employee.department_id.id if employee.department_id else 0,
-                        "job_id": employee.job_id.id if employee.job_id else 0,
-                        "odoo_userid": employee.user_id.id if employee.user_id else 0, #user_id
-                        "parent_id": employee.parent_id.id if employee.parent_id else 0,
-                    }
+            body = {
+                "fields": {
+                    "odoo_id": employee.id, #last_name
+                    "Title": employee.last_name, #last_name
+                    "firstName": name,
+                    "register": employee.ssnid, #ssnid
+                    "companyName": employee.company_id.id, #company_id
+                    "emailAddress": employee.work_email, #work_email
+                    "department_id": employee.department_id.id if employee.department_id else 0,
+                    "job_id": employee.job_id.id if employee.job_id else 0,
+                    "parent_id": employee.parent_id.id if employee.parent_id else 0
                 }
-                try:
-                    response = requests.post(url, headers=headers, json=body)
-                    response_json = response.json()
-                    if response_json.get('id', False):
-                        employee.is_sync_microsoft = True
-                except Exception as e:
-                    ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+            }
+            try:
+                response = requests.post(url, headers=headers, json=body)
+                response_json = response.json()
+                if response_json.get('id', False):
+                    employee.sudo().write({'is_sync_microsoft': True,
+                                           'powerpoint_id': response_json.get('id')})
+                    employee.is_sync_microsoft = True
+            except Exception as e:
+                _logger.error(u'Ажилтаны мэдээлэл Sharepoint руу илгээхэд алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+
+    def update_hik_central_photo(self):
+        try:
+            method, accept, content_type, APP_KEY, APP_SECRET, BASE_URL = get_params(self)
+            API_PATH = "/artemis/api/resource/v1/person/face/update"
+            headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET, API_PATH)
+            image_base64 = self.image_1920.decode('utf-8')
+            url = BASE_URL + API_PATH
+            body = {
+                "personCode": "%s" % self.attendance_id,
+                "faceData": image_base64,
+            }
+            requests.post(url, json=body, headers=headers, verify=False)
+        except Exception as e:
+            raise ValidationError(u'Холбогдож чадсангүй\nАлдаа:%s'%e)
+
+    # def push_late_time_to_microsoft(self):
+    #     microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
+    #     if not microsoft_value_obj:
+    #         return None
+    #     token = get_token(microsoft_value_obj)
+    #     if token['token_type'] and token['access_token']:
+    #         token = token['token_type'] + ' ' + token['access_token']
+    #     else:
+    #         return None
+    #
+    #     return None
+
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
