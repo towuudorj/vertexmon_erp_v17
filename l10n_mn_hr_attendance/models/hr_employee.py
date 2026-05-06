@@ -207,6 +207,7 @@ class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
     is_sync_microsoft = fields.Boolean(related='employee_id.is_sync_microsoft', compute_sudo=True)
+    powerpoint_id = fields.Integer(related='employee_id.powerpoint_id')
 
 
 class HrJob(models.Model):
