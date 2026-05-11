@@ -117,19 +117,20 @@ class stock_picking(models.Model):
                 'sequence': 4,
             })
 
-            job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч')])
+            job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'),('name', '!=', 'Тооцооны нягтлан бодогч')])
             head = False
             if job_id:
                 accountants = employee_obj.search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
                 for accountant in accountants:
                     if not head:
                         head = accountant.parent_id.user_id
-                    signature_user_obj.create({
-                        'user_id': accountant.user_id.id if accountant else False,
-                        'type': 'accountant', # нягтлан бодогч
-                        'picking_id': obj.id,
-                        'sequence': 5,
-                    })
+                    if accountant.user_id:
+                        signature_user_obj.create({
+                            'user_id': accountant.user_id.id if accountant else False,
+                            'type': 'accountant', # нягтлан бодогч
+                            'picking_id': obj.id,
+                            'sequence': 5,
+                        })
 
             signature_user_obj.create({
                 'user_id': head.id if head else False,
