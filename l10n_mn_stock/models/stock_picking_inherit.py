@@ -279,13 +279,21 @@ class stock_picking(models.Model):
             crm_id = mv.purchase_line_id.order_id.requisition_id.crm_lead_id.code
             purchase_order = mv.purchase_line_id.order_id
         if purchase_manager:
+            mails = []
+            for manager in purchase_manager:
+                if manager.employee_id and manager.employee_id.work_email:
+                    mails.append(manager.employee_id.work_email)
+                    continue
+                if manager.partner_id and manager.partner_id.email:
+                    mails.appned(manager.partner_id.email)
             # Send email notification
-            purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
-            self.env['mail.mail'].create({
-                'email_to': ','.join(purchase_manager.mapped('email')),
-                'subject': f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
-                'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
-            }).send()
+            if mails:
+                purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': ','.join(mails),
+                    'subject': f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
+                    'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
+                }).send()
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
