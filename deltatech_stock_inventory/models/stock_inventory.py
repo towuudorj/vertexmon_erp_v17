@@ -360,6 +360,7 @@ class Inventory(models.Model):
             ("company_id", "=", self.company_id.id),
             ("quantity", "!=", "0"),
             ("location_id", "in", locations_ids),
+            ("product_id.type", "=", "product"),
         ]
         if self.prefill_counted_quantity == "zero":
             domain.append(("product_id.active", "=", True))
@@ -400,7 +401,7 @@ class Inventory(models.Model):
         """
         self.ensure_one()
         if self.product_ids:
-            product_ids = self.product_ids.ids
+            product_ids = self.product_ids.filtered(lambda product: product.type == "product").ids
         else:
             product_ids = self.env["product.product"].search_read(
                 [
