@@ -145,7 +145,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
             temp_purchase_order = purchase_order_obj
             for purchase in purchase_order_id:
                 for picking_id in purchase.picking_ids:
-                    if start_date <= picking_id.date_done.date() <= end_date and picking_id.state == 'done' and not picking_id.return_id:
+                    if picking_id.state == 'done' and not picking_id.return_id and start_date <= picking_id.date_done.date() <= end_date:
                         temp_purchase_order |= purchase
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
