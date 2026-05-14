@@ -330,12 +330,19 @@ class PurchaseRequisitionLine(models.Model):
             #elif not line.product_id.id:
             #    raise UserError(_('Бараа оруулаагүй байгаа тул оруулана уу!'))
             else:
-                for list in line.requisition_id.crm_lead_id.lead_line_ids:
-                    if (list.product_id and line.product_id and list.product_id.id == line.product_id.id ) or list.name == line.product_description_variants or list.id == line.lead_line_id.id:
-                        list.cost_price = line.price_unit
-                        list.currency_id = line.currency_id.id
-                        list.product_id = line.product_id.id
-                        list.purchase_date = line.purchase_date
+                if line.lead_line_id:
+                    list = line.lead_line_id
+                    list.cost_price = line.price_unit
+                    list.currency_id = line.currency_id.id
+                    list.product_id = line.product_id.id
+                    list.purchase_date = line.purchase_date
+                else:
+                    for list in line.requisition_id.crm_lead_id.lead_line_ids:
+                        if (list.product_id and line.product_id and list.product_id.id == line.product_id.id ) or list.name == line.product_description_variants or list.id == line.lead_line_id.id:
+                            list.cost_price = line.price_unit
+                            list.currency_id = line.currency_id.id
+                            list.product_id = line.product_id.id
+                            list.purchase_date = line.purchase_date
 
 
             
