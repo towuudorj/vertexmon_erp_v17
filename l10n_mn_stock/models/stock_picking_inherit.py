@@ -285,7 +285,7 @@ class stock_picking(models.Model):
                     mails.append(manager.employee_id.work_email)
                     continue
                 if manager.partner_id and manager.partner_id.email:
-                    mails.appned(manager.partner_id.email)
+                    mails.append(manager.partner_id.email)
             # Send email notification
             if mails:
                 purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
