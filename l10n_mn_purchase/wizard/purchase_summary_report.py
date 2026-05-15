@@ -75,6 +75,13 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                     'font_size': 12,
                                     'num_format': '#,##0.00'
                                 })
+        datetime_format = workbook.add_format({
+                                    'align': 'right',
+                                    'border': 1,
+                                    'text_wrap': True,
+                                    'font_size': 12,
+                                    'num_format': 'yyyy-mm-dd hh:mm'
+        })
         data_left = workbook.add_format({
                                     'align': 'left',
                                     'border': 1,
@@ -142,11 +149,9 @@ class PurchaseOrderCommonReport(models.TransientModel):
         purchase_order_id = purchase_order_obj.search(domain, order='date_approve asc')
         picking_total_value_dict = []
         if is_picked:
-            temp_purchase_order = purchase_order_obj
             for purchase in purchase_order_id:
                 for picking_id in purchase.picking_ids:
                     if picking_id.state == 'done' and not picking_id.return_id and start_date <= picking_id.date_done.date() <= end_date:
-                        temp_purchase_order |= purchase
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
                         total_noat = 0
@@ -176,11 +181,9 @@ class PurchaseOrderCommonReport(models.TransientModel):
                             'total_without_noat' : total_without_noat,
                             'total_noat': total_noat,
                             'total_with_noat': total_with_noat,
-                            'date_done': picking_id.date_done.date(),
+                            'date_done': picking_id.date_done,
                             'order_id': purchase
                         })
-
-            purchase_order_id = temp_purchase_order
 
         num = 1
         
@@ -192,7 +195,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
             if picking_total_value_dict:
                 sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
             for item in sorted_data:
-                sheet.write("A%s" % rowx, "%s" % item['date_done'], data_right)
+                sheet.write("A%s" % rowx, item['date_done'], datetime_format)
                 sheet.write("B%s" % rowx, item['order_id'].name, data_left)
                 sheet.write("C%s" % rowx, "%s" % item['order_id'].partner_id.code, data_left)
                 sheet.write("D%s" % rowx, "%s" % item['order_id'].partner_id.name, data_left)
