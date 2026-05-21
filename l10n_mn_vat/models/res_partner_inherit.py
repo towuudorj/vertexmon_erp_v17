@@ -27,7 +27,7 @@ class ResPartner(models.Model):
                     "Content-Type":"Application/json",                
                     }
             return_data = requests.request("get", url, headers = header)
-            if return_data.status_code == 200:
+            if return_data.status_code == 200 and return_data.json()['data'] != None:
                 json_data = return_data.json()
                 self.name = json_data['data']['name']
             else:
