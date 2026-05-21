@@ -43,15 +43,18 @@ class AccountBankStatementLine(models.Model):
         # =====================================================
         # COMPANY CURRENCY CONVERSION
         # =====================================================
-        if journal_currency == company_currency:
-            balance = amount_currency
+        if self.env.context.get("no_currency_compute"):
+            balance = self.amount_currency
         else:
-            balance = journal_currency._convert(
-                amount_currency,
-                company_currency,
-                company,
-                self.date
-            )
+            if journal_currency == company_currency:
+                balance = amount_currency
+            else:
+                balance = journal_currency._convert(
+                    amount_currency,
+                    company_currency,
+                    company,
+                    self.date
+                )
 
         abs_balance = abs(balance)
         abs_amount_currency = abs(amount_currency)
@@ -182,8 +185,10 @@ class AccountBankStatementLine(models.Model):
                 if suspense_lines
                 else journal.suspense_account_id.id
             )
-
-            vals_list = st_line._prepare_move_line_default_vals(counterpart_account_id)
+            if 'amount_currency' in changed_fields:
+                vals_list = st_line.with_context(no_currency_compute=True)._prepare_move_line_default_vals(counterpart_account_id)
+            else:
+                vals_list = st_line._prepare_move_line_default_vals(counterpart_account_id)
 
             liquidity_vals = vals_list[0]
             counterpart_vals = vals_list[1]
