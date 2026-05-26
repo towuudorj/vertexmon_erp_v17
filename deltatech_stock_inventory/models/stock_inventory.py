@@ -489,7 +489,7 @@ class Inventory(models.Model):
         # 🔹 Step 4: Add missing products (NO STOCK → remaining 117)
         existing_product_ids = set(product_ids)
 
-        #default_location = self.location_ids[:1].id if self.location_ids else False
+        default_location = self.location_ids[:1].id if self.location_ids else False
 
         for product in all_products:
             if product.id not in existing_product_ids:
@@ -500,7 +500,7 @@ class Inventory(models.Model):
                     "prod_lot_id": False,
                     "partner_id": False,
                     "product_id": product.id,
-                    "location_id": location_id,
+                    "location_id": default_location,
                     "package_id": False,
                     "product_uom_id": product.uom_id.id,
                 })
