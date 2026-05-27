@@ -179,7 +179,7 @@ class HrHourRecord(models.Model):
 
     
 
-    def hour_record(self, employee_ids=False):
+    def hour_record(self, employee_id=False):
         hr_data = self
         emp_info = self.env['hr.hour.record.line']
         emp_obj = self.env['hr.employee']
@@ -193,8 +193,8 @@ class HrHourRecord(models.Model):
             emp_id = emp_obj.search([('company_id','=',company.id),('department_id','=',hr_data.department.id)], order='department_id')
         else:
             emp_id = emp_obj.search([('company_id','=',company.id)], order='department_id')
-        if employee_ids:
-            emp_id = employee_ids
+        if employee_id:
+            emp_id = employee_id
         start_date = hr_data.start_date + timedelta(hours=8)
         end_times = hr_data.end_date + timedelta(hours=8)
 
@@ -231,18 +231,17 @@ class HrHourRecord(models.Model):
             total_active_time = 0.0
             work_day = start_date
             att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
-            contract_id = contract_obj.search([('employee_id', '=', line.id), ('state', '=', 'open')])
-            if not contract_id or not contract_id.resource_calendar_id and (not str(line.timely_id) in timely_worker_ids):
-                raise UserError(u"%s энэ ажилтаны гэрээ үүсээгүй эсвэл гэрээ нь дээр цагийн хуваарь оруулаагүй байна !" % line.name)
-            must_work_hour = contract_id.resource_calendar_id.work_time if contract_id.resource_calendar_id.work_time > 0 else 8
+            if not line.resource_calendar_id and (not str(line.timely_id) in timely_worker_ids):
+                raise UserError(u"%s ажилтны ажлын цагийг тохируулаагүй байна!" % line.name)
+            must_work_hour = line.resource_calendar_id.work_time if line.resource_calendar_id.work_time > 0 else 8
 
-            emp_public_holiday_ids = public_holiday_ids.filtered(lambda x: x.calendar_id.id == contract_id.resource_calendar_id.id)
+            emp_public_holiday_ids = public_holiday_ids.filtered(lambda x: x.calendar_id.id == line.resource_calendar_id.id)
             public_holiday = []
             for p_holiday in emp_public_holiday_ids:
                 public_holiday.append(p_holiday.date_from.date())
 
             if att_id and not str(line.timely_id) in timely_worker_ids:
-                work_weekdays = contract_id.resource_calendar_id.attendance_ids.mapped('dayofweek')
+                work_weekdays = line.resource_calendar_id.attendance_ids.mapped('dayofweek')
                 while work_day <= end_time:
                     if work_day.date() in public_holiday:
                         work_day = work_day + timedelta(days=1)
@@ -264,17 +263,17 @@ class HrHourRecord(models.Model):
                                 lunch_end_time = check_in
                                 work_start_time = check_in
                                 work_end_time = check_in
-                                contract_att_line = contract_id.resource_calendar_id.attendance_ids.filtered(
+                                contract_att_line = line.resource_calendar_id.attendance_ids.filtered(
                                     lambda x: x.dayofweek == str(work_day.weekday()))[0]
                                 work_start_time = work_start_time.replace(hour=int(round(contract_att_line.hour_from, 0)),
                                                                           minute=int(contract_att_line.hour_from%1*60), second=0, microsecond=0)
                                 work_end_time = work_end_time.replace(hour=int(round(contract_att_line.hour_to, 0)),
                                                                           minute=int(contract_att_line.hour_to%1*60), second=0, microsecond=0)
-                                if contract_id.resource_calendar_id.lunchtime_start:
-                                    lunch_start_time = lunch_start_time.replace(hour=int(round(contract_id.resource_calendar_id.lunchtime_start, 0)),
-                                                                          minute=int(contract_id.resource_calendar_id.lunchtime_start%1*60), second=0, microsecond=0)
-                                    lunch_end_time = lunch_end_time.replace(hour=int(round(contract_id.resource_calendar_id.lunchtime_end, 0)),
-                                                                        minute=int(contract_id.resource_calendar_id.lunchtime_end%1*60), second=0, microsecond=0)
+                                if line.resource_calendar_id.lunchtime_start:
+                                    lunch_start_time = lunch_start_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_start, 0)),
+                                                                          minute=int(line.resource_calendar_id.lunchtime_start%1*60), second=0, microsecond=0)
+                                    lunch_end_time = lunch_end_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_end, 0)),
+                                                                        minute=int(line.resource_calendar_id.lunchtime_end%1*60), second=0, microsecond=0)
                                 else:
                                     lunch_start_time = lunch_start_time.replace(hour=12, minute=0, second=0, microsecond=0)
                                     lunch_end_time = lunch_end_time.replace(hour=13, minute=0, second=0, microsecond=0)
@@ -420,10 +419,11 @@ class HrHourRecord(models.Model):
                 'active_time':total_active_time,
                 'total_time':total_time
             }
-            if employee_ids:
-                line_vals.append((0, 0, vals))
+            if employee_id:
+                return vals
             else:
                 emp_info.create(vals)
+        return None
 
     def get_timely_data(self, emp_attendance_ids):
         emp_hour_balance = {}
