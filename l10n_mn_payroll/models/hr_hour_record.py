@@ -189,10 +189,10 @@ class HrHourRecord(models.Model):
         self.delete_lines()
         line_vals = []
         company = hr_data.company_id
-        if hr_data.department.id !=[]:
+        if hr_data.department:
             emp_id = emp_obj.search([('company_id','=',company.id),('department_id','=',hr_data.department.id)], order='department_id')
         else:
-            emp_id = emp_obj.search([('company_id','=',company.id)], order='department_id')
+            emp_id = emp_obj.search([('company_id','=',company.id)])
         if employee_id:
             emp_id = employee_id
         start_date = hr_data.start_date + timedelta(hours=8)
