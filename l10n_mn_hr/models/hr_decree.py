@@ -552,6 +552,7 @@ class HrEmployee(models.Model):
     total_ndsh_month = fields.Integer('Total NDSH Month', compute='_compute_annual_leave')
     worked_month_in_company = fields.Integer('Worked Month In Company', compute='_compute_annual_leave')
     annual_leave_day = fields.Integer('Annual Leave Day', compute='_compute_annual_leave')
+    weighing_date = fields.Date('Weighing Date', tracking=True)
 
     def get_department_mn(self):
         self.ensure_one()
@@ -669,6 +670,7 @@ class EmployeePublic(models.Model):
     total_ndsh_month = fields.Integer('Total NDSH Month', related='employee_id.total_ndsh_month', compute_sudo=True)
     worked_month_in_company = fields.Integer('Worked Month In Company', related='employee_id.worked_month_in_company', compute_sudo=True)
     annual_leave_day = fields.Integer('Annual Leave Day', related='employee_id.annual_leave_day', compute_sudo=True)
+    weighing_date = fields.Date('Weighing Date', related='employee_id.weighing_date', compute_sudo=True)
 
 class HrDecreeReport(models.Model):
     _inherit = 'hr.decree'

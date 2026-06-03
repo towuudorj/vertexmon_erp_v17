@@ -9,6 +9,7 @@ import urllib3
 from dateutil import parser
 import pytz
 from datetime import date, datetime, timedelta, time as dt_time
+from dateutil.relativedelta import relativedelta
 
 API_PATH = "/artemis/api/attendance/v1/report"
 
@@ -103,8 +104,10 @@ class HrAttendance(models.Model):
                 else:
                     attendance.color = 1
 
-    def get_attendance_data(self):
+    def get_attendance_data(self, id=False):
         employees_with_attendance_id = self.env['hr.employee'].search([('attendance_id','!=','')])
+        if id:
+            employees_with_attendance_id = self.env['hr.employee'].search([('id', '=', id)])
         method, accept, content_type, APP_KEY, APP_SECRET, BASE_URL = get_params(self)
 
         url = BASE_URL + API_PATH
@@ -112,57 +115,62 @@ class HrAttendance(models.Model):
         for attendance_id in employees_with_attendance_id:
             page_num = 1
             response_json = False
-            while not response_json or 'record' in response_json['data']:
-                body = {
-                    "attendanceReportRequest": {
-                        "pageNo": page_num,
-                        "pageSize": 100,
-                        "queryInfo": {
-                            "personCode": attendance_id.attendance_id,
-                            "beginTime": "2024-01-01T00:00:00 08:00",
-                            "endTime": f"{str(today)}T23:59:59 08:00",
-                            "sortInfo": {
-                                "sortField": 1,
-                                "sortType": 1
+            att_id_list = attendance_id.attendance_id.replace(" ", "")
+            att_id_list = att_id_list.split(',')
+            for att_id in att_id_list:
+                while not response_json or 'record' in response_json['data']:
+                    body = {
+                        "attendanceReportRequest": {
+                            "pageNo": page_num,
+                            "pageSize": 100,
+                            "queryInfo": {
+                                "personCode": att_id,
+                                "beginTime": "2024-01-01T00:00:00 08:00",
+                                "endTime": f"{str(today)}T23:59:59 08:00",
+                                "sortInfo": {
+                                    "sortField": 1,
+                                    "sortType": 1
+                                }
                             }
                         }
                     }
-                }
-                page_num += 1
-                headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET, API_PATH)
-                response = requests.post(url, json=body, headers=headers, verify=False)
-                response_json = response.json()
-                if 'record' in response_json['data']:
-                    for line in response_json['data']['record']:
-                        date = fields.Date.from_string(line['date'])
-                        start = datetime.combine(date, dt_time.min)
-                        end = datetime.combine(date, dt_time.max)
-                        check_in = False
-                        check_out = False
-                        hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
-                                                                             ('check_in', '>=', start),
-                                                                             ('check_in', '<=', end)])
-                        if not hr_attendance_id:
+                    page_num += 1
+                    headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET, API_PATH)
+                    response = requests.post(url, json=body, headers=headers, verify=False)
+                    response_json = response.json()
+                    if 'record' in response_json['data']:
+                        for line in response_json['data']['record']:
+                            date = fields.Date.from_string(line['date'])
+                            start = datetime.combine(date, dt_time.min)
+                            end = datetime.combine(date, dt_time.max)
+                            check_in = False
+                            check_out = False
                             hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
-                                                                                 ('check_out', '>=', start),
-                                                                                 ('check_out', '<=', end)])
-                        if line['attendanceBaseInfo']['beginTime'] != "":
-                            check_in = fields.Datetime.to_string(
-                                parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
+                                                                                 ('check_in', '>=', start + relativedelta(hours=-8)),
+                                                                                 ('check_out', '<=', end + relativedelta(hours=-8))])
 
-                        if line['attendanceBaseInfo']['endTime'] != "":
-                            check_out = fields.Datetime.to_string(
-                                parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
+                            if line['attendanceBaseInfo']['beginTime'] != "":
+                                check_in = fields.Datetime.to_string(
+                                    parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
 
-                        if check_in or check_out:
-                            if not hr_attendance_id:
-                                self.env['hr.attendance'].create({
-                                    'employee_id': attendance_id.id,
-                                    'check_in': check_in if check_in else check_out,
-                                    'check_out': check_out if check_out else check_in,
-                                })
-                            else:
-                                hr_attendance_id.sudo().write({
-                                    'check_in': check_in if check_in else check_out,
-                                    'check_out': check_out if check_out else check_in
-                                })
+                            if line['attendanceBaseInfo']['endTime'] != "":
+                                check_out = fields.Datetime.to_string(
+                                    parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
+
+                            if check_in or check_out:
+                                if not hr_attendance_id:
+                                    self.env['hr.attendance'].create({
+                                        'employee_id': attendance_id.id,
+                                        'check_in': check_in if check_in else check_out,
+                                        'check_out': check_out if check_out else check_in,
+                                    })
+                                else:
+                                    if check_in and hr_attendance_id.check_in > datetime.strptime(check_in, "%Y-%m-%d %H:%M:%S"):
+                                        hr_attendance_id.sudo().write({
+                                            'check_in': check_in
+                                        })
+
+                                    if check_out and hr_attendance_id.check_out < datetime.strptime(check_out, "%Y-%m-%d %H:%M:%S"):
+                                        hr_attendance_id.sudo().write({
+                                            'check_out': check_out
+                                        })

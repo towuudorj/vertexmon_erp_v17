@@ -36,6 +36,7 @@
 						<button name="get_vat_code_check" string="TTD CHECK"  type="object" groups="hr.group_hr_manager"  />
 						<separator string="Ажилласан жилийн мэдээлэл"/>
 						<field name="accession_date"/>
+						<field name="weighing_date"/>
 						<div style="width:200%;">
 							<div style="height:10px"/>
 								<label for="working_year" string="Working year" style="font-weight:bold;vertical-align:center; padding:3px;"/>

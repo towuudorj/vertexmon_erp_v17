@@ -4563,6 +4563,12 @@ msgid "Wednesday"
 msgstr "Лхагва"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__weighing_date
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee_public__weighing_date
+msgid "Weighing Date"
+msgstr "Жинхэлсэн огноо"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_employee_kpi_line__weight_percentage
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_kpi_template_line__weight_percentage
 msgid "Weight Percentage"

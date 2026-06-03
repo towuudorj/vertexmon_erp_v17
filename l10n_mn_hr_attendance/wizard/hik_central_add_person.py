@@ -52,8 +52,8 @@ class HikCentralAddPerson(models.TransientModel):
                 "personFamilyName": self.employee_id.last_name,
                 "gender": 1 if self.employee_id.gender == 'male' else 2,
                 "orgIndexCode": self.hik_central_org_id.org_code,
-                "phoneNo": self.employee_id.work_phone,
-                "email": self.employee_id.work_email
+                "phoneNo": self.employee_id.work_phone.replace(" ", "") if self.employee_id.work_phone else "",
+                "email": self.employee_id.work_email if self.employee_id.work_email else ""
             }
             response = requests.post(url, json=body, headers=headers, verify=False)
             response_json = response.json()

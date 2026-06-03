@@ -27,6 +27,7 @@
                  'hr_attendance',
                  'hr_holidays',
                  'l10n_mn_hr',
+                 'l10n_mn_payroll',
                  'resource'
                 ],
     'data': [
