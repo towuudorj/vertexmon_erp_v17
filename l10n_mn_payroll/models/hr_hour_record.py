@@ -431,6 +431,7 @@ class HrHourRecord(models.Model):
         ir_config = self.env['ir.config_parameter'].sudo()
         name = ir_config.get_param('timely_user_name', default='')
         password = ir_config.get_param('timely_password', default='')
+        company_vat = ir_config.get_param('timely_company_vat', default='')
         token = False
         if name != ' ' and password != ' ':
             data = {
@@ -461,7 +462,7 @@ class HrHourRecord(models.Model):
             work_end = work_end.astimezone(company_tz)
             while have_value:
                 data = {
-                    'company_register': self.company_id.vat,
+                    'company_register': company_vat,
                     'dateFrom': str(work_start.date()),
                     'dateTo': str(work_end.date()),
                     'page': page,

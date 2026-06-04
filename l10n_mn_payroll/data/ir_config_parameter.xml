@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo noupdate="1">
+<odoo noupdate="0">
 
     <record id="timely_user_name" model="ir.config_parameter">
         <field name="key">timely_user_name</field>
@@ -9,6 +9,11 @@
     <record id="timely_password" model="ir.config_parameter">
         <field name="key">timely_password</field>
         <field name="value">Vertexmon5602513</field>
+    </record>
+
+    <record id="timely_compoany_vat" model="ir.config_parameter">
+        <field name="key">timely_company_vat</field>
+        <field name="value">5602513</field>
     </record>
 
 </odoo>
