@@ -21,6 +21,11 @@ msgid "# Purchase requisition"
 msgstr " Худалдан авах хүсэлт"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoice_amount
+msgid "Amount"
+msgstr "Нэхэмжлэл үүсгэх дүн"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__qty_available
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__qty_available
 msgid "Available QTY"
@@ -139,6 +144,11 @@ msgid "Cost Price"
 msgstr "Өртөг үнэ"
 
 #. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_project_invoice
+msgid "Create Invoice"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__change_cost
 msgid "Change cost"
 msgstr "Өртөгийн өөрчлөлт"
@@ -202,6 +212,11 @@ msgid "Create foreign purchase"
 msgstr "Гадаад худалдан авалт үүсгэх"
 
 #. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
+msgid "Create invoice"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: l10n_mn_project
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_foreign_purchase_request
 msgid "Create crm"
 msgstr "CRM Үүсгэх"
@@ -213,7 +228,10 @@ msgstr "Худалдан авалт үүсгэх"
 
 
 #. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_foreign_purchase_request
 #: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_local_purchase_request
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_project_invoice
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.view_project_pack_tasks
 msgid "Cancel"
 msgstr "Хаах"
 
@@ -299,9 +317,22 @@ msgid "Foreign"
 msgstr "Гадаад"
 
 #. module: l10n_mn_project
-#: model:ir.model.fields.selection,name:l10n_mn_project.selection__purchase_project__type__project
+#: model:ir.model,name:l10n_mn_project.model_project_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_package_task_create_line__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__project_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_purchase_requisition__project_id
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_project__project_type__project
 msgid "Project"
 msgstr "Төсөл"
+
+#. module: l10n_mn_project
+#: model:ir.actions.act_window,name:l10n_mn_project.action_project_invoice
+#: model:ir.model,name:l10n_mn_project.model_project_invoice
+msgid "Project Invoice"
+msgstr "Төслийн нэхэмжлэл"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__purchase_project__type__tender
@@ -330,6 +361,38 @@ msgid "Inner"
 msgstr "Дотоод"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__invoice_id
+msgid "Invoice"
+msgstr "Хаалтын нэхэмжлэл"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoice_line_ids
+msgid "Invoice Lines"
+msgstr "Нэхэмжлэлийн мөрүүд"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__invoice_product_id
+msgid "Invoice product"
+msgstr "Нэхэмжлэлийн бүтээгдэхүүн"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoiced_amount
+msgid "Invoiced amount"
+msgstr "Нэхэмжилсэн дүн"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__invoice_journal_id
+msgid "Journal"
+msgstr "Нэхэмжлэлийн журнал"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_package_task_create__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_package_task_create_line__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__write_uid
 msgid "Last Updated by"

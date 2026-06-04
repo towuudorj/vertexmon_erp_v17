@@ -52,6 +52,14 @@
         <field name="mode">extension</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='%(project.project_share_wizard_action)d'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(project.project_share_wizard_action)d'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
              <header>
                 <!-- <button class="btn-secondary" name="action_create_purchase_requisition"
                         type="object"
@@ -80,6 +88,10 @@
                 <button class="btn-secondary" name="%(action_foreign_purchase_request)d"
                         type="action"
                         icon="fa-tasks" string="Create foreign purchase"/>
+
+                <button class="btn-secondary" name="%(action_project_invoice)d"
+                        type="action"
+                        string="Create invoice" invisible="state != 'process'"/>
                 
                  <!-- <button class="btn-secondary" name="package_task"
                         type="object"
@@ -214,6 +226,13 @@
                     type="object"
                     icon="fa-shopping-cart">
                     <field string="Зарлагууд" name="picking_count" widget="statinfo" />
+                </button>
+                <button
+                    class="oe_stat_button"
+                    name="action_view_invoice"
+                    type="object"
+                    icon="fa-dollar">
+                    <field string="Нэхэмжлэхүүд" name="invoice_count" widget="statinfo" />
                 </button>
             </div>
         </field>

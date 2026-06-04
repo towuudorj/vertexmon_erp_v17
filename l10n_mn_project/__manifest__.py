@@ -37,6 +37,7 @@
             'wizard/foreign_purchase_request_wizard.xml',
             'wizard/local_purchase_request_wizard.xml',
             'wizard/make_package_task_wizard.xml',
+            'wizard/project_invoice_wizard.xml',
             'views/project_project_views.xml',
             'views/project_task_view.xml',
             'views/purchase_requisition_view.xml',

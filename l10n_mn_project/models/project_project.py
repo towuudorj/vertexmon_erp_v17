@@ -87,6 +87,7 @@ class ProjectProject(models.Model):
     project_total_profit = fields.Monetary(string='Project Total Profit', compute='_compute_cost_profit')
     account_analytic_line_ids = fields.Many2many('account.analytic.line', string='Account analytic')
     bbo_account_id = fields.Many2one('account.account', string=u'Данс')
+    invoice_count = fields.Integer(compute='_compute_invoice_count')
 
     def write(self, vals):
         if vals.get('access_token'):
@@ -187,6 +188,19 @@ class ProjectProject(models.Model):
         for line in self:
             tax_ids = self.env['account.tax'].search([('company_id','=',line.company_id.id),('type_tax_use','=','sale'),('price_include','=',True)],limit=1)
             analytic_account_1 = line.analytic_account_id
+            self.env.cr.execute("""
+                                SELECT aml.id
+                                FROM account_move_line aml
+                                         LEFT JOIN account_move am on am.id = aml.move_id
+                                WHERE am.move_type = 'out_invoice'
+                                  and aml.analytic_distribution ? %s
+                                """, [str(analytic_account_1.id)])
+            invoice_line_ids = self.env['account.move.line'].browse([row[0] for row in self.env.cr.fetchall()])
+            invoice_ids = invoice_line_ids.filtered(lambda aml_line: aml_line.move_id.payment_types != 'penalty')
+            if invoice_ids:
+                invoice_amount = line.contract_amount - sum(invoice_ids.mapped('price_unit'))
+            else:
+                invoice_amount = 0
             invoice_vals = {
                             'invoice_date':line.close_date,
                             'journal_id':line.invoice_journal_id.id,
@@ -202,7 +216,7 @@ class ProjectProject(models.Model):
                             'quantity':1.0,
                             'product_id':line.invoice_product_id.id,
                             'product_uom_id':line.invoice_product_id.uom_id.id,
-                            'price_unit':line.contract_amount,
+                            'price_unit':invoice_amount,
                             'tax_ids':[(6,0,tax_ids.ids)],
                             'analytic_distribution': {
                                 analytic_account_1.id: 100.0,
@@ -211,6 +225,8 @@ class ProjectProject(models.Model):
                             }
             invoice_vals['invoice_line_ids'].append((0,0,invoice_line))
             invoice_id = account_move_obj.create(invoice_vals)
+
+
             move_value = {
                             'date':line.close_date,
                             'journal_id':line.journal_id.id,
@@ -221,8 +237,7 @@ class ProjectProject(models.Model):
                             'move_type':'entry',
                             'line_ids':[]
                             }
-            
-            
+
             for lines in line.products_line:
                 if lines.product_id.detailed_type == 'service':
                     amount = lines.cost_price
@@ -603,3 +618,38 @@ class ProjectProject(models.Model):
                 obj.project_total_cost = 0
                 obj.project_total_profit = 0
 
+    def _compute_invoice_count(self):
+        for obj in self:
+            analytic_id = str(obj.analytic_account_id.id)
+            self.env.cr.execute("""
+                                SELECT aml.id
+                                FROM account_move_line aml
+                                LEFT JOIN account_move am on aml.move_id = am.id
+                                WHERE am.move_type = 'out_invoice' and analytic_distribution ? %s
+                                """, [analytic_id])
+
+            invoice_lines = self.env['account.move.line'].browse(
+                [row[0] for row in self.env.cr.fetchall()]
+            )
+            obj.invoice_count = len(invoice_lines) if invoice_lines else 0
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        self.env.cr.execute("""
+                SELECT am.id
+                FROM account_move_line aml
+                LEFT JOIN account_move am on am.id = aml.move_id
+                WHERE am.move_type = 'out_invoice' and aml.analytic_distribution ? %s
+            """, [str(self.analytic_account_id.id)]
+        )
+
+
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "domain": [('id', 'in', [row[0] for row in self.env.cr.fetchall()])],
+            "context": {"create": False, 'default_move_type': 'out_invoice'},
+            "name": _("Invoices"),
+            'view_mode': 'tree,form',
+        }
+        return result
