@@ -184,16 +184,20 @@ class HrHourRecord(models.Model):
         emp_info = self.env['hr.hour.record.line']
         emp_obj = self.env['hr.employee']
         att_obj = self.env['hr.attendance']
-        contract_obj = self.env['hr.contract']
         holiday_obj = self.env['hr.leave']
         self.delete_lines()
-        line_vals = []
         company = hr_data.company_id
+        domain = [('company_id','=',company.id), '|', ('attendance_id', '!=', ''), ('timely_id', '!=', 0)]
+
         if hr_data.department:
-            emp_id = emp_obj.search([('company_id','=',company.id),('department_id','=',hr_data.department.id)], order='department_id')
+            domain.append(('department_id','=',hr_data.department.id))
+            emp_id = emp_obj.search(domain, order='department_id')
         else:
-            emp_id = emp_obj.search([('company_id','=',company.id)])
+            domain.append(('company_id','=',company.id))
+            emp_id = emp_obj.search(domain)
         if employee_id:
+            if employee_id.attendance_id == '' and employee_id.timely_id == 0:
+                return {'miss_time': 0}
             emp_id = employee_id
         start_date = hr_data.start_date + timedelta(hours=8)
         end_times = hr_data.end_date + timedelta(hours=8)
@@ -206,9 +210,9 @@ class HrHourRecord(models.Model):
         company_tz = timezone(tz)
 
         start_date = start_date.replace(minute=00, hour=00, second=00)
-        emp_attendance_ids = emp_id.mapped('timely_id')
-        timely_data = self.get_timely_data(emp_attendance_ids)
-        timely_worker_ids = timely_data.keys() if timely_data else []
+        # emp_attendance_ids = emp_id.mapped('timely_id')
+        # timely_data = self.get_timely_data(emp_attendance_ids)
+        # timely_worker_ids = timely_data.keys() if timely_data else []
         public_holiday_ids = self.env['resource.calendar.leaves'].search([('date_from', '>=', start_date), ('date_to', '<=', end_time)])
         for line in emp_id:
             due_time=0
@@ -231,7 +235,7 @@ class HrHourRecord(models.Model):
             total_active_time = 0.0
             work_day = start_date
             att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
-            if not line.resource_calendar_id and (not str(line.timely_id) in timely_worker_ids):
+            if not line.resource_calendar_id:
                 raise UserError(u"%s ажилтны ажлын цагийг тохируулаагүй байна!" % line.name)
             must_work_hour = line.resource_calendar_id.work_time if line.resource_calendar_id.work_time > 0 else 8
 
@@ -240,7 +244,7 @@ class HrHourRecord(models.Model):
             for p_holiday in emp_public_holiday_ids:
                 public_holiday.append(p_holiday.date_from.date())
 
-            if att_id and not str(line.timely_id) in timely_worker_ids:
+            if att_id:
                 work_weekdays = line.resource_calendar_id.attendance_ids.mapped('dayofweek')
                 while work_day <= end_time:
                     if work_day.date() in public_holiday:
@@ -305,7 +309,7 @@ class HrHourRecord(models.Model):
                     work_day = work_day + timedelta(days=1)
 
             holiday_id1 = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
-            if holiday_id1 and not str(line.timely_id) in timely_worker_ids:
+            if holiday_id1:
                 for lines1 in holiday_id1:
                     if lines1.holiday_status_id.sub_type == 'public_holiday':
                         if lines1.date_to <= end_time:
@@ -321,7 +325,7 @@ class HrHourRecord(models.Model):
 
 
             holiday_id = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
-            if holiday_id and not str(line.timely_id) in timely_worker_ids:
+            if holiday_id:
                 for lines in holiday_id:
                     if lines.date_from:
                         if lines.date_to <= end_time:
@@ -379,24 +383,24 @@ class HrHourRecord(models.Model):
                                 elif lines.holiday_status_id.sub_type == 'sick':
                                     sick_time +=lines.number_of_hours_display
 
-            if str(line.timely_id) in timely_worker_ids:
-                emp_hour_balance = timely_data[str(line.timely_id)]
-                due_day += emp_hour_balance['attd']['work']['day']
-                due_time += emp_hour_balance['attd']['work']['time']
-                worked_day += emp_hour_balance['attd']['total_worked']['day']
-                in_time += emp_hour_balance['attd']['total_worked']['time']
-                # sick_time += emp_hour_balance['attd']['sick_time']
-                n_time += emp_hour_balance['attd']['overtime_night']['time']
-                # shift_time += emp_hour_balance['attd']['vacation_day']
-                lost_time += emp_hour_balance['attd']['total_unworked']['time']
-                # free_time1 += emp_hour_balance['attd']['salary_leave_time']
-                unpayroll_time_api = 0
-                for request in emp_hour_balance['request']:
-                    if request['code'] == 'app_leave_normal':
-                        unpayroll_time_api += request['totalTime']
-                unpayroll_time += unpayroll_time_api
-                over_time += emp_hour_balance['attd']['overtime_subtraction']['time']
-                official_time += emp_hour_balance['attd']['holiday_worked']['time']
+            # if str(line.timely_id) in timely_worker_ids:
+            #     emp_hour_balance = timely_data[str(line.timely_id)]
+            #     due_day += emp_hour_balance['attd']['work']['day']
+            #     due_time += emp_hour_balance['attd']['work']['time']
+            #     worked_day += emp_hour_balance['attd']['total_worked']['day']
+            #     in_time += emp_hour_balance['attd']['total_worked']['time']
+            #     # sick_time += emp_hour_balance['attd']['sick_time']
+            #     n_time += emp_hour_balance['attd']['overtime_night']['time']
+            #     # shift_time += emp_hour_balance['attd']['vacation_day']
+            #     lost_time += emp_hour_balance['attd']['total_unworked']['time']
+            #     # free_time1 += emp_hour_balance['attd']['salary_leave_time']
+            #     unpayroll_time_api = 0
+            #     for request in emp_hour_balance['request']:
+            #         if request['code'] == 'app_leave_normal':
+            #             unpayroll_time_api += request['totalTime']
+            #     unpayroll_time += unpayroll_time_api
+            #     over_time += emp_hour_balance['attd']['overtime_subtraction']['time']
+            #     official_time += emp_hour_balance['attd']['holiday_worked']['time']
             total_time = in_time + official_time + sick_time + out_n_time + n_time
             lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
             vals = {
@@ -425,65 +429,68 @@ class HrHourRecord(models.Model):
                 emp_info.create(vals)
         return None
 
-    def get_timely_data(self, emp_attendance_ids):
-        emp_hour_balance = {}
-        token_url = 'https://api.timely.mn/v3/login'
-        ir_config = self.env['ir.config_parameter'].sudo()
-        name = ir_config.get_param('timely_user_name', default='')
-        password = ir_config.get_param('timely_password', default='')
-        company_vat = ir_config.get_param('timely_company_vat', default='')
-        token = False
-        if name != ' ' and password != ' ':
-            data = {
-                "name": name,
-                "password": password,
-            }
-            headers = {
-                'Content-Type': 'application/json',
-            }
-            response = requests.request("POST", token_url, headers=headers, json=data)
-            response_json = response.json()
-            token = response_json['data']
-
-        if token:
-            url = 'https://api.timely.mn/v3/overview-attd'
-            headers = {
-                'Authorization': f'Bearer {token}',
-                'Content-Type': 'application/json',
-            }
-
-            have_value = True
-            page = 1
-            tz = self.company_id.partner_id.tz if self.company_id.partner_id.tz else 'Asia/Ulaanbaatar'
-            company_tz = timezone(tz)
-            work_start = self.start_date
-            work_end = self.end_date
-            work_start = work_start.astimezone(company_tz)
-            work_end = work_end.astimezone(company_tz)
-            while have_value:
-                data = {
-                    'company_register': company_vat,
-                    'dateFrom': str(work_start.date()),
-                    'dateTo': str(work_end.date()),
-                    'page': page,
-                    'limit': 100
-                }
-
-                response = requests.post(url, headers=headers, json=data)
-                response_json = response.json()['data']
-                if response.status_code == 200 and response_json and response_json['data']:
-                    for res in response_json['data']:
-                        if int(res['workerId']) in emp_attendance_ids:
-                            emp_hour_balance[res['workerId']] = {
-                                'attd': res['attd'],
-                                'request': res['request'],
-                            }
-                else:
-                    break
-                page += 1
-
-                return emp_hour_balance
-        return {}
+    # def get_timely_data(self, emp_attendance_ids):
+    #     emp_hour_balance = {}
+    #     token_url = 'https://api.timely.mn/v3/login'
+    #     ir_config = self.env['ir.config_parameter'].sudo()
+    #     name = ir_config.get_param('timely_user_name', default='')
+    #     password = ir_config.get_param('timely_password', default='')
+    #     company_vat = ir_config.get_param('timely_company_vat', default='')
+    #     token = False
+    #     if name != ' ' and password != ' ':
+    #         data = {
+    #             "name": name,
+    #             "password": password,
+    #         }
+    #         headers = {
+    #             'Content-Type': 'application/json',
+    #         }
+    #         response = requests.request("POST", token_url, headers=headers, json=data)
+    #         response_json = response.json()
+    #         token = response_json['data']
+    #
+    #     if token:
+    #         url = 'https://api.timely.mn/v3/overview-attd'
+    #         headers = {
+    #             'Authorization': f'Bearer {token}',
+    #             'Content-Type': 'application/json',
+    #         }
+    #
+    #         have_value = True
+    #         page = 1
+    #         tz = self.company_id.partner_id.tz if self.company_id.partner_id.tz else 'Asia/Ulaanbaatar'
+    #         company_tz = timezone(tz)
+    #         work_start = self.start_date
+    #         work_end = self.end_date
+    #         work_start = work_start.astimezone(company_tz)
+    #         work_end = work_end.astimezone(company_tz)
+    #         while have_value:
+    #             data = {
+    #                 'company_register': company_vat,
+    #                 'dateFrom': str(work_start.date()),
+    #                 'dateTo': str(work_end.date()),
+    #                 'page': page,
+    #                 'limit': 100
+    #             }
+    #             print(url, headers, data)
+    #
+    #             response = requests.post(url, headers=headers, json=data)
+    #             response_json = response.json()['data']
+    #             # print(response_json)
+    #             # print(aaaaaaaaa)
+    #             if response.status_code == 200 and response_json and response_json['data']:
+    #                 for res in response_json['data']:
+    #                     if int(res['workerId']) in emp_attendance_ids:
+    #                         emp_hour_balance[res['workerId']] = {
+    #                             'attd': res['attd'],
+    #                             'request': res['request'],
+    #                         }
+    #             else:
+    #                 break
+    #             page += 1
+    #
+    #             return emp_hour_balance
+    #     return {}
 
     def delete_lines(self):
         for invoice in self:
