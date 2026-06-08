@@ -80,14 +80,15 @@
                                     <field name="active_time" editable="True" widget="float_time" />
                                     <field name="night_time" editable="True" widget="float_time" />
                                     <field name="outer_night_time" editable="True" widget="float_time" />
-                                    <field name="sick_time" editable="True" widget="float_time" />
-                                    <field name="shift_holiday" editable="True" />
-                                    <field name="miss_time" editable="True" widget="float_time" />
-                                    <field name="free_time1" editable="True" widget="float_time" />
-                                    <field name="free_time2" editable="True" widget="float_time" />
-                                    <field name="more_time" editable="True" widget="float_time" />
-                                    <field name="more_time1" editable="True" widget="float_time" />
-                                    <field name="total_time" readonly="True" widget="float_time" />
+                                    <field name="sick_time" editable="True" widget="float_time" optional='show'/>
+                                    <field name="shift_holiday" editable="True" optional='show'/>
+                                    <field name="miss_time" editable="True" widget="float_time" optional='show'/>
+                                    <field name="free_time1" editable="True" widget="float_time" optional='show'/>
+                                    <field name="free_time2" editable="True" widget="float_time" optional='show'/>
+                                    <field name="more_time" editable="True" widget="float_time" optional='show'/>
+                                    <field name="more_time1" editable="True" widget="float_time" optional='show'/>
+                                    <field name="total_time" readonly="True" widget="float_time" optional='show'/>
+                                    <button name="see_attendance" type="object" icon="oi-arrow-right" optional='show'/>
                                 </tree>
                         	</field>
                         	<div class="oe_chatter">

@@ -765,4 +765,18 @@ class hr_hour_record_line(models.Model):
                         'more_time':over_time,
                         }}
         return res
+
+    def see_attendance(self):
+        self.ensure_one()
+        if self.parentd_id:
+            attendance_ids = self.env['hr.attendance'].search([
+                ('employee_id', '=', self.employee_id.id),
+                ('check_in', '>=', self.parentd_id.start_date),
+                ('check_in', '>=', self.parentd_id.end_date)
+            ])
+            action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_attendance_action')
+            if attendance_ids:
+                action['domain'] = [('id', 'in', attendance_ids.ids)]
+            return action
+        return None
    

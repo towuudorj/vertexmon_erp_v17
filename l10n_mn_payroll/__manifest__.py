@@ -39,6 +39,7 @@
             'data/salary_rule_category_data.xml',
             'data/salary_rule_data.xml',
             'data/salary_rule_input_data.xml',
+            'data/hr_hour_record_rule.xml',
             'data/location_data.xml',
             'data/country_data.xml',
             'data/ndd_type_data.xml',
