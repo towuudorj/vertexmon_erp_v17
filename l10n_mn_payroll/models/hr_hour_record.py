@@ -429,68 +429,6 @@ class HrHourRecord(models.Model):
                 emp_info.create(vals)
         return None
 
-    # def get_timely_data(self, emp_attendance_ids):
-    #     emp_hour_balance = {}
-    #     token_url = 'https://api.timely.mn/v3/login'
-    #     ir_config = self.env['ir.config_parameter'].sudo()
-    #     name = ir_config.get_param('timely_user_name', default='')
-    #     password = ir_config.get_param('timely_password', default='')
-    #     company_vat = ir_config.get_param('timely_company_vat', default='')
-    #     token = False
-    #     if name != ' ' and password != ' ':
-    #         data = {
-    #             "name": name,
-    #             "password": password,
-    #         }
-    #         headers = {
-    #             'Content-Type': 'application/json',
-    #         }
-    #         response = requests.request("POST", token_url, headers=headers, json=data)
-    #         response_json = response.json()
-    #         token = response_json['data']
-    #
-    #     if token:
-    #         url = 'https://api.timely.mn/v3/overview-attd'
-    #         headers = {
-    #             'Authorization': f'Bearer {token}',
-    #             'Content-Type': 'application/json',
-    #         }
-    #
-    #         have_value = True
-    #         page = 1
-    #         tz = self.company_id.partner_id.tz if self.company_id.partner_id.tz else 'Asia/Ulaanbaatar'
-    #         company_tz = timezone(tz)
-    #         work_start = self.start_date
-    #         work_end = self.end_date
-    #         work_start = work_start.astimezone(company_tz)
-    #         work_end = work_end.astimezone(company_tz)
-    #         while have_value:
-    #             data = {
-    #                 'company_register': company_vat,
-    #                 'dateFrom': str(work_start.date()),
-    #                 'dateTo': str(work_end.date()),
-    #                 'page': page,
-    #                 'limit': 100
-    #             }
-    #             print(url, headers, data)
-    #
-    #             response = requests.post(url, headers=headers, json=data)
-    #             response_json = response.json()['data']
-    #             # print(response_json)
-    #             # print(aaaaaaaaa)
-    #             if response.status_code == 200 and response_json and response_json['data']:
-    #                 for res in response_json['data']:
-    #                     if int(res['workerId']) in emp_attendance_ids:
-    #                         emp_hour_balance[res['workerId']] = {
-    #                             'attd': res['attd'],
-    #                             'request': res['request'],
-    #                         }
-    #             else:
-    #                 break
-    #             page += 1
-    #
-    #             return emp_hour_balance
-    #     return {}
 
     def delete_lines(self):
         for invoice in self:

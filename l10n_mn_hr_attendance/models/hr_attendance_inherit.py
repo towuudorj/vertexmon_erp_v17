@@ -10,6 +10,7 @@ from dateutil import parser
 import pytz
 from datetime import date, datetime, timedelta, time as dt_time
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 
 API_PATH = "/artemis/api/attendance/v1/report"
 
@@ -104,7 +105,7 @@ class HrAttendance(models.Model):
                 else:
                     attendance.color = 1
 
-    def get_attendance_data(self, id=False):
+    def get_attendance_data(self, id=False, last_days=False):
         employees_with_attendance_id = self.env['hr.employee'].search([('attendance_id','!=','')])
         if id:
             employees_with_attendance_id = self.env['hr.employee'].search([('id', '=', id)])
@@ -112,6 +113,21 @@ class HrAttendance(models.Model):
 
         url = BASE_URL + API_PATH
         today = fields.Date.today()
+        if last_days:
+            begin_date = today - timedelta(days=last_days)
+        else:
+            begin_date = today
+            if today.month != 1:
+                month = today.month-1
+                year = today.year
+            else:
+                month = 12
+                year = today.year-1
+            begin_date = begin_date.replace(year=year, month=month)
+
+        # Timely-гаас ирц татах функц
+        self.get_timely_data(begin_date, today)
+
         for attendance_id in employees_with_attendance_id:
             page_num = 1
             response_json = False
@@ -125,7 +141,7 @@ class HrAttendance(models.Model):
                             "pageSize": 100,
                             "queryInfo": {
                                 "personCode": att_id,
-                                "beginTime": "2024-01-01T00:00:00 08:00",
+                                "beginTime": f"{begin_date}T00:00:00 05:00",
                                 "endTime": f"{str(today)}T23:59:59 08:00",
                                 "sortInfo": {
                                     "sortField": 1,
@@ -147,7 +163,7 @@ class HrAttendance(models.Model):
                             check_out = False
                             hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
                                                                                  ('check_in', '>=', start + relativedelta(hours=-8)),
-                                                                                 ('check_out', '<=', end + relativedelta(hours=-8))])
+                                                                                 ('check_in', '<=', end + relativedelta(hours=-8))])
 
                             if line['attendanceBaseInfo']['beginTime'] != "":
                                 check_in = fields.Datetime.to_string(
@@ -174,3 +190,110 @@ class HrAttendance(models.Model):
                                         hr_attendance_id.sudo().write({
                                             'check_out': check_out
                                         })
+
+
+    def get_timely_data(self, start_date, end_date):
+        employees = self.env['hr.employee'].search([('timely_id', '!=', 0)])
+        if not employees:
+            return None
+        token_url = 'https://api.timely.mn/v3/login'
+        ir_config = self.env['ir.config_parameter'].sudo()
+        name = ir_config.get_param('timely_user_name', default='')
+        password = ir_config.get_param('timely_password', default='')
+        company_vat = ir_config.get_param('timely_company_vat', default='')
+        leave_obj = self.env['hr.leave'].sudo()
+        token = False
+        if name != ' ' and password != ' ':
+            data = {
+                "name": name,
+                "password": password,
+            }
+            headers = {
+                'Content-Type': 'application/json',
+            }
+            response = requests.request("POST", token_url, headers=headers, json=data)
+            response_json = response.json()
+            token = response_json['data']
+
+        if token:
+            url = 'https://api.timely.mn/v3/expanded-attd'
+            headers = {
+                'Authorization': f'Bearer {token}',
+                'Content-Type': 'application/json',
+            }
+
+            have_value = True
+            page = 1
+            while have_value:
+                data = {
+                    'company_register': company_vat,
+                    'dateFrom': str(start_date),
+                    'dateTo': str(end_date),
+                    'page': page,
+                    'limit': 100
+                }
+                page += 1
+                response = requests.post(url, headers=headers, json=data)
+                response_json = response.json()
+                if not response_json['data']:
+                    break
+                if 'success' in response_json and response_json.get('success', False):
+                    for line in response_json['data']:
+                        employee_id = employees.filtered(lambda emp: str(emp.timely_id) == line['workerId'])
+                        if not employee_id:
+                            continue
+                        for key, value in list(line['attd'].items()):
+                            date = fields.Date.from_string(key)
+                            start = datetime.combine(date, dt_time.min)
+                            end = datetime.combine(date, dt_time.max)
+                            check_in = False
+                            check_out = False
+                            hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', employee_id.id),
+                                                                                 ('check_in', '>=',
+                                                                                  start + relativedelta(hours=-8)),
+                                                                                 ('check_in', '<=',
+                                                                                  end + relativedelta(hours=-8))])
+
+                            if value['clockIn']:
+                                dt = datetime.strptime(value['clockIn'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                check_in = fields.Datetime.to_datetime(dt) - timedelta(hours=8)
+
+                            if value['clockOut']:
+                                dt = datetime.strptime(value['clockOut'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                check_out = fields.Datetime.to_datetime(dt) - timedelta(hours=8)
+
+                            if check_in or check_out:
+                                if not hr_attendance_id:
+                                    self.env['hr.attendance'].create({
+                                        'employee_id': employee_id.id,
+                                        'check_in': check_in if check_in else check_out,
+                                        'check_out': check_out if check_out else check_in,
+                                    })
+                                else:
+                                    if check_in and hr_attendance_id.check_in > check_in:
+                                        hr_attendance_id.sudo().write({
+                                            'check_in': check_in
+                                        })
+
+                                    if check_out and hr_attendance_id.check_out < check_out:
+                                        hr_attendance_id.sudo().write({
+                                            'check_out': check_in
+                                        })
+                            # if value['requests']:
+                            #     for requests in value['requests']:
+                            #         leave_vals = {
+                            #             'holiday_status_id': payroll_leave_type_id.id if requests['code'] == 'app_leave_normal' else unpayroll_leave_type_id.id,
+                            #             'request_unit_hours': True,
+                            #             'employee_id': employee.id if employee else False,
+                            #             'sharepoint_id': data['id'],
+                            #         }
+                            #         leave_vals.update({'request_date_from': str(start_date.date()),
+                            #                            'request_date_to': str(end_date.date()),
+                            #                            'request_hour_from': hour_min_to_selection[
+                            #                                str(start_date.hour) + ':' + str(start_date.minute)],
+                            #                            'request_hour_to': hour_min_to_selection[
+                            #                                str(end_date.hour) + ':' + str(end_date.minute)]
+                            #                            })
+                            #
+                            #         leave_obj.create(leave_vals)
+        return None

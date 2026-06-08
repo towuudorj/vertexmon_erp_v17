@@ -32,6 +32,11 @@ msgid "Available QTY"
 msgstr "Боломжит тоо хэмжээ"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__barter
+msgid "Barter transaction"
+msgstr "Бартер"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__company_id
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__company_id
 msgid "Company"
@@ -118,6 +123,15 @@ msgstr "Тайлбар"
 msgid "Partner"
 msgstr "Харилцагч"
 
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__payment_type
+msgid "Payment type"
+msgstr "Төлбөрийн төрөл"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__penalty
+msgid "Penalty"
+msgstr "Алданги"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_local_purchase_request_line__uom_id
@@ -302,6 +316,16 @@ msgid "Done"
 msgstr "Дууссан"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__down_payment
+msgid "Down payment"
+msgstr "Урьдчилгаа төлбөр"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__final_payment
+msgid "Final payment"
+msgstr "Эцсийн санхүүжилт"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_products_line__purchase_type__foreign
 msgid "Foreign"
 msgstr "Гадаад"
@@ -315,6 +339,11 @@ msgstr "Дотоод"
 #: model:ir.model.fields.selection,name:l10n_mn_project.selection__purchase_requisition__type__foreign
 msgid "Foreign"
 msgstr "Гадаад"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__guarantee_collateral
+msgid "Guarantee and collateral"
+msgstr "Баталгаа барьцаа"
 
 #. module: l10n_mn_project
 #: model:ir.model,name:l10n_mn_project.model_project_project
@@ -441,6 +470,11 @@ msgstr "Бүтээгдэхүүнүүд"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_task__products_line
 msgid "Products Line"
 msgstr "Бүтээгдэхүүний мөр"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields.selection,name:l10n_mn_project.selection__project_invoice__payment_type__progress_payment
+msgid "Progress payment"
+msgstr "Дундын санхүүжилт"
 
 #. module: l10n_mn_project
 #: model:ir.model,name:l10n_mn_project.model_project_project
