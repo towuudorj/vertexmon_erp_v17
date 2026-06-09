@@ -58,6 +58,7 @@ class PurchaseRequisition(models.Model):
     supplier_day = fields.Char(string='Supplier day')
     supplier_date = fields.Date(string='Supplier date')
     edit_info_desc = fields.Text(string='Мэдээлэл шинэчлэх дээр тайлбар')
+    crm_type = fields.Selection(related='crm_lead_id.crm_type')
     
     
     
