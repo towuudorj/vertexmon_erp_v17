@@ -484,6 +484,11 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_stock_move__project_balance
+msgid "Project Balance"
+msgstr "Төслийн үлдэгдэл"
+
+#. module: l10n_mn_project
 #: model:ir.model,name:l10n_mn_project.model_project_products_line
 #: model:ir.model,name:l10n_mn_project.model_task_products_line
 msgid "Project Product Line"

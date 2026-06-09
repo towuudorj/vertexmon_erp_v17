@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="stock_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="product_in_project" column_invisible="1"/>
+                <field name="project_balance" column_invisible="not parent.analytic_id"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree" position="attributes">
+                    <attribute name="decoration-warning">not product_in_project and parent.analytic_id</attribute>
+                    <attribute name="decoration-success">product_in_project and parent.analytic_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
