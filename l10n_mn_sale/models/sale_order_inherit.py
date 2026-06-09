@@ -237,6 +237,7 @@ class SaleOrder(models.Model):
     payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
     together_sales_id = fields.Many2many('res.users', string='Together sales')
     is_ot_po_duplicated = fields.Boolean(compute='_compute_ot_po_duplicated')
+    contract_number_by_hand = fields.Char(string='Contact Number By hand')
 
 
     def action_create_new_invoice(self):

@@ -710,6 +710,11 @@ msgid "Confirmed"
 msgstr "Батлагдсан"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_sale_order__contract_number_by_hand
+msgid "Contact Number By hand"
+msgstr "Гэрээний дугаар /гараас/"
+
+#. module: l10n_mn_sale
 #: model:ir.model.fields.selection,name:l10n_mn_sale.selection__sales_contract_register__state__closed
 msgid "Closed"
 msgstr "Хаагдсан"
