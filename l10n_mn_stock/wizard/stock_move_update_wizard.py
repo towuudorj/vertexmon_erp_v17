@@ -215,6 +215,14 @@ class StockMoveUpdate(models.TransientModel):
         })
         return move_vals
 
+    def _sync_move_line_picking(self, moves):
+        for move in moves.filtered('picking_id'):
+            move.move_line_ids.filtered(
+                lambda line: line.picking_id != move.picking_id
+            ).sudo().write({
+                'picking_id': move.picking_id.id,
+            })
+
     def _get_related_crm_lead(self, move, purchase_id=False):
         purchase_order = purchase_id or move.purchase_line_id.order_id
         if purchase_order and purchase_order.requisition_id and purchase_order.requisition_id.crm_lead_id:
@@ -347,6 +355,7 @@ class StockMoveUpdate(models.TransientModel):
                     purchase_move_id.sudo().write(
                         self._prepare_purchase_stock_move_vals(new_line, purchase_line_id)
                     )
+                    self._sync_move_line_picking(purchase_move_id)
                     new_lines_to_unlink |= new_line
                 else:
                     new_line.sudo().write({
@@ -354,6 +363,7 @@ class StockMoveUpdate(models.TransientModel):
                         'product_uom_qty': new_line.quantity,
                         'purchase_line_id': purchase_line_id.id if purchase_line_id else False,
                     })
+                    self._sync_move_line_picking(new_line)
             message_body += f'<li>{new_line.product_id.name}:{new_line.quantity}</li>'
         message_body += '</ul>'
         picking_id.message_post(author_id=self.env.user.partner_id.id,
@@ -381,11 +391,13 @@ class StockMoveUpdate(models.TransientModel):
                         )
                     )
                 if project_stock_move:
-                    self.env['stock.move'].sudo().create(
+                    new_project_move = self.env['stock.move'].sudo().create(
                         self._prepare_project_stock_move_vals(project_stock_move, new_line)
                     )
+                    self._sync_move_line_picking(new_project_move)
         else:
             same_product_sale_move = self._get_related_sale_move(move, purchase_id)
+            print(purchase_id, same_product_sale_move, quantity_delta, '\n\n\n\n')
             if quantity_delta and (
                     len(same_product_sale_move) != 1 or
                     float_compare(same_product_sale_move.product_uom_qty + quantity_delta, 0.0,
@@ -427,11 +439,12 @@ class StockMoveUpdate(models.TransientModel):
                 sale_order_line_id = self.env['sale.order.line'].with_context(
                     skip_split_stock_rule=True
                 ).sudo().create(sale_order_line_vals)
-                self.env['stock.move'].sudo().create(
+                new_sale_move = self.env['stock.move'].sudo().create(
                     self._prepare_sale_stock_move_vals(
                         same_product_sale_move, new_line, sale_order_line_id
                     )
                 )
+                self._sync_move_line_picking(new_sale_move)
                 sale_message_body = f'<ul><li>{new_line.product_id.name}:{new_line.quantity}</li></ul>'
                 sale_picking_id.message_post(
                     author_id=self.env.user.partner_id.id,
