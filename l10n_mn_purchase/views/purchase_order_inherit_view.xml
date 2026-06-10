@@ -40,6 +40,17 @@
                             string="Create Bill" class="oe_highlight"
                             invisible="state not in ('purchase', 'done') or not order_line" data-hotkey="w"/>
                 </xpath>
+                <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                    <attribute name="groups">l10n_mn_account.group_financial_analyst</attribute>
+                </xpath>
+                <xpath expr="//button[@id='bid_confirm']" position="after">
+                    <button name="button_draft" string="Reject" type="object" invisible="state != 'sent'"
+                    groups="l10n_mn_account.group_financial_analyst"/>
+                    <button name="button_request" string="Request" type="object" invisible="state != 'draft'"/>
+                </xpath>
             </field>
         </record>
 

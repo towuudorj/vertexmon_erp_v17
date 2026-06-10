@@ -55,8 +55,9 @@ class PurchaseOrder(models.Model):
         return invoice_vals
 
 
-
-
+    def button_request(self):
+        self.ensure_one()
+        self.state = 'sent'
 
     def button_confirm(self):
         for order in self:
@@ -73,11 +74,17 @@ class PurchaseOrder(models.Model):
             if order.analytic_id:
                 project_id = self.env['project.project'].search([('analytic_account_id','=',order.analytic_id.id)])
                 crm_manager = order.requisition_id.crm_lead_id.user_id
-                if crm_manager and crm_manager.mapped('email'):
+                manager_employee = crm_manager.employee_id
+                manager_mail = False
+                if manager_employee:
+                    manager_mail = manager_employee.work_email
+                if not manager_mail:
+                    manager_mail = crm_manager.partner_id.email
+                if manager_mail:
                     # Send email notification
                     purchase_url = f'/web#id={order.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({
-                        'email_to': ','.join(crm_manager.mapped('email')),
+                        'email_to': manager_mail,
                         'subject': f'Худалдан авалтын захиалга: {order.name} батлагдсан байна.',
                         'body_html': f'Дэлгэрэнгүй мэдээллийг харна уу. <a href="{purchase_url}">{order.name}</a>'+
                         f'- Төслийн нэр: {project_id.name} \n Төслийн менежер: {project_id.user_id.name}, Нийлүүлэгч: {order.partner_id.name}',
