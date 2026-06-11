@@ -39,7 +39,7 @@ class ControllerAttendance(http.Controller):
                 attendance_data.append({
                     'first_name': attendance_id.employee_id.name,
                     'last_name': attendance_id.employee_id.last_name,
-                    'email': attendance_id.employee_id.last_name,
+                    'email': attendance_id.employee_id.work_email,
                     'register': attendance_id.employee_id.ssnid,
                     'in': str(attendance_id.check_in + timedelta(hours=8)),
                     'out': str(attendance_id.check_out + timedelta(hours=8)),
