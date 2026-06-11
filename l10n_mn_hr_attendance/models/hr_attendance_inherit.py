@@ -156,40 +156,41 @@ class HrAttendance(models.Model):
                     response_json = response.json()
                     if 'record' in response_json['data']:
                         for line in response_json['data']['record']:
-                            date = fields.Date.from_string(line['date'])
-                            start = datetime.combine(date, dt_time.min)
-                            end = datetime.combine(date, dt_time.max)
-                            check_in = False
-                            check_out = False
-                            hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
-                                                                                 ('check_in', '>=', start + relativedelta(hours=-8)),
-                                                                                 ('check_in', '<=', end + relativedelta(hours=-8))])
+                            if line['personInfo']['personCode'] == att_id:
+                                date = fields.Date.from_string(line['date'])
+                                start = datetime.combine(date, dt_time.min)
+                                end = datetime.combine(date, dt_time.max)
+                                check_in = False
+                                check_out = False
+                                hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
+                                                                                     ('check_in', '>=', start + relativedelta(hours=-8)),
+                                                                                     ('check_in', '<=', end + relativedelta(hours=-8))])
 
-                            if line['attendanceBaseInfo']['beginTime'] != "":
-                                check_in = fields.Datetime.to_string(
-                                    parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
+                                if line['attendanceBaseInfo']['beginTime'] != "":
+                                    check_in = fields.Datetime.to_string(
+                                        parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
 
-                            if line['attendanceBaseInfo']['endTime'] != "":
-                                check_out = fields.Datetime.to_string(
-                                    parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
+                                if line['attendanceBaseInfo']['endTime'] != "":
+                                    check_out = fields.Datetime.to_string(
+                                        parser.isoparse(line['attendanceBaseInfo']['endTime']).astimezone(pytz.UTC))
 
-                            if check_in or check_out:
-                                if not hr_attendance_id:
-                                    self.env['hr.attendance'].create({
-                                        'employee_id': attendance_id.id,
-                                        'check_in': check_in if check_in else check_out,
-                                        'check_out': check_out if check_out else check_in,
-                                    })
-                                else:
-                                    if check_in and hr_attendance_id.check_in > datetime.strptime(check_in, "%Y-%m-%d %H:%M:%S"):
-                                        hr_attendance_id.sudo().write({
-                                            'check_in': check_in
+                                if check_in or check_out:
+                                    if not hr_attendance_id:
+                                        self.env['hr.attendance'].create({
+                                            'employee_id': attendance_id.id,
+                                            'check_in': check_in if check_in else check_out,
+                                            'check_out': check_out if check_out else check_in,
                                         })
+                                    else:
+                                        if check_in and hr_attendance_id.check_in > datetime.strptime(check_in, "%Y-%m-%d %H:%M:%S"):
+                                            hr_attendance_id.sudo().write({
+                                                'check_in': check_in
+                                            })
 
-                                    if check_out and hr_attendance_id.check_out < datetime.strptime(check_out, "%Y-%m-%d %H:%M:%S"):
-                                        hr_attendance_id.sudo().write({
-                                            'check_out': check_out
-                                        })
+                                        if check_out and hr_attendance_id.check_out < datetime.strptime(check_out, "%Y-%m-%d %H:%M:%S"):
+                                            hr_attendance_id.sudo().write({
+                                                'check_out': check_out
+                                            })
 
 
     def get_timely_data(self, start_date, end_date):
