@@ -30,7 +30,7 @@ class ControllerAttendance(http.Controller):
             end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
             end_date = datetime.combine(end_date, datetime.max.time())
             attendance_ids = request.env['hr.attendance'].sudo().search([
-                ('employee_id.company_id', '=', 1),
+                ('employee_id.company_id', '=', 5),
                 ('check_in', '<=', end_date),
                 ('check_in', '>=', start_date)
             ])
