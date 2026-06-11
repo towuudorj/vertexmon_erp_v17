@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class ControllerAttendance(http.Controller):
 
-    @http.route("/get/attendance", methods=["GET"], type="json", auth="public")
+    @http.route("/get/attendance", methods=["POST"], type="json", auth="public")
     def get_attendance_data(self, **kwargs):
         data = json.loads(request.httprequest.data or b"{}")
         try:
