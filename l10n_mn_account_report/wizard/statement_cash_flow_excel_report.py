@@ -18,7 +18,6 @@ class statement_cashflow_report(models.TransientModel):
                                 default=lambda self: self.env.user.company_id)
     date_from=fields.Date("Start Date", required=True,default=fields.Date.context_today)
     date_to=fields.Date("End Date", required=True,default=fields.Date.context_today)
-    fiscalyear_id = fields.Many2one('account.fiscal.year', string='Fiscal year',required=True)
     target_move=fields.Selection([('posted', 'All Posted Entries'),
                                      ('all', 'All Entries'),
                                     ], string='State', required=True,default='posted')
@@ -30,7 +29,6 @@ class statement_cashflow_report(models.TransientModel):
             'company_id': self.company_id.id,
             'start_date': self.date_from,
             'end_date': self.date_to,
-            'fiscalyear_id': self.fiscalyear_id.id,
             'target_move': self.target_move,
         })
         return data
@@ -120,12 +118,10 @@ class statement_cashflow_report(models.TransientModel):
         account_move_line_obj = self.env['account.move.line']
         cash_move_obj = self.env['account.cash.move.type']
         cash_ids = cash_move_obj.search([('company_id','=',data['company_id'])])
-        m_pre_amount = 0.0
-        m_now_amount = 0.0
         sheet.write("A%s"%rowx, u'1',data_bold_left)
         sheet.write("B%s"%rowx, u'Үндсэн үйл ажиллагааны мөнгөн гүйлгээ',data_bold_left)
-        sheet.write("C%s"%rowx, m_pre_amount, data_bold_right)
-        sheet.write("D%s"%rowx, m_now_amount,data_bold_right)
+        sheet.write("C%s"%rowx, '', data_bold_right)
+        sheet.write("D%s"%rowx, '',data_bold_right)
         rowx += 1
 
         sheet.write("A%s"%rowx, u'1.1',data_bold_left)
@@ -150,9 +146,9 @@ class statement_cashflow_report(models.TransientModel):
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
-                            pre_amount -=lines.debit
+                            pre_amount +=lines.debit
                         else:
-                            pre_amount +=lines.credit
+                            pre_amount -=lines.credit
                 if len(state)==1:
                     now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
@@ -160,9 +156,9 @@ class statement_cashflow_report(models.TransientModel):
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
-                            now_amount -=now_lines.debit
+                            now_amount +=now_lines.debit
                         else:
-                            now_amount +=now_lines.credit
+                            now_amount -=now_lines.credit
                 sheet.write("A%s"%rowx,  u'%s'%type_line.sequence,data_left)
                 sheet.write("B%s"%rowx,  u'%s'%type_line.name,data_left)
                 sheet.write("C%s"%rowx,  pre_amount, data_right)
@@ -227,8 +223,8 @@ class statement_cashflow_report(models.TransientModel):
         
         sheet.write("A%s"%rowx, u'2',data_bold_left)
         sheet.write("B%s"%rowx, u'Хөрөнгө оруулалтын үйл ажиллагааны мөнгөн гүйлгээ',data_bold_left)
-        sheet.write("C%s"%rowx, 0.0, data_bold_right)
-        sheet.write("D%s"%rowx, 0.0, data_bold_right)
+        sheet.write("C%s"%rowx, '', data_bold_right)
+        sheet.write("D%s"%rowx, '', data_bold_right)
         rowx += 1
 
 
@@ -331,8 +327,8 @@ class statement_cashflow_report(models.TransientModel):
 
         sheet.write("A%s"%rowx, u'3',data_bold_left)
         sheet.write("B%s"%rowx, u'Санхүүгийн үйл ажиллагааны мөнгөн гүйлгээ',data_bold_left)
-        sheet.write("C%s"%rowx, 0.0, data_bold_right)
-        sheet.write("D%s"%rowx, 0.0,data_bold_right)
+        sheet.write("C%s"%rowx, '', data_bold_right)
+        sheet.write("D%s"%rowx, '',data_bold_right)
         rowx +=1
 
         sheet.write("A%s"%rowx, u'3.1',data_bold_left)
@@ -436,19 +432,14 @@ class statement_cashflow_report(models.TransientModel):
         rowx +=1
         pre_pre_balance = 0.0
         pre_balance = 0.0
-        account_type_obj = self.env['account.account.type']
-        #account_type_ids = account_type_obj.search([('account_type','=','')])
         accounts = []
-        #for acc_type_line in account_type_ids:
-        now_fiscalyear = data['fiscalyear_id']
-        fiscalyear_obj = self.env['account.fiscal.year']
-        nyear = fiscalyear_obj.browse(now_fiscalyear)
+
         account_ids = account_obj.search([('account_type','=','asset_cash')])
 
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -456,7 +447,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_pre_balance -=lines.credit
         else:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -467,7 +458,7 @@ class statement_cashflow_report(models.TransientModel):
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','>=',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -475,7 +466,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_balance -=lines.credit
         else:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','>=',nyear.date_from),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<=',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:

@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Statement of cash flows">
                     <group colspan="4">
-                        <field name="target_move" />
-                        <field name="fiscalyear_id"/>
+                        <field name="target_move"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
