@@ -71,6 +71,7 @@ class AccountBankStatementLine(models.Model):
             'amount_currency': abs_amount_currency if is_inbound else -abs_amount_currency,
             'debit': abs_balance if is_inbound else 0.0,
             'credit': abs_balance if not is_inbound else 0.0,
+            'cash_move_type_id':  self.cash_move_type_id.id or False,
         }
 
         # =====================================================
@@ -166,7 +167,7 @@ class AccountBankStatementLine(models.Model):
         trigger_fields = (
             'payment_ref', 'amount', 'amount_currency',
             'foreign_currency_id', 'currency_id',
-            'partner_id', 'tax_ids'
+            'partner_id', 'tax_ids', 'cash_move_type_id'
         )
 
         if not any(f in changed_fields for f in trigger_fields):
