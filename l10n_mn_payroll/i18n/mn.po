@@ -62,9 +62,61 @@ msgstr "Салбарын бүртгэл"
 msgid "Country register"
 msgstr "Улсын бүртгэл"
 
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_abstract_report_excel__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_give_bank_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__create_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн этгээд"
 
-
-
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_abstract_report_excel__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_give_bank_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__create_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__company_id
@@ -150,6 +202,15 @@ msgid "Employee"
 msgstr "Ажилтан"
 
 #. module: l10n_mn_payroll
+#: model:ir.actions.act_window,name:l10n_mn_payroll.action_hr_salary_month_range
+#: model:ir.model,name:l10n_mn_payroll.model_salary_month_range
+#: model:ir.ui.menu,name:l10n_mn_payroll.salary_month_range_menu
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_salary_month_range_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_salary_month_range_tree_view
+msgid "Salary Month Range"
+msgstr "Цалингын мөчлөг"
+
+#. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__shift_days
 msgid "Shift holiday day"
 msgstr "Амралтын хоног"
@@ -158,6 +219,11 @@ msgstr "Амралтын хоног"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__working_month
 msgid "Working month"
 msgstr "Ажилласан сар"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__date_to
+msgid "To"
+msgstr "Дуусах"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__total_working_days
@@ -247,12 +313,16 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__year
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__year
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__name
 msgid "Year"
 msgstr "Жил"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__month
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__month
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__name
 msgid "Month"
 msgstr "Сар"
 
@@ -347,6 +417,33 @@ msgstr "Компани"
 msgid "Department"
 msgstr "Хэлтэс"
 
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_abstract_report_excel__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_country_register__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hhoat_report_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_give_bank_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment_line__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_location_register__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_ndsh_report_import__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_work_category__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register__display_name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_working_day_register_line__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__work_days
@@ -571,6 +668,11 @@ msgid "Free time2"
 msgstr "Чөлөөтэй цаг(цалингүй)"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__date_from
+msgid "From"
+msgstr "Эхлэх"
+
+#. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record_line__more_time
 msgid "More time"
 msgstr "Илүү цаг"
@@ -671,6 +773,7 @@ msgstr "Журнал"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__write_uid
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__write_uid
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__write_uid
@@ -698,6 +801,7 @@ msgstr "Сүүлд шинэчилсэн этгээд"
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus_line__write_date
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__write_date
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_report_excel_output__write_date
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__write_date
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__write_date
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register_line__write_date
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__write_date
@@ -1033,6 +1137,8 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__name
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_salary_month_range__name
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__name
 msgid "Name"
 msgstr "Нэр"

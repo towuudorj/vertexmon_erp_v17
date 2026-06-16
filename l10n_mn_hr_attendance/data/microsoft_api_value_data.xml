@@ -7,6 +7,7 @@
             <field name="sharepoint_url">vertexmonllc.sharepoint.com</field>
             <field name="site_name">OdooERP-PowerApps</field>
             <field name="employee_list_name">AttendanceEmployee</field>
+            <field name="attendance_list_name">AttendanceList</field>
             <field name="leave_list_name">AttendanceRequest</field>
             <field name="job_list_name">AttendanceJob</field>
             <field name="department_list_name">AttendanceDepartment</field>

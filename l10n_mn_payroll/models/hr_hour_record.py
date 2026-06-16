@@ -210,10 +210,7 @@ class HrHourRecord(models.Model):
         company_tz = timezone(tz)
 
         start_date = start_date.replace(minute=00, hour=00, second=00)
-        # emp_attendance_ids = emp_id.mapped('timely_id')
-        # timely_data = self.get_timely_data(emp_attendance_ids)
-        # timely_worker_ids = timely_data.keys() if timely_data else []
-        public_holiday_ids = self.env['resource.calendar.leaves'].search([('date_from', '>=', start_date), ('date_to', '<=', end_time)])
+        public_holiday_ids = self.env['resource.calendar.leaves'].search([('date_from', '>=', start_date), ('date_to', '<=', end_time), ('resource_id', '=', False), ('company_id', '=', False)])
         for line in emp_id:
             due_time=0
             due_day=0
@@ -244,69 +241,67 @@ class HrHourRecord(models.Model):
             for p_holiday in emp_public_holiday_ids:
                 public_holiday.append(p_holiday.date_from.date())
 
-            if att_id:
-                work_weekdays = line.resource_calendar_id.attendance_ids.mapped('dayofweek')
-                while work_day <= end_time:
-                    if work_day.date() in public_holiday:
-                        work_day = work_day + timedelta(days=1)
-                        continue
-                    worked_hour = 0
-                    if str(work_day.weekday()) in work_weekdays:
-                        due_day += 1
-                        due_time += must_work_hour
-                        for att_line1 in att_id:
-                            if att_line1.check_in.date() == work_day.date():
-                                check_in = att_line1.check_in
-                                check_out = att_line1.check_out
-                                check_in = check_in.astimezone(company_tz)
-                                check_out = check_out.astimezone(company_tz)
-                                delta = check_out - check_in
-                                total_active_time += (delta.total_seconds() / 60 / 60)
-                                lunch_hour = 1
-                                lunch_start_time = check_in
-                                lunch_end_time = check_in
-                                work_start_time = check_in
-                                work_end_time = check_in
-                                contract_att_line = line.resource_calendar_id.attendance_ids.filtered(
-                                    lambda x: x.dayofweek == str(work_day.weekday()))[0]
-                                work_start_time = work_start_time.replace(hour=int(round(contract_att_line.hour_from, 0)),
-                                                                          minute=int(contract_att_line.hour_from%1*60), second=0, microsecond=0)
-                                work_end_time = work_end_time.replace(hour=int(round(contract_att_line.hour_to, 0)),
-                                                                          minute=int(contract_att_line.hour_to%1*60), second=0, microsecond=0)
-                                if line.resource_calendar_id.lunchtime_start:
-                                    lunch_start_time = lunch_start_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_start, 0)),
-                                                                          minute=int(line.resource_calendar_id.lunchtime_start%1*60), second=0, microsecond=0)
-                                    lunch_end_time = lunch_end_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_end, 0)),
-                                                                        minute=int(line.resource_calendar_id.lunchtime_end%1*60), second=0, microsecond=0)
-                                else:
-                                    lunch_start_time = lunch_start_time.replace(hour=12, minute=0, second=0, microsecond=0)
-                                    lunch_end_time = lunch_end_time.replace(hour=13, minute=0, second=0, microsecond=0)
-
-                                if lunch_start_time < check_in < lunch_end_time:
-                                    delta = check_in - lunch_start_time
-                                    lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
-                                if lunch_start_time < check_out < lunch_end_time:
-                                    delta = lunch_end_time - check_out
-                                    lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
-                                if check_in >= lunch_end_time or check_out <= lunch_start_time:
-                                    lunch_hour = 0
-                                if lunch_hour < 0:
-                                    lunch_hour = 0
-
-                                if work_start_time < check_in:
-                                    delta = (work_end_time if work_end_time <= check_out else check_out) - check_in
-                                else:
-                                    delta = (check_in + timedelta(hours=must_work_hour+1) if check_in + timedelta(hours=must_work_hour+1) < check_out else check_out) - check_in
-                                worked_hour = float(delta.total_seconds() / 60 / 60) - lunch_hour
-
-                        if worked_hour > 0:
-                            in_time += worked_hour
-
-                            worked_day += 1
-                            lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
-                        else:
-                            lost_time += must_work_hour
+            work_weekdays = line.resource_calendar_id.attendance_ids.mapped('dayofweek')
+            while work_day <= end_time:
+                if work_day.date() in public_holiday:
                     work_day = work_day + timedelta(days=1)
+                    continue
+                worked_hour = 0
+                if str(work_day.weekday()) in work_weekdays:
+                    due_day += 1
+                    due_time += must_work_hour
+                    for att_line1 in att_id:
+                        if att_line1.check_in.date() == work_day.date():
+                            check_in = att_line1.check_in
+                            check_out = att_line1.check_out
+                            check_in = check_in.astimezone(company_tz)
+                            check_out = check_out.astimezone(company_tz)
+                            delta = check_out - check_in
+                            total_active_time += (delta.total_seconds() / 60 / 60)
+                            lunch_hour = 1
+                            lunch_start_time = check_in
+                            lunch_end_time = check_in
+                            work_start_time = check_in
+                            work_end_time = check_in
+                            contract_att_line = line.resource_calendar_id.attendance_ids.filtered(
+                                lambda x: x.dayofweek == str(work_day.weekday()))[0]
+                            work_start_time = work_start_time.replace(hour=int(round(contract_att_line.hour_from, 0)),
+                                                                      minute=int(contract_att_line.hour_from%1*60), second=0, microsecond=0)
+                            work_end_time = work_end_time.replace(hour=int(round(contract_att_line.hour_to, 0)),
+                                                                      minute=int(contract_att_line.hour_to%1*60), second=0, microsecond=0)
+                            if line.resource_calendar_id.lunchtime_start:
+                                lunch_start_time = lunch_start_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_start, 0)),
+                                                                      minute=int(line.resource_calendar_id.lunchtime_start%1*60), second=0, microsecond=0)
+                                lunch_end_time = lunch_end_time.replace(hour=int(round(line.resource_calendar_id.lunchtime_end, 0)),
+                                                                    minute=int(line.resource_calendar_id.lunchtime_end%1*60), second=0, microsecond=0)
+                            else:
+                                lunch_start_time = lunch_start_time.replace(hour=12, minute=0, second=0, microsecond=0)
+                                lunch_end_time = lunch_end_time.replace(hour=13, minute=0, second=0, microsecond=0)
+
+                            if lunch_start_time < check_in < lunch_end_time:
+                                delta = check_in - lunch_start_time
+                                lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
+                            if lunch_start_time < check_out < lunch_end_time:
+                                delta = lunch_end_time - check_out
+                                lunch_hour = lunch_hour - delta.total_seconds() / 60 / 60
+                            if check_in >= lunch_end_time or check_out <= lunch_start_time:
+                                lunch_hour = 0
+                            if lunch_hour < 0:
+                                lunch_hour = 0
+
+                            if work_start_time < check_in:
+                                delta = (work_end_time if work_end_time <= check_out else check_out) - check_in
+                            else:
+                                delta = (check_in + timedelta(hours=must_work_hour+1) if check_in + timedelta(hours=must_work_hour+1) < check_out else check_out) - check_in
+                            worked_hour = float(delta.total_seconds() / 60 / 60) - lunch_hour
+
+                    if worked_hour > 0:
+                        in_time += worked_hour
+                        worked_day += 1
+                        lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
+                    else:
+                        lost_time += must_work_hour
+                work_day = work_day + timedelta(days=1)
 
             holiday_id1 = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
             if holiday_id1:
@@ -383,24 +378,6 @@ class HrHourRecord(models.Model):
                                 elif lines.holiday_status_id.sub_type == 'sick':
                                     sick_time +=lines.number_of_hours_display
 
-            # if str(line.timely_id) in timely_worker_ids:
-            #     emp_hour_balance = timely_data[str(line.timely_id)]
-            #     due_day += emp_hour_balance['attd']['work']['day']
-            #     due_time += emp_hour_balance['attd']['work']['time']
-            #     worked_day += emp_hour_balance['attd']['total_worked']['day']
-            #     in_time += emp_hour_balance['attd']['total_worked']['time']
-            #     # sick_time += emp_hour_balance['attd']['sick_time']
-            #     n_time += emp_hour_balance['attd']['overtime_night']['time']
-            #     # shift_time += emp_hour_balance['attd']['vacation_day']
-            #     lost_time += emp_hour_balance['attd']['total_unworked']['time']
-            #     # free_time1 += emp_hour_balance['attd']['salary_leave_time']
-            #     unpayroll_time_api = 0
-            #     for request in emp_hour_balance['request']:
-            #         if request['code'] == 'app_leave_normal':
-            #             unpayroll_time_api += request['totalTime']
-            #     unpayroll_time += unpayroll_time_api
-            #     over_time += emp_hour_balance['attd']['overtime_subtraction']['time']
-            #     official_time += emp_hour_balance['attd']['holiday_worked']['time']
             total_time = in_time + official_time + sick_time + out_n_time + n_time
             lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
             vals = {

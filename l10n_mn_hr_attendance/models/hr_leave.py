@@ -9,6 +9,8 @@ from pytz import timezone
 from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
 
 hour_min_to_selection = {
+    '0:0': '0',
+    '0:5': '0.5',
     '1:0': '1',
     '1:30': '1.5',
     '2:0': '2',
@@ -61,6 +63,10 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     sharepoint_id = fields.Integer("Share Point ID")
+    timely_id = fields.Integer("Share Point ID")
+
+    def _get_leaves_on_public_holiday(self):
+        return False
 
 
     def get_approved_leaves(self):

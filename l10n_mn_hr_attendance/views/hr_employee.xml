@@ -17,6 +17,8 @@
                             invisible="not attendance_id or not image_1920"
                             groups="hr.group_hr_manager"
                             type="object"/>
+                    <button name="push_late_time_to_microsoft" string="Push late time"
+                            type="object" groups="base.group_no_one"/>
                 </xpath>
             </data>
         </field>

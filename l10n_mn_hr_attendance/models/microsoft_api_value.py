@@ -14,6 +14,8 @@ class MicrosoftApiValue(models.Model):
     site_id = fields.Char(string='Site ID')
     employee_list_name = fields.Char(string='Employee List Name')
     employee_list_id = fields.Char(string='Employee List ID')
+    attendance_list_name = fields.Char(string='Attendance List Name')
+    attendance_list_id = fields.Char(string='Attendance List ID')
     job_list_name= fields.Char(string='Job List Name')
     job_list_id = fields.Char(string='Job List ID')
     department_list_name= fields.Char(string='Department List Name')

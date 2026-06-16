@@ -52,3 +52,5 @@ access_hr_payroll_give_bank_report,hr.payroll.give.bank.report,model_hr_payroll_
 
 access_hr_attendance_detail_excel_report_manager,hr.attendance.detail.excel.report,model_hr_attendance_detail_excel_report,om_hr_payroll.group_hr_payroll_manager,1,1,1,1
 access_hr_attendance_detail_excel_report,hr.attendance.detail.excel.report,model_hr_attendance_detail_excel_report,om_hr_payroll.group_hr_payroll_user,1,0,0,0
+
+access_salary_month_range,salary.month.range,model_salary_month_range,om_hr_payroll.group_hr_payroll_user,1,1,1,1

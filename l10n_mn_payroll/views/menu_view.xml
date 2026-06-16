@@ -26,6 +26,6 @@
 			
 			<menuitem id="working_day_register_menu" name="Working day register" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_working_day_register_tree_view"/>
 			<menuitem id="vat_income_type_menu" name="VAT Income Type" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_vat_income_type_tree_view"/>
-			
+			<menuitem id="salary_month_range_menu" name="Salary Month Range" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_hr_salary_month_range" sequence="100"/>
 	</data>
 </odoo>

@@ -5,6 +5,7 @@ import json
 import logging
 from odoo.addons.l10n_mn_hr_attendance.models.hr_attendance_inherit import build_headers, get_params
 from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
+from datetime import date, datetime, time, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class Employee(models.Model):
         }
 
     def push_hr_info_to_microsoft(self):
-        department_ids = self.env['hr.department'].sudo().search([])
+        department_ids = self.env['hr.department'].sudo().search([('is_sync_microsoft', '=', False)])
         job_ids = self.env['hr.job'].sudo().search([('is_sync_microsoft', '=', False)])
         employee_ids = self.env['hr.employee'].sudo().search([('is_sync_microsoft', '=', False)])
         microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
@@ -96,8 +97,7 @@ class Employee(models.Model):
                     if response_json.get('id', False):
                         department.is_sync_microsoft = True
                 except Exception as e:
-                    ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
-
+                    _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
         job_list_id = get_list_id(microsoft_value_obj, site_id, token, 'job_list_name', 'job_list_id')
         for job in job_ids:
             url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{job_list_id}/items"
@@ -119,7 +119,7 @@ class Employee(models.Model):
                 if response_json.get('id', False):
                     job.is_sync_microsoft = True
             except Exception as e:
-                ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+                _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
         employee_ids.push_to_microsoft(token=token)
 
 
@@ -155,14 +155,15 @@ class Employee(models.Model):
             body = {
                 "fields": {
                     "odoo_id": employee.id, #last_name
-                    "Title": employee.last_name, #last_name
-                    "firstName": name,
-                    "register": employee.ssnid, #ssnid
-                    "companyName": employee.company_id.id, #company_id
-                    "emailAddress": employee.work_email, #work_email
+                    "Title": employee.last_name or '', #last_name
+                    "firstName": name or '',
+                    "register": employee.ssnid or '', #ssnid
+                    "companyName": employee.company_id.id or 0, #company_id
+                    "emailAddress": employee.work_email or '', #work_email
                     "department_id": employee.department_id.id if employee.department_id else 0,
                     "job_id": employee.job_id.id if employee.job_id else 0,
-                    "parent_id": employee.parent_id.id if employee.parent_id else 0
+                    "parent_id": employee.parent_id.id if employee.parent_id else 0,
+                    "birthday": str(employee.birthday) if employee.birthday else ""
                 }
             }
             try:
@@ -170,7 +171,7 @@ class Employee(models.Model):
                 response_json = response.json()
                 if response_json.get('id', False):
                     employee.sudo().write({'is_sync_microsoft': True,
-                                           'powerpoint_id': response_json.get('id')})
+                                           'powerpoint_id': int(response_json.get('id'))})
                     employee.is_sync_microsoft = True
             except Exception as e:
                 _logger.error(u'Ажилтаны мэдээлэл Sharepoint руу илгээхэд алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
@@ -187,20 +188,80 @@ class Employee(models.Model):
                 "faceData": image_base64,
             }
             requests.post(url, json=body, headers=headers, verify=False)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': u'Ажилтны зургийг амжилттай шинэчиллээ',
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
         except Exception as e:
             raise ValidationError(u'Холбогдож чадсангүй\nАлдаа:%s'%e)
 
-    # def push_late_time_to_microsoft(self):
-    #     microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
-    #     if not microsoft_value_obj:
-    #         return None
-    #     token = get_token(microsoft_value_obj)
-    #     if token['token_type'] and token['access_token']:
-    #         token = token['token_type'] + ' ' + token['access_token']
-    #     else:
-    #         return None
-    #
-    #     return None
+    def push_late_time_to_microsoft(self, token=False):
+        self.ensure_one()
+        microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
+
+        if not token:
+            if not microsoft_value_obj:
+                return None
+            token = get_token(microsoft_value_obj)
+            if token['token_type'] and token['access_token']:
+                token = token['token_type'] + ' ' + token['access_token']
+            else:
+                return None
+        try:
+            today = fields.Date.context_today(self)
+            current_salary_month = self.env['salary.month.range'].search([('year', '=', today.year), ('month', '=', today.month)], limit=1)
+            if current_salary_month:
+                start_date = current_salary_month.date_from
+                end_date = current_salary_month.date_to
+            else:
+                start_date = date(today.year, today.month, 1)
+                end_date = fields.Date.end_of(today, "month")
+            hr_hour_record = self.env['hr.hour.record'].new({
+                'start_date': datetime.combine(start_date, time(0, 1)) - timedelta(hours=8),
+                'end_date': datetime.combine(end_date, time(23, 59)) - timedelta(hours=8),
+                'company_id': self.env['res.company'].search([], limit=1, order='id asc').id
+            })
+            line_vals = hr_hour_record.hour_record(employee_id=self)
+
+            site_id = get_site_id(microsoft_value_obj, token)
+
+            list_id = get_list_id(microsoft_value_obj, site_id, token, 'employee_list_name', 'employee_list_id')
+
+            url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items/{self.powerpoint_id}/fields"
+
+            headers = {
+                "Authorization": token,
+                "Content-Type": "application/json"
+            }
+            data = {
+                "late_hour": round(line_vals['miss_time'], 2) if line_vals.get('miss_time', False) else 0
+            }
+
+            res = requests.patch(url, headers=headers, json=data)
+        except Exception as e:
+            _logger.error('ERROR:%s' % e)
+            return None
+        return None
+
+    def _cron_push_late_time(self):
+        employees = self.env['hr.employee'].search([('powerpoint_id', '!=', False)])
+        microsoft_value_obj = self.env['microsoft.api.value'].search([], limit=1)
+        if not microsoft_value_obj:
+            return None
+        token = get_token(microsoft_value_obj)
+        if token['token_type'] and token['access_token']:
+            token = token['token_type'] + ' ' + token['access_token']
+        else:
+            return None
+        for emp in employees:
+            emp.push_late_time_to_microsoft(token=token)
+        self.env['hr.attendance'].push_attendance_to_microsoft()
+        return None
 
 
 class EmployeePublic(models.Model):

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="l10n_mn_payroll.NoFormatInteger" owl="1">
+        <t t-if="props.readonly">
+            <span t-esc="displayValue"/>
+        </t>
+
+        <t t-else="">
+            <input type="number"
+               class="o_input"
+               t-att-value="props.record.data[props.name]"
+               t-on-change="onInputChange"/>
+        </t>
+    </t>
+
+</templates>

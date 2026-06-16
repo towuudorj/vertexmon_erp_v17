@@ -66,6 +66,7 @@
             'views/vat_income_type_view.xml',
             'views/hr_payslip_run_inherit.xml',
             'views/hr_payslip_inherit_view.xml',
+            'views/salary_mont_range_view.xml',
             'report/payroll_prepayment_report_view.xml',
             'wizard/hhoat_report_view.xml',
             'wizard/ndsh_report_import_view.xml',
@@ -78,7 +79,9 @@
     'assets':
         {
             'web.assets_backend': [
-                'l10n_mn_payroll/static/src/js/stock_excel_report.js'
+                'l10n_mn_payroll/static/src/js/stock_excel_report.js',
+                'l10n_mn_payroll/static/src/js/no_format_integer.js',
+                'l10n_mn_payroll/static/src/xml/no_format_integer.xml',
             ],
         },
     'installable': True,

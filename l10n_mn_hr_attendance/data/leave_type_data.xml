@@ -20,5 +20,25 @@
             <field name="request_unit">hour</field>
             <field name="use_in_api" eval="True"/>
         </record>
+
+        <record id="leave_type_over_time" model="hr.leave.type">
+            <field name="name">Илүү цаг</field>
+            <field name="requires_allocation">no</field>
+            <field name="sub_type">over_time</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="company_id" eval="False"/>
+            <field name="request_unit">hour</field>
+            <field name="use_in_api" eval="True"/>
+        </record>
+
+        <record id="leave_type_sick" model="hr.leave.type">
+            <field name="name">Өвчтэй</field>
+            <field name="requires_allocation">no</field>
+            <field name="sub_type">sick</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="company_id" eval="False"/>
+            <field name="request_unit">hour</field>
+            <field name="use_in_api" eval="True"/>
+        </record>
     </data>
 </odoo>
