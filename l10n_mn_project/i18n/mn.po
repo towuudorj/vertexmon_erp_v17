@@ -121,6 +121,7 @@ msgstr "Тайлбар"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_foreign_purchase_request__partner_id
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__partner_id
 msgid "Partner"
 msgstr "Харилцагч"
 

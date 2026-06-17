@@ -15,6 +15,7 @@ class ProjectInvoice(models.TransientModel):
     invoice_amount = fields.Float('Amount')
     project_id = fields.Many2one('project.project', "Project")
     invoiced_amount = fields.Float('Invoiced amount')
+    partner_id = fields.Many2one('res.partner', "Partner")
     payment_type = fields.Selection([('down_payment', 'Down payment'),
                                      ('progress_payment', 'Progress payment'),
                                      ('final_payment', 'Final payment'),
@@ -110,13 +111,13 @@ class ProjectInvoice(models.TransientModel):
                     'analytic_distribution': {
                         analytic_account_1.id: 100.0,
                     },
-                    'account_id': project.invoice_journal_id.default_account_id.id,
+                    'account_id': line.product_id.property_account_expense_id.id or False,
                 }))
 
             invoice_vals = {
                 'invoice_date': project.close_date,
                 'journal_id': project.invoice_journal_id.id,
-                'partner_id': project.partner_id.id,
+                'partner_id': self.partner_id.id,
                 'state': 'draft',
                 'move_type': 'in_invoice',
                 'payment_types': self.payment_type,
