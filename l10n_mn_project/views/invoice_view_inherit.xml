@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="invoice_search_view_inherit" model="ir.ui.view">
+        <field name="name">account.move.search.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='groupy_by_journal']" position="after">
+                <filter name="groupy_by_move_type" domain="[]" context="{'group_by': 'move_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

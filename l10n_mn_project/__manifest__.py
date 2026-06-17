@@ -42,6 +42,8 @@
             'views/project_task_view.xml',
             'views/purchase_requisition_view.xml',
             'views/stock_picking_view.xml',
+            'views/invoice_view_inherit.xml',
+            'views/product_category_view.xml',
 
                 ],
     "auto_install": False,

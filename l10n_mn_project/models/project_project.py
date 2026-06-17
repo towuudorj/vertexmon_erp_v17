@@ -625,7 +625,7 @@ class ProjectProject(models.Model):
                                 SELECT aml.id
                                 FROM account_move_line aml
                                 LEFT JOIN account_move am on aml.move_id = am.id
-                                WHERE am.move_type = 'out_invoice' and analytic_distribution ? %s
+                                WHERE aml.analytic_distribution ? %s
                                 """, [analytic_id])
 
             invoice_lines = self.env['account.move.line'].browse(
@@ -639,16 +639,15 @@ class ProjectProject(models.Model):
                 SELECT am.id
                 FROM account_move_line aml
                 LEFT JOIN account_move am on am.id = aml.move_id
-                WHERE am.move_type = 'out_invoice' and aml.analytic_distribution ? %s
+                WHERE aml.analytic_distribution ? %s
             """, [str(self.analytic_account_id.id)]
         )
-
 
         result = {
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', [row[0] for row in self.env.cr.fetchall()])],
-            "context": {"create": False, 'default_move_type': 'out_invoice'},
+            "context": {"create": False, 'search_default_groupy_by_move_type': 1},
             "name": _("Invoices"),
             'view_mode': 'tree,form',
         }
