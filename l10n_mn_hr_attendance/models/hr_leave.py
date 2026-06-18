@@ -63,7 +63,7 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     sharepoint_id = fields.Integer("Share Point ID")
-    timely_id = fields.Integer("Share Point ID")
+    timely_id = fields.Integer("Timly ID")
 
     def _get_leaves_on_public_holiday(self):
         return False

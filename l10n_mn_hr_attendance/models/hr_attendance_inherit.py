@@ -294,6 +294,8 @@ class HrAttendance(models.Model):
                                             })
                                 if value['requests']:
                                     for request in value['requests']:
+                                        if leave_obj.search([('timely_id', '=', int(request['id']))]):
+                                            continue
                                         req_in = datetime.strptime(request['reqIn'], "%Y-%m-%dT%H:%M:%S.%fZ")
                                         req_in = fields.Datetime.to_datetime(req_in)
                                         req_out = datetime.strptime(request['reqOut'], "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -301,8 +303,8 @@ class HrAttendance(models.Model):
                                         leave_vals = {
                                             'request_date_from': req_in.date(),
                                             'request_date_to': req_out.date(),
-                                            'request_hour_from': hour_min_to_selection[str(req_in.hour) + ':' + str(req_in.minute)],
-                                            'request_hour_to': hour_min_to_selection[str(req_out.hour) + ':' + str(5 * (round(req_out.minute % 5)))],
+                                            'request_hour_from': hour_min_to_selection[str(req_in.hour) + ':' + ('30' if req_out.minute >= 30 else '0')],
+                                            'request_hour_to': hour_min_to_selection[str(req_out.hour) + ':' + ('30' if req_out.minute >= 30 else '0')],
                                             'request_unit_hours': True,
                                             'employee_id': employee_id.id if employee_id else False,
                                             'timely_id': request['id']
