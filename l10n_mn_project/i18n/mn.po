@@ -407,6 +407,11 @@ msgid "Invoice Type"
 msgstr "Нэхэмжлэлийн төрөл"
 
 #. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoice_date
+msgid "Invoice date"
+msgstr "Нэхэмжлэлийн огноо"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoice_line_ids
 msgid "Invoice Lines"
 msgstr "Нэхэмжлэлийн мөрүүд"
@@ -560,6 +565,11 @@ msgstr "Худалдан авалтын хүсэлт"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_task_products_line__product_qty
 msgid "Quantity"
 msgstr "Тоо хэмжээ"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice_line__ref
+msgid "Reference"
+msgstr "Гүйлгээний утга"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__sequence

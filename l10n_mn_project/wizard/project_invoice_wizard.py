@@ -16,6 +16,7 @@ class ProjectInvoice(models.TransientModel):
     project_id = fields.Many2one('project.project', "Project")
     invoiced_amount = fields.Float('Invoiced amount')
     partner_id = fields.Many2one('res.partner', "Partner")
+    invoice_date = fields.Date('Invoice date', default=fields.Date.context_today)
     payment_type = fields.Selection([('down_payment', 'Down payment'),
                                      ('progress_payment', 'Progress payment'),
                                      ('final_payment', 'Final payment'),
@@ -86,7 +87,7 @@ class ProjectInvoice(models.TransientModel):
             }
 
             invoice_vals = {
-                'invoice_date': project.close_date,
+                'invoice_date': self.invoice_date,
                 'journal_id': project.invoice_journal_id.id,
                 'partner_id': project.partner_id.id,
                 'state': 'draft',
@@ -102,7 +103,7 @@ class ProjectInvoice(models.TransientModel):
             invoice_lines = []
             for line in self.line_ids:
                 invoice_lines.append((0, 0,{
-                    'name': u'%s' % line.product_id.name,
+                    'name': u'%s' % line.ref,
                     'quantity': 1.0,
                     'product_id': line.product_id.id,
                     'product_uom_id': line.product_id.uom_id.id,
@@ -115,7 +116,7 @@ class ProjectInvoice(models.TransientModel):
                 }))
 
             invoice_vals = {
-                'invoice_date': project.close_date,
+                'invoice_date': self.invoice_date,
                 'journal_id': project.invoice_journal_id.id,
                 'partner_id': self.partner_id.id,
                 'state': 'draft',
@@ -137,3 +138,4 @@ class ProjectInvoiceLine(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Product', domain=[('categ_id.code', '=', 'project')])
     amount = fields.Float('Amount')
     parent_id = fields.Many2one('project.invoice', string='Parent Invoice')
+    ref = fields.Char('Reference')

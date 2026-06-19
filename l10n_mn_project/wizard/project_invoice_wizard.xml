@@ -9,16 +9,18 @@
                 <group>
                     <field name="project_id" readonly="1"/>
                     <field name="invoiced_amount" readonly="1" invisible="invoice_type == 'in_invoice'"/>
-                    <field name="invoice_amount" invisible="invoice_type == 'in_invoice'" required="invoice_type == 'out_invoice'"/>
-                    <field name="partner_id" invisible="invoice_type == 'out_invoice'" required="1"/>
                     <field name="invoice_type"/>
+                    <field name="invoice_amount" invisible="invoice_type == 'in_invoice'" required="invoice_type == 'out_invoice'"/>
+                    <field name="invoice_date" required="1"/>
+                    <field name="partner_id" invisible="invoice_type == 'out_invoice'" required="1"/>
                     <field name="payment_type" required="1"/>
                 </group>
                 <group invisible="invoice_type == 'out_invoice'">
                     <field name="line_ids" nolabel="1" colspan="2">
                         <tree editable="top">
-                            <field name="product_id" width="47%"/>
-                            <field name="amount" width="47%"/>
+                            <field name="product_id" width="60%"/>
+                            <field name="ref" width="50%"/>
+                            <field name="amount" width="50%"/>
                         </tree>
                     </field>
                 </group>
