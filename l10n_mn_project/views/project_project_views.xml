@@ -91,7 +91,7 @@
 
                 <button class="btn-secondary" name="%(action_project_invoice)d"
                         type="action"
-                        string="Create invoice" invisible="state != 'process'"/>
+                        string="Create invoice" invisible="state not in ('process', 'planned')"/>
                 
                  <!-- <button class="btn-secondary" name="package_task"
                         type="object"
