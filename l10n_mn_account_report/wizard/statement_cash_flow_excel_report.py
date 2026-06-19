@@ -409,6 +409,8 @@ class statement_cashflow_report(models.TransientModel):
                 sheet.write(rowx, 2, pre_amount, data_right)
                 if now_amount < 0.0:
                     now_amount = now_amount*(-1)
+                if pre_amount < 0.0:
+                    pre_amount = pre_amount*(-1)
                 sheet.write(rowx, 3, now_amount,data_right)
                 fie_pre_amount +=pre_amount
                 fie_now_amount +=now_amount
@@ -444,8 +446,6 @@ class statement_cashflow_report(models.TransientModel):
                 sheet.write(rowx, 0, u'%s' % type_fie_exp.sequence, data_left)
                 sheet.write(rowx, 1, u'%s' % type_fie_exp.name, data_left)
                 sheet.write(rowx, 2, pre_amount, data_right)
-                if now_amount < 0.0:
-                    now_amount = now_amount * (-1)
                 sheet.write(rowx, 3, now_amount, data_right)
                 exch_diff_pre_amount += pre_amount
                 exch_diff_now_amount += now_amount
