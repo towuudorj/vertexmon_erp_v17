@@ -183,9 +183,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -240,9 +240,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -287,9 +287,9 @@ class statement_cashflow_report(models.TransientModel):
                 now_amount = 0.0
                 if len(state)==1:
                     
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -344,9 +344,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -389,7 +389,7 @@ class statement_cashflow_report(models.TransientModel):
                 counts += 1
                 pre_amount = 0.0
                 now_amount = 0.0
-                move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fie_exp.id),('date','>=',data['start_date']),('date','<=',data['start_date']),('parent_state','=',state)])
+                move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fie_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -419,14 +419,23 @@ class statement_cashflow_report(models.TransientModel):
         exch_diff_pre_amount = 0
         exch_diff_now_amount = 0
 
+        sheet.write("C%s"%(rowx-counts), fie_pre_amount, data_bold_right)
+        sheet.write("D%s"%(rowx-counts), fie_now_amount,data_bold_right)
+        
+        sheet.write("A%s"%rowx, u'3.20',data_bold_left)
+        sheet.write("B%s"%rowx, u'Санхүүгийн үйл ажиллагааны цэвэр мөнгөн гүйлгээний дүн',data_bold_left)
+        sheet.write("C%s"%rowx, fi_pre_amount-fie_pre_amount, data_bold_right)
+        sheet.write("D%s"%rowx, fi_now_amount-fie_now_amount,data_bold_right)
+        rowx +=1
+
         for type_fie_exp in cash_ids:
             if type_fie_exp.group == 'exchange_rate_difference':
                 counts += 1
                 pre_amount = 0.0
                 now_amount = 0.0
                 move_line_ids = account_move_line_obj.search(
-                    [('cash_move_type_id', '=', type_fie_exp.id), ('date', '>=', data['start_date']),
-                     ('date', '<=', data['start_date']), ('parent_state', '=', state)])
+                    [('cash_move_type_id', '=', type_fie_exp.id),
+                     ('date', '<', data['start_date']), ('parent_state', '=', state)])
                 if move_line_ids != []:
                     for lines in move_line_ids:
                         if lines.debit > 0.0:
@@ -451,15 +460,6 @@ class statement_cashflow_report(models.TransientModel):
                 exch_diff_now_amount += now_amount
                 rowx += 1
 
-        sheet.write("C%s"%(rowx-counts), fie_pre_amount, data_bold_right)
-        sheet.write("D%s"%(rowx-counts), fie_now_amount,data_bold_right)
-        
-        sheet.write("A%s"%rowx, u'3.20',data_bold_left)
-        sheet.write("B%s"%rowx, u'Санхүүгийн үйл ажиллагааны цэвэр мөнгөн гүйлгээний дүн',data_bold_left)
-        sheet.write("C%s"%rowx, fi_pre_amount-fie_pre_amount, data_bold_right)
-        sheet.write("D%s"%rowx, fi_now_amount-fie_now_amount,data_bold_right)
-        rowx +=1
-
         sheet.write("A%s"%rowx, u'4',data_bold_left)
         sheet.write("B%s"%rowx, u'Валютын ханшийн зөрүү',data_bold_left)
         sheet.write("C%s"%rowx, exch_diff_pre_amount, data_bold_right)
@@ -483,7 +483,7 @@ class statement_cashflow_report(models.TransientModel):
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -491,7 +491,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_pre_balance -=lines.credit
         else:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -502,7 +502,7 @@ class statement_cashflow_report(models.TransientModel):
         for acc in account_ids:
                 accounts.append(acc.id)
         if len(accounts) == 1:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','=',accounts.id),('date','<',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -510,7 +510,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_balance -=lines.credit
         else:
-            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<=',data['start_date']),('parent_state','=',state)])
+            nowmove_line_ids = account_move_line_obj.search([('account_id','in',tuple(accounts)),('date','<',data['start_date']),('parent_state','=',state)])
             if nowmove_line_ids !=[]:
                 for lines in nowmove_line_ids:
                     if lines.debit >0.0:
@@ -524,8 +524,8 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("D%s"%rowx, pre_balance,data_bold_right)
         
         rowx +=1
-        pre_last_balance = pre_now_balance+pre_pre_balance
-        last_balance = now_balance+pre_balance
+        pre_last_balance = pre_now_balance+pre_pre_balance+exch_diff_pre_amount
+        last_balance = now_balance+pre_balance+exch_diff_now_amount
         sheet.write("A%s"%rowx, u'7',data_bold_left)
         sheet.write("B%s"%rowx, u'Мөнгө, түүнтэй адилтгах хөрөнгийн эцсийн үлдэгдэл',data_bold_left)
         sheet.write("C%s"%rowx, pre_last_balance, data_bold_right)
