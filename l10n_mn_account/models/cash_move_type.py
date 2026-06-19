@@ -14,6 +14,7 @@ class AccountCashMoveType(models.Model):
          ('investing_expense', 'Cash flows expense from investing activities'),
          ('financing_income', 'Cash flows income from financing activities'),
          ('financing_expense', 'Cash flows expense from financing activities'),
+         ('exchange_rate_difference', 'Exchange Gain/Loss'),
          ('dummy', 'Non affects in statements')
      ]
      name = fields.Char(string='Cash move type', required=True)

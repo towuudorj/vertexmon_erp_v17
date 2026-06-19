@@ -413,6 +413,44 @@ class statement_cashflow_report(models.TransientModel):
                 fie_pre_amount +=pre_amount
                 fie_now_amount +=now_amount
                 rowx +=1
+
+        exch_diff_pre_amount = 0
+        exch_diff_now_amount = 0
+
+        for type_fie_exp in cash_ids:
+            if type_fie_exp.group == 'exchange_rate_difference':
+                counts += 1
+                pre_amount = 0.0
+                now_amount = 0.0
+                move_line_ids = account_move_line_obj.search(
+                    [('cash_move_type_id', '=', type_fie_exp.id), ('date', '>=', data['start_date']),
+                     ('date', '<=', data['start_date']), ('parent_state', '=', state)])
+                if move_line_ids != []:
+                    for lines in move_line_ids:
+                        if lines.debit > 0.0:
+                            pre_amount += lines.debit
+                        else:
+                            pre_amount -= lines.credit
+
+                now_move_line_ids = account_move_line_obj.search(
+                    [('cash_move_type_id', '=', type_fie_exp.id), ('date', '>=', data['start_date']),
+                     ('date', '<=', data['end_date']), ('parent_state', '=', state)])
+                if now_move_line_ids != []:
+                    for now_lines in now_move_line_ids:
+                        if now_lines.debit > 0.0:
+                            now_amount += now_lines.debit
+                        else:
+                            now_amount -= now_lines.credit
+                sheet.write(rowx, 0, u'%s' % type_fie_exp.sequence, data_left)
+                sheet.write(rowx, 1, u'%s' % type_fie_exp.name, data_left)
+                sheet.write(rowx, 2, pre_amount, data_right)
+                if now_amount < 0.0:
+                    now_amount = now_amount * (-1)
+                sheet.write(rowx, 3, now_amount, data_right)
+                exch_diff_pre_amount += pre_amount
+                exch_diff_now_amount += now_amount
+                rowx += 1
+
         sheet.write("C%s"%(rowx-counts), fie_pre_amount, data_bold_right)
         sheet.write("D%s"%(rowx-counts), fie_now_amount,data_bold_right)
         
@@ -422,9 +460,15 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("D%s"%rowx, fi_now_amount-fie_now_amount,data_bold_right)
         rowx +=1
 
+        sheet.write("A%s"%rowx, u'4',data_bold_left)
+        sheet.write("B%s"%rowx, u'Валютын ханшийн зөрүү',data_bold_left)
+        sheet.write("C%s"%rowx, exch_diff_pre_amount, data_bold_right)
+        sheet.write("D%s"%rowx, exch_diff_now_amount,data_bold_right)
+        rowx +=1
+
         now_balance = (fi_now_amount-fie_now_amount)+(inv_now_amount-inve_now_amount)+(in_now_amount-exp_now_amount) 
         pre_now_balance = (fi_pre_amount-fie_pre_amount)+(inv_pre_amount-inve_pre_amount)+(in_pre_amount-exp_pre_amount)
-        sheet.write("A%s"%rowx, u'4',data_bold_left)
+        sheet.write("A%s"%rowx, u'5',data_bold_left)
         sheet.write("B%s"%rowx, u'Бүх цэвэр мөнгөн гүйлгээ',data_bold_left)
         sheet.write("C%s"%rowx, pre_now_balance, data_bold_right)
         sheet.write("D%s"%rowx, now_balance,data_bold_right)
@@ -474,7 +518,7 @@ class statement_cashflow_report(models.TransientModel):
                     else:
                         pre_balance -=lines.credit
                         
-        sheet.write("A%s"%rowx, u'5.1',data_bold_left)
+        sheet.write("A%s"%rowx, u'6',data_bold_left)
         sheet.write("B%s"%rowx, u'Мөнгө, түүнтэй адилтгах хөрөнгийн эхний үлдэгдэл',data_bold_left)
         sheet.write("C%s"%rowx, pre_pre_balance, data_bold_right)
         sheet.write("D%s"%rowx, pre_balance,data_bold_right)
@@ -482,7 +526,7 @@ class statement_cashflow_report(models.TransientModel):
         rowx +=1
         pre_last_balance = pre_now_balance+pre_pre_balance
         last_balance = now_balance+pre_balance
-        sheet.write("A%s"%rowx, u'5.2',data_bold_left)
+        sheet.write("A%s"%rowx, u'7',data_bold_left)
         sheet.write("B%s"%rowx, u'Мөнгө, түүнтэй адилтгах хөрөнгийн эцсийн үлдэгдэл',data_bold_left)
         sheet.write("C%s"%rowx, pre_last_balance, data_bold_right)
         sheet.write("D%s"%rowx, last_balance,data_bold_right)
