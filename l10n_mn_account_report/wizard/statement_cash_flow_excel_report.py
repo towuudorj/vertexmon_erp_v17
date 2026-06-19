@@ -404,14 +404,14 @@ class statement_cashflow_report(models.TransientModel):
                             now_amount +=now_lines.debit
                         else:
                             now_amount -=now_lines.credit
-                sheet.write(rowx, 0, u'%s'%type_fie_exp.sequence,data_left)
-                sheet.write(rowx, 1, u'%s'%type_fie_exp.name,data_left)
-                sheet.write(rowx, 2, pre_amount, data_right)
+                sheet.write("A%s"%rowx, u'%s'%type_fie_exp.sequence,data_left)
+                sheet.write("B%s"%rowx, u'%s'%type_fie_exp.name,data_left)
+                sheet.write("C%s"%rowx, pre_amount, data_right)
                 if now_amount < 0.0:
                     now_amount = now_amount*(-1)
                 if pre_amount < 0.0:
                     pre_amount = pre_amount*(-1)
-                sheet.write(rowx, 3, now_amount,data_right)
+                sheet.write("D%s"%rowx, now_amount,data_right)
                 fie_pre_amount +=pre_amount
                 fie_now_amount +=now_amount
                 rowx +=1
@@ -452,13 +452,8 @@ class statement_cashflow_report(models.TransientModel):
                             now_amount += now_lines.debit
                         else:
                             now_amount -= now_lines.credit
-                sheet.write(rowx, 0, u'%s' % type_fie_exp.sequence, data_left)
-                sheet.write(rowx, 1, u'%s' % type_fie_exp.name, data_left)
-                sheet.write(rowx, 2, pre_amount, data_right)
-                sheet.write(rowx, 3, now_amount, data_right)
                 exch_diff_pre_amount += pre_amount
                 exch_diff_now_amount += now_amount
-                rowx += 1
 
         sheet.write("A%s"%rowx, u'4',data_bold_left)
         sheet.write("B%s"%rowx, u'Валютын ханшийн зөрүү',data_bold_left)
