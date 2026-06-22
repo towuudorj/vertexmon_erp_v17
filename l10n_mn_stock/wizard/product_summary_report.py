@@ -209,105 +209,93 @@ class ProductSummaryReport(models.TransientModel):
             date_to_dt_max = datetime.combine(date_to, time.max)
             date_to_dt_min = datetime.combine(date_to, time.min)
             for pro in product_ids:
-                if location_ids:
-                    
-                    f_query_income = """
-                                     SELECT mv.product_id, 
-                                            SUM(mv.quantity) AS qty
-                                     FROM stock_move_line mv
-                                              JOIN stock_location sl ON mv.location_id = sl.id
-                                              JOIN stock_location dest ON mv.location_dest_id = dest.id
-                                     WHERE mv.state = 'done'
-                                       AND mv.date < %s
-                                       AND dest.id IN %s
-                                       AND mv.product_id = %s
-                                       AND mv.company_id = %s
-                                       AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
-                                       AND dest.usage = 'internal'
-                                     GROUP BY mv.product_id \
-                                     """
-                    self._cr.execute(
-                        f_query_income,
-                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
-                    )
-                    f_income = self._cr.dictfetchall()
+                f_query_income = f"""
+                                 SELECT mv.product_id, 
+                                        SUM(mv.quantity) AS qty
+                                 FROM stock_move_line mv
+                                          JOIN stock_location sl ON mv.location_id = sl.id
+                                          JOIN stock_location dest ON mv.location_dest_id = dest.id
+                                 WHERE mv.state = 'done'
+                                   AND mv.date < %s
+                                   {'AND dest.id IN %s' % tuple(location_ids) if location_ids else ''}
+                                   AND mv.product_id = %s
+                                   AND mv.company_id = %s
+                                   AND sl.usage not in ('internal','transit')
+                                   AND dest.usage in ('internal','transit')
+                                 GROUP BY mv.product_id \
+                                 """
+                self._cr.execute(
+                    f_query_income,
+                    (date_from_dt_min, pro.id, data['company_id'])
+                )
+                f_income = self._cr.dictfetchall()
+                f_query_expense = f"""
+                                  SELECT mv.product_id, 
+                                         SUM(mv.quantity) AS qty
+                                  FROM stock_move_line mv
+                                   JOIN stock_location sl ON mv.location_id = sl.id
+                                   JOIN stock_location dest ON mv.location_dest_id = dest.id
+                                  WHERE mv.state = 'done'
+                                    AND mv.date < %s
+                                    {'AND sl.id IN %s'%tuple(location_ids) if location_ids else ''}
+                                    AND mv.product_id = %s
+                                    AND mv.company_id = %s
+                                    AND sl.usage in ('internal','transit')
+                                    AND dest.usage not in ('internal','transit')
+                                  GROUP BY mv.product_id 
+                                  """
 
-                    f_query_expense = """
-                                      SELECT mv.product_id, 
-                                             SUM(mv.quantity) AS qty
-                                      FROM stock_move_line mv
-                                       JOIN stock_location sl ON mv.location_id = sl.id
-                                       JOIN stock_location dest ON mv.location_dest_id = dest.id
-                                      WHERE mv.state = 'done'
-                                        AND mv.date < %s
-                                        AND sl.id IN %s
-                                        AND mv.product_id = %s
-                                        AND mv.company_id = %s
-                                        AND sl.usage = 'internal'
-                                        AND dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
-                                      GROUP BY mv.product_id 
-                                      """
+                self._cr.execute(
+                    f_query_expense,
+                    (date_from_dt_min, pro.id, data['company_id'])
+                )
+                f_expense = self._cr.dictfetchall()
 
-                    self._cr.execute(
-                        f_query_expense,
-                        (date_from_dt_min, tuple(location_ids), pro.id, data['company_id'])
-                    )
-                    f_expense = self._cr.dictfetchall()
+                query_income = f"""
+                               SELECT mv.product_id, 
+                                      SUM(mv.quantity) AS qty
+                               FROM stock_move_line mv
+                                        JOIN stock_location sl ON mv.location_id = sl.id
+                                        JOIN stock_location dest ON mv.location_dest_id = dest.id
+                               WHERE mv.state = 'done'
+                                 AND mv.date >= %s
+                                 AND mv.date <= %s
+                                 {'AND dest.id IN %s'%tuple(location_ids) if location_ids else ''}
+                                 AND mv.product_id = %s
+                                 AND mv.company_id = %s
+                                 AND sl.usage not in ('internal','transit')
+                                 AND dest.usage in ('internal','transit')
+                               GROUP BY mv.product_id 
+                               """
 
-                    query_income = """
-                                   SELECT mv.product_id, 
-                                          SUM(mv.quantity) AS qty
-                                   FROM stock_move_line mv
-                                            JOIN stock_location sl ON mv.location_id = sl.id
-                                            JOIN stock_location dest ON mv.location_dest_id = dest.id
-                                   WHERE mv.state = 'done'
-                                     AND mv.date >= %s
-                                     AND mv.date <= %s
-                                     AND dest.id IN %s
-                                     AND mv.product_id = %s
-                                     AND mv.company_id = %s
-                                     AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
-                                     AND dest.usage = 'internal'
-                                   GROUP BY mv.product_id 
-                                   """
+                self._cr.execute(
+                    query_income,
+                    (date_from_dt_min, date_to_dt_max, pro.id, data['company_id'])
+                )
+                income = self._cr.dictfetchall()
 
-                    self._cr.execute(
-                        query_income,
-                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
-                    )
-                    income = self._cr.dictfetchall()
+                query_expense = f"""
+                                SELECT mv.product_id, 
+                                       SUM(mv.quantity) AS qty
+                                FROM stock_move_line mv
+                                         JOIN stock_location sl ON mv.location_id = sl.id
+                                         JOIN stock_location dest ON mv.location_dest_id = dest.id
+                                WHERE mv.state = 'done'
+                                  AND mv.date >= %s
+                                  AND mv.date <= %s
+                                  {'AND sl.id IN %s'%tuple(location_ids) if location_ids else ''}
+                                  AND mv.product_id = %s
+                                  AND mv.company_id = %s
+                                  AND sl.usage IN ('internal','transit')
+                                  AND dest.usage not in ('internal','transit')
+                                GROUP BY mv.product_id 
+                                """
 
-                    query_expense = """
-                                    SELECT mv.product_id, 
-                                           SUM(mv.quantity) AS qty
-                                    FROM stock_move_line mv
-                                             JOIN stock_location sl ON mv.location_id = sl.id
-                                             JOIN stock_location dest ON mv.location_dest_id = dest.id
-                                    WHERE mv.state = 'done'
-                                      AND mv.date >= %s
-                                      AND mv.date <= %s
-                                      AND sl.id IN %s
-                                      AND mv.product_id = %s
-                                      AND mv.company_id = %s
-                                      AND sl.usage = 'internal'
-                                      AND dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
-                                    GROUP BY mv.product_id 
-                                    """
-
-                    self._cr.execute(
-                        query_expense,
-                        (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
-                    )
-                    expense = self._cr.dictfetchall()
-                    
-
-
-
-                else:
-                    f_income = []
-                    f_expense = []
-                    income = []
-                    expense = []
+                self._cr.execute(
+                    query_expense,
+                    (date_from_dt_min, date_to_dt_max, pro.id, data['company_id'])
+                )
+                expense = self._cr.dictfetchall()
 
                 f_bal_price = 0
                 f_in_qty = 0
