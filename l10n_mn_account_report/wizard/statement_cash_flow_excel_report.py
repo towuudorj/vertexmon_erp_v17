@@ -461,8 +461,8 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("D%s"%rowx, exch_diff_now_amount,data_bold_right)
         rowx +=1
 
-        now_balance = (fi_now_amount-fie_now_amount)+(inv_now_amount-inve_now_amount)+(in_now_amount-exp_now_amount) 
-        pre_now_balance = (fi_pre_amount-fie_pre_amount)+(inv_pre_amount-inve_pre_amount)+(in_pre_amount-exp_pre_amount)
+        now_balance = (fi_now_amount-fie_now_amount)+(inv_now_amount-inve_now_amount)+(in_now_amount-exp_now_amount)+exch_diff_now_amount
+        pre_now_balance = (fi_pre_amount-fie_pre_amount)+(inv_pre_amount-inve_pre_amount)+(in_pre_amount-exp_pre_amount)+exch_diff_pre_amount
         sheet.write("A%s"%rowx, u'5',data_bold_left)
         sheet.write("B%s"%rowx, u'Бүх цэвэр мөнгөн гүйлгээ',data_bold_left)
         sheet.write("C%s"%rowx, pre_now_balance, data_bold_right)
@@ -519,8 +519,8 @@ class statement_cashflow_report(models.TransientModel):
         sheet.write("D%s"%rowx, pre_balance,data_bold_right)
         
         rowx +=1
-        pre_last_balance = pre_now_balance+pre_pre_balance+exch_diff_pre_amount
-        last_balance = now_balance+pre_balance+exch_diff_now_amount
+        pre_last_balance = pre_now_balance+pre_pre_balance
+        last_balance = now_balance+pre_balance
         sheet.write("A%s"%rowx, u'7',data_bold_left)
         sheet.write("B%s"%rowx, u'Мөнгө, түүнтэй адилтгах хөрөнгийн эцсийн үлдэгдэл',data_bold_left)
         sheet.write("C%s"%rowx, pre_last_balance, data_bold_right)
