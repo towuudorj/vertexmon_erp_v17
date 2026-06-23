@@ -16,9 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_mn_project
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Менежер"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__purchase_requisition_count
 msgid "# Purchase requisition"
 msgstr " Худалдан авах хүсэлт"
+
+#. module: l10n_mn_project
+#: model:res.groups,name:l10n_mn_project.group_project_admin
+msgid "Administrator"
+msgstr "Администратор"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_invoice__invoice_amount
