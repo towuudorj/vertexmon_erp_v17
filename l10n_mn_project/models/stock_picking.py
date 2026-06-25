@@ -49,5 +49,6 @@ class StockMove(models.Model):
                         quantity=1.0,
                         product=obj.product_id,
                         partner=obj.picking_id.partner_id,
+                        handle_price_include=False,
                     )
                     obj.tax_amount = taxes['total_included'] - taxes['total_excluded']
