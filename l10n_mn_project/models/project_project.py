@@ -88,6 +88,7 @@ class ProjectProject(models.Model):
     account_analytic_line_ids = fields.Many2many('account.analytic.line', string='Account analytic', compute='_compute_analytic_line_ids')
     bbo_account_id = fields.Many2one('account.account', string=u'Данс')
     invoice_count = fields.Integer(compute='_compute_invoice_count')
+    tax_id = fields.Many2one(comodel_name='account.tax', ondelete='cascade', check_company=True)
 
     def write(self, vals):
         if vals.get('access_token'):

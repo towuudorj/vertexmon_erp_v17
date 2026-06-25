@@ -34,3 +34,20 @@ class StockMove(models.Model):
              else:
                  obj.product_in_project = False
                  obj.project_balance = 0
+
+    @api.depends('picking_id', 'product_uom_qty', 'discount', 'sale_price', 'sale_prices', 'price_subtotal')
+    def _compute_tax_amount(self):
+        super(StockMove, self)._compute_tax_amount()
+        for obj in self:
+            if obj.picking_id.analytic_id.project_ids:
+                project = obj.picking_id.analytic_id.project_ids[0]
+                tax_id = project.tax_id
+                if tax_id:
+                    taxes = tax_id.with_company(obj.company_id).compute_all(
+                        obj.price_subtotal or 0.0,
+                        currency=obj.company_id.currency_id,
+                        quantity=1.0,
+                        product=obj.product_id,
+                        partner=obj.picking_id.partner_id,
+                    )
+                    obj.tax_amount = taxes['total_included'] - taxes['total_excluded']

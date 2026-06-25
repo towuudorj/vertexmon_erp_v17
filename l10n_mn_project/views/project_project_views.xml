@@ -132,7 +132,8 @@
                 <field name="picking_type_id" readonly="state in ('confirm','done')"/>
                 <field name="purchase_manager_id" readonly="state in ('confirm','done')"/>
                 <field name="project_type" readonly="state in ('confirm','done')"/>
-            </xpath>    
+                <field name="tax_id" readonly="state == 'done'"/>
+            </xpath>
             
             <xpath expr="//page[@name='description']"
                    position="after">
