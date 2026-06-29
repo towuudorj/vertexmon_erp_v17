@@ -128,20 +128,20 @@ class SupplyProductReport(models.TransientModel):
         
                 CASE
                     WHEN sl.supply_location = TRUE
-                    THEN mv.quantity
+                    THEN -mv.quantity
         
                     WHEN dest.supply_location = TRUE
-                    THEN -mv.quantity
+                    THEN mv.quantity
         
                     ELSE 0
                 END AS signed_qty,
         
                 CASE
                     WHEN sl.supply_location = TRUE
-                    THEN ABS(COALESCE(svl.value, 0))
+                    THEN -ABS(COALESCE(svl.value, 0))
         
                     WHEN dest.supply_location = TRUE
-                    THEN -ABS(COALESCE(svl.value, 0))
+                    THEN ABS(COALESCE(svl.value, 0))
         
                     ELSE 0
                 END AS signed_value
@@ -235,7 +235,6 @@ class SupplyProductReport(models.TransientModel):
             colly += 1
             sheet.write(rowx, colly, str(round(product.standard_price, 2)) + product.cost_currency_id.symbol, data_left)
             colly += 1
-            print(line['quantity']-1, line['quantity'])
             sheet.write(rowx, colly, line['quantity'] if not group_partner else line['quantity']*-1, data_right)
             colly += 1
             sheet.write(rowx, colly, line['debit_quantity'] if not group_partner else line['credit_quantity'], data_right)
