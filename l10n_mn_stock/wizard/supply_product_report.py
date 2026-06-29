@@ -127,24 +127,20 @@ class SupplyProductReport(models.TransientModel):
                 mv.date::date AS move_date,
         
                 CASE
-                    WHEN sl.usage NOT IN ('internal', 'transit')
-                     AND dest.usage IN ('internal', 'transit')
+                    WHEN sl.supply_location = TRUE
                     THEN mv.quantity
         
-                    WHEN sl.usage IN ('internal', 'transit')
-                     AND dest.usage NOT IN ('internal', 'transit')
+                    WHEN dest.supply_location = TRUE
                     THEN -mv.quantity
         
                     ELSE 0
                 END AS signed_qty,
         
                 CASE
-                    WHEN sl.usage NOT IN ('internal', 'transit')
-                     AND dest.usage IN ('internal', 'transit')
+                    WHEN sl.supply_location = TRUE
                     THEN ABS(COALESCE(svl.value, 0))
         
-                    WHEN sl.usage IN ('internal', 'transit')
-                     AND dest.usage NOT IN ('internal', 'transit')
+                    WHEN dest.supply_location = TRUE
                     THEN -ABS(COALESCE(svl.value, 0))
         
                     ELSE 0
@@ -160,17 +156,6 @@ class SupplyProductReport(models.TransientModel):
             WHERE mv.state = 'done'
               AND mv.date::date <= '{date_to}'
               AND (sl.supply_location = TRUE OR dest.supply_location = TRUE)
-              AND (
-                    (
-                        sl.usage NOT IN ('internal', 'transit')
-                        AND dest.usage IN ('internal', 'transit')
-                    )
-                    OR
-                    (
-                        sl.usage IN ('internal', 'transit')
-                        AND dest.usage NOT IN ('internal', 'transit')
-                    )
-              )
         ),
         report AS (
             SELECT
@@ -250,15 +235,16 @@ class SupplyProductReport(models.TransientModel):
             colly += 1
             sheet.write(rowx, colly, str(round(product.standard_price, 2)) + product.cost_currency_id.symbol, data_left)
             colly += 1
-            sheet.write(rowx, colly, line['quantity'], data_right)
+            print(line['quantity']-1, line['quantity'])
+            sheet.write(rowx, colly, line['quantity'] if not group_partner else line['quantity']*-1, data_right)
             colly += 1
-            sheet.write(rowx, colly, line['debit_quantity'], data_right)
+            sheet.write(rowx, colly, line['debit_quantity'] if not group_partner else line['credit_quantity'], data_right)
             colly += 1
-            sheet.write(rowx, colly, line['credit_quantity'], data_right)
+            sheet.write(rowx, colly, line['credit_quantity'] if not group_partner else line['debit_quantity'], data_right)
             colly += 1
-            sheet.write(rowx, colly, line['total_quantity'], data_right)
+            sheet.write(rowx, colly, line['total_quantity'] if not group_partner else line['total_quantity']*-1, data_right)
             colly += 1
-            sheet.write(rowx, colly, line['total_value'], data_right)
+            sheet.write(rowx, colly, line['total_value'] if not group_partner else line['total_value'], data_right)
 
             count += 1
             rowx += 1
@@ -271,11 +257,11 @@ class SupplyProductReport(models.TransientModel):
 
 
         sheet.merge_range(f'A%s:E%s' % (rowx, rowx), u'Нийт', data_center_bold)
-        sheet.write(f'F%s' % rowx, total_quantity, data_right)
-        sheet.write(f'G%s' % rowx, total_debit_quantity, data_right)
-        sheet.write(f'H%s' % rowx, total_credit_quantity, data_right)
-        sheet.write(f'I%s' % rowx, total_t_quantity, data_right)
-        sheet.write(f'J%s' % rowx, total_value, data_right)
+        sheet.write(f'F%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
+        sheet.write(f'G%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
+        sheet.write(f'H%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
+        sheet.write(f'I%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
+        sheet.write(f'J%s' % rowx, total_value if not group_partner else total_value, data_right)
 
 
         workbook.close()
