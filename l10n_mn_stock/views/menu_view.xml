@@ -13,7 +13,9 @@
 
 
         <menuitem id="stock_summary_report_mn_menu" name="Stock summary report" parent="stock.menu_warehouse_report" action="action_product_summary_report"  />
-        
+
+        <menuitem id="stock_supply_report_mn_menu" name="Stock Supply summary report" parent="stock.menu_warehouse_report" action="action_product_supply_report"  />
+
         <menuitem id="product_aged_report_mn_menu" name="Product aged report" parent="stock.menu_warehouse_report" action="action_product_aged_report"  />
         
         <menuitem id="product_sales_report_mn_menu" name="Product sales report" parent="stock.menu_warehouse_report" action="action_product_sales_report"  />

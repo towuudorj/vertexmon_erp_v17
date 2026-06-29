@@ -320,7 +320,7 @@ class StockMoveLine(models.Model):
 
     
     @api.depends('picking_id')
-    def _compute_tax_amount(self):
+    def _compute_discount(self):
         for line in self:
             discount = 0.0
             if self.picking_id.sale_id.order_line:

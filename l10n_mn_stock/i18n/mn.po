@@ -82,6 +82,10 @@ msgstr "Дистрибутер"
 msgid "Is quotation"
 msgstr "Үнийн саналын бараа эсэх"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_location__supply_location
+msgid "Is supply"
+msgstr "Хангамжын байрлал эсэх?"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
@@ -147,6 +151,19 @@ msgid "By Customer"
 msgstr "Хүргэлтийн хаяг"
 
 #. module: l10n_mn_stock
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_aged_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_detail_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_quantity_page_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_require_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_sales_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_supply_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.purchase_product_income_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.stock_move_update_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_move_line__related_partner_id
 msgid "Related Partner"
 msgstr "Холбоотой харилцагч"
@@ -181,6 +198,11 @@ msgstr "Гарын үсэг"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.mn_stock_pikcing_inherit_view
 msgid "Signature approves"
 msgstr "Гарын үсгийн зөвшөөрөл"
+
+#. module: l10n_mn_stock
+#: model:ir.ui.menu,name:l10n_mn_stock.stock_supply_report_mn_menu
+msgid "Stock Supply summary report"
+msgstr "Хангамжийн бараа материалын тайлан"
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__total_amount
@@ -336,6 +358,7 @@ msgstr "Эцэг ангилал"
 #. module: l10n_mn_stock
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_detail_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_supply_report_view
 msgid "Preview"
 msgstr "Харах"
 
@@ -395,6 +418,11 @@ msgid "Substitute User"
 msgstr "Орлох хэрэглэгч"
 
 #. module: l10n_mn_stock
+#: model:ir.actions.act_window,name:l10n_mn_stock.action_product_supply_report
+msgid "Supply product report"
+msgstr "Хангамжийн бараа материалын тайлан"
+
+#. module: l10n_mn_stock
 #: model:ir.ui.menu,name:l10n_mn_stock.stock_detail_report_mn_menu
 msgid "Stock detail report"
 msgstr "Бараа материалын дэлгэрэнгүй тайлан"
@@ -418,6 +446,7 @@ msgstr "Дуусгасан ажилтан"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_require_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_sales_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_supply_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.purchase_product_income_report_view
 msgid "Export"
 msgstr "Татах"
@@ -426,6 +455,11 @@ msgstr "Татах"
 #: model:ir.model.fields.selection,name:l10n_mn_stock.selection__picking_signature_users__type__financial_analyst
 msgid "Financial Analyst"
 msgstr "Санхүүгийн шинжээч"
+
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_supply_product_report__group_by_partner
+msgid "Group by partner"
+msgstr "Харилцагчаар бүлэглэх"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
