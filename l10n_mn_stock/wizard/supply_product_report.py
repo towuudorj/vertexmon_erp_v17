@@ -113,97 +113,104 @@ class SupplyProductReport(models.TransientModel):
         group_partner = data.get('group_by_partner', False)
 
         query = f"""
-            WITH svl_sum AS (
+            WITH moves AS (
+                SELECT
+                    mv.id AS move_line_id,
+                    mv.move_id,
+                    mv.product_id,
+                    {'COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id, ' if group_partner else ''}
+                    mv.date::date AS move_date,
+                    mv.quantity,
+            
+                    sl.supply_location AS src_supply_location,
+                    dest.supply_location AS dest_supply_location
+            
+                FROM stock_move_line mv
+                JOIN stock_move sm ON sm.id = mv.move_id
+                LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
+                JOIN stock_location sl ON sl.id = mv.location_id
+                JOIN stock_location dest ON dest.id = mv.location_dest_id                        
+                WHERE mv.state = 'done'
+                  AND mv.date::date <= '{date_to}'
+                  AND (
+                        sl.supply_location = TRUE
+                        OR dest.supply_location = TRUE
+                  )
+            ),
+            
+            signed_moves AS (
+                SELECT
+                    move_line_id,
+                    product_id,
+                    {'partner_id, ' if group_partner else ''}
+                    move_date,
+            
+                    CASE
+                        WHEN src_supply_location = TRUE THEN -quantity
+                        WHEN dest_supply_location = TRUE THEN quantity
+                        ELSE 0
+                    END AS signed_qty
+            
+                FROM moves
+            ),
+            
+            report AS (
+                SELECT
+                    sm.product_id,
+                    {'sm.partner_id, ' if group_partner else ''}
+            
+                    SUM(
+                        CASE
+                            WHEN sm.move_date < '{date_from}'
+                            THEN sm.signed_qty
+                            ELSE 0
+                        END
+                    ) AS opening_qty,
+            
+                    SUM(
+                        CASE
+                            WHEN sm.move_date BETWEEN '{date_from}' AND '{date_to}'
+                             AND sm.signed_qty > 0
+                            THEN sm.signed_qty
+                            ELSE 0
+                        END
+                    ) AS debit_quantity,
+            
+                    SUM(
+                        CASE
+                            WHEN sm.move_date BETWEEN '{date_from}' AND '{date_to}'
+                             AND sm.signed_qty < 0
+                            THEN ABS(sm.signed_qty)
+                            ELSE 0
+                        END
+                    ) AS credit_quantity,
+            
+                    SUM(sm.signed_qty) AS total_quantity
+            
+                FROM signed_moves sm
+                GROUP BY sm.product_id{', sm.partner_id ' if group_partner else ''}
+            )
+            
             SELECT
-                stock_move_id,
-                SUM(value) AS value
-            FROM stock_valuation_layer
-            GROUP BY stock_move_id
-        ),
-        moves AS (
-            SELECT
-                mv.product_id,
-                {' COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id, ' if group_partner else ''}
-                mv.date::date AS move_date,
-        
-                CASE
-                    WHEN sl.supply_location = TRUE
-                    THEN -mv.quantity
-        
-                    WHEN dest.supply_location = TRUE
-                    THEN mv.quantity
-        
-                    ELSE 0
-                END AS signed_qty,
-        
-                CASE
-                    WHEN sl.supply_location = TRUE
-                    THEN -ABS(COALESCE(svl.value, 0))
-        
-                    WHEN dest.supply_location = TRUE
-                    THEN ABS(COALESCE(svl.value, 0))
-        
-                    ELSE 0
-                END AS signed_value
-        
-            FROM stock_move_line mv
-            JOIN stock_location sl ON sl.id = mv.location_id
-            JOIN stock_location dest ON dest.id = mv.location_dest_id
-            LEFT JOIN stock_move sm ON sm.id = mv.move_id
-            {'LEFT JOIN stock_picking sp ON sp.id = sm.picking_id ' if group_partner else ''}
-            LEFT JOIN svl_sum svl ON svl.stock_move_id = sm.id
-        
-            WHERE mv.state = 'done'
-              AND mv.date::date <= '{date_to}'
-              AND (sl.supply_location = TRUE OR dest.supply_location = TRUE)
-        ),
-        report AS (
-            SELECT
-                product_id,
-                {' partner_id, ' if group_partner else ''}
-        
-                SUM(
-                    CASE WHEN move_date < '{date_from}'
-                    THEN signed_qty ELSE 0 END
-                ) AS opening_qty,
-        
-                SUM(
-                    CASE WHEN move_date BETWEEN '{date_from}' AND '{date_to}'
-                     AND signed_qty > 0
-                    THEN signed_qty ELSE 0 END
-                ) AS debit_quantity,
-        
-                SUM(
-                    CASE WHEN move_date BETWEEN '{date_from}' AND '{date_to}'
-                     AND signed_qty < 0
-                    THEN ABS(signed_qty) ELSE 0 END
-                ) AS credit_quantity,
-        
-                SUM(signed_qty) AS total_quantity,
-                SUM(signed_value) AS total_value
-        
-            FROM moves
-            GROUP BY product_id{', partner_id' if group_partner else ''}
-        )
-        
-        SELECT
-            pp.id AS p_id,
-            {"COALESCE(rp.name, 'No Partner') AS partner_name," if group_partner else ''}
-            {' COALESCE(rp.id, 0) AS partner_id, ' if group_partner else ''}
-            r.opening_qty AS quantity,
-            r.debit_quantity,
-            r.credit_quantity,
-            r.total_quantity,
-            r.total_value
-        FROM report r
-        LEFT JOIN product_product pp ON pp.id = r.product_id
-       {'LEFT JOIN res_partner rp ON rp.id = r.partner_id' if group_partner else ''}
-        
-        WHERE r.total_quantity <> 0 OR r.total_value <> 0
-        
-        {'ORDER BY rp.id' if group_partner else ''}
+                pp.id AS p_id,
+                {"COALESCE(rp.name, 'No Partner') AS partner_name, COALESCE(rp.id, 0) AS partner_id," if group_partner else ''}
+                
+                COALESCE(r.opening_qty, 0) AS quantity,
+                COALESCE(r.debit_quantity, 0) AS debit_quantity,
+                COALESCE(r.credit_quantity, 0) AS credit_quantity,
+                COALESCE(r.total_quantity, 0) AS total_quantity
+            
+            FROM report r
+            LEFT JOIN product_product pp ON pp.id = r.product_id
+            {"LEFT JOIN res_partner rp ON rp.id = r.partner_id" if group_partner else ''}
+            
+            WHERE
+                COALESCE(r.total_quantity, 0) <> 0
+            
+            ORDER BY {"rp.id," if group_partner else ''} pp.id;
         """
 
+        print(query)
         self._cr.execute(query)
         data = self._cr.dictfetchall()
         product_obj = self.env['product.product']
@@ -233,7 +240,7 @@ class SupplyProductReport(models.TransientModel):
             colly += 1
             sheet.write(rowx, colly, product.uom_id.name, data_left)
             colly += 1
-            sheet.write(rowx, colly, str(round(product.standard_price, 2)) + product.cost_currency_id.symbol, data_left)
+            sheet.write(rowx, colly, round(product.standard_price, 2), data_left)
             colly += 1
             sheet.write(rowx, colly, line['quantity'] if not group_partner else line['quantity']*-1, data_right)
             colly += 1
@@ -243,7 +250,8 @@ class SupplyProductReport(models.TransientModel):
             colly += 1
             sheet.write(rowx, colly, line['total_quantity'] if not group_partner else line['total_quantity']*-1, data_right)
             colly += 1
-            sheet.write(rowx, colly, line['total_value'] if not group_partner else line['total_value'], data_right)
+            value = line['total_quantity']*product.standard_price if not group_partner else (line['total_quantity']*product.standard_price)*-1
+            sheet.write(rowx, colly, str(round(value, 2)), data_right)
 
             count += 1
             rowx += 1
@@ -252,7 +260,7 @@ class SupplyProductReport(models.TransientModel):
             total_debit_quantity += line['debit_quantity']
             total_credit_quantity += line['credit_quantity']
             total_t_quantity += line['total_quantity']
-            total_value += line['total_value']
+            total_value += value
 
 
         sheet.merge_range(f'A%s:E%s' % (rowx, rowx), u'Нийт', data_center_bold)

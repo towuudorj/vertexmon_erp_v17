@@ -459,7 +459,7 @@ msgstr "Санхүүгийн шинжээч"
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_supply_product_report__group_by_partner
 msgid "Group by partner"
-msgstr "Харилцагчаар бүлэглэх"
+msgstr "Харилцагчаар үлдэгдэл татах"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
