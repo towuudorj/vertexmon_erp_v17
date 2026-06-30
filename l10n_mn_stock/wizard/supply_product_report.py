@@ -133,7 +133,7 @@ class SupplyProductReport(models.TransientModel):
                 WHERE mv.state = 'done'
                   AND mv.date::date <= '{date_to}'
                   AND (
-                        sl.supply_location = TRUE
+                        sl.supply_location = TRUEx``
                         OR dest.supply_location = TRUE
                   )
             ),

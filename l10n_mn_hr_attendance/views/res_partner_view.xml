@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.server" id="add_partner_to_microsoft">
+        <field name="name">Add to microsoft</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="code">
+            records.push_to_microsoft()
+        </field>
+    </record>
+
+</odoo>

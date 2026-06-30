@@ -21,6 +21,7 @@
                         <field name="job_list_name"/>
                         <field name="department_list_name"/>
                         <field name="leave_list_name"/>
+                        <field name="partner_list_name"/>
                     </group>
                 </group>
             </form>

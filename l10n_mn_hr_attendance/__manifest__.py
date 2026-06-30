@@ -40,6 +40,7 @@
             'views/microsoft_api_value_view.xml',
             'wizard/hik_central_add_person.xml',
             'views/hr_employee.xml',
+            'views/res_partner_view.xml',
             'views/menu_view.xml',
     ],
     'test': [],

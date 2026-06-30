@@ -22,6 +22,8 @@ class MicrosoftApiValue(models.Model):
     department_list_id = fields.Char(string='Department List ID')
     leave_list_name = fields.Char(string='Leave List Name')
     leave_list_id = fields.Char(string='Leave List ID')
+    partner_list_name = fields.Char(string='Partner List Name')
+    partner_list_id = fields.Char(string='Partner List ID')
 
     def write(self, vals):
 
