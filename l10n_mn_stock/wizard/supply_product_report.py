@@ -133,7 +133,7 @@ class SupplyProductReport(models.TransientModel):
                 WHERE mv.state = 'done'
                   AND mv.date::date <= '{date_to}'
                   AND (
-                        sl.supply_location = TRUEx``
+                        sl.supply_location = TRUE
                         OR dest.supply_location = TRUE
                   )
             ),
@@ -210,7 +210,6 @@ class SupplyProductReport(models.TransientModel):
             ORDER BY {"rp.id," if group_partner else ''} pp.id;
         """
 
-        print(query)
         self._cr.execute(query)
         data = self._cr.dictfetchall()
         product_obj = self.env['product.product']
