@@ -43,6 +43,21 @@ class StockMove(models.Model):
             })
         return result
 
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
+        result = super(StockMove, self)._generate_valuation_lines_data(
+            partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description
+        )
+        if self.picking_id.analytic_id.project_ids:
+            if self.picking_id.analytic_id.project_ids[0].warehouse_id.lot_stock_id.id == self.picking_id.location_id.id:
+                result['debit_line_vals']['analytic_distribution'] = {
+                    self.picking_id.analytic_id.id: 100.0,
+                }
+            elif self.picking_id.analytic_id.project_ids[0].warehouse_id.lot_stock_id.id == self.picking_id.location_dest_id.id:
+                result['credit_line_vals']['analytic_distribution'] = {
+                    self.picking_id.analytic_id.id: 100.0,
+                }
+        return result
+
 
     def product_price_update_before_done(self, forced_qty=None):
         tmpl_dict = defaultdict(lambda: 0.0)
