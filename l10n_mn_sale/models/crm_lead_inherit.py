@@ -494,13 +494,18 @@ class CrmLead(models.Model):
                 sale_order_id.action_confirm()
                 purchase_id = self.env['purchase.order'].search([('requisition_id','in',lead.purchase_request_ids.ids)],limit=1)
                 crm_manager = self.user_id
-                if crm_manager and crm_manager.mapped('email'):
+                manager_employee = crm_manager.employee_id
+                manager_mail = False
+                if manager_employee:
+                    manager_mail = manager_employee.work_email
+                if not manager_mail:
+                    manager_mail = crm_manager.partner_id.email
+                if manager_mail:
                     # Send email notification
-                    
                     sale_url = f'/web#id={sale_order_id.id}&model=sale.order&view_type=form'
                     purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
                     self.env['mail.mail'].create({
-                        'email_to': ','.join(crm_manager.mapped('email')),
+                        'email_to': manager_mail,
                         'subject': f'Таны Сэжим {self.code} -ыг зөвшөөрсөн байна.',
                         'body_html': f'Холбоотой доорхи захиалгууд үүслээ. '+
                         f'- Борлуулалтын захиалга {sale_order_id.name} <a href="{sale_url}">мэдээлэл харах холбоос</a>\n'+ 
@@ -538,7 +543,7 @@ class CrmLead(models.Model):
             'partner_type': self.partner_id.partner_type.id,
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
-            'date_order': self.send_date,
+            'date_order': datetime.now(),
             'origin': self.name,
             'warehouse_id': self.team_id.warehouse_id.id,
             'pricelist_id':self.pricelist_id.id,
