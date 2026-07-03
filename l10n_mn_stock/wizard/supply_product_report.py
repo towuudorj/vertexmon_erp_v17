@@ -20,6 +20,7 @@ class SupplyProductReport(models.TransientModel):
     end_date = fields.Date(string=u'Дуусах огноо', required=True,
                            default=fields.Date.context_today)
     group_by_partner = fields.Boolean('Group by partner', default=False)
+    partner_ids = fields.Many2many('res.partner', string="Partners")
 
     def get_report_data(self):
         data = super(SupplyProductReport, self).get_report_data()
@@ -28,7 +29,8 @@ class SupplyProductReport(models.TransientModel):
             'company_id': self.company_id.id,
             'date_from': self.start_date,
             'date_to': self.end_date,
-            'group_by_partner': self.group_by_partner
+            'group_by_partner': self.group_by_partner,
+            'partner_ids': self.partner_ids.ids
         })
         return data
 
@@ -111,6 +113,9 @@ class SupplyProductReport(models.TransientModel):
         date_to = data['date_to']
 
         group_partner = data.get('group_by_partner', False)
+        partner_where = ''
+        if data.get('partner_ids', False):
+            partner_where = 'AND rp.id in (%s) ' % ','.join(str(id) for id in data.get('partner_ids'))
 
         query = f"""
             WITH moves AS (
@@ -129,9 +134,12 @@ class SupplyProductReport(models.TransientModel):
                 JOIN stock_move sm ON sm.id = mv.move_id
                 LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
                 JOIN stock_location sl ON sl.id = mv.location_id
-                JOIN stock_location dest ON dest.id = mv.location_dest_id                        
+                JOIN stock_location dest ON dest.id = mv.location_dest_id
+                {'LEFT JOIN res_partner rp on rp.id = mv.partner_id' if group_partner else ''}
                 WHERE mv.state = 'done'
                   AND mv.date::date <= '{date_to}'
+                  {'AND rp.is_company = False '  if group_partner else ''}
+                  {partner_where}
                   AND (
                         sl.supply_location = TRUE
                         OR dest.supply_location = TRUE
@@ -202,8 +210,7 @@ class SupplyProductReport(models.TransientModel):
             
             FROM report r
             LEFT JOIN product_product pp ON pp.id = r.product_id
-            {"LEFT JOIN res_partner rp ON rp.id = r.partner_id" if group_partner else ''}
-            
+            {"LEFT JOIN res_partner rp ON rp.id = r.partner_id " if group_partner else ''}
             WHERE
                 COALESCE(r.total_quantity, 0) <> 0
             
@@ -221,14 +228,28 @@ class SupplyProductReport(models.TransientModel):
         total_t_quantity = 0
         total_value = 0
 
+        p_total_quantity = 0
+        p_total_debit_quantity = 0
+        p_total_credit_quantity = 0
+        p_total_t_quantity = 0
+        p_total_value = 0
+        last_group_rowx = False
+
         partner_total = 0
         last_partner_id = False
         for line in data:
             product = product_obj.browse(line.get('p_id'))
             if group_partner:
                 if (isinstance(last_partner_id, bool) and not last_partner_id) or (isinstance(last_partner_id, int) and last_partner_id not in [int(line['partner_id']), 0]):
-                    sheet.merge_range(rowx, 0, rowx, 9, line['partner_name'], data_center_bold)
+                    if last_group_rowx:
+                        sheet.write(last_group_rowx, 5, p_total_quantity, data_right)
+                        sheet.write(last_group_rowx, 6, p_total_debit_quantity, data_right)
+                        sheet.write(last_group_rowx, 7, p_total_credit_quantity, data_right)
+                        sheet.write(last_group_rowx, 8, p_total_value, data_right)
+                        sheet.write(last_group_rowx, 9, p_total_t_quantity, data_right)
+                    sheet.merge_range(rowx, 0, rowx, 4, line['partner_name'], data_center_bold)
                     last_partner_id = int(line['partner_id'])
+                    last_group_rowx = rowx
                     rowx += 1
             colly = 0
             sheet.write(rowx, colly, count, data_left)
@@ -254,12 +275,24 @@ class SupplyProductReport(models.TransientModel):
 
             count += 1
             rowx += 1
-
+            if group_partner:
+                p_total_quantity += line['quantity']
+                p_total_debit_quantity += line['debit_quantity']
+                p_total_credit_quantity += line['credit_quantity']
+                p_total_t_quantity += line['total_quantity']
+                p_total_value += value
             total_quantity += line['quantity']
             total_debit_quantity += line['debit_quantity']
             total_credit_quantity += line['credit_quantity']
             total_t_quantity += line['total_quantity']
             total_value += value
+
+        if last_group_rowx:
+            sheet.write(last_group_rowx, 5, p_total_quantity if not group_partner else p_total_quantity*-1, data_right)
+            sheet.write(last_group_rowx, 6, p_total_debit_quantity if not group_partner else p_total_credit_quantity, data_right)
+            sheet.write(last_group_rowx, 7, p_total_credit_quantity if not group_partner else p_total_debit_quantity, data_right)
+            sheet.write(last_group_rowx, 8, p_total_t_quantity if not group_partner else p_total_t_quantity*-1, data_right)
+            sheet.write(last_group_rowx, 9, p_total_value, data_right)
 
 
         sheet.merge_range(f'A%s:E%s' % (rowx, rowx), u'Нийт', data_center_bold)
@@ -267,7 +300,7 @@ class SupplyProductReport(models.TransientModel):
         sheet.write(f'G%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
         sheet.write(f'H%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
         sheet.write(f'I%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
-        sheet.write(f'J%s' % rowx, total_value if not group_partner else total_value, data_right)
+        sheet.write(f'J%s' % rowx, total_value, data_right)
 
 
         workbook.close()

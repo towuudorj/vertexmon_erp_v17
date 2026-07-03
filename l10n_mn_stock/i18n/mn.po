@@ -356,6 +356,11 @@ msgid "Parent Category"
 msgstr "Эцэг ангилал"
 
 #. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_supply_product_report__partner_ids
+msgid "Partners"
+msgstr "Харилцагчид"
+
+#. module: l10n_mn_stock
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_detail_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_summary_report_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_stock.product_supply_report_view
