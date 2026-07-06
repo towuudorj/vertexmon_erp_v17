@@ -65,8 +65,8 @@ class ProjectProject(models.Model):
         compute="_compute_purchase_requisition", string="# Purchase requisition"
     )
     purchase_ids = fields.Many2many('purchase.order', string='Purchase order')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse' , required=True)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type', required=True)
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse' , required=True, tracking=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type', required=True, tracking=True)
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager',)
     crm_count = fields.Integer(string='Crm count', compute="_get_crm_count")
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
@@ -75,10 +75,10 @@ class ProjectProject(models.Model):
     state = fields.Selection([('planned','Planned'),
                               ('confirm','Confirm'),
                               ('process','Process'),
-                              ('done','Done')],string='State', default='planned')
+                              ('done','Done')],string='State', default='planned', tracking=True)
     product_count = fields.Integer(sttring='Product count', compute="compute_product_count")
-    journal_id = fields.Many2one('account.journal',string='Journal', domain=[("type",'=',"general")])
-    invoice_journal_id = fields.Many2one('account.journal', string='Journal', domain=[("type",'=',"sale")])
+    journal_id = fields.Many2one('account.journal',string='Journal', domain=[("type",'=',"general")], tracking=True)
+    invoice_journal_id = fields.Many2one('account.journal', string='Journal', domain=[("type",'=',"sale")], tracking=True)
     close_move_id = fields.Many2one('account.move', string='Close move entry')
     invoice_id = fields.Many2one('account.move',string='Invoice')
     close_date = fields.Date(string='Close date')
@@ -178,7 +178,10 @@ class ProjectProject(models.Model):
     def action_confirm(self):
         for line in self:
             line.state = 'confirm'
-            
+
+    def action_draft(self):
+        for line in self:
+            line.state = 'planned'
     
     def action_process(self):
         for line in self:

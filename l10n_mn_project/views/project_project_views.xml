@@ -68,6 +68,10 @@
                 <button class="btn-secondary" name="action_confirm"
                         type="object"
                         string="Батлах" invisible="state != 'planned'"/>
+
+                <button class="btn-secondary" name="action_draft"
+                        type="object" groups="l10n_mn_account.group_financial_analyst"
+                        string="To Draft" invisible="state not in ('confirm', 'process')"/>
                         
                 <button class="btn-secondary" name="action_done"
                         type="object"

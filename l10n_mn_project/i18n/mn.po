@@ -381,6 +381,11 @@ msgid "Tender"
 msgstr "Тендер"
 
 #. module: l10n_mn_project
+#: model_terms:ir.ui.view,arch_db:l10n_mn_project.edit_project
+msgid "To Draft"
+msgstr "Цуцлах"
+
+#. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_sale_report__distributor_ids
 msgid "Distributor"
 msgstr "Дистрибютер"
