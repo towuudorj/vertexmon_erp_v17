@@ -50,6 +50,26 @@ class SaleOrderCommonReport(models.TransientModel):
                      'report_name': 'Sale order common report'}
         }
 
+    def _get_picking_tax_base_lines(self, picking, order_lines):
+        tax_base_lines = []
+        for order_line in order_lines:
+            delivered_qty = 0.0
+            moves = picking.move_ids.filtered(
+                lambda move: move.state == 'done' and move.sale_line_id == order_line
+            )
+            for move in moves:
+                move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
+                move_uom = move.product_uom or order_line.product_uom
+                delivered_qty += move_uom._compute_quantity(move_qty, order_line.product_uom)
+
+            if not delivered_qty:
+                continue
+
+            tax_base_line = order_line._convert_to_tax_base_line_dict()
+            tax_base_line['quantity'] = delivered_qty
+            tax_base_lines.append(tax_base_line)
+        return tax_base_lines
+
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -167,34 +187,18 @@ class SaleOrderCommonReport(models.TransientModel):
                     'picking_id': picking,
                     'order_line_ids': picking.move_ids.sale_line_id
                 })
-            # picking_ids = picking_ids.ids if picking_ids else []
-            # temp_sale_order = sale_order_obj
-            # if picking_ids:
-            #     for sale_line in sale_order_id:
-            #         for picking_id in sale_line.picking_ids:
-            #             if picking_id.id in picking_ids:
-            #                 temp_sale_order |= sale_line
-            #                 break
-            #     sale_order_id = temp_sale_order
-            # else:
-            #     sale_order_id = []
 
         total_amount_untaxed = 0.0
         total_amount_tax = 0.0
         total_amount_total = 0.0
         num = 1
         if is_picked:
-            amount_untaxed = 0
-            amount_tax = 0
-            amount_total = 0
-            sorted_data = []
             if picking_total_value_dict:
                 picking_total_value_dict = sorted(picking_total_value_dict, key=lambda x: x['picking_id'].date_done)
             for line in picking_total_value_dict:
                 order_lines = line['order_line_ids']
-                # filtered(lambda x: not x.display_type and not x.is_downpayment)
                 amount_value = self.env['account.tax']._prepare_tax_totals(
-                    [x._convert_to_tax_base_line_dict() for x in order_lines],
+                    self._get_picking_tax_base_lines(line['picking_id'], order_lines),
                     line['sale_order_id'].currency_id or line['sale_order_id'].company_id.currency_id
                 )
                 amount_untaxed = amount_value['amount_untaxed']
@@ -202,7 +206,6 @@ class SaleOrderCommonReport(models.TransientModel):
                 amount_total =  amount_value['amount_total']
                 if amount_untaxed == 0 and amount_total == 0:
                     continue
-                # convert_date = fields.Date.from_string(line['sale_order_id'].date_order)
                 sheet.write("A%s" % rowx, num, data_center)
                 sheet.write("B%s" % rowx, line['picking_id'].date_done, datetime_format)
                 sheet.write("C%s" % rowx, line['sale_order_id'].name, data_left)

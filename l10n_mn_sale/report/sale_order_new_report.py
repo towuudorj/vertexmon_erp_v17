@@ -52,6 +52,76 @@ class SaleOrderNewReport(models.TransientModel):
                      'report_name': 'Sale order report'}
         }
 
+    def _get_picked_moves(self, line, start_date, end_date):
+        return line.move_ids.filtered(
+            lambda move: move.state == 'done'
+            and move.picking_id
+            and move.picking_id.state == 'done'
+            and not move.picking_id.return_id
+            and move.picking_id.scheduled_date
+            and start_date <= move.picking_id.scheduled_date.date() <= end_date
+        )
+
+    def _get_picked_delivered_qty(self, line, start_date, end_date):
+        delivered_qty = 0.0
+        for move in self._get_picked_moves(line, start_date, end_date):
+            move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
+            move_uom = move.product_uom or line.product_uom
+            delivered_qty += move_uom._compute_quantity(move_qty, line.product_uom)
+        return delivered_qty
+
+    def _get_line_delivered_qty_by_picking(self, picking, line):
+        delivered_qty = 0.0
+        moves = picking.move_ids.filtered(
+            lambda move: move.state == 'done' and move.sale_line_id == line
+        )
+        for move in moves:
+            move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
+            move_uom = move.product_uom or line.product_uom
+            delivered_qty += move_uom._compute_quantity(move_qty, line.product_uom)
+        return delivered_qty
+
+    def _get_picking_amount_total_by_line(self, picking):
+        order_lines = picking.move_ids.sale_line_id
+        currency = picking.sale_id.currency_id or picking.sale_id.company_id.currency_id
+        line_data = []
+        tax_base_lines = []
+        for line in order_lines:
+            delivered_qty = self._get_line_delivered_qty_by_picking(picking, line)
+            if not delivered_qty:
+                continue
+
+            tax_base_line = line._convert_to_tax_base_line_dict()
+            tax_base_line['quantity'] = delivered_qty
+            tax_base_lines.append(tax_base_line)
+            line_subtotal = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * delivered_qty
+            line_data.append((line, line_subtotal))
+
+        if not tax_base_lines:
+            return {}
+
+        amount_value = self.env['account.tax']._prepare_tax_totals(tax_base_lines, currency)
+        subtotal_sum = sum(line_subtotal for line, line_subtotal in line_data)
+        if not subtotal_sum:
+            return {line: 0.0 for line, line_subtotal in line_data}
+
+        remaining_amount = amount_value['amount_total']
+        amount_by_line = {}
+        for line, line_subtotal in line_data[:-1]:
+            line_amount = currency.round(amount_value['amount_total'] * line_subtotal / subtotal_sum)
+            amount_by_line[line] = amount_by_line.get(line, 0.0) + line_amount
+            remaining_amount -= line_amount
+
+        last_line = line_data[-1][0]
+        amount_by_line[last_line] = amount_by_line.get(last_line, 0.0) + remaining_amount
+        return amount_by_line
+
+    def _get_delivered_amount_total(self, line, start_date, end_date):
+        amount_total = 0.0
+        for picking in self._get_picked_moves(line, start_date, end_date).mapped('picking_id'):
+            amount_total += self._get_picking_amount_total_by_line(picking).get(line, 0.0)
+        return amount_total
+
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -163,8 +233,7 @@ class SaleOrderNewReport(models.TransientModel):
                 ('order_id.state', '=', 'sale'),
                 ('is_downpayment', '=', False),
                 ('order_id.company_id', '=', data['company_id']),
-                ('order_id.is_license', '=', data['is_license']),
-                ('qty_delivered', '>', 0)
+                ('order_id.is_license', '=', data['is_license'])
             ]
         if data['sales_user_id'] != False:
             domain.append(('order_id.user_id', '=', data['sales_user_id']))
@@ -172,22 +241,19 @@ class SaleOrderNewReport(models.TransientModel):
             domain.append(('order_id.partner_id', '=', data['partner_id']))
         sale_order_line_id = sale_order_line_obj.search(domain, order='order_date desc')
         if data['target_move'] == 'picked':
-            stock_move_ids = sale_order_line_id.mapped('move_ids').filtered(lambda m:
-                                                                            start_date <= m.picking_id.scheduled_date.date() <= end_date
-                                                                            )
-            sale_order_line_id = sale_order_line_id.filtered(lambda so: any(ml.id in stock_move_ids.ids for ml in so.move_ids))
+            sale_order_line_id = sale_order_line_id.filtered(
+                lambda line: self._get_picked_delivered_qty(line, start_date, end_date) > 0
+            )
         num = 1
 
         for line in sale_order_line_id:
             if data['target_move'] == 'picked':
-                if line.discount:
-                    price_unit = (line.price_unit / 100) * (100 - line.discount)
-                else:
-                    price_unit = line.price_unit
-                price_total = price_unit * line.qty_delivered
-                margin = line.price_unit * line.qty_delivered - (line.purchase_price * line.qty_delivered)
-                total_purchase_price = line.purchase_price * line.qty_delivered
+                delivered_qty = self._get_picked_delivered_qty(line, start_date, end_date)
+                price_total = self._get_delivered_amount_total(line, start_date, end_date)
+                margin = price_total - (line.purchase_price * delivered_qty)
+                total_purchase_price = line.purchase_price * delivered_qty
             else:
+                delivered_qty = line.product_uom_qty
                 price_total = line.price_total
                 margin = line.price_total - (line.purchase_price * line.product_uom_qty)
                 total_purchase_price = line.purchase_price * line.product_uom_qty
@@ -203,7 +269,7 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("I%s" % rowx, line.product_id.name, data_left)
             sheet.write("J%s" % rowx, line.product_uom.name, data_left)
             sheet.write("K%s" % rowx, line.product_uom_qty, data_right)
-            sheet.write("L%s" % rowx, line.product_uom_qty, data_right)
+            sheet.write("L%s" % rowx, delivered_qty, data_right)
             sheet.write("M%s" % rowx, line.purchase_price, data_right)
             sheet.write("N%s" % rowx, total_purchase_price, data_right)
             sheet.write("O%s" % rowx, margin, data_right)
