@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 def verbose_format(amount,currency):
     u'''Мөнгөн дүнг үсгээр илэрхийлэх функц
     '''
@@ -543,7 +544,7 @@ class CrmLead(models.Model):
             'partner_type': self.partner_id.partner_type.id,
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
-            'date_order': datetime.now(),
+            'date_order': fields.Datetime.now(),
             'origin': self.name,
             'warehouse_id': self.team_id.warehouse_id.id,
             'pricelist_id':self.pricelist_id.id,
