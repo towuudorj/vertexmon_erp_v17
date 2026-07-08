@@ -230,7 +230,6 @@ class ProjectProject(models.Model):
             invoice_vals['invoice_line_ids'].append((0,0,invoice_line))
             invoice_id = account_move_obj.create(invoice_vals)
 
-
             move_value = {
                             'date':line.close_date,
                             'journal_id':line.journal_id.id,
@@ -242,38 +241,14 @@ class ProjectProject(models.Model):
                             'line_ids':[]
                             }
 
-            for lines in line.products_line:
-                if lines.product_id.detailed_type == 'service':
-                    amount = lines.cost_price
-                else:
-                    amount = lines.qty_delivered * lines.cost_price
-                mv_debit_lines = {
-                            'product_id':lines.product_id.id,
-                            'debit':amount,
-                            'credit':0.0,
-                            'date':line.close_date,
-                            'journal_id':line.journal_id.id,
-                            'company_id':line.company_id.id,
-                            'account_id':lines.product_id.categ_id.property_stock_account_output_categ_id.id,
-                            }
-                mv_credit_lines = {    
-                            'product_id':lines.product_id.id,
-                            'debit':0.0,
-                            'credit':amount,
-                            'date':line.close_date,
-                            'journal_id':line.journal_id.id,
-                            'company_id':line.company_id.id,
-                            'analytic_distribution': {
-                                analytic_account_1.id: 100.0,
-                            },
-                            'account_id':line.journal_id.default_account_id.id,
-                            }
-                move_value['line_ids'].append((0, 0, mv_debit_lines))
-                move_value['line_ids'].append((0, 0, mv_credit_lines))
             product_ids = line.products_line.mapped('product_id')
-            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id),('product_id','not in', product_ids.ids)])
+            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
             if project_analytic_line_ids:
+                project_analytic_p_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
+                project_product_aml_ids = self.env['account.move.line'].browse(project_analytic_p_line_ids.mapped('move_line_id').ids)
+                project_analytic_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
                 project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
+
                 for am_line in project_aml_ids:
                     if am_line.balance > 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
                         mv_debit_lines = {
@@ -299,6 +274,39 @@ class ProjectProject(models.Model):
                         }
                         move_value['line_ids'].append((0, 0, mv_debit_lines))
                         move_value['line_ids'].append((0, 0, mv_credit_lines))
+
+                product_group = {}
+                for aml_id in project_product_aml_ids:
+                    if aml_id.product_id and aml_id.product_id.id not in product_group.keys():
+                        product_group[aml_id.product_id.id] = aml_id.balance
+                    elif aml_id.product_id and aml_id.product_id.id in product_group.keys():
+                        product_group[aml_id.product_id.id] += aml_id.balance
+                for key, value in product_group.items():
+                    for lines in line.products_line:
+                        if lines.product_id.id == key:
+                            mv_debit_lines = {
+                                'product_id': lines.product_id.id,
+                                'debit': value,
+                                'credit': 0.0,
+                                'date': line.close_date,
+                                'journal_id': line.journal_id.id,
+                                'company_id': line.company_id.id,
+                                'account_id': lines.product_id.categ_id.property_stock_account_output_categ_id.id,
+                            }
+                            mv_credit_lines = {
+                                'product_id': lines.product_id.id,
+                                'debit': 0.0,
+                                'credit': value,
+                                'date': line.close_date,
+                                'journal_id': line.journal_id.id,
+                                'company_id': line.company_id.id,
+                                'analytic_distribution': {
+                                    analytic_account_1.id: 100.0,
+                                },
+                                'account_id': line.journal_id.default_account_id.id,
+                            }
+                            move_value['line_ids'].append((0, 0, mv_debit_lines))
+                            move_value['line_ids'].append((0, 0, mv_credit_lines))
 
             move_id = account_move_obj.create(move_value)
             move_id.action_post()
@@ -614,8 +622,11 @@ class ProjectProject(models.Model):
                 obj.project_total_cost = sum(obj.close_move_id.line_ids.mapped('debit'))
                 obj.project_total_profit = obj.contract_amount - sum(obj.close_move_id.line_ids.mapped('debit'))
             else:
-                obj.project_total_cost = 0
-                obj.project_total_profit = 0
+                project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', obj.analytic_account_id.id)])
+                project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
+                total_cost = sum(project_aml_ids.mapped('credit'))
+                obj.project_total_cost = total_cost
+                obj.project_total_profit = obj.contract_amount - total_cost
 
     def _compute_invoice_count(self):
         for obj in self:
