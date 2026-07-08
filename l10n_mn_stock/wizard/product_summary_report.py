@@ -237,7 +237,7 @@ class ProductSummaryReport(models.TransientModel):
                                    JOIN stock_location dest ON mv.location_dest_id = dest.id
                                   WHERE mv.state = 'done'
                                     AND mv.date < %s
-                                    {('AND dest.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                    {('AND sl.id IN ' + str(tuple(location_ids))) if location_ids else ''}
                                     AND mv.product_id = %s
                                     AND mv.company_id = %s
                                     AND sl.usage in ('internal','transit')
@@ -250,7 +250,6 @@ class ProductSummaryReport(models.TransientModel):
                     (date_from_dt_min, pro.id, data['company_id'])
                 )
                 f_expense = self._cr.dictfetchall()
-
                 query_income = f"""
                                SELECT mv.product_id, 
                                       SUM(mv.quantity) AS qty
@@ -283,7 +282,7 @@ class ProductSummaryReport(models.TransientModel):
                                 WHERE mv.state = 'done'
                                   AND mv.date >= %s
                                   AND mv.date <= %s
-                                  {('AND dest.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                  {('AND sl.id IN ' + str(tuple(location_ids))) if location_ids else ''}
                                   AND mv.product_id = %s
                                   AND mv.company_id = %s
                                   AND sl.usage IN ('internal','transit')
