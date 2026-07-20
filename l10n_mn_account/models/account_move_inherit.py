@@ -187,10 +187,68 @@ class AccountMove(models.Model):
     advance_payment_percentage = fields.Float(string='Advance Payment Percentage')
     is_advance_payment = fields.Boolean(string='Advance Payment')
     advance_payment_amount = fields.Monetary(string="Advance Payment Amount", compute="_compute_advance_payment_amount")
+    invoice_state = fields.Selection([('parent_approve', 'Parent approve'), ('accountant_approve', 'Accountant approve')],
+                                     default='parent_approve')
+    invisible_approve_to_parent = fields.Boolean(compute='_compute_invisible_approve_to_parent')
+    parent_notif_sent = fields.Boolean(default=False)
 
 
+    def approve_to_accountant(self):
+        job_obj = self.env['hr.job'].sudo()
+        for obj in self:
+            if obj.invoice_state == 'parent_approve':
+                job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'), ('name', '!=', 'Тооцооны нягтлан бодогч')])
+                head = False
+                if job_id:
+                    accountants = self.env['hr.employee'].search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
+                    if accountants:
+                        acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
+                        self.env['mail.mail'].create({
+                            'email_to': ', '.join(accountants.mapped('work_email')),
+                            'subject': f'Нэхэмжлэл батлах хүсэлт ирлээ.',
+                            'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ..<br><br>
+                                             <a href="{acc_move_url}"
+                                             style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
+                                                    box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
+                                                    border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                                     Нэхэмжлэл</a><br>
+                                         """
+                        }).send()
+                obj.invoice_state = 'accountant_approve'
 
-    
+    def action_send_parent_notif(self):
+        for obj in self:
+            parent_email = obj.create_uid.employee_id.parent_id.work_email
+            if parent_email:
+                acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': parent_email,
+                    'subject': f'Нэхэмжлэл батлах хүсэлт ирлээ.',
+                    'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ.<br><br>
+                                     <a href="{acc_move_url}"
+                                             style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
+                                                    box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
+                                                    border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                                     Нэхэмжлэл</a><br>
+                                 """
+                }).send()
+                obj.parent_notif_sent = True
+        return
+
+    @api.depends('date', 'auto_post')
+    def _compute_hide_post_button(self):
+        for record in self:
+            if record.move_type != 'entry':
+                record.hide_post_button = record.invoice_state != 'accountant_approve' or record.state != 'draft' \
+                    or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
+            else:
+                record.hide_post_button = record.state != 'draft' \
+                    or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
+
+    def _compute_invisible_approve_to_parent(self):
+        current_user = self.env.user
+        for obj in self:
+            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id
 
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold

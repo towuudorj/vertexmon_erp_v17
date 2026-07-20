@@ -399,6 +399,16 @@ msgstr "Баримтын дугаар"
 msgid "VAT Declaration"
 msgstr "Гаалийн мэдүүлгийн дугаар"
 
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_mn_inherit
+msgid "approve"
+msgstr "Батлах"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_mn_inherit
+msgid "send"
+msgstr "Хүсэлт илгээх"
+
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank Address"

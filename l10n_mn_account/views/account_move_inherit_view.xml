@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-		<!--  
+		<!--
         <record id="view_account_move_mn_inherit" model="ir.ui.view">
             <field name="name">account.move.form.mn</field>
             <field name="model">account.move</field>
@@ -37,13 +37,13 @@
                     <attribute name="domain">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and  [('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
                                                     or [('detailed_type', '=', 'service'),('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]</attribute>
-          
+
                 </xpath>
             </data>
             </field>
         </record>
         -->
-        
+
         <record id="view_account_move_mn_inherit" model="ir.ui.view">
             <field name="name">account.move.form.mn</field>
             <field name="model">account.move</field>
@@ -53,7 +53,13 @@
                 <xpath expr='//sheet/notebook/page[@id="aml_tab"]/field[@name="line_ids"]/tree/field[@name="currency_id"]' position="before">
                     <field name="cash_move_type_id" string="Мөнгөн гүйлгээний төрөл"/>
                 </xpath>
-
+                <xpath expr='//button[@name="action_post"]' position="after">
+                    <field name="invisible_approve_to_parent" invisible="1"/>
+                    <field name="parent_notif_sent" invisible="1"/>
+                    <field name="invoice_state" invisible="1"/>
+                    <button name="approve_to_accountant" type="object" string="approve" invisible="invisible_approve_to_parent or invoice_state == 'accountant_approve'"/>
+                    <button name="action_send_parent_notif" type="object" string="send" invisible="parent_notif_sent"/>
+                </xpath>
             </data>
             </field>
         </record>
