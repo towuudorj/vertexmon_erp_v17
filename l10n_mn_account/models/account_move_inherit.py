@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.tools import frozendict, format_date, float_compare, Query
+from markupsafe import Markup
 
 
 def verbose_format(amount,currency):
@@ -198,7 +199,6 @@ class AccountMove(models.Model):
         for obj in self:
             if obj.invoice_state == 'parent_approve':
                 job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'), ('name', '!=', 'Тооцооны нягтлан бодогч')])
-                head = False
                 if job_id:
                     accountants = self.env['hr.employee'].search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
                     if accountants:
@@ -206,15 +206,24 @@ class AccountMove(models.Model):
                         self.env['mail.mail'].create({
                             'email_to': ', '.join(accountants.mapped('work_email')),
                             'subject': f'Нэхэмжлэл батлах хүсэлт ирлээ.',
-                            'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ..<br><br>
+                            'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ.<br>
+                                             Харилцагч: {obj.partner_id.name or ''}<br>
+                                             Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
                                              <a href="{acc_move_url}"
                                              style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
                                                     box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
                                                     border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                                     Нэхэмжлэл</a><br>
+                                             Нэхэмжлэл</a><br>
                                          """
                         }).send()
                 obj.invoice_state = 'accountant_approve'
+                obj.message_post(
+                    body=Markup("""
+                        <p><strong>Шууд удирдлага хянав.</strong></p>
+                    """),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                )
 
     def action_send_parent_notif(self):
         for obj in self:
@@ -223,8 +232,10 @@ class AccountMove(models.Model):
                 acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
                 self.env['mail.mail'].create({
                     'email_to': parent_email,
-                    'subject': f'Нэхэмжлэл батлах хүсэлт ирлээ.',
-                    'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ.<br><br>
+                    'subject': f'Нэхэмжлэл хянах хүсэлт ирлээ.',
+                    'body_html': f"""Таньд нэхэмжлэл хянах хүсэлт ирлээ.<br>
+                                     Харилцагч: {obj.partner_id.name}<br>
+                                     Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
                                      <a href="{acc_move_url}"
                                              style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
                                                     box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
@@ -235,20 +246,10 @@ class AccountMove(models.Model):
                 obj.parent_notif_sent = True
         return
 
-    @api.depends('date', 'auto_post')
-    def _compute_hide_post_button(self):
-        for record in self:
-            if record.move_type != 'entry':
-                record.hide_post_button = record.invoice_state != 'accountant_approve' or record.state != 'draft' \
-                    or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
-            else:
-                record.hide_post_button = record.state != 'draft' \
-                    or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
-
     def _compute_invisible_approve_to_parent(self):
         current_user = self.env.user
         for obj in self:
-            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id
+            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id and obj.move_type == 'in_invoice'
 
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold
@@ -509,7 +510,28 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
             move.amount_text = to_text.capitalize()
-            
+
+    def _get_report_base_filename(self):
+        if self.move_type in ['in_invoice', 'out_invoice']:
+            analytic_account_ids = []
+            for line in self.invoice_line_ids:
+                if line.analytic_distribution:
+                    analytic_account_ids += list(line.analytic_distribution.keys())
+            if len(analytic_account_ids) == 1:
+                analytic_account = self.env['account.analytic.account'].browse(int(analytic_account_ids[0]))
+                project = analytic_account.project_ids[0]
+                name = ''
+                name += {
+                    'out_invoice': _('Invoice %s' % project.name),
+                    'in_invoice': _('Bill %s' % project.name),
+                }[self.move_type]
+                if not self.name or self.name == '/':
+                    if self.id:
+                        name += '(* %s)' % str(self.id)
+                else:
+                    name += self.name
+                return name
+        return super(AccountMove, self)._get_report_base_filename()
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"

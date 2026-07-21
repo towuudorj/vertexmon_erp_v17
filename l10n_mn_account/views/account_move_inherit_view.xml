@@ -57,8 +57,8 @@
                     <field name="invisible_approve_to_parent" invisible="1"/>
                     <field name="parent_notif_sent" invisible="1"/>
                     <field name="invoice_state" invisible="1"/>
-                    <button name="approve_to_accountant" type="object" string="approve" invisible="invisible_approve_to_parent or invoice_state == 'accountant_approve'"/>
-                    <button name="action_send_parent_notif" type="object" string="send" invisible="parent_notif_sent"/>
+                    <button name="approve_to_accountant" type="object" string="Reviewed" invisible="invisible_approve_to_parent or invoice_state == 'accountant_approve'"/>
+                    <button name="action_send_parent_notif" type="object" string="send" invisible="parent_notif_sent or move_type != 'in_invoice'"/>
                 </xpath>
             </data>
             </field>
