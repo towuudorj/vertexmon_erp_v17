@@ -205,7 +205,7 @@ class AccountMove(models.Model):
                         acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
                         self.env['mail.mail'].create({
                             'email_to': ', '.join(accountants.mapped('work_email')),
-                            'subject': f'Нэхэмжлэл батлах хүсэлт ирлээ.',
+                            'subject': f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл батлах хүсэлт ирлээ.",
                             'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ.<br>
                                              Харилцагч: {obj.partner_id.name or ''}<br>
                                              Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
@@ -227,13 +227,22 @@ class AccountMove(models.Model):
 
     def action_send_parent_notif(self):
         for obj in self:
-            parent_email = obj.create_uid.employee_id.parent_id.work_email
-            if parent_email:
+            email = False
+            if obj.move_type == 'in_invoice':
+                email = obj.create_uid.employee_id.parent_id.work_email
+            elif obj.move_type == 'out_invoice':
+                job_id = job_obj.search(
+                    [('name', 'ilike', 'нягтлан бодогч'), ('name', '!=', 'Тооцооны нягтлан бодогч')])
+                if job_id:
+                    accountants = self.env['hr.employee'].search(
+                        [('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
+                    email = ', '.join(accountants.mapped('work_email'))
+            if email:
                 acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
                 self.env['mail.mail'].create({
-                    'email_to': parent_email,
-                    'subject': f'Нэхэмжлэл хянах хүсэлт ирлээ.',
-                    'body_html': f"""Таньд нэхэмжлэл хянах хүсэлт ирлээ.<br>
+                    'email_to': email,
+                    'subject': f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.",
+                    'body_html': f"""Таньд нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.<br>
                                      Харилцагч: {obj.partner_id.name}<br>
                                      Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
                                      <a href="{acc_move_url}"
@@ -249,7 +258,7 @@ class AccountMove(models.Model):
     def _compute_invisible_approve_to_parent(self):
         current_user = self.env.user
         for obj in self:
-            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id and obj.move_type == 'in_invoice'
+            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id and obj.move_type != 'in_invoice'
 
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold

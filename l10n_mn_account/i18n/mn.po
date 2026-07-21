@@ -294,7 +294,7 @@ msgstr "Бүртгэсэн огноо"
 #. module: l10n_mn_account
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_mn_inherit
 msgid "Reviewed"
-msgstr "Хянах"
+msgstr "Хянасан"
 
 #. module: l10n_mn_account
 #: model:ir.model.fields,field_description:l10n_mn_account.field_account_currency_equalization__name
@@ -412,7 +412,7 @@ msgstr "Батлах"
 #. module: l10n_mn_account
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_move_mn_inherit
 msgid "send"
-msgstr "Удирдлагад илгээх"
+msgstr "Мэдэгдэл илгээх"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
