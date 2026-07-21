@@ -259,7 +259,7 @@ class AccountMove(models.Model):
     def _compute_invisible_approve_to_parent(self):
         current_user = self.env.user
         for obj in self:
-            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id and obj.move_type != 'in_invoice'
+            obj.invisible_approve_to_parent = obj.create_uid.employee_id.parent_id.id != current_user.employee_id.id or obj.move_type != 'in_invoice'
 
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold
