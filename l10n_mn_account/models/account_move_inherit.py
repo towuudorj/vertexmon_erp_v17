@@ -226,6 +226,7 @@ class AccountMove(models.Model):
                 )
 
     def action_send_parent_notif(self):
+        job_obj = self.env['hr.job'].sudo()
         for obj in self:
             email = False
             if obj.move_type == 'in_invoice':
