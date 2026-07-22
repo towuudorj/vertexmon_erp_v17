@@ -8,9 +8,12 @@
     "author": "Vertexmon",
     "application": False,
     "installable": True,
-    "depends": ["base"],
+    "depends": ["base", "hr"],
     "data": [
+        'security/ir.model.access.csv',
+        'data/microsoft_api_value_data.xml',
         'views/report_base_view.xml',
+        'views/microsoft_api_value_view.xml'
     ],
     'assets': {
         'web.assets_backend': [

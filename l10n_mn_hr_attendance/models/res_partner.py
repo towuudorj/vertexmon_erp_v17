@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
+from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
 import logging
 
 _logger = logging.getLogger(__name__)

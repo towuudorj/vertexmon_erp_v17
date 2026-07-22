@@ -12,7 +12,7 @@ from datetime import date, datetime, timedelta, time as dt_time
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 from odoo.addons.l10n_mn_hr_attendance.models.hr_leave import hour_min_to_selection
-from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
+from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
 import logging
 from zoneinfo import ZoneInfo
 
@@ -172,7 +172,6 @@ class HrAttendance(models.Model):
                                 hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', attendance_id.id),
                                                                                      ('check_in', '>=', start + relativedelta(hours=-8)),
                                                                                      ('check_in', '<=', end + relativedelta(hours=-8))])
-
                                 if line['attendanceBaseInfo']['beginTime'] != "":
                                     check_in = fields.Datetime.to_string(
                                         parser.isoparse(line['attendanceBaseInfo']['beginTime']).astimezone(pytz.UTC))
@@ -190,14 +189,18 @@ class HrAttendance(models.Model):
                                         })
                                     else:
                                         if check_in and hr_attendance_id.check_in > datetime.strptime(check_in, "%Y-%m-%d %H:%M:%S"):
-                                            hr_attendance_id.sudo().write({
-                                                'check_in': check_in
-                                            })
+                                            self.env.cr.execute("""
+                                                                    UPDATE hr_attendance
+                                                                    SET check_in = %s
+                                                                    WHERE id = %s
+                                                                """, (check_in, hr_attendance_id.id))
 
                                         if check_out and hr_attendance_id.check_out < datetime.strptime(check_out, "%Y-%m-%d %H:%M:%S"):
-                                            hr_attendance_id.sudo().write({
-                                                'check_out': check_out
-                                            })
+                                            self.env.cr.execute("""
+                                                                    UPDATE hr_attendance
+                                                                    SET check_out = %s
+                                                                    WHERE id = %s
+                                                                """, (check_out, hr_attendance_id.id))
 
 
     def get_timely_data(self, start_date, end_date):
@@ -331,7 +334,7 @@ class HrAttendance(models.Model):
                             continue
         return None
 
-    def push_attendance_to_microsoft(self):
+    def _cron_update_attendance(self):
         microsoft_value_obj = self.env['microsoft.api.value'].sudo().search([], limit=1)
         token = get_token(microsoft_value_obj)
         if token['token_type'] and token['access_token']:
@@ -342,29 +345,22 @@ class HrAttendance(models.Model):
         site_id = get_site_id(microsoft_value_obj, token)
 
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'attendance_list_name', 'attendance_list_id')
-        month_range = fields.Datetime.now()
-        month_range = month_range - relativedelta(months=1)
-        attendance_ids = self.env['hr.attendance'].sudo().search(['|', ('check_in', '>=', month_range), ('write_date', '>=', month_range)])
-
-        url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items?$expand=fields"
-
-        headers = {
-            "Authorization": token,
-        }
-        response = requests.get(url, headers=headers, json={})
-        response_json = response.json()
-        response_json = response_json.get('value', [])
-        created_ids = []
-        for attendance in response_json:
-            created_ids.append(int(attendance['fields']['odoo_id']))
+        date_range = fields.Datetime.now()
+        date_range = date_range - relativedelta(days=7)
+        attendance_ids = self.env['hr.attendance'].sudo().search([('share_point_id', '=', '')])
 
         headers = {
             "Authorization": token,
             "Content-Type": "application/json"
         }
-        for att in attendance_ids:
+        attendance_ids.push_to_sharepoint(headers, site_id, list_id)
+        changed_att_ids = self.env['hr.attendance'].sudo().search([('write_date', '>=', date_range)])
+        changed_att_ids.push_to_sharepoint(headers, site_id, list_id)
+
+    def push_to_sharepoint(self, headers, site_id, list_id):
+        for att in self:
             try:
-                if att.id not in created_ids:
+                if att.share_point_id == '':
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
                 else:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items/{att.share_point_id}/fields"
@@ -391,23 +387,26 @@ class HrAttendance(models.Model):
                 line_vals = hr_hour_record.hour_record(employee_id=att.employee_id)
                 los_time = line_vals['miss_time'] or 0
                 body = {
-                    "fields": {
-                        "Title": employee.last_name,
-                        "first_name": employee.name,
-                        "odoo_id": att.id,
-                        "check_in": str(check_in),
-                        "check_out": str(check_out),
-                        "worked_hours": worked_hour,
-                        "loss_time": str(round(los_time, 2)),
-                        "emp_id": employee.id,
-                    }
+                    "Title": employee.last_name or '',
+                    "first_name": employee.name or '',
+                    "odoo_id": att.id,
+                    "check_in": str(check_in),
+                    "check_out": str(check_out),
+                    "worked_hours": worked_hour,
+                    "loss_time": str(round(los_time, 2)),
+                    "emp_id": employee.id,
                 }
-                response = requests.post(url, headers=headers, json=body)
+                if att.share_point_id == '':
+                    body = {"fields": body}
+                    response = requests.post(url, headers=headers, json=body)
+                else:
+                    response = requests.patch(url, headers=headers, json=body)
                 response_json = response.json()
-
                 if response_json.get('id', False):
                     att.share_point_id = response_json.get('id')
+                    self.env.cr.commit()
 
             except Exception as e:
+                self.env.cr.rollback()
                 _logger.error("error accured on push_attendance_to_microsoft error:%s\n", e)
                 continue

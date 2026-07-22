@@ -4,7 +4,7 @@ import requests
 import json
 import logging
 from odoo.addons.l10n_mn_hr_attendance.models.hr_attendance_inherit import build_headers, get_params
-from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
+from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
 from datetime import date, datetime, time, timedelta
 
 _logger = logging.getLogger(__name__)
@@ -98,6 +98,7 @@ class Employee(models.Model):
                         department.is_sync_microsoft = True
                 except Exception as e:
                     _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+        self.env.cr.commit()
         job_list_id = get_list_id(microsoft_value_obj, site_id, token, 'job_list_name', 'job_list_id')
         for job in job_ids:
             url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{job_list_id}/items"
@@ -120,6 +121,7 @@ class Employee(models.Model):
                     job.is_sync_microsoft = True
             except Exception as e:
                 _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
+        self.env.cr.commit()
         employee_ids.push_to_microsoft(token=token)
 
 
@@ -173,7 +175,9 @@ class Employee(models.Model):
                     employee.sudo().write({'is_sync_microsoft': True,
                                            'powerpoint_id': int(response_json.get('id'))})
                     employee.is_sync_microsoft = True
+                    self.env.cr.commit()
             except Exception as e:
+                self.env.cr.rollback()
                 _logger.error(u'Ажилтаны мэдээлэл Sharepoint руу илгээхэд алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
 
     def update_hik_central_photo(self):
@@ -242,7 +246,7 @@ class Employee(models.Model):
                 "late_hour": round(line_vals['miss_time'], 2) if line_vals.get('miss_time', False) else 0
             }
 
-            res = requests.patch(url, headers=headers, json=data)
+            requests.patch(url, headers=headers, json=data)
         except Exception as e:
             _logger.error('ERROR:%s' % e)
             return None
@@ -260,7 +264,6 @@ class Employee(models.Model):
             return None
         for emp in employees:
             emp.push_late_time_to_microsoft(token=token)
-        self.env['hr.attendance'].push_attendance_to_microsoft()
         return None
 
 

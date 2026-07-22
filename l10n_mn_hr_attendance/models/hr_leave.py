@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil import parser
 import pytz
 from pytz import timezone
-from odoo.addons.l10n_mn_hr_attendance.controllers.microsoft_controllers import *
+from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
 
 hour_min_to_selection = {
     '0:0': '0',

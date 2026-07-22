@@ -24,6 +24,8 @@ class MicrosoftApiValue(models.Model):
     leave_list_id = fields.Char(string='Leave List ID')
     partner_list_name = fields.Char(string='Partner List Name')
     partner_list_id = fields.Char(string='Partner List ID')
+    payment_list_name = fields.Char(string='Payment List Name')
+    payment_list_id = fields.Char(string='Payment List ID')
 
     def write(self, vals):
 

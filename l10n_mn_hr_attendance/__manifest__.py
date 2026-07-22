@@ -28,16 +28,15 @@
                  'hr_holidays',
                  'l10n_mn_hr',
                  'l10n_mn_payroll',
-                 'resource'
+                 'resource',
+                 'vertexmon_tools'
                 ],
     'data': [
             'security/ir.model.access.csv',
             'data/cron_data.xml',
             'data/ir_conifg_parameter_data.xml',
-            'data/microsoft_api_value_data.xml',
             'data/leave_type_data.xml',
             'views/hr_attendance_inherit_view.xml',
-            'views/microsoft_api_value_view.xml',
             'wizard/hik_central_add_person.xml',
             'views/hr_employee.xml',
             'views/res_partner_view.xml',

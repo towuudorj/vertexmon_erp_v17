@@ -12,5 +12,6 @@
         <field name="job_list_name">AttendanceJob</field>
         <field name="department_list_name">AttendanceDepartment</field>
         <field name="partner_list_name">Partners</field>
+        <field name="payment_list_name">Payment</field>
     </record>
 </odoo>
