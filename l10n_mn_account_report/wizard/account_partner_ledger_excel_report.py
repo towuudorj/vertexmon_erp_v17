@@ -242,7 +242,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             select += ("sum(aml.debit)  as debit,"
                        "sum(aml.credit) as credit,"
                        "sum(aml.amount_currency) as amount_currency")
-            group_by += ["aml.partner_id", "aml.account_id", "aml.currency_id"]
+            group_by = ["aml.partner_id", "aml.account_id", "aml.currency_id"]
         else:
             select += ("aml.debit as debit,"
                        "aml.credit as credit,"
@@ -289,13 +289,14 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
      from (
          select sum(aml.balance) as balance,
                 sum(aml.amount_currency) as currency_balance,
-                 aml.account_id , aml.partner_id
+                 aml.account_id , aml.partner_id {', aml.currency_id' if 'aml.currency_id' in group_by else ''}
          from account_move_line aml
          left join account_account aa on aa.id = aml.account_id
          left join res_partner rp on rp.id = aml.partner_id
+         {'left join res_currency rc on rc.id = aml.currency_id' if 'aml.currency_id' in group_by else ''}
          where aml.parent_state = 'posted' and aml.date < '{self_obj.start_date}'
          and aml.company_id = {self_obj.company_id.id} {where_aml}
-         group by aml.account_id , aml.partner_id
+         group by aml.account_id , aml.partner_id {', aml.currency_id' if 'aml.currency_id' in group_by else ''}
      ) as start_balance
      FULL JOIN 
      (
@@ -308,10 +309,10 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         WHERE aml.company_id = {self_obj.company_id.id} AND aml.parent_state IN ('{"', '".join(move_state)}')
         AND aml.date BETWEEN '{self_obj.start_date}' AND '{self_obj.end_date}' {where_aml}
         {group_by}
-     ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id
+     ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id {'AND aml.currency_id = start_balance.currency_id' if 'aml.currency_id' in group_by else ''}
      LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
      LEFT JOIN account_account aa ON aa.id = COALESCE(aml.account_id, start_balance.account_id)
-     LEFT JOIN res_currency rc ON rc.id = aa.currency_id
+     LEFT JOIN res_currency rc ON rc.id = aml.currency_id
      WHERE (start_balance.balance != 0 or (aml.debit != 0 or aml.credit !=0))
      {where}
      {order_by}
