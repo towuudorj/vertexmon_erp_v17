@@ -186,11 +186,13 @@ class ProjectProject(models.Model):
     def action_process(self):
         for line in self:
             line.state = 'process'
-        
+
     def action_done(self):
         account_move_obj = self.env['account.move']
         for line in self:
-            tax_ids = self.env['account.tax'].search([('company_id','=',line.company_id.id),('type_tax_use','=','sale'),('price_include','=',True)],limit=1)
+            tax_ids = self.env['account.tax'].search(
+                [('company_id', '=', line.company_id.id), ('type_tax_use', '=', 'sale'), ('price_include', '=', True)],
+                limit=1)
             analytic_account_1 = line.analytic_account_id
             self.env.cr.execute("""
                                 SELECT aml.id
@@ -206,53 +208,79 @@ class ProjectProject(models.Model):
             else:
                 invoice_amount = 0
             invoice_vals = {
-                            'invoice_date':line.close_date,
-                            'journal_id':line.invoice_journal_id.id,
-                            'partner_id':line.partner_id.id,
-                            'state':'draft',
-                            'move_type':'out_invoice',
-                            'invoice_line_ids':[],
-                            'company_id':line.company_id.id,
-                            'invoice_origin':'%s'%line.name
-                            }
+                'invoice_date': line.close_date,
+                'journal_id': line.invoice_journal_id.id,
+                'partner_id': line.partner_id.id,
+                'state': 'draft',
+                'move_type': 'out_invoice',
+                'invoice_line_ids': [],
+                'company_id': line.company_id.id,
+                'invoice_origin': '%s' % line.name
+            }
             invoice_line = {
-                            'name':u'%s'%line.invoice_product_id.name,
-                            'quantity':1.0,
-                            'product_id':line.invoice_product_id.id,
-                            'product_uom_id':line.invoice_product_id.uom_id.id,
-                            'price_unit':invoice_amount,
-                            'tax_ids':[(6,0,tax_ids.ids)],
-                            'analytic_distribution': {
-                                analytic_account_1.id: 100.0,
-                            },
-                            'account_id':line.invoice_journal_id.default_account_id.id,
-                            }
-            invoice_vals['invoice_line_ids'].append((0,0,invoice_line))
+                'name': u'%s' % line.invoice_product_id.name,
+                'quantity': 1.0,
+                'product_id': line.invoice_product_id.id,
+                'product_uom_id': line.invoice_product_id.uom_id.id,
+                'price_unit': invoice_amount,
+                'tax_ids': [(6, 0, tax_ids.ids)],
+                'analytic_distribution': {
+                    analytic_account_1.id: 100.0,
+                },
+                'account_id': line.invoice_journal_id.default_account_id.id,
+            }
+            invoice_vals['invoice_line_ids'].append((0, 0, invoice_line))
             invoice_id = account_move_obj.create(invoice_vals)
 
             move_value = {
-                            'date':line.close_date,
-                            'journal_id':line.journal_id.id,
-                            'partner_id':line.partner_id.id,
-                            'company_id':line.company_id.id,
-                            'ref':'%s'%line.name,
-                            'state':'draft',
-                            'move_type':'entry',
-                            'line_ids':[]
-                            }
+                'date': line.close_date,
+                'journal_id': line.journal_id.id,
+                'partner_id': line.partner_id.id,
+                'company_id': line.company_id.id,
+                'ref': '%s' % line.name,
+                'state': 'draft',
+                'move_type': 'entry',
+                'line_ids': []
+            }
 
+            for lines in line.products_line:
+                if lines.product_id.detailed_type == 'service':
+                    amount = lines.cost_price
+                else:
+                    amount = lines.qty_delivered * lines.cost_price
+                mv_debit_lines = {
+                    'product_id': lines.product_id.id,
+                    'debit': amount,
+                    'credit': 0.0,
+                    'date': line.close_date,
+                    'journal_id': line.journal_id.id,
+                    'company_id': line.company_id.id,
+                    'account_id': lines.product_id.categ_id.property_stock_account_output_categ_id.id,
+                }
+                mv_credit_lines = {
+                    'product_id': lines.product_id.id,
+                    'debit': 0.0,
+                    'credit': amount,
+                    'date': line.close_date,
+                    'journal_id': line.journal_id.id,
+                    'company_id': line.company_id.id,
+                    'analytic_distribution': {
+                        analytic_account_1.id: 100.0,
+                    },
+                    'account_id': line.journal_id.default_account_id.id,
+                }
+                move_value['line_ids'].append((0, 0, mv_debit_lines))
+                move_value['line_ids'].append((0, 0, mv_credit_lines))
             product_ids = line.products_line.mapped('product_id')
-            project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
+            project_analytic_line_ids = self.env['account.analytic.line'].search(
+                [('account_id', '=', line.analytic_account_id.id), ('product_id', 'not in', product_ids.ids)])
             if project_analytic_line_ids:
-                project_analytic_p_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
-                project_product_aml_ids = self.env['account.move.line'].browse(project_analytic_p_line_ids.mapped('move_line_id').ids)
-                project_analytic_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
-                project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
-
+                project_aml_ids = self.env['account.move.line'].browse(
+                    project_analytic_line_ids.mapped('move_line_id').ids)
                 for am_line in project_aml_ids:
                     if am_line.balance > 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
                         mv_debit_lines = {
-                            #'product_id': am_line.product_id.id,
+                            # 'product_id': am_line.product_id.id,
                             'debit': abs(am_line.balance),
                             'credit': 0.0,
                             'date': line.close_date,
@@ -261,7 +289,7 @@ class ProjectProject(models.Model):
                             'account_id': line.bbo_account_id.id,
                         }
                         mv_credit_lines = {
-                            #'product_id': am_line.product_id.id,
+                            # 'product_id': am_line.product_id.id,
                             'debit': 0.0,
                             'credit': abs(am_line.balance),
                             'date': line.close_date,
@@ -275,45 +303,140 @@ class ProjectProject(models.Model):
                         move_value['line_ids'].append((0, 0, mv_debit_lines))
                         move_value['line_ids'].append((0, 0, mv_credit_lines))
 
-                product_group = {}
-                for aml_id in project_product_aml_ids:
-                    if aml_id.product_id and aml_id.product_id.id not in product_group.keys():
-                        product_group[aml_id.product_id.id] = aml_id.balance
-                    elif aml_id.product_id and aml_id.product_id.id in product_group.keys():
-                        product_group[aml_id.product_id.id] += aml_id.balance
-                for key, value in product_group.items():
-                    for lines in line.products_line:
-                        if lines.product_id.id == key:
-                            mv_debit_lines = {
-                                'product_id': lines.product_id.id,
-                                'debit': value,
-                                'credit': 0.0,
-                                'date': line.close_date,
-                                'journal_id': line.journal_id.id,
-                                'company_id': line.company_id.id,
-                                'account_id': lines.product_id.categ_id.property_stock_account_output_categ_id.id,
-                            }
-                            mv_credit_lines = {
-                                'product_id': lines.product_id.id,
-                                'debit': 0.0,
-                                'credit': value,
-                                'date': line.close_date,
-                                'journal_id': line.journal_id.id,
-                                'company_id': line.company_id.id,
-                                'analytic_distribution': {
-                                    analytic_account_1.id: 100.0,
-                                },
-                                'account_id': line.journal_id.default_account_id.id,
-                            }
-                            move_value['line_ids'].append((0, 0, mv_debit_lines))
-                            move_value['line_ids'].append((0, 0, mv_credit_lines))
-
             move_id = account_move_obj.create(move_value)
             move_id.action_post()
             line.close_move_id = move_id.id
             line.invoice_id = invoice_id.id
-            
+
             line.state = 'done'
+        
+    # def action_done(self):
+    #     account_move_obj = self.env['account.move']
+    #     for line in self:
+    #         tax_ids = self.env['account.tax'].search([('company_id','=',line.company_id.id),('type_tax_use','=','sale'),('price_include','=',True)],limit=1)
+    #         analytic_account_1 = line.analytic_account_id
+    #         self.env.cr.execute("""
+    #                             SELECT aml.id
+    #                             FROM account_move_line aml
+    #                                      LEFT JOIN account_move am on am.id = aml.move_id
+    #                             WHERE am.move_type = 'out_invoice'
+    #                               and aml.analytic_distribution ? %s
+    #                             """, [str(analytic_account_1.id)])
+    #         invoice_line_ids = self.env['account.move.line'].browse([row[0] for row in self.env.cr.fetchall()])
+    #         invoice_ids = invoice_line_ids.filtered(lambda aml_line: aml_line.move_id.payment_types != 'penalty')
+    #         if invoice_ids:
+    #             invoice_amount = line.contract_amount - sum(invoice_ids.mapped('price_unit'))
+    #         else:
+    #             invoice_amount = 0
+    #         invoice_vals = {
+    #                         'invoice_date':line.close_date,
+    #                         'journal_id':line.invoice_journal_id.id,
+    #                         'partner_id':line.partner_id.id,
+    #                         'state':'draft',
+    #                         'move_type':'out_invoice',
+    #                         'invoice_line_ids':[],
+    #                         'company_id':line.company_id.id,
+    #                         'invoice_origin':'%s'%line.name
+    #                         }
+    #         invoice_line = {
+    #                         'name':u'%s'%line.invoice_product_id.name,
+    #                         'quantity':1.0,
+    #                         'product_id':line.invoice_product_id.id,
+    #                         'product_uom_id':line.invoice_product_id.uom_id.id,
+    #                         'price_unit':invoice_amount,
+    #                         'tax_ids':[(6,0,tax_ids.ids)],
+    #                         'analytic_distribution': {
+    #                             analytic_account_1.id: 100.0,
+    #                         },
+    #                         'account_id':line.invoice_journal_id.default_account_id.id,
+    #                         }
+    #         invoice_vals['invoice_line_ids'].append((0,0,invoice_line))
+    #         invoice_id = account_move_obj.create(invoice_vals)
+    #
+    #         move_value = {
+    #                         'date':line.close_date,
+    #                         'journal_id':line.journal_id.id,
+    #                         'partner_id':line.partner_id.id,
+    #                         'company_id':line.company_id.id,
+    #                         'ref':'%s'%line.name,
+    #                         'state':'draft',
+    #                         'move_type':'entry',
+    #                         'line_ids':[]
+    #                         }
+    #
+    #         product_ids = line.products_line.mapped('product_id')
+    #         project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', line.analytic_account_id.id)])
+    #         if project_analytic_line_ids:
+    #             project_analytic_p_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
+    #             project_product_aml_ids = self.env['account.move.line'].browse(project_analytic_p_line_ids.mapped('move_line_id').ids)
+    #             project_analytic_line_ids = project_analytic_line_ids.filtered(lambda x: x.product_id not in product_ids.ids)
+    #             project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
+    #
+    #             for am_line in project_aml_ids:
+    #                 if am_line.balance > 0.0 and am_line.account_id.id == line.journal_id.default_account_id.id:
+    #                     mv_debit_lines = {
+    #                         #'product_id': am_line.product_id.id,
+    #                         'debit': abs(am_line.balance),
+    #                         'credit': 0.0,
+    #                         'date': line.close_date,
+    #                         'journal_id': am_line.journal_id.id,
+    #                         'company_id': am_line.company_id.id,
+    #                         'account_id': line.bbo_account_id.id,
+    #                     }
+    #                     mv_credit_lines = {
+    #                         #'product_id': am_line.product_id.id,
+    #                         'debit': 0.0,
+    #                         'credit': abs(am_line.balance),
+    #                         'date': line.close_date,
+    #                         'journal_id': am_line.journal_id.id,
+    #                         'company_id': am_line.company_id.id,
+    #                         'analytic_distribution': {
+    #                             analytic_account_1.id: 100.0,
+    #                         },
+    #                         'account_id': line.journal_id.default_account_id.id,
+    #                     }
+    #                     move_value['line_ids'].append((0, 0, mv_debit_lines))
+    #                     move_value['line_ids'].append((0, 0, mv_credit_lines))
+    #
+    #             product_group = {}
+    #             for aml_id in project_product_aml_ids:
+    #                 if aml_id.product_id and aml_id.product_id.id not in product_group.keys():
+    #                     product_group[aml_id.product_id.id] = aml_id.balance
+    #                 elif aml_id.product_id and aml_id.product_id.id in product_group.keys():
+    #                     product_group[aml_id.product_id.id] += aml_id.balance
+    #             for key, value in product_group.items():
+    #                 for lines in line.products_line:
+    #                     if lines.product_id.id == key:
+    #                         mv_debit_lines = {
+    #                             'product_id': lines.product_id.id,
+    #                             'debit': value,
+    #                             'credit': 0.0,
+    #                             'date': line.close_date,
+    #                             'journal_id': line.journal_id.id,
+    #                             'company_id': line.company_id.id,
+    #                             'account_id': lines.product_id.categ_id.property_stock_account_output_categ_id.id,
+    #                         }
+    #                         mv_credit_lines = {
+    #                             'product_id': lines.product_id.id,
+    #                             'debit': 0.0,
+    #                             'credit': value,
+    #                             'date': line.close_date,
+    #                             'journal_id': line.journal_id.id,
+    #                             'company_id': line.company_id.id,
+    #                             'analytic_distribution': {
+    #                                 analytic_account_1.id: 100.0,
+    #                             },
+    #                             'account_id': line.journal_id.default_account_id.id,
+    #                         }
+    #                         move_value['line_ids'].append((0, 0, mv_debit_lines))
+    #                         move_value['line_ids'].append((0, 0, mv_credit_lines))
+    #
+    #         move_id = account_move_obj.create(move_value)
+    #         move_id.action_post()
+    #         line.close_move_id = move_id.id
+    #         line.invoice_id = invoice_id.id
+    #
+    #         line.state = 'done'
     
     
     def action_picking_count(self):
