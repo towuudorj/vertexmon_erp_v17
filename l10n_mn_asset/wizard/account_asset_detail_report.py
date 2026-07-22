@@ -236,7 +236,7 @@ class AccountAssetDetailReport(models.TransientModel):
                     total_i += month_dep
                     total_j += date_between_dep
                     # total_k += 0
-                    total_l += dep_line.remaining_value if dep_line else line.value - date_between_dep
+                    total_l += (dep_line.remaining_value if dep_line else line.value) - date_between_dep - (sale_line.amount if sale_line else 0)
                     num += 1
                     rowx += 1
                 if data['group_by']:
@@ -420,8 +420,8 @@ class AccountAssetDetailReport(models.TransientModel):
                 total_m += line['acc_dep_balance']
                 total_n += line['month_dep']
                 total_o += line['expense_dep']
-                total_p += line['acc_dep_balance'] + line['month_dep'] - line['expense_dep']
-                total_q += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - (line['acc_dep_balance'] + line['month_dep'] - line['expense_dep'])
+                total_p += line['dep_balance']
+                total_q += line['start_balance'] + line['income_balance'] -  line['expense_balance'] - line['acc_dep_balance'] - line['dep_balance']
             if data['group_by_category'] and last_group_data['last_id']:
                 sheet.write('D%s' % last_group_data['last_row'], "=SUM(D%s:D%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
                 sheet.write('E%s' % last_group_data['last_row'], "=SUM(E%s:E%s)" % (last_group_data['last_row'] + 1, rowx - 1), data_right)
