@@ -97,7 +97,8 @@ class ProjectInvoice(models.TransientModel):
                 'company_id': project.company_id.id,
                 'invoice_origin': '%s' % project.name
             }
-            account_move_obj.create(invoice_vals)
+            account_move_id = account_move_obj.create(invoice_vals)
+            account_move_id._compute_partner_bank_id()
             return None
         else:
             invoice_lines = []

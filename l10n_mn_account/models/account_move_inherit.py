@@ -359,19 +359,7 @@ class AccountMove(models.Model):
             if record.advance_payment_percentage:
                 record.advance_payment_amount = ((record.amount_total / (record.advance_payment_percentage)) * 100.0)
             else:
-                record.advance_payment_amount = 0.0    
-
-
-    @api.depends('bank_partner_id')
-    def _compute_partner_bank_id(self):
-        for move in self:
-            bank_id = False
-            bank_ids = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id)
-            for bnk in bank_ids:
-                if bnk.acc_number == '5002411886':
-                    bank_id = bnk.id
-            move.partner_bank_id = bank_id
+                record.advance_payment_amount = 0.0
 
     def button_create_landed_costs(self):
         """Create a `stock.landed.cost` record associated to the account move of `self`, each
