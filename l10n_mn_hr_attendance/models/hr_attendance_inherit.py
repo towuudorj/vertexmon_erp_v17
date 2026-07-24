@@ -347,8 +347,7 @@ class HrAttendance(models.Model):
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'attendance_list_name', 'attendance_list_id')
         date_range = fields.Datetime.now()
         date_range = date_range - relativedelta(days=7)
-        attendance_ids = self.env['hr.attendance'].sudo().search([('share_point_id', '=', '')])
-
+        attendance_ids = self.env['hr.attendance'].sudo().search(['|', ('share_point_id', '=', ''), ('share_point_id', '=', False)])
         headers = {
             "Authorization": token,
             "Content-Type": "application/json"
