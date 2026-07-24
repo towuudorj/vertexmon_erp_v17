@@ -210,7 +210,11 @@ class HrHourRecord(models.Model):
         company_tz = timezone(tz)
 
         start_date = start_date.replace(minute=00, hour=00, second=00)
-        public_holiday_ids = self.env['resource.calendar.leaves'].search([('date_from', '>=', start_date), ('date_to', '<=', end_time), ('resource_id', '=', False), ('company_id', '=', False)])
+        public_holiday_ids = self.env['resource.calendar.leaves'].search([
+            ('resource_id', '=', False),
+            ('date_from', '<=', end_time),
+            ('date_to', '>=', start_date)
+        ])
         for line in emp_id:
             due_time=0
             due_day=0
@@ -238,10 +242,13 @@ class HrHourRecord(models.Model):
 
             emp_public_holiday_ids = public_holiday_ids.filtered(lambda x: x.calendar_id.id == line.resource_calendar_id.id)
             public_holiday = []
-            for p_holiday in emp_public_holiday_ids:
-                public_holiday.append(p_holiday.date_from.date())
-
             work_weekdays = line.resource_calendar_id.attendance_ids.mapped('dayofweek')
+            for p_holiday in emp_public_holiday_ids:
+                holiday_date = p_holiday.date_from.date()
+                while holiday_date <= p_holiday.date_to.date():
+                    if str(holiday_date.weekday()) in work_weekdays:
+                        public_holiday.append(holiday_date)
+                    holiday_date += timedelta(days=1)
             while work_day <= end_time:
                 if work_day.date() in public_holiday:
                     work_day = work_day + timedelta(days=1)
@@ -251,10 +258,10 @@ class HrHourRecord(models.Model):
                     due_day += 1
                     due_time += must_work_hour
                     for att_line1 in att_id:
-                        if att_line1.check_in.date() == work_day.date():
-                            check_in = att_line1.check_in
+                        check_in = att_line1.check_in
+                        check_in = check_in.astimezone(company_tz)
+                        if check_in.date() == work_day.date():
                             check_out = att_line1.check_out
-                            check_in = check_in.astimezone(company_tz)
                             check_out = check_out.astimezone(company_tz)
                             delta = check_out - check_in
                             total_active_time += (delta.total_seconds() / 60 / 60)
