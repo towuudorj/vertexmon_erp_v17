@@ -199,8 +199,16 @@ class HrHourRecord(models.Model):
             if employee_id.attendance_id == '' and employee_id.timely_id == 0:
                 return {'miss_time': 0}
             emp_id = employee_id
+
+        end_times = hr_data.end_date
+        today = fields.Datetime.now()
+
+        if end_times > today:
+            end_times = end_times.replace(month=today.month, day=today.day)
+            end_times = end_times - timedelta(days=1)
+
         start_date = hr_data.start_date + timedelta(hours=8)
-        end_times = hr_data.end_date + timedelta(hours=8)
+        end_times = end_times + timedelta(hours=8)
 
         end_time = end_times.replace(minute=59, hour=23, second=59)
         start_date = start_date.replace(minute=00, hour=00, second=00)
