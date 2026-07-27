@@ -31,14 +31,18 @@ class ProjectProductsLine(models.Model):
     
     @api.depends('project_id')
     def _compute_qty_delivered(self):
-        quant_obj = self.env['stock.quant']
-        picking_obj = self.env['stock.picking']
         for line in self:
             qty = 0
             for pick in line.project_id.picking_ids:
                 for pur in pick.move_ids_without_package:
                     if pur.product_id.id == line.product_id.id and pick.state == 'done':
-                        qty +=pur.quantity   
+                        qty +=pur.quantity
+                return_pickings = pick.move_ids.returned_move_ids.mapped('picking_id')
+                if return_pickings:
+                    for ret in return_pickings:
+                        for pur in ret.move_ids_without_package:
+                            if pur.product_id.id == line.product_id.id and ret.state == 'done':
+                                qty -= pur.quantity
             line.qty_delivered = qty
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
