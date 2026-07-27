@@ -15,7 +15,7 @@ class statement_cashflow_report(models.TransientModel):
     _description = "Statement of cash flows"
     
     company_id= fields.Many2one('res.company', string='Company', required=True,
-                                default=lambda self: self.env.user.company_id)
+                                default=lambda self: self.env.company)
     date_from=fields.Date("Start Date", required=True,default=fields.Date.context_today)
     date_to=fields.Date("End Date", required=True,default=fields.Date.context_today)
     target_move=fields.Selection([('posted', 'All Posted Entries'),
