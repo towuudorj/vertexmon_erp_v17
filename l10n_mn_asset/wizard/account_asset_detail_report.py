@@ -283,11 +283,11 @@ class AccountAssetDetailReport(models.TransientModel):
                         	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
                         FROM (
                         	select 
-            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_id is not null AND am.state='posted' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as acc_dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as acc_dep_balance,
             	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' and aadl.is_sale_line = True
             	                                       THEN aadl.amount ELSE 0 END), 0) as expense_dep,
             	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
-            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_id is not null AND am.state='posted' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as dep_balance,
             	                aaa.name,
             	                aac.id as category_id,
             	                al.id as location_id,
@@ -297,7 +297,6 @@ class AccountAssetDetailReport(models.TransientModel):
                             LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
             	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
             	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
-            	            LEFT JOIN account_move am on am.id = aadl.move_id
             	            {where}
             	            GROUP BY aaa.name, aac.id, al.id
                         ) as sub

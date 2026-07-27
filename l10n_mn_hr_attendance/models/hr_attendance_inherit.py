@@ -359,7 +359,7 @@ class HrAttendance(models.Model):
     def push_to_sharepoint(self, headers, site_id, list_id):
         for att in self:
             try:
-                if att.share_point_id == '':
+                if att.share_point_id == '' or not att.share_point_id:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
                 else:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items/{att.share_point_id}/fields"
