@@ -272,7 +272,7 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write("K%s" % rowx, total_k, data_left)
                 sheet.write("L%s" % rowx, total_l, data_left)
         else:
-            where = f"WHERE (aaa.invoice_id is not null OR aaa.state!='draft') AND aaa.active=True AND aaa.company_id = {data['company_id']} "
+            where = f"WHERE (aaa.invoice_id is not null AND aaa.state!='draft') AND aaa.active=True AND aaa.company_id = {data['company_id']} "
             if data['category_id']:
                 where += f"AND aac.id = '{data['category_id']}' "
             if data['owner_id']:
