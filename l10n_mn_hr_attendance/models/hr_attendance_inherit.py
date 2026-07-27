@@ -395,7 +395,7 @@ class HrAttendance(models.Model):
                     "loss_time": str(round(los_time, 2)),
                     "emp_id": employee.id,
                 }
-                if att.share_point_id == '':
+                if att.share_point_id == '' or not att.share_point_id:
                     body = {"fields": body}
                     response = requests.post(url, headers=headers, json=body)
                 else:
