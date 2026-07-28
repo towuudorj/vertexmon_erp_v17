@@ -50,12 +50,24 @@ class SaleOrderCommonReport(models.TransientModel):
                      'report_name': 'Sale order common report'}
         }
 
-    def _get_picking_tax_base_lines(self, picking, order_lines):
+    def _get_move_sale_line(self, move):
+        return move.sale_line_id or move.origin_returned_move_id.sale_line_id
+
+    def _get_picking_order_lines(self, picking):
+        return picking.move_ids.mapped('sale_line_id') | picking.move_ids.mapped('origin_returned_move_id.sale_line_id')
+
+    def _get_origin_return_pickings(self, picking, return_pickings):
+        return return_pickings.filtered(
+            lambda return_picking: return_picking.return_id == picking
+            or picking in return_picking.move_ids.mapped('origin_returned_move_id.picking_id')
+        )
+
+    def _get_picking_tax_base_lines(self, picking, order_lines, sign=1.0):
         tax_base_lines = []
         for order_line in order_lines:
             delivered_qty = 0.0
             moves = picking.move_ids.filtered(
-                lambda move: move.state == 'done' and move.sale_line_id == order_line
+                lambda move: move.state == 'done' and self._get_move_sale_line(move) == order_line
             )
             for move in moves:
                 move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
@@ -66,7 +78,7 @@ class SaleOrderCommonReport(models.TransientModel):
                 continue
 
             tax_base_line = order_line._convert_to_tax_base_line_dict()
-            tax_base_line['quantity'] = delivered_qty
+            tax_base_line['quantity'] = sign * delivered_qty
             tax_base_lines.append(tax_base_line)
         return tax_base_lines
 
@@ -180,12 +192,17 @@ class SaleOrderCommonReport(models.TransientModel):
 
         picking_total_value_dict = []
         if is_picked:
-            picking_ids = sale_order_id.mapped('picking_ids').filtered(lambda p: start_date <= p.scheduled_date.date() <= end_date and p.state=='done' and not p.return_id)
+            period_picking_ids = sale_order_id.mapped('picking_ids').filtered(
+                lambda p: p.scheduled_date and start_date <= p.scheduled_date.date() <= end_date and p.state == 'done'
+            )
+            picking_ids = period_picking_ids.filtered(lambda p: not p.return_id)
+            return_picking_ids = period_picking_ids.filtered(lambda p: p.return_id)
             for picking in picking_ids:
                 picking_total_value_dict.append({
                     'sale_order_id': picking.sale_id,
                     'picking_id': picking,
-                    'order_line_ids': picking.move_ids.sale_line_id
+                    'order_line_ids': self._get_picking_order_lines(picking),
+                    'return_picking_ids': self._get_origin_return_pickings(picking, return_picking_ids),
                 })
 
         total_amount_untaxed = 0.0
@@ -197,8 +214,15 @@ class SaleOrderCommonReport(models.TransientModel):
                 picking_total_value_dict = sorted(picking_total_value_dict, key=lambda x: x['picking_id'].date_done)
             for line in picking_total_value_dict:
                 order_lines = line['order_line_ids']
+                tax_base_lines = self._get_picking_tax_base_lines(line['picking_id'], order_lines)
+                for return_picking in line['return_picking_ids']:
+                    tax_base_lines += self._get_picking_tax_base_lines(
+                        return_picking,
+                        self._get_picking_order_lines(return_picking),
+                        sign=-1.0
+                    )
                 amount_value = self.env['account.tax']._prepare_tax_totals(
-                    self._get_picking_tax_base_lines(line['picking_id'], order_lines),
+                    tax_base_lines,
                     line['sale_order_id'].currency_id or line['sale_order_id'].company_id.currency_id
                 )
                 amount_untaxed = amount_value['amount_untaxed']

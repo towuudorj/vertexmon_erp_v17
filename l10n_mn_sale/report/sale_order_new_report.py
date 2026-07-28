@@ -52,14 +52,22 @@ class SaleOrderNewReport(models.TransientModel):
                      'report_name': 'Sale order report'}
         }
 
+    def _get_move_sale_line(self, move):
+        return move.sale_line_id or move.origin_returned_move_id.sale_line_id
+
+    def _get_period_pickings(self, line, start_date, end_date):
+        return line.order_id.picking_ids.filtered(
+            lambda picking: picking.state == 'done'
+            and picking.scheduled_date
+            and start_date <= picking.scheduled_date.date() <= end_date
+        )
+
+    def _get_picking_order_lines(self, picking):
+        return picking.move_ids.mapped('sale_line_id') | picking.move_ids.mapped('origin_returned_move_id.sale_line_id')
+
     def _get_picked_moves(self, line, start_date, end_date):
-        return line.move_ids.filtered(
-            lambda move: move.state == 'done'
-            and move.picking_id
-            and move.picking_id.state == 'done'
-            and not move.picking_id.return_id
-            and move.picking_id.scheduled_date
-            and start_date <= move.picking_id.scheduled_date.date() <= end_date
+        return self._get_period_pickings(line, start_date, end_date).mapped('move_ids').filtered(
+            lambda move: move.state == 'done' and self._get_move_sale_line(move) == line
         )
 
     def _get_picked_delivered_qty(self, line, start_date, end_date):
@@ -67,13 +75,14 @@ class SaleOrderNewReport(models.TransientModel):
         for move in self._get_picked_moves(line, start_date, end_date):
             move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
             move_uom = move.product_uom or line.product_uom
-            delivered_qty += move_uom._compute_quantity(move_qty, line.product_uom)
+            sign = -1.0 if move.picking_id.return_id else 1.0
+            delivered_qty += sign * move_uom._compute_quantity(move_qty, line.product_uom)
         return delivered_qty
 
     def _get_line_delivered_qty_by_picking(self, picking, line):
         delivered_qty = 0.0
         moves = picking.move_ids.filtered(
-            lambda move: move.state == 'done' and move.sale_line_id == line
+            lambda move: move.state == 'done' and self._get_move_sale_line(move) == line
         )
         for move in moves:
             move_qty = move.quantity if 'quantity' in move._fields else move.quantity_done
@@ -81,9 +90,9 @@ class SaleOrderNewReport(models.TransientModel):
             delivered_qty += move_uom._compute_quantity(move_qty, line.product_uom)
         return delivered_qty
 
-    def _get_picking_amount_total_by_line(self, picking):
-        order_lines = picking.move_ids.sale_line_id
-        currency = picking.sale_id.currency_id or picking.sale_id.company_id.currency_id
+    def _get_picking_amount_total_by_line(self, picking, sign=1.0, currency=None):
+        order_lines = self._get_picking_order_lines(picking)
+        currency = currency or picking.sale_id.currency_id or picking.sale_id.company_id.currency_id
         line_data = []
         tax_base_lines = []
         for line in order_lines:
@@ -92,9 +101,9 @@ class SaleOrderNewReport(models.TransientModel):
                 continue
 
             tax_base_line = line._convert_to_tax_base_line_dict()
-            tax_base_line['quantity'] = delivered_qty
+            tax_base_line['quantity'] = sign * delivered_qty
             tax_base_lines.append(tax_base_line)
-            line_subtotal = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * delivered_qty
+            line_subtotal = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * sign * delivered_qty
             line_data.append((line, line_subtotal))
 
         if not tax_base_lines:
@@ -118,8 +127,10 @@ class SaleOrderNewReport(models.TransientModel):
 
     def _get_delivered_amount_total(self, line, start_date, end_date):
         amount_total = 0.0
-        for picking in self._get_picked_moves(line, start_date, end_date).mapped('picking_id'):
-            amount_total += self._get_picking_amount_total_by_line(picking).get(line, 0.0)
+        currency = line.order_id.currency_id or line.order_id.company_id.currency_id
+        for picking in self._get_period_pickings(line, start_date, end_date):
+            sign = -1.0 if picking.return_id else 1.0
+            amount_total += self._get_picking_amount_total_by_line(picking, sign=sign, currency=currency).get(line, 0.0)
         return amount_total
 
     def get_xlsx_report(self, data, response, get_file=False):
