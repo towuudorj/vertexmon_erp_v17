@@ -67,6 +67,14 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                     'bg_color': '#ead1c0',
                                     'color': 'black'
                                 })
+        title_no_border = workbook.add_format({
+                                    'align': 'center',
+                                    'border': 0,
+                                    'bold': True,
+                                    'font_size': 12,
+                                    'bg_color': '#ead1c0',
+                                    'color': 'black'
+                                })
 
         data_right = workbook.add_format({
                                     'align': 'right',
@@ -110,18 +118,21 @@ class PurchaseOrderCommonReport(models.TransientModel):
         sheet.set_column(3, 3, 25)
         sheet.set_column(6, 6, 20)
         rowx = 1
-        sheet.merge_range("A%s:H%s"%(rowx,rowx), u'Худалдан авалтын тайлан хураангуй', title)
-        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title)
-        sheet.merge_range("F%s:H%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title)
+        sheet.merge_range("A%s:J%s"%(rowx,rowx), u'Худалдан авалтын тайлан хураангуй', title_no_border)
+        sheet.merge_range("A%s:C%s"%(rowx+1,rowx+1), u'%s'%(data['company_name']), title_no_border)
+        sheet.merge_range("D%s:G%s"%(rowx+1,rowx+1), '', title_no_border)
+        sheet.merge_range("H%s:J%s"%(rowx+1,rowx+1), u'Огноо: %s - %s'%(data['start_date'],data['end_date']), title_no_border)
         rowx += 3
         sheet.write("A%s"%rowx, u'Батлагдсан огноо', title)
         sheet.write('B%s'%rowx, u'Захиалгын №', title)
         sheet.write("C%s"%rowx, u'Харилцагчийн №', title)
         sheet.write("D%s"%rowx, u'Харилцагч', title)
-        sheet.write("E%s"%rowx, u'Нийт үнэ', title)
-        sheet.write("F%s"%rowx, u'НӨАТ', title)
-        sheet.write("G%s"%rowx, u'Нийт үнэ НӨАТ', title)
-        sheet.write("H%s"%rowx, u'Хэрэглэгч', title)
+        sheet.write("E%s"%rowx, u'Валют', title)
+        sheet.write("F%s"%rowx, u'Нийт үнэ', title)
+        sheet.write("G%s"%rowx, u'НӨАТ', title)
+        sheet.write("H%s"%rowx, u'Нийт үнэ НӨАТ', title)
+        sheet.write("I%s"%rowx, u'Нийт үнэ НӨАТ /₮/', title)
+        sheet.write("J%s"%rowx, u'Хэрэглэгч', title)
         rowx += 1
 
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
@@ -155,8 +166,11 @@ class PurchaseOrderCommonReport(models.TransientModel):
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
                         total_noat = 0
+                        total_with_noat_mnt = 0
                         total_with_noat = 0
                         for line in picking_purchase_line_id:
+                            currency_rate = self.env['res.currency.rate'].search([('company_id','=',purchase.company_id.id),('currency_id','=',line.currency_id.id),('name','=',str(picking_id.date_done.date()))])
+                            curr_rate = currency_rate.inverse_company_rate if currency_rate else purchase.currency_rate
                             price_unit = line.price_unit
                             if line.discount:
                                 price_unit -= price_unit / 100 * line.discount
@@ -170,26 +184,28 @@ class PurchaseOrderCommonReport(models.TransientModel):
                                 )
                                 total_without_noat += res['total_excluded']
                                 total_with_noat += res['total_included']
+                                total_with_noat_mnt += res['total_included'] * curr_rate
                                 total_noat += res['total_included'] - res['total_excluded']
                             else:
                                 total = price_unit * sum(line.move_ids.filtered(lambda m: m.picking_id == picking_id).mapped('quantity'))
                                 total_without_noat += total
                                 total_with_noat += total
+                                total_with_noat_mnt += total * curr_rate
                                 total_noat += 0
 
                         picking_total_value_dict.append({
+                            'currency' : purchase.currency_id.name,
                             'total_without_noat' : total_without_noat,
                             'total_noat': total_noat,
                             'total_with_noat': total_with_noat,
+                            'total_with_noat_mnt': total_with_noat_mnt,
                             'date_done': picking_id.date_done,
                             'order_id': purchase
                         })
 
         num = 1
-        
-        total_amount_untaxed = 0.0
-        total_amount_tax = 0.0
-        total_amount_total = 0.0
+
+        total_with_noat_mnt = 0.0
         if is_picked:
             sorted_data = []
             if picking_total_value_dict:
@@ -199,13 +215,13 @@ class PurchaseOrderCommonReport(models.TransientModel):
                 sheet.write("B%s" % rowx, item['order_id'].name, data_left)
                 sheet.write("C%s" % rowx, "%s" % item['order_id'].partner_id.code, data_left)
                 sheet.write("D%s" % rowx, "%s" % item['order_id'].partner_id.name, data_left)
-                sheet.write("E%s" % rowx, item['total_without_noat'], data_right)
-                sheet.write("F%s" % rowx, item['total_noat'], data_right)
-                sheet.write("G%s" % rowx, item['total_with_noat'], data_right)
-                sheet.write("H%s" % rowx, "%s" % item['order_id'].user_id.name, data_right)
-                total_amount_untaxed += item['total_without_noat']
-                total_amount_tax += item['total_noat']
-                total_amount_total += item['total_with_noat']
+                sheet.write("E%s" % rowx, item['currency'], data_right)
+                sheet.write("F%s" % rowx, item['total_without_noat'], data_right)
+                sheet.write("G%s" % rowx, item['total_noat'], data_right)
+                sheet.write("H%s" % rowx, item['total_with_noat'], data_right)
+                sheet.write("I%s" % rowx, item['total_with_noat_mnt'], data_right)
+                sheet.write("J%s" % rowx, "%s" % item['order_id'].user_id.name, data_right)
+                total_with_noat_mnt += item['total_with_noat_mnt']
                 num += 1
                 rowx += 1
         else:
@@ -215,20 +231,21 @@ class PurchaseOrderCommonReport(models.TransientModel):
                 sheet.write("B%s"%rowx, line.name, data_left)
                 sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
                 sheet.write("D%s"%rowx, "%s"%line.partner_id.name, data_left)
-                sheet.write("E%s"%rowx, line.amount_untaxed, data_right)
-                sheet.write("F%s"%rowx, line.amount_tax, data_right)
-                sheet.write("G%s"%rowx, line.amount_total, data_right)
-                sheet.write("H%s"%rowx, "%s"%line.user_id.name, data_right)
-                total_amount_untaxed +=line.amount_untaxed
-                total_amount_tax +=line.amount_tax
-                total_amount_total +=line.amount_total
+                sheet.write("E%s"%rowx, line.currency_id.name, data_right)
+                sheet.write("F%s"%rowx, line.amount_untaxed, data_right)
+                sheet.write("G%s"%rowx, line.amount_tax, data_right)
+                sheet.write("H%s"%rowx, line.amount_total, data_right)
+                sheet.write("I%s"%rowx, line.amount_total * line.currency_rate, data_right)
+                sheet.write("J%s"%rowx, "%s"%line.user_id.name, data_right)
+                total_with_noat_mnt += line.amount_total * line.currency_rate
                 num +=1
                 rowx +=1
-        sheet.merge_range("A%s:D%s"%(rowx,rowx), u'Нийт дүн:', data_bold_left)
-        sheet.write("E%s"%rowx, total_amount_untaxed, data_bold_center)
-        sheet.write("F%s"%rowx, total_amount_tax, data_bold_center)
-        sheet.write("G%s"%rowx, total_amount_total, data_bold_center)
+        sheet.merge_range("A%s:E%s"%(rowx,rowx), u'Нийт дүн:', data_bold_center)
+        sheet.write("F%s"%rowx, '', data_bold_center)
+        sheet.write("G%s"%rowx, '', data_bold_center)
         sheet.write("H%s"%rowx, '', data_bold_center)
+        sheet.write("I%s"%rowx, total_with_noat_mnt, data_bold_center)
+        sheet.write("J%s"%rowx, '', data_bold_center)
 
 
         rowx += 1

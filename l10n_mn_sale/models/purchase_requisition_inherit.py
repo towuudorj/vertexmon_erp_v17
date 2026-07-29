@@ -208,6 +208,7 @@ class PurchaseRequisition(models.Model):
                             'partner_id': lines.supplier_id.id,
                             'currency_id': lines.currency_id.id,
                             'requisition_id': pr.id,
+                            'purchase_type': 'local' if lines.currency_id.name == 'MNT' else 'foreign',
                         }
                         purchase_order_id = self.env['purchase.order'].create(datas)
                         pr.purchase_ids = [(4,purchase_order_id.id)]
