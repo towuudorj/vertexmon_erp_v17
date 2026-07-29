@@ -165,14 +165,13 @@ class StockMove(models.Model):
     def _compute_all_price(self):
         for line in self:
             total = 0.0
-            if  line.picking_id.sale_id.order_line:
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            total = (lines.price_subtotal/lines.product_uom_qty)*line.product_uom_qty   
-                        else:
-                            if lines.price_subtotal>0.0 and lines.product_uom_qty >0.0:
-                                total = (lines.price_subtotal/lines.product_uom_qty)*line.product_uom_qty
+            if line.sale_line_id:
+                sale_line = line.sale_line_id
+                if sale_line.discount > 0.0:
+                    total = (sale_line.price_subtotal/sale_line.product_uom_qty)*line.product_uom_qty
+                else:
+                    if sale_line.price_subtotal>0.0 and sale_line.product_uom_qty >0.0:
+                        total = (sale_line.price_subtotal/sale_line.product_uom_qty)*line.product_uom_qty
             else:
                 if line.product_uom_qty >0.0 and line.sale_prices >0.0:
                     total = line.product_uom_qty * line.sale_prices
