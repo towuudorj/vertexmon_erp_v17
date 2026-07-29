@@ -137,7 +137,7 @@
                                                                   t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                         </td>
                                                         <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
-                                                            <span t-field="move.price_subtotal"
+                                                            <span t-esc="move.sale_price*move.product_uom_qty"
                                                                   t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                         </td>
                                                     </t>
@@ -181,7 +181,7 @@
                                                                       t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                             </td>
                                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
-                                                                <span t-field="move.price_subtotal"
+                                                                <span t-esc="move.sale_price*move.product_uom_qty"
                                                                       t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                             </td>
                                                         </t>
@@ -292,7 +292,7 @@
                                                                   t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                         </td>
                                                         <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
-                                                            <span t-field="move.price_subtotal"
+                                                            <span t-esc="move.sale_price*move.product_uom_qty"
                                                                   t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                         </td>
                                                     </t>
@@ -338,7 +338,7 @@
                                                                       t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                             </td>
                                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
-                                                                <span t-field="move.price_subtotal"
+                                                                <span t-esc="move.sale_price*move.product_uom_qty"
                                                                       t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                             </td>
                                                         </t>
