@@ -24,6 +24,7 @@ class PurchaseOrder(models.Model):
                                        ('freight','Freight'),
                                        ('customs','Customs'),
                                        ('stock','Stock')], string='Freight status')
+    invoice_status_forced = fields.Boolean(default=False)
 
 
     def _prepare_invoice(self):
@@ -237,6 +238,8 @@ class PurchaseOrder(models.Model):
     @api.depends('state', 'order_line.qty_to_invoice', 'order_line')
     def _get_invoiced(self):
         for obj in self:
+            if obj.invoice_status_forced:
+                return
             acc_move_ids = self.env['account.move'].search([('invoice_origin', '=', obj.name),
                                                             ('state', '!=', 'cancel'),
                                                             ('partner_id', '=', obj.partner_id.id),
@@ -251,6 +254,15 @@ class PurchaseOrder(models.Model):
                     super(PurchaseOrder, self)._get_invoiced()
             else:
                 super(PurchaseOrder, self)._get_invoiced()
+
+    def force_invoice_state(self):
+        self.invoice_status_forced = True
+        if self.invoice_status == 'to invoice':
+            self.invoice_status = 'invoiced'
+            self.message_post(body=u'Нэхэмжлэлийн төлвийг хүчээр баталлаа.')
+        elif self.invoice_status == 'invoiced':
+            self.invoice_status = 'to invoice'
+            self.message_post(body=u'Нэхэмжлэлийн төлвийг хүчээр цуцаллаа.')
 
 
 class PurchaseOrderLine(models.Model):

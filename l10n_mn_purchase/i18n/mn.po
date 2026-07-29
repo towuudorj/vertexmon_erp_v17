@@ -73,6 +73,11 @@ msgid "Invoice list"
 msgstr "Нэхэмжлэлийн мөрүүд"
 
 #. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.view_purchase_order_mn_form
+msgid "Invoiced"
+msgstr "Бүрэн нэхэмжилсэн"
+
+#. module: l10n_mn_purchase
 #: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_order_line__is_downpayment
 msgid "Is Down payment"
 msgstr "Урьдчилгаа төлбөр"
@@ -273,6 +278,11 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr "Нэхэмжлэх боломжтой мөр алга. Хэрэв бараа нь хүлээж авсан тоо хэмжээнд суурилсан хяналтын бодлоготой бол хүлээж авсан тоо байгаа эсэхийг шалгана уу."
+
+#. module: l10n_mn_purchase
+#: model_terms:ir.ui.view,arch_db:l10n_mn_purchase.view_purchase_order_mn_form
+msgid "To invoice"
+msgstr "Нэхэмжлэлийн төлөв буцаах"
 
 #. module: l10n_mn_purchase
 #. odoo-python

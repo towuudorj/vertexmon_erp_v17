@@ -51,6 +51,15 @@
                     groups="l10n_mn_account.group_financial_analyst"/>
                     <button name="button_request" string="Request" type="object" invisible="state != 'draft'"/>
                 </xpath>
+                <xpath expr="//field[@name='invoice_status']" position="before">
+                    <field name="invoice_status_forced" invisible="1"/>
+                    <div colspan="2">
+                        <button name="force_invoice_state" string="Invoiced" type="object" invisible="invoice_status != 'to invoice'"
+                            groups="account.group_account_user" style="display: inline-block;"/>
+                        <button name="force_invoice_state" string="To invoice" type="object" invisible="invoice_status != 'invoiced' or (invoice_status == 'invoiced' and invoice_status_forced == False)"
+                            groups="account.group_account_user" style="display:block;"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 
