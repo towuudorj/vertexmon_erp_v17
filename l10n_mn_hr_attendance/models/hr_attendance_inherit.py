@@ -255,7 +255,7 @@ class HrAttendance(models.Model):
                 if 'success' in response_json and response_json.get('success', False):
                     for line in response_json['data']:
                         try:
-                            employee_id = employees.filtered(lambda emp: str(emp.timely_id) == line['workerId'])
+                            employee_id = employees.filtered(lambda emp: emp.timely_id == line['workerId'])
                             if not employee_id:
                                 continue
                             for key, value in list(line['attd'].items()):
