@@ -177,19 +177,13 @@ class StockMove(models.Model):
                     total = line.product_uom_qty * line.sale_prices
                 else:
                     total = 0.0
-            line.price_subtotal = total 
+            line.price_subtotal = total
     
     @api.depends('picking_id')
     def _compute_list_price(self):
         for line in self:
-            sale_price = 0.0
-            if line.picking_id.sale_id.order_line:
-                for lines in line.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            sale_price = lines.price_unit/1.1
-                        else:
-                            sale_price = lines.price_unit/1.1
+            if line.sale_line_id:
+                sale_price = line.sale_line_id.price_unit/1.1
             else:
                 sale_price = line.sale_prices
             line.sale_price = sale_price
@@ -199,41 +193,24 @@ class StockMove(models.Model):
     def _compute_untaxed_amount(self):
         for line in self:
             total = 0.0
-            if line.picking_id.sale_id.order_line:
-                for lines in line.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            total = lines.price_subtotal 
-                        else:
-                            total = lines.price_subtotal
-
-            line.untaxed_amount = total 
+            if line.sale_line_id:
+                total = line.sale_line_id.price_subtotal
+            line.untaxed_amount = total
     
     @api.depends('picking_id')
     def _compute_tax_amount(self):
         for line in self:
             tax_amount = 0.0
-            if line.picking_id.sale_id.order_line:
-                for lines in line.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            tax_amount = lines.price_tax
-                        else:
-                            tax_amount = lines.price_tax
-
+            if line.sale_line_id:
+                tax_amount = line.sale_line_id.price_tax
             line.tax_amount = tax_amount
 
     @api.depends('picking_id')
     def _compute_discount(self):
         for line in self:
             discount = 0.0
-            if line.picking_id.sale_id.order_line:
-                for lines in line.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            discount = lines.discount
-                        else:
-                            discount = lines.discount
+            if line.sale_line_id:
+                discount = line.sale_line_id.discount
 
             line.discount = discount
     
@@ -264,23 +241,10 @@ class StockMoveLine(models.Model):
     @api.depends('picking_id')
     def _compute_all_price(self):
         for line in self:
-            total = 0.0
-            if  line.picking_id.sale_id.order_line:
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id==line.product_id.id:
-                        if lines.discount > 0.0:
-                            total = lines.price_subtotal
-                        else:
-                            total = lines.price_subtotal
+            if line.move_id.sale_line_id:
+                total = line.move_id.sale_line_id.price_subtotal
             else:
-                for lis in line.picking_id.move_ids_without_package:
-                    if lis.product_id.id == line.product_id.id:
-                        if line.quantity >0.0 and lis.sale_prices >0.0:
-                            total = line.quantity * lis.sale_prices
-                        else:
-                            total = 0.0
-                else:
-                    total = line.quantity * line.sale_price
+                total = line.quantity * line.sale_prices
 
             line.price_subtotal = total 
     
@@ -288,48 +252,27 @@ class StockMoveLine(models.Model):
     def _compute_list_price(self):
         for line in self:
             sale_price = 0.0
-            if line.picking_id.sale_id.order_line:
-
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id and lines.id:
-                        if lines.discount > 0.0:
-                            sale_price = lines.price_unit/1.1
-                        else:
-                            sale_price = lines.price_unit/1.1
-            else:
-                if line.picking_id.move_ids_without_package:
-                    for lis in line.picking_id.move_ids_without_package:
-                        if lis.product_id.id == line.product_id.id and lis.sale_prices > 0.0:
-                            sale_price = lis.sale_prices
-                else:
-                    sale_price = line.sale_prices
-
+            sale_line_id = line.move_id.sale_line_id
+            if sale_line_id:
+                sale_price = sale_line_id.price_unit/1.1
             line.sale_price = sale_price
     
     @api.depends('picking_id')
     def _compute_untaxed_amount(self):
         for line in self:
             untaxed_amount = 0.0
-            if self.picking_id.sale_id.order_line:
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            untaxed_amount = lines.price_subtotal
-                        else:
-                            untaxed_amount = lines.price_subtotal
+            sale_line_id = line.move_id.sale_line_id
+            if sale_line_id:
+                untaxed_amount = sale_line_id.price_subtotal
             line.untaxed_amount = untaxed_amount
 
     @api.depends('picking_id')
     def _compute_tax_amount(self):
         for line in self:
             tax_amount = 0.0
-            if self.picking_id.sale_id.order_line:
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            tax_amount = lines.price_tax
-                        else:
-                            tax_amount = lines.price_tax
+            sale_line_id = line.move_id.sale_line_id
+            if sale_line_id:
+                tax_amount = sale_line_id.price_tax
             line.tax_amount = tax_amount
 
     
@@ -337,13 +280,9 @@ class StockMoveLine(models.Model):
     def _compute_discount(self):
         for line in self:
             discount = 0.0
-            if self.picking_id.sale_id.order_line:
-                for lines in self.picking_id.sale_id.order_line:
-                    if lines.product_id.id == line.product_id.id:
-                        if lines.discount > 0.0:
-                            discount = lines.discount
-                        else:
-                            discount = lines.discount
+            sale_line_id = line.move_id.sale_line_id
+            if sale_line_id:
+                discount = sale_line_id.discount
             line.discount = discount
 
     @api.depends('picking_id')

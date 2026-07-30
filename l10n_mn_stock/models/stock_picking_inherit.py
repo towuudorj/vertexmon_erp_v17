@@ -166,14 +166,14 @@ class stock_picking(models.Model):
             line.amount_total = total
 
     def _compute_tax(self):
-        total = 0.0
         for lin in self:
-            if lin.move_ids:
-                for line in lin.move_ids:
+            total = 0.0
+            if lin.state == 'done':
+                for line in lin.move_line_ids_without_package:
                     total +=line.tax_amount
-            #elif lin.move_ids_without_package:
-            #    for line in lin.move_ids_without_package:
-            #        total +=line.tax_amount
+            else:
+               for line in lin.move_ids_without_package:
+                   total +=line.tax_amount
             lin.amount_tax = total
 
     def _compute_untaxed(self):
@@ -192,11 +192,6 @@ class stock_picking(models.Model):
                         total +=line.untaxed_amount
                     else:
                         total +=line.price_subtotal
-                        
-                   
-            #elif lin.move_ids_without_package:
-            #    for line in lin.move_ids_without_package:
-            #        total +=line.untaxed_amount
             lin.amount_untaxed = total
 
     def button_validate(self):
