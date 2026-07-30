@@ -286,15 +286,13 @@ class HrAttendance(models.Model):
                                             'check_out': check_out if check_out else check_in,
                                         })
                                     else:
-                                        if check_in and hr_attendance_id.check_in > check_in:
-                                            hr_attendance_id.sudo().write({
-                                                'check_in': check_in
-                                            })
-
-                                        if check_out and hr_attendance_id.check_out < check_out:
-                                            hr_attendance_id.sudo().write({
-                                                'check_out': check_in
-                                            })
+                                        qry = f"""
+                                            UPDATE hr_attendance
+                                            SET {"check_in='%s'"%check_in if check_in else ''}{', ' if check_in and check_out else ''}
+                                                {"check_out='%s'"%check_out if check_out else ''}
+                                            WHERE id = {hr_attendance_id.id}
+                                        """
+                                        self.env.cr.execute(qry)
                                 if value['requests']:
                                     for request in value['requests']:
                                         if leave_obj.search([('timely_id', '=', int(request['id']))]):
