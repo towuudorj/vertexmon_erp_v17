@@ -123,14 +123,7 @@ class HrAttendance(models.Model):
         if last_days:
             begin_date = today - timedelta(days=last_days)
         else:
-            begin_date = today
-            if today.month != 1:
-                month = today.month-1
-                year = today.year
-            else:
-                month = 12
-                year = today.year-1
-            begin_date = begin_date.replace(year=year, month=month)
+            begin_date = today - relativedelta(months=1)
 
         # Timely-гаас ирц татах функц
         self.get_timely_data(begin_date, today)
@@ -193,14 +186,14 @@ class HrAttendance(models.Model):
                                                                     UPDATE hr_attendance
                                                                     SET check_in = %s
                                                                     WHERE id = %s
-                                                                """, (check_in, hr_attendance_id.id))
+                                                                """, (str(check_in), hr_attendance_id.id))
 
                                         if check_out and hr_attendance_id.check_out < datetime.strptime(check_out, "%Y-%m-%d %H:%M:%S"):
                                             self.env.cr.execute("""
                                                                     UPDATE hr_attendance
                                                                     SET check_out = %s
                                                                     WHERE id = %s
-                                                                """, (check_out, hr_attendance_id.id))
+                                                                """, (str(check_out), hr_attendance_id.id))
 
 
     def get_timely_data(self, start_date, end_date):
