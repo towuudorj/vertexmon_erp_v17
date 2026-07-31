@@ -243,7 +243,14 @@ class HrHourRecord(models.Model):
             free_time1 = 0.0
             total_active_time = 0.0
             work_day = start_date
-            att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',start_date),('check_out','<=',end_time)])
+
+            user_tz = pytz.timezone(self.env.user.tz or 'Asia/Ulaanbaatar')
+            local_start = user_tz.localize(start_date)
+            utc_start = local_start.astimezone(pytz.utc).replace(tzinfo=None)
+
+            local_end = user_tz.localize(end_time)
+            utc_end = local_end.astimezone(pytz.utc).replace(tzinfo=None)
+            att_id = att_obj.search([('employee_id','=',line.id),('check_in','>=',utc_start),('check_out','<=',utc_end)])
             if not line.resource_calendar_id:
                 raise UserError(u"%s ажилтны ажлын цагийг тохируулаагүй байна!" % line.name)
             must_work_hour = line.resource_calendar_id.work_time if line.resource_calendar_id.work_time > 0 else 8
