@@ -294,7 +294,7 @@ class SupplyProductReport(models.TransientModel):
             sheet.write(last_group_rowx, 8, p_total_t_quantity if not group_partner else p_total_t_quantity*-1, data_right)
             sheet.write(last_group_rowx, 9, p_total_value, data_right)
 
-
+        rowx += 1
         sheet.merge_range(f'A%s:E%s' % (rowx, rowx), u'Нийт', data_center_bold)
         sheet.write(f'F%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
         sheet.write(f'G%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
