@@ -159,6 +159,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                       AND pol.product_id = %s
                                       AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
+                                      AND sp.state = 'done'
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                       """%(data['start_date'],data['end_date'],data['company_id'], data['product_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
@@ -195,6 +196,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                       AND pp.categ_id = %s
                                       AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
+                                      AND sp.state = 'done'
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                       """%(data['start_date'],data['end_date'],data['company_id'],data['category_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
@@ -229,6 +231,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                       AND po.company_id = %s
                                       AND po.purchase_type = '%s'
                                       AND po.state IN ('purchase', 'done')
+                                      AND sp.state = 'done'
                                       AND pol.qty_received > 0 order by sp.date_done, po.name
                                   """%(data['start_date'],data['end_date'],data['company_id'],data['purchase_type']))
                 purchase_data_ids = self._cr.dictfetchall()
