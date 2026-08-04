@@ -274,8 +274,8 @@ class PurchaseExpenseReport(models.TransientModel):
                     self._cr.execute("""select ad.id, COALESCE(ad.additional_landed_cost, 0) as additional_landed_cost,  
                                         ad.product_id, ad.cost_line_id, 
                                         COALESCE(am.vat_declaration, '') as vat_declaration, sm.quantity
-                                    from stock_valuation_adjustment_lines as ad
-                                    left join stock_move sm on sm.id = ad.move_id
+                                    from stock_move as sm
+                                    left join stock_valuation_adjustment_lines as ad on sm.id = ad.move_id
                                     left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join account_move am on am.id = sc.vendor_bill_id
