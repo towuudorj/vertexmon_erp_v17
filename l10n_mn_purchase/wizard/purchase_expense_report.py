@@ -115,7 +115,8 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("Z%s"%rowx, u'Нийт зардал+өртөг', header_txt)
             sheet.write("AA%s"%rowx, u'Тээврийн компани', header_txt)
             sheet.write("AB%s"%rowx, u'Хүргэсэн тоо', header_txt)
-            sheet.write("AC%s"%rowx, u'Гаалийн мэдүүлгийн дугаар', header_txt)
+            sheet.write("AC%s"%rowx, u'Хүргэгдсэн нийт дүн', header_txt)
+            sheet.write("AD%s"%rowx, u'Гаалийн мэдүүлгийн дугаар', header_txt)
             rowx +=1
             
 
@@ -143,9 +144,9 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty,
+                                        sm.product_uom_qty as product_qty,
                                         sp.id as picking_id,
-                                        po.currency_rate
+                                        sm.id as move_id
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -177,9 +178,9 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty,
+                                        sm.product_uom_qty as product_qty,
                                         sp.id as picking_id,
-                                        po.currency_rate
+                                        sm.id as move_id
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
                                         ON sp.origin = po.name
@@ -213,8 +214,9 @@ class PurchaseExpenseReport(models.TransientModel):
                                         pol.price_unit,
                                         po.currency_rate,
                                         po.partner_ref,
-                                        pol.product_qty,
+                                        sm.product_uom_qty as product_qty,
                                         sp.id as picking_id,
+                                        sm.id as move_id,
                                         po.currency_rate
                                     FROM purchase_order po
                                     LEFT JOIN stock_picking sp
@@ -277,8 +279,8 @@ class PurchaseExpenseReport(models.TransientModel):
                                     left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join account_move am on am.id = sc.vendor_bill_id
-                                    where sm.purchase_line_id = %s and sm.picking_id = %s
-                                """%(purchase_data['id'], purchase_data['picking_id']))
+                                    where sm.purchase_line_id = %s and sm.id = %s
+                                """%(purchase_data['id'], purchase_data['move_id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
                     count = 0
@@ -328,7 +330,8 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("Z%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("AA%s"%rowx, u"%s"%freight_partner, text_right)
                 sheet.write("AB%s"%rowx, quantity, text_right)
-                sheet.write("AC%s"%rowx, vat_declaration, text_right)
+                sheet.write("AC%s"%rowx, purchase_data['price_unit'] * quantity * curr_rate, text_right)
+                sheet.write("AD%s"%rowx, vat_declaration, text_right)
 
                 
                 rowx +=1
