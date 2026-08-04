@@ -1,0 +1,25 @@
+<odoo noupdate="0">
+
+    <record id="ir_cron_get_approved_expense" model="ir.cron">
+        <field name="name">Microsoft: Төлбөр татах</field>
+        <field name="model_id" ref="model_hr_expense"/>
+        <field name="state">code</field>
+        <field name="code">model.get_approved_expense()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_push_company_account" model="ir.cron">
+        <field name="name">Microsoft: Компаний данс шинэчилэх</field>
+        <field name="model_id" ref="model_res_partner_bank"/>
+        <field name="state">code</field>
+        <field name="code">model.microsoft_push_bank_ids()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>

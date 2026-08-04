@@ -26,9 +26,10 @@
                  'hr',
                  'account',
                  'hr_expense',
-
+                 'vertexmon_tools',
                 ],
     'data': [
+            'data/cron_data.xml',
             'report/expense_report_view.xml',
             'views/hr_expense_sheet_inherit_view.xml',
             'views/report_view.xml',

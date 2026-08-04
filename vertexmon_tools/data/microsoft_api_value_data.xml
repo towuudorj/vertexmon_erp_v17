@@ -13,5 +13,6 @@
         <field name="department_list_name">AttendanceDepartment</field>
         <field name="partner_list_name">Partners</field>
         <field name="payment_list_name">Payment</field>
+        <field name="company_account_list_name">CompanyAccount</field>
     </record>
 </odoo>

@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
+import logging
+from pytz import timezone
+from dateutil import parser
+
+_logger = logging.getLogger(__name__)
 
 
 def verbose_format(amount,currency):
@@ -191,69 +196,50 @@ class HrExpense(models.Model):
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'payment_list_name', 'payment_list_id')
 
         url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items?$expand=fields"
-        # url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/columns"
         headers = {
             "Authorization": token,
         }
-        print(url, token)
-        print(aaaaa)
         response = requests.get(url, headers=headers, json={})
         response_json = response.json()
-        print(response_json, '\n\n\n')
-        print(aaaaaaa)
-        hr_expense_ids = self.env['hr.expense'].sudo().search([('sharepoint_id', '!=', False)])
+        expense_obj = self.env['hr.expense'].sudo()
+        hr_expense_ids = expense_obj.search(['&', ('sharepoint_id', '!=', False), ('sharepoint_id', '!=', '')])
         sharepoint_ids = hr_expense_ids.mapped('sharepoint_id')
-        for expense in response_json:
-            fields = {
-                'order': 'LinkTitle',
-                'name': 'order_numner',
-                'partner_odoo_id': 'partner_name',
-                'amount': 'amount',
-                'request_date': 'request_date',
-                'approved_date': 'approved_date',
-                'payment_def': 'payment_def',
-                'payment_term': 'payment_term',
-                'bank_account': 'bank_account',
-                'currency': 'currency',
-                'add_information': 'add_information',
-            }
+
+        for expense in response_json['value']:
             try:
                 data = expense.get('fields', {})
-                if data['status'] == 'approved' and data['id'] and int(data['id']) not in sharepoint_ids:
-                    employee = self.env['hr.employee'].search(
-                        [('ssnid', '=', data['_x0420__x0435__x0433__x0438__x04'])], limit=1)
-                    if data['typeDate'] and data['typeDate'] == 'Цагаар':
-                        start_date = data['_x042d__x0445__x043b__x044d__x04']
-                        end_date = data['_x0414__x0443__x0443__x0441__x04']
-                    else:
-                        start_date = data['beginDate']
-                        end_date = data['endDate']
+                if data['status'] == 'Батлагдсан' and 'id' in data and int(data['id']) not in sharepoint_ids:
 
                     tz = timezone('Asia/Ulaanbaatar')
-                    start_date = parser.isoparse(start_date).astimezone(tz)
-                    end_date = parser.isoparse(end_date).astimezone(tz)
+                    request_date = data['request_date']
+                    request_date = parser.isoparse(request_date).astimezone(tz)
 
-                    leave_vals = {
-                        'holiday_status_id': payroll_leave_type_id.id if data[
-                                                                             'typeSalary'] == 'salary' else unpayroll_leave_type_id.id,
-                        'request_unit_hours': True if data['typeDate'] == 'Цагаар' else False,
-                        'employee_id': employee.id if employee else False,
-                        'sharepoint_id': data['id'],
+                    currency_id = self.env['res.currency'].search([('name', '=', data['currency'])], limit=1)
+                    account_id = False
+                    if 'bank_account' in data:
+                        account_id = int(data.get('bank_account'))
+
+                    line_vals = {
+                        'name': data['order_numner'],
+                        'total_amount_currency': data['amount'],
+                        'date': request_date.date(),
+                        'employee_id': int(data['created_employee_id']) if 'created_employee_id' in data else 1,
+                        'currency_id': currency_id.id if currency_id else False,
+                        'company_id': int(data['odoo_company_id']),
                     }
-                    if data['typeDate'] == 'Цагаар':
-                        leave_vals.update(
-                            {'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date()),
-                             'request_hour_from': hour_min_to_selection[
-                                 str(start_date.hour) + ':' + str(start_date.minute)],
-                             'request_hour_to': hour_min_to_selection[str(end_date.hour) + ':' + str(end_date.minute)]
-                             })
 
-                    else:
-                        leave_vals.update(
-                            {'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date())})
-                    leave_obj.create(leave_vals)
-            except Exception:
-                continue
+                    expense_vals = {
+                        'name': data['order_numner'],
+                        'accounting_date': request_date.date(),
+                        'partner_id': data['partner_name'],
+                        'bank_account_id': account_id,
+                        'company_id': int(data['odoo_company_id']),
+                        'employee_id': int(data['created_employee_id']) if 'created_employee_id' in data else 1,
+                        'expense_line_ids': [(0, 0, line_vals)],
+                    }
+                    self.env['hr.expense.sheet'].sudo().create(expense_vals)
+            except Exception as e:
+                _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
 
     
 class HrExpenseSheet(models.Model):

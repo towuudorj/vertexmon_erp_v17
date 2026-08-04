@@ -26,6 +26,8 @@ class MicrosoftApiValue(models.Model):
     partner_list_id = fields.Char(string='Partner List ID')
     payment_list_name = fields.Char(string='Payment List Name')
     payment_list_id = fields.Char(string='Payment List ID')
+    company_account_list_name = fields.Char(string='Company account List Name')
+    company_account_list_id = fields.Char(string='Company account List Name')
 
     def write(self, vals):
 

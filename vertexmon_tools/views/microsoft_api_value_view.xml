@@ -19,12 +19,12 @@
                         <field name="site_name"/>
                         <field name="employee_list_name"/>
                         <field name="attendance_list_name"/>
-                        <field name="attendance_list_id"/>
                         <field name="job_list_name"/>
                         <field name="department_list_name"/>
                         <field name="leave_list_name"/>
                         <field name="partner_list_name"/>
                         <field name="payment_list_name"/>
+                        <field name="company_account_list_name"/>
                     </group>
                 </group>
             </form>
