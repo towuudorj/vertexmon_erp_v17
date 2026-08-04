@@ -14,6 +14,7 @@
 						<field name="categ_id"/>
 						<field name="is_transaction" string="Гүйлгээтэй бараа татах"/>
 						<field name="type"/>
+						<field name="dont_show_inventory_count"/>
 						<field name="start_date"/>
 						<field name="end_date"/>
 					</group>

@@ -30,6 +30,7 @@ class ProductSummaryReport(models.TransientModel):
                                      'warehouse_ids', string=u'Агуулах')
     type = fields.Selection([('quantity', u'Тоогоор'),
                              ('cost', u'Өртгөөр')], string=u'Төрөл', required=True)
+    dont_show_inventory_count = fields.Boolean(default=False, string=u'Тооллогын хөдөлгөөн харуулахгүй')
 
     def get_report_data(self):
         data = super(ProductSummaryReport, self).get_report_data()
@@ -43,7 +44,8 @@ class ProductSummaryReport(models.TransientModel):
             'categ_id': self.categ_id.id,
             'product_id': self.product_id.id,
             'type': self.type,
-            'is_transaction':self.is_transaction
+            'is_transaction':self.is_transaction,
+            'dont_show_inventory_count':self.dont_show_inventory_count,
         })
         return data
 
@@ -222,6 +224,7 @@ class ProductSummaryReport(models.TransientModel):
                                    AND mv.company_id = %s
                                    AND sl.usage not in ('internal','transit')
                                    AND dest.usage in ('internal','transit')
+                                   {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] else ''}
                                  GROUP BY mv.product_id \
                                  """
                 self._cr.execute(
@@ -242,6 +245,7 @@ class ProductSummaryReport(models.TransientModel):
                                     AND mv.company_id = %s
                                     AND sl.usage in ('internal','transit')
                                     AND dest.usage not in ('internal','transit')
+                                    {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                   GROUP BY mv.product_id 
                                   """
 
@@ -264,6 +268,7 @@ class ProductSummaryReport(models.TransientModel):
                                  AND mv.company_id = %s
                                  AND sl.usage not in ('internal','transit')
                                  AND dest.usage in ('internal','transit')
+                                 {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                GROUP BY mv.product_id 
                                """
 
@@ -287,6 +292,7 @@ class ProductSummaryReport(models.TransientModel):
                                   AND mv.company_id = %s
                                   AND sl.usage IN ('internal','transit')
                                   AND dest.usage not in ('internal','transit')
+                                  {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                 GROUP BY mv.product_id 
                                 """
 
@@ -482,6 +488,7 @@ class ProductSummaryReport(models.TransientModel):
                                        AND mv.company_id = %s
                                        AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
                                        AND dest.usage = 'internal'
+                                       {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                      GROUP BY mv.product_id 
                                      """
                     self._cr.execute(
@@ -502,8 +509,8 @@ class ProductSummaryReport(models.TransientModel):
                                         AND mv.product_id = %s
                                         AND mv.company_id = %s
                                         AND sl.usage = 'internal'
-                                        AND \
-                                          dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
+                                        AND dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
+                                        {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                       GROUP BY mv.product_id 
                                       """
 
@@ -527,6 +534,7 @@ class ProductSummaryReport(models.TransientModel):
                                      AND mv.company_id = %s
                                      AND sl.usage IN ('supplier', 'customer', 'inventory', 'production', 'internal')
                                      AND dest.usage = 'internal'
+                                     {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                    GROUP BY mv.product_id 
                                    """
 
@@ -550,9 +558,9 @@ class ProductSummaryReport(models.TransientModel):
                                       AND mv.company_id = %s
                                       AND sl.usage = 'internal'
                                       AND dest.usage IN ('customer', 'supplier', 'inventory', 'production', 'internal')
+                                      {' AND mv.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
                                     GROUP BY mv.product_id 
                                     """
-
                     self._cr.execute(
                         query_expense,
                         (date_from_dt_min, date_to_dt_max, tuple(location_ids), pro.id, data['company_id'])
