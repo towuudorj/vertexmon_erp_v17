@@ -12,17 +12,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     _name = 'account.partner.ledger.excel.report'
     _inherit = ['xls.report.base']
     _description = 'account partner ledger excel report'
-    
-
-    
-    def _get_all_journal(self):
-        company_id = self.env['res.company']._company_default_get('account.partner.ledger.excel.employee.report')
-        return self.env['account.journal'].search([('company_id','=',company_id.id)])
-    
-    # def _get_account_id(self):
-    #     company_id = self.env['res.company']._company_default_get('account.partner.ledger.excel.employee.report')
-    #     account_id = self.env['account.account'].search([('company_id','=',company_id.id),('code','=','12000001')],limit=1)
-    #     return account_id.id
 
 
     company_id = fields.Many2one('res.company',u'Компани',required=True, default=lambda self: self.env.company)
@@ -32,7 +21,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
     result_selection = fields.Selection([('customer',u'Авлагын данс'),
                                          ('supplier',u'Өглөгийн данс'),
                                          ('customer_supplier',u'Өглөг авлагийн данс')],u'Харилцагчийн',required=True,default='customer')
-    partner_id = fields.Many2one('res.partner',u'Харилцагч')
+    partner_ids = fields.Many2many('res.partner', 'ledger_report_partner_ids', 'report_id', 'partner_id', u'Харилцагч')
     is_extra = fields.Boolean(u'Задаргаатай эсэх')
     start_date = fields.Date(u'Эхлэх огноо',default=lambda *a: time.strftime('%Y-%m-01'))
     end_date = fields.Date(u'Дуусах огноо',default=lambda *a: time.strftime('%Y-%m-%d'))
@@ -50,7 +39,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'target_move': self.target_move,
             'result_selection': self.result_selection,
             'account_id': self.account_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_ids': self.partner_ids.ids or False,
             'is_extra': self.is_extra,
             'res_id': self.id,
             'account_journal_ids': self.account_journal_ids.ids
@@ -78,7 +67,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                 partner_ids = self._cr.dictfetchall()
                 p_ids = [p_id['partner_id'] for p_id in partner_ids]
                 domain = "[('id','in',%s)]" % str(p_ids)
-            for node in doc.xpath("//field[@name='partner_id']"):
+            for node in doc.xpath("//field[@name='partner_ids']"):
                     node.attrib["domain"] = domain
         return arch, view
 
@@ -188,8 +177,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         order_by = []
         group_by = []
         select = ""
-        if self_obj.partner_id:
-            where += f" and rp.id = {self_obj.partner_id.id}"
+        if self_obj.partner_ids:
+            where += f" and rp.id in (%s)" % ", ".join(str(p_id) for p_id in self_obj.partner_ids.ids)
 
         if self_obj.group_option_ids:
             for i in range(len(self_obj.group_option_ids)):

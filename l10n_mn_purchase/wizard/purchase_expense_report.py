@@ -118,15 +118,6 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("AC%s"%rowx, u'Хүргэгдсэн нийт дүн', header_txt)
             sheet.write("AD%s"%rowx, u'Гаалийн мэдүүлгийн дугаар', header_txt)
             rowx +=1
-            
-
-            purchase_orders = self.env['purchase.order'].search([
-                ('date_order', '>=', data['start_date']),
-                ('date_order', '<=', data['end_date']),
-                ('state', 'in', ['purchase', 'done']),
-                ('company_id', '=', self.company_id.id),
-                ('purchase_type','=',data['purchase_type'])
-            ])
 
             if data['product_id']:
                 self._cr.execute("""SELECT
