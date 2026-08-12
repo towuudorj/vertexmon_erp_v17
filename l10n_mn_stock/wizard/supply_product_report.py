@@ -21,6 +21,8 @@ class SupplyProductReport(models.TransientModel):
                            default=fields.Date.context_today)
     group_by_partner = fields.Boolean('Group by partner', default=False)
     partner_ids = fields.Many2many('res.partner', string="Partners")
+    filter_by_issue_date = fields.Boolean(string=u'Олгосон огноогоор шүүх', default=False)
+    issue_date_filter = fields.Date(string=u'Олгосон огноо')
 
     def get_report_data(self):
         data = super(SupplyProductReport, self).get_report_data()
@@ -30,7 +32,9 @@ class SupplyProductReport(models.TransientModel):
             'date_from': self.start_date,
             'date_to': self.end_date,
             'group_by_partner': self.group_by_partner,
-            'partner_ids': self.partner_ids.ids
+            'partner_ids': self.partner_ids.ids,
+            'filter_by_issue_date': self.filter_by_issue_date,
+            'issue_date_filter': self.issue_date_filter,
         })
         return data
 
@@ -89,25 +93,27 @@ class SupplyProductReport(models.TransientModel):
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 5)
-        sheet.set_column(1, 1, 16)
-        sheet.set_column(2, 2, 60)
-        sheet.set_column(3, 20, 18)
+        sheet.set_column(1, 1, 14)
+        sheet.set_column(2, 2, 16)
+        sheet.set_column(3, 3, 60)
+        sheet.set_column(4, 20, 18)
 
         sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), head_title)
-        sheet.merge_range('A2:J2', u'Хангамжийн бараа материалын тайлан', head_title)
-        sheet.merge_range('H3:J3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head)
+        sheet.merge_range('A2:K2', u'Хангамжийн бараа материалын тайлан', head_title)
+        sheet.merge_range('I3:K3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head)
         rowx = 4
 
         sheet.write('A%s' % rowx, u'№', data_center_bold)
-        sheet.write('B%s' % rowx, u'Барааны код', data_center_bold)
-        sheet.write('C%s' % rowx, u'Барааны нэр', data_center_bold)
-        sheet.write('D%s' % rowx, u'Хэмжих нэгж', data_center_bold)
-        sheet.write('E%s' % rowx, u'Нэгж өртөг', data_center_bold)
-        sheet.write('F%s' % rowx, u'Эхний үлдэгдэл', data_center_bold)
-        sheet.write('G%s' % rowx, u'Орлого', data_center_bold)
-        sheet.write('H%s' % rowx, u'Зарлага', data_center_bold)
-        sheet.write('I%s' % rowx, u'Эцсийн үлдэгдэл', data_center_bold)
-        sheet.write('J%s' % rowx, u'Нийт өртөг', data_center_bold)
+        sheet.write('B%s' % rowx, u'Олгосон огноо', data_center_bold)
+        sheet.write('C%s' % rowx, u'Барааны код', data_center_bold)
+        sheet.write('D%s' % rowx, u'Барааны нэр', data_center_bold)
+        sheet.write('E%s' % rowx, u'Хэмжих нэгж', data_center_bold)
+        sheet.write('F%s' % rowx, u'Нэгж өртөг', data_center_bold)
+        sheet.write('G%s' % rowx, u'Эхний үлдэгдэл', data_center_bold)
+        sheet.write('H%s' % rowx, u'Орлого', data_center_bold)
+        sheet.write('I%s' % rowx, u'Зарлага', data_center_bold)
+        sheet.write('J%s' % rowx, u'Эцсийн үлдэгдэл', data_center_bold)
+        sheet.write('K%s' % rowx, u'Нийт өртөг', data_center_bold)
 
         date_from = data['date_from']
         date_to = data['date_to']
@@ -116,6 +122,8 @@ class SupplyProductReport(models.TransientModel):
         partner_where = ''
         if data.get('partner_ids', False):
             partner_where = 'AND rp.id in (%s) ' % ','.join(str(id) for id in data.get('partner_ids'))
+
+        issue_date_filter = fields.Date.to_date(data.get('issue_date_filter')) if data.get('filter_by_issue_date') and data.get('issue_date_filter') else False
 
         query = f"""
             WITH moves AS (
@@ -126,7 +134,8 @@ class SupplyProductReport(models.TransientModel):
                     {'COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id, ' if group_partner else ''}
                     mv.date::date AS move_date,
                     mv.quantity,
-            
+                    sp.issue_date AS issue_date,
+
                     sl.supply_location AS src_supply_location,
                     dest.supply_location AS dest_supply_location
             
@@ -152,7 +161,8 @@ class SupplyProductReport(models.TransientModel):
                     product_id,
                     {'partner_id, ' if group_partner else ''}
                     move_date,
-            
+                    issue_date,
+
                     CASE
                         WHEN src_supply_location = TRUE THEN -quantity
                         WHEN dest_supply_location = TRUE THEN quantity
@@ -193,8 +203,10 @@ class SupplyProductReport(models.TransientModel):
                         END
                     ) AS credit_quantity,
             
-                    SUM(sm.signed_qty) AS total_quantity
-            
+                    SUM(sm.signed_qty) AS total_quantity,
+
+                    MIN(sm.issue_date) AS first_issue_date
+
                 FROM signed_moves sm
                 GROUP BY sm.product_id{', sm.partner_id ' if group_partner else ''}
             )
@@ -206,7 +218,8 @@ class SupplyProductReport(models.TransientModel):
                 COALESCE(r.opening_qty, 0) AS quantity,
                 COALESCE(r.debit_quantity, 0) AS debit_quantity,
                 COALESCE(r.credit_quantity, 0) AS credit_quantity,
-                COALESCE(r.total_quantity, 0) AS total_quantity
+                COALESCE(r.total_quantity, 0) AS total_quantity,
+                r.first_issue_date AS issue_date
             
             FROM report r
             LEFT JOIN product_product pp ON pp.id = r.product_id
@@ -219,6 +232,8 @@ class SupplyProductReport(models.TransientModel):
 
         self._cr.execute(query)
         data = self._cr.dictfetchall()
+        if issue_date_filter:
+            data = [line for line in data if line.get('issue_date') and line['issue_date'] >= issue_date_filter]
         product_obj = self.env['product.product']
         count = 1
 
@@ -242,17 +257,19 @@ class SupplyProductReport(models.TransientModel):
             if group_partner:
                 if (isinstance(last_partner_id, bool) and not last_partner_id) or (isinstance(last_partner_id, int) and last_partner_id not in [int(line['partner_id']), 0]):
                     if last_group_rowx:
-                        sheet.write(last_group_rowx, 5, p_total_quantity, data_right)
-                        sheet.write(last_group_rowx, 6, p_total_debit_quantity, data_right)
-                        sheet.write(last_group_rowx, 7, p_total_credit_quantity, data_right)
-                        sheet.write(last_group_rowx, 8, p_total_value, data_right)
-                        sheet.write(last_group_rowx, 9, p_total_t_quantity, data_right)
-                    sheet.merge_range(rowx, 0, rowx, 4, line['partner_name'], data_center_bold)
+                        sheet.write(last_group_rowx, 6, p_total_quantity, data_right)
+                        sheet.write(last_group_rowx, 7, p_total_debit_quantity, data_right)
+                        sheet.write(last_group_rowx, 8, p_total_credit_quantity, data_right)
+                        sheet.write(last_group_rowx, 9, p_total_value, data_right)
+                        sheet.write(last_group_rowx, 10, p_total_t_quantity, data_right)
+                    sheet.merge_range(rowx, 0, rowx, 5, line['partner_name'], data_center_bold)
                     last_partner_id = int(line['partner_id'])
                     last_group_rowx = rowx
                     rowx += 1
             colly = 0
             sheet.write(rowx, colly, count, data_left)
+            colly += 1
+            sheet.write(rowx, colly, line['issue_date'].strftime('%Y-%m-%d') if line.get('issue_date') else '', data_left)
             colly += 1
             sheet.write(rowx, colly, product.default_code, data_left)
             colly += 1
@@ -288,19 +305,19 @@ class SupplyProductReport(models.TransientModel):
             total_value += value
 
         if last_group_rowx:
-            sheet.write(last_group_rowx, 5, p_total_quantity if not group_partner else p_total_quantity*-1, data_right)
-            sheet.write(last_group_rowx, 6, p_total_debit_quantity if not group_partner else p_total_credit_quantity, data_right)
-            sheet.write(last_group_rowx, 7, p_total_credit_quantity if not group_partner else p_total_debit_quantity, data_right)
-            sheet.write(last_group_rowx, 8, p_total_t_quantity if not group_partner else p_total_t_quantity*-1, data_right)
-            sheet.write(last_group_rowx, 9, p_total_value, data_right)
+            sheet.write(last_group_rowx, 6, p_total_quantity if not group_partner else p_total_quantity*-1, data_right)
+            sheet.write(last_group_rowx, 7, p_total_debit_quantity if not group_partner else p_total_credit_quantity, data_right)
+            sheet.write(last_group_rowx, 8, p_total_credit_quantity if not group_partner else p_total_debit_quantity, data_right)
+            sheet.write(last_group_rowx, 9, p_total_t_quantity if not group_partner else p_total_t_quantity*-1, data_right)
+            sheet.write(last_group_rowx, 10, p_total_value, data_right)
 
         rowx += 1
-        sheet.merge_range(f'A%s:E%s' % (rowx, rowx), u'Нийт', data_center_bold)
-        sheet.write(f'F%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
-        sheet.write(f'G%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
-        sheet.write(f'H%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
-        sheet.write(f'I%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
-        sheet.write(f'J%s' % rowx, total_value, data_right)
+        sheet.merge_range(f'A%s:F%s' % (rowx, rowx), u'Нийт', data_center_bold)
+        sheet.write(f'G%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
+        sheet.write(f'H%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
+        sheet.write(f'I%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
+        sheet.write(f'J%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
+        sheet.write(f'K%s' % rowx, total_value, data_right)
 
 
         workbook.close()

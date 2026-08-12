@@ -16,6 +16,10 @@
                         <field name="start_date"/>
                         <field name="end_date"/>
                     </group>
+                    <group>
+                        <field name="filter_by_issue_date"/>
+                        <field name="issue_date_filter" required="filter_by_issue_date" invisible="not filter_by_issue_date"/>
+                    </group>
                     <footer>
                         <button name="action_print_xls_report" string="Export" type="object"
                                 class="oe_highlight"/>

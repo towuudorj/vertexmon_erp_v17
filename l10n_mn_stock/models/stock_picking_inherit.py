@@ -29,6 +29,7 @@ class stock_picking(models.Model):
     amount_untaxed = fields.Float(string='Amount untaxed',
           compute='_compute_untaxed')
     receipt_date = fields.Date(string='Receipt Date')
+    issue_date = fields.Date(string='Issue Date')
     delivery_user_id = fields.Many2one('res.users', string='Delivery User')
     project_type = fields.Selection([
         ('project', 'Project'),

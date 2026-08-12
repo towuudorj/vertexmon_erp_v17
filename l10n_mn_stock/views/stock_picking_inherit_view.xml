@@ -7,6 +7,10 @@
                 <field name="model">stock.picking</field>            
                 <field name="inherit_id" ref="stock.view_picking_form"/>
                 <field name="arch" type="xml">                
+                    <xpath expr="//field[@name='date_done']" position="after">
+                        <field name="issue_date" readonly="0" force_save="1"/>
+                    </xpath>
+
                     <xpath expr="//field[@name='origin']" position="after">
                     	<field name="is_work_out"/>
                         <field name="purchase_count"/>
@@ -18,7 +22,7 @@
                         <field name="analytic_id" string="Project" invisible="project_type=='tender'"/>
                         <field name="analytic_id" string="Tender" invisible="project_type=='project'"/>
                     </xpath>
-                    
+
                     <xpath expr="//notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="after">
                 		<field name="sale_prices"/>
                         <field name="price_subtotal"/>

@@ -183,6 +183,11 @@ msgstr "Жин"
 msgid "Analytic"
 msgstr "Төсөл"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_picking__issue_date
+msgid "Issue Date"
+msgstr "Олгосон огноо"
+
 
 #. module: l10n_mn_stock
 #: model:ir.model.fields,field_description:l10n_mn_stock.field_stock_quant__sale_price
