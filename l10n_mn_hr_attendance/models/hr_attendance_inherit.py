@@ -306,16 +306,16 @@ class HrAttendance(models.Model):
                                         if leave_vals['request_hour_to'] == '0':
                                             leave_vals.update({'request_hour_from': str(float(leave_vals['request_hour_from']) - 0.5),
                                                                'request_hour_to': '23.5'})
-                                        if request['enName'] == 'Leave':
+                                        if request['code'] == 'app_leave_normal':
                                             leave_vals.update({
                                                 'holiday_status_id': payroll_leave_type_id.id if request['code'] == 'app_leave_normal' else unpayroll_leave_type_id.id,
                                             })
 
-                                        elif request['enName'] == 'Overtime':
+                                        elif request['code'] == 'overtime_regular_request':
                                             leave_vals.update({
                                                 'holiday_status_id': overtime_leave_type_id.id
                                             })
-                                        elif request['enName'] == 'Sick Leave':
+                                        elif request['code'] == 'sick':
                                             leave_vals.update({
                                                 'holiday_status_id': sick_leave_type_id.id
                                             })

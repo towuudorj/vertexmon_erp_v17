@@ -1,9 +1,9 @@
-<odoo noupdate="0">
+<odoo noupdate="1">
     <record id="ir_cron_edi_network" model="ir.cron">
         <field name="name">ИРЦ: Нүүр таних төхөөрөмжөөс ирц татах</field>
         <field name="model_id" ref="model_hr_attendance"/>
         <field name="state">code</field>
-        <field name="code">model.get_attendance_data()</field>
+        <field name="code">model.get_attendance_data(last_days=10)</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
