@@ -529,10 +529,11 @@ class CrmLead(models.Model):
                         'product_uom_qty': line.qty,
                         'product_uom': line.uom_id.id,
                         'price_unit': line.sale_price,
+                        'discount': line.discount,
                         'route_id':line.product_id.route_ids.id,
                         'crm_lead_line_id': line.id,
                         'company_id': self.company_id.id or self.env.company.id,
-                        'tax_id': [(6, 0, line.product_id.taxes_id.ids)],
+                        'tax_id': [(6, 0, (line.tax_id.ids or line.product_id.taxes_id.ids))],
                         }
                 line_ids.append((0, 0, datas))
             else:

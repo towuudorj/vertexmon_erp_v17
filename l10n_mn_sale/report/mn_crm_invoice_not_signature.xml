@@ -161,7 +161,7 @@
                 			<td style="padding: 3px; width: 15%; border: 1px solid black; font-weight: bold;">НӨАТ-гүй Нийт үнэ</td>
                 		</tr>
                 		<t t-set="i" t-value="1"/>
-						<tr class="border-black" t-foreach="o.order_line" t-as="line">
+						<tr class="border-black" t-foreach="o.lead_line_ids" t-as="line">
 							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
 							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
 		                        <t t-esc="line.name"/>

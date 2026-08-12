@@ -66,10 +66,10 @@ class CrmLeadLine(models.Model):
             self.pre_qty = self.product_id.virtual_available
             
 
-    @api.onchange('qty','sale_price')
+    @api.onchange('qty','sale_price','discount')
     def _onchange_qty(self):
         if self.qty > 0 and self.sale_price >0:
-            self.price_subtotal = self.sale_price * self.qty
+            self.price_subtotal = self.sale_price * self.qty * (1 - (self.discount or 0.0) / 100.0)
         else:
             if self.qty < 0:
                 raise UserError(_('Тоо 0-с их байх ёстой!'))
