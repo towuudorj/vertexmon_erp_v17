@@ -73,8 +73,8 @@
                     </tr>
                     <tr>
                         <td style="border: 1px solid black; padding:3px;">Хүлээн авагч:</td>
-                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.bank_ids.bank_id.name"/></td>
-                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-field="o.partner_id.bank_ids.acc_number"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-esc="o.partner_id.bank_ids[0].bank_id.name or ''"/></td>
+                        <td style="border: 1px solid black; padding:3px; text-align: center;"><span t-esc="o.partner_id.bank_ids[0].acc_number or ''"/></td>
                     
                     </tr>
                     <tr>
