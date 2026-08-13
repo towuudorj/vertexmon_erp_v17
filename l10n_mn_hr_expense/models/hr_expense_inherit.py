@@ -226,6 +226,7 @@ class HrExpense(models.Model):
                         'employee_id': int(data['created_employee_id']) if 'created_employee_id' in data else 1,
                         'currency_id': currency_id.id if currency_id else False,
                         'company_id': int(data['odoo_company_id']),
+                        'sharepoint_id': int(data['id'])
                     }
 
                     expense_vals = {
