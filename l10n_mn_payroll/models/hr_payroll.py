@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
 from odoo import api, fields, models, tools, _
+from datetime import date, datetime, time, timedelta
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
                
 class ResourceCalendar(models.Model): 
@@ -48,7 +49,7 @@ class HrPayslipRun(models.Model):
     
 
 
-class hr_payslip(models.Model):
+class HrPayslip(models.Model):
     _inherit = "hr.payslip"
 
     dep_id = fields.Many2one('hr.department', string='Department')  
@@ -75,7 +76,42 @@ class hr_payslip(models.Model):
             'views': [(treeview_ref and treeview_ref.id or False, 'tree'), (formview_ref and formview_ref.id or False, 'form')],
             'context': {}
         }
-        
 
+    @api.model
+    def get_worked_day_lines(self, contracts, date_from, date_to):
+        """
+        @param contract: Browse record of contracts
+        @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
+        """
+        res = super(HrPayslip, self).get_worked_day_lines(contracts, date_from, date_to)
+        res = [line for line in res if line.get('code') != 'WORK100']
 
-    
+        if self.employee_id:
+            start_date = self.date_from
+            end_date = self.date_to
+            hr_hour_record = self.env['hr.hour.record'].new({
+                'start_date': datetime.combine(start_date, time(0, 1)) - timedelta(hours=8),
+                'end_date': datetime.combine(end_date, time(23, 59)) - timedelta(hours=8),
+                'company_id': self.employee_id.company_id.id
+            })
+            line_vals = hr_hour_record.hour_record(employee_id=self.employee_id)
+            must_work = {
+                'name': _("Must work"),
+                'sequence': 1,
+                'code': 'MUST_WORK',
+                'number_of_days': line_vals['due_day'],
+                'number_of_hours': round(line_vals['due_time'], 2),
+                'contract_id': contracts.id
+            }
+            worked = {
+                'name': _("Worked"),
+                'sequence': 1,
+                'code': 'WORK100',
+                'number_of_days': line_vals['work_day'],
+                'number_of_hours': round(line_vals['work_time'] + line_vals['free_time1'], 2),
+                'contract_id': contracts.id
+            }
+
+            res.append(must_work)
+            res.append(worked)
+        return res

@@ -371,7 +371,7 @@ class HrHourRecord(models.Model):
                                 out_n_time +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'payroll':
-                                free_time1 +=holiday_days*mach
+                                free_time1 +=holiday_days*must_work_hour
 
                             elif lines.holiday_status_id.sub_type == 'legal_leave':
                                 official_time +=holiday_days*must_work_hour
