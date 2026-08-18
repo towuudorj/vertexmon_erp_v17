@@ -115,3 +115,474 @@ class HrPayslip(models.Model):
             res.append(must_work)
             res.append(worked)
         return res
+
+    @api.model
+    def _get_payslip_lines(
+        self,
+        contract_ids,
+        payslip_id,
+        from_sequence=None,
+    ):
+
+        def _sum_salary_rule_category(localdict, category, amount):
+            if category.parent_id:
+                localdict = _sum_salary_rule_category(
+                    localdict,
+                    category.parent_id,
+                    amount
+                )
+
+            localdict['categories'].dict[category.code] = (
+                localdict['categories'].dict[category.code] + amount
+                if category.code in localdict['categories'].dict
+                else amount
+            )
+
+            return localdict
+
+        class BrowsableObject(object):
+            def __init__(self, employee_id, data, env):
+                self.employee_id = employee_id
+                self.dict = data
+                self.env = env
+
+            def __getattr__(self, attr):
+                return (
+                    self.dict[attr]
+                    if attr in self.dict
+                    else 0.0
+                )
+
+        class InputLine(BrowsableObject):
+
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = fields.Date.today()
+
+                self.env.cr.execute("""
+                    SELECT sum(amount)
+                    FROM hr_payslip hp
+                    JOIN hr_payslip_input pi
+                        ON hp.id = pi.payslip_id
+                    WHERE hp.employee_id = %s
+                      AND hp.state = 'done'
+                      AND hp.date_from >= %s
+                      AND hp.date_to <= %s
+                      AND pi.code = %s
+                """, (
+                    self.employee_id,
+                    from_date,
+                    to_date,
+                    code,
+                ))
+
+                return self.env.cr.fetchone()[0] or 0.0
+
+        class WorkedDays(BrowsableObject):
+
+            def _sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = fields.Date.today()
+
+                self.env.cr.execute("""
+                    SELECT
+                        sum(number_of_days),
+                        sum(number_of_hours)
+                    FROM hr_payslip hp
+                    JOIN hr_payslip_worked_days pi
+                        ON hp.id = pi.payslip_id
+                    WHERE hp.employee_id = %s
+                      AND hp.state = 'done'
+                      AND hp.date_from >= %s
+                      AND hp.date_to <= %s
+                      AND pi.code = %s
+                """, (
+                    self.employee_id,
+                    from_date,
+                    to_date,
+                    code,
+                ))
+
+                return self.env.cr.fetchone()
+
+            def sum(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date)
+                return res and res[0] or 0.0
+
+            def sum_hours(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date)
+                return res and res[1] or 0.0
+
+        class Payslips(BrowsableObject):
+
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = fields.Date.today()
+
+                self.env.cr.execute("""
+                    SELECT sum(
+                        CASE
+                            WHEN hp.credit_note = FALSE
+                            THEN pl.total
+                            ELSE -pl.total
+                        END
+                    )
+                    FROM hr_payslip hp
+                    JOIN hr_payslip_line pl
+                        ON hp.id = pl.slip_id
+                    WHERE hp.employee_id = %s
+                      AND hp.state = 'done'
+                      AND hp.date_from >= %s
+                      AND hp.date_to <= %s
+                      AND pl.code = %s
+                """, (
+                    self.employee_id,
+                    from_date,
+                    to_date,
+                    code,
+                ))
+
+                res = self.env.cr.fetchone()
+                return res and res[0] or 0.0
+
+        result_dict = {}
+        rules_dict = {}
+        worked_days_dict = {}
+        inputs_dict = {}
+        blacklist = []
+
+        payslip = self.env['hr.payslip'].browse(payslip_id)
+
+        # ---------------------------------------------------------
+        # Worked days
+        # ---------------------------------------------------------
+
+        for worked_days_line in payslip.worked_days_line_ids:
+            worked_days_dict[worked_days_line.code] = worked_days_line
+
+        # ---------------------------------------------------------
+        # Inputs
+        # ---------------------------------------------------------
+
+        for input_line in payslip.input_line_ids:
+            inputs_dict[input_line.code] = input_line
+
+        # ---------------------------------------------------------
+        # Browsable objects
+        # ---------------------------------------------------------
+
+        categories = BrowsableObject(
+            payslip.employee_id.id,
+            {},
+            self.env
+        )
+
+        inputs = InputLine(
+            payslip.employee_id.id,
+            inputs_dict,
+            self.env
+        )
+
+        worked_days = WorkedDays(
+            payslip.employee_id.id,
+            worked_days_dict,
+            self.env
+        )
+
+        payslips = Payslips(
+            payslip.employee_id.id,
+            {},
+            self.env
+        )
+
+        rules = BrowsableObject(
+            payslip.employee_id.id,
+            rules_dict,
+            self.env
+        )
+
+        baselocaldict = {
+            'categories': categories,
+            'rules': rules,
+            'payslip': payslips,
+            'worked_days': worked_days,
+            'inputs': inputs,
+        }
+
+        # ---------------------------------------------------------
+        # Contracts
+        # ---------------------------------------------------------
+
+        contracts = self.env['hr.contract'].browse(contract_ids)
+
+        if not contracts:
+            return []
+
+        if len(contracts) == 1 and payslip.struct_id:
+            structure_ids = list(
+                set(
+                    payslip.struct_id
+                    ._get_parent_structure()
+                    .ids
+                )
+            )
+        else:
+            structure_ids = contracts.get_all_structures()
+
+        # ---------------------------------------------------------
+        # Salary rules
+        # ---------------------------------------------------------
+
+        rule_ids = (
+            self.env['hr.payroll.structure']
+            .browse(structure_ids)
+            .get_all_rules()
+        )
+
+        sorted_rule_ids = [
+            rule_id
+            for rule_id, sequence in sorted(
+                rule_ids,
+                key=lambda x: x[1]
+            )
+        ]
+
+        sorted_rules = self.env['hr.salary.rule'].browse(
+            sorted_rule_ids
+        )
+
+        # ---------------------------------------------------------
+        # Process contracts
+        # ---------------------------------------------------------
+
+        for contract in contracts:
+
+            employee = contract.employee_id
+
+            localdict = dict(
+                baselocaldict,
+                employee=employee,
+                contract=contract,
+            )
+
+            # Existing lines for this contract
+            existing_lines = payslip.line_ids.filtered(
+                lambda line:
+                    line.contract_id.id == contract.id
+            )
+
+            # -----------------------------------------------------
+            # Run rules by sequence
+            # -----------------------------------------------------
+
+            for rule in sorted_rules:
+
+                key = f'{rule.code}-{contract.id}'
+
+                # =================================================
+                # IMPORTANT:
+                #
+                # If from_sequence is provided and this rule is
+                # before/equal to changed line sequence:
+                #
+                # DO NOT calculate it again.
+                #
+                # Instead use existing line values to rebuild:
+                #   - localdict[rule.code]
+                #   - rules
+                #   - categories
+                #   - result_dict
+                # =================================================
+
+                if (
+                    from_sequence is not None
+                    and rule.sequence <= from_sequence
+                ):
+                    existing_line = existing_lines.filtered(
+                        lambda line:
+                            line.salary_rule_id.id == rule.id
+                    )[:1]
+
+                    if existing_line:
+
+                        total = existing_line.total
+
+                        # This is what later Python rules use:
+                        #
+                        # BASIC
+                        # GROSS
+                        # NET
+                        # etc.
+                        localdict[rule.code] = total
+
+                        # rules.BASIC / rules.GROSS ...
+                        rules_dict[rule.code] = rule
+
+                        # Categories must also be reconstructed.
+                        localdict = _sum_salary_rule_category(
+                            localdict,
+                            rule.category_id,
+                            total
+                        )
+
+                        # Keep existing line in result
+                        result_dict[key] = {
+                            'salary_rule_id': rule.id,
+                            'contract_id': contract.id,
+                            'name': rule.name,
+                            'code': rule.code,
+                            'category_id': rule.category_id.id,
+                            'sequence': rule.sequence,
+                            'appears_on_payslip':
+                                rule.appears_on_payslip,
+                            'condition_select':
+                                rule.condition_select,
+                            'condition_python':
+                                rule.condition_python,
+                            'condition_range':
+                                rule.condition_range,
+                            'condition_range_min':
+                                rule.condition_range_min,
+                            'condition_range_max':
+                                rule.condition_range_max,
+                            'amount_select':
+                                rule.amount_select,
+                            'amount_fix':
+                                rule.amount_fix,
+                            'amount_python_compute':
+                                rule.amount_python_compute,
+                            'amount_percentage':
+                                rule.amount_percentage,
+                            'amount_percentage_base':
+                                rule.amount_percentage_base,
+                            'register_id':
+                                rule.register_id.id,
+                            'amount':
+                                existing_line.amount,
+                            'employee_id':
+                                contract.employee_id.id,
+                            'quantity':
+                                existing_line.quantity,
+                            'rate':
+                                existing_line.rate,
+                        }
+
+                    # IMPORTANT:
+                    # Do not calculate this rule again.
+                    continue
+
+                # =================================================
+                # From here:
+                # rule.sequence > from_sequence
+                #
+                # These rules WILL be recalculated.
+                # =================================================
+
+                localdict['result'] = None
+                localdict['result_qty'] = 1.0
+                localdict['result_rate'] = 100
+
+                # -------------------------------------------------
+                # Condition
+                # -------------------------------------------------
+
+                if rule._satisfy_condition(
+                    localdict
+                ) and rule.id not in blacklist:
+
+                    # -------------------------------------------------
+                    # Calculate rule
+                    # -------------------------------------------------
+
+                    amount, qty, rate = rule._compute_rule(
+                        localdict
+                    )
+
+                    previous_amount = (
+                        localdict.get(rule.code, 0.0)
+                    )
+
+                    total = (
+                        contract.company_id.currency_id.round(
+                            amount * qty * rate / 100.0
+                        )
+                    )
+
+                    # -------------------------------------------------
+                    # Update localdict
+                    # -------------------------------------------------
+
+                    localdict[rule.code] = total
+
+                    rules_dict[rule.code] = rule
+
+                    # -------------------------------------------------
+                    # Update categories
+                    # -------------------------------------------------
+
+                    localdict = _sum_salary_rule_category(
+                        localdict,
+                        rule.category_id,
+                        total - previous_amount
+                    )
+
+                    # -------------------------------------------------
+                    # Save recalculated result
+                    # -------------------------------------------------
+
+                    result_dict[key] = {
+                        'salary_rule_id': rule.id,
+                        'contract_id': contract.id,
+                        'name': rule.name,
+                        'code': rule.code,
+                        'category_id': rule.category_id.id,
+                        'sequence': rule.sequence,
+                        'appears_on_payslip':
+                            rule.appears_on_payslip,
+                        'condition_select':
+                            rule.condition_select,
+                        'condition_python':
+                            rule.condition_python,
+                        'condition_range':
+                            rule.condition_range,
+                        'condition_range_min':
+                            rule.condition_range_min,
+                        'condition_range_max':
+                            rule.condition_range_max,
+                        'amount_select':
+                            rule.amount_select,
+                        'amount_fix':
+                            rule.amount_fix,
+                        'amount_python_compute':
+                            rule.amount_python_compute,
+                        'amount_percentage':
+                            rule.amount_percentage,
+                        'amount_percentage_base':
+                            rule.amount_percentage_base,
+                        'register_id':
+                            rule.register_id.id,
+                        'amount': amount,
+                        'employee_id':
+                            contract.employee_id.id,
+                        'quantity': qty,
+                        'rate': rate,
+                    }
+
+                else:
+
+                    # -------------------------------------------------
+                    # Condition false:
+                    # blacklist rule and its children
+                    # -------------------------------------------------
+
+                    blacklist += [
+                        rule_id
+                        for rule_id, seq
+                        in rule._recursive_search_of_rules()
+                    ]
+
+            # end rule loop
+
+        # end contract loop
+
+        return list(result_dict.values())

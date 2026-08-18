@@ -14,4 +14,5 @@ from . import work_category
 from . import vat_income_type
 from . import hr_employee
 from . import salary_month_range
+from . import hr_payslip_line
 #from . import res_company_inherit
