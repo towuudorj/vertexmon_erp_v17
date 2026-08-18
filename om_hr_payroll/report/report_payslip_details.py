@@ -40,18 +40,18 @@ class PayslipDetailsReport(models.AbstractModel):
             for payslip_id, lines_dict in result.items():
                 res.setdefault(payslip_id, [])
                 for rule_categ_id, line_ids in lines_dict.items():
-                    rule_categories = RuleCateg.browse(rule_categ_id)
+                    # rule_categories = RuleCateg.browse(rule_categ_id)
                     lines = PayslipLine.browse(line_ids)
                     level = 0
-                    for parent in get_recursive_parent(rule_categories):
-                        res[payslip_id].append({
-                            'rule_category': parent.name,
-                            'name': parent.name,
-                            'code': parent.code,
-                            'level': level,
-                            'total': sum(lines.mapped('total')),
-                        })
-                        level += 1
+                    # for parent in get_recursive_parent(rule_categories):
+                        # res[payslip_id].append({
+                        #     'rule_category': parent.name,
+                        #     'name': parent.name,
+                        #     'code': parent.code,
+                        #     'level': level,
+                        #     'total': sum(lines.mapped('total')),
+                        # })
+                        # level += 1
                     for line in lines:
                         res[payslip_id].append({
                             'rule_category': line.name,

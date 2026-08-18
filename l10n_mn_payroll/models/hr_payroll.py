@@ -61,7 +61,6 @@ class HrPayslip(models.Model):
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
             copied_payslip.compute_sheet()
             copied_payslip.action_payslip_done()
-            payslip.write({'is_return':True})
         formview_ref = self.env.ref('hr_payroll_community.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll_community.view_hr_payslip_tree', False)
         

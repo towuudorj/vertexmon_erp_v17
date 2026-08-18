@@ -93,43 +93,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <h3>Payslip Lines by Contribution Register</h3>
-                        <table class="table table-sm mt32">
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Quantity/rate</th>
-                                    <th>Amount</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="get_lines_by_contribution_register.get(o.id, [])" t-as="p">
-                                    <td>
-                                        <span t-esc="p.get('code', '')"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="p.get('name', '')"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="p.get('quantity', '')"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="p.get('amount', 0)"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="p.get('total', 0)"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <p class="text-right">
-                            <strong>Authorized signature</strong>
-                        </p>
                     </div>
                 </t>
             </t>
