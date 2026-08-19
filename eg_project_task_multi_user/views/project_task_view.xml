@@ -34,7 +34,7 @@
 <!--        <field name="res_model">project.task.multi.user</field>-->
 <!--        <field name="view_mode">tree,from</field>-->
 <!--    </record>-->
-<!--    <menuitem parent="project.menu_project_config" id="menu_assign_to_multi_user_ids" name="Assign To Multi User" action="action_assign_to_multi_user_ids" groups="project.group_project_manager"/>-->
+<!--    <menuitem parent="project.menu_project_config" id="menu_assign_to_multi_user_ids" name="Assign To Multi User" action="action_assign_to_multi_user_ids" groups="project.group_project_user"/>-->
 </odoo>
 
 

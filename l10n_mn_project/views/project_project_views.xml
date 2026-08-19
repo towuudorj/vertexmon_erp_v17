@@ -79,7 +79,7 @@
                 
                 <button class="btn-secondary" name="action_process"
                         type="object"
-                        string="Явагдаж буй" invisible="state != 'confirm'" groups="project.group_project_manager"/>
+                        string="Явагдаж буй" invisible="state != 'confirm'" groups="project.group_project_user"/>
                 
                 <button class="btn-secondary" name="action_create_tasks"
                         type="object"
