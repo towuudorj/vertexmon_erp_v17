@@ -39,7 +39,8 @@ class hr_contract(models.Model):
     accident_insurance = fields.Float(string='Accident insurance')
     voucher = fields.Float(string='Voucher')
     abnormal_add = fields.Float(string='Abnormal add')
-    trial_end_date = fields.Float(string='Trial End Date') 
+    trial_end_date = fields.Float(string='Trial End Date')
+    insurance_type_id = fields.Many2one('insurance.type', 'Insurance Type')
 
     
 class HrPayslipRun(models.Model):

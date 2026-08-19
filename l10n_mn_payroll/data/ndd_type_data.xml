@@ -1,319 +1,456 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<data noupdate="0">
+    <data noupdate="0">
 
-		<record id="ndd_type_2024" model="insurance.type">
-			<field name="name">Хөдөлмөрийн гэрээний дагуу ажиллаж байгаа үндсэн ажилтан</field>
-			<field name="code">01001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2024" model="insurance.type">
+            <field name="name">Хөдөлмөрийн гэрээний дагуу ажиллаж байгаа үндсэн ажилтан</field>
+            <field name="code">01001</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2025" model="insurance.type">
-			<field name="name">Иргэний хуульд заасан ажил гүйцэтгэх, хөлсөөр ажиллах болон бусад  гэрээгээр ажиллагч</field>
-			<field name="code">02001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
-	
-		<record id="ndd_type_2026" model="insurance.type">
-			<field name="name">Хөдөлмөрийн гэрээний дагуу ажиллаж байгаа үндсэн ажилтан</field>
-			<field name="code">01002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2025" model="insurance.type">
+            <field name="name">Иргэний хуульд заасан ажил гүйцэтгэх, хөлсөөр ажиллах болон бусад гэрээгээр ажиллагч
+            </field>
+            <field name="code">02001</field>
+            <field name="insurance_percent_employer">11.5</field>
+            <field name="insurance_percent_employee">11.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2027" model="insurance.type">
-			<field name="name">Хүүхэд асрах чөлөөтэй байгаа аж ахуйн нэгж, байгууллагын ажилтан эх/эцэг/</field>
-			<field name="code">06002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2027" model="insurance.type">
+            <field name="name">Хүүхэд асрах чөлөөтэй байгаа аж ахуйн нэгж, байгууллагын ажилтан эх/эцэг/</field>
+            <field name="code">06002</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2028" model="insurance.type">
-			<field name="name">Хугацаат цэргийн алба хаагч, цэргийн сургуулийн сонсогч</field>
-			<field name="code">08002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2028" model="insurance.type">
+            <field name="name">Хугацаат цэргийн алба хаагч, цэргийн сургуулийн сонсогч</field>
+            <field name="code">08002</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2029" model="insurance.type">
-			<field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон хугацаат цэргийн алба хаагч, цэргийн сургуулийн сонсогч</field>
-			<field name="code">08012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2029" model="insurance.type">
+            <field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон хугацаат цэргийн алба хаагч, цэргийн
+                сургуулийн сонсогч
+            </field>
+            <field name="code">08012</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2030" model="insurance.type">
-			<field name="name">Цэргийн байгууллагын алба хаагч</field>
-			<field name="code">11001</field>
-			<field name="company_id" ref="base.main_company"/>	
-		</record>
+        <record id="ndd_type_2030" model="insurance.type">
+            <field name="name">Цэргийн байгууллагын алба хаагч</field>
+            <field name="code">11001</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2031" model="insurance.type">
-			<field name="name">Сул зогсолтын үеийн олговор авч байгаа ажилтан</field>
-			<field name="code">14001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2031" model="insurance.type">
+            <field name="name">Сул зогсолтын үеийн олговор авч байгаа ажилтан</field>
+            <field name="code">14001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2032" model="insurance.type">
-			<field name="name">Жирэмсний болон амаржсаны амралттай байгаа ажилтан</field>
-			<field name="code">17002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2032" model="insurance.type">
+            <field name="name">Жирэмсний болон амаржсаны амралттай байгаа ажилтан</field>
+            <field name="code">17002</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2033" model="insurance.type">
-			<field name="name">Ажил олгогчийн захиалгаар суралцаж байгаа ажилтан, төрийн албан хаагч</field>
-			<field name="code">20002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2033" model="insurance.type">
+            <field name="name">Ажил олгогчийн захиалгаар суралцаж байгаа ажилтан, төрийн албан хаагч</field>
+            <field name="code">20002</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2034" model="insurance.type">
-			<field name="name">Ажил олгогчийн захиалгаар суралцаж байгаа хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан төрийн албан хаагч</field>
-			<field name="code">20012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2034" model="insurance.type">
+            <field name="name">Ажил олгогчийн захиалгаар суралцаж байгаа хөдөлмөрийн чадвар алдсаны тэтгэвэр
+                тогтоолгосон ажилтан төрийн албан хаагч
+            </field>
+            <field name="code">20012</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2035" model="insurance.type">
-			<field name="name">Нэг ба түүнээс дээш сарын хугацаагаар хөдөлмөрийн чадвараа түр алдсан ажилтан</field>
-			<field name="code">21002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2035" model="insurance.type">
+            <field name="name">Нэг ба түүнээс дээш сарын хугацаагаар хөдөлмөрийн чадвараа түр алдсан ажилтан</field>
+            <field name="code">21002</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2036" model="insurance.type">
-			<field name="name">Өндөр насны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
-			<field name="code">22001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2036" model="insurance.type">
+            <field name="name">Өндөр насны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
+            <field name="code">22001</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">9.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2036" model="insurance.type">
-			<field name="name">Өндөр насны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
-			<field name="code">22011</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2036" model="insurance.type">
+            <field name="name">Өндөр насны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
+            <field name="code">22011</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0.8</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2037" model="insurance.type">
-			<field name="name">Цэргийн алба хаасны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
-			<field name="code">22021</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2037" model="insurance.type">
+            <field name="name">Цэргийн алба хаасны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)
+            </field>
+            <field name="code">22021</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">9.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2038" model="insurance.type">
-			<field name="name">Цэргийн алба хаасны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
-			<field name="code">22031</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2038" model="insurance.type">
+            <field name="name">Цэргийн алба хаасны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл
+                төлөхгүй)
+            </field>
+            <field name="code">22031</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0.8</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2039" model="insurance.type">
-			<field name="name">Эрх бүхий байгууллагаас сетификат аваагүй БНСУ-ын иргэн</field>
-			<field name="code">23001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2039" model="insurance.type">
+            <field name="name">Эрх бүхий байгууллагаас сетификат аваагүй БНСУ-ын иргэн</field>
+            <field name="code">23001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2040" model="insurance.type">
-			<field name="name">Эрх бүхий байгууллагаас сертификат авсан БНСУ-ын иргэн</field>
-			<field name="code">24001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2040" model="insurance.type">
+            <field name="name">Эрх бүхий байгууллагаас сертификат авсан БНСУ-ын иргэн</field>
+            <field name="code">24001</field>
+            <field name="insurance_percent_employer">4</field>
+            <field name="insurance_percent_employee">3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2041" model="insurance.type">
-			<field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг ажилтан /ажил зогссон үед/</field>
-			<field name="code">25002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2041" model="insurance.type">
+            <field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг ажилтан /ажил зогссон үед/</field>
+            <field name="code">25002</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2042" model="insurance.type">
-			<field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг өндөр насны тэтгэвэр тогтоолгосон ажилтан /ажил зогссон үед/ тэтгэврийн даатгалын шимтгэл төлөх</field>
-			<field name="code">25012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2042" model="insurance.type">
+            <field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг өндөр насны тэтгэвэр тогтоолгосон ажилтан
+                /ажил зогссон үед/ тэтгэврийн даатгалын шимтгэл төлөх
+            </field>
+            <field name="code">25012</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2043" model="insurance.type">
-			<field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг өндөр насны тэтгэвэр тогтоолгосон ажилтан /ажил зогссон үед/ тэтгэврийн даатгалын шимтгэл төлөхгүй</field>
-			<field name="code">25022</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2043" model="insurance.type">
+            <field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг өндөр насны тэтгэвэр тогтоолгосон ажилтан
+                /ажил зогссон үед/ тэтгэврийн даатгалын шимтгэл төлөхгүй
+            </field>
+            <field name="code">25022</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2044" model="insurance.type">
-			<field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан /ажил зогссон үед/</field>
-			<field name="code">25032</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2044" model="insurance.type">
+            <field name="name">Улирлын шинжтэй ажил үүргийг байнга эрхэлдэг хөдөлмөрийн чадвар алдсаны тэтгэвэр
+                тогтоолгосон ажилтан /ажил зогссон үед/
+            </field>
+            <field name="code">25032</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2045" model="insurance.type">
-			<field name="name">Улсын хил дээр ажиллаж байгаа гаалийн улсын байцаагчийн ажилгүй байгаа эхнэр/ нөхөр</field>
-			<field name="code">28002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2045" model="insurance.type">
+            <field name="name">Улсын хил дээр ажиллаж байгаа гаалийн улсын байцаагчийн ажилгүй байгаа эхнэр/ нөхөр
+            </field>
+            <field name="code">28002</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2046" model="insurance.type">
-			<field name="name">Улсын хил дээр ажиллаж байгаа гаалийн улсын байцаагчийн ажилгүй байгаа хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон эхнэр/ нөхөр</field>
-			<field name="code">28012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2046" model="insurance.type">
+            <field name="name">Улсын хил дээр ажиллаж байгаа гаалийн улсын байцаагчийн ажилгүй байгаа хөдөлмөрийн чадвар
+                алдсаны тэтгэвэр тогтоолгосон эхнэр/ нөхөр
+            </field>
+            <field name="code">28012</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2047" model="insurance.type">
-			<field name="name">Улсын хил дээр алба хааж байгаа офицер, ахлагчийн ажилгүй байгаа эхнэр/нөхөр</field>
-			<field name="code">29002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2047" model="insurance.type">
+            <field name="name">Улсын хил дээр алба хааж байгаа офицер, ахлагчийн ажилгүй байгаа эхнэр/нөхөр</field>
+            <field name="code">29002</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2048" model="insurance.type">
-			<field name="name">Улсын хил дээр алба хааж байгаа офицер, ахлагчийн ажилгүй байгаа хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон эхнэр/нөхөр</field>
-			<field name="code">29012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2048" model="insurance.type">
+            <field name="name">Улсын хил дээр алба хааж байгаа офицер, ахлагчийн ажилгүй байгаа хөдөлмөрийн чадвар
+                алдсаны тэтгэвэр тогтоолгосон эхнэр/нөхөр
+            </field>
+            <field name="code">29012</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2049" model="insurance.type">
-			<field name="name">Дипломат төлөөлөгчийн газрын ажилтны хөдөлмөр эрхлээгүй, өндөр насны тэтгэвэр тогтоолгоогүй эхнэр/нөхөр</field>
-			<field name="code">30002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2049" model="insurance.type">
+            <field name="name">Дипломат төлөөлөгчийн газрын ажилтны хөдөлмөр эрхлээгүй, өндөр насны тэтгэвэр
+                тогтоолгоогүй эхнэр/нөхөр
+            </field>
+            <field name="code">30002</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2050" model="insurance.type">
-			<field name="name">Дипломат төлөөлөгчийн газрын ажилтны хөдөлмөр эрхлээгүй, хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон эхнэр/нөхөр</field>
-			<field name="code">30012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2050" model="insurance.type">
+            <field name="name">Дипломат төлөөлөгчийн газрын ажилтны хөдөлмөр эрхлээгүй, хөдөлмөрийн чадвар алдсаны
+                тэтгэвэр тогтоолгосон эхнэр/нөхөр
+            </field>
+            <field name="code">30012</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2051" model="insurance.type">
-			<field name="name">Гамшгаас хамгаалах болон бусад дайчилгаагаар ажилласан хүн</field>
-			<field name="code">31002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2051" model="insurance.type">
+            <field name="name">Гамшгаас хамгаалах болон бусад дайчилгаагаар ажилласан хүн</field>
+            <field name="code">31002</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2052" model="insurance.type">
-			<field name="name">Хууль бусаар ажлаас халагдсан хүн</field>
-			<field name="code">32001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2052" model="insurance.type">
+            <field name="name">Хууль бусаар ажлаас халагдсан хүн</field>
+            <field name="code">32001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2053" model="insurance.type">
-			<field name="name">Сул зогсолтын үеийн олговор авч байгаа тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
-			<field name="code">34001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2053" model="insurance.type">
+            <field name="name">Сул зогсолтын үеийн олговор авч байгаа тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн
+                даатгалын шимтгэл төлнө)
+            </field>
+            <field name="code">34001</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">9.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
 
-		<record id="ndd_type_2054" model="insurance.type">
-			<field name="name">Сул зогсолтын үеийн олговор авч байгаа тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
-			<field name="code">34011</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2054" model="insurance.type">
+            <field name="name">Сул зогсолтын үеийн олговор авч байгаа тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн
+                даатгалын шимтгэл төлөхгүй)
+            </field>
+            <field name="code">34011</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0.8</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2055" model="insurance.type">
-			<field name="name">Шашны байгууллагын лам, санваартан</field>
-			<field name="code">37001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2055" model="insurance.type">
+            <field name="name">Шашны байгууллагын лам, санваартан</field>
+            <field name="code">37001</field>
+            <field name="insurance_percent_employer">9.5</field>
+            <field name="insurance_percent_employee">9.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2056" model="insurance.type">
-			<field name="name">Тэтгэвэр тогтоолгосны дараа ажиллаж байгаа жирэмсний болон амаржсаны амралттай ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
-			<field name="code">38002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2056" model="insurance.type">
+            <field name="name">Тэтгэвэр тогтоолгосны дараа ажиллаж байгаа жирэмсний болон амаржсаны амралттай ажилтан
+                (тэтгэврийн даатгалын шимтгэл төлнө)
+            </field>
+            <field name="code">38002</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2057" model="insurance.type">
-			<field name="name">Тэтгэвэр тогтоолгосны дараа ажиллаж байгаа хөдөлмөрийн чадвараа 1  сараас дээш хугацаанд түр алдсан ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
-			<field name="code">39012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2057" model="insurance.type">
+            <field name="name">Тэтгэвэр тогтоолгосны дараа ажиллаж байгаа хөдөлмөрийн чадвараа 1 сараас дээш хугацаанд
+                түр алдсан ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)
+            </field>
+            <field name="code">39012</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2058" model="insurance.type">
-			<field name="name">Үндсэн ажлаас гадуур зэрэгцсэн хөдөлмөрийн гэрээгээр ажиллаж байгаа ажилтан</field>
-			<field name="code">40001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2058" model="insurance.type">
+            <field name="name">Үндсэн ажлаас гадуур зэрэгцсэн хөдөлмөрийн гэрээгээр ажиллаж байгаа ажилтан</field>
+            <field name="code">40001</field>
+            <field name="insurance_percent_employer">10.5</field>
+            <field name="insurance_percent_employee">10.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2059" model="insurance.type">
-			<field name="name">Жирэмсний болон амаржсаны амралттай байгаа цэргийн алба хаагч эх</field>
-			<field name="code">41002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2059" model="insurance.type">
+            <field name="name">Жирэмсний болон амаржсаны амралттай байгаа цэргийн алба хаагч эх</field>
+            <field name="code">41002</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2060" model="insurance.type">
-			<field name="name">Хүүхэд асрах чөлөөтэй байгаа цэргийн албан хаагч эх</field>
-			<field name="code">41012</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2060" model="insurance.type">
+            <field name="name">Хүүхэд асрах чөлөөтэй байгаа цэргийн албан хаагч эх</field>
+            <field name="code">41012</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2061" model="insurance.type">
-			<field name="name">Нэг сараас дээш хугацаагаар хөдөлмөрийн чадвараа алдсан цэргийн алба хаагч</field>
-			<field name="code">42002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2061" model="insurance.type">
+            <field name="name">Нэг сараас дээш хугацаагаар хөдөлмөрийн чадвараа алдсан цэргийн алба хаагч</field>
+            <field name="code">42002</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2062" model="insurance.type">
-			<field name="name">Хууль зүйн туслалцаа үзүүлэх гэрээтэй өмгөөлөгч</field>
-			<field name="code">50001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2062" model="insurance.type">
+            <field name="name">Хууль зүйн туслалцаа үзүүлэх гэрээтэй өмгөөлөгч</field>
+            <field name="code">50001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2063" model="insurance.type">
-			<field name="name">Шилжин ажилласан Зэвсэгт хүчин, тагнуул, цагдаа, шүүхийн шийдвэр гүйцэтгэх байгууллагын алба хаагчийн хөдөлмөр эрхлээгүй эхнэр/нөхөр</field>
-			<field name="code">51002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2063" model="insurance.type">
+            <field name="name">Шилжин ажилласан Зэвсэгт хүчин, тагнуул, цагдаа, шүүхийн шийдвэр гүйцэтгэх байгууллагын
+                алба хаагчийн хөдөлмөр эрхлээгүй эхнэр/нөхөр
+            </field>
+            <field name="code">51002</field>
+            <field name="insurance_percent_employer">18.8</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2064" model="insurance.type">
-			<field name="name">Цэргийн гэрээт алба хаагч</field>
-			<field name="code">53001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2064" model="insurance.type">
+            <field name="name">Цэргийн гэрээт алба хаагч</field>
+            <field name="code">53001</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2065" model="insurance.type">
-			<field name="name">Цэргийн цолны мөнгө авсан хүүхдээ асрах чөлөөтэй байгаа цэргийн алба хаагч эх</field>
-			<field name="code">61001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2065" model="insurance.type">
+            <field name="name">Цэргийн цолны мөнгө авсан хүүхдээ асрах чөлөөтэй байгаа цэргийн алба хаагч эх</field>
+            <field name="code">61001</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">2</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2066" model="insurance.type">
-			<field name="name">Хөдөлмөрийн хөлс, түүнтэй адилтгах орлого авсан хүүхдээ асрах чөлөөтөй байгаа эх/эцэг</field>
-			<field name="code">68001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2066" model="insurance.type">
+            <field name="name">Хөдөлмөрийн хөлс, түүнтэй адилтгах орлого авсан хүүхдээ асрах чөлөөтөй байгаа эх/эцэг
+            </field>
+            <field name="code">68001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2067" model="insurance.type">
-			<field name="name">Цэргийн алба хаасны болон хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосны дараа цэргийн цолтой  ажиллаж байгаа алба хаагч</field>
-			<field name="code">69001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2067" model="insurance.type">
+            <field name="name">Цэргийн алба хаасны болон хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосны дараа цэргийн
+                цолтой ажиллаж байгаа алба хаагч
+            </field>
+            <field name="code">69001</field>
+            <field name="insurance_percent_employer">0</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2068" model="insurance.type">
-			<field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлнө)</field>
-			<field name="code">70001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2068" model="insurance.type">
+            <field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл
+                төлнө)
+            </field>
+            <field name="code">70001</field>
+            <field name="insurance_percent_employer">10</field>
+            <field name="insurance_percent_employee">9.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2069" model="insurance.type">
-			<field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл төлөхгүй)</field>
-			<field name="code">70011</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2069" model="insurance.type">
+            <field name="name">Хөдөлмөрийн чадвар алдсаны тэтгэвэр тогтоолгосон ажилтан (тэтгэврийн даатгалын шимтгэл
+                төлөхгүй)
+            </field>
+            <field name="code">70011</field>
+            <field name="insurance_percent_employer">1.5</field>
+            <field name="insurance_percent_employee">0.8</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2070" model="insurance.type">
-			<field name="name">Цэргийн байгууллагын захиалгаар суралцагч цэргийн цолтой алба хаагч</field>
-			<field name="code">71002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2070" model="insurance.type">
+            <field name="name">Цэргийн байгууллагын захиалгаар суралцагч цэргийн цолтой алба хаагч</field>
+            <field name="code">71002</field>
+            <field name="insurance_percent_employer">2</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2071" model="insurance.type">
-			<field name="name">Хилс хэргээр мөрдөгдсөн, хилс хэргээр хорих ял эдэлсэн хүн</field>
-			<field name="code">72001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2071" model="insurance.type">
+            <field name="name">Хилс хэргээр мөрдөгдсөн, хилс хэргээр хорих ял эдэлсэн хүн</field>
+            <field name="code">72001</field>
+            <field name="insurance_percent_employer">12.5</field>
+            <field name="insurance_percent_employee">11.5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2072" model="insurance.type">
-			<field name="name">Дагалднаар суралцаж байгаа хөдөлмөрийн гэрээтэй ажилтан</field>
-			<field name="code">74002</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2072" model="insurance.type">
+            <field name="name">Дагалднаар суралцаж байгаа хөдөлмөрийн гэрээтэй ажилтан</field>
+            <field name="code">74002</field>
+            <field name="insurance_percent_employer">24</field>
+            <field name="insurance_percent_employee">0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2073" model="insurance.type">
-			<field name="name">Төлөөлөн удирдах зөвлөлийн гишүүн</field>
-			<field name="code">75001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2073" model="insurance.type">
+            <field name="name">Төлөөлөн удирдах зөвлөлийн гишүүн</field>
+            <field name="code">75001</field>
+            <field name="insurance_percent_employer">12</field>
+            <field name="insurance_percent_employee">11.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-		<record id="ndd_type_2074" model="insurance.type">
-			<field name="name">Бүх шатны сонгуулийн хэсэг, хороонд ажиллахаар томилогдсон иргэн</field>
-			<field name="code">76001</field>
-			<field name="company_id" ref="base.main_company"/>
-		</record>
+        <record id="ndd_type_2074" model="insurance.type">
+            <field name="name">Бүх шатны сонгуулийн хэсэг, хороонд ажиллахаар томилогдсон иргэн</field>
+            <field name="code">76001</field>
+            <field name="insurance_percent_employer">12</field>
+            <field name="insurance_percent_employee">11.3</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
-	</data>
+    </data>
 </odoo>

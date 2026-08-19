@@ -3,7 +3,7 @@ import logging
 from odoo import api, fields, models
 from odoo import tools, _
 
-class insurance_type(models.Model):
+class InsuranceType(models.Model):
     _name = 'insurance.type'
     _description = 'Insurance type'
     
@@ -14,3 +14,5 @@ class insurance_type(models.Model):
     )
     name = fields.Char(string='Insurance type')
     code = fields.Char(string='Code')
+    insurance_percent_employee = fields.Float(string='Insurance percent employee')
+    insurance_percent_employer = fields.Float(string='Insurance percent employer')

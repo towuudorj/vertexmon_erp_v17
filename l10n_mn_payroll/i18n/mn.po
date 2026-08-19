@@ -978,6 +978,20 @@ msgstr "Ээлжийн амралтын тооцоолол"
 msgid "Working day register"
 msgstr "Ажилласан өдөр бүртгэх"
 
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_contract__insurance_type_id
+msgid "Insurance Type"
+msgstr "Даатгуулагчийн төрөл"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__insurance_percent_employee
+msgid "Insurance percent employee"
+msgstr "Ажилтан төлөх нийт НДШ (%)"
+
+#. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_insurance_type__insurance_percent_employer
+msgid "Insurance percent employer"
+msgstr "Ажил олгогч төлөх нийт НДШ (%)"
 
 #. module: l10n_mn_payroll
 #: model:ir.actions.act_window,name:l10n_mn_payroll.action_insurance_type_tree_view

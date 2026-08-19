@@ -60,6 +60,9 @@
 								</div>
 							</group>
 						</xpath>
+						<xpath expr='//field[@name="contract_type_id"]' position="after">
+							<field name="insurance_type_id" required="1"/>
+						</xpath>
 					</data>
 	        </field>
     	</record>
