@@ -366,7 +366,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         total_credit = 0
         for line in lines:
             for group_value in group_values:
-                if not group_value['last_value'] or line[group_value['check_row']] != group_value['last_value']:
+                if not group_value['last_value'] or (line[group_value['check_row']] or '0') != group_value['last_value']:
                     group_value['sequence'] += 1
                     if group_value['row']:
                         sheet.write(group_value['row'], last_coly - 3, group_value['start_balance'], group_value['num'])
@@ -381,7 +381,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     parent_group_sequence = []
                     is_child = False
                     for i in range(len(group_values)):
-                        if group_values[i]['check_row'] == group_value['check_row']:
+                        if group_values[i].get('check_row', '0') == group_value['check_row']:
                             is_child = True
                             continue
                         if is_child:
@@ -397,7 +397,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     sheet.merge_range(rowx, 1, rowx, last_coly-4, line[group_value['write_row']],
                                       group_value['str'])
                     group_value['row'] = rowx
-                    group_value['last_value'] = line[group_value['check_row']]
+                    group_value['last_value'] = line[group_value['check_row']] or '0'
                     sequence = 1
                     last_line_end_balance = {}
                     rowx += 1
