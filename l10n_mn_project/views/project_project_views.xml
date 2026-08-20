@@ -111,15 +111,16 @@
             </xpath>
             
             <xpath expr="//field[@name='user_id']" position="replace">
-                <field name="user_id" readonly="state in ('confirm','done')" />
+                <field name="user_id" readonly="state != 'planned'" />
             </xpath>   
             
             <xpath expr="//field[@name='date_start']" position="replace">
-                <field name="date_start" readonly="state in ('confirm','done')" />
-            </xpath>   
+                <field name="date_start" readonly="state == 'done'"/>
+                <field name="date" readonly="state == 'done'"/>
+            </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="replace">
-            	<field name="partner_id" readonly="state in ('confirm','done')" />
+            	<field name="partner_id" readonly="state != 'planned'" />
             	<field name="invoice_product_id"/>
             	<field name="invoice_journal_id" required="state == 'process'"/>
             	<field name="journal_id" string="Журнал" required="state == 'process'"/>
@@ -127,15 +128,15 @@
             	<field name="close_date" string="Хаасан огноо" required="state == 'process'"/>
             	<field name="close_move_id" readonly="1"/>
             	<field name="invoice_id" readonly="1"/>
-                <field name="contract_number" readonly="state in ('confirm','done')" />
-                <field name="contract_amount" widget="monetary" readonly="state in ('confirm','done')"/>
-                <field name="quality_amount" widget="monetary" readonly="state in ('confirm','done')"/>
+                <field name="contract_number" readonly="state != 'planned'" />
+                <field name="contract_amount" widget="monetary" readonly="state != 'planned'"/>
+                <field name="quality_amount" widget="monetary" readonly="state != 'planned'"/>
                 <field name="project_total_cost" widget="monetary"/>
                 <field name="project_total_profit" widget="monetary" invisible="state != 'done'"/>
-                <field name="warehouse_id" readonly="state in ('confirm','done')"/>
-                <field name="picking_type_id" readonly="state in ('confirm','done')"/>
-                <field name="purchase_manager_id" readonly="state in ('confirm','done')"/>
-                <field name="project_type" readonly="state in ('confirm','done')"/>
+                <field name="warehouse_id" readonly="state != 'planned'"/>
+                <field name="picking_type_id" readonly="state != 'planned'"/>
+                <field name="purchase_manager_id" readonly="state != 'planned'"/>
+                <field name="project_type" readonly="state != 'planned'"/>
                 <field name="tax_id" readonly="state == 'done'"/>
             </xpath>
             
@@ -144,7 +145,7 @@
                 <page name="project_products" string="Products">
                     <field name="products_line"
                             widget="section_and_note_one2many"
-                            mode="tree" readonly="state in ('confirm','done')">
+                            mode="tree" readonly="state != 'planned'">
                         <tree string="Project Product Lines"
                                 editable="bottom"
                                 limit="200">
