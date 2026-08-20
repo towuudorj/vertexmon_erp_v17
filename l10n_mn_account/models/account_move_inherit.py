@@ -232,8 +232,7 @@ class AccountMove(models.Model):
             if obj.move_type == 'in_invoice':
                 email = obj.create_uid.employee_id.parent_id.work_email
             elif obj.move_type == 'out_invoice':
-                job_id = job_obj.search(
-                    [('name', 'ilike', 'нягтлан бодогч'), ('name', '!=', 'Тооцооны нягтлан бодогч')])
+                job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч')])
                 if job_id:
                     accountants = self.env['hr.employee'].search(
                         [('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
