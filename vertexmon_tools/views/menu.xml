@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_user_setting_root"
+              name="User setting"
+              parent="base.menu_administration"
+    />
+
+    <menuitem id="menu_user_setting"
+              parent="menu_user_setting_root"
+              action="user_setting_action"
+              sequence="0"
+    />
+
+    <menuitem id="menu_user_role"
+              parent="menu_user_setting_root"
+              action="user_role_action"
+              sequence="1"
+    />
+</odoo>

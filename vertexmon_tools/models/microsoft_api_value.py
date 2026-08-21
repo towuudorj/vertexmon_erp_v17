@@ -30,17 +30,8 @@ class MicrosoftApiValue(models.Model):
     company_account_list_id = fields.Char(string='Company account List Name')
 
     def write(self, vals):
-
-        if vals.get('site_name', False):
-            vals['site_id'] = False
-        if vals.get('employee_list_name', False):
-            vals['employee_list_id'] = False
-        if vals.get('leave_list_name', False):
-            vals['leave_list_id'] = False
-        if vals.get('job_list_name', False):
-            vals['job_list_id'] = False
-        if vals.get('department_list_name', False):
-            vals['department_list_id'] = False
-
+        for key, value in list(vals.items()):
+            if vals.get(key):
+                if '_name' in key:
+                    vals[key.replace('_name', '_id')] = False
         return super(MicrosoftApiValue, self).write(vals)
-

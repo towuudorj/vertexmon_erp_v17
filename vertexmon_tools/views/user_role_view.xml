@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="tools_user_role_view" model="ir.ui.view">
+            <field name="name">tools.user.role.form</field>
+            <field name="model">user.role</field>
+            <field name="arch" type="xml">
+                <form string="User role">
+                    <sheet>
+                        <div class="row">
+                            <h2 class="col-lg-6 ps-lg-0">
+                                <field name="name" class="w-100" placeholder="Name"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="hide_menu_ids"/>
+                                <field name="hide_menu_ids" colspan="1" nolabel="1">
+                                    <tree>
+                                        <field name="complete_name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <label for="group_ids"/>
+                                <field name="group_ids" colspan="1" nolabel="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tools_user_role_tree_view" model="ir.ui.view">
+            <field name="name">tools.user.role.tree</field>
+            <field name="model">user.role</field>
+            <field name="arch" type="xml">
+                <tree string="User role">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="user_role_action">
+            <field name="name">User role</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">user.role</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="tools_user_setting_view" model="ir.ui.view">
+            <field name="name">tools.user.setting.form</field>
+            <field name="model">user.setting</field>
+            <field name="arch" type="xml">
+                <form string="User setting">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="user_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="role_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <label for="hide_menu_ids"/>
+                                <field name="hide_menu_ids" colspan="2" nolabel="1">
+                                    <tree>
+                                        <field name="complete_name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <label for="group_ids"/>
+                                <field name="group_ids" colspan="2" nolabel="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tools_user_setting_tree_view" model="ir.ui.view">
+            <field name="name">tools.user.setting.tree</field>
+            <field name="model">user.setting</field>
+            <field name="arch" type="xml">
+                <tree string="User setting">
+                    <field name="role_id"/>
+                    <field name="user_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="user_setting_action">
+            <field name="name">User setting</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">user.setting</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
