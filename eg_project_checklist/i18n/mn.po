@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eg_project_checklist
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20241202\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-24 02:09+0000\n"
+"PO-Revision-Date: 2026-08-24 02:09+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_project__checklist_ids
+msgid "Check list"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,help:eg_project_checklist.field_project_project__progress
+msgid "Display progress of current task."
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__id
+msgid "ID"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__name
+msgid "Name"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_project__progress
+#: model_terms:ir.ui.view,arch_db:eg_project_checklist.inherit_project_chekcklist_tree_view_inherit
+msgid "Progress"
+msgstr "Явц (%)"
+
+#. module: eg_project_checklist
+#: model:ir.model,name:eg_project_checklist.model_project_project
+#: model:ir.model.fields,field_description:eg_project_checklist.field_project_checklist__project_id
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: eg_project_checklist
+#: model:ir.model.fields,help:eg_project_checklist.field_project_checklist__name
+msgid "Project Progress Stages"
+msgstr ""
+
+#. module: eg_project_checklist
+#: model:ir.model,name:eg_project_checklist.model_project_checklist
+msgid "project.checklist"
+msgstr ""

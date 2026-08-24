@@ -11,11 +11,11 @@
     
     'website': "https://www.inkerp.com",
 
-    "depends": ['project'],
+    "depends": ['project', 'l10n_mn_project'],
     
     "data": [
         "views/project_project_form.xml",
-        "views/project_checklist_view.xml",
+        # "views/project_checklist_view.xml",
         "security/ir.model.access.csv"
 
     ],

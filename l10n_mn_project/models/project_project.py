@@ -197,7 +197,7 @@ class ProjectProject(models.Model):
             self.env.cr.execute("""
                                 SELECT aml.id
                                 FROM account_move_line aml
-                                         LEFT JOIN account_move am on am.id = aml.move_id
+                                LEFT JOIN account_move am on am.id = aml.move_id
                                 WHERE am.move_type = 'out_invoice'
                                   and aml.analytic_distribution ? %s
                                 """, [str(analytic_account_1.id)])
