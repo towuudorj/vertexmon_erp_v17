@@ -9,7 +9,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_favorite']" position="after">
                 <field name="sequence_name"/>
-                
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="date_start" optional="show"/>
+                <field name="date" optional="show"/>
             </xpath>
         </field>
     </record>
