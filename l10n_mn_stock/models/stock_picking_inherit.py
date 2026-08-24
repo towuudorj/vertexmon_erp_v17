@@ -82,8 +82,9 @@ class stock_picking(models.Model):
 
         for obj in res:
             env_user = self.env.user
-            if obj.sale_id:
-                env_user = obj.sale_id.user_id
+            sale_id = self.env['sale.order'].browse(vals.get('sale_id', False))
+            if sale_id:
+                env_user = sale_id.user_id
             env_employee = env_user.employee_id
             signature_user_obj.create({
                 'user_id': env_user.id,
@@ -91,65 +92,65 @@ class stock_picking(models.Model):
                 'picking_id': obj.id,
                 'sequence': 1,
             })
+            if not sale_id:
+                if env_employee.parent_id.id != env_employee.coach_id.id:
+                    signature_user_obj.create({
+                        'user_id': env_employee.coach_id.user_id.id if env_employee.coach_id else False,
+                        'type': 'coach',  # Дадлагажуулагч
+                        'picking_id': obj.id,
+                        'sequence': 2,
+                    })
 
-            if env_employee.parent_id.id != env_employee.coach_id.id:
                 signature_user_obj.create({
-                    'user_id': env_employee.coach_id.user_id.id if env_employee.coach_id else False,
-                    'type': 'coach',  # Дадлагажуулагч
+                    'user_id': env_employee.parent_id.user_id.id if env_employee.parent_id else False,
+                    'type': 'approved', # Зөвшөөрсөн
                     'picking_id': obj.id,
-                    'sequence': 2,
+                    'sequence': 3,
                 })
 
-            signature_user_obj.create({
-                'user_id': env_employee.parent_id.user_id.id if env_employee.parent_id else False,
-                'type': 'approved', # Зөвшөөрсөн
-                'picking_id': obj.id,
-                'sequence': 3,
-            })
+                job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
+                financial_analyst = False
+                if job_id:
+                    financial_analyst = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
+                signature_user_obj.create({
+                    'user_id': financial_analyst.user_id.id if financial_analyst else False,
+                    'type': 'financial_analyst', # Санхүүгийн шинжээч
+                    'picking_id': obj.id,
+                    'sequence': 4,
+                })
 
-            job_id = job_obj.search([('name', '=', 'Санхүүгийн шинжээч')])
-            financial_analyst = False
-            if job_id:
-                financial_analyst = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
-            signature_user_obj.create({
-                'user_id': financial_analyst.user_id.id if financial_analyst else False,
-                'type': 'financial_analyst', # Санхүүгийн шинжээч
-                'picking_id': obj.id,
-                'sequence': 4,
-            })
+                job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'),('name', '!=', 'Тооцооны нягтлан бодогч')])
+                head = False
+                if job_id:
+                    accountants = employee_obj.search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
+                    for accountant in accountants:
+                        if not head:
+                            head = accountant.parent_id.user_id
+                        if accountant.user_id:
+                            signature_user_obj.create({
+                                'user_id': accountant.user_id.id if accountant else False,
+                                'type': 'accountant', # нягтлан бодогч
+                                'picking_id': obj.id,
+                                'sequence': 5,
+                            })
 
-            job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'),('name', '!=', 'Тооцооны нягтлан бодогч')])
-            head = False
-            if job_id:
-                accountants = employee_obj.search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
-                for accountant in accountants:
-                    if not head:
-                        head = accountant.parent_id.user_id
-                    if accountant.user_id:
-                        signature_user_obj.create({
-                            'user_id': accountant.user_id.id if accountant else False,
-                            'type': 'accountant', # нягтлан бодогч
-                            'picking_id': obj.id,
-                            'sequence': 5,
-                        })
+                signature_user_obj.create({
+                    'user_id': head.id if head else False,
+                    'type': 'head', # Дарга
+                    'picking_id': obj.id,
+                    'sequence': 6,
+                })
 
-            signature_user_obj.create({
-                'user_id': head.id if head else False,
-                'type': 'head', # Дарга
-                'picking_id': obj.id,
-                'sequence': 6,
-            })
-
-            job_id = job_obj.search([('name', '=', 'Нярав')])
-            cashier = False
-            if job_id:
-                cashier = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
-            signature_user_obj.create({
-                'user_id': cashier.user_id.id if cashier else False,
-                'type': 'issued_cashier', # Олгосон нярав
-                'picking_id': obj.id,
-                'sequence': 7,
-            })
+                job_id = job_obj.search([('name', '=', 'Нярав')])
+                cashier = False
+                if job_id:
+                    cashier = employee_obj.search([('job_id', '=', job_id.id), ('company_id', '=', obj.company_id.id)], limit=1, order='create_date asc')
+                signature_user_obj.create({
+                    'user_id': cashier.user_id.id if cashier else False,
+                    'type': 'issued_cashier', # Олгосон нярав
+                    'picking_id': obj.id,
+                    'sequence': 7,
+                })
 
         return res
 

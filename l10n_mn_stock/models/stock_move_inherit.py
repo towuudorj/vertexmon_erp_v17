@@ -233,6 +233,14 @@ class StockMove(models.Model):
             }
         return None
 
+    def _get_new_picking_values(self):
+        res = super(StockMove, self)._get_new_picking_values()
+        print(self.sale_line_id,self.sale_line_id.order_id,  'aaaa\n\n\n\n')
+        if self.sale_line_id and self.sale_line_id.order_id:
+            res['user_id'] = self.sale_line_id.order_id.user_id.id or False
+            res['sale_id'] = self.sale_line_id.order_id.id or False
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
