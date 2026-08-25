@@ -180,6 +180,16 @@
                     <div style="position:relative; margin-left: 60px; margin-bottom: 7px;">
                     </div>
                     <div style="font-size:11px; padding-top:10px; text-align:right; margin-right:20px; margin-bottom: 10px;"><b>Тамга</b>        Хариуцсан борлуулалтын менежер :......................................................................./............................................................../
+                        <t t-if="o.user_id.signature_image">
+                            <div style="margin-left: 500px; margin-top: -20px; position: fixed; border:none; z-index:2;">
+                                <img t-attf-src="data:image/jpg;base64,{{o.user_id.signature_image}}" style="height:30px;"/>
+                            </div>
+                        </t>
+                        <t t-if="o.user_id.name_image">
+                            <div style="margin-left: 700px; margin-top: -10px; position: fixed; border:none; z-index:2;">
+                                <img t-attf-src="data:image/jpg;base64,{{o.user_id.name_image}}" style="width:160px;"/>
+                            </div>
+                        </t>
                     </div> 
                     <div style="font-size:11px; padding:5px; text-align:right; margin-right: 20px;"> Шалгасан нягтлан бодогч :............................................................................................../............................................................/
                     </div>   
