@@ -412,11 +412,11 @@
                                        Хариуцсан борлуулалтын менежер
                                 :...................................................................../................................................................/
                                 <t t-if="sig_dict.get('picking_created', None) != None and sig_dict.get('picking_created').signature_image">
-                                    <div style="margin-left: 560px; margin-top: -4px; position: fixed; border:none; z-index:2;">
+                                    <div style="margin-left: 560px; margin-top: -12px; position: fixed; border:none; z-index:2;">
                                         <img t-attf-src="data:image/jpg;base64,{{sig_dict.get('picking_created').signature_image}}"
                                              style="height:30px;"/>
                                     </div>
-                                    <div style="margin-left: 700px; margin-top: 6px; position: fixed; border:none; z-index:2;">
+                                    <div style="margin-left: 700px; margin-top: -2px; position: fixed; border:none; z-index:2;">
                                        <t t-esc="sig_dict.get('picking_created').signature"/>
                                     </div>
                                 </t>
