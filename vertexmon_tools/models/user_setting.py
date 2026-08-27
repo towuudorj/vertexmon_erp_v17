@@ -25,6 +25,7 @@ class UserSetting(models.Model):
                     user.groups_id = ([(4, group.id)] for group in obj.group_ids)
                 if obj.hide_menu_ids:
                     user.hide_menu_ids = ([(4, menu.id)] for menu in obj.hide_menu_ids)
+        self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
@@ -40,6 +41,7 @@ class UserSetting(models.Model):
                     user.groups_id = ([(4, group.id)] for group in obj.group_ids)
                 if obj.hide_menu_ids:
                     user.hide_menu_ids = ([(4, menu.id)] for menu in obj.hide_menu_ids)
+        self.env.registry.clear_cache()
         return res
 
 

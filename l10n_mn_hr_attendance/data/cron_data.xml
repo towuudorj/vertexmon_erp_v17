@@ -1,4 +1,4 @@
-<odoo noupdate="1">
+<odoo noupdate="0">
     <record id="ir_cron_edi_network" model="ir.cron">
         <field name="name">ИРЦ: Нүүр таних төхөөрөмжөөс ирц татах</field>
         <field name="model_id" ref="model_hr_attendance"/>
@@ -49,6 +49,17 @@
         <field name="model_id" ref="model_hr_attendance"/>
         <field name="state">code</field>
         <field name="code">model._cron_update_attendance()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_get_att_edit_req" model="ir.cron">
+        <field name="name">Microsoft: Ирц нөхөн засах хүсэлт</field>
+        <field name="model_id" ref="model_attendance_edit_request"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_get_attendance_request()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>

@@ -25,6 +25,7 @@
                         <field name="partner_list_name"/>
                         <field name="payment_list_name"/>
                         <field name="company_account_list_name"/>
+                        <field name="att_edit_req_list_name"/>
                     </group>
                 </group>
             </form>

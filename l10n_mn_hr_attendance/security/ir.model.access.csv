@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hik_central_add_person,hik.central.add.person,model_hik_central_add_person,hr.group_hr_manager,1,1,1,1
 access_hik_central_org,hik.central.org,model_hik_central_org,hr.group_hr_manager,1,1,1,1
+access_attendance_edit_request,attendance.edit.request,model_attendance_edit_request,base.group_user,1,1,1,1
 

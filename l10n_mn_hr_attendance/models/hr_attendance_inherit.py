@@ -131,7 +131,9 @@ class HrAttendance(models.Model):
         for attendance_id in employees_with_attendance_id:
             page_num = 1
             response_json = False
-            att_id_list = attendance_id.attendance_id.replace(" ", "")
+            att_id_list = attendance_id.attendance_id
+            if ' ' in att_id_list:
+                att_id_list = att_id_list.replace(' ', '')
             att_id_list = att_id_list.split(',')
             for att_id in att_id_list:
                 while not response_json or 'record' in response_json['data']:

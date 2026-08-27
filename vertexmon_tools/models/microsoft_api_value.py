@@ -28,6 +28,8 @@ class MicrosoftApiValue(models.Model):
     payment_list_id = fields.Char(string='Payment List ID')
     company_account_list_name = fields.Char(string='Company account List Name')
     company_account_list_id = fields.Char(string='Company account List Name')
+    att_edit_req_list_name = fields.Char(string='Attendance edit Request')
+    att_edit_req_list_id = fields.Char(string='Attendance edit Request')
 
     def write(self, vals):
         for key, value in list(vals.items()):
