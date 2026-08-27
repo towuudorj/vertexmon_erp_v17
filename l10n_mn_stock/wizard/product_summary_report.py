@@ -17,7 +17,7 @@ class ProductSummaryReport(models.TransientModel):
     _description = "Stock summary Report - Mongolia"
 
     company_id = fields.Many2one('res.company', string=u'Компани', readonly=True,
-                                 default=lambda self: self.env.user.company_id)
+                                 default=lambda self: self.env.company)
     location_ids = fields.Many2one('stock.location', string=u'Байрлал')
     start_date = fields.Date(string=u'Эхлэх огноо', required=True,
                              default=fields.Date.context_today)
