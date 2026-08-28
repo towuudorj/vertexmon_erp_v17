@@ -166,6 +166,22 @@ class ProjectProject(models.Model):
                 analytic_account.id for [analytic_account] in projects_read_group
             ])
             analytic_account_to_update.write({'name': self.name})
+        key_fields = ['user_id',
+                      'partner_id',
+                      'contract_number',
+                      'contract_amount',
+                      'quality_amount',
+                      'warehouse_id',
+                      'picking_type_id',
+                      'purchase_manager_id',
+                      'project_type',
+                      'products_line'
+                      ]
+        if any(obj.state == 'process' for obj in self) and any(field in key_fields for field in vals.keys()):
+            if not self.env.user.has_group('l10n_mn_account.group_financial_analyst'):
+                raise UserError((u"Явагдаж буй төсөл тул санхүүгийн шинжээчид хандана уу"))
+
+
         return res
     
     def compute_product_count(self):
