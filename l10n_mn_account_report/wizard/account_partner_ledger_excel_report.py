@@ -301,7 +301,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
      ) as aml ON aml.partner_id = start_balance.partner_id AND aml.account_id = start_balance.account_id {'AND aml.currency_id = start_balance.currency_id' if 'aml.currency_id' in group_by else ''}
      LEFT JOIN res_partner rp ON rp.id = COALESCE(aml.partner_id, start_balance.partner_id)
      LEFT JOIN account_account aa ON aa.id = COALESCE(aml.account_id, start_balance.account_id)
-     LEFT JOIN res_currency rc ON rc.id = COALESCE(aml.currency_id, start_balance.currency_id)
+     LEFT JOIN res_currency rc ON rc.id =  {'COALESCE(aml.currency_id, start_balance.currency_id)' if 'aml.currency_id' in group_by else 'aml.currency_id'}
      WHERE (start_balance.balance != 0 or (aml.debit != 0 or aml.credit !=0))
      {where}
      {order_by}
