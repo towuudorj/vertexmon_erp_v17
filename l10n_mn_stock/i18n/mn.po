@@ -269,6 +269,12 @@ msgstr "Нэгж үнэ"
 msgid "User"
 msgstr "Хэрэглэгч"
 
+#. module: l10n_mn_stock
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_product__validity_period
+#: model:ir.model.fields,field_description:l10n_mn_stock.field_product_template__validity_period
+msgid "Validity Period/month/"
+msgstr "Ашиглах хугацаа (сар)"
+
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"

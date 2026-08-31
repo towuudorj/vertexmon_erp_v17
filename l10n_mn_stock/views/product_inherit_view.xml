@@ -13,6 +13,9 @@
                     <field name="is_quotation"/>
                     <field name="ot_code"/>
                 </xpath>
+                <field name="categ_id" position="before">
+                    <field name="validity_period"/>
+                </field>
             </field>
 		</record>
 
@@ -24,6 +27,9 @@
                 <field name="categ_id" position="after">
                     <field name="model" required="1"/>
                 </field>
+                <div name="standard_price_uom" position="after">
+                    <field name="validity_period"/>
+                </div>
             </field>
         </record>
 

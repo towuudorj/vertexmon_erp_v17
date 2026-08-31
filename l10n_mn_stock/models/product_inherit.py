@@ -15,6 +15,7 @@ class ProductProduct(models.Model):
     default_code = fields.Char('Internal Reference', related="product_tmpl_id.default_code")
     is_quotation = fields.Boolean(string='Is quotation', related="product_tmpl_id.is_quotation")
     ot_code = fields.Char(string='OT code', related="product_tmpl_id.ot_code")
+    validity_period = fields.Integer(related="product_tmpl_id.validity_period")
 
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
@@ -87,17 +88,18 @@ class ProductTemplate(models.Model):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('product.product_category_all')
 
-    model = fields.Char(string='Model',required=True)
+    model = fields.Char(string='Model',required=True, tracking=True)
     distributor_ids = fields.Many2one('res.partner', string='Distributer', domain=[("is_distributor","=",True)])
     distributor_id = fields.Many2one('distributor.register', string='Distributer')
     default_code = fields.Char('Internal Reference', index=True, compute='_compute_default_code', store=True)
     product_categ_id = fields.Many2one('product.category.new', string='Product Category')
     is_quotation = fields.Boolean(string='Is quotation', default=False)
-    ot_code = fields.Char(string='OT code')
+    ot_code = fields.Char(string='OT code', tracking=True)
     categ_id = fields.Many2one(
         'product.category', string='Item group',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
-        required=True)
+        required=True, tracking=True)
+    validity_period = fields.Integer(string='Validity Period/month/', tracking=True)
 
     _sql_constraints = [
         ('unique_model_company_id', 'unique(model)', 'Model must be unique!'),

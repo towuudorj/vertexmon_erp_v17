@@ -117,6 +117,7 @@ class HrLeave(models.Model):
                         'request_unit_hours': True if data['typeDate'] == 'Цагаар' else False,
                         'employee_id': employee.id if employee else False,
                         'sharepoint_id': data['id'],
+                        'state': 'validate',
                     }
                     if data['typeDate'] == 'Цагаар':
                         leave_vals.update({'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date()),
@@ -126,6 +127,11 @@ class HrLeave(models.Model):
 
                     else:
                         leave_vals.update({'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date())})
-                    leave_obj.create(leave_vals)
+                    leave_obj.with_context(
+                        tracking_disable=True,
+                        mail_activity_automation_skip=True,
+                        leave_fast_create=True,
+                        leave_skip_state_check=True
+                    ).create(leave_vals)
             except Exception:
                 continue

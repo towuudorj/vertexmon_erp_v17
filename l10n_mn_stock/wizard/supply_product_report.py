@@ -59,6 +59,10 @@ class SupplyProductReport(models.TransientModel):
             'align': 'right',
             'font_size': 12
         })
+        left_head = workbook.add_format({
+            'align': 'left',
+            'font_size': 12
+        })
         head_title = workbook.add_format({
             'align': 'center',
             'font_size': 16,
@@ -81,6 +85,14 @@ class SupplyProductReport(models.TransientModel):
             'num_format': '#,##0.00'
         })
 
+        data_left_int = workbook.add_format({
+            'align': 'center',
+            'border': 1,
+            'font_size': 12,
+            'valign': 'vcenter',
+            'num_format': 'General'
+        })
+
         data_center_bold = workbook.add_format({
             'align': 'center',
             'border': 1,
@@ -95,26 +107,39 @@ class SupplyProductReport(models.TransientModel):
         sheet.set_column(0, 0, 5)
         sheet.set_column(1, 1, 14)
         sheet.set_column(2, 2, 16)
-        sheet.set_column(3, 3, 60)
-        sheet.set_column(4, 20, 18)
+        sheet.set_column(3, 3, 16)
+        sheet.set_column(4, 4, 60)
+        sheet.set_column(5, 20, 18)
 
         sheet.merge_range('A1:D1', u'Байгууллагын нэр: %s' % (data['company_name']), head_title)
-        sheet.merge_range('A2:K2', u'Хангамжийн бараа материалын тайлан', head_title)
-        sheet.merge_range('I3:K3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head)
+        sheet.merge_range('A2:L2', u'Хангамжийн бараа материалын тайлан', head_title)
+        sheet.merge_range('I3:L3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head)
         rowx = 4
-
-        sheet.write('A%s' % rowx, u'№', data_center_bold)
-        sheet.write('B%s' % rowx, u'Олгосон огноо', data_center_bold)
-        sheet.write('C%s' % rowx, u'Барааны код', data_center_bold)
-        sheet.write('D%s' % rowx, u'Барааны нэр', data_center_bold)
-        sheet.write('E%s' % rowx, u'Хэмжих нэгж', data_center_bold)
-        sheet.write('F%s' % rowx, u'Нэгж өртөг', data_center_bold)
-        sheet.write('G%s' % rowx, u'Эхний үлдэгдэл', data_center_bold)
-        sheet.write('H%s' % rowx, u'Орлого', data_center_bold)
-        sheet.write('I%s' % rowx, u'Зарлага', data_center_bold)
-        sheet.write('J%s' % rowx, u'Эцсийн үлдэгдэл', data_center_bold)
-        sheet.write('K%s' % rowx, u'Нийт өртөг', data_center_bold)
-
+        y = 0
+        sheet.merge_range(rowx, y, rowx+1, y, u'№', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Олгосон огноо', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Ашиглах хугацаа (сар)', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Барааны код', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Барааны нэр', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Хэмжих нэгж', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Нэгж өртөг', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Эхний үлдэгдэл', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Орлого', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Зарлага', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Эцсийн үлдэгдэл', data_center_bold)
+        y += 1
+        sheet.merge_range(rowx, y, rowx+1, y, u'Нийт өртөг', data_center_bold)
+        rowx += 2
         date_from = data['date_from']
         date_to = data['date_to']
 
@@ -257,19 +282,21 @@ class SupplyProductReport(models.TransientModel):
             if group_partner:
                 if (isinstance(last_partner_id, bool) and not last_partner_id) or (isinstance(last_partner_id, int) and last_partner_id not in [int(line['partner_id']), 0]):
                     if last_group_rowx:
-                        sheet.write(last_group_rowx, 6, p_total_quantity, data_right)
-                        sheet.write(last_group_rowx, 7, p_total_debit_quantity, data_right)
-                        sheet.write(last_group_rowx, 8, p_total_credit_quantity, data_right)
-                        sheet.write(last_group_rowx, 9, p_total_value, data_right)
+                        sheet.write(last_group_rowx, 7, p_total_quantity, data_right)
+                        sheet.write(last_group_rowx, 8, p_total_debit_quantity, data_right)
+                        sheet.write(last_group_rowx, 9, p_total_credit_quantity, data_right)
                         sheet.write(last_group_rowx, 10, p_total_t_quantity, data_right)
-                    sheet.merge_range(rowx, 0, rowx, 5, line['partner_name'], data_center_bold)
+                        sheet.write(last_group_rowx, 11, p_total_value, data_right)
+                    sheet.merge_range(rowx, 0, rowx, 6, line['partner_name'], data_center_bold)
                     last_partner_id = int(line['partner_id'])
                     last_group_rowx = rowx
                     rowx += 1
             colly = 0
-            sheet.write(rowx, colly, count, data_left)
+            sheet.write(rowx, colly, count, data_left_int)
             colly += 1
             sheet.write(rowx, colly, line['issue_date'].strftime('%Y-%m-%d') if line.get('issue_date') else '', data_left)
+            colly += 1
+            sheet.write(rowx, colly, product.validity_period, data_left_int)
             colly += 1
             sheet.write(rowx, colly, product.default_code, data_left)
             colly += 1
@@ -288,7 +315,7 @@ class SupplyProductReport(models.TransientModel):
             sheet.write(rowx, colly, line['total_quantity'] if not group_partner else line['total_quantity']*-1, data_right)
             colly += 1
             value = line['total_quantity']*product.standard_price if not group_partner else (line['total_quantity']*product.standard_price)*-1
-            sheet.write(rowx, colly, str(round(value, 2)), data_right)
+            sheet.write(rowx, colly, round(value, 2), data_right)
 
             count += 1
             rowx += 1
@@ -312,12 +339,17 @@ class SupplyProductReport(models.TransientModel):
             sheet.write(last_group_rowx, 10, p_total_value, data_right)
 
         rowx += 1
-        sheet.merge_range(f'A%s:F%s' % (rowx, rowx), u'Нийт', data_center_bold)
-        sheet.write(f'G%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
-        sheet.write(f'H%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
-        sheet.write(f'I%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
-        sheet.write(f'J%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
-        sheet.write(f'K%s' % rowx, total_value, data_right)
+        sheet.merge_range(f'A%s:G%s' % (rowx, rowx), u'Нийт', data_center_bold)
+        sheet.write(f'H%s' % rowx, total_quantity if not group_partner else total_quantity*-1, data_right)
+        sheet.write(f'I%s' % rowx, total_debit_quantity if not group_partner else total_credit_quantity, data_right)
+        sheet.write(f'J%s' % rowx, total_credit_quantity if not group_partner else total_debit_quantity, data_right)
+        sheet.write(f'K%s' % rowx, total_t_quantity if not group_partner else total_t_quantity*-1, data_right)
+        sheet.write(f'L%s' % rowx, total_value, data_right)
+
+        rowx += 3
+
+        sheet.merge_range(f'A%s:B%s' % (rowx, rowx), u'Хянасан:', head)
+        sheet.merge_range(f'C%s:E%s' % (rowx, rowx), u'......................................../........................................', left_head)
 
 
         workbook.close()
