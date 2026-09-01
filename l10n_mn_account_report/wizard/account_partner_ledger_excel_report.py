@@ -83,7 +83,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         group1_num = {
             'align': 'right',
             'bold': True,
-            'bg_color': '#b0f6ff',
+            'bg_color': '#ffce99',
             'font_size': 12,
             'border': 1,
             'num_format': '#,##0.00 "₮"'
@@ -94,14 +94,14 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         group1_str['align'] = 'left'
         group_1_str = workbook.add_format(group1_str)
         group2_num = group1_num.copy()
-        group2_num['bg_color'] = '#dbfbff'
+        group2_num['bg_color'] = '#ffdab3'
         group_2_num = workbook.add_format(group2_num)
         group2_str = group2_num.copy()
         group2_str['num_format'] = 'General'
         group2_str['align'] = 'left'
         group_2_str = workbook.add_format(group2_str)
         group3_num = group1_num.copy()
-        group3_num['bg_color'] = '#f2feff'
+        group3_num['bg_color'] = '#ffe6cc'
         group_3_num = workbook.add_format(group3_num)
         group3_str = group3_num.copy()
         group3_str['num_format'] = 'General'
