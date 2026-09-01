@@ -18,8 +18,8 @@ class PurchaseProductIncomeReport(models.TransientModel):
                                 default=lambda self: self.env.user.company_id)
     category_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
-    start_date = fields.Date(string=u'Эхлэх огноо')
-    end_date = fields.Date(string=u'Дуусах огноо')
+    start_date = fields.Date(string=u'Эхлэх огноо', required=True)
+    end_date = fields.Date(string=u'Дуусах огноо', required=True)
     type = fields.Selection([('purchase','Purchase income'),
                              ('internal','Internal income'),
                              ('return','Return income'),
@@ -140,7 +140,7 @@ class PurchaseProductIncomeReport(models.TransientModel):
         product = []
         products = False
         if product_id:
-            product = product_obj.search([('id','=',product_id)],order='name asc').id
+            product = product_obj.search([('id','=',product_id)],order='name asc').ids
         else:
             if category_id:
                 categ_id = category_obj.search( [('parent_id','=',category_id)])

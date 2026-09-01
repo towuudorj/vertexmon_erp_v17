@@ -31,6 +31,7 @@ class ProductSummaryReport(models.TransientModel):
     type = fields.Selection([('quantity', u'Тоогоор'),
                              ('cost', u'Өртгөөр')], string=u'Төрөл', required=True)
     dont_show_inventory_count = fields.Boolean(default=False, string=u'Тооллогын хөдөлгөөн харуулахгүй')
+    hide_zero_qty = fields.Boolean(string=u'Хөдөлгөөнгүй эхний үлдэгдэл 0 барааг харуулахгүй')
 
     def get_report_data(self):
         data = super(ProductSummaryReport, self).get_report_data()
@@ -46,6 +47,7 @@ class ProductSummaryReport(models.TransientModel):
             'type': self.type,
             'is_transaction':self.is_transaction,
             'dont_show_inventory_count':self.dont_show_inventory_count,
+            'hide_zero_qty': self.hide_zero_qty,
         })
         return data
 
@@ -132,8 +134,12 @@ class ProductSummaryReport(models.TransientModel):
         location_ids = []
         warehouse_ids = data.get('warehouse_ids') or []
         if isinstance(warehouse_ids, (list, tuple)) and warehouse_ids:
+            warehouses = self.env['stock.warehouse'].browse(warehouse_ids)
+        else:
+            warehouses = self.env['stock.warehouse'].search([('company_id', '=', data['company_id'])])
+        if warehouses:
             locations = self.env['stock.location'].search([
-                ('warehouse_id', 'in', tuple(warehouse_ids))
+                ('warehouse_id', 'in', warehouses.ids)
             ])
             location_ids = locations.ids
 
@@ -380,7 +386,10 @@ class ProductSummaryReport(models.TransientModel):
                     last_price = 0.0
                 else:
                     last_price = last_qty * pro.standard_price
-                
+
+                if data.get('hide_zero_qty') and f_bal_qty == 0.0 and in_qty == 0.0 and ex_qty == 0.0:
+                    continue
+
                 sheet.write(f'A%s' % rowx, count, data_left)
                 sheet.write(f'B%s' % rowx, u'%s' % pro.name, data_left)
                 sheet.write(f'C%s' % rowx, u'%s' % pro.barcode, data_left)
@@ -475,8 +484,8 @@ class ProductSummaryReport(models.TransientModel):
                 last_qty = 0
                 f_ex_qty = 0
                 if location_ids:
-                    f_query_income = """
-                                     SELECT mv.product_id, 
+                    f_query_income = f"""
+                                     SELECT mv.product_id,
                                             SUM(mv.quantity) AS qty
                                      FROM stock_move_line mv
                                               JOIN stock_location sl ON mv.location_id = sl.id
@@ -497,8 +506,8 @@ class ProductSummaryReport(models.TransientModel):
                     )
                     f_income = self._cr.dictfetchall()
 
-                    f_query_expense = """
-                                      SELECT mv.product_id, 
+                    f_query_expense = f"""
+                                      SELECT mv.product_id,
                                              SUM(mv.quantity) AS qty
                                       FROM stock_move_line mv
                                                JOIN stock_location sl ON mv.location_id = sl.id
@@ -520,8 +529,8 @@ class ProductSummaryReport(models.TransientModel):
                     )
                     f_expense = self._cr.dictfetchall()
 
-                    query_income = """
-                                   SELECT mv.product_id, 
+                    query_income = f"""
+                                   SELECT mv.product_id,
                                           SUM(mv.quantity) AS qty
                                    FROM stock_move_line mv
                                             JOIN stock_location sl ON mv.location_id = sl.id
@@ -544,8 +553,8 @@ class ProductSummaryReport(models.TransientModel):
                     )
                     income = self._cr.dictfetchall()
 
-                    query_expense = """
-                                    SELECT mv.product_id, 
+                    query_expense = f"""
+                                    SELECT mv.product_id,
                                            SUM(mv.quantity) AS qty
                                     FROM stock_move_line mv
                                              JOIN stock_location sl ON mv.location_id = sl.id
@@ -591,6 +600,10 @@ class ProductSummaryReport(models.TransientModel):
 
                 f_bal_qty = f_in_qty - f_ex_qty
                 last_qty = f_bal_qty + in_qty - ex_qty
+
+                if data.get('hide_zero_qty') and f_bal_qty == 0.0 and in_qty == 0.0 and ex_qty == 0.0:
+                    continue
+
                 sheet.write(f'A%s' % rowx, count, data_left)
                 sheet.write(f'B%s' % rowx, u'%s' % pro.name, data_left)
                 sheet.write(f'C%s' % rowx, u'%s' % pro.barcode, data_left)
