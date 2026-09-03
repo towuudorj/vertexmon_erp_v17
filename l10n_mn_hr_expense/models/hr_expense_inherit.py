@@ -221,6 +221,7 @@ class HrExpense(models.Model):
 
                     line_vals = {
                         'name': data['order_numner'],
+                        'state': 'done',
                         'total_amount_currency': data['amount'],
                         'date': request_date.date(),
                         'employee_id': int(data['created_employee_id']) if 'created_employee_id' in data else 1,
@@ -231,14 +232,27 @@ class HrExpense(models.Model):
 
                     expense_vals = {
                         'name': data['order_numner'],
+                        'state': 'done',
                         'accounting_date': request_date.date(),
                         'partner_id': data['partner_name'],
                         'bank_account_id': account_id,
                         'company_id': int(data['odoo_company_id']),
                         'employee_id': int(data['created_employee_id']) if 'created_employee_id' in data else 1,
                         'expense_line_ids': [(0, 0, line_vals)],
+                        'journal_id': 1
                     }
-                    self.env['hr.expense.sheet'].sudo().create(expense_vals)
+                    exp = self.env['hr.expense.sheet'].sudo().create(expense_vals)
+                    self.env.cr.commit()
+                    self.env.cr.execute("""
+                        UPDATE hr_expense
+                        SET state = 'done'
+                        WHERE id = %s;
+                                     
+                        UPDATE hr_expense_sheet
+                        SET state = 'done'
+                        WHERE id = %s;
+                        
+                    """,(exp.expense_line_ids[0].id, exp.id, ))
             except Exception as e:
                 _logger.error(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
 
@@ -278,3 +292,7 @@ class HrExpenseSheet(models.Model):
                     record.amount_text = verbose_format(record.total_amount,record.currency_id)
             else:
                 record.amount_text = ''
+
+    def action_to_done(self):
+        self.write({'state': 'done'})
+        return

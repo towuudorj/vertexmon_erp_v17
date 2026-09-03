@@ -127,6 +127,7 @@ class HrAttendance(models.Model):
 
         # Timely-гаас ирц татах функц
         self.get_timely_data(begin_date, today)
+        self.get_tapa_timely_data(begin_date, today)
 
         for attendance_id in employees_with_attendance_id:
             page_num = 1
@@ -199,9 +200,6 @@ class HrAttendance(models.Model):
 
 
     def get_timely_data(self, start_date, end_date):
-        employees = self.env['hr.employee'].search([('timely_id', '!=', 0)])
-        if not employees:
-            return None
         token_url = 'https://api.timely.mn/v3/login'
         ir_config = self.env['ir.config_parameter'].sudo()
         name = ir_config.get_param('timely_user_name', default='')
@@ -226,6 +224,10 @@ class HrAttendance(models.Model):
             token = response_json['data']
 
         if token:
+            employees = self.env['hr.employee'].search([('timely_id', '!=', 0)])
+            employees = self.update_employee_timely_id(token, employees, company_vat)
+            if not employees:
+                return None
             url = 'https://api.timely.mn/v3/expanded-attd'
             headers = {
                 'Authorization': f'Bearer {token}',
@@ -327,6 +329,126 @@ class HrAttendance(models.Model):
                             continue
         return None
 
+    def get_tapa_timely_data(self, start_date, end_date):
+        token_url = 'https://api.timely.mn/openapi/auth/token'
+        ir_config = self.env['ir.config_parameter'].sudo()
+        key = ir_config.get_param('tapa_timely_key', default='')
+        company_vat = ir_config.get_param('tapa_timely_company_vat', default='')
+        leave_obj = self.env['hr.leave'].sudo()
+        token = False
+        payroll_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'payroll')], limit=1)
+        unpayroll_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'unpayroll')], limit=1)
+        overtime_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'over_time')], limit=1)
+        sick_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'sick')], limit=1)
+        if key != '':
+            data = {
+                "apiKey": key,
+            }
+            headers = {
+                'Content-Type': 'application/json',
+            }
+            response = requests.post(token_url, headers=headers, json=data)
+            response_json = response.json()
+            token = False
+            if 'result' in response_json and 'accessToken' in response_json['result']:
+                token = response_json['result']['accessToken']
+
+        if token:
+            employees = self.env['hr.employee'].search([('timely_id', '!=', 0), ('company_id', '=', 5)])
+            employees = self.update_tapa_employee_timely_id(token, employees, company_vat)
+            if not employees:
+                return None
+            url = 'https://api.timely.mn/openapi/employees/attendance'
+            headers = {
+                'Authorization': f'Bearer {token}',
+                'Content-Type': 'application/json',
+            }
+            for employee_id in employees:
+                data = {
+                    'dateFrom': str(start_date),
+                    'dateTo': str(end_date),
+                    'workerId': employee_id.timely_id
+                }
+                response = requests.get(url, headers=headers, params=data)
+                response_json = response.json()
+                if not response_json['result']:
+                    break
+                if response_json.get('success', False) and 'result' in response_json:
+                    for line in response_json['result']['attendance']:
+                        try:
+                            date = fields.Date.from_string(line['date'])
+                            start = datetime.combine(date, dt_time.min)
+                            end = datetime.combine(date, dt_time.max)
+                            check_in = False
+                            check_out = False
+                            hr_attendance_id = self.env['hr.attendance'].search([('employee_id', '=', employee_id.id),
+                                                                                 ('check_in', '>=',
+                                                                                  start + relativedelta(hours=-8)),
+                                                                                 ('check_in', '<=',
+                                                                                  end + relativedelta(hours=-8))])
+
+                            if line['clockIn']:
+                                dt = datetime.strptime(line['clockIn'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                check_in = fields.Datetime.to_datetime(dt) - timedelta(hours=8)
+
+                            if line['clockOut']:
+                                dt = datetime.strptime(line['clockOut'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                check_out = fields.Datetime.to_datetime(dt) - timedelta(hours=8)
+
+                            if check_in or check_out:
+                                if not hr_attendance_id:
+                                    self.env['hr.attendance'].create({
+                                        'employee_id': employee_id.id,
+                                        'check_in': check_in if check_in else check_out,
+                                        'check_out': check_out if check_out else check_in,
+                                    })
+                                else:
+                                    qry = f"""
+                                        UPDATE hr_attendance
+                                        SET {"check_in='%s'"%check_in if check_in else ''}{', ' if check_in and check_out else ''}
+                                            {"check_out='%s'"%check_out if check_out else ''}
+                                        WHERE id = {hr_attendance_id.id}
+                                    """
+                                    self.env.cr.execute(qry)
+                            if line['requests']:
+                                for request in line['requests']:
+                                    if leave_obj.search([('timely_id', '=', int(request['id']))]):
+                                        continue
+                                    req_in = datetime.strptime(request['reqIn'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                    req_in = fields.Datetime.to_datetime(req_in)
+                                    req_out = datetime.strptime(request['reqOut'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                    req_out = fields.Datetime.to_datetime(req_out)
+                                    leave_vals = {
+                                        'request_date_from': req_in.date(),
+                                        'request_date_to': req_out.date(),
+                                        'request_hour_from': hour_min_to_selection[str(req_in.hour) + ':' + ('30' if req_out.minute >= 30 else '0')],
+                                        'request_hour_to': hour_min_to_selection[str(req_out.hour) + ':' + ('30' if req_out.minute >= 30 else '0')],
+                                        'request_unit_hours': True,
+                                        'employee_id': employee_id.id if employee_id else False,
+                                        'timely_id': request['id']
+                                    }
+                                    if leave_vals['request_hour_to'] == '0':
+                                        leave_vals.update({'request_hour_from': str(float(leave_vals['request_hour_from']) - 0.5),
+                                                           'request_hour_to': '23.5'})
+                                    if request['code'] == 'app_leave_normal':
+                                        leave_vals.update({
+                                            'holiday_status_id': payroll_leave_type_id.id if request['code'] == 'app_leave_normal' else unpayroll_leave_type_id.id,
+                                        })
+
+                                    elif request['code'] == 'overtime_regular_request':
+                                        leave_vals.update({
+                                            'holiday_status_id': overtime_leave_type_id.id
+                                        })
+                                    elif request['code'] == 'sick':
+                                        leave_vals.update({
+                                            'holiday_status_id': sick_leave_type_id.id
+                                        })
+                                    leave_obj.create(leave_vals)
+                        except Exception as e:
+                            _logger.error("error accured on get_timely_data error:%s\n", e)
+                            continue
+        return None
+
     def _cron_update_attendance(self):
         microsoft_value_obj = self.env['microsoft.api.value'].sudo().search([], limit=1)
         token = get_token(microsoft_value_obj)
@@ -402,3 +524,75 @@ class HrAttendance(models.Model):
                 self.env.cr.rollback()
                 _logger.error("error accured on push_attendance_to_microsoft error:%s\n", e)
                 continue
+
+    def update_employee_timely_id(self, token, employees, comp_reg):
+        url = 'https://api.timely.mn/v3/employees'
+        headers = {
+            'Authorization': f'Bearer {token}',
+        }
+
+        att_ids = employees.mapped('timely_id')
+        response = requests.get(url, headers=headers, params={'company_register': comp_reg})
+        response_json = response.json()
+
+        if 'success' in response_json and response_json.get('success', False):
+            for line in response_json['data']:
+                try:
+                    if line['id'] in att_ids:
+                        continue
+                    else:
+                        domain = []
+                        if line.get('register', False):
+                            domain += [('ssnid', '=', line['register'])]
+                        if line.get('phone', False):
+                            if domain:
+                                domain = ['|'] + domain
+                            domain += [('work_phone', '=', line['phone'])]
+                        if domain:
+                            emp = self.env['hr.employee'].search(domain, limit=1)
+                            if emp:
+                                self.env.cr.execute("""
+                                    UPDATE hr_employee
+                                    SET timely_id = %s
+                                    WHERE id = %s
+                                """ , (line['id'], emp.id))
+                                employees |= emp
+                except Exception:
+                    continue
+        return employees
+
+    def update_tapa_employee_timely_id(self, token, employees, comp_reg):
+        url = 'https://api.timely.mn/openapi/employees'
+        headers = {
+            'Authorization': f'Bearer {token}',
+        }
+
+        att_ids = employees.mapped('timely_id')
+        response = requests.get(url, headers=headers, params={'company_register': comp_reg})
+        response_json = response.json()
+
+        if 'success' in response_json and response_json.get('success', False):
+            for line in response_json['result']:
+                try:
+                    if line['workerId'] in att_ids:
+                        continue
+                    else:
+                        domain = []
+                        if line.get('register', False):
+                            domain += [('ssnid', '=', line['register'])]
+                        if line.get('phone', False):
+                            if domain:
+                                domain = ['|'] + domain
+                            domain += [('work_phone', '=', line['phone'])]
+                        if domain:
+                            emp = self.env['hr.employee'].search(domain, limit=1)
+                            if emp:
+                                self.env.cr.execute("""
+                                    UPDATE hr_employee
+                                    SET timely_id = %s
+                                    WHERE id = %s
+                                """ , (line['workerId'], emp.id))
+                                employees |= emp
+                except Exception:
+                    continue
+        return employees

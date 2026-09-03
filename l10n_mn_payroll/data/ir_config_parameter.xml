@@ -16,4 +16,15 @@
         <field name="value">5602513</field>
     </record>
 
+    <record id="tapa_timely_key" model="ir.config_parameter">
+        <field name="key">tapa_timely_key</field>
+        <field name="value">timely_sk_11ff334416d1b148f14dd0d2ae3a9dd34cfe2feac90f19f80ca85a6ba1535986</field>
+    </record>
+
+    <record id="tapa_timely_compoany_vat" model="ir.config_parameter">
+        <field name="key">tapa_timely_company_vat</field>
+        <field name="value">5130573</field>
+    </record>
+
+
 </odoo>

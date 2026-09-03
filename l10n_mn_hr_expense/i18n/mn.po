@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mn_hr_expense
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20241202\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-02 03:39+0000\n"
+"PO-Revision-Date: 2026-09-02 03:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.actions.report,print_report_name:l10n_mn_hr_expense.payment_order_expense_report_hr_new_pdf
+msgid "'payment_order_pdf'"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr_expense.payment_order_expense_report_datas
+msgid ""
+".... хоногийн ..... хувийн ..... торгууль бүгд ......... төг ......... мөн"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr_expense.payment_order_expense_report_datas
+msgid "06 дугаар сарын 28 ны өдрийн 182 тоот"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__accounting_date
+msgid "Accounting Date"
+msgstr "Санхүүгийн огноо"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__amount_text
+msgid "Amount in words"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model,name:l10n_mn_hr_expense.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банкны дансууд"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__bank_account_id
+msgid "Bank account"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__currency_amount
+msgid "Currency amount"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model,name:l10n_mn_hr_expense.model_hr_expense
+msgid "Expense"
+msgstr "Зардал"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model,name:l10n_mn_hr_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Зардлын тооцоо"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.actions.server,name:l10n_mn_hr_expense.ir_cron_push_company_account_ir_actions_server
+msgid "Microsoft: Компаний данс шинэчилэх"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.actions.server,name:l10n_mn_hr_expense.ir_cron_get_approved_expense_ir_actions_server
+msgid "Microsoft: Төлбөр татах"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense_sheet__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: l10n_mn_hr_expense
+#: model:ir.model.fields,field_description:l10n_mn_hr_expense.field_hr_expense__sharepoint_id
+msgid "Share Point ID"
+msgstr ""
+
+#. module: l10n_mn_hr_expense
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr_expense.hr_expense_sheet_form_inherit_view
+msgid "To done"
+msgstr "Дууссан"
