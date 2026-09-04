@@ -21,6 +21,10 @@ class Inventory(models.Model):
         required=True,
         default=lambda self: _("New"),
     )
+    start_date = fields.Date(
+        "Тооллогын эхлэх огноо",
+        default=fields.Date.context_today,
+    )
     date = fields.Datetime(
         "Inventory Date",
         required=True,

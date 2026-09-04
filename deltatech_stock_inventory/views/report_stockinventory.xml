@@ -29,7 +29,7 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>
-                            Stock Inventory by position
+                            Байршлаар бараа материалын тооллого
                         </h2>
                         <t t-set="locations" t-value="o.line_ids.mapped('location_id')" />
                         <t t-foreach="locations" t-as="location">
@@ -75,10 +75,26 @@
                         <div>
                             <span t-field="o.note" />
                         </div>
+                        <t t-call="deltatech_stock_inventory.report_inventory_signature" />
                     </div>
                 </t>
             </t>
         </t>
+    </template>
+
+    <template id="report_inventory_signature">
+        <div style="padding:16px 4px 4px 4px; text-align:right;">Тооллого хийсэн Бараа материалын нярав
+            :................................................../................................../
+        </div>
+        <div style="padding:16px 4px 4px 4px; text-align:right;">Тооллого хянасан Бараа материалын нягтлан
+            :................................................../................................../
+        </div>
+        <div style="padding:16px 4px 4px 4px; text-align:right;">Тооллого хянасан Ахлах нягтлан
+            :................................................../................................../
+        </div>
+        <div style="padding:16px 4px 4px 4px; text-align:right;">Тооллого хянасан СЭЗахирал
+            :................................................../................................../
+        </div>
     </template>
 
     <record id="action_report_inventory_diff" model="ir.actions.report">
@@ -96,13 +112,13 @@
             <thead>
                 <tr>
                     <th>
-                        <strong>Inventory</strong>
+                        <strong>Тооллого</strong>
                     </th>
                     <th>
-                        <strong>Date</strong>
+                        <strong>Огноо</strong>
                     </th>
                     <th>
-                        <strong>Location</strong>
+                        <strong>Байршил</strong>
                     </th>
                 </tr>
             </thead>
@@ -112,7 +128,7 @@
                         <span t-field="o.name" />
                     </td>
                     <td>
-                        <span t-field="o.date" />
+                        <span t-esc="'%s - %s' % (o.start_date.strftime('%Y/%m/%d') if o.start_date else '', o.date.strftime('%Y/%m/%d') if o.date else '')" />
                     </td>
                     <td>
                         <span t-field="location.display_name" />
@@ -128,7 +144,7 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>
-                            Stock Inventory
+                            Бараа материалын тооллого
                         </h2>
                         <t t-set="locations" t-value="o.line_ids.mapped('location_id')" />
                         <t t-foreach="locations" t-as="location">
@@ -183,6 +199,7 @@
                         <div>
                             <span t-field="o.note" />
                         </div>
+                        <t t-call="deltatech_stock_inventory.report_inventory_signature" />
                     </div>
                 </t>
             </t>
@@ -194,34 +211,34 @@
                 <strong>№</strong>
             </th>
             <th>
-                <strong>Product</strong>
+                <strong>Бараа</strong>
             </th>
             <th>
-                <strong>Production Lot</strong>
+                <strong>Цуврал/Серийн дугаар</strong>
             </th>
             <th>
-                <strong>Package</strong>
+                <strong>Баглаа боодол</strong>
             </th>
             <th class="text-right">
-                <strong>Theoretical Quantity</strong>
+                <strong>Онолын тоо хэмжээ</strong>
             </th>
             <th class="text-right">
-                <strong>Real Quantity</strong>
+                <strong>Бодит тоо хэмжээ</strong>
             </th>
             <th>
-                <strong>Unit of measure</strong>
+                <strong>Хэмжих нэгж</strong>
             </th>
             <th class="text-right">
-                <strong>Amount</strong>
+                <strong>Дүн</strong>
             </th>
             <th class="text-right">
-                <strong>Difference Quantity</strong>
+                <strong>Зөрүү тоо хэмжээ</strong>
             </th>
             <th class="text-right">
-                <strong>Plus Amount</strong>
+                <strong>Илүү дүн</strong>
             </th>
             <th class="text-right">
-                <strong>Minus Amount</strong>
+                <strong>Дутуу дүн</strong>
             </th>
         </tr>
     </template>
@@ -276,7 +293,7 @@
     <template id="report_inventory_total">
         <tr>
             <td>
-                <strong>Total general</strong>
+                <strong>Нийт дүн</strong>
             </td>
             <td />
             <td />
@@ -284,10 +301,10 @@
             <td class="text-right" />
             <td>
                 <div>
-                    <strong>Before:</strong>
+                    <strong>Өмнөх:</strong>
                 </div>
                 <div>
-                    <strong>After:</strong>
+                    <strong>Дараах:</strong>
                 </div>
             </td>
             <td class="text-right">
