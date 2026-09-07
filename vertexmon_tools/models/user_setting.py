@@ -18,13 +18,13 @@ class UserSetting(models.Model):
             for user in obj.user_ids:
                 if obj.role_id:
                     if obj.role_id.group_ids:
-                        user.groups_id = [(6, 0, obj.role_id.group_ids.ids)]
+                        user.groups_id = [(4, group.id) for group in obj.role_id.group_ids]
                     if obj.role_id.hide_menu_ids:
-                        user.hide_menu_ids = [(6, 0, obj.role_id.hide_menu_ids.ids)]
+                        user.hide_menu_ids = [(4, menu.id) for menu in obj.role_id.hide_menu_ids]
                 if obj.group_ids:
-                    user.groups_id = ([(4, group.id)] for group in obj.group_ids)
+                    user.groups_id = [(4, group.id) for group in obj.group_ids]
                 if obj.hide_menu_ids:
-                    user.hide_menu_ids = ([(4, menu.id)] for menu in obj.hide_menu_ids)
+                    user.hide_menu_ids = [(4, menu.id) for menu in obj.hide_menu_ids]
         self.env.registry.clear_cache()
         return res
 
@@ -34,13 +34,13 @@ class UserSetting(models.Model):
             for user in obj.user_ids:
                 if obj.role_id:
                     if obj.role_id.group_ids:
-                        user.groups_id = [(6, 0, obj.role_id.group_ids.ids)]
+                        user.groups_id = [(4, group.id) for group in obj.role_id.group_ids]
                     if obj.role_id.hide_menu_ids:
-                        user.hide_menu_ids = [(6, 0, obj.role_id.hide_menu_ids.ids)]
+                        user.hide_menu_ids = [(4, menu.id) for menu in obj.role_id.hide_menu_ids]
                 if obj.group_ids:
-                    user.groups_id = ([(4, group.id)] for group in obj.group_ids)
+                    user.groups_id = [(4, group.id) for group in obj.group_ids]
                 if obj.hide_menu_ids:
-                    user.hide_menu_ids = ([(4, menu.id)] for menu in obj.hide_menu_ids)
+                    user.hide_menu_ids = [(4, menu.id) for menu in obj.hide_menu_ids]
         self.env.registry.clear_cache()
         return res
 

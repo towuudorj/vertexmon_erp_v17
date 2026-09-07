@@ -96,11 +96,7 @@ class general_book_report(models.TransientModel):
         journal_ids = journal_obj.search([('type','!=','opening'),('company_id','=',self.company_id.id)])
         journal_st = journal_obj.search([('type','=','opening'),('company_id','=',self.company_id.id)])
         
-        if len(self.account_ids)==1:
-            account_id = account_obj.search([('id','=',self.account_ids.id),('company_id','=',self.company_id.id)])
-            
-        else:
-            account_id = account_obj.search([('id','in',tuple(self.account_ids.ids),('company_id','=',self.company_id.id))])
+        account_id = account_obj.search([('id', 'in', self.account_ids.ids), ('company_id', '=', self.company_id.id)])
 
         start_balance = 0.0
         total = 0.0

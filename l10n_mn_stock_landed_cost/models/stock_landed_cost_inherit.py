@@ -189,12 +189,13 @@ class StockValuationAdjustmentLines(models.Model):
 
         return AccountMoveLine
 
-    @api.depends('final_cost','quantity')
+    @api.depends('final_cost', 'quantity')
     def _compute_unit_price(self):
         for line in self:
-            if line.quantity >0.0:
-                unit_cost = line.final_cost/line.quantity
-            line.unit_price = unit_cost
+            if line.quantity > 0.0:
+                line.unit_price = line.final_cost / line.quantity
+            else:
+                line.unit_price = 0.0
 
 
 

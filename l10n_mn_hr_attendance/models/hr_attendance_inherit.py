@@ -372,7 +372,7 @@ class HrAttendance(models.Model):
                 response = requests.get(url, headers=headers, params=data)
                 response_json = response.json()
                 if not response_json['result']:
-                    break
+                    continue
                 if response_json.get('success', False) and 'result' in response_json:
                     for line in response_json['result']['attendance']:
                         try:
