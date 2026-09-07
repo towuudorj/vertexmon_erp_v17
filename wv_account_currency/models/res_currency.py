@@ -10,15 +10,16 @@ from datetime import datetime, timedelta
 from datetime import date
 from odoo.exceptions import UserError
 import json, requests
-from requests.auth import HTTPBasicAuth 
+from requests.auth import HTTPBasicAuth
+from odoo import SUPERUSER_ID
 
 class ResCurrency(models.Model):
     _inherit = "res.currency"
 
 
     def download_currency(self):
-        rate_obj = self.env['res.currency.rate']
-        currency_obj = self.env['res.currency']
+        rate_obj = self.env['res.currency.rate'].with_user(SUPERUSER_ID)
+        currency_obj = self.env['res.currency'].with_user(SUPERUSER_ID)
         token = '0'
         token_time = 0
         
