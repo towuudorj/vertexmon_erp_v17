@@ -26,5 +26,20 @@
             <field name="name">Item group</field>
         </record>
 
+        <record id="action_stock_manual_employee_url" model="ir.actions.act_url">
+            <field name="name">Агуулахын ажилтан</field>
+            <field name="url">/l10n_mn_stock/static/stock_manual_employee.html</field>
+            <field name="target">new</field>
+        </record>
+        <record id="action_stock_manual_manager_url" model="ir.actions.act_url">
+            <field name="name">Агуулахын менежер</field>
+            <field name="url">/l10n_mn_stock/static/stock_manual_manager.html</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="stock_manual_root_menu" name="Гарын авлага" parent="stock.menu_stock_root" sequence="99"/>
+        <menuitem id="stock_manual_employee_menu" name="Агуулахын ажилтан" parent="stock_manual_root_menu" sequence="1" action="action_stock_manual_employee_url" groups="stock.group_stock_user,stock.group_stock_manager"/>
+        <menuitem id="stock_manual_manager_menu" name="Агуулахын менежер" parent="stock_manual_root_menu" sequence="2" action="action_stock_manual_manager_url" groups="stock.group_stock_manager"/>
+
     </data>
 </odoo>

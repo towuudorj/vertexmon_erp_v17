@@ -144,7 +144,6 @@ class ProductSummaryReport(models.TransientModel):
             location_ids = locations.ids
 
         product_obj = self.env['product.product']
-        stock_valuation_layer_obj = self.env['stock.valuation.layer']
         if data['product_id'] and not data['categ_id']:
             product_ids = product_obj.search([('id', '=', data['product_id']),('detailed_type','=','product')])
         elif not data['product_id'] and data['categ_id']:
@@ -308,54 +307,128 @@ class ProductSummaryReport(models.TransientModel):
                 )
                 expense = self._cr.dictfetchall()
 
+                # Барааны өртгийг тоо хэмжээтэй ижил байршил/огнооны хамрах хүрээгээр
+                # (stock_move-той холбож) тооцно, эс бөгөөс сонгосон агуулах/байршлаас
+                # үл хамааран компанийн бүх түүхэн үнэлгээний давхаргыг нэмээд
+                # дүн хэт өндөр гарах эндүүрэлд хүргэдэг байсан.
+                f_query_income_value = f"""
+                                 SELECT svl.product_id,
+                                        SUM(svl.value) AS value
+                                 FROM stock_valuation_layer svl
+                                          JOIN stock_move sm ON svl.stock_move_id = sm.id
+                                          JOIN stock_location sl ON sm.location_id = sl.id
+                                          JOIN stock_location dest ON sm.location_dest_id = dest.id
+                                 WHERE sm.state = 'done'
+                                   AND sm.date < %s
+                                   {('AND dest.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                   AND svl.product_id = %s
+                                   AND svl.company_id = %s
+                                   AND sl.usage not in ('internal','transit')
+                                   AND dest.usage in ('internal','transit')
+                                   {' AND sm.picking_id IS NOT NULL' if data['dont_show_inventory_count'] else ''}
+                                 GROUP BY svl.product_id
+                                 """
+                self._cr.execute(
+                    f_query_income_value,
+                    (date_from_dt_min, pro.id, data['company_id'])
+                )
+                f_income_value = self._cr.dictfetchall()
+
+                f_query_expense_value = f"""
+                                  SELECT svl.product_id,
+                                         SUM(svl.value) AS value
+                                  FROM stock_valuation_layer svl
+                                   JOIN stock_move sm ON svl.stock_move_id = sm.id
+                                   JOIN stock_location sl ON sm.location_id = sl.id
+                                   JOIN stock_location dest ON sm.location_dest_id = dest.id
+                                  WHERE sm.state = 'done'
+                                    AND sm.date < %s
+                                    {('AND sl.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                    AND svl.product_id = %s
+                                    AND svl.company_id = %s
+                                    AND sl.usage in ('internal','transit')
+                                    AND dest.usage not in ('internal','transit')
+                                    {' AND sm.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
+                                  GROUP BY svl.product_id
+                                  """
+                self._cr.execute(
+                    f_query_expense_value,
+                    (date_from_dt_min, pro.id, data['company_id'])
+                )
+                f_expense_value = self._cr.dictfetchall()
+
+                query_income_value = f"""
+                               SELECT svl.product_id,
+                                      SUM(svl.value) AS value
+                               FROM stock_valuation_layer svl
+                                        JOIN stock_move sm ON svl.stock_move_id = sm.id
+                                        JOIN stock_location sl ON sm.location_id = sl.id
+                                        JOIN stock_location dest ON sm.location_dest_id = dest.id
+                               WHERE sm.state = 'done'
+                                 AND sm.date >= %s
+                                 AND sm.date <= %s
+                                 {('AND dest.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                 AND svl.product_id = %s
+                                 AND svl.company_id = %s
+                                 AND sl.usage not in ('internal','transit')
+                                 AND dest.usage in ('internal','transit')
+                                 {' AND sm.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
+                               GROUP BY svl.product_id
+                               """
+                self._cr.execute(
+                    query_income_value,
+                    (date_from_dt_min, date_to_dt_max, pro.id, data['company_id'])
+                )
+                income_value = self._cr.dictfetchall()
+
+                query_expense_value = f"""
+                                SELECT svl.product_id,
+                                       SUM(svl.value) AS value
+                                FROM stock_valuation_layer svl
+                                         JOIN stock_move sm ON svl.stock_move_id = sm.id
+                                         JOIN stock_location sl ON sm.location_id = sl.id
+                                         JOIN stock_location dest ON sm.location_dest_id = dest.id
+                                WHERE sm.state = 'done'
+                                  AND sm.date >= %s
+                                  AND sm.date <= %s
+                                  {('AND sl.id IN ' + str(tuple(location_ids))) if location_ids else ''}
+                                  AND svl.product_id = %s
+                                  AND svl.company_id = %s
+                                  AND sl.usage IN ('internal','transit')
+                                  AND dest.usage not in ('internal','transit')
+                                  {' AND sm.picking_id IS NOT NULL' if data['dont_show_inventory_count'] == True else ''}
+                                GROUP BY svl.product_id
+                                """
+                self._cr.execute(
+                    query_expense_value,
+                    (date_from_dt_min, date_to_dt_max, pro.id, data['company_id'])
+                )
+                expense_value = self._cr.dictfetchall()
+
                 f_bal_price = 0
                 f_in_qty = 0
-                f_in_price = 0
+                f_in_price = sum((l['value'] or 0.0) for l in f_income_value)
                 in_qty = 0
-                in_price = 0
+                in_price = sum((l['value'] or 0.0) for l in income_value)
                 ex_qty = 0
-                ex_price = 0
+                ex_price = abs(sum((l['value'] or 0.0) for l in expense_value))
                 last_qty = 0
                 last_price = 0
                 f_ex_qty = 0
-                f_ex_price = 0
+                f_ex_price = abs(sum((l['value'] or 0.0) for l in f_expense_value))
                 for lines in f_income:
                     if lines['product_id'] == pro.id:
                         f_in_qty += lines['qty']
-                        valuation_ids = stock_valuation_layer_obj.search([('product_id','=',pro.id),('create_date','<',date_from_dt_min),('quantity','>',0.0)])
-                        if valuation_ids:
-                            for vl in valuation_ids:
-                                f_in_price += vl.value
-                        else:
-                            f_in_price = pro.standard_price
                 for lined in f_expense:
                     if lined['product_id'] == pro.id:
                         if lined['qty'] < 0:
                             f_ex_qty += lined['qty'] * (-1)
                         else:
                             f_ex_qty += lined['qty']
-                        valuation_ids = stock_valuation_layer_obj.search([('product_id','=',pro.id),('create_date','<',date_from_dt_min),('quantity','<',0.0)])
-                        if valuation_ids:
-                            for vl in valuation_ids:
-                                if vl.value < 0.0:
-                                    f_ex_price += vl.value*(-1)
-                                else:
-                                    f_ex_price += vl.value
-                        else:
-                            f_ex_price = pro.standard_price
 
                 for linem in income:
                     if linem['product_id'] == pro.id:
                         in_qty += linem['qty']
-                        valuation_ids = stock_valuation_layer_obj.search([('product_id','=',pro.id),('create_date','>=',date_from_dt_min),('create_date','<=',date_to_dt_max),('quantity','>',0.0)])
-                        if valuation_ids:
-                            for vl in valuation_ids:
-                                if vl.value < 0.0:
-                                    in_price += vl.value*(-1)
-                                else:
-                                    in_price += vl.value
-                        else:
-                            in_price +=pro.standard_price
 
                 for linex in expense:
                     if linex['product_id'] == pro.id:
@@ -363,16 +436,7 @@ class ProductSummaryReport(models.TransientModel):
                             ex_qty += linex['qty'] * (-1)
                         else:
                             ex_qty += linex['qty']
-                        valuation_ids = stock_valuation_layer_obj.search([('product_id','=',pro.id),('create_date','>=',date_from_dt_min),('create_date','<=',date_to_dt_max),('quantity','<',0.0)])
-                        if valuation_ids:
-                            for vl in valuation_ids:
-                                if vl.value < 0.0:
-                                    ex_price += vl.value*(-1)
-                                else:
-                                    ex_price += vl.value
-                        else:
-                            ex_price += pro.standard_price
-                                
+
                 f_bal_qty = f_in_qty - f_ex_qty
                 if f_bal_qty == 0.0:
                     f_bal_price  = 0.0

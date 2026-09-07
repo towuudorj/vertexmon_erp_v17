@@ -30,7 +30,7 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>
-                            Байршлаар бараа материалын тооллого
+                            Бараа материалын тооллого
                         </h2>
                         <t t-set="locations" t-value="o.line_ids.mapped('location_id')" />
                         <t t-foreach="locations" t-as="location">
@@ -214,14 +214,11 @@
             <th>
                 <strong>Бараа</strong>
             </th>
-            <th>
-                <strong>Цуврал/Серийн дугаар</strong>
-            </th>
-            <th>
-                <strong>Баглаа боодол</strong>
+            <th class="text-right">
+                <strong>Бүртгэлтэй тоо хэмжээ</strong>
             </th>
             <th class="text-right">
-                <strong>Онолын тоо хэмжээ</strong>
+                <strong>Зөрүү тоо хэмжээ</strong>
             </th>
             <th class="text-right">
                 <strong>Бодит тоо хэмжээ</strong>
@@ -231,9 +228,6 @@
             </th>
             <th class="text-right">
                 <strong>Дүн</strong>
-            </th>
-            <th class="text-right">
-                <strong>Зөрүү тоо хэмжээ</strong>
             </th>
             <th class="text-right">
                 <strong>Илүү дүн</strong>
@@ -252,14 +246,13 @@
                 <td>
                     <span t-field="line.product_id" />
                 </td>
-                <td>
-                    <span t-field="line.prod_lot_id" />
-                </td>
-                <td>
-                    <span t-field="line.package_id" />
-                </td>
                 <td class="text-right">
                     <span t-field="line.theoretical_qty" />
+                </td>
+                <td class="text-right">
+                    <t t-if='dif!=0'>
+                        <span t-esc="round(dif)" t-options='{"widget": "float", "precision": 0}' />
+                    </t>
                 </td>
                 <td class="text-right">
                     <t t-if="line.state == 'done'">
@@ -271,11 +264,6 @@
                 </td>
                 <td class="text-right">
                     <span t-esc="round(line.product_qty*price,2)" t-options='{"widget": "float", "precision": 2}' />
-                </td>
-                <td class="text-right">
-                    <t t-if='dif!=0'>
-                        <span t-esc="round(dif)" t-options='{"widget": "float", "precision": 0}' />
-                    </t>
                 </td>
                 <td class="text-right">
                     <t t-if='dif&gt;0'>
@@ -297,7 +285,7 @@
                 <strong>Нийт дүн</strong>
             </td>
             <td />
-            <td />
+            <td class="text-right" />
             <td class="text-right" />
             <td class="text-right" />
             <td>
@@ -319,7 +307,6 @@
                     />
                 </div>
             </td>
-            <td class="text-right" />
             <td class="text-right">
                 <strong t-esc="round(total_plus,2)" t-options='{"widget": "float", "precision": 2}' />
             </td>

@@ -185,7 +185,11 @@ class ProductStockAccountDetailReport(models.TransientModel):
             
             move_line_id = move_line_obj.search( [('account_id','in',f_account_ids.ids),('company_id','=',self.company_id.id),('date','<=',self.start_date),('product_id','=',product_id),('journal_id','=',journal.id)])
             if move_line_id:
-                f_balance = move_line_id
+                # Нээлтийн журналд жил бүр шинэ бичилт нэмэгддэг тул хамгийн сүүлийн
+                # (start_date-аас өмнөх хамгийн ойрын) бичилтийг л авна, эс бөгөөс
+                # өмнөх бүх жилийн эхний үлдэгдэл давхар нэмэгдэнэ.
+                opening_date = max(move_line_id.mapped('date'))
+                f_balance = move_line_id.filtered(lambda l: l.date == opening_date)
             
             
             if income_ids !=False:
@@ -208,7 +212,8 @@ class ProductStockAccountDetailReport(models.TransientModel):
                 # Барааны орлого
                 move_line_id = move_line_obj.search( [('account_id','=',f_account_ids.id),('company_id','=',self.company_id.id),('date','<=',self.start_date),('journal_id','=',journal.id)])
                 if move_line_id:
-                    f_balance = move_line_obj.browse( move_line_id)
+                    opening_date = max(move_line_id.mapped('date'))
+                    f_balance = move_line_id.filtered(lambda l: l.date == opening_date)
                 
                 
                 if income_ids !=False:
@@ -227,6 +232,8 @@ class ProductStockAccountDetailReport(models.TransientModel):
                 # Барааны орлого
                 move_line_id = move_line_obj.search( [('account_id','in',f_account_ids.ids),('company_id','=',self.company_id.id),('date','<=',self.start_date),('journal_id','=',journal.id)])
                 if move_line_id:
+                    opening_date = max(move_line_id.mapped('date'))
+                    move_line_id = move_line_id.filtered(lambda l: l.date == opening_date)
                     f_balance = move_line_id
                 
                 

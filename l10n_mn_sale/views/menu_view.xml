@@ -11,7 +11,26 @@
         <menuitem id="crm_lead_tender_menu" name="Tender"  parent="crm.crm_menu_sales" sequence="1" action="crm_lead_action_tender_pipeline"/>	
         <menuitem id="crm_lead_project_menu" name="Project"  parent="crm.crm_menu_sales" sequence="1" action="crm_lead_action_project_pipeline"/>
 
-        <menuitem id="sales_contract_register_menu" name="Sales contract"  parent="sale.sale_menu_root" sequence="20" action="action_sales_contract_register_tree_view"/>	
+        <record id="action_sales_manual_employee_url" model="ir.actions.act_url">
+            <field name="name">Борлуулалтын ажилтан</field>
+            <field name="url">/l10n_mn_sale/static/sales_manual_employee.html</field>
+            <field name="target">new</field>
+        </record>
+        <record id="action_sales_manual_manager_url" model="ir.actions.act_url">
+            <field name="name">Борлуулалтын менежер</field>
+            <field name="url">/l10n_mn_sale/static/sales_manual_manager.html</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="sale_manual_root_menu" name="Гарын авлага" parent="sale.sale_menu_root" sequence="99"/>
+        <menuitem id="sale_manual_employee_menu" name="Борлуулалтын ажилтан" parent="sale_manual_root_menu" sequence="1" action="action_sales_manual_employee_url" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+        <menuitem id="sale_manual_manager_menu" name="Борлуулалтын менежер" parent="sale_manual_root_menu" sequence="2" action="action_sales_manual_manager_url" groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="crm_manual_root_menu" name="Гарын авлага" parent="crm.crm_menu_root" sequence="99"/>
+        <menuitem id="crm_manual_employee_menu" name="Борлуулалтын ажилтан" parent="crm_manual_root_menu" sequence="1" action="action_sales_manual_employee_url" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+        <menuitem id="crm_manual_manager_menu" name="Борлуулалтын менежер" parent="crm_manual_root_menu" sequence="2" action="action_sales_manual_manager_url" groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="sales_contract_register_menu" name="Sales contract"  parent="sale.sale_menu_root" sequence="20" action="action_sales_contract_register_tree_view"/>
         <menuitem id="sales_contract_type_menu" name="Sales type"  parent="sale.menu_sale_config" sequence="30" action="action_sales_contract_type_tree_view"/>	
         
         <menuitem id="sales_plan_register_menu" name="Sales plan register"  parent="sale.menu_sale_config" sequence="30" action="action_sales_plan_register_tree_view"/>	

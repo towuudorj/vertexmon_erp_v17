@@ -16,13 +16,27 @@
                 action="action_purchase_order_common_report"
 				sequence="51" />
 
-        <menuitem 
-				id="action_freight_type_register_menu" 
-				name="Freight type register" 
+        <menuitem
+				id="action_freight_type_register_menu"
+				name="Freight type register"
 				parent="purchase.menu_purchase_config"
                 action="action_freight_type_register_tree_view"
 				sequence="50" />
-        
+
+        <record id="action_purchase_manual_employee_url" model="ir.actions.act_url">
+            <field name="name">Худалдан авалтын ажилтан</field>
+            <field name="url">/l10n_mn_purchase/static/purchase_manual_employee.html</field>
+            <field name="target">new</field>
+        </record>
+        <record id="action_purchase_manual_manager_url" model="ir.actions.act_url">
+            <field name="name">Худалдан авалтын менежер</field>
+            <field name="url">/l10n_mn_purchase/static/purchase_manual_manager.html</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="purchase_manual_root_menu" name="Гарын авлага" parent="purchase.menu_purchase_root" sequence="99"/>
+        <menuitem id="purchase_manual_employee_menu" name="Худалдан авалтын ажилтан" parent="purchase_manual_root_menu" sequence="1" action="action_purchase_manual_employee_url" groups="purchase.group_purchase_user,purchase.group_purchase_manager"/>
+        <menuitem id="purchase_manual_manager_menu" name="Худалдан авалтын менежер" parent="purchase_manual_root_menu" sequence="2" action="action_purchase_manual_manager_url" groups="purchase.group_purchase_manager"/>
 
     </data>
 </odoo>

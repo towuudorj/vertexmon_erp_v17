@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Борлуулалтын Ажилтны Гарын Авлага</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --card:#FFFFFF;
+    --ink:#1E2521;
+    --ink-soft:#57625B;
+    --ink-faint:#8A948C;
+    --line:#D9DCD1;
+    --jade:#29604F;
+    --jade-ink:#1E4A3D;
+    --jade-soft:#E3EEE8;
+    --seal:#9C3A2A;
+    --seal-soft:#F6E3DE;
+    --gold:#93691B;
+    --gold-soft:#F2E8CE;
+    --shadow: 0 1px 2px rgba(30,37,33,.06), 0 8px 24px -12px rgba(30,37,33,.15);
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size:15.5px;
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'IBM Plex Serif', ui-serif, Georgia, serif;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0;
+  }
+  code, .mono{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  a{color:var(--jade-ink);}
+
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px 96px;
+  }
+
+  /* ---------- header ---------- */
+  .masthead{
+    padding:48px 0 32px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--jade);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--jade);
+    display:inline-block;
+  }
+  .masthead h1{
+    font-size:clamp(28px, 4vw, 42px);
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .masthead p{
+    max-width:62ch;
+    color:var(--ink-soft);
+    font-size:16px;
+    margin-top:12px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:20px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:5px 10px;
+    border-radius:999px;
+  }
+
+  /* ---------- layout ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns:230px minmax(0,1fr);
+    gap:48px;
+    align-items:start;
+  }
+  nav.toc{
+    position:sticky;
+    top:24px;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+    padding-right:8px;
+  }
+  nav.toc a{
+    display:flex;
+    gap:10px;
+    align-items:baseline;
+    padding:7px 8px;
+    border-radius:7px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:13.5px;
+    line-height:1.35;
+    border-left:2px solid transparent;
+  }
+  nav.toc a .n{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-faint);
+    flex-shrink:0;
+    width:16px;
+  }
+  nav.toc a:hover{ background:var(--jade-soft); color:var(--ink); }
+  nav.toc a.active{
+    background:var(--jade-soft);
+    color:var(--jade-ink);
+    border-left-color:var(--jade);
+    font-weight:600;
+  }
+  nav.toc a.active .n{ color:var(--jade-ink); }
+
+  main{ display:flex; flex-direction:column; gap:56px; min-width:0; }
+
+  section{ scroll-margin-top:24px; }
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:18px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .sec-head .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--jade);
+    background:var(--jade-soft);
+    border-radius:6px;
+    padding:3px 8px;
+  }
+  .sec-head h2{
+    font-size:22px;
+    font-weight:600;
+  }
+
+  section > p{ color:var(--ink-soft); max-width:72ch; }
+  section > p.lead{ color:var(--ink); font-size:16px; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px 22px;
+  }
+
+  ol.steps{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  ol.steps li{
+    display:grid;
+    grid-template-columns:26px 1fr;
+    gap:12px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--line);
+  }
+  ol.steps li:last-child{ border-bottom:none; padding-bottom:0; }
+  ol.steps li .idx{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--jade);
+    background:var(--jade-soft);
+    width:26px; height:26px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  ol.steps li .txt{ color:var(--ink-soft); }
+  ol.steps li .txt strong{ color:var(--ink); font-weight:600; }
+
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); }
+  th, td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{
+    background:var(--jade-soft);
+    color:var(--jade-ink);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:color-mix(in srgb, var(--jade-soft) 45%, transparent); }
+  td.mono, th.mono{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; white-space:nowrap; }
+
+  .badge{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.02em;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .b-neutral{ background:var(--line); color:var(--ink-soft); }
+  .b-gold{ background:var(--gold-soft); color:var(--gold); }
+  .b-jade{ background:var(--jade-soft); color:var(--jade-ink); }
+  .b-seal{ background:var(--seal-soft); color:var(--seal); }
+
+  .btnlabel{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:3px 10px;
+    border-radius:6px;
+  }
+
+  .callout{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:12px;
+    padding:14px 16px;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    margin-top:16px;
+    font-size:14px;
+  }
+  .callout .ico{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px; padding-top:1px;}
+  .callout.info{ background:var(--jade-soft); border-color:transparent; }
+  .callout.info .ico{ color:var(--jade-ink); }
+  .callout.warn{ background:var(--gold-soft); border-color:transparent; }
+  .callout.warn .ico{ color:var(--gold); }
+  .callout.approve{ background:var(--seal-soft); border-color:transparent; }
+  .callout.approve .ico{ color:var(--seal); }
+  .callout p{ margin:0; color:var(--ink); }
+  .callout strong{ color:var(--ink); }
+
+  /* ---------- flow diagram ---------- */
+  .flow{
+    display:grid;
+    gap:14px;
+    margin-top:20px;
+  }
+  .flow-row{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:16px;
+    align-items:stretch;
+  }
+  .flow-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .flow-tag b{
+    color:var(--card);
+    background:var(--ink);
+    width:22px;height:22px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;
+    flex-shrink:0;
+  }
+  .flow-track{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:0;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:12px 14px;
+  }
+  .flow-node{
+    font-size:13px;
+    padding:6px 12px;
+    border-radius:7px;
+    background:var(--jade-soft);
+    color:var(--jade-ink);
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .flow-node.end-ok{ background:var(--jade); color:var(--card); }
+  .flow-node.end-stop{ background:var(--seal-soft); color:var(--seal); }
+  .flow-arrow{
+    color:var(--ink-faint);
+    padding:0 10px;
+    font-size:14px;
+  }
+  .flow-note{ font-size:12.5px; color:var(--ink-faint); margin-left:8px; }
+
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  @media (max-width:640px){ .two-col{ grid-template-columns:1fr; } }
+
+  footer{
+    margin-top:64px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    color:var(--ink-faint);
+    font-size:12.5px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  @media (max-width:900px){
+    .layout{ grid-template-columns:1fr; }
+    nav.toc{
+      position:static;
+      flex-direction:row;
+      overflow-x:auto;
+      max-height:none;
+      gap:6px;
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:8px;
+    }
+    nav.toc a{ border-left:none; border-bottom:2px solid transparent; flex-shrink:0; }
+    nav.toc a.active{ border-left-color:transparent; border-bottom-color:var(--jade); }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    nav.toc a{ transition: background .15s ease, color .15s ease; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="masthead">
+    <div class="eyebrow">Vertexmon ERP · Борлуулалтын модуль · Ажилтанд зориулав</div>
+    <h1>Борлуулалтын ажилтны гарын авлага</h1>
+    <p>Сэжим (CRM lead) үүсгэхээс эхлээд захиалга батлуулж, гэрээ хийж, нэхэмжлэл үүсгэх хүртэлх бүх алхам. Систем дэх бодит товч, талбар, төлвийн нэрсээр бичсэн.</p>
+    <div class="meta-row">
+      <span class="chip">13 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.09.07</span>
+      <span class="chip">Модуль: l10n_mn_sale</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" id="toc">
+      <a href="#s01"><span class="n">01</span>Ажлын урсгал</a>
+      <a href="#s02"><span class="n">02</span>Сэжим үүсгэх</a>
+      <a href="#s03"><span class="n">03</span>Барааны мөр</a>
+      <a href="#s04"><span class="n">04</span>Батлуулах, төлөв</a>
+      <a href="#s05"><span class="n">05</span>Худалдан авалт</a>
+      <a href="#s06"><span class="n">06</span>Захиалга (SO)</a>
+      <a href="#s07"><span class="n">07</span>Гэрээ үүсгэх</a>
+      <a href="#s08"><span class="n">08</span>Нэхэмжлэл</a>
+      <a href="#s09"><span class="n">09</span>Хүргэлт/төлбөр</a>
+      <a href="#s10"><span class="n">10</span>Цуцлах</a>
+      <a href="#s11"><span class="n">11</span>Тайлан</a>
+      <a href="#s12"><span class="n">12</span>Мэдэгдэл</a>
+      <a href="#s13"><span class="n">13</span>Түгээмэл алдаа</a>
+    </nav>
+
+    <main>
+
+      <!-- 01 -->
+      <section id="s01">
+        <div class="sec-head"><span class="num">01</span><h2>Ажлын урсгалын тойм</h2></div>
+        <p class="lead">Борлуулалт бүр <strong>Сэжим</strong> (CRM lead) дээрээс эхэлдэг. Түүн дээр барааны мөрүүдийг бөглөж батлуулахад, барааны төрлөөс хамааран гурван замын аль нэгээр урсгал явна:</p>
+
+        <div class="flow">
+          <div class="flow-row">
+            <div class="flow-tag"><b>А</b>Нөөцөөс шууд</div>
+            <div class="flow-track">
+              <span class="flow-node">Сэжим</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Батлах</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-ok">Захиалга автоматаар үүсэж баталгаажина</span>
+              <span class="flow-note">Бүх мөр «Үнийн санал» төрөлтэй үед — Албаны захирлын зөвшөөрөл шаардахгүй</span>
+            </div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-tag"><b>Б</b>Худалдан авалт хийж</div>
+            <div class="flow-track">
+              <span class="flow-node">Сэжим</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Батлах</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Албаны захиралд имэйл</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Худалдан авалт</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-ok">Зөвшөөрөх → Захиалга үүснэ</span>
+            </div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-tag"><b>В</b>Дотоод нөөц</div>
+            <div class="flow-track">
+              <span class="flow-node">Сэжим (Нөөцөнд авах)</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Батлах</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-stop">Худалдан авалтаар дуусна — захиалга үүсэхгүй</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <span class="ico">Анхаар</span>
+          <p>«Батлах» ба «Зөвшөөрөх» товчнууд өөр эрхийн бүлэгт харьяалагддаг. Хэрэв танд харагдахгүй бол доор <a href="#s04">04-р бүлэгт</a> тайлбарласныг үзнэ үү.</p>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section id="s02">
+        <div class="sec-head"><span class="num">02</span><h2>Сэжим (CRM lead) үүсгэх</h2></div>
+        <p>Цэс: <strong>CRM → Борлуулалт → Opportunity → Шинэ</strong>. Шинэ бичлэг нээгээд дараах талбаруудыг бөглөнө.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Талбар</th><th>Тайлбар</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Төсөл</strong></td><td>Заавал. <strong>CBD</strong> албаны ажилтан төсөлгүй бол «CBD Борлуулалтын алба» сонгоно; <strong>PD</strong> албаных төсөлгүй бол «PD Төслийн алба» сонгоно; <strong>ASD</strong> алба хамаарах бодит төслөө сонгоно.</td></tr>
+              <tr><td><strong>Үйлчлүүлэгч</strong></td><td>Хайлт хийж сонгоно, олдохгүй бол шинээр үүсгэнэ. Сонгосны дараа <strong>Имэйл</strong>, <strong>Утас</strong> зэрэг мэдээлэл автоматаар татагдана.</td></tr>
+              <tr><td><strong>CRM сэжим нэр</strong></td><td>Хоосон орхивол үйлчлүүлэгчийн нэрээр автоматаар бөглөгдөнө.</td></tr>
+              <tr><td><strong>CRM Төрөл</strong></td><td><span class="badge b-jade">Сэжим бүртгэх</span> — бодит борлуулалт хийх. <span class="badge b-gold">Нөөцөнд авах</span> — дотоод нөөц нөхөх, захиалга үүсгэхгүй (Зам В).</td></tr>
+              <tr><td><strong>Пайз</strong></td><td>Үйлчлүүлэгчээс автоматаар татагдана (жишээ нь «Боловсруулах үйлдвэрлэл»).</td></tr>
+              <tr><td><strong>Үнийн хуснэгт</strong></td><td>Үйлчлүүлэгчээс автоматаар татагдана.</td></tr>
+              <tr><td><strong>Борлуулагч /нэмэлт/</strong></td><td>Хамтран борлуулж байгаа тохиолдолд хамааралтай ажилтнуудыг нэмж оруулна.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <span class="ico">Навигаци</span>
+          <p>Дэлгэцийн дээд хэсэгт байгаа <span class="mono">⚙</span> (тохиргоо) товчны <strong>Хэвлэх</strong> дэд цэснээс «CRM Quotation» (Үнийн санал) болон «CRM Quotation No Sign» (Үнийн санал — Гарын үсэггүй) хэвлэмэл маягтуудыг гаргаж болно. Мөн дэлгэцийн баруун дээд буланд <strong>Нэхэмжлэл</strong>, <strong>Үнийн судалгаа</strong>, <strong>Purchase Order</strong>, <strong>Захиалгууд</strong>, <strong>Similar Leads</strong> гэсэн смарт товчнуудаар холбогдох бичлэгүүд рүү шууд шилжинэ.</p>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section id="s03">
+        <div class="sec-head"><span class="num">03</span><h2>Барааны мөр бөглөх</h2></div>
+        <p>«Order line» табд бараа мөр бүрийг нэмнэ. Бараа бүртгэгдээгүй бол <strong>Тайлбар</strong> талбарт нэрийг нь бичээд Худалдан авалтын хэсэгт шинээр үүсгүүлж болно.</p>
+
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:10px;">Хүсэлтийн төрөл</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Төрөл</th><th>Хэзээ ашиглах</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="badge b-gold">Худалдаж авах</span></td><td>Нийлүүлэгчээс үнэ судлуулж, худалдан авах шаардлагатай. <strong>Хариуцах худалдан авагч</strong>-ийг заавал сонгоно.</td></tr>
+                  <tr><td><span class="badge b-gold">Үнэ судлуулах</span></td><td>«Худалдаж авах»-тай ижил төстэй, зөвхөн үнэ судлуулах зорилготой мөр — эцэст нь худалдан авалт хийгдэнэ.</td></tr>
+                  <tr><td><span class="badge b-jade">Үнийн санал</span></td><td>Агуулахын үлдэгдэл хүрэлцэж байгаа тул худалдан авалт үүсгэлгүйгээр шууд нөөцөөс борлуулна — судалсан үнэ шаардахгүй.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:10px;">Заавал бөглөх талбарууд</h3>
+            <ol class="steps">
+              <li><span class="idx">1</span><div class="txt"><strong>Тоо хэмжээ</strong> 0-ээс их байх ёстой — эсрэг тохиолдолд алдаа гарна.</div></li>
+              <li><span class="idx">2</span><div class="txt"><strong>Зарах үнэ</strong> — заавал бөглөнө, 0 үлдвэл батлуулах боломжгүй.</div></li>
+              <li><span class="idx">3</span><div class="txt"><strong>Судалсан үнэ</strong> — «Үнийн санал»-аас бусад бүх төрөлд заавал.</div></li>
+              <li><span class="idx">4</span><div class="txt"><strong>Бэлэг бараа</strong> (is_free_pro) сонговол дээрх үнийн шалгалтуудыг алгасна.</div></li>
+            </ol>
+          </div>
+        </div>
+        <p style="margin-top:14px;">Ашгийн хувь (<em>margin_percent</em>) зарах болон судалсан үнээс автоматаар тооцогдоно. Ач холбогдол (Priority) <span class="badge b-jade">Энгийн</span> ногооноор, <span class="badge b-seal">Яаралтай</span> улаанаар мөрийн жагсаалтад тодруулагдана. Худалдан авалт хийгдэх хугацааны шинж чанарыг «Нэг удаагийн» эсвэл «Хуваагдах — жилийн туршид хуваагдаж борлуулагдах» гэж тэмдэглэж болно.</p>
+      </section>
+
+      <!-- 04 -->
+      <section id="s04">
+        <div class="sec-head"><span class="num">04</span><h2>Батлуулах ба төлвийн шилжилт</h2></div>
+        <p>Сэжимийн төлөв (<span class="mono">new_status</span>) статус мөрөнд харагдана:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Төлөв</th><th>Хэн хийдэг</th><th>Юу болдог</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge b-neutral">Шинэ</span></td><td>Борлуулагч</td><td>Мөрүүдээ бөглөж дуусгана.</td></tr>
+              <tr><td><span class="badge b-gold">Үнэ судлагдсан</span></td><td>Систем автомат</td><td>Ядаж нэг мөрөнд судалсан үнэ орсон үед автоматаар шилжинэ.</td></tr>
+              <tr><td><span class="badge b-jade">Батлагдсан</span></td><td>CBD/PD/ASD албаны ажилтан, менежер → <span class="btnlabel">Батлах</span></td><td>Худалдан авалт шаардлагатай бол Албаны захиралд имэйл очно.</td></tr>
+              <tr><td><span class="badge b-jade">Дууссан</span></td><td>Албаны захирал → <span class="btnlabel">Зөвшөөрөх</span> <em>(эрх шаардана)</em></td><td>Борлуулалтын захиалга автоматаар үүсэж баталгаажина.</td></tr>
+              <tr><td><span class="badge b-seal">Цуцлагдсан</span></td><td>Хэн ч → <span class="btnlabel">Цуцлах</span></td><td>Шалтгаан заавал бичнэ, бүх мөр цуцлагдана.</td></tr>
+              <tr><td><span class="badge b-gold">Хойшлуулсан</span></td><td>Хэн ч → <span class="btnlabel">Хойшлуулах</span></td><td>Шалтгаан заавал бичнэ; дараа нь <span class="btnlabel">Шинэ</span> дарж дахин эхлүүлнэ.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout approve">
+          <span class="ico">Эрх</span>
+          <p><strong>«Батлах»</strong> товчийг CBD, PD, ASD албаны ажилтан болон менежерүүд хийж болно. <strong>«Зөвшөөрөх»</strong> товч харин зөвхөн захиалгын мөр «Үнэ судлуулах» эсвэл «Худалдаж авах» төрөлтэй байхад л гарч ирдэг бөгөөд үүнийг <strong>Албаны захирал</strong> л дарж зөвшөөрдгийг анхаарна уу.</p>
+        </div>
+
+        <p style="margin-top:16px;"><span class="btnlabel">Батлах</span> дарахад системд:</p>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt">Мөр бүрийн зарах/судалсан үнийг шалгана — дутуу бол <a href="#s13">алдааны мэдэгдэл</a> гарч зогсоно.</div></li>
+          <li><span class="idx">2</span><div class="txt">Бүх мөр <strong>«Үнийн санал»</strong> төрөлтэй бол — Захиалга шууд үүсэж, Сэжим шууд «Дууссан» төлөвт орно (Зам А).</div></li>
+          <li><span class="idx">3</span><div class="txt">Мөрд «Үнэ судлуулах» эсвэл «Худалдаж авах» төрөл байвал төлөв «Батлагдсан» болж, Албаны захиралд <span class="btnlabel">Зөвшөөрөх</span> хийхийг хүлээнэ (Зам Б/В).</div></li>
+        </ol>
+      </section>
+
+      <!-- 05 -->
+      <section id="s05">
+        <div class="sec-head"><span class="num">05</span><h2>Худалдан авалтын хүсэлт</h2></div>
+        <p>Мөр дээр «Худалдан авалт» төрөл сонгож, <strong>Хариуцах худалдан авагч</strong>-ийг зөв оноосон бол л энэ мөр Худалдан авалтын багийн <span class="mono">Purchase → Үнийн судалгааны хувиарлалт</span> жагсаалтад бодитоор орж, тэдний талд боловсруулагдана.</p>
+        <div class="callout info">
+          <span class="ico">Санамж</span>
+          <p>Борлуулагчийн үүрэг бол зөвхөн <strong>зөв төрөл + зөв хариуцагч</strong>-ийг мөр дээр оноох хүртэл. Худалдан авалтын хүсэлт (Purchase requisition) үүсгэх, гүйцэтгэх ажлыг Худалдан авалтын баг гүйцэтгэнэ.</p>
+        </div>
+        <p>Менежер <span class="btnlabel">Зөвшөөрөх</span> дарж дуусгахад:</p>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt">Холбогдох Худалдан авалтын хүсэлт «Судалгаа дууссан» төлөвт шилжинэ.</div></li>
+          <li><span class="idx">2</span><div class="txt">Борлуулалтын захиалга автоматаар үүсэж баталгаажина.</div></li>
+          <li><span class="idx">3</span><div class="txt">Анхны борлуулагчид үүссэн Захиалга болон Худалдан авалтын захиалга руу шууд хандах холбоос бүхий имэйл очно.</div></li>
+        </ol>
+      </section>
+
+      <!-- 06 -->
+      <section id="s06">
+        <div class="sec-head"><span class="num">06</span><h2>Борлуулалтын захиалга (Sale Order)</h2></div>
+        <p>Захиалга Сэжимээс автоматаар үүсэх, эсвэл шууд <strong>Sales</strong> модулиас гараар нээж болно. Дугаар (жишээ нь <code class="mono">26091501001</code>) огноо + борлуулагчийн код + өдрийн дараалал дугаараар автоматаар бүрддэг тул гараар өөрчлөх шаардлагагүй.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Талбар</th><th>Утга</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Sales type</strong></td><td>Шууд / Тендер / Төсөл</td></tr>
+              <tr><td><strong>Sale order type</strong></td><td>Шууд / Шууд бус / Үнийн санал</td></tr>
+              <tr><td><strong>OT/PO код</strong></td><td>Давхардсан код орсон тохиолдолд системээс мэдэгдэнэ — «Давхардсан захиалгууд харах» товчоор шалгаж болно.</td></tr>
+              <tr><td><strong>Дансны данс</strong> (partner_bank_id)</td><td>Компанийн үндсэн дансаар автоматаар бөглөгдөнө, нэхэмжлэлд дамжина.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout approve">
+          <span class="ico">Эрх</span>
+          <p>Захиалгыг <span class="btnlabel">Батлах</span> товч зөвхөн <em>«Борлуулалтын захиалга батлах»</em> бүлэгт байгаа хэрэглэгчид харагдана. Баталгаажсан даруйд харилцагчид баталгаажуулах имэйл автоматаар илгээгдэнэ.</p>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section id="s07">
+        <div class="sec-head"><span class="num">07</span><h2>Гэрээ үүсгэх</h2></div>
+        <p>Баталгаажсан захиалга дээр <strong>«Create contract»</strong> товч дарж, харилцагч бүрт нэг гэрээ (Sales contract) үүсгэнэ. Дараах тохиолдолд боломжгүй:</p>
+        <div class="two-col">
+          <div class="callout warn"><span class="ico">Хориглоно</span><p>Захиалгын нийт дүн 0 бол.</p></div>
+          <div class="callout warn"><span class="ico">Хориглоно</span><p>Тухайн харилцагч/захиалгад гэрээ өмнө нь үүссэн бол.</p></div>
+        </div>
+        <p style="margin-top:16px;">Гэрээний төлөв: <span class="badge b-neutral">Ноорог</span> → <span class="badge b-neutral">Ноорог илгээсэн</span> → <span class="badge b-jade">Баталгаажсан</span> → <span class="badge b-gold">Төлбөр хүлээгдэж буй</span> → <span class="badge b-jade">Хаагдсан</span> / <span class="badge b-gold">Барьцаа</span> / <span class="badge b-seal">Цуцлагдсан</span>. Жагсаалт: <strong>Sales → Sales contract</strong>. Гэрээний төрөл, борлуулалтын төлөвлөгөө <strong>Sales → Configuration</strong> дор бүртгэгдэнэ.</p>
+      </section>
+
+      <!-- 08 -->
+      <section id="s08">
+        <div class="sec-head"><span class="num">08</span><h2>Нэхэмжлэл үүсгэх</h2></div>
+        <p>Захиалга дээрх <span class="btnlabel">Нэхэмжлэл үүсгэх</span> товч дарахад нээгдэх цонхонд <strong>Тогтмол дүн</strong> болон <strong>Төлбөрийн нөхцөл</strong> гэсэн хоёр сонголт байна.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Сонголт</th><th>Хэзээ ашиглах</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Тогтмол дүн</strong></td><td>Нэхэмжлэх дүнг өөрөө гараар бичих үед. Урьдчилгаа төлбөрийн дүн, Төлбөрийн төрлийг сонгож <span class="btnlabel">Ноорог Нэхэмжлэл Үүсгэх</span> дарна.</td></tr>
+              <tr><td><strong>Төлбөрийн нөхцөл</strong></td><td>Захиалгад урьдчилж бэлдсэн төлбөрийн нөхцөл (жишээ нь 30/70 хувь) байгаа үед — идэвхжүүлэх мөрүүдээ сонгоод нэг товчоор олон нэхэмжлэл зэрэг үүсгэнэ.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Төлбөрийн нөхцөлөөр үүсгэхэд цонх дараах мэдээллийг харуулна:</p>
+        <ul style="margin:10px 0 0; padding-left:20px; color:var(--ink-soft);">
+          <li>Захиалгын нийт дүн, өмнө нь үүссэн нэхэмжлэлийн нийт дүн, нэхэмжлэх үлдэгдэл дүн.</li>
+          <li>Мөр бүрд: Хувь (%), Гүйлгээний утга (жишээ нь гэрээний дугаар), Эцсийн огноо бодох өдрийн тоо, Нэхэмжлэлийн дүн.</li>
+          <li>«Нэхэмжлэх үүссэн» (өмнө нь аль хэдийн үүссэн эсэх) болон «Нэхэмжлэх» (энэ удаад үүсгэх эсэх) гэсэн 2 тэмдэглэгээ мөр бүрд бий.</li>
+        </ul>
+
+        <p style="margin-top:12px;">Төлбөрийн төрлийг доорхоос сонгоно (энэ ангилал нийт дүнд нөлөөлдөггүй, зөвхөн тайлангийн ангилал):</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Төрөл</th></tr></thead>
+            <tbody>
+              <tr><td>Урьдчилгаа төлбөр</td></tr>
+              <tr><td>Дундын санхүүжилт</td></tr>
+              <tr><td>Эцсийн санхүүжилт</td></tr>
+              <tr><td>Бартер</td></tr>
+              <tr><td>Баталгаа барьцаа</td></tr>
+              <tr><td>Алданги <span class="mono" style="color:var(--ink-faint);">(нэхэмжлэлүүдийн нийт үнийн дүнд нөлөөлөхгүй)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <span class="ico">Анхаар</span>
+          <p>Захиалга дээр аль хэдийн Ноорог төлөвтэй нэхэмжлэл байгаа бол цонх «Борлуулалтын захиалга дээр Ноорог нэхэмжлэлүүд үүссэн байна» гэж сануулна — давхар нэхэмжлэл үүсгэхээс өмнө шалгаарай.</p>
+        </div>
+      </section>
+
+      <!-- 09 -->
+      <section id="s09">
+        <div class="sec-head"><span class="num">09</span><h2>Хүргэлт ба төлбөрийн төлөв</h2></div>
+        <p>Захиалгын дэлгэц дээрээс шууд харагдана — тайлан татах шаардлагагүй:</p>
+        <div class="two-col">
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Хүргэлтийн төлөв</h3><p style="margin:0;">Агуулахаас бүрэн/хэсэгчлэн/хүргээгүй эсэх — жагсаалт болон захиалгын дэлгэцэнд шошгоор харагдана.</p></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Төлбөрийн төлөв</h3><p style="margin:0;">Төлбөр төлөгдсөн эсэх, төлсөн дүн, үлдэгдэл дүн захиалга дээр шууд харагдана.</p></div>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section id="s10">
+        <div class="sec-head"><span class="num">10</span><h2>Цуцлах ба хойшлуулах</h2></div>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:8px;">Сэжим дээр</h3>
+            <p style="margin:0;"><span class="btnlabel">Цуцлах</span> эсвэл <span class="btnlabel">Хойшлуулах</span> дарахад шалтгаан бичих цонх нээгдэнэ — шалтгаан заавал. Цуцлагдсан/хойшлогдсон Сэжимийг <span class="btnlabel">Шинэ</span> товчоор дахин нээж болно.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:8px;">Захиалга дээр</h3>
+            <p style="margin:0;">Цуцлахад мөн шалтгаан заавал. Цуцлахад холбогдох <strong>ноорог/баталгаажсан нэхэмжлэл</strong> болон <strong>дуусаагүй агуулахын хүргэлт</strong> хамт цуцлагдана — тиймээс баталгаатай тохиолдолд л ашиглана уу.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section id="s11">
+        <div class="sec-head"><span class="num">11</span><h2>Тайлан</h2></div>
+        <p>Цэс: <strong>Sales → Reporting</strong></p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Тайлан</th><th>Зориулалт</th></tr></thead>
+            <tbody>
+              <tr><td>Борлуулалтын тайлан шинэ</td><td>Мөр бүрийн дэлгэрэнгүй харагдац.</td></tr>
+              <tr><td>Борлуулалтын тайлан хураангуй</td><td>Захиалга/борлуулагчаар нэгтгэсэн хураангуй харагдац.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 12 -->
+      <section id="s12">
+        <div class="sec-head"><span class="num">12</span><h2>Мэдэгдэл (имэйл)</h2></div>
+        <p>Урсгалын гол алхам бүрд систем оролцогч талуудад имэйл мэдэгдэл автоматаар илгээдэг тул та утсаар/чатаар давхар сануулах шаардлагагүй:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Үйлдэл</th><th>Хэнд очих</th><th>Агуулга</th></tr></thead>
+            <tbody>
+              <tr><td>Сэжим дээр <span class="btnlabel">Батлах</span> дарах (мөрд «Худалдаж авах»/«Үнэ судлуулах» төрөл байгаа үед)</td><td>Албаны захирал</td><td>«Сэжим {код} -ын батлуулах хүсэлт илгээсэн байна.» — худалдан авалт/зарах нийт үнийн мэдээлэлтэй.</td></tr>
+              <tr><td>Албаны захирал <span class="btnlabel">Зөвшөөрөх</span> дарах</td><td>Анхны борлуулагч (та)</td><td>«Таны Сэжим {код} -ыг зөвшөөрсөн байна.» — үүссэн Захиалга болон Худалдан авалтын захиалга руу шууд орох холбоостой.</td></tr>
+              <tr><td>Захиалга дээр <span class="btnlabel">Батлах</span> дарах</td><td>Харилцагч</td><td>Захиалгыг баталгаажуулсан тухай автомат имэйл (email template).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <span class="ico">Анхаар</span>
+          <p>Мэдэгдэл зөв хүнд хүрэхийн тулд Албаны захирлын мэдээлэл болон тухайн хэрэглэгчийн (эсвэл харилцагчийн) имэйл хаяг зөв бүртгэлтэй байх шаардлагатай.</p>
+        </div>
+      </section>
+
+      <section id="s13">
+        <div class="sec-head"><span class="num">13</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
+        <p>Систем гаргадаг зарим анхааруулгын утга ба шалтгаан:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Мэдэгдэл</th><th>Учир шалтгаан</th><th>Засах арга</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Барааны зарах үнэ бүртгээгүй байгаа тул бүртгэнэ үү!</td><td>Мөрийн зарах үнэ 0.</td><td>Зарах үнийг бөглөх, эсвэл «Бэлэг бараа» болгох.</td></tr>
+              <tr><td class="mono">Барааны судалсан үнэ бүртгээгүй байгаа тул бүртгэнэ үү!</td><td>Судалсан үнэ 0, харин мөр «Үнийн санал» биш.</td><td>Судалсан үнийг бөглөх эсвэл төрлийг «Үнийн санал» болгох.</td></tr>
+              <tr><td class="mono">Бараа бүртгээгүй байгаа тул бүртгэнэ үү!</td><td>Барааны мөр огт байхгүй байхад «Батлах» дарсан.</td><td>Дор хаяж нэг мөр нэмнэ.</td></tr>
+              <tr><td class="mono">Борлуулалтын захиалга үүссэн байна!</td><td>Тухайн Сэжимд аль хэдийн баталгаажсан захиалга байгаа.</td><td>Шинэ Сэжим үүсгэнэ, эсвэл одоо байгаа захиалга дээрээ ажиллана.</td></tr>
+              <tr><td class="mono">Тоо 0-с их байх ёстой!</td><td>Мөрийн тоо хэмжээг сөрөг эсвэл 0 бичсэн.</td><td>Тоо хэмжээг эерэг тоогоор засна.</td></tr>
+              <tr><td class="mono">Contract already exists / Amount total is 0</td><td>Гэрээ өмнө үүссэн эсвэл захиалгын дүн 0.</td><td>Одоо байгаа гэрээг ашиглах, эсвэл захиалгад мөр нэмж дүнг гаргах.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <span>Vertexmon ERP · Борлуулалтын гарын авлага</span>
+        <span>Эх сурвалж: l10n_mn_sale модуль (Odoo 17)</span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="action_project_manual_employee_url" model="ir.actions.act_url">
+            <field name="name">Төслийн гишүүн</field>
+            <field name="url">/l10n_mn_project/static/project_manual_employee.html</field>
+            <field name="target">new</field>
+        </record>
+        <record id="action_project_manual_manager_url" model="ir.actions.act_url">
+            <field name="name">Төслийн менежер</field>
+            <field name="url">/l10n_mn_project/static/project_manual_manager.html</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="project_manual_root_menu" name="Гарын авлага" parent="project.menu_main_pm" sequence="99"/>
+        <menuitem id="project_manual_employee_menu" name="Төслийн гишүүн" parent="project_manual_root_menu" sequence="1" action="action_project_manual_employee_url" groups="project.group_project_user,project.group_project_manager"/>
+        <menuitem id="project_manual_manager_menu" name="Төслийн менежер" parent="project_manual_root_menu" sequence="2" action="action_project_manual_manager_url" groups="project.group_project_manager"/>
+
+    </data>
+</odoo>

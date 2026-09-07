@@ -2,7 +2,13 @@
 #              Dorin Hongu <dhongu(@)gmail(.)com
 # See README.rst file on addons root folder for license details
 
+import io
+import json
+
+import xlsxwriter
+
 from odoo import _, api, fields, models
+from odoo.tools import date_utils
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -61,6 +67,136 @@ class StockInventory(models.Model):
         for line in self.line_ids:
             if not line.is_ok:
                 line.write({"inventory_id": new_inv.id})
+
+    def action_print_inventory_xlsx(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.report",
+            "report_type": "xlsx",
+            "data": {
+                "model": "stock.inventory",
+                "output_format": "xlsx",
+                "options": json.dumps({"inventory_id": self.id}, default=date_utils.json_default),
+                "report_name": "report_inventory_position",
+            },
+        }
+
+    def get_xlsx_report(self, data, response):
+        inventory = self.browse(data["inventory_id"])
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {"in_memory": True})
+        sheet = workbook.add_worksheet()
+
+        title_fmt = workbook.add_format({"align": "center", "font_size": 16, "bold": True})
+        info_fmt = workbook.add_format({"align": "left", "font_size": 11, "bold": True})
+        head_fmt = workbook.add_format(
+            {"align": "center", "border": 1, "font_size": 10, "bold": True, "text_wrap": True, "bg_color": "#EEEEEE"}
+        )
+        text_fmt = workbook.add_format({"align": "left", "border": 1, "font_size": 10, "text_wrap": True})
+        num_fmt = workbook.add_format(
+            {"align": "right", "border": 1, "font_size": 10, "num_format": "#,##0.00"}
+        )
+        total_label_fmt = workbook.add_format({"align": "left", "border": 1, "font_size": 10, "bold": True})
+        total_num_fmt = workbook.add_format(
+            {"align": "right", "border": 1, "font_size": 10, "bold": True, "num_format": "#,##0.00"}
+        )
+
+        sheet.set_column(0, 0, 5)
+        sheet.set_column(1, 1, 30)
+        sheet.set_column(2, 4, 16)
+        sheet.set_column(5, 8, 14)
+
+        rowx = 0
+        sheet.merge_range(rowx, 0, rowx, 8, _("Бараа материалын тооллого"), title_fmt)
+        rowx += 2
+
+        headers = [
+            _("№"),
+            _("Бараа"),
+            _("Бүртгэлтэй тоо хэмжээ"),
+            _("Зөрүү тоо хэмжээ"),
+            _("Бодит тоо хэмжээ"),
+            _("Хэмжих нэгж"),
+            _("Дүн"),
+            _("Илүү дүн"),
+            _("Дутуу дүн"),
+        ]
+
+        locations = inventory.line_ids.mapped("location_id")
+        for location in locations:
+            sheet.write(rowx, 0, _("Тооллого: %s") % (inventory.name or ""), info_fmt)
+            date_str = "%s - %s" % (
+                inventory.start_date.strftime("%Y/%m/%d") if inventory.start_date else "",
+                inventory.date.strftime("%Y/%m/%d") if inventory.date else "",
+            )
+            sheet.write(rowx, 2, _("Огноо: %s") % date_str, info_fmt)
+            sheet.write(rowx, 5, _("Байршил: %s") % location.display_name, info_fmt)
+            rowx += 1
+
+            for col, label in enumerate(headers):
+                sheet.write(rowx, col, label, head_fmt)
+            rowx += 1
+
+            total_plus = total_minus = total_amount = total_before = 0.0
+            counter = 0
+            lines = inventory.line_ids.filtered(lambda l: l.location_id == location)
+            for line in lines:
+                if not (line.theoretical_qty > 0 or line.product_qty > 0):
+                    continue
+                counter += 1
+                price = line.standard_price or line.product_id.standard_price
+                diff = line.product_qty - line.theoretical_qty
+                amount = round(line.product_qty * price, 2) if line.state == "done" else 0.0
+                total_amount += line.product_qty * price
+                total_before += line.theoretical_qty * price
+                plus_amount = diff * price if diff > 0 else 0.0
+                minus_amount = -diff * price if diff < 0 else 0.0
+                total_plus += plus_amount
+                total_minus += minus_amount
+
+                sheet.write(rowx, 0, counter, text_fmt)
+                sheet.write(rowx, 1, line.product_id.display_name or "", text_fmt)
+                sheet.write(rowx, 2, line.theoretical_qty, num_fmt)
+                sheet.write(rowx, 3, round(diff) if diff else "", num_fmt)
+                sheet.write(rowx, 4, line.product_qty if line.state == "done" else "", num_fmt)
+                sheet.write(rowx, 5, line.product_uom_id.name or "", text_fmt)
+                sheet.write(rowx, 6, amount, num_fmt)
+                sheet.write(rowx, 7, round(plus_amount, 2) if diff > 0 else "", num_fmt)
+                sheet.write(rowx, 8, round(minus_amount, 2) if diff < 0 else "", num_fmt)
+                rowx += 1
+
+            sheet.write(rowx, 0, _("Нийт дүн"), total_label_fmt)
+            for col in (1, 2, 3, 4):
+                sheet.write(rowx, col, "", total_label_fmt)
+            sheet.write(rowx, 5, _("Өмнөх:"), total_label_fmt)
+            sheet.write(rowx, 6, round(total_before, 2), total_num_fmt)
+            sheet.write(rowx, 7, round(total_plus, 2), total_num_fmt)
+            sheet.write(rowx, 8, round(total_minus, 2), total_num_fmt)
+            rowx += 1
+            sheet.write(rowx, 5, _("Дараах:"), total_label_fmt)
+            sheet.write(rowx, 6, round(total_before + total_plus - total_minus, 2), total_num_fmt)
+            rowx += 2
+
+        if inventory.note:
+            sheet.write(rowx, 0, inventory.note, workbook.add_format({"text_wrap": True}))
+            rowx += 2
+
+        rowx += 1
+        signature_fmt = workbook.add_format({"align": "right"})
+        for label in (
+            _("Тооллого хийсэн Бараа материалын нярав"),
+            _("Тооллого хянасан Бараа материалын нягтлан"),
+            _("Тооллого хянасан Ахлах нягтлан"),
+            _("Тооллого хянасан СЭЗахирал"),
+        ):
+            sheet.merge_range(rowx, 0, rowx, 8, "%s: ................................................../..................................../" % label, signature_fmt)
+            rowx += 1
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()
 
 
 class StockInventoryLine(models.Model):

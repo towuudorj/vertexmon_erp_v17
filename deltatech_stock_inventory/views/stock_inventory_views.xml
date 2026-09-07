@@ -265,6 +265,13 @@
                         groups="stock.group_stock_user"
                     />
                     <button
+                        name="action_print_inventory_xlsx"
+                        string="Export Excel"
+                        type="object"
+                        invisible="state == 'draft'"
+                        groups="stock.group_stock_user"
+                    />
+                    <button
                         name="action_cancel_draft"
                         invisible="state !='cancel'"
                         string="Set to Draft"

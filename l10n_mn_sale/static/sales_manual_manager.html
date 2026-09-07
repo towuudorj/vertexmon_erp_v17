@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Борлуулалтын Менежерийн Гарын Авлага</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --card:#FFFFFF;
+    --ink:#1E2521;
+    --ink-soft:#57625B;
+    --ink-faint:#8A948C;
+    --line:#D9DCD1;
+    --jade:#29604F;
+    --jade-ink:#1E4A3D;
+    --jade-soft:#E3EEE8;
+    --seal:#9C3A2A;
+    --seal-soft:#F6E3DE;
+    --gold:#93691B;
+    --gold-soft:#F2E8CE;
+    --shadow: 0 1px 2px rgba(30,37,33,.06), 0 8px 24px -12px rgba(30,37,33,.15);
+    --radius: 10px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size:15.5px;
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'IBM Plex Serif', ui-serif, Georgia, serif;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0;
+  }
+  code, .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  a{color:var(--jade-ink);}
+
+  .shell{ max-width:1180px; margin:0 auto; padding:0 24px 96px; }
+
+  .masthead{ padding:48px 0 32px; border-bottom:1px solid var(--line); margin-bottom:36px; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--seal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--seal); display:inline-block; }
+  .masthead h1{ font-size:clamp(28px, 4vw, 42px); font-weight:600; letter-spacing:-.01em; }
+  .masthead p{ max-width:62ch; color:var(--ink-soft); font-size:16px; margin-top:12px; }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:5px 10px;
+    border-radius:999px;
+  }
+
+  .layout{ display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; align-items:start; }
+  nav.toc{
+    position:sticky; top:24px; display:flex; flex-direction:column; gap:2px;
+    max-height:calc(100vh - 48px); overflow-y:auto; padding-right:8px;
+  }
+  nav.toc a{
+    display:flex; gap:10px; align-items:baseline; padding:7px 8px; border-radius:7px;
+    color:var(--ink-soft); text-decoration:none; font-size:13.5px; line-height:1.35;
+    border-left:2px solid transparent;
+  }
+  nav.toc a .n{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; width:16px; }
+  nav.toc a:hover{ background:var(--seal-soft); color:var(--ink); }
+  nav.toc a.active{ background:var(--seal-soft); color:var(--seal); border-left-color:var(--seal); font-weight:600; }
+  nav.toc a.active .n{ color:var(--seal); }
+
+  main{ display:flex; flex-direction:column; gap:56px; min-width:0; }
+
+  section{ scroll-margin-top:24px; }
+  .sec-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .sec-head .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--seal); background:var(--seal-soft); border-radius:6px; padding:3px 8px; }
+  .sec-head h2{ font-size:22px; font-weight:600; }
+
+  section > p{ color:var(--ink-soft); max-width:72ch; }
+  section > p.lead{ color:var(--ink); font-size:16px; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+
+  ol.steps{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  ol.steps li{ display:grid; grid-template-columns:26px 1fr; gap:12px; padding-bottom:12px; border-bottom:1px dashed var(--line); }
+  ol.steps li:last-child{ border-bottom:none; padding-bottom:0; }
+  ol.steps li .idx{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--seal); background:var(--seal-soft);
+    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  ol.steps li .txt{ color:var(--ink-soft); }
+  ol.steps li .txt strong{ color:var(--ink); font-weight:600; }
+
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); }
+  th, td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{
+    background:var(--seal-soft); color:var(--seal); font-size:11.5px; text-transform:uppercase;
+    letter-spacing:.06em; font-weight:600; white-space:nowrap;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:color-mix(in srgb, var(--seal-soft) 40%, transparent); }
+  td.mono, th.mono{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; white-space:nowrap; }
+
+  .badge{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.02em; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .b-neutral{ background:var(--line); color:var(--ink-soft); }
+  .b-gold{ background:var(--gold-soft); color:var(--gold); }
+  .b-jade{ background:var(--jade-soft); color:var(--jade-ink); }
+  .b-seal{ background:var(--seal-soft); color:var(--seal); }
+
+  .btnlabel{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:12px; background:var(--ink); color:var(--paper); padding:3px 10px; border-radius:6px; }
+  .grouplabel{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    background:var(--jade-soft); color:var(--jade-ink); padding:3px 9px; border-radius:6px;
+  }
+
+  .callout{ display:grid; grid-template-columns:auto 1fr; gap:12px; padding:14px 16px; border-radius:var(--radius); border:1px solid var(--line); margin-top:16px; font-size:14px; }
+  .callout .ico{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px; padding-top:1px;}
+  .callout.info{ background:var(--jade-soft); border-color:transparent; }
+  .callout.info .ico{ color:var(--jade-ink); }
+  .callout.warn{ background:var(--gold-soft); border-color:transparent; }
+  .callout.warn .ico{ color:var(--gold); }
+  .callout.approve{ background:var(--seal-soft); border-color:transparent; }
+  .callout.approve .ico{ color:var(--seal); }
+  .callout p{ margin:0; color:var(--ink); }
+  .callout strong{ color:var(--ink); }
+
+  .flow{ display:grid; gap:14px; margin-top:20px; }
+  .flow-row{ display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:stretch; }
+  .flow-tag{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; }
+  .flow-track{
+    display:flex; flex-wrap:wrap; align-items:center; gap:0; background:var(--card);
+    border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px;
+  }
+  .flow-node{ font-size:13px; padding:6px 12px; border-radius:7px; background:var(--seal-soft); color:var(--seal); font-weight:600; white-space:nowrap; }
+  .flow-node.end-ok{ background:var(--seal); color:#fff; }
+  .flow-arrow{ color:var(--ink-faint); padding:0 10px; font-size:14px; }
+  .flow-note{ font-size:12.5px; color:var(--ink-faint); margin-left:8px; }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:640px){ .two-col{ grid-template-columns:1fr; } }
+
+  footer{
+    margin-top:64px; padding-top:24px; border-top:1px solid var(--line); color:var(--ink-faint);
+    font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (max-width:900px){
+    .layout{ grid-template-columns:1fr; }
+    nav.toc{
+      position:static; flex-direction:row; overflow-x:auto; max-height:none; gap:6px;
+      padding-bottom:10px; border-bottom:1px solid var(--line); margin-bottom:8px;
+    }
+    nav.toc a{ border-left:none; border-bottom:2px solid transparent; flex-shrink:0; }
+    nav.toc a.active{ border-left-color:transparent; border-bottom-color:var(--seal); }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    nav.toc a{ transition: background .15s ease, color .15s ease; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="masthead">
+    <div class="eyebrow">Vertexmon ERP · Борлуулалтын модуль · Менежерт зориулав</div>
+    <h1>Борлуулалтын менежерийн гарын авлага</h1>
+    <p>Багийн тохиргоо, эрх хуваарилалт, батлах/зөвшөөрөх шатны хяналт, гэрээний амьдралын мөчлөг, борлуулалтын төлөвлөгөө болон тайлангийн хяналт.</p>
+    <div class="meta-row">
+      <span class="chip">11 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.09.07</span>
+      <span class="chip">Модуль: l10n_mn_sale</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" id="toc">
+      <a href="#m01"><span class="n">01</span>Үүрэг тойм</a>
+      <a href="#m02"><span class="n">02</span>Багийн тохиргоо</a>
+      <a href="#m03"><span class="n">03</span>Эрхийн бүлэг</a>
+      <a href="#m04"><span class="n">04</span>Сэжим зөвшөөрөх</a>
+      <a href="#m05"><span class="n">05</span>Захиалга батлах</a>
+      <a href="#m06"><span class="n">06</span>Гэрээний мөчлөг</a>
+      <a href="#m07"><span class="n">07</span>Борлуулалтын төлөвлөгөө</a>
+      <a href="#m08"><span class="n">08</span>Тайлан, хяналт</a>
+      <a href="#m09"><span class="n">09</span>Цуцлалт хянах</a>
+      <a href="#m10"><span class="n">10</span>Мэдэгдэл</a>
+      <a href="#m11"><span class="n">11</span>Түгээмэл асуулт</a>
+    </nav>
+
+    <main>
+
+      <!-- 01 -->
+      <section id="m01">
+        <div class="sec-head"><span class="num">01</span><h2>Менежерийн үүргийн тойм</h2></div>
+        <p class="lead">Борлуулагчийн <a href="#" onclick="return false;">ажилтны гарын авлага</a>-д тодорхойлсон урсгалыг менежер дараах 4 цэгээр хянана:</p>
+        <div class="two-col">
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Тохиргоо</h3><p style="margin:0;">Багийн бүтэц (Sales Team), агуулах, эрхийн бүлэг хуваарилалт.</p></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Батлах шат</h3><p style="margin:0;">Сэжим «Зөвшөөрөх», Захиалга «Батлах» — зөвхөн эрхтэй хүн хийнэ.</p></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Гэрээ, төслөвлөгөө</h3><p style="margin:0;">Гэрээний төлөв удирдах, хэлтсийн борлуулалтын төлөвлөгөө батлах.</p></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Хяналт</h3><p style="margin:0;">Тайлангаар багийн гүйцэтгэл, цуцлалт/хойшлолтын шалтгааныг харах.</p></div>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section id="m02">
+        <div class="sec-head"><span class="num">02</span><h2>Багийн тохиргоо (Sales Team)</h2></div>
+        <p>Цэс: <strong>Sales → Configuration → Sales Teams</strong>. Багийн бүртгэл дээр дараах талбарууд шууд урсгалд нөлөөлдөг:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Талбар</th><th>Нөлөө</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Багийн ахлагч</strong> (Team Leader)</td><td>Сэжим «Батлах» дарагдах бүрт худалдан авалт/зарах дүнгийн мэдэгдэл имэйлээр яг энэ хүнд очно. Мөн зөвшөөрсний дараа анхны борлуулагчид хариу мэдэгдэл илгээгддэг.</td></tr>
+              <tr><td><strong>Агуулах</strong> (заавал)</td><td>Тухайн багийн Сэжим/Захиалга дээр анхны утгаар энэ агуулахыг ашиглана.</td></tr>
+              <tr><td><strong>Төсөл</strong> (сонголтоор)</td><td>Бөглөсөн бол багийн Сэжим дээр төсөл автоматаар бөглөгдөнө.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <span class="ico">Анхаар</span>
+          <p><strong>Багийн ахлагчаар сонгогдсон нь автоматаар батлах эрхтэй болохгүй.</strong> Имэйл мэдэгдэл хүлээн авах ба «Зөвшөөрөх»/«Батлах» товч дарах эрх тусдаа зүйл — доор 03-р бүлгийг үзнэ үү.</p>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section id="m03">
+        <div class="sec-head"><span class="num">03</span><h2>Эрхийн бүлэг оноох</h2></div>
+        <p>Цэс: <strong>Settings → Users &amp; Companies → Users</strong> → тухайн хэрэглэгчийг нээгээд эрхийн бүлгүүдийг тэмдэглэнэ. Модуль дараах 4 тусгай бүлэг тодорхойлсон:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Эрхийн бүлэг</th><th>Юунд зориулагдсан</th></tr></thead>
+            <tbody>
+              <tr><td><span class="grouplabel">CRM хүсэлт батлах</span></td><td>Сэжим дээрх <span class="btnlabel">Зөвшөөрөх</span> товчийг харуулж, дарах боломж олгоно (04-р бүлэг).</td></tr>
+              <tr><td><span class="grouplabel">Борлуулалтын захиалга батлах</span></td><td>Захиалга дээрх <span class="btnlabel">Батлах</span> товчийг харуулж, дарах боломж олгоно (05-р бүлэг).</td></tr>
+              <tr><td><span class="grouplabel">CRM Төслийн бараа бүртгэх</span></td><td>Сэжимийн «Дууссан» төлөвт гарах <span class="btnlabel">Төслийн бараа бүртгэх</span> товчийг олгоно.</td></tr>
+              <tr><td><span class="grouplabel">Худалдан авалтын хүсэлт ажилтан</span></td><td>Худалдан авалтын хүсэлтийн жагсаалт/боловсруулалттай холбоотой үндсэн эрх.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:14px;">Ихэвчлэн эдгээр 3 эхний бүлгийг багийн ахлагч/менежерт, сүүлийнхийг худалдан авалтын багт оноодог. Шинэ менежер томилогдоход эдгээр бүлгийг мартахгүй нэмж өгнө үү — эс тэгвэл тухайн хүнд батлах товч харагдахгүй.</p>
+        <div class="callout info">
+          <span class="ico">Албан тушаал</span>
+          <p>Практикт «Зөвшөөрөх» товчийг ихэвчлэн тухайн харьяа <strong>Албаны захирал</strong> (CBD/PD/ASD албаны удирдлага) хийдэг тул «CRM хүсэлт батлах» бүлгийг энэ албан тушаалтай хэрэглэгчид оноож байгаарай.</p>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section id="m04">
+        <div class="sec-head"><span class="num">04</span><h2>Сэжим зөвшөөрөх</h2></div>
+        <p>Борлуулагч «Батлах» дарж, худалдан авалт шаардлагатай бол танд имэйл очно: <em>«Сэжим {код} -ын батлуулах хүсэлт илгээсэн байна»</em> — гарчигтай, доторх нь худалдан авалтын нийт үнэ ба борлуулалтын нийт үнийг харуулна.</p>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt">Имэйл дэх холбоосоор Сэжим рүү орж, мөр бүрийн <strong>ашгийн хувь</strong> (margin_percent) болон судалсан/зарах үнийг шалгана.</div></li>
+          <li><span class="idx">2</span><div class="txt">Зөв бол <span class="btnlabel">Зөвшөөрөх</span> дарна (энэ товч зөвхөн <span class="grouplabel">CRM хүсэлт батлах</span> бүлэгтэй хэрэглэгчид харагдана).</div></li>
+          <li><span class="idx">3</span><div class="txt">Систем: холбогдох Худалдан авалтын хүсэлтийг «Судалгаа дууссан» болгож, Борлуулалтын захиалгыг автоматаар үүсгэж баталгаажуулна.</div></li>
+          <li><span class="idx">4</span><div class="txt">Анхны борлуулагчид үүссэн Захиалга ба Худалдан авалтын захиалга руу шууд орох холбоос бүхий баталгаажуулах имэйл автоматаар очно.</div></li>
+        </ol>
+        <div class="callout warn">
+          <span class="ico">Алдаа</span>
+          <p class="mono">Purchase request not found!</p>
+          <p>— Худалдан авалтын хүсэлт үүсээгүй Сэжим дээр «Зөвшөөрөх» дарвал гарна. Эхлээд худалдан авалтын хүсэлт үүссэн эсэхийг шалгана уу.</p>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section id="m05">
+        <div class="sec-head"><span class="num">05</span><h2>Борлуулалтын захиалга батлах</h2></div>
+        <p>Гараар үүсгэсэн, эсвэл Сэжимээс автоматаар ирээгүй захиалгыг та өөрөө <span class="btnlabel">Батлах</span> товчоор баталгаажуулна (энэ товч зөвхөн <span class="grouplabel">Борлуулалтын захиалга батлах</span> бүлэгтэй хэрэглэгчид харагдана). Батлахад системд:</p>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt">Мөр бүрийн татвар, аналитик хуваарилалтыг шалгана.</div></li>
+          <li><span class="idx">2</span><div class="txt">Компанийн тохиргоонд «автомат түгжих» идэвхтэй бол захиалга шууд түгжигдэнэ.</div></li>
+          <li><span class="idx">3</span><div class="txt">Харилцагчид баталгаажуулах имэйл автоматаар илгээгдэнэ.</div></li>
+        </ol>
+      </section>
+
+      <!-- 06 -->
+      <section id="m06">
+        <div class="sec-head"><span class="num">06</span><h2>Гэрээний амьдралын мөчлөг</h2></div>
+        <p>Цэс: <strong>Sales → Sales contract</strong>. Захиалга дээрх «Create contract» товчоор үүссэн гэрээг менежер дараах дарааллаар удирдана:</p>
+        <div class="flow">
+          <div class="flow-row">
+            <div class="flow-tag">Төлөв</div>
+            <div class="flow-track">
+              <span class="flow-node">Ноорог</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Send draft</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Confirm</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Payment waiting</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-ok">Closed</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Deposit</span>
+            </div>
+          </div>
+        </div>
+        <div class="callout info">
+          <span class="ico">Автомат</span>
+          <p><span class="btnlabel">Confirm</span> дарахад гэрээний дугаар (contract_number_auto) дараалал автоматаар олгогдож, баталгаажсан огноо (confirm_date) өнөөдрөөр бичигдэнэ.</p>
+        </div>
+        <div class="callout warn">
+          <span class="ico">Анхаар</span>
+          <p><strong>«Cancel» товч зөвхөн «Closed» төлөвт байгаа гэрээн дээр л харагдана.</strong> Ноорог/баталгаажсан үе шатанд гэрээг цуцлах товч гарахгүй тул шаардлагатай бол эхлээд төлвийг дарааллаар нь Closed хүртэл шилжүүлнэ.</p>
+        </div>
+        <p style="margin-top:14px;">Хэрэв гэрээ төслийн шинжтэй бол («Local type» = Project) <span class="btnlabel">Create project</span> товч гарч, дарахад холбогдох Төсөл (project.project) шинээр үүсч, менежер (sales_manager_id) нь төслийн хариуцагчаар автоматаар орно. Захиалга/Нэхэмжлэл/Төслийн тоог смарт товчоор шууд харна.</p>
+      </section>
+
+      <!-- 07 -->
+      <section id="m07">
+        <div class="sec-head"><span class="num">07</span><h2>Борлуулалтын төлөвлөгөө</h2></div>
+        <p>Цэс: <strong>Sales → Configuration → Sales plan register</strong>. Хэлтэс тус бүрд зорилтот борлуулалтыг бүртгэнэ.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Талбар</th><th>Тайлбар</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Хэлтэс</strong> (department_id)</td><td>Заавал — аль хэлтсийн төлөвлөгөө болохыг тодорхойлно.</td></tr>
+              <tr><td><strong>Эхлэх/дуусах огноо</strong></td><td>Төлөвлөгөөний хамрах хугацаа.</td></tr>
+              <tr><td><strong>Мөрүүд</strong> (sales_plan_ids)</td><td>Бараа тус бүрээр тоо хэмжээ, нэгжийн үнэ, нийт дүн зорилт.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:14px;">Төлөв: <span class="badge b-neutral">Ноорог</span> → <span class="btnlabel">Confirm</span> → <span class="badge b-jade">Баталгаажсан</span>, эсвэл <span class="btnlabel">Cancel</span> → <span class="badge b-seal">Цуцлагдсан</span>.</p>
+      </section>
+
+      <!-- 08 -->
+      <section id="m08">
+        <div class="sec-head"><span class="num">08</span><h2>Тайлан ба хяналт</h2></div>
+        <p>Цэс: <strong>Sales → Reporting</strong> — «Борлуулалтын тайлан шинэ» (дэлгэрэнгүй) ба «Борлуулалтын тайлан хураангуй» (нэгтгэсэн). Борлуулагчаар бүлэглэж багийн гүйцэтгэлийг харьцуулна.</p>
+        <p>Гэрээний жагсаалт дээр бэлэн шүүлтүүр бий: <strong>«Миний гэрээ»</strong>, мөн <strong>Борлуулагч</strong> / <strong>Харилцагч</strong> / <strong>Эхлэх огноо</strong>-гоор бүлэглэх (Group By) сонголт — сар/улирлын тайлан хурдан гаргахад тохиромжтой.</p>
+      </section>
+
+      <!-- 09 -->
+      <section id="m09">
+        <div class="sec-head"><span class="num">09</span><h2>Цуцлалт, хойшлолтыг хянах</h2></div>
+        <p>Цуцлагдсан болон хойшлогдсон Сэжим бүр дээр шалтгаан заавал бичигддэг тул (<span class="mono">cancel_reason</span> / <span class="mono">break_reason</span>) сар бүр эргэж харж, борлуулагчийн ажлын чанар, зах зээлийн жамын шалтгааныг ялгаж дүгнэх боломжтой. Захиалга дээрх цуцлалтын шалтгаан ч мөн адил хадгалагдана.</p>
+        <div class="callout warn">
+          <span class="ico">Анхаар</span>
+          <p>Захиалгыг цуцлахад холбогдох ноорог/баталгаажсан нэхэмжлэл болон дуусаагүй агуулахын хүргэлт хамт цуцлагддагийг ажилтнуудад сануулж байх шаардлагатай.</p>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section id="m10">
+        <div class="sec-head"><span class="num">10</span><h2>Мэдэгдэл (имэйл)</h2></div>
+        <p>Таны нэр орсон 3 автомат имэйл цэг байдаг — эдгээрийг зөв ажиллуулахын тулд Багийн ахлагч (Team Leader) талбар зөв бөглөгдсөн, тухайн хэрэглэгчийн и-мэйл идэвхтэй байх ёстой:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Үйлдэл</th><th>Илгээгддэг хэнд</th><th>Агуулга</th></tr></thead>
+            <tbody>
+              <tr><td>Ажилтан Сэжимийг «Батлах» дарах</td><td><strong>Танд</strong> (тухайн багийн ахлагч)</td><td>«Сэжим {код} -ын батлуулах хүсэлт илгээсэн байна.» — худалдан авалт/зарах нийт үнийн дэлгэрэнгүйтэй.</td></tr>
+              <tr><td>Та «Зөвшөөрөх» дарах</td><td>Анхны борлуулагч</td><td>«Таны Сэжим {код} -ыг зөвшөөрсөн байна.» — үүссэн Захиалга/Худалдан авалтын захиалга руу орох холбоостой.</td></tr>
+              <tr><td>Захиалга «Батлах» дарагдах</td><td>Харилцагч</td><td>Захиалгыг баталгаажуулсан автомат имэйл.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:10px;">Эдгээр мэдэгдэл ажиллахгүй байвал ажилтны гарын авлагад заасан алдаа биш — эхлээд <a href="#m02">Багийн тохиргоо</a>-г шалгаарай.</p>
+      </section>
+
+      <section id="m11">
+        <div class="sec-head"><span class="num">11</span><h2>Түгээмэл асуулт</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Асуудал</th><th>Шалтгаан / Шийдэл</th></tr></thead>
+            <tbody>
+              <tr><td>Ажилтанд «Зөвшөөрөх» эсвэл «Батлах» товч харагдахгүй</td><td>03-р бүлэгт заасан холбогдох эрхийн бүлэг оноогоогүй байна.</td></tr>
+              <tr><td>Имэйл мэдэгдэл очихгүй байна</td><td>Багийн ахлагч (Team Leader) талбар хоосон, эсвэл тухайн хэрэглэгчийн и-мэйл хаяг бүртгэгдээгүй.</td></tr>
+              <tr><td>Гэрээ дээр «Cancel» товч харагдахгүй</td><td>Зөвхөн «Closed» төлөвт л Cancel боломжтой — эхлээд төлвийг дарааллаар нь шилжүүлнэ.</td></tr>
+              <tr><td class="mono">Contract already exists / Project already exists</td><td>Тухайн захиалга/гэрээнд аль хэдийн гэрээ эсвэл төсөл үүссэн — давхар үүсгэх боломжгүй.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <span>Vertexmon ERP · Борлуулалтын менежерийн гарын авлага</span>
+        <span>Эх сурвалж: l10n_mn_sale модуль (Odoo 17)</span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+</body>
+</html>
