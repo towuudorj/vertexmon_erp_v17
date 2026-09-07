@@ -18,5 +18,7 @@ access_product_aged_report_manager,product.aged.report,model_product_aged_report
 access_product_sales_report,product.sales.report,model_product_sales_report,stock.group_stock_user,1,0,0,0
 access_product_sales_report_manager,product.sales.report,model_product_sales_report,stock.group_stock_manager,1,1,1,1
 access_product_sales_report_manager,picking.signature.users,model_picking_signature_users,stock.group_stock_user,1,1,1,1
+access_stock_warehouse_flow_report,stock.warehouse.flow.report,model_stock_warehouse_flow_report,stock.group_stock_user,1,1,1,1
+access_stock_warehouse_flow_report_manager,stock.warehouse.flow.report,model_stock_warehouse_flow_report,stock.group_stock_manager,1,1,1,1
 access_stock_move_update_user,stock.move.update,model_stock_move_update,stock.group_stock_user,1,1,1,1
 access_supply_product_report,supply.product.report,model_supply_product_report,stock.group_stock_user,1,1,1,1

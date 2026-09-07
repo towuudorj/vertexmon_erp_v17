@@ -20,6 +20,8 @@
         
         <menuitem id="product_sales_report_mn_menu" name="Product sales report" parent="stock.menu_warehouse_report" action="action_product_sales_report"  />
 
+        <menuitem id="stock_warehouse_flow_report_mn_menu" name="Барааны урсгалын диаграм" parent="stock.menu_warehouse_report" action="action_stock_warehouse_flow_report"  />
+
         <menuitem id="product_category_new_menu" name="Product category" parent="stock.menu_stock_config_settings" action="action_product_category_new"  />
 
         <record model="ir.ui.menu" id="stock.menu_product_category_config_stock"><!--Sales online payments-->

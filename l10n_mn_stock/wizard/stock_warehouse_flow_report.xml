@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="stock_warehouse_flow_report_view" model="ir.ui.view">
+            <field name="name">stock.warehouse.flow.report</field>
+            <field name="model">stock.warehouse.flow.report</field>
+            <field name="arch" type="xml">
+                <form string="Барааны урсгалын диаграм">
+                    <group>
+                        <field name="company_id"/>
+                        <field name="product_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="warehouse_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button name="action_view_flow_diagram" string="Диаграм харах" type="object"
+                            class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_warehouse_flow_report" model="ir.actions.act_window">
+            <field name="name">Барааны урсгалын диаграм</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.warehouse.flow.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock_warehouse_flow_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
