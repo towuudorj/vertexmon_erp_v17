@@ -255,9 +255,7 @@
                     </t>
                 </td>
                 <td class="text-right">
-                    <t t-if="line.state == 'done'">
-                        <span t-field="line.product_qty" />
-                    </t>
+                    <span t-field="line.product_qty" />
                 </td>
                 <td>
                     <span t-field="line.product_uom_id" groups="uom.group_uom" />

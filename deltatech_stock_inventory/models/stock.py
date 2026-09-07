@@ -147,7 +147,7 @@ class StockInventory(models.Model):
                 counter += 1
                 price = line.standard_price or line.product_id.standard_price
                 diff = line.product_qty - line.theoretical_qty
-                amount = round(line.product_qty * price, 2) if line.state == "done" else 0.0
+                amount = round(line.product_qty * price, 2)
                 total_amount += line.product_qty * price
                 total_before += line.theoretical_qty * price
                 plus_amount = diff * price if diff > 0 else 0.0
@@ -159,7 +159,7 @@ class StockInventory(models.Model):
                 sheet.write(rowx, 1, line.product_id.display_name or "", text_fmt)
                 sheet.write(rowx, 2, line.theoretical_qty, num_fmt)
                 sheet.write(rowx, 3, round(diff) if diff else "", num_fmt)
-                sheet.write(rowx, 4, line.product_qty if line.state == "done" else "", num_fmt)
+                sheet.write(rowx, 4, line.product_qty, num_fmt)
                 sheet.write(rowx, 5, line.product_uom_id.name or "", text_fmt)
                 sheet.write(rowx, 6, amount, num_fmt)
                 sheet.write(rowx, 7, round(plus_amount, 2) if diff > 0 else "", num_fmt)
