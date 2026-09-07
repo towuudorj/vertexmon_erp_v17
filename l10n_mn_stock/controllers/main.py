@@ -34,9 +34,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   #network { width:100%; height:100%; }
   #empty { padding:40px; text-align:center; color:#888; font-size:16px; }
   #detailPanel {
-    position:absolute; top:0; right:0; width:380px; max-width:90%; height:100%;
+    position:absolute; top:0; right:0; width:520px; max-width:92%; height:100%;
     background:#fff; border-left:1px solid #ddd; box-shadow:-4px 0 12px rgba(0,0,0,.08);
-    transform:translateX(100%); transition:transform .18s ease; overflow-y:auto; z-index:5;
+    transform:translateX(100%); transition:transform .18s ease; overflow:auto; z-index:5;
   }
   #detailPanel.open { transform:translateX(0); }
   #detailPanel .dp-head {
@@ -103,13 +103,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           '<td>' + ref + '</td>' +
           (showDirection ? '<td>' + m.direction + '</td>' : '') +
           '<td>' + (m.partner || '') + '</td>' +
+          '<td>' + (m.responsible || '') + '</td>' +
           '<td class="num">' + m.quantity + '</td>' +
           '<td>' + stateBadge(m) + '</td>' +
           '</tr>';
       }).join('');
       var dirHeader = showDirection ? '<th>Чиглэл</th>' : '';
       document.getElementById('detailBody').innerHTML =
-        '<table><thead><tr><th>Огноо</th><th>Баримт</th>' + dirHeader + '<th>Харилцагч</th><th>Тоо</th><th>Төлөв</th></tr></thead>' +
+        '<table><thead><tr><th>Огноо</th><th>Баримт</th>' + dirHeader + '<th>Харилцагч</th><th>Хариуцагч</th><th>Тоо</th><th>Төлөв</th></tr></thead>' +
         '<tbody>' + rows + '</tbody></table>';
     }
 
@@ -277,7 +278,9 @@ class StockWarehouseFlowController(http.Controller):
                 picking_ids.add(r['picking_id'])
 
         partners = {p.id: p.name for p in partner_obj.browse(list(partner_ids))}
-        pickings = {p.id: p.name for p in env['stock.picking'].browse(list(picking_ids))}
+        picking_records = env['stock.picking'].browse(list(picking_ids))
+        pickings = {p.id: p.name for p in picking_records}
+        picking_responsible = {p.id: (p.user_id.name or '') for p in picking_records}
 
         def build_move_dict(r, qty, direction=None):
             is_done = r['state'] == 'done'
@@ -286,6 +289,7 @@ class StockWarehouseFlowController(http.Controller):
                 'reference': escape(pickings.get(r['picking_id']) or r['reference'] or '-'),
                 'picking_id': r['picking_id'] or None,
                 'partner': escape(partners.get(r['partner_id']) or ''),
+                'responsible': escape(picking_responsible.get(r['picking_id']) or ''),
                 'quantity': round(qty, 2),
                 'done': is_done,
                 'state_label': escape(STATE_LABELS.get(r['state'], r['state'] or '')),
@@ -334,8 +338,10 @@ class StockWarehouseFlowController(http.Controller):
             for row in request.env.cr.dictfetchall():
                 opening_balance[row['warehouse_id']] = opening_balance.get(row['warehouse_id'], 0.0) - (row['qty'] or 0.0)
 
-        # Сонгосон хугацаанд бодитоор дууссан (is_done=True) Орлого/Зарлагыг
-        # агуулах тус бүрээр нэгтгэж, Эцсийн үлдэгдлийг тооцно.
+        # Сонгосон хугацаанд бодитоор ДУУССАН (is_done=True) Орлого/Зарлагыг
+        # агуулах тус бүрээр нэгтгэнэ — зангилааны зүүн дээд мөрөнд харуулах
+        # "Орсон/Гарсан" болон Эцсийн үлдэгдлийн тооцоо хоёулаа зөвхөн дууссан
+        # хөдөлгөөнөөр бодогдоно (дуусаагүй/шар сумыг оруулахгүй).
         period_in = {}
         period_out = {}
         for (src_key, dest_key, is_done), qty in edge_qty.items():
@@ -351,18 +357,27 @@ class StockWarehouseFlowController(http.Controller):
         for idx, (key, label) in enumerate(node_labels.items()):
             node_ids[key] = idx
             display_label = label
-            if key[0] == 'wh' and product_id:
-                wh_id = key[1]
-                opening = opening_balance.get(wh_id, 0.0)
-                closing = opening + period_in.get(wh_id, 0.0) - period_out.get(wh_id, 0.0)
-                display_label = '%s\n(Эхний: %s → Эцсийн: %s)' % (label, round(opening, 2), round(closing, 2))
+            font_overrides = {}
+            if key[0] == 'wh':
+                font_overrides = {'align': 'left'}
+                in_total = period_in.get(key[1], 0.0)
+                out_total = period_out.get(key[1], 0.0)
+                summary_line = u'Орсон: %s   Гарсан: %s' % (round(in_total, 2), round(out_total, 2))
+                if product_id:
+                    opening = opening_balance.get(key[1], 0.0)
+                    closing = opening + period_in.get(key[1], 0.0) - period_out.get(key[1], 0.0)
+                    display_label = '%s\n%s\n(Эхний: %s → Эцсийн: %s)' % (
+                        summary_line, label, round(opening, 2), round(closing, 2),
+                    )
+                else:
+                    display_label = '%s\n%s' % (summary_line, label)
             nodes.append({
                 'id': idx,
                 'label': display_label,
                 'shape': 'box',
                 'color': {'background': '#1F5C73', 'border': '#123847'} if key[0] == 'wh'
                          else {'background': '#B8862E', 'border': '#8A6420'},
-                'font': {'color': '#FFFFFF'},
+                'font': dict({'color': '#FFFFFF'}, **font_overrides),
             })
 
         # Хос зангилаа (жишээ нь А→Б, Б→А, эсвэл дууссан/дуусаагүй хос
