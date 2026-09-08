@@ -505,3 +505,82 @@ msgstr "Мөнгөн гүйлгээний төрөл"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_account.account_move_line_search_reconcile_view_inherit_year
 msgid "This Year"
 msgstr "Тухайн жил"
+
+#. module: l10n_mn_account
+#: model:ir.model,name:l10n_mn_account.model_account_bank_statement_line_batch_update
+msgid "Bank Statement Line Batch Update Wizard"
+msgstr "Банкны хуулгын мөр бөөнөөр шинэчлэх визард"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__line_ids
+msgid "Bank Statement Lines"
+msgstr "Банкны хуулгын мөрүүд"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__line_count
+msgid "Selected Lines Count"
+msgstr "Сонгосон мөрийн тоо"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__update_partner
+msgid "Update Partner"
+msgstr "Харилцагч шинэчлэх"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__update_cash_move_type
+msgid "Update Cash Move Type"
+msgstr "Мөнгөн гүйлгээний төрөл шинэчлэх"
+
+#. module: l10n_mn_account
+#: model:ir.model.fields,field_description:l10n_mn_account.field_account_bank_statement_line_batch_update__cash_move_type_id
+msgid "Cash Move Type"
+msgstr "Мөнгөн гүйлгээний төрөл"
+
+#. module: l10n_mn_account
+#: code:addons/l10n_mn_account/wizard/account_bank_statement_line_batch_update.py:0
+#, python-format
+msgid "Please select at least one field to update! (Partner or Cash Move Type)"
+msgstr "Шинэчлэх утгаа сонгоно уу! (Харилцагч эсвэл Мөнгөн гүйлгээний төрөл)"
+
+#. module: l10n_mn_account
+#: code:addons/l10n_mn_account/wizard/account_bank_statement_line_batch_update.py:0
+#, python-format
+msgid "No lines selected to update!"
+msgstr "Шинэчлэх мөр сонгогдоогүй байна!"
+
+#. module: l10n_mn_account
+#: code:addons/l10n_mn_account/wizard/account_bank_statement_line_batch_update.py:0
+#, python-format
+msgid "Please select a Cash Move Type!"
+msgstr "Мөнгөн гүйлгээний төрлийг сонгоно уу!"
+
+#. module: l10n_mn_account
+#: model:ir.actions.act_window,name:l10n_mn_account.action_account_bank_statement_line_batch_update
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_bank_statement_line_batch_update
+msgid "Batch Update"
+msgstr "Бөөнөөр шинэчлэх"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_bank_statement_line_batch_update
+msgid "Batch Update Bank Statement Lines"
+msgstr "Гүйлгээ бөөнөөр шинэчлэх"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_bank_statement_line_batch_update
+msgid "Selected Statement Lines"
+msgstr "Сонгосон гүйлгээнүүд"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_bank_statement_line_batch_update
+msgid "Update"
+msgstr "Шинэчлэх"
+
+#. module: l10n_mn_account
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account.view_account_bank_statement_line_batch_update
+msgid "Cancel"
+msgstr "Болих"
