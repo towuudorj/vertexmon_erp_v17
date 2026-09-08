@@ -93,11 +93,12 @@ class AccountPartnerBalanceReport(models.Model):
             'name': _('%s - Өглөг, авлагын дэлгэрэнгүй') % self.partner_id.name,
             'res_model': 'account.move.line',
             'view_mode': 'tree,form',
+            'target': 'current',
             'domain': [
                 ('partner_id', '=', self.partner_id.id),
                 ('company_id', '=', self.company_id.id),
                 ('parent_state', '=', 'posted'),
                 ('account_id.account_type', 'in', ['asset_receivable', 'asset_prepayments', 'liability_payable']),
             ],
-            'context': {'search_default_group_by_account': 1},
+            'context': {'group_by': ['account_id']},
         }

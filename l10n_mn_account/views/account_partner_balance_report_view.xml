@@ -18,33 +18,13 @@
         <field name="name">account.partner.balance.report.list</field>
         <field name="model">account.partner.balance.report</field>
         <field name="arch" type="xml">
-            <tree string="Харилцагчид (үлдэгдлээр)" create="false" edit="false" delete="false" default_order="abs_balance desc">
+            <tree string="Харилцагчид (үлдэгдлээр)" create="false" edit="false" delete="false" default_order="abs_balance desc" action="action_view_move_lines" type="object">
                 <field name="currency_id" invisible="1"/>
                 <field name="company_id"/>
                 <field name="partner_id"/>
                 <field name="balance_type"/>
                 <field name="balance" widget="monetary"/>
-                <button name="action_view_move_lines" type="object" string="Дэлгэрэнгүй" icon="fa-list-alt" class="btn-link"/>
             </tree>
-        </field>
-    </record>
-
-    <record id="view_account_partner_balance_report_form" model="ir.ui.view">
-        <field name="name">account.partner.balance.report.form</field>
-        <field name="model">account.partner.balance.report</field>
-        <field name="arch" type="xml">
-            <form string="Харилцагчид (үлдэгдлээр)" create="false" edit="false" delete="false">
-                <sheet>
-                    <group>
-                        <field name="company_id"/>
-                        <field name="partner_id"/>
-                        <field name="balance_type"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="balance" widget="monetary"/>
-                    </group>
-                    <button name="action_view_move_lines" type="object" string="Өглөг, авлагын дэлгэрэнгүй харах" class="btn-primary"/>
-                </sheet>
-            </form>
         </field>
     </record>
 
@@ -68,7 +48,7 @@
     <record id="action_account_partner_balance_report" model="ir.actions.act_window">
         <field name="name">Харилцагчид (үлдэгдлээр)</field>
         <field name="res_model">account.partner.balance.report</field>
-        <field name="view_mode">list,graph,form</field>
+        <field name="view_mode">list,graph</field>
         <field name="search_view_id" ref="view_account_partner_balance_report_search"/>
         <field name="context">{}</field>
         <field name="help">Авлага, өглөгтэй харилцагчид (компани тус бүрээр)</field>
