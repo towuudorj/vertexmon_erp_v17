@@ -234,7 +234,7 @@ class SaleOrder(models.Model):
                                 ('10','10'),
                                 ('11','11'),
                                 ('12','12')],string=u'Сар')
-    payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount')
+    payment_amount = fields.Float(string='Payment amount', compute='_compute_payment_amount', store=True)
     together_sales_id = fields.Many2many('res.users', string='Together sales')
     is_ot_po_duplicated = fields.Boolean(compute='_compute_ot_po_duplicated')
     contract_number_by_hand = fields.Char(string='Contact Number By hand')
@@ -332,7 +332,7 @@ class SaleOrder(models.Model):
 
 
 
-    @api.depends('invoice_ids')
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.amount_residual_signed', 'amount_total')
     def _compute_payment_amount(self):
         for sale in self:
             payment_amount = 0.0
