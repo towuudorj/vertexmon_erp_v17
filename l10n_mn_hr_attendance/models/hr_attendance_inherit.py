@@ -468,7 +468,12 @@ class HrAttendance(models.Model):
             "Content-Type": "application/json"
         }
         attendance_ids.push_to_sharepoint(headers, site_id, list_id)
-        changed_att_ids = self.env['hr.attendance'].sudo().search([('write_date', '>=', date_range)])
+        changed_att_ids = self.env['hr.attendance'].sudo().search([
+            ('write_date', '>=', date_range),
+            ('id', 'not in', attendance_ids.ids),
+            ('share_point_id', '!=', False),
+            ('share_point_id', '!=', '')
+        ])
         changed_att_ids.push_to_sharepoint(headers, site_id, list_id)
 
     def push_to_sharepoint(self, headers, site_id, list_id):
@@ -479,27 +484,26 @@ class HrAttendance(models.Model):
                 else:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items/{att.share_point_id}/fields"
                 employee = att.employee_id
-                check_in = att.check_in + timedelta(hours=8)
-                check_in = check_in.replace(tzinfo=ZoneInfo('Asia/Ulaanbaatar'))
-                check_in = check_in.astimezone(ZoneInfo('UTC'))
-                check_in = check_in.strftime('%Y-%m-%dT%H:%M:%SZ')
+                check_in = att.check_in.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-                check_out = att.check_out + timedelta(hours=8)
-                check_out = check_out.replace(tzinfo=ZoneInfo('Asia/Ulaanbaatar'))
-                check_out = check_out.astimezone(ZoneInfo('UTC'))
-                check_out = check_out.strftime('%Y-%m-%dT%H:%M:%SZ')
+                if att.check_out:
+                    check_out = att.check_out.strftime('%Y-%m-%dT%H:%M:%SZ')
+                else:
+                    check_out = check_in
 
                 hours = int(att.worked_hours)
                 minutes = int((att.worked_hours - hours) * 60)
 
                 worked_hour = f"{hours:02d}:{minutes:02d}"
+                local_check_in = att.check_in + timedelta(hours=8)
+                local_date = local_check_in.date()
                 hr_hour_record = self.env['hr.hour.record'].new({
-                    'start_date': datetime.combine(att.check_in.date(), dt_time(0, 1)) - timedelta(hours=8),
-                    'end_date': datetime.combine(att.check_out.date(), dt_time(23, 59)) - timedelta(hours=8),
+                    'start_date': datetime.combine(local_date, dt_time(0, 1)) - timedelta(hours=8),
+                    'end_date': datetime.combine(local_date, dt_time(23, 59)) - timedelta(hours=8),
                     'company_id': self.env['res.company'].search([], limit=1, order='id asc').id
                 })
                 line_vals = hr_hour_record.hour_record(employee_id=att.employee_id)
-                los_time = line_vals['miss_time'] or 0
+                los_time = line_vals.get('miss_time', 0) if line_vals else 0
                 body = {
                     "Title": employee.last_name or '',
                     "first_name": employee.name or '',
