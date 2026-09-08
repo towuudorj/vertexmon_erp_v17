@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_account_partner_balance_report_graph" model="ir.ui.view">
+        <field name="name">account.partner.balance.report.graph</field>
+        <field name="model">account.partner.balance.report</field>
+        <field name="arch" type="xml">
+            <graph string="Харилцагчид (үлдэгдлээр)" type="bar">
+                <field name="company_id" type="row"/>
+                <field name="partner_id" type="row"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="balance" type="measure" widget="monetary"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_account_partner_balance_report_list" model="ir.ui.view">
+        <field name="name">account.partner.balance.report.list</field>
+        <field name="model">account.partner.balance.report</field>
+        <field name="arch" type="xml">
+            <tree string="Харилцагчид (үлдэгдлээр)" create="false" edit="false" delete="false" default_order="abs_balance desc">
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id"/>
+                <field name="partner_id"/>
+                <field name="balance_type"/>
+                <field name="balance" widget="monetary"/>
+                <button name="action_view_move_lines" type="object" string="Дэлгэрэнгүй" icon="fa-list-alt" class="btn-link"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_partner_balance_report_form" model="ir.ui.view">
+        <field name="name">account.partner.balance.report.form</field>
+        <field name="model">account.partner.balance.report</field>
+        <field name="arch" type="xml">
+            <form string="Харилцагчид (үлдэгдлээр)" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="partner_id"/>
+                        <field name="balance_type"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="balance" widget="monetary"/>
+                    </group>
+                    <button name="action_view_move_lines" type="object" string="Өглөг, авлагын дэлгэрэнгүй харах" class="btn-primary"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_partner_balance_report_search" model="ir.ui.view">
+        <field name="name">account.partner.balance.report.search</field>
+        <field name="model">account.partner.balance.report</field>
+        <field name="arch" type="xml">
+            <search string="Харилцагчид (үлдэгдлээр)">
+                <field name="partner_id"/>
+                <filter string="Топ 20" name="filter_top20" domain="[('rank','&lt;=',20)]"/>
+                <filter string="Авлага" name="filter_receivable" domain="[('balance_type','=','receivable')]"/>
+                <filter string="Өглөг" name="filter_payable" domain="[('balance_type','=','payable')]"/>
+                <group expand="0" string="Групп">
+                    <filter string="Компани" name="groupby_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Төрөл" name="groupby_type" context="{'group_by':'balance_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_partner_balance_report" model="ir.actions.act_window">
+        <field name="name">Харилцагчид (үлдэгдлээр)</field>
+        <field name="res_model">account.partner.balance.report</field>
+        <field name="view_mode">list,graph,form</field>
+        <field name="search_view_id" ref="view_account_partner_balance_report_search"/>
+        <field name="context">{}</field>
+        <field name="help">Авлага, өглөгтэй харилцагчид (компани тус бүрээр)</field>
+    </record>
+
+    <menuitem id="account_partner_balance_report_menu"
+        name="Харилцагчид (үлдэгдлээр)"
+        parent="account.menu_finance_reports"
+        action="action_account_partner_balance_report"
+        groups="account.group_account_manager"
+        sequence="15"/>
+
+</odoo>

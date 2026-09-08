@@ -9,3 +9,4 @@ from . import account_account_inherit
 from . import account_bank_statement_line_inherit
 from . import res_partner_bank_inherit
 from . import account_analytic_line_inherit
+from . import account_partner_balance_report

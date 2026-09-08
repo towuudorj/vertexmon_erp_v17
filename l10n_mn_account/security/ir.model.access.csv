@@ -6,3 +6,5 @@ access_account_currency_equalization_manager,account.currency.equalization,model
 access_partner_type_register_user,partner.type.register,model_partner_type_register,account.group_account_user,1,1,0,0
 access_partner_type_register_manager,partner.type.register,model_partner_type_register,account.group_account_manager,1,1,1,1
 access_generate_opening_entries_manager,generate.opening.entries,model_generate_opening_entries,account.group_account_manager,1,1,1,1
+access_account_partner_balance_report_user,account.partner.balance.report,model_account_partner_balance_report,account.group_account_user,1,0,0,0
+access_account_partner_balance_report_manager,account.partner.balance.report,model_account_partner_balance_report,account.group_account_manager,1,0,0,0

@@ -13,7 +13,7 @@
 
 {
     'name': 'Mongolian Account',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting',
     'sequence': 35,
     "author" : "AIBI Development Team",
@@ -53,8 +53,9 @@
             'views/bank_statement_line_form_reconcile_inherit_view.xml',
             'views/account_move_line_search_view.xml',
             
+            'views/account_partner_balance_report_view.xml',
             'views/menu_view.xml',
-            
+
 
     ],
     'test': [],

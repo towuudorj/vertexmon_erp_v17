@@ -10,6 +10,11 @@
 	        <field name="name">Санхүүгийн шинжээч</field>
 	    </record>
 
+        <record id="account_partner_balance_report_comp_rule" model="ir.rule">
+            <field name="name">Харилцагчид (үлдэгдлээр): компанийн харагдац</field>
+            <field name="model_id" ref="model_account_partner_balance_report"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+        </record>
 
     </data>
 </odoo>
