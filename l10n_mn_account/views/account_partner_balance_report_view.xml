@@ -37,6 +37,10 @@
                 <filter string="Топ 20" name="filter_top20" domain="[('rank','&lt;=',20)]"/>
                 <filter string="Авлага" name="filter_receivable" domain="[('balance_type','=','receivable')]"/>
                 <filter string="Өглөг" name="filter_payable" domain="[('balance_type','=','payable')]"/>
+                <separator/>
+                <filter string="Ажилтнаар" name="filter_employee" domain="[('partner_group','=','002')]"/>
+                <filter string="Дотоод харилцагч" name="filter_domestic" domain="[('partner_group','not in',['002','006'])]"/>
+                <filter string="Гадаад харилцагч" name="filter_foreign" domain="[('partner_group','=','006')]"/>
                 <group expand="0" string="Групп">
                     <filter string="Компани" name="groupby_company" context="{'group_by':'company_id'}"/>
                     <filter string="Төрөл" name="groupby_type" context="{'group_by':'balance_type'}"/>

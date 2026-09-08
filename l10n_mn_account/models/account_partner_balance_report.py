@@ -23,6 +23,18 @@ class AccountPartnerBalanceReport(models.Model):
     balance = fields.Float(string=u'Үлдэгдэл', readonly=True, group_operator='sum')
     abs_balance = fields.Float(string=u'Үлдэгдэл (үнэмлэхүй дүн)', readonly=True, group_operator='sum')
     rank = fields.Integer(string=u'Эрэмбэ', readonly=True)
+    partner_group = fields.Selection([
+        ('001', u'001 Борлуулалтын харилцагч ААН, компаниуд'),
+        ('002', u'002 Ажилтан'),
+        ('003', u'003 Банк'),
+        ('004', u'004 Төрийн харилцагч байгууллагууд'),
+        ('005', u'005 Тээврийн компаниуд'),
+        ('006', u'006 Нийлүүлэгч байгууллага/Гадаад/'),
+        ('007', u'007 Нийлүүлэгч байгууллага/Дотоод/'),
+        ('008', u'008 Маркетингийн харилцагч'),
+        ('010', u'010 Хувь хүмүүс'),
+        ('011', u'011 Гэрээт харилцагч'),
+    ], string=u'Харилцагчийн бүлэг', readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -79,9 +91,12 @@ class AccountPartnerBalanceReport(models.Model):
                     CASE WHEN ranked.balance >= 0 THEN 'receivable' ELSE 'payable' END AS balance_type,
                     ranked.balance AS balance,
                     ABS(ranked.balance) AS abs_balance,
-                    ranked.rn AS rank
+                    ranked.rn AS rank,
+                    ptr.partner_group AS partner_group
                 FROM ranked
                 JOIN res_company rc ON rc.id = ranked.company_id
+                LEFT JOIN res_partner rp ON rp.id = ranked.partner_id
+                LEFT JOIN partner_type_register ptr ON ptr.id = rp.partner_type
                 WHERE ABS(ranked.balance) > 0.01
             )
         """ % self._table)
