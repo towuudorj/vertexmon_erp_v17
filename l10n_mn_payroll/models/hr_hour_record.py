@@ -265,6 +265,8 @@ class HrHourRecord(models.Model):
                     if str(holiday_date.weekday()) in work_weekdays:
                         public_holiday.append(holiday_date)
                     holiday_date += timedelta(days=1)
+            day_worked_hours = {}
+            day_leave_hours = {}
             while work_day <= end_time:
                 if work_day.date() in public_holiday:
                     work_day = work_day + timedelta(days=1)
@@ -286,8 +288,11 @@ class HrHourRecord(models.Model):
                             lunch_end_time = check_in
                             work_start_time = check_in
                             work_end_time = check_in
-                            contract_att_line = line.resource_calendar_id.attendance_ids.filtered(
-                                lambda x: x.dayofweek == str(work_day.weekday()))[0]
+                            cal_att_lines = line.resource_calendar_id.attendance_ids.filtered(
+                                lambda x: x.dayofweek == str(work_day.weekday()))
+                            if not cal_att_lines:
+                                continue
+                            contract_att_line = cal_att_lines[0]
                             work_start_time = work_start_time.replace(hour=int(round(contract_att_line.hour_from, 0)),
                                                                       minute=int(contract_att_line.hour_from%1*60), second=0, microsecond=0)
                             work_end_time = work_end_time.replace(hour=int(round(contract_att_line.hour_to, 0)),
@@ -317,11 +322,14 @@ class HrHourRecord(models.Model):
                             else:
                                 delta = (check_in + timedelta(hours=must_work_hour+1) if check_in + timedelta(hours=must_work_hour+1) < check_out else check_out) - check_in
                             worked_hour = float(delta.total_seconds() / 60 / 60) - lunch_hour
+                            if worked_hour < 0:
+                                worked_hour = 0.0
 
                     if worked_hour > 0:
                         in_time += worked_hour
                         worked_day += 1
                         lost_time += must_work_hour - worked_hour if must_work_hour > worked_hour else 0
+                        day_worked_hours[work_day.date()] = worked_hour
                     else:
                         lost_time += must_work_hour
                 work_day = work_day + timedelta(days=1)
@@ -340,6 +348,17 @@ class HrHourRecord(models.Model):
                             while s_date <= end_time:
                                 shift_time += 1
                                 s_date = s_date + timedelta(days=1)
+                        l_date = lines1.request_date_from if lines1.request_date_from else (lines1.date_from.astimezone(company_tz).date() if lines1.date_from else False)
+                        l_end = lines1.request_date_to if lines1.request_date_to else (lines1.date_to.astimezone(company_tz).date() if lines1.date_to else l_date)
+                        if l_date and isinstance(l_date, str):
+                            l_date = fields.Date.to_date(l_date)
+                        if l_end and isinstance(l_end, str):
+                            l_end = fields.Date.to_date(l_end)
+                        if l_date:
+                            cur = l_date
+                            while l_end and cur <= l_end:
+                                day_leave_hours[cur] = day_leave_hours.get(cur, 0.0) + must_work_hour
+                                cur += timedelta(days=1)
 
 
             holiday_id = holiday_obj.search([('employee_id','=',line.id),('date_from','>=',start_date),('state','=','validate')])
@@ -401,8 +420,36 @@ class HrHourRecord(models.Model):
                                 elif lines.holiday_status_id.sub_type == 'sick':
                                     sick_time +=lines.number_of_hours_display
 
+                        if lines.holiday_status_id.sub_type in ['out_work', 'night_out_work', 'sick', 'payroll', 'unpayroll', 'legal_leave']:
+                            l_start = lines.request_date_from if lines.request_date_from else (lines.date_from.astimezone(company_tz).date() if lines.date_from else False)
+                            l_end = lines.request_date_to if lines.request_date_to else (lines.date_to.astimezone(company_tz).date() if lines.date_to else l_start)
+                            if l_start and isinstance(l_start, str):
+                                l_start = fields.Date.to_date(l_start)
+                            if l_end and isinstance(l_end, str):
+                                l_end = fields.Date.to_date(l_end)
+                            if l_start:
+                                if lines.number_of_days_display >= 1:
+                                    cur_l_date = l_start
+                                    while l_end and cur_l_date <= l_end:
+                                        day_leave_hours[cur_l_date] = day_leave_hours.get(cur_l_date, 0.0) + must_work_hour
+                                        cur_l_date += timedelta(days=1)
+                                else:
+                                    l_hours = lines.number_of_hours_display if lines.number_of_hours_display else (lines.number_of_days * must_work_hour if lines.number_of_days else 0.0)
+                                    day_leave_hours[l_start] = day_leave_hours.get(l_start, 0.0) + l_hours
+
             total_time = in_time + official_time + sick_time + out_n_time + n_time
-            lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time
+
+            total_overlap = 0.0
+            for d, l_hours in day_leave_hours.items():
+                w_hours = day_worked_hours.get(d, 0.0)
+                if w_hours > 0 and l_hours > 0:
+                    day_overlap = min(l_hours, max(0.0, w_hours + l_hours - must_work_hour))
+                    total_overlap += day_overlap
+
+            lost_time = lost_time - (shift_time*must_work_hour) - out_n_time - n_time - sick_time - free_time1 - unpayroll_time - official_time + total_overlap
+            if lost_time < 0:
+                lost_time = 0.0
+            lost_time = round(lost_time, 2)
             vals = {
                 'work_day':worked_day,
                 'employee_id': line.id,

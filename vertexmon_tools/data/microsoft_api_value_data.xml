@@ -1,4 +1,4 @@
-<odoo noupdate="0">
+<odoo noupdate="1">
     <record id="attendance_app_key_data" model="microsoft.api.value">
         <field name="name">Microsoft API Values</field>
         <field name="client_id">278f40db-e253-4a26-9020-8e2ecb624d7f</field>
