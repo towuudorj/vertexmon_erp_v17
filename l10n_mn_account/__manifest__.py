@@ -55,6 +55,7 @@
             'views/account_move_line_search_view.xml',
             
             'views/account_partner_balance_report_view.xml',
+            'views/account_move_overdue_view.xml',
             'views/menu_view.xml',
 
 

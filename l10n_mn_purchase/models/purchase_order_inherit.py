@@ -25,6 +25,16 @@ class PurchaseOrder(models.Model):
                                        ('customs','Customs'),
                                        ('stock','Stock')], string='Freight status')
     invoice_status_forced = fields.Boolean(default=False)
+    payment_amount = fields.Float(string=u'Төлбөрийн үлдэгдэл', compute='_compute_payment_amount', store=True)
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.amount_residual_signed', 'amount_total')
+    def _compute_payment_amount(self):
+        for order in self:
+            bills = order.invoice_ids.filtered(lambda m: m.state == 'posted')
+            if bills:
+                order.payment_amount = sum(bills.mapped('amount_residual_signed'))
+            else:
+                order.payment_amount = order.amount_total
 
 
     def _prepare_invoice(self):

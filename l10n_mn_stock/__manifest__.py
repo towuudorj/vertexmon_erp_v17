@@ -13,7 +13,7 @@
 
 {
     "name" : "Mongolian Stock",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "AIBI Development Team",
     "category" : "Account",
     "license": "AGPL-3",
@@ -66,6 +66,7 @@
                 'report/mn_ot_purchase_receipt_report.xml',
                 'views/menu_view.xml',
                 'views/report_view.xml',
+                'views/stock_picking_pending_view.xml',
                 ],
     'assets': {
         'web.assets_backend': [

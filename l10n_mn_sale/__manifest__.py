@@ -13,7 +13,7 @@
 
 {
     "name" : "Mongolian Sale",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "AIBI Development Team",
     "category" : "Account",
     "license": "AGPL-3",
@@ -76,7 +76,8 @@
                 'views/crm_lead_line_view.xml',
                 'views/crm_team_inherit_view.xml',
                 'views/report_view.xml',
-                'views/menu_view.xml'
+                'views/menu_view.xml',
+                'views/sale_order_action_list_view.xml'
                 ],
     "auto_install": False,
     "installable": True,

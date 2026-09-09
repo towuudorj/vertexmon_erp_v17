@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_stock_picking_pending" model="ir.actions.act_window">
+        <field name="name">Хүлээгдэж буй шилжилт</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="view_id" ref="stock.vpicktree"/>
+        <field name="domain">[('state', 'not in', ['done', 'cancel', 'draft'])]</field>
+        <field name="context">{'search_default_backorder': 1}</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="help">Батлагдсан ч гүйцэт хийгдээгүй, дутуу захиалга (backorder) үлдсэн барааны шилжилтүүд</field>
+    </record>
+
+    <menuitem id="stock_picking_pending_menu"
+        name="Хянах"
+        parent="stock.menu_stock_root"
+        action="action_stock_picking_pending"
+        sequence="1"/>
+
+</odoo>

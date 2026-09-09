@@ -13,7 +13,7 @@
 
 {
     "name" : "Mongolian Purchase",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "AIBI Development Team",
     "category" : "Account",
     "license": "AGPL-3",
@@ -25,6 +25,7 @@
                  'product',
                  'base',
                  'purchase',
+                 'purchase_stock',
                  'l10n_mn_account',
                  'purchase_requisition'
                  ],
@@ -41,7 +42,8 @@
               "wizard/purchase_summary_report_view.xml",
               "views/report_view.xml",
               "wizard/purchase_expense_report_view.xml",
-              "views/menu_view.xml"
+              "views/menu_view.xml",
+              "views/purchase_order_action_list_view.xml"
                 ],
     "auto_install": False,
     "installable": True,

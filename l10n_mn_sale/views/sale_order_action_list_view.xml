@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_sale_order_search_inherit_pending" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.pending</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='to_invoice']" position="before">
+                <filter string="Хийгдэх ажил дутуу" name="filter_pending_action"
+                    domain="['|', ('delivery_status','!=','full'), '|', ('invoice_status','=','to invoice'), ('payment_amount','!=',0)]"
+                    help="Хүргэлт, Нэхэмжлэл, Төлбөрийн аль нэг шатандаа дуусаагүй захиалгууд"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order_pending" model="ir.actions.act_window">
+        <field name="name">Хянах</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_id" ref="view_order_tree_inherit_crm_order"/>
+        <field name="domain">[('state','=','sale')]</field>
+        <field name="context">{'search_default_filter_pending_action': 1}</field>
+        <field name="search_view_id" ref="view_sale_order_search_inherit_pending"/>
+        <field name="help">Батлагдсан ч Хүргэлт, Нэхэмжлэл, Төлбөрийн аль нэг шатандаа дуусаагүй Борлуулалтын захиалгууд</field>
+    </record>
+
+    <menuitem id="sale_order_pending_menu"
+        name="Хянах"
+        parent="sale.sale_menu_root"
+        action="action_sale_order_pending"
+        sequence="1"/>
+
+    <menuitem id="crm_lead_my_activities_menu_daily"
+        name="Хянах"
+        parent="crm.crm_menu_root"
+        action="crm.crm_lead_action_my_activities"
+        sequence="1"/>
+
+</odoo>

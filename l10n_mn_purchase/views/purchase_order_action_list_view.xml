@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_purchase_order_search_inherit_pending" model="ir.ui.view">
+        <field name="name">purchase.order.search.inherit.pending</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='approved']" position="after">
+                <filter string="Хийгдэх ажил дутуу" name="filter_pending_action"
+                    domain="['|', ('receipt_status','!=','full'), '|', ('invoice_status','=','to invoice'), ('payment_amount','!=',0)]"
+                    help="Хүлээн авалт, Нэхэмжлэл, Төлбөрийн аль нэг шатандаа дуусаагүй захиалгууд"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_pending" model="ir.actions.act_window">
+        <field name="name">Хянах</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="view_purchase_order_view_tree"/>
+        <field name="domain">[('state','in',['purchase','done'])]</field>
+        <field name="context">{'search_default_filter_pending_action': 1}</field>
+        <field name="search_view_id" ref="view_purchase_order_search_inherit_pending"/>
+        <field name="help">Батлагдсан ч Хүлээн авалт, Нэхэмжлэл, Төлбөрийн аль нэг шатандаа дуусаагүй Худалдан авалтын захиалгууд</field>
+    </record>
+
+    <menuitem id="purchase_order_pending_menu"
+        name="Хянах"
+        parent="purchase.menu_purchase_root"
+        action="action_purchase_order_pending"
+        sequence="1"/>
+
+</odoo>

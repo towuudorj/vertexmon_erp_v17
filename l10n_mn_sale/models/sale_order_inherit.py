@@ -215,8 +215,12 @@ class SaleOrder(models.Model):
                                    required=False,
                                    default=_compute_default_partner_bank_id)
     purchase_request_ids = fields.Many2many('purchase.requisition', string='Purchase requisition')
-    purchase_request_count = fields.Integer(string='Purchase requisition', 
+    purchase_request_count = fields.Integer(string='Purchase requisition',
                                             compute="_compute_purchase_request")
+    related_purchase_order_ids = fields.Many2many('purchase.order', compute='_compute_related_purchase_order_ids',
+                                                   string=u'Холбогдох худалдан авалт')
+    related_purchase_order_count = fields.Integer(compute='_compute_related_purchase_order_ids',
+                                                  string=u'Худалдан авалтын тоо')
     sale_order_type = fields.Selection([('direct', 'Direct'),
                                         ('non_direct', 'Non direct'),
                                         ('quotation', 'Quotation')], string='Sale order type', default='direct',
@@ -377,7 +381,34 @@ class SaleOrder(models.Model):
             purchase_requests = self.env['purchase.requisition'].search([('sale_id', '=', sale.id),('state', '!=', 'cancel')])
             sale.purchase_request_ids = purchase_requests
             sale.purchase_request_count = len(purchase_requests)
-    
+
+    def _compute_related_purchase_order_ids(self):
+        for sale in self:
+            domain = [('sale_id', '=', sale.id)]
+            if sale.opportunity_id:
+                domain = ['|', ('sale_id', '=', sale.id), ('crm_lead_id', '=', sale.opportunity_id.id)]
+            requisitions = self.env['purchase.requisition'].search(domain)
+            purchase_orders = requisitions.mapped('purchase_ids')
+            sale.related_purchase_order_ids = purchase_orders
+            sale.related_purchase_order_count = len(purchase_orders)
+
+    def action_view_related_purchase_orders(self):
+        self.ensure_one()
+        purchases = self.related_purchase_order_ids
+        if not purchases:
+            return {'type': 'ir.actions.act_window_close'}
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': _('Холбогдох Худалдан авалтын захиалга'),
+            'res_model': 'purchase.order',
+            'target': 'current',
+        }
+        if len(purchases) == 1:
+            action.update({'view_mode': 'form', 'res_id': purchases.id})
+        else:
+            action.update({'view_mode': 'tree,form', 'domain': [('id', 'in', purchases.ids)]})
+        return action
+
     def action_view_purchase_requisition(self, purchases=False):
         if not purchases:
             purchases = self.mapped('purchase_request_ids')

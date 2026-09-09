@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_invoice_tree_inherit_overdue" model="ir.ui.view">
+        <field name="name">account.invoice.tree.inherit.overdue</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="partner_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_account_move_overdue" model="ir.actions.act_window">
+        <field name="name">Хугацаа хэтэрсэн нэхэмжлэлүүд</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_invoice_tree_inherit_overdue"/>
+        <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])]</field>
+        <field name="context">{'search_default_late': 1, 'default_move_type': False}</field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help">Батлагдсан ч хугацаа хэтэрч, бүрэн төлөгдөөгүй орлого болон худалдааны нэхэмжлэлүүд</field>
+    </record>
+
+    <menuitem id="account_move_overdue_menu"
+        name="Хянах"
+        parent="account.menu_finance"
+        action="action_account_move_overdue"
+        sequence="1"/>
+
+</odoo>
