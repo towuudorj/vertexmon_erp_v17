@@ -46,7 +46,7 @@ class AccountBankStatement(models.Model):
                 #'KeyField': '%s'%xacbank_config.keyfield,
             }
             partner_bank_obj = self.env['res.partner.bank']
-            response = requests.request("POST", xacbank_config.statement_url, headers=headers_data, cert=client_cert, data=payload)
+            response = requests.request("POST", xacbank_config.statement_url, headers=headers_data, cert=client_cert, verify=False, data=payload)
             if response.status_code == 200:
                 result_data = response.json()
                 if result_data['code']== 100:
