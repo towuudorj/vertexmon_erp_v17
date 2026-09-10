@@ -35,6 +35,6 @@
         name="Хянах"
         parent="crm.crm_menu_root"
         action="crm.crm_lead_action_my_activities"
-        sequence="1"/>
+        sequence="2"/>
 
 </odoo>
