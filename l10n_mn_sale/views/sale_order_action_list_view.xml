@@ -29,7 +29,7 @@
         name="Хянах"
         parent="sale.sale_menu_root"
         action="action_sale_order_pending"
-        sequence="1"/>
+        sequence="2"/>
 
     <menuitem id="crm_lead_my_activities_menu_daily"
         name="Хянах"
