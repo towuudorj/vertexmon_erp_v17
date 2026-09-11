@@ -17,14 +17,7 @@ class Base(models.AbstractModel):
         are properly incorporated into the search domain, non-accessible records are silently
         filtered/hidden from search results, and AccessError popups are prevented in tree views.
         """
-        full_domain = domain or []
-        if not self.env.su:
-            try:
-                rule_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
-                if rule_domain:
-                    full_domain = expression.AND([full_domain, rule_domain])
-            except Exception as e:
-                _logger.warning("Error computing ir.rule domain for %s in web_search_read: %s", self._name, e)
+        domain = domain or []
 
         # Filter out specification fields requiring groups the current user does not belong to
         safe_specification = {}
@@ -35,18 +28,14 @@ class Base(models.AbstractModel):
                     continue
             safe_specification[fname] = fspec
 
-        # Execute search_fetch with rule-aware domain
+        # Execute search_fetch (Odoo automatically applies active ir.rules during _search)
         try:
-            records = self.search_fetch(full_domain, safe_specification.keys(), offset=offset, limit=limit, order=order)
+            records = self.search_fetch(domain, safe_specification.keys(), offset=offset, limit=limit, order=order)
         except AccessError:
             _logger.info("AccessError suppressed in web_search_read search_fetch for model %s", self._name)
             return {'length': 0, 'records': []}
         except Exception:
-            # Fallback to original domain if combined domain failed
-            try:
-                records = self.search_fetch(domain, safe_specification.keys(), offset=offset, limit=limit, order=order)
-            except AccessError:
-                return {'length': 0, 'records': []}
+            return {'length': 0, 'records': []}
 
         # Filter out any records that fail python-side record rule validation
         if records and not self.env.su:
@@ -67,14 +56,11 @@ class Base(models.AbstractModel):
 
         # Format web search read results safely
         try:
-            return self._format_web_search_read_results(full_domain, values_records, offset, limit, count_limit)
+            return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
         except AccessError:
             return {'length': len(values_records) + offset, 'records': values_records}
         except Exception:
-            try:
-                return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
-            except Exception:
-                return {'length': len(values_records) + offset, 'records': values_records}
+            return {'length': len(values_records) + offset, 'records': values_records}
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
@@ -82,17 +68,9 @@ class Base(models.AbstractModel):
         Override search_read to take active record rules into account and prevent AccessError
         from breaking search operations across all models.
         """
-        full_domain = domain or []
-        if not self.env.su:
-            try:
-                rule_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
-                if rule_domain:
-                    full_domain = expression.AND([full_domain, rule_domain])
-            except Exception:
-                pass
-
+        domain = domain or []
         try:
-            records = self.search(full_domain, offset=offset, limit=limit, order=order)
+            records = self.search(domain, offset=offset, limit=limit, order=order)
         except AccessError:
             return []
 
