@@ -43,6 +43,11 @@ class StockMove(models.Model):
             })
         return result
 
+    def _get_dest_account(self, accounts_data):
+        if self.env.context.get('force_stock_dest_account_id'):
+            return self.env.context['force_stock_dest_account_id']
+        return super(StockMove, self)._get_dest_account(accounts_data)
+
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         result = super(StockMove, self)._generate_valuation_lines_data(
             partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description

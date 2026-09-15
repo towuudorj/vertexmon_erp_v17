@@ -2,10 +2,11 @@
 <odoo>
 <data>
 
-    	<menuitem id="account_asset_detail_menu" name="Account asset detail report" 
+    	<menuitem id="account_asset_detail_menu" name="Account asset detail report"
 		parent="l10n_mn_account_report.account_mn_reports" action="action_account_asset_detail_report"/>
 		<menuitem id="asset_location_menu" name="Asset location" parent="account.account_management_menu" action="action_asset_location_tree_view"/>
 		<menuitem id="asset_move_menu" sequence="102" name="Account asset move" parent="account.menu_finance_entries_management" action="action_account_asset_move_tree_view"/>
+		<menuitem id="stock_to_asset_wizard_menu" sequence="103" name="Барааг хөрөнгөд шилжүүлэх" parent="account.menu_finance_entries_management" action="action_stock_to_asset_wizard"/>
 
 </data>
 </odoo>

@@ -94,6 +94,8 @@ class AccountAssetAsset(models.Model):
     is_closed = fields.Boolean(string='Asset account remove')
     uom_id = fields.Many2one('uom.uom', string='Uom')
     asset_qty = fields.Float(string='Asset qty', default=1.0)
+    product_id = fields.Many2one('product.product', string='Гарал үүслийн бараа', copy=False)
+    stock_move_id = fields.Many2one('stock.move', string='Барааны хөдөлгөөн', copy=False, readonly=True)
     capitalization_id = fields.One2many('account.asset.asset.capitalization','asset_id',string='Asset capitalization')
     write_up = fields.Float(string='Write Up', readonly=True, compute='_write_amount')
     scrap_date = fields.Date(string='Scrap date')

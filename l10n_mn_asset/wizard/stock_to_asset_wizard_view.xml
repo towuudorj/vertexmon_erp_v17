@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_stock_to_asset_wizard_form" model="ir.ui.view">
+            <field name="name">view.stock.to.asset.wizard.form</field>
+            <field name="model">stock.to.asset.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Барааг хөрөнгөд шилжүүлэх">
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2">
+                            <field name="location_id"/>
+                            <field name="asset_dest_location_id"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <field name="category_id"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="available_qty"/>
+                            <field name="quantity"/>
+                            <field name="asset_name"/>
+                        </tree>
+                    </field>
+                    <separator string="Тэмдэглэл" colspan="4"/>
+                    <field name="note" nolabel="1" colspan="4"/>
+                    <footer>
+                        <button special="cancel" string="Цуцлах" type="object"/>
+                        <button name="button_transfer" string="Хөрөнгөд шилжүүлэх" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_to_asset_wizard" model="ir.actions.act_window">
+            <field name="name">Барааг хөрөнгөд шилжүүлэх</field>
+            <field name="res_model">stock.to.asset.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_to_asset_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

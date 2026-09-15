@@ -28,23 +28,27 @@
                 'purchase',
                 'om_account_accountant',
                 'hr',
+                'stock',
                 'l10n_mn_account',
                 'l10n_mn_account_report',
+                'l10n_mn_stock',
                 ],
     'data': [
             'data/account_journal_data.xml',
             'data/account_account_data.xml',
             'data/account_asset_category_data.xml',
+            'data/stock_location_data.xml',
             'security/ir.model.access.csv',
             'wizard/asset_capitalization_view.xml',
             'wizard/account_asset_writeoff_view.xml',
             'wizard/account_asset_detail_report_view.xml',
+            'wizard/stock_to_asset_wizard_view.xml',
             'views/mn_asset_inherit.xml',
             'views/asset_location_view.xml',
             'views/account_asset_move_view.xml',
             'absract_report_view.xml',
             'views/menu_view.xml',
-            
+
 
     ],
     'test': [],
