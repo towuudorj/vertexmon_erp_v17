@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_product_dead_stock_report_list" model="ir.ui.view">
+        <field name="name">product.dead.stock.report.list</field>
+        <field name="model">product.dead.stock.report</field>
+        <field name="arch" type="xml">
+            <tree string="Идэвхгүй барааны жагсаалт" create="false" edit="false" delete="false" default_order="last_move_date asc" action="action_view_product_template" type="object">
+                <field name="product_id"/>
+                <field name="categ_id"/>
+                <field name="last_move_date"/>
+                <field name="qty_available"/>
+                <button name="action_archive_product" type="object" string="Архивлах" class="btn-link text-danger"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_dead_stock_report_search" model="ir.ui.view">
+        <field name="name">product.dead.stock.report.search</field>
+        <field name="model">product.dead.stock.report</field>
+        <field name="arch" type="xml">
+            <search string="Идэвхгүй барааны жагсаалт">
+                <field name="product_id"/>
+                <field name="categ_id"/>
+                <filter string="Үлдэгдэлтэй" name="has_qty" domain="[('qty_available','!=',0)]"/>
+                <filter string="Үлдэгдэлгүй" name="no_qty" domain="[('qty_available','=',0)]"/>
+                <separator/>
+                <filter string="Хөдөлгөөн огт байгаагүй" name="never_moved" domain="[('last_move_date','=',False)]"/>
+                <group expand="0" string="Групп">
+                    <filter string="Ангилал" name="groupby_categ" context="{'group_by':'categ_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_dead_stock_report" model="ir.actions.act_window">
+        <field name="name">Идэвхгүй барааны жагсаалт</field>
+        <field name="res_model">product.dead.stock.report</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_product_dead_stock_report_search"/>
+        <field name="help">Сүүлийн 1 жил хөдөлгөөнгүй байгаа идэвхтэй бараа (үлдэгдэлтэй эсвэл үлдэгдэлгүй)</field>
+    </record>
+
+    <menuitem id="product_dead_stock_report_menu"
+        name="Идэвхгүй барааны жагсаалт"
+        parent="stock.menu_stock_warehouse_mgmt"
+        action="action_product_dead_stock_report"
+        sequence="4"/>
+
+</odoo>
