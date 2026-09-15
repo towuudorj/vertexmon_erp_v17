@@ -34,7 +34,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   #network { width:100%; height:100%; }
   #empty { padding:40px; text-align:center; color:#888; font-size:16px; }
   #detailPanel {
-    position:absolute; top:0; right:0; width:520px; max-width:92%; height:100%;
+    position:absolute; top:0; right:0; width:960px; max-width:95%; height:100%;
     background:#fff; border-left:1px solid #ddd; box-shadow:-4px 0 12px rgba(0,0,0,.08);
     transform:translateX(100%); transition:transform .18s ease; overflow:auto; z-index:5;
   }
