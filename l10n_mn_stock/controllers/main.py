@@ -181,7 +181,7 @@ class StockWarehouseFlowController(http.Controller):
 
         # Тайлангийн шинж чанартай тул одоогийн хэрэглэгчийн stock.picking/
         # res.partner г.м моделийн уншиж эрхээс үл хамааран ажиллуулна.
-        senv = env.sudo()
+        senv = env(su=True)
         product = senv['product.product'].browse(product_id) if product_id else senv['product.product']
 
         # 'cancel'-аас бусад бүх төлвийг оруулна: 'done' бус мөр бүрийг
