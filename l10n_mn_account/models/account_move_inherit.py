@@ -198,7 +198,7 @@ class AccountMove(models.Model):
         job_obj = self.env['hr.job'].sudo()
         for obj in self:
             if obj.invoice_state == 'parent_approve':
-                job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч'), ('name', '!=', 'Тооцооны нягтлан бодогч')])
+                job_id = job_obj.search([('name', 'ilike', 'нягтлан бодогч')])
                 if job_id:
                     accountants = self.env['hr.employee'].search([('job_id', 'in', job_id.ids), ('company_id', '=', obj.company_id.id)], order='create_date asc')
                     if accountants:
