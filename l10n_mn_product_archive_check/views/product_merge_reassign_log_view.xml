@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_product_merge_reassign_log_line_list" model="ir.ui.view">
+        <field name="name">product.merge.reassign.log.line.list</field>
+        <field name="model">product.merge.reassign.log.line</field>
+        <field name="arch" type="xml">
+            <tree string="Барааны шилжүүлэг" create="false" edit="false" delete="false" default_order="date desc"
+                  action="action_open_document" type="object">
+                <header>
+                    <button name="%(action_product_merge_reassign_wizard)d" type="action" string="Шилжүүлэг"
+                            class="btn-primary" display="always"/>
+                </header>
+                <field name="date"/>
+                <field name="source_product_id"/>
+                <field name="target_product_id"/>
+                <field name="category"/>
+                <field name="document_name"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_merge_reassign_log_line_search" model="ir.ui.view">
+        <field name="name">product.merge.reassign.log.line.search</field>
+        <field name="model">product.merge.reassign.log.line</field>
+        <field name="arch" type="xml">
+            <search string="Барааны шилжүүлэг">
+                <field name="source_product_id"/>
+                <field name="target_product_id"/>
+                <field name="document_name"/>
+                <group expand="0" string="Групп">
+                    <filter string="Шилжүүлэг" name="groupby_log" context="{'group_by':'log_id'}"/>
+                    <filter string="Төрөл" name="groupby_category" context="{'group_by':'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_merge_reassign_log" model="ir.actions.act_window">
+        <field name="name">Барааны шилжүүлэг</field>
+        <field name="res_model">product.merge.reassign.log.line</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_product_merge_reassign_log_line_search"/>
+        <field name="help">Барааны давхардал шилжүүлэх үйлдлээр өөрчлөгдсөн баримтуудын түүх — баримт дээр дарахад шууд тэр баримт руу орно</field>
+    </record>
+
+    <menuitem id="product_merge_reassign_log_menu"
+        name="Барааны шилжүүлэг"
+        parent="stock.menu_stock_warehouse_mgmt"
+        action="action_product_merge_reassign_log"
+        groups="stock.group_stock_manager"
+        sequence="6"/>
+
+</odoo>

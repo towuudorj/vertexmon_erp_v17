@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_product_merge_reassign_wizard_form" model="ir.ui.view">
+        <field name="name">product.merge.reassign.wizard.form</field>
+        <field name="model">product.merge.reassign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Давхардал шилжүүлэх">
+                <group>
+                    <field name="source_product_id"/>
+                    <field name="target_product_id"/>
+                </group>
+                <p class="text-muted">
+                    "Хуучин/Давхардсан бараа"-тай холбоотой, хараахан дуусаагүй Борлуулалт, Худалдан
+                    авалтын захиалга, Агуулахын шилжилт, CRM болон Төслийн мөрүүдийг "Шилжүүлэх бараа"
+                    руу шилжүүлнэ. Одоогийн үлдэгдлийг өөрчлөхгүй.
+                </p>
+                <footer>
+                    <button string="Шилжүүлэх" type="object" name="action_reassign" class="btn-primary"/>
+                    <button string="Хаах" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_merge_reassign_wizard" model="ir.actions.act_window">
+        <field name="name">Давхардал шилжүүлэх</field>
+        <field name="res_model">product.merge.reassign.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>
