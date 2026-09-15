@@ -128,6 +128,7 @@
                                 <field name="disability_percentage" invisible="disabled_employee == False"/>
                                 <field name="two_jobs"/>
                                 <field name="company_name" invisible="two_jobs == False"/>
+                                <field name="local_purchase_mail_receiver"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company"/>

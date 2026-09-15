@@ -151,6 +151,14 @@ class stock_picking(models.Model):
                     'picking_id': obj.id,
                     'sequence': 7,
                 })
+                if obj.location_id and obj.location_id.supply_location:
+                    cashier = employee_obj.search([('local_purchase_mail_receiver', '=', True)], limit=1, order='create_date asc')
+                    signature_user_obj.create({
+                        'user_id': cashier.user_id.id if cashier else False,
+                        'type': 'inventory_accountant',  # Барааны нягтлан
+                        'picking_id': obj.id,
+                        'sequence': 8,
+                    })
 
         return res
 
@@ -343,6 +351,14 @@ class stock_picking(models.Model):
                             for n_line in notif_line:
                                 users |= n_line.user_id if not n_line.substitute_user else n_line.substitute_user
                             self.send_notif_mail(users)
+                    if line.type == 'issued_cashier':
+                        notif_line = obj.signature_user_ids.filtered(lambda s: s.type == 'inventory_accountant' and
+                                                                                        not s.is_approve_signature)
+                        if notif_line:
+                            users = user_obj
+                            for n_line in notif_line:
+                                users |= n_line.user_id if not n_line.substitute_user else n_line.substitute_user
+                            self.send_notif_mail(users)
 
                 signature_user_line.is_approve_signature = True
 
@@ -402,6 +418,7 @@ class PickingSignatureUsers(models.Model):
             ('picking_created', 'Picking Created'),
             ('financial_analyst', 'Financial Analyst'),
             ('head', 'Head'),
+            ('inventory_accountant', 'Inventory Accountant'),
     ])
     is_approve_signature = fields.Boolean(default=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', ondelete='cascade')

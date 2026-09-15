@@ -2862,6 +2862,11 @@ msgid "Loan Request"
 msgstr "Зээлийн хүсэлт"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_employee__local_purchase_mail_receiver
+msgid "Local Purchase Mail Receiver"
+msgstr "Дотоод худалдан авалтын мэйл илгээх"
+
+#. module: l10n_mn_hr
 #: model:ir.model.fields,field_description:l10n_mn_hr.field_hr_decree__decr_location
 #: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
 msgid "Location"

@@ -553,6 +553,7 @@ class HrEmployee(models.Model):
     worked_month_in_company = fields.Integer('Worked Month In Company', compute='_compute_annual_leave')
     annual_leave_day = fields.Integer('Annual Leave Day', compute='_compute_annual_leave')
     weighing_date = fields.Date('Weighing Date', tracking=True)
+    local_purchase_mail_receiver = fields.Boolean('Local Purchase Mail Receiver', tracking=True, default=False)
 
     def get_department_mn(self):
         self.ensure_one()
@@ -671,6 +672,7 @@ class EmployeePublic(models.Model):
     worked_month_in_company = fields.Integer('Worked Month In Company', related='employee_id.worked_month_in_company', compute_sudo=True)
     annual_leave_day = fields.Integer('Annual Leave Day', related='employee_id.annual_leave_day', compute_sudo=True)
     weighing_date = fields.Date('Weighing Date', related='employee_id.weighing_date', compute_sudo=True)
+    local_purchase_mail_receiver = fields.Boolean(related='employee_id.local_purchase_mail_receiver', compute_sudo=True)
 
 class HrDecreeReport(models.Model):
     _inherit = 'hr.decree'

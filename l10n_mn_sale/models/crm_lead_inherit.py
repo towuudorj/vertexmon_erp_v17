@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 def verbose_format(amount,currency):
@@ -599,7 +602,7 @@ class CrmLead(models.Model):
                             lead.purchase_request_ids = [(4,purchase_request_id.id)]
                             if lines.purchase_user_id.id == purchase_request_id.purchase_user_id.id:
                                 if lines.request_type != 'is_quotation':
-                                    line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id), 
+                                    line_ids = self.env['purchase.requisition.line'].search([('requisition_id', '=', purchase_requests.id),
                                                                                           ('lead_line_id', '=', lines.id)])
                                     if not line_ids:
                                         line_status = ''
@@ -613,7 +616,7 @@ class CrmLead(models.Model):
                                                     'product_uom_id': lines.uom_id.id,
                                                     'priority': lines.priority,
                                                     'requisition_id': purchase_request_id.id,
-                                                    'currency_id': purchase_requests.currency_id.id,
+                                                    'currency_id': purchase_request_id.currency_id.id,
                                                     'line_status':line_status,
                                                     'price_unit':0,
                                                     'lead_line_id':lines.id,
@@ -623,6 +626,30 @@ class CrmLead(models.Model):
                                         lines.request_line_id = line_id.id
                                     else:
                                         lines.request_line_id = line_ids.id
+                            employee = purchase_request_id.purchase_user_id.sudo().employee_id
+                            if employee and employee.local_purchase_mail_receiver:
+                                try:
+                                    base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                                    purchase_requisition_url = f'{base_url}/web#id={purchase_request_id.id}&model=purchase.requisition&view_type=form'
+                                    email_to = employee.work_email or purchase_request_id.purchase_user_id.partner_id.email
+                                    if email_to:
+                                        mail_values = {
+                                            'subject': u'Багц захиалга хуваарилагдсан тухай',
+                                            'email_to': email_to,
+                                            'body_html': f"""
+                                                <p>Танд  {purchase_request_id.name or ''} Багц захиалга хуваарилсан байна. Доорх товчоор дамжин дэлгэрэнгүй мэдээлэлтэй танилцана уу</p>
+                                                <a href="{purchase_requisition_url or ''}"
+                                                     style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
+                                                            box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
+                                                            border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                                                     Захиалга</a><br>
+                                                <p>Баярлалаа.</p>
+                                            """,
+                                            'auto_delete': True,
+                                        }
+                                        self.env['mail.mail'].sudo().create(mail_values).send()
+                                except Exception as e:
+                                    _logger.warning("Багц захиалгын имэйл илгээхэд алдаа гарлаа: %s", e)
                         else:
                             lead.purchase_request_ids = [(4,purchase_requests.id)]
                             if lines.purchase_user_id.id == purchase_requests.purchase_user_id.id:
