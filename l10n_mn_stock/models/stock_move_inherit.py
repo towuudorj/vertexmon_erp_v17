@@ -323,8 +323,39 @@ class StockMoveLine(models.Model):
                 obj.related_partner_id = obj.move_id.picking_id.sale_id.partner_id.id
                 continue
             obj.related_partner_id = False
-    
-    
+
+    def _compute_related_order(self):
+        for line in self:
+            order = False
+            model = False
+            if line.move_id and line.move_id.sale_line_id and line.move_id.sale_line_id.order_id:
+                order = line.move_id.sale_line_id.order_id
+                model = 'sale.order'
+            elif line.picking_id and line.picking_id.sale_id:
+                order = line.picking_id.sale_id
+                model = 'sale.order'
+            elif line.move_id and line.move_id.purchase_line_id and line.move_id.purchase_line_id.order_id:
+                order = line.move_id.purchase_line_id.order_id
+                model = 'purchase.order'
+            elif line.picking_id and line.picking_id.purchase_id:
+                order = line.picking_id.purchase_id
+                model = 'purchase.order'
+            line.related_order_model = model
+            line.related_order_id = order.id if order else False
+
+    def action_view_related_order(self):
+        self.ensure_one()
+        if not self.related_order_model or not self.related_order_id:
+            return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self.related_order_model,
+            'res_id': self.related_order_id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+
     price_subtotal=fields.Float(string=u'Нийт үнэ',compute='_compute_all_price')
     sale_price = fields.Float(string=u'Зарах үнэ',compute='_compute_list_price', readonly=False)
     sale_prices = fields.Float(string=u'Зарах үнэ')
@@ -343,4 +374,6 @@ class StockMoveLine(models.Model):
     analytic_id = fields.Many2one(related='picking_id.analytic_id', string=u"Төсөл", store=True)
     related_partner_id = fields.Many2one('res.partner', compute='_compute_related_partner_id')
     partner_id = fields.Many2one('res.partner',string='Хүргэлтийн хаяг',related='picking_id.partner_id',store=True)
+    related_order_model = fields.Char(compute='_compute_related_order')
+    related_order_id = fields.Integer(compute='_compute_related_order')
 
