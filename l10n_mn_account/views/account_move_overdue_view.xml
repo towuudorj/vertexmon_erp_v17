@@ -27,6 +27,6 @@
         name="Хянах"
         parent="account.menu_finance"
         action="action_account_move_overdue"
-        sequence="1"/>
+        sequence="2"/>
 
 </odoo>

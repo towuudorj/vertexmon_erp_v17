@@ -16,6 +16,6 @@
         name="Хянах"
         parent="stock.menu_stock_root"
         action="action_stock_picking_pending"
-        sequence="1"/>
+        sequence="2"/>
 
 </odoo>

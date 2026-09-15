@@ -147,9 +147,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           selectionWidth: 1.5
         },
         nodes: { shape: 'box', margin: 12, font: { size: 15 } },
-        interaction: { hover: true }
+        interaction: { hover: true, dragNodes: false }
       };
       var network = new vis.Network(container, data, options);
+      network.once('stabilizationIterationsDone', function() {
+        network.setOptions({ physics: false });
+      });
       network.on('click', function(params) {
         if (params.nodes && params.nodes.length) {
           showNodeDetail(params.nodes[0]);
