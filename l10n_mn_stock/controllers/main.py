@@ -179,7 +179,10 @@ class StockWarehouseFlowController(http.Controller):
         company_id = int(company_id) if company_id else env.company.id
         wh_filter_ids = [int(i) for i in warehouse_ids.split(',') if i] if warehouse_ids else []
 
-        product = env['product.product'].browse(product_id) if product_id else env['product.product']
+        # Тайлангийн шинж чанартай тул одоогийн хэрэглэгчийн stock.picking/
+        # res.partner г.м моделийн уншиж эрхээс үл хамааран ажиллуулна.
+        senv = env.sudo()
+        product = senv['product.product'].browse(product_id) if product_id else senv['product.product']
 
         # 'cancel'-аас бусад бүх төлвийг оруулна: 'done' бус мөр бүрийг
         # "дуусаагүй" гэж үзэж диаграм дээр шар өнгөөр ялгаж харуулна.
@@ -225,9 +228,9 @@ class StockWarehouseFlowController(http.Controller):
         request.env.cr.execute(query, tuple(params))
         rows = request.env.cr.dictfetchall()
 
-        warehouse_obj = env['stock.warehouse']
-        partner_obj = env['res.partner']
-        location_obj = env['stock.location']
+        warehouse_obj = senv['stock.warehouse']
+        partner_obj = senv['res.partner']
+        location_obj = senv['stock.location']
 
         def node_key(usage, warehouse_id, location_id, partner_id):
             if usage in ('internal', 'transit') and warehouse_id:
@@ -281,7 +284,7 @@ class StockWarehouseFlowController(http.Controller):
                 picking_ids.add(r['picking_id'])
 
         partners = {p.id: p.name for p in partner_obj.browse(list(partner_ids))}
-        picking_records = env['stock.picking'].browse(list(picking_ids))
+        picking_records = senv['stock.picking'].browse(list(picking_ids))
         pickings = {p.id: p.name for p in picking_records}
         picking_responsible = {p.id: (p.user_id.name or '') for p in picking_records}
 
