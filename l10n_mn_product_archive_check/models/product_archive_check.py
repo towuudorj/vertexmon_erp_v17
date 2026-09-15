@@ -23,6 +23,16 @@ def _archive_check_result(product_name, errors):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    def write(self, vals):
+        if vals.get('active') is False:
+            for product in self:
+                errors = product._get_archive_blockers()
+                if errors:
+                    raise UserError(_(
+                        '"%s" барааг архивлах боломжгүй байна:\n\n- %s'
+                    ) % (product.display_name, '\n- '.join(errors)))
+        return super().write(vals)
+
     def action_check_before_archive(self):
         self.ensure_one()
         return _archive_check_result(self.display_name, self._get_archive_blockers())
@@ -89,6 +99,18 @@ class ProductProduct(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    def write(self, vals):
+        if vals.get('active') is False:
+            for template in self:
+                errors = []
+                for variant in template.product_variant_ids:
+                    errors += variant._get_archive_blockers()
+                if errors:
+                    raise UserError(_(
+                        '"%s" барааг архивлах боломжгүй байна:\n\n- %s'
+                    ) % (template.display_name, '\n- '.join(errors)))
+        return super().write(vals)
 
     def action_check_before_archive(self):
         self.ensure_one()
