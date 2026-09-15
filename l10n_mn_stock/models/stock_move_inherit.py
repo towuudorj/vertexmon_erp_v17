@@ -250,16 +250,27 @@ class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
     
         
-    @api.depends('picking_id')
+    def _sale_line_qty_ratio(self, sale_line_id):
+        """ Тухайн move line-ийн quantity нь эх Борлуулалтын мөрийн
+            нийт тоо хэмжээнээс хэдэн хувийг эзэлж байгааг тооцно.
+            Нэг Борлуулалтын мөр хэд хэдэн move line-д (хэсэгчилсэн
+            хүргэлт г.м) хуваагдсан үед нийт дүнг зөв жинлэхэд ашиглана. """
+        self.ensure_one()
+        if not sale_line_id or not sale_line_id.product_uom_qty:
+            return 0.0
+        return self.quantity / sale_line_id.product_uom_qty
+
+    @api.depends('picking_id', 'quantity')
     def _compute_all_price(self):
         for line in self:
-            if line.move_id.sale_line_id:
-                total = line.move_id.sale_line_id.price_subtotal
+            sale_line_id = line.move_id.sale_line_id
+            if sale_line_id:
+                total = sale_line_id.price_subtotal * line._sale_line_qty_ratio(sale_line_id)
             else:
                 total = line.quantity * line.sale_prices
 
-            line.price_subtotal = total 
-    
+            line.price_subtotal = total
+
     @api.depends('picking_id')
     def _compute_list_price(self):
         for line in self:
@@ -268,23 +279,23 @@ class StockMoveLine(models.Model):
             if sale_line_id:
                 sale_price = sale_line_id.price_unit/1.1
             line.sale_price = sale_price
-    
-    @api.depends('picking_id')
+
+    @api.depends('picking_id', 'quantity')
     def _compute_untaxed_amount(self):
         for line in self:
             untaxed_amount = 0.0
             sale_line_id = line.move_id.sale_line_id
             if sale_line_id:
-                untaxed_amount = sale_line_id.price_subtotal
+                untaxed_amount = sale_line_id.price_subtotal * line._sale_line_qty_ratio(sale_line_id)
             line.untaxed_amount = untaxed_amount
 
-    @api.depends('picking_id')
+    @api.depends('picking_id', 'quantity')
     def _compute_tax_amount(self):
         for line in self:
             tax_amount = 0.0
             sale_line_id = line.move_id.sale_line_id
             if sale_line_id:
-                tax_amount = sale_line_id.price_tax
+                tax_amount = sale_line_id.price_tax * line._sale_line_qty_ratio(sale_line_id)
             line.tax_amount = tax_amount
 
     

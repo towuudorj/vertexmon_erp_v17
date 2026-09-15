@@ -47,6 +47,17 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="report_mn_stock_expense_picked" model="ir.actions.report">
+            <field name="name">Зарлагын баримт (Picked)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_stock.mn_stock_expense_picked</field>
+            <field name="report_file">l10n_mn_stock.mn_stock_expense_picked</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
 
         <record id="report_mn_purchase_add_expense" model="ir.actions.report">
             <field name="name">Худалдан авалтын зардлын баримт</field>
