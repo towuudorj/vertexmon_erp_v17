@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_form_view_check_archive" model="ir.ui.view">
+        <field name="name">product.template.form.check.archive</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button string="Шалгах" type="object" name="action_check_before_archive" class="btn-secondary"/>
+            </header>
+        </field>
+    </record>
+
+</odoo>
