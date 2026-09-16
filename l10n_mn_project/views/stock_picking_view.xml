@@ -14,6 +14,9 @@
                     <attribute name="decoration-warning">not product_in_project and parent.analytic_id</attribute>
                     <attribute name="decoration-success">product_in_project and parent.analytic_id</attribute>
             </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
+                    <attribute name="options">{'create': [('analytic_id', '=', False)]}</attribute>
+            </xpath>
         </field>
     </record>
 

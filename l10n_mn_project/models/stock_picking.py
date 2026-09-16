@@ -5,12 +5,26 @@
 #############################################################################
 import json
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     task_id = fields.Many2one('project.task', string='Project Task')
+
+    def action_cancel(self):
+        if not self.env.user.has_group('stock.group_stock_manager'):
+            if self.filtered('analytic_id'):
+                raise UserError(_("Төсөлтэй холбоотой шилжүүлгийг зөвхөн Агуулахын админ цуцлах эрхтэй."))
+        return super().action_cancel()
+
+    def write(self, vals):
+        if 'analytic_id' in vals and not self.env.user.has_group('stock.group_stock_manager'):
+            locked = self.filtered(lambda p: p.analytic_id and p.state in ('confirmed', 'assigned'))
+            if locked:
+                raise UserError(_("Хүлээгдэж байгаа/бэлэн төлөвтэй, төсөл сонгогдсон шилжүүлгийн Analytic Account талбарыг зөвхөн Агуулахын админ өөрчлөх эрхтэй."))
+        return super().write(vals)
 
 
 class StockMove(models.Model):

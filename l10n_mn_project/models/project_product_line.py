@@ -118,6 +118,10 @@ class ProjectProductsLine(models.Model):
                 if 'product_id' in vals or 'product_qty' in vals or 'purchase_type' in vals or 'purchase_manager_id' in vals or 'cost_price' in vals or 'price_unit' in vals:
                     if not self.env.user.has_group('account.group_account_manager'):
                         raise UserError((u"Эрх бүхий ажилтан биш тул засварлах боломжгүйг анхаарна уу !"))
+            if 'product_id' in vals and vals.get('product_id') != order.product_id.id and order.qty_delivered > 0:
+                raise UserError(_("Уг бараагаар төслөөс зарлага хийгдсэн тул барааг өөрчлөх боломжгүй!"))
+            if 'product_qty' in vals and vals.get('product_qty') < order.qty_delivered:
+                raise UserError(_("Тоо хэмжээг зарлага хийгдсэн тооноос бага байлгах боломжгүй! Зарлага хийгдсэн тоо: %s") % order.qty_delivered)
         return super(ProjectProductsLine, self).write(vals)
     
     
