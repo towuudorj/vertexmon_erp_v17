@@ -13,6 +13,20 @@ class ProjectProductsLine(models.Model):
     _order = 'project_id, sequence, id'
 
 
+    @api.depends('product_id', 'product_id.default_code', 'product_id.name', 'project_id.products_line.product_id')
+    def _compute_is_duplicate_product(self):
+        # Барааны код (default_code)/нэрээр харьцуулна — ижил бодит бараа өөр
+        # (давхардсан) product.product бичлэгээр орсон тохиолдлыг ч оруулна.
+        for line in self:
+            if not line.product_id or not line.project_id:
+                line.is_duplicate_product = False
+                continue
+            key = line.product_id.default_code or line.product_id.name
+            siblings = line.project_id.products_line.filtered(
+                lambda l: l.product_id and (l.product_id.default_code or l.product_id.name) == key
+            )
+            line.is_duplicate_product = len(siblings) > 1
+
     @api.depends('project_id')
     def _compute_qty_available(self):
         quant_obj = self.env['stock.quant']
@@ -46,6 +60,7 @@ class ProjectProductsLine(models.Model):
             line.qty_delivered = qty
     
     project_id = fields.Many2one('project.project', string='Project', index=True, required=True, ondelete='cascade')
+    is_duplicate_product = fields.Boolean(string='Давхардал', compute='_compute_is_duplicate_product')
     
     sequence = fields.Integer(string='Sequence', default=1)
     product_id = fields.Many2one('product.product', string='Product', 

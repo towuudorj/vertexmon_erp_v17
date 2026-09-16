@@ -32,6 +32,27 @@ class ProjectProject(models.Model):
                 'total_cost':total_cost
             })
     
+    @api.depends('products_line.product_id', 'products_line.product_id.default_code', 'products_line.product_id.name')
+    def _compute_duplicate_products(self):
+        # Барааны код (default_code)/нэрээр харьцуулна — учир нь ижил бодит бараа
+        # 2 өөр (давхардсан) product.product бичлэгээр орсон байж болно, зөвхөн
+        # product_id-аар харьцуулбал ийм давхардлыг олохгүй.
+        for project in self:
+            groups = {}
+            for line in project.products_line:
+                if not line.product_id:
+                    continue
+                key = line.product_id.default_code or line.product_id.name
+                groups.setdefault(key, []).append(line.product_id)
+            dupe_labels = []
+            for products in groups.values():
+                if len(products) > 1:
+                    product = products[0]
+                    label = '%s[%s]' % (product.name, product.default_code) if product.default_code else product.name
+                    dupe_labels.append(label)
+            project.has_duplicate_products = bool(dupe_labels)
+            project.duplicate_product_names = ', '.join(dupe_labels)
+
     def _get_crm_count(self):
         crm_obj = self.env['crm.lead']
         for line in self:
@@ -48,6 +69,8 @@ class ProjectProject(models.Model):
     contract_amount = fields.Float(string='Contract Amount', digits='Product Price')
     quality_amount = fields.Float(string='Quality Amount')
     products_line = fields.One2many('project.products.line', 'project_id', string='Products Line', copy=True,)
+    has_duplicate_products = fields.Boolean(compute='_compute_duplicate_products')
+    duplicate_product_names = fields.Char(compute='_compute_duplicate_products')
     total_amount = fields.Monetary(string='Total Amount', store=True, readonly=True, compute='_amount_all')
     untax_amount = fields.Monetary(string='Untax Amount', store=True, readonly=True, compute='_amount_all')
     total_tax_amount = fields.Monetary(
