@@ -364,7 +364,9 @@ msgid "Invoice count"
 msgstr "Нэхэмжлэлийн тоо"
 
 #. module: l10n_mn_sale
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_lead__warehouse_id
 #: model:ir.model.fields,field_description:l10n_mn_sale.field_crm_team__warehouse_id
+#: model:ir.model.fields,field_description:l10n_mn_sale.field_purchase_requisition__warehouse_id
 msgid "Warehouse"
 msgstr "Агуулах"
 

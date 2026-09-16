@@ -170,6 +170,7 @@
                                 <field name="expire_day"/>
                                 <field name="invoice_percentage"/>
                                 <field name="invoice_description"/>
+                                <field name="warehouse_id" readonly="new_status == 'done'"/>
                             </group>
                         </xpath>
 

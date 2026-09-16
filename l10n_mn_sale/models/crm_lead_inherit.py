@@ -263,6 +263,7 @@ class CrmLead(models.Model):
     invoice_percentage = fields.Float(string='Invoice Percentage')
     amount_percentage_text = fields.Char(string='Amount text',
          readonly=True,compute='_compute_amount_percentage')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     
     @api.depends('partner_id')
     def _compute_name(self):
@@ -550,7 +551,7 @@ class CrmLead(models.Model):
             'medium_id': self.medium_id.id,
             'date_order': fields.Datetime.now(),
             'origin': self.name,
-            'warehouse_id': self.team_id.warehouse_id.id,
+            'warehouse_id': self.team_id.warehouse_id.id if not self.warehouse_id else self.warehouse_id.id,
             'pricelist_id':self.pricelist_id.id,
             'user_id':self.user_id.id,
             'together_sales_id':[(6,0,self.together_sales_id.ids)],
@@ -590,7 +591,7 @@ class CrmLead(models.Model):
                                 'company_id': lead.company_id.id,
                                 'origin': lead.name,
                                 'supplier_day':lead.supply_day,
-                                'warehouse_id': lead.team_id.warehouse_id.id,
+                                'warehouse_id': lead.team_id.warehouse_id.id if not lead.warehouse_id else lead.warehouse_id.id,
                                 'currency_id':lead.company_id.currency_id.id,
                                 'state': 'draft',
                                 'type_id': type_id.id,
