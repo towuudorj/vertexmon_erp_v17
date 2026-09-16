@@ -75,17 +75,25 @@ class LocalPurchaseRequest(models.TransientModel):
                                         })
                 lines.line_id.pur_qty = lines.line_id.pur_qty + qty
             employee_id = employee_obj.search([('user_id','=',self.env.user.id)])
-            crm_manager = employee_id.parent_id.user_id
-            if crm_manager and crm_manager.mapped('email'):
+            crm_manager = employee_id.parent_id
+            local_purchase_employee = self.env['hr.employee'].sudo().search([('local_purchase_mail_receiver', '=', True)])
+            email_list = []
+            if crm_manager and crm_manager.work_email:
+                email_list.append({'type': 'parent', 'email': [crm_manager.work_email]})
+            if local_purchase_employee and local_purchase_employee.mapped('work_email'):
+                email_list.append({'type': 'local_purchase', 'email': local_purchase_employee.mapped('work_email')})
+            if email_list:
                 # Send email notification
                 purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
-                self.env['mail.mail'].create({
-                    'email_to': ','.join(crm_manager.mapped('email')),
-                    'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.',
-                    'body_html': f'Холбогдох хаягаар орж батлана уу. <a href="{purchase_url}">{purchase_id.name}</a>'+
-                    f'- Төслийн нэр {line.project_id.name} \n Төслийн менежер: {line.project_id.user_id.name}, Нийлүүлэгч: {line.supplier_id.name}'+ 
-                    f'- Худалдан авалтын нийт дүн: {purchase_id.amount_total, purchase_id.currency_id.name}',
-                }).send()
+                for email_dict in email_list:
+                    self.env['mail.mail'].create({
+                        'email_to': ','.join(email_dict['email']),
+                        'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.',
+                        'body_html': f"Холбогдох хаягаар орж { 'батлана уу' if email_dict['type'] == 'parent' else 'шалгана уу'}. "+
+                        f"<a href='{purchase_url}'>{purchase_id.name}</a>"+
+                        f"<ul><li>Төслийн нэр: {line.project_id.name}</li> <li>Төслийн менежер: {line.project_id.user_id.name}</li> <li>Нийлүүлэгч: {line.supplier_id.name}</li>"+
+                        f"<li>Худалдан авалтын нийт дүн: {purchase_id.amount_total} {purchase_id.currency_id.name} </li></ul>",
+                    }).send()
 
 
 class LocalPurchaseRequestLine(models.TransientModel):
