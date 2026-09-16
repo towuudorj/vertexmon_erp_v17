@@ -80,10 +80,10 @@
                     <field name="related_order_id" invisible="1"/>
                     <field name="related_order_model" invisible="1"/>
                     <button name="action_view_related_order" type="object"
-                        string="ХА" class="btn-link text-success"
+                        string="Худалдан авалт" class="btn-link text-success"
                         invisible="related_order_model != 'purchase.order'"/>
                     <button name="action_view_related_order" type="object"
-                        string="БОР" class="btn-link text-danger"
+                        string="Борлуулалт" class="btn-link text-danger"
                         invisible="related_order_model != 'sale.order'"/>
                 </xpath>
             </field>
