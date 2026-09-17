@@ -1,12 +1,37 @@
 # -*- coding: utf-8 -*-
 import logging
 from odoo import api, models
+from odoo.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+
+    def check_access_rule(self, operation):
+        """
+        Verify that the given operation is allowed for the current user according to ir.rules.
+        Standard Odoo in-memory Python filtering (_filter_access_rules_python) may fail when
+        evaluating relational domains involving archived records or un-stored computed fields
+        (e.g., user_id.employee_id where the employee is archived).
+        When an AccessError is raised, we fall back to SQL-level access rule verification
+        (_filter_access_rules) to check if the records are genuinely allowed by database rules
+        before concluding that access is forbidden.
+        """
+        try:
+            return super().check_access_rule(operation)
+        except AccessError:
+            if self.env.su:
+                raise
+            # If in-memory Python check failed, verify with SQL _filter_access_rules
+            invalid = self - self._filter_access_rules(operation)
+            if not invalid:
+                # All records actually pass SQL-level access rules!
+                return
+            # Records are truly forbidden by SQL rules as well
+            raise
+
 
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
