@@ -42,7 +42,11 @@
         <menuitem id="sale_order_new_report_menu" name="Борлуулалтын тайлан шинэ"  parent="sale.menu_sale_report" sequence="0" action="action_sale_order_new_report"/>	
 
 
-        <menuitem id="sale_order_common_report_menu" name="Борлуулалтын тайлан хураангуй"  parent="sale.menu_sale_report" sequence="1" action="action_sale_order_common_report"/>	
+        <menuitem id="sale_order_common_report_menu" name="Борлуулалтын тайлан хураангуй"  parent="sale.menu_sale_report" sequence="1" action="action_sale_order_common_report"/>
+
+        <menuitem id="sale_order_template_report_menu" name="Борлуулалтын захиалгын загвар"  parent="sale.menu_sale_report" sequence="2" action="action_sale_order_template_report"/>
+
+        <menuitem id="crm_quotation_template_report_menu" name="Үнийн саналын загвар"  parent="sale.menu_sale_report" sequence="3" action="action_crm_quotation_template_report"/>
 
 
 

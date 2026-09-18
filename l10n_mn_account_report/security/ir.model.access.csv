@@ -9,6 +9,8 @@ access_general_journal_report_user,general.journal.report,model_general_journal_
 access_general_journal_report_manager,general.journal.report,model_general_journal_report,account.group_account_manager,1,1,1,1
 access_payment_order_reportsd_user,payment.order.reportsd,model_payment_order_reportsd,account.group_account_user,1,0,0,0
 access_payment_order_reportsd_manager,payment.order.reportsd,model_payment_order_reportsd,account.group_account_manager,1,1,1,1
+access_payment_order_template_report_user,payment.order.template.report,model_payment_order_template_report,account.group_account_user,1,1,1,0
+access_payment_order_template_report_manager,payment.order.template.report,model_payment_order_template_report,account.group_account_manager,1,1,1,1
 access_report_excel_output_user,report.excel.output,model_report_excel_output,account.group_account_user,1,0,0,0
 access_report_excel_output_manager,report.excel.output,model_report_excel_output,account.group_account_manager,1,1,1,1
 access_abstract_report_excel_user,abstract.report.excel,model_abstract_report_excel,account.group_account_user,1,0,0,0

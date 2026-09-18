@@ -53,6 +53,8 @@
                 'report/mn_ot_sale_invoice.xml',
                 'report/sale_order_common_report_view.xml',
                 'report/sale_order_new_report_view.xml',
+                'report/sale_order_template_report_view.xml',
+                'report/crm_quotation_template_report_view.xml',
                 'report/mn_ot_stock_expense.xml',
                 'wizard/create_product_wizard_view.xml',
                 'wizard/create_purchase_request_wizard_view.xml',

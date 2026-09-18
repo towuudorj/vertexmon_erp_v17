@@ -2,3 +2,5 @@ from . import sale_report_inherit
 from . import sales_plan_report
 from . import sale_order_new_report
 from . import sale_order_common_report
+from . import sale_order_template_report
+from . import crm_quotation_template_report

@@ -39,6 +39,7 @@
             'views/print_cash_order.xml',
             'views/bank_and_cash_statement_view.xml',
             'views/payment_order_view.xml',
+            'report/payment_order_template_report_view.xml',
             'report/payment_order.xml',
             'report/payment_order_transport.xml',
             'views/report_view.xml',

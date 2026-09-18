@@ -58,6 +58,12 @@
             <field name="target">new</field>
         </record>
 
+        <menuitem id="account_invoice_template_report_menu"
+            action="action_account_invoice_template_report"
+            name="Нэхэмжлэлийн загвар"
+            sequence="55"
+            parent="account.menu_finance_reports"/>
+
         <menuitem id="account_manual_root_menu" name="Гарын авлага" parent="account.menu_finance" sequence="99"/>
         <menuitem id="account_manual_employee_menu" name="Нягтлан бодогч" parent="account_manual_root_menu" sequence="1" action="action_account_manual_employee_url" groups="account.group_account_user,account.group_account_manager"/>
         <menuitem id="account_manual_manager_menu" name="Санхүүгийн менежер" parent="account_manual_root_menu" sequence="2" action="action_account_manual_manager_url" groups="account.group_account_manager"/>

@@ -52,6 +52,13 @@
 				sequence="1" />
 
 		<menuitem
+				action="action_payment_order_template_report"
+				id="payment_order_template_report_menu"
+				parent="account_mn_reports"
+				name="Төлбөрийн даалгаврын загвар"
+				sequence="3" />
+
+		<menuitem
 				action="action_account_partner_ledger_excel_report"
 				id="sale_account_partner_ledger_report_menu"
 				parent="sale.menu_sale_report"

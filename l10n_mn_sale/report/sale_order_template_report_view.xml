@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="sale_order_template_report_view" model="ir.ui.view">
+            <field name="name">sale.order.template.report.form</field>
+            <field name="model">sale.order.template.report</field>
+            <field name="arch" type="xml">
+                <form string="Борлуулалтын захиалгын загвар">
+                    <group>
+                        <field name="company_id"/>
+                        <field name="line_count"/>
+                    </group>
+
+                    <footer>
+                        <button name="action_print_xls_report" string="Export" type="object"
+                            class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sale_order_template_report" model="ir.actions.act_window">
+            <field name="name">Борлуулалтын захиалгын загвар</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.template.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_order_template_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

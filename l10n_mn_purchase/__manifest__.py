@@ -42,6 +42,7 @@
               "wizard/purchase_summary_report_view.xml",
               "views/report_view.xml",
               "wizard/purchase_expense_report_view.xml",
+              "wizard/purchase_order_template_report_view.xml",
               "views/menu_view.xml",
               "views/purchase_order_action_list_view.xml"
                 ],
