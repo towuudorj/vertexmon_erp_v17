@@ -31,7 +31,7 @@
                  'project',
                  'crm',
                  'mail',
-                 'l10n_mn_account'
+                 'spreadsheet_dashboard_sale',
                  ],
     "data" : [ 
                 'security/ir.model.access.csv',
@@ -79,8 +79,19 @@
                 'views/crm_team_inherit_view.xml',
                 'views/report_view.xml',
                 'views/menu_view.xml',
-                'views/sale_order_action_list_view.xml'
+                'views/sale_order_action_list_view.xml',
+                'data/sales_dashboard_data.xml',
                 ],
+    "assets": {
+        "spreadsheet.o_spreadsheet": [
+            "l10n_mn_sale/static/src/dashboard/funnel_chart/funnel_chart.js",
+            "l10n_mn_sale/static/src/dashboard/funnel_chart/funnel_chart.xml",
+            "l10n_mn_sale/static/src/dashboard/funnel_chart/funnel_chart.scss",
+        ],
+        "web.assets_backend": [
+            "l10n_mn_sale/static/src/dashboard/funnel_chart/funnel_chart.scss",
+        ],
+    },
     "auto_install": False,
     "installable": True,
 }

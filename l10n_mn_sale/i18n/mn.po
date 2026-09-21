@@ -1398,8 +1398,50 @@ msgstr "Урьдчилгаа төлбөр"
 msgid "Description"
 msgstr "Гүйлгээний утга"
 
+#. module: l10n_mn_sale
+msgid "Quotation to Order Funnel"
+msgstr "Үнийн саналаас захиалгад хөрвөсөн конус график"
 
+#. module: l10n_mn_sale
+msgid "Quotations"
+msgstr "Үнийн санал"
 
+#. module: l10n_mn_sale
+msgid "Confirmed Orders"
+msgstr "Захиалга болсон"
 
+#. module: l10n_mn_sale
+msgid "Conversion Rate"
+msgstr "Хөрвөлтийн хувь"
 
+#. module: l10n_mn_sale
+msgid "Conversion"
+msgstr "Хөрвөлт"
 
+#. module: l10n_mn_sale
+msgid "Pending"
+msgstr "Хүлээгдэж буй"
+
+#. module: l10n_mn_sale
+msgid "pcs"
+msgstr "ш"
+
+#. module: l10n_mn_sale
+msgid "Quotation to Order Conversion"
+msgstr "Үнийн саналаас захиалгад хөрвөсөн үзүүлэлт"
+
+#. module: l10n_mn_sale
+msgid "Draft quotation amount"
+msgstr "Ноорог үнийн саналын дүн"
+
+#. module: l10n_mn_sale
+msgid "Sent quotation amount"
+msgstr "Илгээсэн үнийн саналын дүн"
+
+#. module: l10n_mn_sale
+msgid "Total pending quotation amount"
+msgstr "Хүлээгдэж буй үнийн саналын нийт дүн"
+
+#. module: l10n_mn_sale
+msgid "Order amount"
+msgstr "Захиалгын дүн"

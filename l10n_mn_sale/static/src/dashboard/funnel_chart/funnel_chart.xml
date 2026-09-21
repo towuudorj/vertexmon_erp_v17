@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="l10n_mn_sale.FunnelChartComponent">
+        <div class="o_funnel_chart_widget w-100 h-100 d-flex flex-column" t-att-style="'background-color: ' + (runtime.background || '#ffffff')">
+
+            <!-- SVG Cone Funnel Body -->
+            <div class="o_funnel_chart_body flex-grow-1 position-relative d-flex align-items-center justify-content-center p-2">
+                <svg viewBox="0 0 340 180" class="w-100 h-100" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <!-- Gradient for Stage 1: Quotations (Modern Indigo) -->
+                        <linearGradient id="quotationsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4F46E5"/>
+                            <stop offset="100%" stop-color="#7C3AED"/>
+                        </linearGradient>
+
+                        <!-- Gradient for Stage 2: Orders (Emerald Green) -->
+                        <linearGradient id="ordersGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10B981"/>
+                        </linearGradient>
+
+                        <!-- Filter for subtle drop shadow -->
+                        <filter id="funnelDropShadow" x="-10%" y="-10%" width="120%" height="130%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.18"/>
+                        </filter>
+                    </defs>
+
+                    <!-- STAGE 1: Quotations (Top wide cone section) -->
+                    <g class="o_funnel_stage o_funnel_stage_1" style="cursor: pointer;">
+                        <!-- 3D top rim ellipse -->
+                        <ellipse cx="170" cy="14" rx="140" ry="7" fill="#6366F1" opacity="0.9"/>
+
+                        <!-- Trapezoid body -->
+                        <path d="M 30 14 L 310 14 L 265 76 L 75 76 Z"
+                              fill="url(#quotationsGradient)"
+                              filter="url(#funnelDropShadow)"/>
+
+                        <!-- Stage 1 Value (Monetary amount on TOP) -->
+                        <text x="170" y="38"
+                              fill="#FFFFFF"
+                              font-weight="800"
+                              text-anchor="middle"
+                              t-att-font-size="runtime.stage1FontSize">
+                            <t t-esc="runtime.stage1Text"/>
+                        </text>
+
+                        <!-- Stage 1 Title (Below the amount) -->
+                        <text x="170" y="58"
+                              fill="#FFFFFF"
+                              font-size="12px"
+                              font-weight="600"
+                              text-anchor="middle"
+                              letter-spacing="0.3px">
+                            Үнийн санал
+                        </text>
+                    </g>
+
+                    <!-- CONNECTING FLOW / CONVERSION ARROW -->
+                    <g class="o_funnel_connector">
+                        <!-- Connector Arrow -->
+                        <polygon points="155,77 185,77 170,87" fill="#64748B" opacity="0.4"/>
+                        <!-- Conversion rate pill badge -->
+                        <rect x="95" y="76" width="150" height="20" rx="10" fill="#0F172A" opacity="0.88" filter="url(#funnelDropShadow)"/>
+                        <text x="170" y="90" fill="#38BDF8" font-size="10.5px" font-weight="700" text-anchor="middle">
+                            ↓ Хөрвөлт: <t t-esc="runtime.conversionRate"/>%
+                        </text>
+                    </g>
+
+                    <!-- STAGE 2: Confirmed Orders (Bottom narrow cone section) -->
+                    <g class="o_funnel_stage o_funnel_stage_2" style="cursor: pointer;">
+                        <!-- Trapezoid body -->
+                        <path d="M 85 99 L 255 99 L 215 154 L 125 154 Z"
+                              fill="url(#ordersGradient)"
+                              filter="url(#funnelDropShadow)"/>
+
+                        <!-- Stage 2 Value (Monetary amount on TOP) -->
+                        <text x="170" y="121"
+                              fill="#FFFFFF"
+                              font-weight="800"
+                              text-anchor="middle"
+                              t-att-font-size="runtime.stage2FontSize">
+                            <t t-esc="runtime.stage2Text"/>
+                        </text>
+
+                        <!-- Stage 2 Title (Below the amount) -->
+                        <text x="170" y="141"
+                              fill="#FFFFFF"
+                              font-size="11.5px"
+                              font-weight="600"
+                              text-anchor="middle"
+                              letter-spacing="0.3px">
+                            Захиалга болсон
+                        </text>
+                    </g>
+
+                    <!-- FOOTER SUMMARY NOTE -->
+                    <g class="o_funnel_summary">
+                        <text x="170" y="172" fill="#64748B" font-size="9px" text-anchor="middle">
+                            <t t-esc="runtime.footerText"/>
+                        </text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </t>
+</templates>
