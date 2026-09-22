@@ -10,6 +10,7 @@
                     <group colspan="4">
                         <field name="company_id" widget='selection'/>
                         <field name="target_move" />
+                        <field name="order_by_p_order" invisible="target_move != 'delivered'"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="purchase_user_id"/>

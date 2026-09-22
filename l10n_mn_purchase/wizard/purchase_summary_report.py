@@ -21,6 +21,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
     purchase_user_id = fields.Many2one('res.users', string='Purchase manager')
     target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('delivered', 'Delivered')],
                                       string='States', default='posted')
+    order_by_p_order = fields.Boolean('Order By Purchase Order')
 
     
     
@@ -33,6 +34,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
             'end_date': self.date_to,
             'target_move': self.target_move,
             'purchase_user_id': self.purchase_user_id.id,
+            'order_by_p_order': self.order_by_p_order,
         }
         return {
             'type': 'ir.actions.report',
@@ -209,7 +211,10 @@ class PurchaseOrderCommonReport(models.TransientModel):
         if is_picked:
             sorted_data = []
             if picking_total_value_dict:
-                sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
+                if data['order_by_p_order']:
+                    sorted_data = sorted(picking_total_value_dict, key=lambda x: (x["order_id"].name or "", x["date_done"] or datetime.min))
+                else:
+                    sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
             for item in sorted_data:
                 sheet.write("A%s" % rowx, item['date_done'], datetime_format)
                 sheet.write("B%s" % rowx, item['order_id'].name, data_left)

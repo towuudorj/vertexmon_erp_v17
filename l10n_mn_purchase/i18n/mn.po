@@ -348,6 +348,11 @@ msgid "Manufacturer"
 msgstr "Үйлдвэрлэгдэж байгаа"
 
 #. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_summary_report__order_by_p_order
+msgid "Order By Purchase Order"
+msgstr "Худалдан авалтаар эрэмбэлэх "
+
+#. module: l10n_mn_purchase
 #: model:ir.model.fields.selection,name:l10n_mn_purchase.selection__purchase_order__freight_status__freight
 msgid "Freight"
 msgstr "Тээвэрт гарсан"
