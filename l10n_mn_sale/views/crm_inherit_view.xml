@@ -23,7 +23,10 @@
                          <tree position="attributes">
                              <attribute name="decoration-success">new_status == 'confirm'</attribute>
                         </tree>
-                        <xpath expr='//field[@name="expected_revenue"]' position="replace">
+                        <xpath expr='//field[@name="expected_revenue"]' position="attributes">
+                            <attribute name="invisible">True</attribute>
+                        </xpath>
+                        <xpath expr='//field[@name="expected_revenue"]' position="after">
                             <field name="amount_total" />
                             <field name="new_status" string="Төлөв"/>
                         </xpath>
