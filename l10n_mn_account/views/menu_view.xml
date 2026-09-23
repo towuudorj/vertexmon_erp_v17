@@ -53,7 +53,7 @@
             <field name="target">new</field>
         </record>
         <record id="action_account_manual_manager_url" model="ir.actions.act_url">
-            <field name="name">Санхүүгийн менежер</field>
+            <field name="name">Ахлах нягтлан бодогч</field>
             <field name="url">/l10n_mn_account/static/account_manual_manager.html</field>
             <field name="target">new</field>
         </record>
@@ -66,7 +66,7 @@
 
         <menuitem id="account_manual_root_menu" name="Гарын авлага" parent="account.menu_finance" sequence="99"/>
         <menuitem id="account_manual_employee_menu" name="Нягтлан бодогч" parent="account_manual_root_menu" sequence="1" action="action_account_manual_employee_url" groups="account.group_account_user,account.group_account_manager"/>
-        <menuitem id="account_manual_manager_menu" name="Санхүүгийн менежер" parent="account_manual_root_menu" sequence="2" action="action_account_manual_manager_url" groups="account.group_account_manager"/>
+        <menuitem id="account_manual_manager_menu" name="Ахлах нягтлан бодогч" parent="account_manual_root_menu" sequence="2" action="action_account_manual_manager_url" groups="account.group_account_manager"/>
 
 
 </odoo>
