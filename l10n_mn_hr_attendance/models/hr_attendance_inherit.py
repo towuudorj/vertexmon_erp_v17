@@ -461,7 +461,7 @@ class HrAttendance(models.Model):
 
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'attendance_list_name', 'attendance_list_id')
         date_range = fields.Datetime.now()
-        date_range = date_range - relativedelta(days=7)
+        date_range = date_range - relativedelta(days=30)
         attendance_ids = self.env['hr.attendance'].sudo().search(['|', ('share_point_id', '=', ''), ('share_point_id', '=', False)])
         headers = {
             "Authorization": token,
@@ -470,9 +470,7 @@ class HrAttendance(models.Model):
         attendance_ids.push_to_sharepoint(headers, site_id, list_id)
         changed_att_ids = self.env['hr.attendance'].sudo().search([
             ('write_date', '>=', date_range),
-            ('id', 'not in', attendance_ids.ids),
-            ('share_point_id', '!=', False),
-            ('share_point_id', '!=', '')
+            ('id', 'not in', attendance_ids.ids)
         ])
         changed_att_ids.push_to_sharepoint(headers, site_id, list_id)
 
