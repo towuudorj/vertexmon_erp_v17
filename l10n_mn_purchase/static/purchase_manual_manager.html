@@ -92,7 +92,7 @@
     <p>Захиалга батлах эрхийн зөв хуваарилалт, хоёр шаттай баталгаажуулалт, тохиргоо болон тайлангийн бүрэн хяналт.</p>
     <div class="meta-row">
       <span class="chip">8 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.07</span>
+      <span class="chip">Шинэчилсэн: 2026.09.23</span>
       <span class="chip">Модуль: l10n_mn_purchase</span>
     </div>
   </header>
@@ -120,14 +120,14 @@
         <div class="sec-head"><span class="num">02</span><h2>Эрхийн бүлэг — чухал ялгаа</h2></div>
         <div class="callout warn">
           <span class="ico">Чухал</span>
-          <p>Захиалгыг <strong>«Хяналтанд илгээх» → «Confirm Order»</strong> болгож баталгаажуулах эрх нь <span class="grouplabel">Худалдан авалтын менежер</span> бүлэгт БИШ, харин <span class="grouplabel">Санхүүгийн шинжээч</span> (l10n_mn_account.group_financial_analyst) бүлэгт байдаг. Худалдан авалтын менежерт зөвхөн энэ бүлгийг оноовол «Confirm Order»/«Reject» товч харагдахгүй байх магадлалтай — эдгээр 2 эрхийг тусад нь шалгаж, шаардлагатай бол хоёуланг нь нэг хүнд олгоно уу.</p>
+          <p>Захиалгыг <strong>«Хяналтанд илгээх» → «Confirm Order»</strong> болгож баталгаажуулах эрх нь <span class="grouplabel">Худалдан авалтын менежер</span> бүлэгт БИШ, харин <span class="grouplabel">Нягтлан бодогч</span> (l10n_mn_account.group_financial_analyst) бүлэгт байдаг. Худалдан авалтын менежерт зөвхөн энэ бүлгийг оноовол «Confirm Order»/«Reject» товч харагдахгүй байх магадлалтай — эдгээр 2 эрхийг тусад нь шалгаж, шаардлагатай бол хоёуланг нь нэг хүнд олгоно уу.</p>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Эрхийн бүлэг</th><th>Юунд ашиглагдана</th></tr></thead>
             <tbody>
               <tr><td><span class="grouplabel">Худалдан авалтын менежер</span> (purchase.group_purchase_manager)</td><td>Тохиргооны цэс, Тээврийн төрлийн бүртгэл/тайлангийн бүрэн CRUD (устгах эрх), «Approve Order» (хоёр шаттай баталгаажуулалтын 2-р шат), «Unlock».</td></tr>
-              <tr><td><span class="grouplabel">Санхүүгийн шинжээч</span> (l10n_mn_account.group_financial_analyst)</td><td>Захиалгыг «Sent» төлвөөс «Confirm Order» / «Reject» хийх — бодит хяналтын шат.</td></tr>
+              <tr><td><span class="grouplabel">Нягтлан бодогч</span> (l10n_mn_account.group_financial_analyst)</td><td>Захиалгыг «Sent» төлвөөс «Confirm Order» / «Reject» хийх — бодит хяналтын шат.</td></tr>
               <tr><td><span class="grouplabel">CRM хүсэлт батлах</span> (l10n_mn_sale.group_crm_request_confirm)</td><td>Худалдан авалтын хүсэлт үүсэх эх сурвалж болох Сэжимийг зөвшөөрөх — Борлуулалтын талд байдаг эрх, гэхдээ худалдан авалтын урсгалд шууд нөлөөтэй.</td></tr>
             </tbody>
           </table>
@@ -152,7 +152,7 @@
 
       <section id="pm04">
         <div class="sec-head"><span class="num">04</span><h2>Хоёр шаттай баталгаажуулалт</h2></div>
-        <p>Компанийн тохиргоонд «two_step» баталгаажуулалт идэвхтэй бөгөөд захиалгын дүн тогтоосон хязгаараас дээш үед, Санхүүгийн шинжээч «Confirm Order» дарсан ч захиалга шууд «Purchase» биш, харин <span class="badge b-gold">Батлуулахаар</span> (to approve) төлөвт зогсоно.</p>
+        <p>Компанийн тохиргоонд «two_step» баталгаажуулалт идэвхтэй бөгөөд захиалгын дүн тогтоосон хязгаараас дээш үед, Нягтлан бодогч «Confirm Order» дарсан ч захиалга шууд «Purchase» биш, харин <span class="badge b-gold">Батлуулахаар</span> (to approve) төлөвт зогсоно.</p>
         <div class="callout info">
           <span class="ico">Эцсийн шат</span>
           <p>Ийм үед зөвхөн <span class="grouplabel">Худалдан авалтын менежер</span> бүлэгтэй хэрэглэгч <span class="btnlabel">Approve Order</span> дарж эцэслэн баталгаажуулна.</p>
@@ -176,7 +176,7 @@
             <thead><tr><th>Үйлдэл</th><th>Хэнд очих</th><th>Агуулга</th></tr></thead>
             <tbody>
               <tr><td>Ажилтан <span class="btnlabel">Quotation end</span> дарах</td><td>Сэжимийг үүсгэсэн борлуулагч</td><td>Үнийн судалгаа дууссаныг мэдэгдэнэ.</td></tr>
-              <tr><td>Та (эсвэл Санхүүгийн шинжээч) <span class="btnlabel">Confirm Order</span> дарах, захиалга аналитик данстай (төсөлтэй холбоотой) бол</td><td>Холбогдох Төсөл/CRM-ийн менежер</td><td>«Худалдан авалтын захиалга: {дугаар} батлагдсан байна.»</td></tr>
+              <tr><td>Та (эсвэл Нягтлан бодогч) <span class="btnlabel">Confirm Order</span> дарах, захиалга аналитик данстай (төсөлтэй холбоотой) бол</td><td>Холбогдох Төсөл/CRM-ийн менежер</td><td>«Худалдан авалтын захиалга: {дугаар} батлагдсан байна.»</td></tr>
             </tbody>
           </table>
         </div>
@@ -189,7 +189,7 @@
           <table>
             <thead><tr><th>Асуудал</th><th>Шалтгаан / Шийдэл</th></tr></thead>
             <tbody>
-              <tr><td>Санхүүгийн шинжээч рүү илгээсэн ч «Confirm Order» товч харагдахгүй байна</td><td>Тухайн хэрэглэгчид <span class="grouplabel">Санхүүгийн шинжээч</span> бүлэг оноогоогүй байна — Худалдан авалтын менежер бүлэг үүнийг орлохгүй.</td></tr>
+              <tr><td>Нягтлан бодогч рүү илгээсэн ч «Confirm Order» товч харагдахгүй байна</td><td>Тухайн хэрэглэгчид <span class="grouplabel">Нягтлан бодогч</span> бүлэг оноогоогүй байна — Худалдан авалтын менежер бүлэг үүнийг орлохгүй.</td></tr>
               <tr><td>Захиалга «Approve Order»-оор урагшлахгүй, зогсчихсон</td><td>Хоёр шаттай баталгаажуулалт идэвхтэй, дүн хязгаараас дээш — Худалдан авалтын менежерийн эрхтэй хүн хэрэгтэй.</td></tr>
               <tr><td>Тайлангийн буруу мөрийг устгах боломжгүй</td><td>Устгах эрх зөвхөн Худалдан авалтын менежерт байдаг.</td></tr>
             </tbody>
