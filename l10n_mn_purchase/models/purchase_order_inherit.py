@@ -135,9 +135,9 @@ class PurchaseOrder(models.Model):
             'origin': self.name,
             'analytic_id': project_id.analytic_account_id.id,
             'company_id': self.company_id.id,
-            'note': f'Дотоод худалдан авалтын Шууд зарлага: {self.name}',
             'move_ids': move_vals,
         })
+        picking.message_post(body=f'Дотоод худалдан авалтын Шууд зарлага: {self.name}')
         picking.action_confirm()
         project_id.picking_ids = [(4, picking.id)]
         products = self.order_line.product_id
