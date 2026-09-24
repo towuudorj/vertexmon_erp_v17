@@ -73,6 +73,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         return arch, view
 
     def get_xlsx_report(self, data, response, get_file=False):
+        self_obj = self.browse(data['res_id'])
+        show_matched = bool(self_obj.is_extra and self_obj.is_show_matched)
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -155,8 +157,12 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         sheet.set_column(2, 2, 40)
         sheet.set_column(3, 3, 10)
         sheet.set_column(4, 4, 10)
-        sheet.set_column(5, 5, 40)
-        sheet.set_column(6, 14, 20)
+        sheet.set_column(5, 5, 55)
+        if show_matched:
+            sheet.set_column(6, 6, 14)
+            sheet.set_column(7, 15, 20)
+        else:
+            sheet.set_column(6, 14, 20)
         sheet.set_column('P:P', None, None, {'hidden': 1})
         sheet.freeze_panes(5, 3)
         group_values = []
@@ -165,8 +171,6 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             2: {'str': group_2_str, 'num': group_2_num},
             3: {'str': group_3_str, 'num': group_3_num}
         }
-        self_obj = self.browse(data['res_id'])
-        show_matched = bool(self_obj.is_extra and self_obj.is_show_matched)
         move_state = ['draft', 'posted']
         if self_obj.result_selection == 'customer':
             account_type = ['asset_receivable', 'asset_prepayments']
@@ -367,7 +371,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     if r['credit_move_id'] in move_line_ids:
                         reconcile_map.setdefault(r['credit_move_id'], []).append(debit_ref)
             for line in lines:
-                line['matched_ref'] = ', '.join(reconcile_map.get(line.get('move_line_id'), []))
+                # A non-empty value (even a single space) stops Excel from letting the
+                # long "Гүйлгээний утга" text overflow through a genuinely blank cell.
+                line['matched_ref'] = ', '.join(reconcile_map.get(line.get('move_line_id'), [])) or ' '
 
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (self_obj.company_id.name), data_left_no_border)
 
