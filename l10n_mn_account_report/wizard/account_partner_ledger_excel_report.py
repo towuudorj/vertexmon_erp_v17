@@ -152,7 +152,10 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         sheet.set_column(0, 0, 10)
         sheet.set_column(1, 1, 40)
         sheet.set_column(2, 2, 40)
-        sheet.set_column(3, 14, 20)
+        sheet.set_column(3, 3, 10)
+        sheet.set_column(4, 4, 10)
+        sheet.set_column(5, 5, 40)
+        sheet.set_column(6, 14, 20)
         sheet.set_column('P:P', None, None, {'hidden': 1})
         sheet.freeze_panes(5, 3)
         group_values = []
