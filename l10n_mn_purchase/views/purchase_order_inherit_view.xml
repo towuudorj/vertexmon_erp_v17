@@ -27,6 +27,9 @@
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="currency_rate" />
                 </xpath>
+                <xpath expr="//page[@name='purchase_delivery_invoice']//field[@name='origin']" position="after">
+                    <field name="is_direct_issue" readonly="1"/>
+                </xpath>
                 
                 <xpath expr="//sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
                     <field name="month" optional="show"/>

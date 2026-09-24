@@ -17,6 +17,7 @@ class LocalPurchaseRequest(models.TransientModel):
     date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
     project_id = fields.Many2one('project.project', string='Project', required=True)
     picking_type_id = fields.Many2one('stock.picking.type', string='Stock picking type', required=True, domain="[('code','=','incoming')]")
+    is_direct_issue = fields.Boolean(string='Шууд зарлагадах')
     
     
     @api.model
@@ -57,7 +58,8 @@ class LocalPurchaseRequest(models.TransientModel):
                                 'picking_type_id':line.picking_type_id.id,
                                 'date_order':line.date,
                                 'purchase_type':'local',
-                                'partner_type':line.supplier_id.partner_type.id
+                                'partner_type':line.supplier_id.partner_type.id,
+                                'is_direct_issue':line.is_direct_issue,
                                 })
             line.project_id.purchase_ids = [(4, purchase_id.id)]
             for lines in line.line_ids:

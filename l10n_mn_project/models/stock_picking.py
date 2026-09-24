@@ -26,6 +26,21 @@ class StockPicking(models.Model):
                 raise UserError(_("Хүлээгдэж байгаа/бэлэн төлөвтэй, төсөл сонгогдсон шилжүүлгийн Analytic Account талбарыг зөвхөн Агуулахын админ өөрчлөх эрхтэй."))
         return super().write(vals)
 
+    def _action_done(self):
+        res = super()._action_done()
+        for picking in self:
+            purchase = picking.purchase_id
+            if (picking.picking_type_id.code == 'incoming' and purchase
+                    and purchase.purchase_type == 'local' and purchase.user_id.email):
+                purchase_url = f'/web#id={purchase.id}&model=purchase.order&view_type=form'
+                self.env['mail.mail'].create({
+                    'email_to': purchase.user_id.email,
+                    'subject': f'Дотоод худалдан авалт: {purchase.name} -ийн бараа хүлээн авагдлаа.',
+                    'body_html': f'Таны захиалсан дотоод худалдан авалтын бараа хүлээн авагдлаа. '
+                    f'<a href="{purchase_url}">{purchase.name}</a>',
+                }).send()
+        return res
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

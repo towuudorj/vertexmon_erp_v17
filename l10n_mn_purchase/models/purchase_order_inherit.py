@@ -26,6 +26,7 @@ class PurchaseOrder(models.Model):
                                        ('stock','Stock')], string='Freight status')
     invoice_status_forced = fields.Boolean(default=False)
     payment_amount = fields.Float(string=u'Төлбөрийн үлдэгдэл', compute='_compute_payment_amount', store=True)
+    is_direct_issue = fields.Boolean(string='Шууд зарлагадах', default=False)
 
     @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.amount_residual_signed', 'amount_total')
     def _compute_payment_amount(self):
@@ -100,9 +101,59 @@ class PurchaseOrder(models.Model):
                         'body_html': f'Дэлгэрэнгүй мэдээллийг харна уу. <a href="{purchase_url}">{order.name}</a>'+
                         f'- Төслийн нэр: {project_id.name} \n Төслийн менежер: {project_id.user_id.name}, Нийлүүлэгч: {order.partner_id.name}',
                     }).send()
+                if order.is_direct_issue and project_id:
+                    order._create_project_issue_picking(project_id)
             if order.partner_id not in order.message_partner_ids:
                 order.message_subscribe([order.partner_id.id])
         return True
+
+    def _create_project_issue_picking(self, project_id):
+        self.ensure_one()
+        picking_type = project_id.picking_type_id
+        if not picking_type:
+            return
+        project_price_map = {pline.product_id.id: pline.price_unit for pline in project_id.products_line}
+        move_vals = [(0, 0, {
+            'product_id': line.product_id.id,
+            'name': line.name,
+            'product_uom_qty': line.product_qty,
+            'product_uom': line.product_uom.id,
+            'location_id': picking_type.default_location_src_id.id,
+            'location_dest_id': picking_type.default_location_dest_id.id,
+            'company_id': self.company_id.id,
+            'sale_prices': project_price_map.get(line.product_id.id, line.price_unit),
+            'price_subtotal': project_price_map.get(line.product_id.id, line.price_unit) * line.product_qty,
+        }) for line in self.order_line if line.product_id]
+        if not move_vals:
+            return
+        picking = self.env['stock.picking'].create({
+            'partner_id': project_id.partner_id.id,
+            'picking_type_id': picking_type.id,
+            'location_id': picking_type.default_location_src_id.id,
+            'location_dest_id': picking_type.default_location_dest_id.id,
+            'scheduled_date': self.date_order,
+            'origin': self.name,
+            'analytic_id': project_id.analytic_account_id.id,
+            'company_id': self.company_id.id,
+            'note': f'Дотоод худалдан авалтын Шууд зарлага: {self.name}',
+            'move_ids': move_vals,
+        })
+        picking.action_confirm()
+        project_id.picking_ids = [(4, picking.id)]
+        products = self.order_line.product_id
+        for pline in project_id.products_line.filtered(lambda l: l.product_id in products):
+            pline.picking_ids = [(4, picking.id)]
+        buyer = self.user_id
+        if buyer.email:
+            picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
+            self.env['mail.mail'].create({
+                'email_to': buyer.email,
+                'subject': f'Төслийн зарлагын баримт үүслээ: {picking.name}',
+                'body_html': f'{self.name} захиалгатай холбоотой төслийн зарлагын баримт үүссэн байна. '
+                f'<a href="{picking_url}">{picking.name}</a>'
+                f'<ul><li>Төсөл: {project_id.name}</li></ul>',
+            }).send()
+        return picking
 
 
     @api.onchange('currency_id')

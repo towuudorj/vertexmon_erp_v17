@@ -12,6 +12,7 @@
                     <field name="supplier_id"/>
                     <field name="project_id"/>
                     <field name="picking_type_id"/>
+                    <field name="is_direct_issue"/>
                 </group>
                 <field name="line_ids">
                     <tree editable="bottom">
