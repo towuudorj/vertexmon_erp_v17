@@ -21,6 +21,7 @@
                                 <field name="company_id"/>
                                 <field name="result_selection"/>
                                 <field name="is_extra"/>
+                                <field name="is_show_matched" invisible="not is_extra"/>
                                 <field name="group_option_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </group>
                             <group>

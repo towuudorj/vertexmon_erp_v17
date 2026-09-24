@@ -23,6 +23,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                          ('customer_supplier',u'Өглөг авлагийн данс')],u'Харилцагчийн',required=True,default='customer')
     partner_ids = fields.Many2many('res.partner', 'ledger_report_partner_ids', 'report_id', 'partner_id', u'Харилцагч')
     is_extra = fields.Boolean(u'Задаргаатай эсэх')
+    is_show_matched = fields.Boolean(u'Холбогдсон гүйлгээ')
     start_date = fields.Date(u'Эхлэх огноо',default=lambda *a: time.strftime('%Y-%m-01'))
     end_date = fields.Date(u'Дуусах огноо',default=lambda *a: time.strftime('%Y-%m-%d'))
     account_journal_ids = fields.Many2many('account.journal', 'account_partner_new_ledger_excel_journal_rel', 'account_id', 'journal_id',
@@ -165,6 +166,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             3: {'str': group_3_str, 'num': group_3_num}
         }
         self_obj = self.browse(data['res_id'])
+        show_matched = bool(self_obj.is_extra and self_obj.is_show_matched)
         move_state = ['draft', 'posted']
         if self_obj.result_selection == 'customer':
             account_type = ['asset_receivable', 'asset_prepayments']
@@ -240,7 +242,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                        "aml.credit as credit,"
                        "aml.amount_currency as amount_currency,"
                        "aml.name as name,"
-                       "aml.date as date")
+                       "aml.date as date,"
+                       "aml.id as move_line_id")
 
         if group_by:
             group_by = '\nGROUP BY ' + ', '.join(group for group in group_by)
@@ -277,7 +280,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             COALESCE(start_balance.currency_balance, 0) as start_currency_balance,
             COALESCE(aml.debit, 0) as debit,
             COALESCE(aml.credit, 0) as credit,
-            COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date" if self_obj.is_extra else ''}
+            COALESCE(aml.amount_currency, 0) as amount_currency {", COALESCE(aml.name, '') as ref, aml.date as date, aml.move_line_id as move_line_id" if self_obj.is_extra else ''}
      from (
          select sum(aml.balance) as balance,
                 sum(aml.amount_currency) as currency_balance,
@@ -312,6 +315,60 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
 
         self._cr.execute(qry)
         lines = self._cr.dictfetchall()
+
+        if show_matched:
+            move_line_ids = list({line['move_line_id'] for line in lines if line.get('move_line_id')})
+
+            # Replay the same group/line numbering logic used below when writing
+            # rows, so matched entries can be referenced by their report row
+            # number (e.g. "2.3") instead of by document name.
+            move_line_row_number = {}
+            sim_groups = [{'check_row': gv['check_row'], 'sequence': 0, 'last_value': False} for gv in group_values]
+            sim_sequence = 1
+            for line in lines:
+                for sim_group in sim_groups:
+                    if not sim_group['last_value'] or (line[sim_group['check_row']] or '0') != sim_group['last_value']:
+                        sim_group['sequence'] += 1
+                        is_child = False
+                        for other in sim_groups:
+                            if other['check_row'] == sim_group['check_row']:
+                                is_child = True
+                                continue
+                            if is_child:
+                                other['sequence'] = 0
+                                other['last_value'] = False
+                        sim_group['last_value'] = line[sim_group['check_row']] or '0'
+                        sim_sequence = 1
+                line_seq = '.'.join(str(g['sequence']) for g in sim_groups) if sim_groups else ''
+                line_seq = (line_seq + '.' + str(sim_sequence)) if line_seq != '' else str(sim_sequence)
+                if line.get('move_line_id'):
+                    move_line_row_number[line['move_line_id']] = line_seq
+                sim_sequence += 1
+
+            reconcile_map = {}
+            if move_line_ids:
+                self._cr.execute("""
+                    SELECT apr.debit_move_id, apr.credit_move_id, apr.amount,
+                           dmove.name as debit_move_name, cmove.name as credit_move_name
+                    FROM account_partial_reconcile apr
+                    JOIN account_move_line dml ON dml.id = apr.debit_move_id
+                    JOIN account_move_line cml ON cml.id = apr.credit_move_id
+                    JOIN account_move dmove ON dmove.id = dml.move_id
+                    JOIN account_move cmove ON cmove.id = cml.move_id
+                    WHERE apr.debit_move_id IN %(ids)s OR apr.credit_move_id IN %(ids)s
+                """, {'ids': tuple(move_line_ids)})
+                for r in self._cr.dictfetchall():
+                    # Fall back to the document name when the matched line falls
+                    # outside this report's own rows (e.g. different period/filter).
+                    debit_ref = move_line_row_number.get(r['debit_move_id']) or r['debit_move_name'] or ''
+                    credit_ref = move_line_row_number.get(r['credit_move_id']) or r['credit_move_name'] or ''
+                    if r['debit_move_id'] in move_line_ids:
+                        reconcile_map.setdefault(r['debit_move_id'], []).append(credit_ref)
+                    if r['credit_move_id'] in move_line_ids:
+                        reconcile_map.setdefault(r['credit_move_id'], []).append(debit_ref)
+            for line in lines:
+                line['matched_ref'] = ', '.join(reconcile_map.get(line.get('move_line_id'), []))
+
         sheet.merge_range("A1:C1", u'Байгууллагын нэр: %s' % (self_obj.company_id.name), data_left_no_border)
 
         if self_obj.result_selection == 'customer' and self_obj.is_extra == False:
@@ -327,7 +384,11 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         else:
             report_name =  u'Өглөг, авлагийн дэлгэрэнгүй тайлан'
 
-        if self_obj.is_extra:
+        if self_obj.is_extra and show_matched:
+            sheet.merge_range(1, 0, 1, 10, report_name, head)
+            sheet.merge_range(2, 9, 2, 10, u'Тайлант хугацаа: %s - %s'%(self_obj.start_date,self_obj.end_date) ,
+                              data_left_no_border)
+        elif self_obj.is_extra:
             sheet.merge_range(1, 0, 1, 9, report_name, head)
             sheet.merge_range(2, 8, 2, 9, u'Тайлант хугацаа: %s - %s'%(self_obj.start_date,self_obj.end_date) ,
                               data_left_no_border)
@@ -350,6 +411,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             coly += 1
             sheet.merge_range(rowx, coly, rowx + 1, coly, u'Гүйлгээний утга', title)
             coly += 1
+            if show_matched:
+                sheet.merge_range(rowx, coly, rowx + 1, coly, u'Холбогдсон', title)
+                coly += 1
         sheet.merge_range(rowx, coly, rowx+1, coly, u'Эхний үлдэгдэл', title)
         coly += 1
         sheet.merge_range(rowx, coly, rowx, coly+1, u'Гүйлгээ', title)
@@ -428,6 +492,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     coly += 1
                     sheet.merge_range(rowx, coly, rowx+1, coly, line['ref'], txt_left)
                     coly += 1
+                    if show_matched:
+                        sheet.merge_range(rowx, coly, rowx+1, coly, line['matched_ref'], txt_left)
+                        coly += 1
                     if sequence == 1:
                         for group in group_values:
                             group['start_balance'] += line['start_balance']
@@ -490,6 +557,9 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                     coly += 1
                     sheet.write(rowx, coly, line['ref'], txt_left)
                     coly += 1
+                    if show_matched:
+                        sheet.write(rowx, coly, line['matched_ref'], txt_left)
+                        coly += 1
                     if sequence == 1:
                         for group in group_values:
                             group['start_balance'] += line['start_balance']
