@@ -6,7 +6,7 @@ from odoo.tools.float_utils import float_is_zero
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 
-    cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash move type', required=True)
+    cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash move type')
     move_account_names = fields.Char(compute='_compute_counterpart_account_name')
     company_amount = fields.Float(compute='_compute_company_amount')
     tax_ids = fields.Many2many(

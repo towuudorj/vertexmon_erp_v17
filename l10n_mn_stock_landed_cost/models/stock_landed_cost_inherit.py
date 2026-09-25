@@ -44,7 +44,10 @@ class StockLandedCost(models.Model):
 
                 # Prorate the value at what's still in stock
                 move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
-                cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
+                if move_qty > 0:
+                    cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
+                else:
+                    cost_to_add = 0.0
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     valuation_layer = self.env['stock.valuation.layer'].create({
                         'value': cost_to_add,

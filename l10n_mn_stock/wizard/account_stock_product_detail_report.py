@@ -355,16 +355,16 @@ class ProductStockAccountDetailReport(models.TransientModel):
                         if p_inc.move_id.state !='cancel':
                             if p_inc.move_id.state !='draft':
                                 #if p_inc.quantity != 0.0:
-                                    if p_inc.account_id.id == p_inc.product_id.categ_id.property_stock_account_input_categ_id.id:
-                                        if  p_inc.debit == 0.0 and  p_inc.credit >0.0 :
-                                            purchase_qty += p_inc.quantity
-                                            purchase_amount +=p_inc.credit
-                                            income_qty -= p_inc.quantity
-                                            income_amount -=p_inc.credit
-                                    else:
-                                        if  p_inc.debit > 0.0 and  p_inc.credit == 0.0:
-                                            income_qty += p_inc.quantity
-                                            income_amount +=p_inc.debit
+                                if p_inc.account_id.id == p_inc.product_id.categ_id.property_stock_account_input_categ_id.id:
+                                    if  p_inc.debit == 0.0 and  p_inc.credit >0.0 :
+                                        purchase_qty += p_inc.quantity
+                                        purchase_amount +=p_inc.credit
+                                        income_qty -= p_inc.quantity
+                                        income_amount -=p_inc.credit
+                                else:
+                                    if  p_inc.debit > 0.0 and  p_inc.credit == 0.0:
+                                        income_qty += p_inc.quantity
+                                        income_amount +=p_inc.debit
                             
             if expense !=[]:
                 for exp in expense:
@@ -372,11 +372,11 @@ class ProductStockAccountDetailReport(models.TransientModel):
                         if exp.move_id.state !='cancel':
                             if exp.move_id.state !='draft':
                           #      if exp.quantity != 0.0:
-                                    if exp.account_id.id != p_inc.product_id.categ_id.property_stock_account_input_categ_id.id:
-                                        if exp.credit and exp.debit==0.0:
-                                            if exp.quantity <0.0:
-                                                expense_qty +=exp.quantity*(-1)
-                                            expense_amount +=exp.credit
+                                if exp.account_id.id != exp.product_id.categ_id.property_stock_account_input_categ_id.id:
+                                    if exp.credit and exp.debit==0.0:
+                                        if exp.quantity <0.0:
+                                            expense_qty +=exp.quantity*(-1)
+                                        expense_amount +=exp.credit
                             
                         
             end_qty = f_balance_qty+income_qty+purchase_qty-expense_qty

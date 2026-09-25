@@ -138,7 +138,7 @@ class CashMovelineReport(models.TransientModel):
         left join res_currency AS rc on rc.id = aa.currency_id
         WHERE am.date >= '{data['start_date']}' and am.date <='{data['end_date']}' 
         {'and aml.account_id in (%s)' % ', '.join(str(a_id) for a_id in data['account_ids']) if data['account_ids'] else ''}
-         and am.state in {target_move}
+         and am.state in {target_move} and aml.company_id = {data['company_id']}
         order by aml.date asc"""
         )
         all = self._cr.fetchall()

@@ -499,7 +499,6 @@ class AccountMove(models.Model):
                         total_currency += line.amount_currency
 
             sign = move.direction_sign
-            to_text = verbose_format(move.amount_total,move.currency_id)
             move.amount_untaxed = sign * total_untaxed_currency
             move.amount_tax = sign * total_tax_currency
             move.amount_total = sign * total_currency
@@ -509,6 +508,7 @@ class AccountMove(models.Model):
             move.amount_total_signed = abs(total) if move.move_type == 'entry' else -total
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
+            to_text = verbose_format(move.amount_total,move.currency_id)
             move.amount_text = to_text.capitalize()
 
     def _get_report_base_filename(self):
