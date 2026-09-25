@@ -30,15 +30,16 @@ class StockPicking(models.Model):
         res = super()._action_done()
         for picking in self:
             purchase = picking.purchase_id
-            if (picking.picking_type_id.code == 'incoming' and purchase
-                    and purchase.purchase_type == 'local' and purchase.user_id.email):
-                purchase_url = f'/web#id={purchase.id}&model=purchase.order&view_type=form'
-                self.env['mail.mail'].create({
-                    'email_to': purchase.user_id.email,
-                    'subject': f'Дотоод худалдан авалт: {purchase.name} -ийн бараа хүлээн авагдлаа.',
-                    'body_html': f'Таны захиалсан дотоод худалдан авалтын бараа хүлээн авагдлаа. '
-                    f'<a href="{purchase_url}">{purchase.name}</a>',
-                }).send()
+            if picking.picking_type_id.code == 'incoming' and purchase and purchase.purchase_type == 'local':
+                email = purchase.user_id.employee_id.work_email or purchase.user_id.partner_id.email
+                if email:
+                    purchase_url = f'/web#id={purchase.id}&model=purchase.order&view_type=form'
+                    self.env['mail.mail'].create({
+                        'email_to': email,
+                        'subject': f'Дотоод худалдан авалт: {purchase.name} -ийн барааг хүлээн авлаа.',
+                        'body_html': f'Таны захиалсан дотоод худалдан авалтын барааг хүлээн авлаа. '
+                        f'<a href="{purchase_url}">{purchase.name}</a>',
+                    }).send()
         return res
 
 

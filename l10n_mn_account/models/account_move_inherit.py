@@ -204,8 +204,8 @@ class AccountMove(models.Model):
                                                                   ('company_id', '=', obj.company_id.id),
                                                                   ('work_email', '!=', False)
                                                                  ], order='create_date asc')
-                    if accountants:
-                        acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
+                    if accountants and accountants.mapped('work_email'):
+                        acc_move_url = f'/web#id={obj.id}&model=account.move&view_type=form'
                         self.env['mail.mail'].create({
                             'email_to': ', '.join(accountants.mapped('work_email')),
                             'subject': f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл батлах хүсэлт ирлээ.",

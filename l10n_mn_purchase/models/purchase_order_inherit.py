@@ -135,19 +135,22 @@ class PurchaseOrder(models.Model):
             'origin': self.name,
             'analytic_id': project_id.analytic_account_id.id,
             'company_id': self.company_id.id,
+            'note': f'Дотоод худалдан авалтын Шууд зарлага: {self.name}',
             'move_ids': move_vals,
         })
-        picking.message_post(body=f'Дотоод худалдан авалтын Шууд зарлага: {self.name}')
         picking.action_confirm()
         project_id.picking_ids = [(4, picking.id)]
         products = self.order_line.product_id
         for pline in project_id.products_line.filtered(lambda l: l.product_id in products):
             pline.picking_ids = [(4, picking.id)]
         buyer = self.user_id
-        if buyer.email:
+        email = buyer.employee_id.work_email
+        if not email:
+            email = buyer.partner_id.email
+        if email:
             picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
             self.env['mail.mail'].create({
-                'email_to': buyer.email,
+                'email_to': email,
                 'subject': f'Төслийн зарлагын баримт үүслээ: {picking.name}',
                 'body_html': f'{self.name} захиалгатай холбоотой төслийн зарлагын баримт үүссэн байна. '
                 f'<a href="{picking_url}">{picking.name}</a>'
