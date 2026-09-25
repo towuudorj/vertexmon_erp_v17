@@ -154,7 +154,9 @@ class ProjectProductsLine(models.Model):
                 invoice_ids = self.env['account.move'].browse(move_ids)
                 invoice_line_ids = False
                 if invoice_ids:
-                    invoice_line_ids = invoice_ids.mapped('invoice_line_ids').filtered(lambda i_line: i_line.product_id.id == line.product_id.id and i_line.move_id.state == 'posted')
+                    invoice_line_ids = invoice_ids.mapped('invoice_line_ids').filtered(lambda i_line: (line.product_id.id == i_line.purchase_line_id.product_id.id
+                                                                                                       or i_line.product_id.id == line.product_id.id)
+                                                                                                      and i_line.move_id.state == 'posted')
                 if invoice_line_ids:
                     delivery_cost = abs(sum(invoice_line_ids.mapped('price_total')))
                 else:
