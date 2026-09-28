@@ -349,6 +349,7 @@ class PurchaseOrderLine(models.Model):
                                 ('12','12')],string=u'Сар')
     pre_qty = fields.Float(string='Pre quantity')
     is_downpayment = fields.Boolean(string='Is Down payment')
+    parent_line_id = fields.Many2one('purchase.order.line', string='Parent')
 
 
     def _prepare_account_move_line(self, move=False):
