@@ -74,8 +74,10 @@ class AccountAssetAssetCapitalization(models.Model):
     
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
-    
+
     department_id = fields.Many2one('hr.department',string='Department')
+    account_asset_gain_id = fields.Many2one('account.account', string='Үндсэн хөрөнгө данснаас хассаны олзын данс')
+    account_asset_loss_id = fields.Many2one('account.account', string='Үндсэн хөрөнгө данснаас хассаны гарзын данс')
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
@@ -121,25 +123,59 @@ class AccountAssetAsset(models.Model):
                     'method_number': asset.method_number,
                 }
 
+                if asset.salvage_value:
+                    raise UserError(_(
+                        "Энэ хөрөнгөд Хаягдлын үнэ (Salvage value) тохируулагдсан байна. "
+                        "Хаягдал/сэлбэгийн орлогын дансыг тодорхойлж, засварыг өргөтгөх хэрэгтэй тул "
+                        "одоогоор зөвхөн Хаягдлын үнэгүй хөрөнгийг устгах боломжтой."
+                    ))
+
+                accumulated_depreciation = asset.value - asset.salvage_value - asset.value_residual
+                gain_loss_amount = asset.value_residual
+
+                move_lines = [(0, 0, {
+                    'name': asset.name,
+                    'account_id': asset.category_id.account_depreciation_id.id,
+                    'debit': accumulated_depreciation,
+                    'credit': 0.0,
+                })]
+
+                if gain_loss_amount > 0:
+                    if not asset.category_id.account_asset_loss_id:
+                        raise UserError(_(
+                            "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Гарзын данс тохируулагдаагүй байна."
+                        ) % asset.category_id.name)
+                    move_lines.append((0, 0, {
+                        'name': asset.name,
+                        'account_id': asset.category_id.account_asset_loss_id.id,
+                        'debit': gain_loss_amount,
+                        'credit': 0.0,
+                    }))
+                elif gain_loss_amount < 0:
+                    if not asset.category_id.account_asset_gain_id:
+                        raise UserError(_(
+                            "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Олзын данс тохируулагдаагүй байна."
+                        ) % asset.category_id.name)
+                    move_lines.append((0, 0, {
+                        'name': asset.name,
+                        'account_id': asset.category_id.account_asset_gain_id.id,
+                        'debit': 0.0,
+                        'credit': -gain_loss_amount,
+                    }))
+
+                move_lines.append((0, 0, {
+                    'name': asset.name,
+                    'account_id': asset.category_id.account_asset_id.id,
+                    'debit': 0.0,
+                    'credit': asset.value,
+                }))
+
                 move_vals = {
                     'journal_id': asset.category_id.journal_id.id,
                     'date': asset.scrap_date,
                     'ref': asset.name,
                     'move_type': 'entry',
-                    'line_ids': [
-                        (0, 0, {
-                            'name': asset.name,
-                            'account_id': asset.category_id.account_depreciation_id.id,
-                            'debit': asset.value_residual,
-                            'credit': 0.0,
-                        }),
-                        (0, 0, {
-                            'name': asset.name,
-                            'account_id': asset.category_id.account_asset_id.id,
-                            'debit': 0.0,
-                            'credit': asset.value_residual,
-                        })
-                    ]
+                    'line_ids': move_lines,
                 }
 
                 move = account_move_obj.create(move_vals)

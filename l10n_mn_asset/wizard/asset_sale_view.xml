@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="account_asset_sale_form">
+            <field name="name">account.asset.sale.form</field>
+            <field name="model">account.asset.sale</field>
+            <field name="arch" type="xml">
+                <form string="Asset Sale">
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="sale_date"/>
+                        <field name="sale_price"/>
+                        <field name="vat_percent"/>
+                        <field name="receivable_account_id"/>
+                        <field name="vat_account_id"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel"/>
+                        <button string="Зарах" name="action_sell" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_asset_sale" model="ir.actions.act_window">
+            <field name="name">Asset Sale</field>
+            <field name="res_model">account.asset.sale</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_asset_sale_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

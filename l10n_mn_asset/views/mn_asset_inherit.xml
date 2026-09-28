@@ -10,21 +10,15 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr='//button[@name="set_to_close"]' position="after" >
-                        <button name="%(action_account_asset_capitalization)d" 
-                                string="Asset Capital" type="action" invisible="state != 'open'"/>
-                        <button name="%(action_account_asset_writeoff)d"
-                                string="Write Off" type="action" invisible="state != 'open'" />
-                        <button name="action_asset_scrap" 
-                                string="Scrap" type="object" invisible="state != 'open'"
+                        <button name="%(action_account_asset_sale)d"
+                                string="Зарах" type="action" invisible="state != 'open'"
+                                class="oe_highlight"/>
+                        <button name="action_asset_scrap"
+                                string="Хөрөнгө актлах" type="object" invisible="state != 'open'"
                                 confirm="The asset will be scrapped permanently. Continue?"/>
                     </xpath>
                     <xpath expr='//button[@name="set_to_close"]' position="attributes">
                         <attribute name="invisible">1</attribute>
-                    </xpath>
-                    <xpath expr='//button[@name="set_to_close"]' position="after" >
-                        <button name="set_to_close" invisible="state != 'open'" string="Sell or Dispose" type="object"
-                            confirm="The asset will be closed permanently. Continue?"
-                            class="oe_highlight"/>
                     </xpath>
                     <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
                         <field name="write_up"/>

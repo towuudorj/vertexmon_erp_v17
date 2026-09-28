@@ -22,3 +22,6 @@ access_stock_to_asset_wizard_manager,stock.to.asset.wizard,model_stock_to_asset_
 access_stock_to_asset_wizard_line_user,stock.to.asset.wizard.line,model_stock_to_asset_wizard_line,account.group_account_user,1,1,0,0
 access_stock_to_asset_wizard_line_invoice,stock.to.asset.wizard.line,model_stock_to_asset_wizard_line,account.group_account_invoice,1,1,1,0
 access_stock_to_asset_wizard_line_manager,stock.to.asset.wizard.line,model_stock_to_asset_wizard_line,account.group_account_manager,1,1,1,1
+access_account_asset_sale_user,account.asset.sale,model_account_asset_sale,account.group_account_user,1,1,0,0
+access_account_asset_sale_invoice,account.asset.sale,model_account_asset_sale,account.group_account_invoice,1,1,1,0
+access_account_asset_sale_manager,account.asset.sale,model_account_asset_sale,account.group_account_manager,1,1,1,1
