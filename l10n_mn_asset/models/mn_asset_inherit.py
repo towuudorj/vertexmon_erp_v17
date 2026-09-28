@@ -117,104 +117,102 @@ class AccountAssetAsset(models.Model):
                 ))
 
             unposted_depreciation_lines = asset.depreciation_line_ids.filtered(lambda dep_line: not dep_line.move_check)
-            if unposted_depreciation_lines:
-                old_values = {
-                    'method_end': asset.method_end,
-                    'method_number': asset.method_number,
-                }
+            old_values = {
+                'method_end': asset.method_end,
+                'method_number': asset.method_number,
+            }
 
-                if asset.salvage_value:
+            if asset.salvage_value:
+                raise UserError(_(
+                    "Энэ хөрөнгөд Хаягдлын үнэ (Salvage value) тохируулагдсан байна. "
+                    "Хаягдал/сэлбэгийн орлогын дансыг тодорхойлж, засварыг өргөтгөх хэрэгтэй тул "
+                    "одоогоор зөвхөн Хаягдлын үнэгүй хөрөнгийг устгах боломжтой."
+                ))
+
+            accumulated_depreciation = asset.value - asset.salvage_value - asset.value_residual
+            gain_loss_amount = asset.value_residual
+
+            move_lines = [(0, 0, {
+                'name': asset.name,
+                'account_id': asset.category_id.account_depreciation_id.id,
+                'debit': accumulated_depreciation,
+                'credit': 0.0,
+            })]
+
+            if gain_loss_amount > 0:
+                if not asset.category_id.account_asset_loss_id:
                     raise UserError(_(
-                        "Энэ хөрөнгөд Хаягдлын үнэ (Salvage value) тохируулагдсан байна. "
-                        "Хаягдал/сэлбэгийн орлогын дансыг тодорхойлж, засварыг өргөтгөх хэрэгтэй тул "
-                        "одоогоор зөвхөн Хаягдлын үнэгүй хөрөнгийг устгах боломжтой."
-                    ))
-
-                accumulated_depreciation = asset.value - asset.salvage_value - asset.value_residual
-                gain_loss_amount = asset.value_residual
-
-                move_lines = [(0, 0, {
-                    'name': asset.name,
-                    'account_id': asset.category_id.account_depreciation_id.id,
-                    'debit': accumulated_depreciation,
-                    'credit': 0.0,
-                })]
-
-                if gain_loss_amount > 0:
-                    if not asset.category_id.account_asset_loss_id:
-                        raise UserError(_(
-                            "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Гарзын данс тохируулагдаагүй байна."
-                        ) % asset.category_id.name)
-                    move_lines.append((0, 0, {
-                        'name': asset.name,
-                        'account_id': asset.category_id.account_asset_loss_id.id,
-                        'debit': gain_loss_amount,
-                        'credit': 0.0,
-                    }))
-                elif gain_loss_amount < 0:
-                    if not asset.category_id.account_asset_gain_id:
-                        raise UserError(_(
-                            "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Олзын данс тохируулагдаагүй байна."
-                        ) % asset.category_id.name)
-                    move_lines.append((0, 0, {
-                        'name': asset.name,
-                        'account_id': asset.category_id.account_asset_gain_id.id,
-                        'debit': 0.0,
-                        'credit': -gain_loss_amount,
-                    }))
-
+                        "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Гарзын данс тохируулагдаагүй байна."
+                    ) % asset.category_id.name)
                 move_lines.append((0, 0, {
                     'name': asset.name,
-                    'account_id': asset.category_id.account_asset_id.id,
+                    'account_id': asset.category_id.account_asset_loss_id.id,
+                    'debit': gain_loss_amount,
+                    'credit': 0.0,
+                }))
+            elif gain_loss_amount < 0:
+                if not asset.category_id.account_asset_gain_id:
+                    raise UserError(_(
+                        "'%s' ангилалд Үндсэн хөрөнгө данснаас хассаны Олзын данс тохируулагдаагүй байна."
+                    ) % asset.category_id.name)
+                move_lines.append((0, 0, {
+                    'name': asset.name,
+                    'account_id': asset.category_id.account_asset_gain_id.id,
                     'debit': 0.0,
-                    'credit': asset.value,
+                    'credit': -gain_loss_amount,
                 }))
 
-                move_vals = {
-                    'journal_id': asset.category_id.journal_id.id,
-                    'date': asset.scrap_date,
-                    'ref': asset.name,
-                    'move_type': 'entry',
-                    'line_ids': move_lines,
-                }
+            move_lines.append((0, 0, {
+                'name': asset.name,
+                'account_id': asset.category_id.account_asset_id.id,
+                'debit': 0.0,
+                'credit': asset.value,
+            }))
 
-                move = account_move_obj.create(move_vals)
+            move_vals = {
+                'journal_id': asset.category_id.journal_id.id,
+                'date': asset.scrap_date,
+                'ref': asset.name,
+                'move_type': 'entry',
+                'line_ids': move_lines,
+            }
 
-                sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_lines) + 1
-                residual_value = asset.value_residual
-                asset_value = asset.value
-                salvage_value = asset.salvage_value
-                asset_code = asset.code
-                scrap_date = asset.scrap_date
-                asset_id = asset.id
+            move = account_move_obj.create(move_vals)
 
-                unposted_depreciation_lines.unlink()
-                depreciation_line_obj.create({
-                    'amount': residual_value,
-                    'asset_id': asset_id,
-                    'sequence': sequence,
-                    'move_id': move.id,
-                    'is_scrap_line': True,
-                    'name': (asset_code or '') + '/' + str(sequence),
-                    'remaining_value': 0,
-                    'depreciated_value': asset_value - salvage_value,
-                    'depreciation_date': scrap_date,
-                })
+            sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_lines) + 1
+            residual_value = asset.value_residual
+            asset_value = asset.value
+            salvage_value = asset.salvage_value
+            asset_code = asset.code
+            scrap_date = asset.scrap_date
+            asset_id = asset.id
 
-                fresh_asset = self.browse(asset_id)
-                fresh_asset.write({
-                    'scrap_id': move.id,
-                    'method_end': scrap_date,
-                    'method_number': sequence,
-                })
-                tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
-                changes, tracking_value_ids = fresh_asset._mail_track(tracked_fields, old_values)
-                if changes:
-                    fresh_asset.message_post(
-                        subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'),
-                        tracking_value_ids=tracking_value_ids)
+            unposted_depreciation_lines.unlink()
+            depreciation_line_obj.create({
+                'amount': residual_value,
+                'asset_id': asset_id,
+                'sequence': sequence,
+                'move_id': move.id,
+                'is_scrap_line': True,
+                'name': (asset_code or '') + '/' + str(sequence),
+                'remaining_value': 0,
+                'depreciated_value': asset_value - salvage_value,
+                'depreciation_date': scrap_date,
+            })
 
-            self.browse(asset.id).write({'state': 'scrap'})
+            fresh_asset = self.browse(asset_id)
+            fresh_asset.write({
+                'scrap_id': move.id,
+                'method_end': scrap_date,
+                'method_number': sequence,
+                'state': 'scrap',
+            })
+            tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
+            changes, tracking_value_ids = fresh_asset._mail_track(tracked_fields, old_values)
+            if changes:
+                fresh_asset.message_post(
+                    subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'),
+                    tracking_value_ids=tracking_value_ids)
 
         return True
 

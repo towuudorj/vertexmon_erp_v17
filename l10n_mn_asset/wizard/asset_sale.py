@@ -38,8 +38,6 @@ class AccountAssetSale(models.TransientModel):
             ) % category.name)
 
         unposted_depreciation_lines = asset.depreciation_line_ids.filtered(lambda dep_line: not dep_line.move_check)
-        if not unposted_depreciation_lines:
-            raise UserError(_("Энэ хөрөнгө өмнө нь хаагдсан байна."))
 
         old_values = {
             'method_end': asset.method_end,
