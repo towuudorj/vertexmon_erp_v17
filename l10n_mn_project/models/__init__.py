@@ -6,3 +6,5 @@ from . import stock_picking
 from . import project_task
 from . import task_product_line
 from . import product_category
+from . import product_template
+from . import account_move

@@ -47,6 +47,7 @@
             'views/stock_picking_view.xml',
             'views/invoice_view_inherit.xml',
             'views/product_category_view.xml',
+            'views/product_template_view.xml',
             'views/menu_view.xml',
 
                 ],
