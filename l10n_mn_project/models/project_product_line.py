@@ -220,7 +220,40 @@ class ProjectProductsLine(models.Model):
         self.qty_available = self.with_context({'to_date': datetime.today()}).qty_available
        
         self.price_total = self.price_unit * self.product_qty
-        self.cost_total = self.cost_price * self.product_qty   
+        self.cost_total = self.cost_price * self.product_qty
 
-    
+    def _get_invoiced_amount(self):
+        self.ensure_one()
+        if not self.project_id.analytic_account_id:
+            return 0.0
+        aml = self.env['account.move.line'].search([
+            ('product_id', '=', self.product_id.id),
+            ('move_id.move_type', '=', 'in_invoice'),
+            ('move_id.state', '=', 'posted'),
+            ('purchase_line_id.order_id.analytic_id', '=', self.project_id.analytic_account_id.id),
+        ])
+        return sum(aml.mapped('price_subtotal'))
+
+    def _check_budget_threshold(self):
+        for line in self:
+            if not line.product_id.project_budget_monitor or not line.price_total:
+                continue
+            issued_amount = line._get_invoiced_amount()
+            if issued_amount < line.price_total * 0.9:
+                continue
+            manager = line.project_id.user_id.employee_id.parent_id
+            if not manager or not manager.work_email:
+                continue
+            project_url = f'/web#id={line.project_id.id}&model=project.project&view_type=form'
+            self.env['mail.mail'].create({
+                'email_to': manager.work_email,
+                'subject': f'Төслийн төсвийн анхааруулга: {line.project_id.name} - {line.product_id.name}',
+                'body_html': (
+                    f'Төсөл: {line.project_id.name}<br/>'
+                    f'Бараа: {line.product_id.name}<br/>'
+                    f'Нийт зарлагдсан дүн: {issued_amount:,.2f} / Төлөвлөсөн дүн: {line.price_total:,.2f}<br/>'
+                    f'Зарлагадсан дүн нь төлөвлөсөн дүнгийн 90%-иас давлаа.<br/>'
+                    f'<a href="{project_url}">{line.project_id.name}</a>'
+                ),
+            }).send()
 
