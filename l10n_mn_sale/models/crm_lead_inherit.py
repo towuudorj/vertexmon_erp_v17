@@ -264,6 +264,7 @@ class CrmLead(models.Model):
     amount_percentage_text = fields.Char(string='Amount text',
          readonly=True,compute='_compute_amount_percentage')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    margin = fields.Float(string='Margin', compute='_compute_margin')
     
     @api.depends('partner_id')
     def _compute_name(self):
@@ -560,8 +561,7 @@ class CrmLead(models.Model):
             'company_id': self.company_id.id or self.env.company.id,
             'tag_ids': [(6, 0, self.tag_ids.ids)],
             'team_id': self.team_id.id,
-            'company_id': self.company_id.id or self.env.company.id,
-            'order_line':line_ids 
+            'order_line':line_ids
             }
         
         if self.team_id:
@@ -784,3 +784,10 @@ class CrmLead(models.Model):
             })
         action['context'] = context
         return action
+
+    def _compute_margin(self):
+        for obj in self:
+            if obj.order_ids:
+                obj.margin = sum(obj.order_ids.mapped('margin'))
+            else:
+                obj.margin = 0
