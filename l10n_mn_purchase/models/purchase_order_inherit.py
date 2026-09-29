@@ -93,14 +93,19 @@ class PurchaseOrder(models.Model):
                 if not manager_mail:
                     manager_mail = crm_manager.partner_id.email
                 if manager_mail:
-                    # Send email notification
                     purchase_url = f'/web#id={order.id}&model=purchase.order&view_type=form'
-                    self.env['mail.mail'].create({
-                        'email_to': manager_mail,
-                        'subject': f'Худалдан авалтын захиалга: {order.name} батлагдсан байна.',
-                        'body_html': f'Дэлгэрэнгүй мэдээллийг харна уу. <a href="{purchase_url}">{order.name}</a>'+
-                        f'- Төслийн нэр: {project_id.name} \n Төслийн менежер: {project_id.user_id.name}, Нийлүүлэгч: {order.partner_id.name}',
-                    }).send()
+                    self.env['mail.mail'].create_notification(
+                        email_to=manager_mail,
+                        subject=f'Худалдан авалтын захиалга: {order.name} батлагдсан байна.',
+                        intro='Дараах худалдан авалтын захиалга батлагдлаа.',
+                        details=[
+                            ('Төсөл', project_id.name),
+                            ('Төслийн менежер', project_id.user_id.name),
+                            ('Нийлүүлэгч', order.partner_id.name),
+                        ],
+                        url=purchase_url,
+                        link_label=order.name,
+                    )
                 if order.is_direct_issue and project_id:
                     order._create_project_issue_picking(project_id)
             if order.partner_id not in order.message_partner_ids:
@@ -135,9 +140,9 @@ class PurchaseOrder(models.Model):
             'origin': self.name,
             'analytic_id': project_id.analytic_account_id.id,
             'company_id': self.company_id.id,
-            'note': f'Дотоод худалдан авалтын Шууд зарлага: {self.name}',
             'move_ids': move_vals,
         })
+        picking.message_post(body=f'Дотоод худалдан авалтын Шууд зарлага: {self.name}')
         picking.action_confirm()
         project_id.picking_ids = [(4, picking.id)]
         products = self.order_line.product_id
@@ -149,13 +154,17 @@ class PurchaseOrder(models.Model):
             email = buyer.partner_id.email
         if email:
             picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
-            self.env['mail.mail'].create({
-                'email_to': email,
-                'subject': f'Төслийн зарлагын баримт үүслээ: {picking.name}',
-                'body_html': f'{self.name} захиалгатай холбоотой төслийн зарлагын баримт үүссэн байна. '
-                f'<a href="{picking_url}">{picking.name}</a>'
-                f'<ul><li>Төсөл: {project_id.name}</li></ul>',
-            }).send()
+            self.env['mail.mail'].create_notification(
+                email_to=email,
+                subject=f'Төслийн зарлагын баримт үүслээ: {picking.name}',
+                intro='Дараах төслийн зарлагын баримт үүслээ.',
+                details=[
+                    ('Захиалга', self.name),
+                    ('Төсөл', project_id.name),
+                ],
+                url=picking_url,
+                link_label=picking.name,
+            )
         return picking
 
 

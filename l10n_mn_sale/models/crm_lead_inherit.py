@@ -406,12 +406,18 @@ class CrmLead(models.Model):
                         if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
-                            self.env['mail.mail'].create({
-                                'email_to': ','.join(crm_manager.mapped('email')),
-                                'subject': f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
-                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
-                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
-                            }).send()
+                            self.env['mail.mail'].create_notification(
+                                email_to=','.join(crm_manager.mapped('email')),
+                                subject=f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                intro='Дараах Сэжимийг холбогдох хаягаар орж зөвшөөрнө үү.',
+                                details=[
+                                    ('Борлуулалтын ажилтан', '-'),
+                                    ('Худалдан авалтын нийт үнэ', f'{self.cost_total_amount:,.2f} {self.buy_currency_id.name}'),
+                                    ('Борлуулалтын нийт үнэ', f'{self.amount_total:,.2f} {self.sale_currency_id.name}'),
+                                ],
+                                url=crm_url,
+                                link_label=self.code,
+                            )
                     elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
@@ -422,12 +428,18 @@ class CrmLead(models.Model):
                         if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
-                            self.env['mail.mail'].create({
-                                'email_to': ','.join(crm_manager.mapped('email')),
-                                'subject': f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
-                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
-                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
-                            }).send()
+                            self.env['mail.mail'].create_notification(
+                                email_to=','.join(crm_manager.mapped('email')),
+                                subject=f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                intro='Дараах Сэжимийг холбогдох хаягаар орж зөвшөөрнө үү.',
+                                details=[
+                                    ('Борлуулалтын ажилтан', '-'),
+                                    ('Худалдан авалтын нийт үнэ', f'{self.cost_total_amount:,.2f} {self.buy_currency_id.name}'),
+                                    ('Борлуулалтын нийт үнэ', f'{self.amount_total:,.2f} {self.sale_currency_id.name}'),
+                                ],
+                                url=crm_url,
+                                link_label=self.code,
+                            )
                 else:
                     for lines in line.order_ids:
                         if lines.state in ['sale','done']:
@@ -439,12 +451,18 @@ class CrmLead(models.Model):
                         if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
-                            self.env['mail.mail'].create({
-                                'email_to': ','.join(crm_manager.mapped('email')),
-                                'subject': f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
-                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
-                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
-                            }).send()
+                            self.env['mail.mail'].create_notification(
+                                email_to=','.join(crm_manager.mapped('email')),
+                                subject=f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                intro='Дараах Сэжимийг холбогдох хаягаар орж зөвшөөрнө үү.',
+                                details=[
+                                    ('Борлуулалтын ажилтан', '-'),
+                                    ('Худалдан авалтын нийт үнэ', f'{self.cost_total_amount:,.2f} {self.buy_currency_id.name}'),
+                                    ('Борлуулалтын нийт үнэ', f'{self.amount_total:,.2f} {self.sale_currency_id.name}'),
+                                ],
+                                url=crm_url,
+                                link_label=self.code,
+                            )
                     elif line.crm_type == 'crm' and line_type == 'send_quotation' and quote_count == count:
                         line.new_status = 'done'
                         sale_order_id = self.env['sale.order'].create(self._prepare_opportunity_quotation_context())
@@ -456,12 +474,18 @@ class CrmLead(models.Model):
                         if crm_manager and crm_manager.mapped('email'):
                             # Send email notification
                             crm_url = f'/web#id={self.id}&model=crm.lead&view_type=form'
-                            self.env['mail.mail'].create({
-                                'email_to': ','.join(crm_manager.mapped('email')),
-                                'subject': f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
-                                'body_html': f'Холбогдох хаягаар орж зөвшөөрнө үү <a href="{crm_url}">{self.code}</a> дээр дарна уу \n '+
-                                '- Борлуулалтын ажилтан - \n'+ f'- Худалдан авалтын нийт үнэ: {self.cost_total_amount, self.buy_currency_id.name} \n' + f'Борлуулалтын нийт үнэ: {self.amount_total, self.sale_currency_id.name}',
-                            }).send()
+                            self.env['mail.mail'].create_notification(
+                                email_to=','.join(crm_manager.mapped('email')),
+                                subject=f'Сэжим {self.code} -ын батлуулах хүсэлт илгээсэн байна.',
+                                intro='Дараах Сэжимийг холбогдох хаягаар орж зөвшөөрнө үү.',
+                                details=[
+                                    ('Борлуулалтын ажилтан', '-'),
+                                    ('Худалдан авалтын нийт үнэ', f'{self.cost_total_amount:,.2f} {self.buy_currency_id.name}'),
+                                    ('Борлуулалтын нийт үнэ', f'{self.amount_total:,.2f} {self.sale_currency_id.name}'),
+                                ],
+                                url=crm_url,
+                                link_label=self.code,
+                            )
 
             else:
                 raise UserError(_('Бараа бүртгээгүй байгаа тул бүртгэнэ үү!'))
@@ -510,13 +534,17 @@ class CrmLead(models.Model):
                     # Send email notification
                     sale_url = f'/web#id={sale_order_id.id}&model=sale.order&view_type=form'
                     purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
-                    self.env['mail.mail'].create({
-                        'email_to': manager_mail,
-                        'subject': f'Таны Сэжим {self.code} -ыг зөвшөөрсөн байна.',
-                        'body_html': f'Холбоотой доорхи захиалгууд үүслээ. '+
-                        f'- Борлуулалтын захиалга {sale_order_id.name} <a href="{sale_url}">мэдээлэл харах холбоос</a>\n'+ 
-                        f'- Худалдан авалтын захиалга {purchase_id.name} <a href="{purchase_url}">мэдээлэл харах холбоос</a>\n',
-                    }).send()
+                    self.env['mail.mail'].create_notification(
+                        email_to=manager_mail,
+                        subject=f'Таны Сэжим {self.code} -ыг зөвшөөрсөн байна.',
+                        intro='Холбоотой доорхи захиалгууд үүслээ.',
+                        details=[
+                            ('Борлуулалтын захиалга', f'<a href="{sale_url}">{sale_order_id.name}</a>'),
+                            ('Худалдан авалтын захиалга', f'<a href="{purchase_url}">{purchase_id.name}</a>'),
+                        ],
+                        url=sale_url,
+                        link_label=sale_order_id.name,
+                    )
             #lead.message_post(body=_('Purchase request confirmed.'))
 
     
@@ -634,21 +662,15 @@ class CrmLead(models.Model):
                                     purchase_requisition_url = f'{base_url}/web#id={purchase_request_id.id}&model=purchase.requisition&view_type=form'
                                     email_to = employee.work_email or purchase_request_id.purchase_user_id.partner_id.email
                                     if email_to:
-                                        mail_values = {
-                                            'subject': u'Багц захиалга хуваарилагдсан тухай',
-                                            'email_to': email_to,
-                                            'body_html': f"""
-                                                <p>Танд  {purchase_request_id.name or ''} Багц захиалга хуваарилсан байна. Доорх товчоор дамжин дэлгэрэнгүй мэдээлэлтэй танилцана уу</p>
-                                                <a href="{purchase_requisition_url or ''}"
-                                                     style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
-                                                            box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
-                                                            border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                                                     Захиалга</a><br>
-                                                <p>Баярлалаа.</p>
-                                            """,
-                                            'auto_delete': True,
-                                        }
-                                        self.env['mail.mail'].sudo().create(mail_values).send()
+                                        self.env['mail.mail'].sudo().create_notification(
+                                            email_to=email_to,
+                                            subject=u'Багц захиалга хуваарилагдсан тухай',
+                                            intro=f'Танд {purchase_request_id.name or ""} Багц захиалга хуваарилсан байна. Доорх товчоор дамжин дэлгэрэнгүй мэдээлэлтэй танилцана уу.',
+                                            details=[],
+                                            url=purchase_requisition_url or '',
+                                            link_label='Захиалга',
+                                            auto_delete=True,
+                                        )
                                 except Exception as e:
                                     _logger.warning("Багц захиалгын имэйл илгээхэд алдаа гарлаа: %s", e)
                         else:

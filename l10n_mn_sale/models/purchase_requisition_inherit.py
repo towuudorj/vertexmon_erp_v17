@@ -124,21 +124,27 @@ class PurchaseRequisition(models.Model):
                 if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
-                    self.env['mail.mail'].create({
-                        'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ судлагдав.',
-                        'body_html': f'Үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
-                    }).send()
+                    self.env['mail.mail'].create_notification(
+                        email_to=','.join(crm_manager.mapped('email')),
+                        subject=f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ судлагдав.',
+                        intro='Үнийн судалгааны мэдээлэлтэй танилцана уу.',
+                        details=[],
+                        url=po_url,
+                        link_label=self.name,
+                    )
             else:
                 crm_manager = self.user_id
                 if crm_manager and crm_manager.mapped('email'):
                     # Send email notification
                     po_url = f'/web#id={self.id}&model=purchase.requisition&view_type=form'
-                    self.env['mail.mail'].create({
-                        'email_to': ','.join(crm_manager.mapped('email')),
-                        'subject': f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ шинэчлэгдсэн байна.',
-                        'body_html': f'Шинэчилсэн үнийн судалгааны мэдээлэл харах холбоос <a href="{po_url}">{self.name}</a> дээр дарна уу',
-                    }).send()
+                    self.env['mail.mail'].create_notification(
+                        email_to=','.join(crm_manager.mapped('email')),
+                        subject=f'Таны Сэжим {self.crm_lead_id.code} -ын үнэ шинэчлэгдсэн байна.',
+                        intro='Шинэчилсэн үнийн судалгааны мэдээлэлтэй танилцана уу.',
+                        details=[],
+                        url=po_url,
+                        link_label=self.name,
+                    )
 
     def quotation_cancel(self):
         for pr in self:

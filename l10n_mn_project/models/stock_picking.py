@@ -34,12 +34,35 @@ class StockPicking(models.Model):
                 email = purchase.user_id.employee_id.work_email or purchase.user_id.partner_id.email
                 if email:
                     purchase_url = f'/web#id={purchase.id}&model=purchase.order&view_type=form'
-                    self.env['mail.mail'].create({
-                        'email_to': email,
-                        'subject': f'Дотоод худалдан авалт: {purchase.name} -ийн барааг хүлээн авлаа.',
-                        'body_html': f'Таны захиалсан дотоод худалдан авалтын барааг хүлээн авлаа. '
-                        f'<a href="{purchase_url}">{purchase.name}</a>',
-                    }).send()
+                    self.env['mail.mail'].create_notification(
+                        email_to=email,
+                        subject=f'Дотоод худалдан авалт: {purchase.name} -ийн барааг хүлээн авлаа.',
+                        intro='Таны захиалсан дотоод худалдан авалтын барааг хүлээн авлаа.',
+                        details=[('Захиалга', purchase.name)],
+                        url=purchase_url,
+                        link_label=purchase.name,
+                    )
+            elif picking.analytic_id and not picking.task_id and picking.origin:
+                order = self.env['purchase.order'].search([
+                    ('name', '=', picking.origin),
+                    ('company_id', '=', picking.company_id.id),
+                ], limit=1)
+                if order:
+                    project = picking.analytic_id.project_ids[:1]
+                    email = order.user_id.employee_id.work_email or order.user_id.partner_id.email
+                    if email:
+                        picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
+                        self.env['mail.mail'].create_notification(
+                            email_to=email,
+                            subject=f'Төслийн зарлагын баримт гарлаа: {picking.name}',
+                            intro='Дараах төслийн зарлагын баримт бодитоор гарлаа.',
+                            details=[
+                                ('Захиалга', order.name),
+                                ('Төсөл', project.name if project else ''),
+                            ],
+                            url=picking_url,
+                            link_label=picking.name,
+                        )
         return res
 
 

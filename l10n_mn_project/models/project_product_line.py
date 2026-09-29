@@ -272,15 +272,17 @@ class ProjectProductsLine(models.Model):
                 continue
 
             project_url = f'/web#id={line.project_id.id}&model=project.project&view_type=form'
-            self.env['mail.mail'].create({
-                'email_to': ','.join(emails),
-                'subject': f'Төслийн төсвийн анхааруулга: {line.project_id.name} - {line.product_id.name}',
-                'body_html': (
-                    f'Төсөл: {line.project_id.name}<br/>'
-                    f'Бараа: {line.product_id.name}<br/>'
-                    f'Нийт зарлагдсан дүн: {issued_amount:,.2f} / Төлөвлөсөн дүн: {line.price_total:,.2f}<br/>'
-                    f'Зарлагадсан дүн нь төлөвлөсөн дүнгийн 90%-иас давлаа.<br/>'
-                    f'<a href="{project_url}">{line.project_id.name}</a>'
-                ),
-            }).send()
+            self.env['mail.mail'].create_notification(
+                email_to=','.join(emails),
+                subject=f'Төслийн төсвийн анхааруулга: {line.project_id.name} - {line.product_id.name}',
+                intro='Төслийн барааны зарлагдсан дүн төлөвлөсөн дүнгийн 90%-иас давлаа.',
+                details=[
+                    ('Төсөл', line.project_id.name),
+                    ('Бараа', line.product_id.name),
+                    ('Нийт зарлагдсан дүн', f'{issued_amount:,.2f}'),
+                    ('Төлөвлөсөн дүн', f'{line.price_total:,.2f}'),
+                ],
+                url=project_url,
+                link_label=line.project_id.name,
+            )
 

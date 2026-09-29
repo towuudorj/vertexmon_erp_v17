@@ -79,23 +79,33 @@ class LocalPurchaseRequest(models.TransientModel):
             employee_id = employee_obj.search([('user_id','=',self.env.user.id)])
             crm_manager = employee_id.parent_id
             local_purchase_employee = self.env['hr.employee'].sudo().search([('local_purchase_mail_receiver', '=', True)])
-            email_list = []
+
+            purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
+            details = [
+                ('Төслийн нэр', line.project_id.name),
+                ('Төслийн менежер', line.project_id.user_id.name),
+                ('Нийлүүлэгч', line.supplier_id.name),
+                ('Худалдан авалтын нийт дүн', f'{purchase_id.amount_total:,.2f} {purchase_id.currency_id.name}'),
+            ]
+            subject = f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.'
             if crm_manager and crm_manager.work_email:
-                email_list.append({'type': 'parent', 'email': [crm_manager.work_email]})
+                self.env['mail.mail'].create_notification(
+                    email_to=crm_manager.work_email,
+                    subject=subject,
+                    intro='Дараах дотоод худалдан авалтын захиалгыг холбогдох хаягаар орж батлана уу.',
+                    details=details,
+                    url=purchase_url,
+                    link_label=purchase_id.name,
+                )
             if local_purchase_employee and local_purchase_employee.mapped('work_email'):
-                email_list.append({'type': 'local_purchase', 'email': local_purchase_employee.mapped('work_email')})
-            if email_list:
-                # Send email notification
-                purchase_url = f'/web#id={purchase_id.id}&model=purchase.order&view_type=form'
-                for email_dict in email_list:
-                    self.env['mail.mail'].create({
-                        'email_to': ','.join(email_dict['email']),
-                        'subject': f'Дотоод худалдан авалтын захиалга: {purchase_id.name} үүссэн байна.',
-                        'body_html': f"Холбогдох хаягаар орж { 'батлана уу' if email_dict['type'] == 'parent' else 'шалгана уу'}. "+
-                        f"<a href='{purchase_url}'>{purchase_id.name}</a>"+
-                        f"<ul><li>Төслийн нэр: {line.project_id.name}</li> <li>Төслийн менежер: {line.project_id.user_id.name}</li> <li>Нийлүүлэгч: {line.supplier_id.name}</li>"+
-                        f"<li>Худалдан авалтын нийт дүн: {purchase_id.amount_total} {purchase_id.currency_id.name} </li></ul>",
-                    }).send()
+                self.env['mail.mail'].create_notification(
+                    email_to=','.join(local_purchase_employee.mapped('work_email')),
+                    subject=subject,
+                    intro='Дараах дотоод худалдан авалтын захиалгыг холбогдох хаягаар орж шалгана уу.',
+                    details=details,
+                    url=purchase_url,
+                    link_label=purchase_id.name,
+                )
 
 
 class LocalPurchaseRequestLine(models.TransientModel):

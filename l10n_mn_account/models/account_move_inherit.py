@@ -206,19 +206,17 @@ class AccountMove(models.Model):
                                                                  ], order='create_date asc')
                     if accountants and accountants.mapped('work_email'):
                         acc_move_url = f'/web#id={obj.id}&model=account.move&view_type=form'
-                        self.env['mail.mail'].create({
-                            'email_to': ', '.join(accountants.mapped('work_email')),
-                            'subject': f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл батлах хүсэлт ирлээ.",
-                            'body_html': f"""Таньд нэхэмжлэл батлах хүсэлт ирлээ.<br>
-                                             Харилцагч: {obj.partner_id.name or ''}<br>
-                                             Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
-                                             <a href="{acc_move_url}"
-                                             style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
-                                                    box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
-                                                    border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                                             Нэхэмжлэл</a><br>
-                                         """
-                        }).send()
+                        self.env['mail.mail'].create_notification(
+                            email_to=', '.join(accountants.mapped('work_email')),
+                            subject=f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл батлах хүсэлт ирлээ.",
+                            intro='Таньд нэхэмжлэл батлах хүсэлт ирлээ.',
+                            details=[
+                                ('Харилцагч', obj.partner_id.name or ''),
+                                ('Нэхэмжлэлийн дүн', f'{obj.amount_total:,.2f}'),
+                            ],
+                            url=acc_move_url,
+                            link_label='Нэхэмжлэл',
+                        )
                 obj.invoice_state = 'accountant_approve'
                 obj.message_post(
                     body=Markup("""
@@ -242,19 +240,17 @@ class AccountMove(models.Model):
                     email = ', '.join(accountants.mapped('work_email'))
             if email:
                 acc_move_url = f'/web#id={self.id}&model=account.move&view_type=form'
-                self.env['mail.mail'].create({
-                    'email_to': email,
-                    'subject': f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.",
-                    'body_html': f"""Таньд нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.<br>
-                                     Харилцагч: {obj.partner_id.name}<br>
-                                     Нэхэмжлэлийн дүн: {obj.amount_total}<br><br>
-                                     <a href="{acc_move_url}"
-                                             style="border-image-repeat:stretch;border-image-outset:0;border-image-width:1;border-image-slice:100%;border-image-source:none;border-style:solid;
-                                                    box-sizing:border-box;border-left-color:#875a7b;border-bottom-color:#875a7b;border-right-color:#875a7b;border-top-color:#875a7b;border-left-width:1px;
-                                                    border-bottom-width:1px;border-right-width:1px;border-top-width:1px;padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                                     Нэхэмжлэл</a><br>
-                                 """
-                }).send()
+                self.env['mail.mail'].create_notification(
+                    email_to=email,
+                    subject=f"{'Нийлүүлэгчийн' if obj.move_type == 'in_invoice' else 'Захиалагчийн'} нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.",
+                    intro=f"Таньд нэхэмжлэл {'хянах' if obj.move_type == 'in_invoice' else 'батлах'} хүсэлт ирлээ.",
+                    details=[
+                        ('Харилцагч', obj.partner_id.name),
+                        ('Нэхэмжлэлийн дүн', f'{obj.amount_total:,.2f}'),
+                    ],
+                    url=acc_move_url,
+                    link_label='Нэхэмжлэл',
+                )
                 obj.parent_notif_sent = True
         return
 

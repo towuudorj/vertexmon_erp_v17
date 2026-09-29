@@ -294,14 +294,48 @@ class stock_picking(models.Model):
             # Send email notification
             if mails:
                 purchase_url = f'/web#id={purchase_order.id}&model=purchase.order&view_type=form'
-                self.env['mail.mail'].create({
-                    'email_to': ','.join(mails),
-                    'subject': f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
-                    'body_html': f'Худалдан авалтын дэлгэрэнгүй мэдээлэл харах холбоос. <a href="{purchase_url}">{purchase_order.name}</a>',
-                }).send()
+                self.env['mail.mail'].create_notification(
+                    email_to=','.join(mails),
+                    subject=f'Таны Сэжим : {crm_id} - ын худалдан авалтын барааг хүлээн авсан байна.',
+                    intro='Таны Сэжимийн худалдан авалтын барааг хүлээн авсан байна.',
+                    details=[('Захиалга', purchase_order.name)],
+                    url=purchase_url,
+                    link_label=purchase_order.name,
+                )
         #if self.sale_id.invoice_ids:
         #    self.sale_id._create_invoices()
         return True
+
+    def _action_done(self):
+        res = super()._action_done()
+        for picking in self:
+            if not picking.signature_user_ids:
+                continue
+            creator_line = picking.signature_user_ids.filtered(lambda s: s.type == 'picking_created')[:1]
+            if not creator_line:
+                continue
+            creator = creator_line.substitute_user or creator_line.user_id
+            email = False
+            if creator.employee_id and creator.employee_id.work_email:
+                email = creator.employee_id.work_email
+            elif creator.partner_id and creator.partner_id.email:
+                email = creator.partner_id.email
+            if email:
+                doc_label = 'Зарлагын баримт' if picking.sale_id else 'Шаардах'
+                details = []
+                if picking.sale_id:
+                    details.append(('Борлуулалтын захиалга', picking.sale_id.name))
+                    details.append(('Харилцагч', picking.partner_id.name or ''))
+                picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
+                self.env['mail.mail'].create_notification(
+                    email_to=email,
+                    subject=f'{doc_label} {picking.name} дууссан төлөвт орлоо.',
+                    intro=f'Таны үүсгэсэн {doc_label} агуулахаас гарч, дууссан төлөвт орлоо.',
+                    details=details,
+                    url=picking_url,
+                    link_label=picking.name,
+                )
+        return res
 
     def _compute_signature_approval(self):
         env_user = self.env.user
@@ -379,20 +413,22 @@ class stock_picking(models.Model):
         if emails:
             picking_url = f'/web#id={self.id}&model=stock.picking&view_type=form'
             created = self.signature_user_ids.filtered(lambda s: s.type == 'picking_created').user_id
-            self.env['mail.mail'].create({
-                'email_to': ','.join(emails),
-                'subject': f'Шаардах хуудас {self.name} -ын гарын үсэг зуруулах хүсэлт илгээсэн байна.',
-                'body_html': f"""<br>
-                            Шаардах хуудас: {self.name} <br>
-                            Борлуулалтын ажилтан: {created.name} <br>
-                            Доорх товчоор дамжин орж зурна уу
-                            <br><br>
-                             <a href="{picking_url}" style="box-sizing:border-box;background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                                 Шаардах хуудас
-                             </a><br><br>
-                             """
-
-            }).send()
+            doc_label = 'Зарлагын баримт' if self.sale_id else 'Шаардах'
+            details = [
+                (doc_label, self.name),
+                ('Борлуулалтын ажилтан', created.name),
+            ]
+            if self.sale_id:
+                details.append(('Борлуулалтын захиалга', self.sale_id.name))
+                details.append(('Харилцагч', self.partner_id.name or ''))
+            self.env['mail.mail'].create_notification(
+                email_to=','.join(emails),
+                subject=f'{doc_label} {self.name} -ын гарын үсэг зуруулах хүсэлт илгээсэн байна.',
+                intro=f'Доорх {doc_label}-д орж гарын үсэг зурна уу.',
+                details=details,
+                url=picking_url,
+                link_label=doc_label,
+            )
 
     def get_signature_users(self):
         self.ensure_one()
