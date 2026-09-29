@@ -357,7 +357,7 @@ class PurchaseOrderLine(models.Model):
         res.update({'month': self.month})
         if self.is_downpayment:
             res['quantity'] = 1
-        if self.order_id.analytic_id:
+        if self.order_id.analytic_id and self.env.context.get('is_service'):
             res['analytic_distribution'] = {self.order_id.analytic_id.id: 100.0}
         return res
 

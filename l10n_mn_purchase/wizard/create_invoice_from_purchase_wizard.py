@@ -164,6 +164,7 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                     continue
                 if not line.is_downpayment:
                     down_payment_product_id = order.company_id.sudo().sale_down_payment_product_id
+                    is_service_product =  line.product_id.detailed_type == 'service'
                     if line.product_template_id and line.product_template_id.categ_id and 'хангамж' in line.product_template_id.categ_id.name.lower():
                         if not order.company_id.sudo().purchase_down_payment_product_id:
                             order.company_id.purchase_down_payment_product_id = self.env['product.product'].sudo().create(
@@ -178,14 +179,14 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                             )
                         down_payment_product_id = order.company_id.sudo().purchase_down_payment_product_id
                     else:
-                        if line.product_id.detailed_type == 'service':
+                        if is_service_product:
                             down_payment_product_id = line.product_id
                     if self.payment_method == 'fixed':
                         payment_percent = float(self.amount / float(sum((line.price_unit * line.product_qty) for line in self.purchase_order_id.order_line.filtered(lambda x: not x.is_downpayment)) / 100))
                         price_unit = float(line.price_unit * line.product_qty * payment_percent /  100)
                         down_payment_line = self.create_down_payment_line(price_unit, down_payment_product_id.id,
                                                                           line.taxes_id, line.id)
-                        line_vals = down_payment_line._prepare_account_move_line()
+                        line_vals = down_payment_line.with_context(is_service=is_service_product)._prepare_account_move_line()
                     elif self.payment_method == 'term':
                         payment_percent = term_line.percent
                         price_unit = float(line.price_unit * line.product_qty / 100) * payment_percent
@@ -193,14 +194,14 @@ class PurchaseCreateInvoiceWizard(models.TransientModel):
                         invoice_vals['payment_types'] = term_line.payment_type
                         down_payment_line = self.create_down_payment_line(price_unit, down_payment_product_id.id,
                                                                           line.taxes_id, line.id)
-                        line_vals = down_payment_line._prepare_account_move_line()
+                        line_vals = down_payment_line.with_context(is_service=is_service_product)._prepare_account_move_line()
                         line_vals.update({'name': term_line.desc if term_line.desc else dict(term_line._fields['payment_type']._description_selection(self.env)).get(term_line.payment_type)})
                     else:
                         payment_percent = float(self.amount_to_invoice_create / float(sum((line.price_unit * line.product_qty) for line in self.purchase_order_id.order_line.filtered(lambda x: not x.is_downpayment)) / 100))
                         price_unit = float(line.price_unit * line.product_qty * payment_percent / 100)
                         down_payment_line = self.create_down_payment_line(price_unit, down_payment_product_id.id,
                                                                           line.taxes_id, line.id)
-                        line_vals = down_payment_line._prepare_account_move_line()
+                        line_vals = down_payment_line.with_context(is_service=is_service_product)._prepare_account_move_line()
                     line_vals.update({'sequence': sequence})
                     invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
                     sequence += 1
