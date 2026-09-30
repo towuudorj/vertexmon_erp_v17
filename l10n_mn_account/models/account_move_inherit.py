@@ -193,6 +193,28 @@ class AccountMove(models.Model):
     invisible_approve_to_parent = fields.Boolean(compute='_compute_invisible_approve_to_parent')
     parent_notif_sent = fields.Boolean(default=False)
 
+    @api.model
+    def write(self, vals):
+        current_po_id_dict = {}
+        if 'po_ids' in vals:
+            for obj in self:
+                current_po_id_dict[obj.id] = obj.po_ids
+
+        res = super(AccountMove, self).write(vals)
+
+        if 'po_ids' in vals:
+            for obj in self:
+                current_po_ids = current_po_id_dict.get(obj.id)
+                new_po_ids = obj.po_ids
+                obj.message_post(
+                    body=Markup(f"""
+                        <p><strong>Баримтын дугаар: </strong> ({', '.join(po.display_name for po in current_po_ids)}) -> ({', '.join(po.display_name for po in new_po_ids)})</p>
+                    """),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                )
+        return res
+
 
     def approve_to_accountant(self):
         job_obj = self.env['hr.job'].sudo()
@@ -368,6 +390,8 @@ class AccountMove(models.Model):
         `stock.landed.costs` lines mirroring the current `account.move.line` of self.
         """
         self.ensure_one()
+        if not self.po_ids:
+            raise ValidationError(u"Баримтын дугаар бүртгэгдээгүй байна!")
         landed_costs_lines = self.line_ids.filtered(lambda line: line.is_landed_costs_line)
 
         landed_costs = self.env['stock.landed.cost'].create({

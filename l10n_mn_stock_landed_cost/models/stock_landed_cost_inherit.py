@@ -9,7 +9,7 @@ from odoo.tools.float_utils import float_is_zero
 class StockLandedCost(models.Model):
     _inherit = "stock.landed.cost"
 
-    po_ids = fields.Many2many('purchase.order', string=u'Худалдан авалт', domain="[('state','=','purchase')]")
+    po_ids = fields.Many2many(related='vendor_bill_id.po_ids', string=u'Худалдан авалт')
     picking_ids = fields.Many2many(
         'stock.picking', string=u'Орлогын баримт',
         copy=False)
