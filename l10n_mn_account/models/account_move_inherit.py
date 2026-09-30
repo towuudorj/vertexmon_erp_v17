@@ -193,7 +193,6 @@ class AccountMove(models.Model):
     invisible_approve_to_parent = fields.Boolean(compute='_compute_invisible_approve_to_parent')
     parent_notif_sent = fields.Boolean(default=False)
 
-    @api.model
     def write(self, vals):
         current_po_id_dict = {}
         if 'po_ids' in vals:
@@ -209,6 +208,22 @@ class AccountMove(models.Model):
                 obj.message_post(
                     body=Markup(f"""
                         <p><strong>Баримтын дугаар: </strong> ({', '.join(po.display_name for po in current_po_ids)}) -> ({', '.join(po.display_name for po in new_po_ids)})</p>
+                    """),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                )
+        return res
+
+
+    @api.model
+    def create(self, vals):
+        res = super(AccountMove, self).create(vals)
+        if 'po_ids' in vals:
+            for obj in res:
+                new_po_ids = obj.po_ids
+                obj.message_post(
+                    body=Markup(f"""
+                        <p><strong>Баримтын дугаар: </strong> () -> ({', '.join(po.display_name for po in new_po_ids)})</p>
                     """),
                     message_type="comment",
                     subtype_xmlid="mail.mt_note",
