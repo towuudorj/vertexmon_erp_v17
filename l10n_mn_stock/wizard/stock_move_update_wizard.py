@@ -286,11 +286,14 @@ class StockMoveUpdate(models.TransientModel):
             picking = self.move_id.picking_id
             picking_url = f'/web#id={picking.id}&model=stock.picking&view_type=form'
 
-            self.env['mail.mail'].create({
-                'email_to': ', '.join(emails),
-                'subject': u'%s хүлээн авах баримтын мөрд өөрчлөлт орлоо' % picking.name,
-                'body_html': html + f'</br> Дэлгэрэнгүй мэдээллийг харна уу. <a href="{picking_url}">{picking.name}</a>',
-            }).send()
+            self.env['mail.mail'].create_notification(
+                email_to=', '.join(emails),
+                subject=u'%s хүлээн авах баримтын мөрд өөрчлөлт орлоо' % picking.name,
+                intro=html,
+                details=[],
+                url=picking_url,
+                link_label=picking.name,
+            )
 
     def update(self):
         mail_users = self.env['res.users']
