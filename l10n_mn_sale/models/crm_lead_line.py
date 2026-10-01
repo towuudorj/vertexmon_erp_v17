@@ -34,7 +34,7 @@ class CrmLeadLine(models.Model):
     ], string='Priority', default='normal')
     purchase_type = fields.Selection([('one_year','One year supllier'),
                                         ('once_pro','Once product')],string='Purchase type')        
-    pre_qty = fields.Float(string='Pre quantity')
+    pre_qty = fields.Float(string='Pre quantity', compute='_compute_pre_qty')
     order_line_image = fields.Binary(string='Order line image')
     add_desc = fields.Text(string='Additional description')
     discount = fields.Float(string='Discount (%)', default=0.0)
@@ -58,13 +58,24 @@ class CrmLeadLine(models.Model):
                 line.margin_percent = 0.0
 
     
+    @api.depends('product_id', 'lead_id.warehouse_id', 'lead_id.team_id.warehouse_id')
+    def _compute_pre_qty(self):
+        for line in self:
+            if not line.product_id:
+                line.pre_qty = 0.0
+                continue
+            warehouse = line.lead_id.warehouse_id or line.lead_id.team_id.warehouse_id
+            if warehouse:
+                line.pre_qty = line.product_id.with_context(warehouse=warehouse.id).virtual_available
+            else:
+                line.pre_qty = line.product_id.virtual_available
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.name = self.product_id.name
             self.uom_id = self.product_id.uom_id.id
-            self.pre_qty = self.product_id.virtual_available
-            
+
 
     @api.onchange('qty','sale_price','discount')
     def _onchange_qty(self):
