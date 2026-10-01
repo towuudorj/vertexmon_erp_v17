@@ -138,7 +138,7 @@
             	<field name="invoice_journal_id" required="state == 'process'"/>
             	<field name="journal_id" string="Журнал" required="state == 'process'"/>
             	<field name="bbo_account_id" string="Данс" required="state == 'process'"/>
-            	<field name="close_date" string="Хаасан огноо" required="state == 'process'"/>
+            	<field name="close_date" string="Хаасан огноо"/>
             	<field name="close_move_id" readonly="1"/>
             	<field name="invoice_id" readonly="1"/>
                 <field name="contract_number" readonly="state in ('confirm','done')" />
