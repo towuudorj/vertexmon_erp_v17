@@ -81,6 +81,20 @@ class stock_picking(models.Model):
         job_obj = self.env['hr.job'].sudo()
 
         for obj in res:
+            backorder_id = vals.get('backorder_id')
+            if backorder_id:
+                original = self.browse(backorder_id)
+                for line in original.signature_user_ids:
+                    signature_user_obj.create({
+                        'user_id': line.user_id.id,
+                        'substitute_user': line.substitute_user.id,
+                        'type': line.type,
+                        'picking_id': obj.id,
+                        'sequence': line.sequence,
+                        'is_approve_signature': line.is_approve_signature,
+                    })
+                continue
+
             env_user = self.env.user
             sale_id = self.env['sale.order'].browse(vals.get('sale_id', False))
             if sale_id:
