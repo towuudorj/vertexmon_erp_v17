@@ -11,6 +11,39 @@
 					<xpath expr="//field[@name='credit_note']" position="after">
                         <field name="dep_id"/>
 					</xpath>
+					<xpath expr="//field[@name='slip_ids']" position="inside">
+						<tree decoration-info="state == 'done'" decoration-muted="state == 'cancel'">
+							<field name="employee_last_name"/>
+							<field name="employee_first_name"/>
+							<field name="employee_department_id"/>
+							<field name="employee_bank_account" optional="show"/>
+							<field name="wage_amount" sum="Нийт"/>
+							<field name="month_work_days" sum="Нийт" optional="show"/>
+							<field name="month_work_hours" sum="Нийт" optional="show"/>
+							<field name="worked_days" sum="Нийт"/>
+							<field name="worked_hours" sum="Нийт"/>
+							<field name="overtime_hours" sum="Нийт" optional="show"/>
+							<field name="overtime_amount" sum="Нийт" optional="show"/>
+							<field name="computed_salary" sum="Нийт"/>
+							<field name="vacation_amount" sum="Нийт" optional="show"/>
+							<field name="performance_amount" sum="Нийт" optional="show"/>
+							<field name="other_allowance_amount" sum="Нийт" optional="show"/>
+							<field name="allowance_total" sum="Нийт"/>
+							<field name="gross_amount" sum="Нийт"/>
+							<field name="advance_amount" sum="Нийт"/>
+							<field name="ndsh_employee_amount" sum="Нийт"/>
+							<field name="ndsh_company_amount" sum="Нийт"/>
+							<field name="pit_amount" sum="Нийт"/>
+							<field name="pit_percent" string="%" optional="show"/>
+							<field name="phone_deduction_amount" sum="Нийт" optional="show"/>
+							<field name="receivable_deduction_amount" sum="Нийт" optional="show"/>
+							<field name="deduction_total" sum="Нийт"/>
+							<field name="net_amount" sum="Нийт"/>
+							<field name="employee_register" optional="show"/>
+							<field name="employee_id" column_invisible="1"/>
+							<field name="state" column_invisible="1"/>
+						</tree>
+					</xpath>
 
 				</data>
 			</field>

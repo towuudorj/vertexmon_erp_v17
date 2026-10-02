@@ -1,0 +1,12 @@
+// Цалингийн хуудсын багц: Цалингийн хуудас жагсаалтын толгойг бүтэн харуулах
+.o_field_widget[name="slip_ids"] .o_list_table thead th {
+    vertical-align: bottom;
+
+    .text-truncate {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+}

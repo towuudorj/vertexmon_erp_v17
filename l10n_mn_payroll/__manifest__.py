@@ -82,6 +82,7 @@
                 'l10n_mn_payroll/static/src/js/stock_excel_report.js',
                 'l10n_mn_payroll/static/src/js/no_format_integer.js',
                 'l10n_mn_payroll/static/src/xml/no_format_integer.xml',
+                'l10n_mn_payroll/static/src/scss/payslip_run.scss',
             ],
         },
     'installable': True,

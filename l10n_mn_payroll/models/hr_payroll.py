@@ -50,11 +50,98 @@ class HrPayslipRun(models.Model):
     
 
 
+# Цалингийн хуудсын багцын жагсаалтын багана -> цалингийн дүрмийн код(ууд)
+PAYSLIP_COLUMN_CODES = {
+    'wage_amount': ('BS',),
+    'month_work_days': ('MWD',),
+    'month_work_hours': ('MWT',),
+    'worked_days': ('WDD',),
+    'worked_hours': ('WDT',),
+    'overtime_hours': ('OTH',),
+    'overtime_amount': ('OT',),
+    'computed_salary': ('CBS',),
+    'vacation_amount': ('RS',),
+    'performance_amount': ('KPI',),
+    'allowance_total': ('ADT',),
+    'gross_amount': ('CS',),
+    'advance_amount': ('ADV',),
+    'ndsh_employee_amount': ('SI11', 'SI15', 'SI10'),
+    'ndsh_company_amount': ('NDSH',),
+    'pit_amount': ('LLL',),
+    'phone_deduction_amount': ('PH',),
+    'receivable_deduction_amount': ('EDE', 'PAY', 'FAULT'),
+    'deduction_total': ('TE',),
+    'net_amount': ('GIVE',),
+}
+
+
 class HrPayslip(models.Model):
     _inherit = "hr.payslip"
 
-    dep_id = fields.Many2one('hr.department', string='Department')  
-    
+    dep_id = fields.Many2one('hr.department', string='Department')
+
+    employee_last_name = fields.Char(string='Овог', compute='_compute_employee_info')
+    employee_first_name = fields.Char(string='Нэр', compute='_compute_employee_info')
+    employee_department_id = fields.Many2one('hr.department', string='Хэлтэс тасаг', compute='_compute_employee_info')
+    employee_bank_account = fields.Char(string='Дансны дугаар', compute='_compute_employee_info')
+    employee_register = fields.Char(string='Регистр №', compute='_compute_employee_info')
+
+    wage_amount = fields.Float(string='Үндсэн цалин', compute='_compute_payslip_columns', store=True)
+    month_work_days = fields.Float(string='Сарын ажлын хоног', compute='_compute_payslip_columns', store=True)
+    month_work_hours = fields.Float(string='Сарын ажлын фонд цаг', compute='_compute_payslip_columns', store=True)
+    worked_days = fields.Float(string='Ажилласан хоног', compute='_compute_payslip_columns', store=True)
+    worked_hours = fields.Float(string='Ажилласан цаг', compute='_compute_payslip_columns', store=True)
+    overtime_hours = fields.Float(string='Илүү цаг', compute='_compute_payslip_columns', store=True)
+    overtime_amount = fields.Float(string='Илүү цагийн нэмэгдэл', compute='_compute_payslip_columns', store=True)
+    computed_salary = fields.Float(string='Бодогдсон цалин', compute='_compute_payslip_columns', store=True)
+    vacation_amount = fields.Float(string='Амралтын мөнгө', compute='_compute_payslip_columns', store=True)
+    performance_amount = fields.Float(string='Гүйцэтгэлийн нэмэгдэл', compute='_compute_payslip_columns', store=True)
+    other_allowance_amount = fields.Float(string='Бусад нэмэгдэл', compute='_compute_payslip_columns', store=True)
+    allowance_total = fields.Float(string='Нэмэгдлийн дүн', compute='_compute_payslip_columns', store=True)
+    gross_amount = fields.Float(string='Олговол зохих', compute='_compute_payslip_columns', store=True)
+    advance_amount = fields.Float(string='Урьдчилгаа цалин', compute='_compute_payslip_columns', store=True)
+    ndsh_employee_amount = fields.Float(string='НДШ-Даатгуулагчаас', compute='_compute_payslip_columns', store=True)
+    ndsh_company_amount = fields.Float(string='НДШ Ажил олгогчоос', compute='_compute_payslip_columns', store=True)
+    pit_amount = fields.Float(string='ХАОАТ', compute='_compute_payslip_columns', store=True)
+    pit_percent = fields.Float(string='ХАОАТ %', compute='_compute_payslip_columns', store=True)
+    phone_deduction_amount = fields.Float(string='Утасны суутгал', compute='_compute_payslip_columns', store=True)
+    receivable_deduction_amount = fields.Float(string='Ажилчдаас авлага', compute='_compute_payslip_columns', store=True)
+    deduction_total = fields.Float(string='Суутгалын дүн', compute='_compute_payslip_columns', store=True)
+    net_amount = fields.Float(string='Гарт олгох', compute='_compute_payslip_columns', store=True)
+
+    @api.depends('employee_id')
+    def _compute_employee_info(self):
+        for slip in self:
+            emp = slip.employee_id.sudo()
+            slip.employee_last_name = emp['last_name'] if 'last_name' in emp._fields else False
+            slip.employee_first_name = emp.name
+            slip.employee_department_id = emp.department_id
+            slip.employee_bank_account = emp.bank_account_id.acc_number
+            slip.employee_register = emp['register_number'] if 'register_number' in emp._fields else False
+
+    @api.depends('line_ids.code', 'line_ids.total',
+                 'worked_days_line_ids.code', 'worked_days_line_ids.number_of_days')
+    def _compute_payslip_columns(self):
+        for slip in self:
+            totals = {}
+            for line in slip.line_ids:
+                totals[line.code] = totals.get(line.code, 0.0) + line.total
+            vals = {
+                field_name: sum(totals.get(code, 0.0) for code in codes)
+                for field_name, codes in PAYSLIP_COLUMN_CODES.items()
+            }
+            # Хоногийн дүрэм байхгүй бол ажилласан өдрийн мөрөөс авна
+            worked_days = {wd.code: wd.number_of_days for wd in slip.worked_days_line_ids}
+            if not vals['month_work_days']:
+                vals['month_work_days'] = worked_days.get('MUST_WORK', 0.0)
+            if not vals['worked_days']:
+                vals['worked_days'] = worked_days.get('WORK100', 0.0)
+            # Бусад нэмэгдэл = Нэмэгдлийн дүнгээс амралтын мөнгө, гүйцэтгэлийн нэмэгдлийг хассан үлдэгдэл
+            vals['other_allowance_amount'] = (vals['allowance_total'] - vals['vacation_amount']
+                                              - vals['performance_amount'])
+            vals['pit_percent'] = vals['pit_amount'] / vals['wage_amount'] * 100 if vals['wage_amount'] else 0.0
+            slip.update(vals)
+
     def refund_sheet(self):
         for payslip in self:
             if  payslip.credit_note == True:
