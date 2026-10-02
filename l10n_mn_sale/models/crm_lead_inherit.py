@@ -812,4 +812,16 @@ class CrmLead(models.Model):
             if obj.order_ids:
                 obj.margin = sum(obj.order_ids.mapped('margin'))
             else:
-                obj.margin = 0
+                # Захиалга үүсээгүй бол сэжмийн мөрөөс: татваргүй дүн - өртөг
+                cost = 0.0
+                for line in obj.lead_line_ids:
+                    if line.cost_price:
+                        unit_cost = line.cost_price
+                        if (line.currency_id and line.currency_id != line.company_id.currency_id
+                                and line.currency_amount > 0):
+                            unit_cost *= line.currency_amount
+                    else:
+                        # Нөөцөөс борлуулах бараанд судалсан үнэ байхгүй тул барааны өртгийг авна
+                        unit_cost = line.product_id.standard_price
+                    cost += unit_cost * line.qty
+                obj.margin = obj.untax_amount - cost
