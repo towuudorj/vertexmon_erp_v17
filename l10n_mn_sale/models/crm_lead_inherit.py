@@ -264,7 +264,8 @@ class CrmLead(models.Model):
     amount_percentage_text = fields.Char(string='Amount text',
          readonly=True,compute='_compute_amount_percentage')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    margin = fields.Float(string='Margin', compute='_compute_margin')
+    margin = fields.Monetary(string='Margin', compute='_compute_margin', currency_field='sale_currency_id')
+    margin_percent = fields.Float(string='Margin (%)', compute='_compute_margin')
     
     @api.depends('partner_id')
     def _compute_name(self):
@@ -277,7 +278,8 @@ class CrmLead(models.Model):
     
     def _get_sale_currency(self):
         for line in self:
-            line.sale_currency_id = line.pricelist_id.currency_id.id
+            line.sale_currency_id = (line.pricelist_id.currency_id or line.company_id.currency_id
+                                     or self.env.company.currency_id).id
     
     def _get_buy_currency(self):
         for line in self:
@@ -811,6 +813,8 @@ class CrmLead(models.Model):
         for obj in self:
             if obj.order_ids:
                 obj.margin = sum(obj.order_ids.mapped('margin'))
+                untaxed = sum(obj.order_ids.mapped('amount_untaxed'))
+                obj.margin_percent = obj.margin / untaxed if untaxed else 0.0
             else:
                 # Захиалга үүсээгүй бол сэжмийн мөрөөс: татваргүй дүн - өртөг
                 cost = 0.0
@@ -825,3 +829,4 @@ class CrmLead(models.Model):
                         unit_cost = line.product_id.standard_price
                     cost += unit_cost * line.qty
                 obj.margin = obj.untax_amount - cost
+                obj.margin_percent = obj.margin / obj.untax_amount if obj.untax_amount else 0.0
