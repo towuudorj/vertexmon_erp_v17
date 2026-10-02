@@ -194,20 +194,29 @@ class StockMove(models.Model):
             line.sale_price = sale_price
 
     
-    @api.depends('picking_id')
+    def _sale_line_qty_ratio(self):
+        """ Тухайн move-ийн тоо хэмжээ нь Борлуулалтын мөрийн нийт тоо
+            хэмжээнээс хэдэн хувийг эзэлж байгааг тооцно (хэсэгчилсэн хүргэлт). """
+        self.ensure_one()
+        sale_line = self.sale_line_id
+        if not sale_line or not sale_line.product_uom_qty:
+            return 0.0
+        return self.product_uom_qty / sale_line.product_uom_qty
+
+    @api.depends('picking_id', 'product_uom_qty')
     def _compute_untaxed_amount(self):
         for line in self:
             total = 0.0
             if line.sale_line_id:
-                total = line.sale_line_id.price_subtotal
+                total = line.sale_line_id.price_subtotal * line._sale_line_qty_ratio()
             line.untaxed_amount = total
-    
-    @api.depends('picking_id')
+
+    @api.depends('picking_id', 'product_uom_qty')
     def _compute_tax_amount(self):
         for line in self:
             tax_amount = 0.0
             if line.sale_line_id:
-                tax_amount = line.sale_line_id.price_tax
+                tax_amount = line.sale_line_id.price_tax * line._sale_line_qty_ratio()
             line.tax_amount = tax_amount
 
     @api.depends('picking_id')

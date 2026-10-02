@@ -203,19 +203,15 @@ class stock_picking(models.Model):
     def _compute_untaxed(self):
         for lin in self:
             total = 0.0
-            if lin.move_ids:
-                for line in lin.move_ids:
-                    if line.untaxed_amount > 0.0:
-                        total +=line.untaxed_amount
-                    else:
-                        total +=line.price_subtotal
-                    
+            if lin.state == 'done':
+                lines = lin.move_line_ids_without_package
             else:
-                for line in lin.move_ids_without_package:
-                    if line.untaxed_amount > 0.0:
-                        total +=line.untaxed_amount
-                    else:
-                        total +=line.price_subtotal
+                lines = lin.move_ids_without_package
+            for line in lines:
+                if line.untaxed_amount > 0.0:
+                    total +=line.untaxed_amount
+                else:
+                    total +=line.price_subtotal
             lin.amount_untaxed = total
 
     def button_validate(self):
