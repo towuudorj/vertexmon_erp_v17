@@ -12,10 +12,6 @@
                         string="This Year"
                         domain="[('date','&gt;=', context_today().strftime('%Y-01-01')),
                                  ('date','&lt;=', context_today().strftime('%Y-12-31'))]"/>
-                <filter name="mn_reconciled_mark" string="Тулгагдсан"
-                        domain="[('is_reconciled_mark', '=', True)]"/>
-                <filter name="mn_not_reconciled_mark" string="Тулгагдаагүй"
-                        domain="[('is_reconciled_mark', '=', False)]"/>
 
             </xpath>
 

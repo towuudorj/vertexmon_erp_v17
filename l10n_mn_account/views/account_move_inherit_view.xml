@@ -62,10 +62,6 @@
                     <xpath expr='//tree/field[@name="analytic_distribution"]' position="after">
 	                    <field name="counterpart_account_name" optional="hidden"/>
 	                </xpath>
-                    <xpath expr='//tree/field[@name="date"]' position="before">
-                        <field name="is_reconciled_mark" widget="boolean" readonly="1" optional="show"
-                               class="o_mn_reconciled_mark"/>
-                    </xpath>
 	            </data>
             </field>
         </record>
@@ -103,11 +99,6 @@
                 <data>
                     <xpath expr='//search/group/filter[@name="group_by_move"]' position="before">
                     <filter string="Cash move type" name="cash_move_type_id"  domain="[]" context="{'group_by': 'cash_move_type_id'}"/>
-                    </xpath>
-                    <xpath expr='//search/filter[@name="unreconciled"]' position="after">
-                        <separator/>
-                        <filter string="Тулгагдсан" name="mn_reconciled_mark" domain="[('is_reconciled_mark', '=', True)]"/>
-                        <filter string="Тулгагдаагүй" name="mn_not_reconciled_mark" domain="[('is_reconciled_mark', '=', False)]"/>
                     </xpath>
                 </data>
             </field>
