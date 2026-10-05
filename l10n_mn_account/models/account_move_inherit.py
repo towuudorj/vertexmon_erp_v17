@@ -575,6 +575,34 @@ class AccountMoveLine(models.Model):
     country_origin = fields.Many2one('res.country', string='Country of Origin')
     counterpart_account_name = fields.Char(string='Counterpart Account', compute='_compute_counterpart_account_name',
                                            store=True)
+    is_reconciled_mark = fields.Boolean(string='Тулгагдсан', compute='_compute_is_reconciled_mark',
+                                        search='_search_is_reconciled_mark')
+
+    @api.depends('statement_line_id.is_reconciled', 'move_id.line_ids.reconciled',
+                 'move_id.line_ids.account_id.reconcile')
+    def _compute_is_reconciled_mark(self):
+        # Бичилт түвшинд: банкны хуулгын бичилт бол хуулгын мөр нь тулгагдсан эсэх,
+        # бусад бичилт бол тааруулах дансны бүх мөр нь тулгагдсан эсэх
+        for line in self:
+            if line.statement_line_id:
+                line.is_reconciled_mark = line.statement_line_id.is_reconciled
+                continue
+            reconcilable = line.move_id.line_ids.filtered(lambda l: l.account_id.reconcile)
+            line.is_reconciled_mark = bool(reconcilable) and all(reconcilable.mapped('reconciled'))
+
+    def _search_is_reconciled_mark(self, operator, value):
+        if operator not in ('=', '!='):
+            raise NotImplementedError()
+        domain = ['|',
+                  ('statement_line_id.is_reconciled', '=', True),
+                  '&', '&',
+                  ('statement_line_id', '=', False),
+                  ('move_id.line_ids', 'any', [('account_id.reconcile', '=', True)]),
+                  ('move_id.line_ids', 'not any', [('account_id.reconcile', '=', True),
+                                                   ('reconciled', '=', False)])]
+        if (operator == '=') == bool(value):
+            return domain
+        return ['!'] + domain
 
 
     def _prepare_analytic_distribution_line(self, distribution, account_ids, distribution_on_each_plan):

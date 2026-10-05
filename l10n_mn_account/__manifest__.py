@@ -61,6 +61,11 @@
 
 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mn_account/static/src/scss/reconciled_mark.scss',
+        ],
+    },
     'test': [],
     'installable': True,
     'auto_install': False,
