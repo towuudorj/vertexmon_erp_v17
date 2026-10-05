@@ -403,7 +403,7 @@ msgstr "Валют"
 #. module: om_account_asset
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_search
 msgid "Current"
-msgstr "Одоогийн"
+msgstr "Ашиглагдаж буй"
 
 #. module: om_account_asset
 #: model:ir.model.fields,field_description:om_account_asset.field_account_asset_depreciation_line__amount
@@ -1063,7 +1063,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:om_account_asset.field_account_asset_asset__state
 #: model:ir.model.fields,field_description:om_account_asset.field_asset_asset_report__state
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: om_account_asset
 #: model:ir.model.fields,help:om_account_asset.field_account_asset_asset__method_period
