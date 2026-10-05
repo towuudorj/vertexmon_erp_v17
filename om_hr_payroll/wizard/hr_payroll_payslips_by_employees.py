@@ -9,7 +9,22 @@ class HrPayslipEmployees(models.TransientModel):
     _name = 'hr.payslip.employees'
     _description = 'Generate payslips for all selected employees'
 
-    employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees')
+    employee_ids = fields.Many2many(
+        'hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees',
+        domain="[('department_id', '=', dep_id)] if dep_id else []"
+    )
+    payslip_run_id = fields.Many2one(
+        'hr.payslip.run',
+        string='Payslip Batch',
+        default=lambda self: self.env.context.get('active_id')
+        if self.env.context.get('active_model') == 'hr.payslip.run' else False
+    )
+    dep_id = fields.Many2one(
+        'hr.department',
+        string='Department',
+        related='payslip_run_id.dep_id',
+        readonly=True
+    )
 
     def compute_sheet(self):
         payslips = self.env['hr.payslip']
@@ -31,6 +46,7 @@ class HrPayslipEmployees(models.TransientModel):
                 'payslip_run_id': active_id,
                 'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids')],
                 'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids')],
+                'month': self.payslip_run_id.month,
                 'date_from': from_date,
                 'date_to': to_date,
                 'credit_note': run_data.get('credit_note'),

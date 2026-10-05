@@ -41,7 +41,9 @@ class HrPayslip(models.Model):
         if 'journal_id' in self.env.context:
             for vals in vals_list:
                 vals['journal_id'] = self.env.context.get('journal_id')
-        return super(HrPayslip, self).create(vals_list)
+        res = super(HrPayslip, self).create(vals_list)
+        res.get_worked_day_lines(res.contract_id, res.date_from, res.date_to)
+        return res
 
     @api.onchange('contract_id')
     def onchange_contract(self):

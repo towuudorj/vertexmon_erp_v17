@@ -237,9 +237,11 @@ msgid "State"
 msgstr "Төлөв"
 
 #. module: l10n_mn_payroll
-#: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__confirm_user_id
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__hr_hour_record__state__confirmed
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__shift_holiday_register__state__confirmed
+#: model:ir.model.fields.selection,name:l10n_mn_payroll.selection__working_day_register__state__confirmed
 msgid "Confirmed"
-msgstr "Батлагдсан"
+msgstr "Зөвшөөрсөн"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__average_amount
@@ -413,7 +415,14 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: l10n_mn_payroll
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_detail_excel_report__department_id
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_attendance_excel_report__department_id
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_hour_record__department
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payroll_prepayment__dep_id
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payslip__dep_id
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_hr_payslip_run__dep_id
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_bonus__dep_id
+#: model:ir.model.fields,field_description:l10n_mn_payroll.field_payroll_excel_report__dep_id
 msgid "Department"
 msgstr "Хэлтэс"
 

@@ -6,19 +6,18 @@
         <field name="model">hr.payslip.employees</field>
         <field name="arch" type="xml">
             <form string="Payslips by Employees">
-                <header>
+                <span nolabel="1">This wizard will generate payslips for all selected employee(s) based
+                    on the dates and credit note specified on Payslips Run.
+                </span>
+                <separator string="Employees"/>
+                <newline/>
+                <field name="payslip_run_id" invisible="1"/>
+                <field name="dep_id" invisible="1"/>
+                <field name="employee_ids" nolabel="1" domain="[('department_id', '=', dep_id)] if dep_id else []"/>
+                <footer>
                     <button icon="fa-cogs" string="Generate" name="compute_sheet" type="object" class="oe_highlight"/>
-                </header>
-                <group>
-                    <span colspan="4" nolabel="1">This wizard will generate payslips for all selected employee(s) based
-                        on the dates and credit note specified on Payslips Run.
-                    </span>
-                </group>
-                <group colspan="4">
-                    <separator string="Employees" colspan="4"/>
-                    <newline/>
-                    <field name="employee_ids" nolabel="1"/>
-                </group>
+                    <button string="Цуцлах" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
             </form>
         </field>
     </record>

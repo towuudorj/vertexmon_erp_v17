@@ -172,35 +172,36 @@ class HrPayslip(models.Model):
         """
         res = super(HrPayslip, self).get_worked_day_lines(contracts, date_from, date_to)
         res = [line for line in res if line.get('code') != 'WORK100']
-
-        if self.employee_id:
-            start_date = self.date_from
-            end_date = self.date_to
+        employee_id = self.employee_id or contracts.employee_id
+        if employee_id or contracts:
+            start_date = date_from or self.date_from
+            end_date = date_to or self.date_to
             hr_hour_record = self.env['hr.hour.record'].new({
                 'start_date': datetime.combine(start_date, time(0, 1)) - timedelta(hours=8),
                 'end_date': datetime.combine(end_date, time(23, 59)) - timedelta(hours=8),
                 'company_id': self.employee_id.company_id.id
             })
-            line_vals = hr_hour_record.hour_record(employee_id=self.employee_id)
-            must_work = {
-                'name': _("Must work"),
-                'sequence': 1,
-                'code': 'MUST_WORK',
-                'number_of_days': line_vals['due_day'],
-                'number_of_hours': round(line_vals['due_time'], 2),
-                'contract_id': contracts.id
-            }
-            worked = {
-                'name': _("Worked"),
-                'sequence': 1,
-                'code': 'WORK100',
-                'number_of_days': line_vals['work_day'],
-                'number_of_hours': round(line_vals['work_time'] + line_vals['free_time1'], 2),
-                'contract_id': contracts.id
-            }
+            line_vals = hr_hour_record.hour_record(employee_id=employee_id)
+            if 'due_day' in line_vals.keys() and 'work_day' in line_vals.keys():
+                must_work = {
+                    'name': _("Must work"),
+                    'sequence': 1,
+                    'code': 'MUST_WORK',
+                    'number_of_days': line_vals['due_day'],
+                    'number_of_hours': round(line_vals['due_time'], 2),
+                    'contract_id': contracts.id
+                }
+                worked = {
+                    'name': _("Worked"),
+                    'sequence': 1,
+                    'code': 'WORK100',
+                    'number_of_days': line_vals['work_day'],
+                    'number_of_hours': round(line_vals['work_time'] + line_vals['free_time1'], 2),
+                    'contract_id': contracts.id
+                }
 
-            res.append(must_work)
-            res.append(worked)
+                res.append(must_work)
+                res.append(worked)
         return res
 
     @api.model
