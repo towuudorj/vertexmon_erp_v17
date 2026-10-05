@@ -49,6 +49,9 @@
                         <field name="owner_id" />
                         <field name="asset_location_id" optional="hidden"/>
                     </xpath>
+                    <xpath expr='//field[@name="state"]' position="attributes">
+                        <attribute name="string">Төлөв</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -58,6 +61,9 @@
             <field name="model">account.asset.asset</field>
             <field name="inherit_id" ref="om_account_asset.view_account_asset_search"/>
             <field name="arch" type="xml">
+                <xpath expr='//filter[@name="current"]' position="attributes">
+                    <attribute name="string">Ашиглагдаж буй</attribute>
+                </xpath>
                 <xpath expr='//filter[@name="closed"]' position="after">
                     <filter string="Актлагдсан" name="scrapped" domain="[('state', '=', 'scrap')]"/>
                 </xpath>
