@@ -26,10 +26,8 @@ class HrPayslip(models.Model):
     name = fields.Char(string='Payslip Name')
     number = fields.Char(string='Reference', copy=False)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    date_from = fields.Date(string='Date From', required=True,
-        default=lambda self: fields.Date.to_string(date.today().replace(day=1)))
-    date_to = fields.Date(string='Date To', required=True,
-        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()))
+    date_from = fields.Date(string='Date From', compute='_compute_date', store=True)
+    date_to = fields.Date(string='Date To', compute='_compute_date', store=True)
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -63,6 +61,7 @@ class HrPayslip(models.Model):
         help="Indicates this payslip has a refund of another")
     payslip_run_id = fields.Many2one('hr.payslip.run', string='Payslip Batches', copy=False)
     payslip_count = fields.Integer(compute='_compute_payslip_count', string="Payslip Computation Details")
+    month = fields.Integer(string='Month')
 
     def _compute_details_by_salary_rule_category(self):
         for payslip in self:
@@ -608,6 +607,22 @@ class HrPayslip(models.Model):
         else:
             return 0.0
 
+    @api.depends('month')
+    def _compute_date(self):
+        for obj in self:
+            if obj.month:
+                salary_month_range_id = self.env['salary.month.range'].search([('month', '=', obj.month)])
+                if salary_month_range_id:
+                    date_from = salary_month_range_id.date_from
+                    date_to = salary_month_range_id.date_to
+                else:
+                    date_from = fields.Date.to_string(date.today().replace(day=1))
+                    date_to = fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())
+            else:
+                date_from = fields.Date.to_string(date.today().replace(day=1))
+                date_to = fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())
+            obj.date_from = date_from
+            obj.date_to = date_to
 
 class HrPayslipLine(models.Model):
     _name = 'hr.payslip.line'
@@ -676,25 +691,21 @@ class HrPayslipRun(models.Model):
     _name = 'hr.payslip.run'
     _description = 'Payslip Batches'
 
-    name = fields.Char(required=True)
+    name = fields.Char(default=lambda self: str(date.today().year) + ' - ' + str(date.today().month), required=True)
     slip_ids = fields.One2many('hr.payslip', 'payslip_run_id', string='Payslips')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
         ('close', 'Close'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
-    date_start = fields.Date(
-        string='Date From', required=True,
-        default=lambda self: fields.Date.to_string(date.today().replace(day=1))
-    )
-    date_end = fields.Date(
-        string='Date To', required=True,
-        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())
-    )
+    date_start = fields.Date(string='Date From', compute='_compute_date')
+    date_end = fields.Date(string='Date To', compute='_compute_date')
     credit_note = fields.Boolean(
         string='Credit Note',
         help="If its checked, indicates that all payslips generated from here are refund payslips."
     )
+    dep_id = fields.Many2one('hr.department', string='Department')
+    month = fields.Integer(string='Month', default=lambda self: date.today().month)
 
     def draft_payslip_run(self):
         return self.write({'state': 'draft'})
@@ -712,3 +723,25 @@ class HrPayslipRun(models.Model):
             if rec.state == 'done':
                 raise ValidationError(_('You Cannot Delete Done Payslips Batches'))
         return super(HrPayslipRun, self).unlink()
+
+    def compute_sheets(self):
+        for obj in self:
+            for line in obj.slip_ids:
+                line.compute_sheet()
+
+    @api.depends('month')
+    def _compute_date(self):
+        for obj in self:
+            if obj.month:
+                salary_month_range_id = self.env['salary.month.range'].search([('month', '=', obj.month)])
+                if salary_month_range_id:
+                    date_from = salary_month_range_id.date_from
+                    date_to = salary_month_range_id.date_to
+                else:
+                    date_from = fields.Date.to_string(date.today().replace(day=1))
+                    date_to = fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())
+            else:
+                date_from = fields.Date.to_string(date.today().replace(day=1))
+                date_to = fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())
+            obj.date_start = date_from
+            obj.date_end = date_to

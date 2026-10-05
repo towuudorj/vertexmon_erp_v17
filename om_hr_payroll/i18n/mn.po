@@ -970,6 +970,12 @@ msgid "Miscellaneous"
 msgstr "Бусад"
 
 #. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__month
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__month
+msgid "Month"
+msgstr "Сар"
+
+#. module: om_hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Monthly"
 msgstr "Сар бүр"
