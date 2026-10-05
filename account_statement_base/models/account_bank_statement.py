@@ -9,9 +9,10 @@ class AccountBankStatement(models.Model):
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):
         for stmt in self:
+            # first_line_index нь running balance-ийн эхлэх цэг (anchor) тул заавал тооцно
+            sorted_lines = stmt.line_ids.filtered('internal_index').sorted('internal_index')
+            stmt.first_line_index = sorted_lines[:1].internal_index
             if stmt.line_ids:
-                #sorted_lines = stmt.line_ids.sorted('internal_index')
-                #stmt.first_line_index = sorted_lines[:1].internal_index
                 stmt.date = stmt.date
             else:
                 stmt.date = fields.Date.today()
