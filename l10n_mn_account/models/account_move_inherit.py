@@ -183,6 +183,7 @@ class AccountMove(models.Model):
     )
     partner_type_id = fields.Many2one('partner.type.register', string='Partner type')
     po_ids = fields.Many2many('purchase.order', string='Purchase Orders', domain="[('state', '=', 'purchase')]")
+    has_landed_costs = fields.Boolean(compute='_compute_has_landed_costs')
     invoice_date_due = fields.Date(string='Төлбөр хийх хугацаа', readonly=True)
     vat_declaration = fields.Char(string='VAT Declaration')
     advance_payment_percentage = fields.Float(string='Advance Payment Percentage')
@@ -395,6 +396,11 @@ class AccountMove(models.Model):
                 record.advance_payment_amount = ((record.amount_total / (record.advance_payment_percentage)) * 100.0)
             else:
                 record.advance_payment_amount = 0.0
+
+    def _compute_has_landed_costs(self):
+        # Агуулахын эрхгүй хэрэглэгч нэхэмжлэл нээхэд stock.landed.cost-ийн эрхийн алдаа гаргахгүйн тулд sudo
+        for move in self:
+            move.has_landed_costs = 'landed_costs_ids' in move._fields and bool(move.sudo().landed_costs_ids)
 
     def button_create_landed_costs(self):
         """Create a `stock.landed.cost` record associated to the account move of `self`, each
