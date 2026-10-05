@@ -270,6 +270,7 @@ class PurchaseExpenseReport(models.TransientModel):
                                         COALESCE(am.vat_declaration, '') as vat_declaration, sm.quantity
                                     from stock_move as sm
                                     left join stock_valuation_adjustment_lines as ad on sm.id = ad.move_id
+                                        and ad.cost_id in (select id from stock_landed_cost where state = 'done')
                                     left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join account_move am on am.id = sc.vendor_bill_id
@@ -277,7 +278,6 @@ class PurchaseExpenseReport(models.TransientModel):
                                 """%(purchase_data['id'], purchase_data['move_id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
-                    count = 0
                     for exp in expense_data_ids:
                         quantity = exp['quantity']
                         if exp['vat_declaration'] not in vat_declaration:
@@ -285,26 +285,15 @@ class PurchaseExpenseReport(models.TransientModel):
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
 
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
-
-                            count +=1
-                            if count == 1:
-                                frieght_cost += exp['additional_landed_cost']
+                            frieght_cost += exp['additional_landed_cost']
                             if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
                                 freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
                         elif exp_pro.name == u'Гаалийн албан татвар'  and st_line.product_id.id == exp_pro.id:
-
-                            count +=1
-                            if count == 1:
-                                custom_tax_cost += exp['additional_landed_cost']
+                            custom_tax_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн мэдүүлэг'  and st_line.product_id.id == exp_pro.id:
-
-                            count +=1
-                            if count == 1:
-                                declaration_cost += exp['additional_landed_cost']
+                            declaration_cost += exp['additional_landed_cost']
                         elif exp_pro.name == u'Гаалийн бүрдүүлэлт'  and st_line.product_id.id == exp_pro.id:
-                            count +=1
-                            if count == 1:
-                                clearance_cost += exp['additional_landed_cost']
+                            clearance_cost += exp['additional_landed_cost']
                         #additional_costs['%s'%exp['id']] = exp['additional_landed_cost']
                 
 
@@ -414,14 +403,16 @@ class PurchaseExpenseReport(models.TransientModel):
                                     left join stock_landed_cost_lines as sc_lines on ad.cost_line_id = sc_lines.id
                                     left join stock_landed_cost as sc on ad.cost_id = sc.id
                                     left join purchase_order_stock_landed_cost_rel as polsc on sc.id = polsc.stock_landed_cost_id
-                                    where polsc.purchase_order_id = %s and ad.product_id = %s and sc.company_id = %s
+                                    left join purchase_order_line pol on pol.id = sm.purchase_line_id
+                                    where polsc.purchase_order_id = %s and pol.order_id = %s
+                                      and sc.company_id = %s and sc.state = 'done'
                                     group by ad.id, ad.additional_landed_cost, sc_lines.product_id, ad.product_id, ad.cost_line_id
-                                """%(purchase_data.id, product.id, data['company_id']))
+                                """%(purchase_data.id, purchase_data.id, data['company_id']))
                     expense_data_ids = self._cr.dictfetchall()
                     stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
                     for exp in expense_data_ids:
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
-                        if exp_pro.name == u'Тээврийн зардал' or exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
+                        if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
                             if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
                                 freight_partner += ", " + st_line.cost_id.vendor_bill_id.partner_id.name
