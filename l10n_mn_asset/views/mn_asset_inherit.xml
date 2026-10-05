@@ -52,6 +52,22 @@
                 </data>
             </field>
         </record>
+
+        <record id="view_account_asset_search_mn_inherit" model="ir.ui.view">
+            <field name="name">account.asset.asset.search.mn</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="om_account_asset.view_account_asset_search"/>
+            <field name="arch" type="xml">
+                <xpath expr='//filter[@name="closed"]' position="after">
+                    <filter string="Актлагдсан" name="scrapped" domain="[('state', '=', 'scrap')]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Хаагдсан, Актлагдсан хөрөнгийг анхдагчаар нууна -->
+        <record id="om_account_asset.action_account_asset_asset_form" model="ir.actions.act_window">
+            <field name="context">{'search_default_current': 1}</field>
+        </record>
 		
 
 	
