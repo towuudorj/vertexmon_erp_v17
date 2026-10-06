@@ -201,6 +201,11 @@ msgstr "Цуцлах"
 
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
+msgid "Export Excel"
+msgstr "Excel татах"
+
+#. module: deltatech_stock_inventory
+#: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Cancel Inventory"
 msgstr "Тооллого цуцлах"
 
@@ -477,12 +482,12 @@ msgstr "Тооллого хийгдэж буй"
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Үлдэгдэлгүй барааг оруулах"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,help:deltatech_stock_inventory.field_stock_inventory__exhausted
 msgid "Include also products with quantity of 0"
-msgstr ""
+msgstr "Үлдэгдэл нь 0 байгаа барааг мөн тооллогод оруулна"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,help:deltatech_stock_inventory.field_stock_inventory_line__difference_qty
@@ -715,7 +720,7 @@ msgstr ""
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "New inventory for Not Ok"
-msgstr "Агуулахын шинэ тоолого тийм биш"
+msgstr "Баталгаажаагүй мөрөөр шинэ тооллого"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__activity_date_deadline
@@ -918,7 +923,7 @@ msgstr "Тоо шинэчлэх"
 #. module: deltatech_stock_inventory
 #: model_terms:ir.ui.view,arch_db:deltatech_stock_inventory.view_inventory_form
 msgid "Remove Not Ok"
-msgstr "Тийм биш бол устгах"
+msgstr "Баталгаажаагүй мөрийг устгах"
 
 #. module: deltatech_stock_inventory
 #: model:ir.model.fields,field_description:deltatech_stock_inventory.field_stock_inventory__activity_user_id

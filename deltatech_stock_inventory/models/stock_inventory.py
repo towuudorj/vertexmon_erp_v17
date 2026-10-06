@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, time
+
+import pytz
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -372,7 +376,7 @@ class Inventory(models.Model):
         if self.product_ids:
             domain = expression.AND([domain, [("product_id", "in", self.product_ids.ids)]])
 
-        fields = [
+        read_fields = [
             "product_id",
             "location_id",
             "lot_id",
@@ -382,8 +386,8 @@ class Inventory(models.Model):
         ]
         group_by = ["product_id", "location_id", "lot_id", "package_id", "owner_id"]
 
-        quants = self.env["stock.quant"].read_group(domain, fields, group_by, lazy=False)
-        return {
+        quants = self.env["stock.quant"].read_group(domain, read_fields, group_by, lazy=False)
+        quantities = {
             (
                 quant["product_id"] and quant["product_id"][0] or False,
                 quant["location_id"] and quant["location_id"][0] or False,
@@ -392,6 +396,74 @@ class Inventory(models.Model):
                 quant["owner_id"] and quant["owner_id"][0] or False,
             ): quant["quantity"]
             for quant in quants
+        }
+
+        # start_date өгөгдсөн бол тухайн өдрийн 00:00-оос өмнөх үлдэгдлийг тооцно:
+        # одоогийн үлдэгдлээс start_date-ээс хойших хөдөлгөөнийг буцааж хасна
+        if self.start_date and self.start_date < fields.Date.context_today(self):
+            quantities = self._get_quantities_before_start_date(quantities, locations_ids)
+        return quantities
+
+    def _get_start_datetime_utc(self):
+        """start_date-ийн 00:00 цагийг хэрэглэгчийн цагийн бүсээс UTC руу хөрвүүлнэ"""
+        self.ensure_one()
+        tz = pytz.timezone(self.env.user.tz or "UTC")
+        start_dt = tz.localize(datetime.combine(self.start_date, time.min))
+        return start_dt.astimezone(pytz.utc).replace(tzinfo=None)
+
+    def _get_quantities_before_start_date(self, quantities, locations_ids):
+        """Одоогийн үлдэгдлээс start_date-ээс хойш дууссан хөдөлгөөнийг буцааж,
+        start_date-ээс өмнөх үлдэгдлийг гаргана.
+
+        :param quantities: одоогийн үлдэгдэл {(product, location, lot, package, owner): qty}
+        :param locations_ids: тооллогод хамаарах байрлалууд
+        :return: start_date-ээс өмнөх үлдэгдэл ижил бүтэцтэй dict
+        """
+        self.ensure_one()
+        quantities = dict(quantities)
+        domain = [
+            ("company_id", "=", self.company_id.id),
+            ("state", "=", "done"),
+            ("date", ">=", self._get_start_datetime_utc()),
+            ("product_id.type", "=", "product"),
+            "|",
+            ("location_id", "in", locations_ids),
+            ("location_dest_id", "in", locations_ids),
+        ]
+        if self.product_ids:
+            domain.append(("product_id", "in", self.product_ids.ids))
+        if self.prefill_counted_quantity == "zero":
+            domain.append(("product_id.active", "=", True))
+
+        locations_set = set(locations_ids)
+        move_lines = self.env["stock.move.line"].search(domain)
+        for ml in move_lines:
+            qty = ml.quantity_product_uom
+            # Ирсэн хөдөлгөөн: тухайн байрлалд нэмэгдсэн тул хасна
+            if ml.location_dest_id.id in locations_set:
+                key = (
+                    ml.product_id.id,
+                    ml.location_dest_id.id,
+                    ml.lot_id.id or False,
+                    ml.result_package_id.id or False,
+                    ml.owner_id.id or False,
+                )
+                quantities[key] = quantities.get(key, 0) - qty
+            # Гарсан хөдөлгөөн: тухайн байрлалаас хасагдсан тул нэмнэ
+            if ml.location_id.id in locations_set:
+                key = (
+                    ml.product_id.id,
+                    ml.location_id.id,
+                    ml.lot_id.id or False,
+                    ml.package_id.id or False,
+                    ml.owner_id.id or False,
+                )
+                quantities[key] = quantities.get(key, 0) + qty
+
+        return {
+            key: qty
+            for key, qty in quantities.items()
+            if not float_is_zero(qty, precision_digits=self.env["decimal.precision"].precision_get("Product Unit of Measure"))
         }
 
     def _get_exhausted_inventory_lines_vals(self, non_exhausted_set):
