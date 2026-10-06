@@ -396,6 +396,11 @@ msgid "Computation"
 msgstr "Тооцоололт"
 
 #. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+msgid "Compute"
+msgstr "Тооцоолох"
+
+#. module: om_hr_payroll
 #: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
 msgstr "Тооцоолох"

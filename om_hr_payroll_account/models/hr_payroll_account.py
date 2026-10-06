@@ -73,8 +73,8 @@ class HrPayslip(models.Model):
                 'journal_id': slip.journal_id.id,
                 'date': date,
             }
-            if not any(line.salary_rule_id.account_debit and line.salary_rule_id.account_credit for line in slip.details_by_salary_rule_category):
-                raise UserError(_('Missing Debit Or Credit Account in Salary Rule'))
+            # if not any(line.salary_rule_id.account_debit and line.salary_rule_id.account_credit for line in slip.details_by_salary_rule_category):
+            #     raise UserError(_('Missing Debit Or Credit Account in Salary Rule'))
             for line in slip.details_by_salary_rule_category:
                 amount = currency.round(slip.credit_note and -line.total or line.total)
                 if currency.is_zero(amount):
@@ -88,7 +88,7 @@ class HrPayslip(models.Model):
                 if debit_account_id:
                     debit_line = (0, 0, {
                         'name': line.name,
-                        'partner_id': line._get_partner_id(credit_account=False),
+                        'partner_id': slip.employee_id.work_contact_id.id or line._get_partner_id(credit_account=False),
                         'account_id': debit_account_id,
                         'journal_id': slip.journal_id.id,
                         'date': date,
@@ -103,7 +103,7 @@ class HrPayslip(models.Model):
                 if credit_account_id:
                     credit_line = (0, 0, {
                         'name': line.name,
-                        'partner_id': line._get_partner_id(credit_account=True),
+                        'partner_id': slip.employee_id.work_contact_id.id or line._get_partner_id(credit_account=True),
                         'account_id': credit_account_id,
                         'journal_id': slip.journal_id.id,
                         'date': date,
