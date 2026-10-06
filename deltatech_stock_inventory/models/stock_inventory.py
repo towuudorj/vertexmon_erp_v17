@@ -400,7 +400,11 @@ class Inventory(models.Model):
 
         # start_date өгөгдсөн бол тухайн өдрийн 00:00-оос өмнөх үлдэгдлийг тооцно:
         # одоогийн үлдэгдлээс start_date-ээс хойших хөдөлгөөнийг буцааж хасна
-        if self.start_date and self.start_date < fields.Date.context_today(self):
+        if (
+            self.start_date
+            and self.start_date < fields.Date.context_today(self)
+            and not self.env.context.get("inventory_current_qty")
+        ):
             quantities = self._get_quantities_before_start_date(quantities, locations_ids)
         return quantities
 
@@ -743,7 +747,11 @@ class InventoryLine(models.Model):
         if self[0].inventory_id.state == "done":
             self.outdated = False
             return
-        quants_by_inventory = {inventory: inventory._get_quantities() for inventory in self.inventory_id}
+        # Одоогийн үлдэгдэлтэй харьцуулна (start_date-ээс хойших орлого/зарлагыг шинэчлэхийн тулд)
+        quants_by_inventory = {
+            inventory: inventory.with_context(inventory_current_qty=True)._get_quantities()
+            for inventory in self.inventory_id
+        }
         for line in self:
             quants = quants_by_inventory[line.inventory_id]
             if line.state == "done" or not line.id:
