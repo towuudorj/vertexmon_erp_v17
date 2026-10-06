@@ -281,8 +281,8 @@
                                     <field name="untax_amount" class="oe_subtotal_footer_separator"/>
                                     <field name="tax_amount" class="oe_subtotal_footer_separator"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                    <label for="margin"/>
-                                    <div class="text-nowrap oe_subtotal_footer_separator">
+                                    <label for="margin" invisible="1"/>
+                                    <div class="text-nowrap oe_subtotal_footer_separator" invisible="1">
                                         <field name="sale_currency_id" invisible="1"/>
                                         <field name="margin" class="oe_inline" widget="monetary"/>
                                         <span class="oe_inline" invisible="untax_amount == 0">
