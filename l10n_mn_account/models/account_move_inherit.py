@@ -402,6 +402,29 @@ class AccountMove(models.Model):
         for move in self:
             move.has_landed_costs = 'landed_costs_ids' in move._fields and bool(move.sudo().landed_costs_ids)
 
+    def _get_missing_product_lines(self):
+        """Бараа сонгоогүй нэхэмжлэлийн мөрүүд (татвар, хэсэг, тэмдэглэлийн мөр орохгүй)."""
+        return self.filtered(lambda m: m.is_invoice(include_receipts=True)).invoice_line_ids.filtered(
+            lambda line: line.display_type == 'product' and not line.product_id)
+
+    def action_post(self):
+        # Зөвхөн хэрэглэгч "Батлах" товч дарахад (check_missing_product) шалгана;
+        # кодоор батлах автомат урсгалд (төлбөрийн нөхцөлийн нэхэмжлэл г.м.) нөлөөлөхгүй.
+        if self.env.context.get('check_missing_product') and self._get_missing_product_lines():
+            wizard = self.env['account.move.missing.product.confirm'].create({'move_ids': [(6, 0, self.ids)]})
+            return {
+                'name': _('Бараа сонгоогүй мөр байна'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move.missing.product.confirm',
+                'res_id': wizard.id,
+                'view_mode': 'form',
+                'target': 'new',
+                # Вэб клиент товчны context-ийг (check_missing_product=True) нэгтгэдэг тул тодорхой False болгоно
+                'context': dict(self.env.context, check_missing_product=False),
+            }
+        # Дотор нь бусад бичилт батлагдахад дахин шалгахгүй
+        return super(AccountMove, self.with_context(check_missing_product=False)).action_post()
+
     def button_create_landed_costs(self):
         """Create a `stock.landed.cost` record associated to the account move of `self`, each
         `stock.landed.costs` lines mirroring the current `account.move.line` of self.
