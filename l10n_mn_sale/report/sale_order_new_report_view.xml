@@ -32,7 +32,7 @@
         </record>
 
         <record id="action_sale_order_new_report" model="ir.actions.act_window">
-            <field name="name">Борлуулалтын тайлан</field>
+            <field name="name">Борлуулалтын тайлан дэлгэрэнгүй</field>
             <field name="res_model">sale.order.new.report</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="sale_order_new_report_view"/>

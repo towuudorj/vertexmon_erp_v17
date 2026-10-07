@@ -39,7 +39,7 @@
 
         <menuitem id="crm_lead_line_menu" name="Үнийн судалгааны хувиарлалт"  parent="purchase.menu_procurement_management" sequence="0" action="crm_lead_line_action"/>	
 
-        <menuitem id="sale_order_new_report_menu" name="Борлуулалтын тайлан шинэ"  parent="sale.menu_sale_report" sequence="0" action="action_sale_order_new_report"/>	
+        <menuitem id="sale_order_new_report_menu" name="Борлуулалтын тайлан дэлгэрэнгүй"  parent="sale.menu_sale_report" sequence="0" action="action_sale_order_new_report"/>	
 
 
         <menuitem id="sale_order_common_report_menu" name="Борлуулалтын тайлан хураангуй"  parent="sale.menu_sale_report" sequence="1" action="action_sale_order_common_report"/>
