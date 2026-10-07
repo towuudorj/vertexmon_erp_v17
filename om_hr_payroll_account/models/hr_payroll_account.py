@@ -51,14 +51,17 @@ class HrPayslip(models.Model):
         self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
 
     def action_payslip_cancel(self):
+        if any(slip.payslip_run_id for slip in self):
+            raise UserError(_('Цалингийн хуудсын багцаас үүссэн тул багцаас цуцлана уу'))
         moves = self.mapped('move_id')
         moves.filtered(lambda x: x.state == 'posted').button_cancel()
         moves.unlink()
         return super(HrPayslip, self).action_payslip_cancel()
 
     def action_payslip_done(self):
-        res = super(HrPayslip, self).action_payslip_done()
+        super(HrPayslip, self).action_payslip_done()
 
+        all_line_ids = []
         for slip in self:
             line_ids = []
             debit_sum = 0.0
@@ -144,11 +147,16 @@ class HrPayslip(models.Model):
                     'credit': 0.0,
                 })
                 line_ids.append(adjust_debit)
-            move_dict['line_ids'] = line_ids
-            move = self.env['account.move'].create(move_dict)
-            slip.write({'move_id': move.id, 'date': date})
-            move.action_post()
-        return res
+            if self.env.context.get('form_payslip_run'):
+                all_line_ids.extend(line_ids)
+            else:
+                move_dict['line_ids'] = line_ids
+                move = self.env['account.move'].create(move_dict)
+                slip.write({'move_id': move.id, 'date': date})
+                move.action_post()
+
+        if self.env.context.get('form_payslip_run'):
+            return all_line_ids
 
 
 class HrSalaryRule(models.Model):
@@ -175,4 +183,53 @@ class HrPayslipRun(models.Model):
         'account.journal', 'Salary Journal', required=True, domain=[('type', '=', 'salary')],
         default=lambda self: self.env['account.journal'].search([('type', '=', 'salary')], limit=1)
     )
-    
+    account_move_date = fields.Date(
+        'Date Account', help="Keep empty to use the period of the validation(Payslip) date."
+    )
+    move_id = fields.Many2one('account.move')
+
+    def done_payslip_run(self):
+        for run in self:
+            if not run.slip_ids:
+                raise UserError(_("Цалингийн хуудас үүсээгүй байна!"))
+            move_line_vals = []
+            for line in run.slip_ids:
+                lines = line.with_context(form_payslip_run=True).action_payslip_done()
+                if lines:
+                    move_line_vals += lines
+
+            if not move_line_vals:
+                raise UserError(_("Санхүүгийн бичилт үүсгэх мөр олдсонгүй! Цалингийн дүрмийн дансны тохиргоог шалгана уу."))
+
+            date = run.account_move_date or run.date_end
+            move_dict = {
+                'narration': _('Payslip of %s') % run.name,
+                'ref':  (_('Advance salary') if 'payslip_type' in run and run.payslip_type == 'advance' else _('Final salary')) + " " + run.name,
+                'journal_id': run.journal_id.id,
+                'date': date,
+                'line_ids': move_line_vals,
+            }
+
+            move = self.env['account.move'].create(move_dict)
+            run.slip_ids.write({'move_id': move.id, 'date': date})
+            move.action_post()
+            run.write({'state': 'done', 'move_id': move.id})
+
+    def see_move(self):
+        action = {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref("account.view_move_form").id,
+            'target': 'new',
+            'res_model': 'account.move',
+            'res_id': self.move_id.id,
+        }
+        return action
+
+    def cancel_payslip_run(self):
+        for run in self:
+            moves = run.mapped('move_id')
+            moves.filtered(lambda x: x.state == 'posted').button_cancel()
+            moves.unlink()
+            run.slip_ids.write({'date': False, 'state': 'draft'})
+            run.write({'state': 'draft', 'move_id': False})

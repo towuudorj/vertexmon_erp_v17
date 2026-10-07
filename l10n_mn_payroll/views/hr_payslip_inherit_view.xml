@@ -10,6 +10,13 @@
                     <data>
                         <xpath expr="//field[@name='number']" position="after">
                             <field name="dep_id"/>
+                            <field name="payslip_type" readonly="1"/>
+                            <field name="advance_must_hours" invisible="payslip_type != 'advance'"
+                                   readonly="state != 'draft'"/>
+                            <field name="advance_worked_hours" invisible="payslip_type != 'advance'"
+                                   readonly="state != 'draft'"/>
+                            <field name="prepayment_amount" invisible="payslip_type != 'advance'"
+                                   readonly="state != 'draft'"/>
                         </xpath>
 
                     </data>

@@ -18,6 +18,11 @@ msgstr ""
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. module: om_hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll_account.hr_payslip_run_form_inherit
+msgid "Account move"
+msgstr "Санхүүгийн бичилт"
+
 #. module: hr_payroll_account
 #: model_terms:ir.ui.view,arch_db:om_hr_payroll_account.hr_contract_form_inherit
 #: model_terms:ir.ui.view,arch_db:om_hr_payroll_account.hr_salary_rule_form_inherit
@@ -43,6 +48,18 @@ msgstr "Тохируулах бичилт"
 msgid "Analytic Account"
 msgstr "Шинжилгээний данс"
 
+#. module: om_hr_payroll_account
+#. odoo-python
+#: code:addons/om_hr_payroll_account/models/hr_payroll_account.py:0
+#, python-format
+msgid "Advance salary"
+msgstr "Урьдчилгаа цалин"
+
+#. module: om_hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll_account.view_hr_payslip_inherit_form
+msgid "Are you sure to delete the related accounting entry ?"
+msgstr "Холбоотой санхүүгийн бичилтүүдийг устгахдаа итгэлтэй байна уу ?"
+
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:om_hr_payroll_account.field_hr_payslip_line__account_credit
 #: model:ir.model.fields,field_description:om_hr_payroll_account.field_hr_salary_rule__account_credit
@@ -64,6 +81,13 @@ msgstr "Дебит данс"
 #: model:ir.model,name:om_hr_payroll_account.model_hr_contract
 msgid "Employee Contract"
 msgstr "Ажилтны хөдөлмөрийн гэрээ"
+
+#. module: om_hr_payroll_account
+#. odoo-python
+#: code:addons/om_hr_payroll_account/models/hr_payroll_account.py:0
+#, python-format
+msgid "Final salary"
+msgstr "Сүүл цалин"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:om_hr_payroll_account.model_hr_payslip_employees
@@ -91,8 +115,10 @@ msgstr "Цалингийн хуудас бөөнөөр"
 msgid "Payslip Line"
 msgstr "Цалингийн хуудасын мөр"
 
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/om_hr_payroll_account.py:65
+#. module: om_hr_payroll_account
+#. odoo-python
+#: code:addons/om_hr_payroll_account/models/hr_payroll_account.py:0
+#: code:addons/om_hr_payroll_account/models/hr_payroll_account.py:0
 #, python-format
 msgid "Payslip of %s"
 msgstr "%s-н цалингийн хуудас"

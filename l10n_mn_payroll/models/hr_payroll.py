@@ -42,13 +42,21 @@ class hr_contract(models.Model):
     trial_end_date = fields.Float(string='Trial End Date')
     insurance_type_id = fields.Many2one('insurance.type', 'Insurance Type')
 
-    
 class HrPayslipRun(models.Model):
     _inherit = "hr.payslip.run"
 
     dep_id = fields.Many2one('hr.department', string='Department')
-    
+    payslip_type = fields.Selection([('advance', 'Урьдчилгаа цалин'),
+                                     ('final', 'Сүүл цалин')],
+                                    string='Цалингийн төрөл', required=True, default='final')
+    advance_run_id = fields.Many2one('hr.payslip.run', string='Урьдчилгаа цалингийн багц',
+                                     domain="[('payslip_type', '=', 'advance'), ('state', '=', 'done'), ('id', '!=', id)]",
+                                     help='Сүүл цалин бодоход энэ багцын урьдчилгааг ADV суутгалд татна.')
 
+    @api.onchange('payslip_type')
+    def _onchange_payslip_type(self):
+        if self.payslip_type == 'advance':
+            self.advance_run_id = False
 
 # Цалингийн хуудсын багцын жагсаалтын багана -> цалингийн дүрмийн код(ууд)
 PAYSLIP_COLUMN_CODES = {
@@ -71,7 +79,8 @@ PAYSLIP_COLUMN_CODES = {
     'phone_deduction_amount': ('PH',),
     'receivable_deduction_amount': ('EDE', 'PAY', 'FAULT'),
     'deduction_total': ('TE',),
-    'net_amount': ('GIVE',),
+    # ADVP мөр зөвхөн урьдчилгаа цалингийн хуудсанд байна
+    'net_amount': ('GIVE', 'ADVP'),
 }
 
 
@@ -79,6 +88,21 @@ class HrPayslip(models.Model):
     _inherit = "hr.payslip"
 
     dep_id = fields.Many2one('hr.department', string='Department')
+    # Буцаалтын хуудас багцгүй хуулагддаг тул related биш, хуулагддаг compute
+    payslip_type = fields.Selection([('advance', 'Урьдчилгаа цалин'),
+                                     ('final', 'Сүүл цалин')],
+                                    string='Цалингийн төрөл', compute='_compute_payslip_type',
+                                    store=True, readonly=False, copy=True)
+    advance_must_hours = fields.Float(string='Ажиллах ёстой цаг', compute='_compute_advance_hours',
+                                      store=True, readonly=False, copy=True,
+                                      help='Цагийн бүртгэлээс авна. Гараар засаж болно.')
+    advance_worked_hours = fields.Float(string='Ажилласан цаг (урьдчилгаа)', compute='_compute_advance_hours',
+                                        store=True, readonly=False, copy=True,
+                                        help='Цагийн бүртгэлээс авна. Гараар засаж болно.')
+    prepayment_amount = fields.Float(string='Урьдчилгаа олгох дүн', compute='_compute_prepayment_amount',
+                                     store=True, readonly=False, copy=True,
+                                     help='Гэрээний цалин × урьдчилгааны % × ажилласан цаг / ажиллах ёстой цаг. '
+                                          'Гараар засаж болно.')
 
     employee_last_name = fields.Char(string='Овог', compute='_compute_employee_info')
     employee_first_name = fields.Char(string='Нэр', compute='_compute_employee_info')
@@ -140,7 +164,129 @@ class HrPayslip(models.Model):
             vals['other_allowance_amount'] = (vals['allowance_total'] - vals['vacation_amount']
                                               - vals['performance_amount'])
             vals['pit_percent'] = vals['pit_amount'] / vals['wage_amount'] * 100 if vals['wage_amount'] else 0.0
+            # Урьдчилгааны хуудсанд BS дүрэм бодогдохгүй тул гэрээний цалинг харуулна
+            if slip.payslip_type == 'advance' and not vals['wage_amount']:
+                vals['wage_amount'] = slip.contract_id.wage
             slip.update(vals)
+
+    @api.depends('payslip_run_id.payslip_type')
+    def _compute_payslip_type(self):
+        for slip in self:
+            if slip.payslip_run_id:
+                slip.payslip_type = slip.payslip_run_id.payslip_type
+            elif not slip.payslip_type:
+                slip.payslip_type = 'final'
+
+    @api.depends('payslip_type', 'worked_days_line_ids.code', 'worked_days_line_ids.number_of_hours')
+    def _compute_advance_hours(self):
+        for slip in self:
+            if slip.payslip_type != 'advance':
+                slip.advance_must_hours = slip.advance_worked_hours = 0.0
+            elif slip.state == 'draft':
+                hours = {wd.code: wd.number_of_hours for wd in slip.worked_days_line_ids}
+                slip.advance_must_hours = hours.get('MUST_WORK', 0.0)
+                slip.advance_worked_hours = hours.get('WORK100', 0.0)
+
+    @api.depends('payslip_type', 'contract_id.wage',
+                 'advance_must_hours', 'advance_worked_hours')
+    def _compute_prepayment_amount(self):
+        for slip in self:
+            if slip.payslip_type != 'advance':
+                slip.prepayment_amount = 0.0
+            elif slip.state == 'draft':
+                # Батлагдсан хуудасны дүнг гэрээ өөрчлөгдсөн ч хөндөхгүй
+                # Ажиллах ёстой цаг 0 бол цагаар хуваахгүй, бүтэн цалингаас бодно
+                ratio = (slip.advance_worked_hours / slip.advance_must_hours
+                         if slip.advance_must_hours else 1.0)
+                slip.prepayment_amount = slip.company_id.currency_id.round(
+                    slip.contract_id.wage * 40 / 100.0 * ratio)
+
+    def write(self, vals):
+        res = super(HrPayslip, self).write(vals)
+        # Урьдчилгааны хувь, дүнг гараар зассан бол мөрийг шууд шинэчилнэ
+        if {'prepayment_amount', 'advance_must_hours', 'advance_worked_hours'} & set(vals):
+            self.filtered(lambda s: s.payslip_type == 'advance' and s.state == 'draft')._compute_advance_sheet()
+        return res
+
+    def compute_sheet(self):
+        advance_slips = self.filtered(lambda s: s.payslip_type == 'advance')
+        final_slips = self - advance_slips
+        final_slips._apply_advance_inputs()
+        res = super(HrPayslip, final_slips).compute_sheet()
+        advance_slips._compute_advance_sheet()
+        return res
+
+    def _compute_advance_sheet(self):
+        """Урьдчилгаа цалингийн хуудас: цалингийн дүрмүүдийг бодохгүй, зөвхөн ADVP мөр үүсгэнэ."""
+        for slip in self:
+            rule = slip._get_advance_rule()
+            contract = slip.contract_id or self.env['hr.contract'].browse(
+                self.get_contract(slip.employee_id, slip.date_from, slip.date_to)[:1])
+            if not contract:
+                raise ValidationError(_("No running contract found for the employee: %s or no contract in the given period") % slip.employee_id.name)
+            slip.line_ids.unlink()
+            line_vals = {
+                'salary_rule_id': rule.id,
+                'contract_id': contract.id,
+                'employee_id': slip.employee_id.id,
+                'name': rule.name,
+                'code': rule.code,
+                'category_id': rule.category_id.id,
+                'sequence': rule.sequence,
+                'appears_on_payslip': rule.appears_on_payslip,
+                'condition_select': 'none',
+                'amount_select': 'fix',
+                'register_id': rule.register_id.id,
+                'amount': slip.prepayment_amount,
+                'quantity': 1.0,
+                'rate': 100.0,
+            }
+            slip_vals = {
+                'number': slip.number or self.env['ir.sequence'].next_by_code('salary.slip'),
+                'line_ids': [(0, 0, line_vals)],
+            }
+            # contract_id-г дахин бичвэл гараар зассан prepayment_amount дахин бодогдоно
+            if not slip.contract_id:
+                slip_vals['contract_id'] = contract.id
+            super(HrPayslip, slip).write(slip_vals)
+
+    def _get_advance_rule(self):
+        """Хуудасны компанийн ADVP дүрэм. Компани бүр өөрийн данстай ADVP дүрэмтэй байж болно."""
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        rules = self.env['hr.salary.rule'].search([
+            ('code', '=', 'ADVP'), ('company_id', 'in', [company.id, False])])
+        rule = rules.filtered(lambda r: r.company_id == company)[:1] or rules[:1] \
+            or self.env.ref('l10n_mn_payroll.advp_salary_rule')
+        accounts = rule.sudo().account_debit | rule.sudo().account_credit
+        wrong = accounts.filtered(lambda a: a.company_id not in company.parent_ids)
+        if wrong:
+            raise UserError(_('"%(rule)s" (ADVP) цалингийн дүрмийн данс %(accounts)s нь %(company)s компанийнх биш байна. '
+                              'Цалингийн дүрэм дээр тухайн компанийн дансыг тохируулна уу.',
+                              rule=rule.name, accounts=', '.join(wrong.mapped('code')), company=company.name))
+        return rule
+
+    def _apply_advance_inputs(self):
+        """Багц дээр сонгосон урьдчилгааны багцаас ажилтны урьдчилгааг ADV оролтод татна."""
+        for slip in self:
+            advance_run = slip.payslip_run_id.advance_run_id
+            if not advance_run:
+                continue
+            advance_slips = advance_run.slip_ids.filtered(
+                lambda s: s.employee_id == slip.employee_id and s.state == 'done')
+            amount = sum(s.net_amount * (-1 if s.credit_note else 1) for s in advance_slips)
+            adv_input = slip.input_line_ids.filtered(lambda i: i.code == 'ADV')
+            if adv_input:
+                adv_input[0].amount = amount
+                (adv_input - adv_input[0]).unlink()
+            elif slip.contract_id:
+                self.env['hr.payslip.input'].create({
+                    'payslip_id': slip.id,
+                    'name': _('Урьдчилгаа'),
+                    'code': 'ADV',
+                    'amount': amount,
+                    'contract_id': slip.contract_id.id,
+                })
 
     def refund_sheet(self):
         for payslip in self:

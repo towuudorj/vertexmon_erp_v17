@@ -85,9 +85,24 @@
         <field name="model">hr.payslip.run</field>
         <field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet/*[1]" position="before">
+                <div class="oe_button_box" name="button_box" invisible="state != 'done'">
+                    <button name="see_move"
+                            string="Account move"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            type="object">
+                    </button>
+                </div>
+            </xpath>
             <field name="credit_note" position="before">
+                <field name="account_move_date" string="Санхүүгийн огноо"/>
                 <field name="journal_id"/>
             </field>
+            <xpath expr='//button[@name="done_payslip_run"]' position="after">
+               <button string="Цуцлах" name="cancel_payslip_run" type="object" invisible="state != 'done'"
+                       class="oe_highlight" confirm="Холбоотой санхүүгийн бичилтүүдийг устгахдаа итгэлтэй байна уу ?"/>
+            </xpath>
         </field>
     </record>
 

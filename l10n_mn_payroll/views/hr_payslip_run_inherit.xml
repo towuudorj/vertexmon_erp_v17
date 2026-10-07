@@ -8,44 +8,94 @@
 	        <field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_form"/>
 	        <field name="arch" type="xml">
 	            <data>
+					<xpath expr="//sheet/label[@for='name']" position="before">
+						<group name="payslip_type">
+							<field name="payslip_type" widget="radio" options="{'horizontal': true}"
+								   readonly="state != 'draft' or slip_ids"/>
+						</group>
+					</xpath>
+					<xpath expr="//sheet/h1" position="after">
+						<group name="final_period" invisible="payslip_type != 'final'">
+							<field name="advance_run_id"
+								   readonly="state != 'draft'" options="{'no_create': True}"/>
+						</group>
+					</xpath>
 					<xpath expr="//field[@name='credit_note']" position="after">
                         <field name="dep_id"/>
 					</xpath>
 					<xpath expr="//field[@name='slip_ids']" position="inside">
-						<tree decoration-info="state == 'done'" decoration-muted="state == 'cancel'">
+						<!-- Урьдчилгааны багцад зөвхөн урьдчилгааны дүнг мөр дээр засна; сүүл цалингийн баганууд нуугдана -->
+						<tree editable="bottom" create="0" open_form_view="True"
+							  decoration-info="state == 'done'" decoration-muted="state == 'cancel'">
 							<field name="employee_last_name" width="120px"/>
 							<field name="employee_first_name" width="120px"/>
 							<field name="employee_department_id" width="180px"/>
 							<field name="employee_bank_account" width="130px" optional="show"/>
 							<field name="wage_amount" width="110px" sum="Нийт"/>
-							<field name="month_work_days" width="110px" sum="Нийт" optional="show"/>
-							<field name="month_work_hours" width="110px" sum="Нийт" optional="show"/>
-							<field name="worked_days" width="110px" sum="Нийт"/>
-							<field name="worked_hours" width="110px" sum="Нийт"/>
-							<field name="overtime_hours" width="110px" sum="Нийт" optional="show"/>
-							<field name="overtime_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="computed_salary" width="110px" sum="Нийт"/>
-							<field name="vacation_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="performance_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="other_allowance_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="allowance_total" width="110px" sum="Нийт"/>
-							<field name="gross_amount" width="110px" sum="Нийт"/>
-							<field name="advance_amount" width="110px" sum="Нийт"/>
-							<field name="ndsh_employee_amount" width="110px" sum="Нийт"/>
-							<field name="ndsh_company_amount" width="110px" sum="Нийт"/>
-							<field name="pit_amount" width="110px" sum="Нийт"/>
-							<field name="pit_percent" width="70px" string="%" optional="show"/>
-							<field name="phone_deduction_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="receivable_deduction_amount" width="110px" sum="Нийт" optional="show"/>
-							<field name="deduction_total" width="110px" sum="Нийт"/>
-							<field name="net_amount" width="110px" sum="Нийт"/>
+							<field name="advance_must_hours" width="110px" sum="Нийт"
+								   column_invisible="parent.payslip_type != 'advance'"
+								   readonly="state != 'draft'"/>
+							<field name="advance_worked_hours" width="110px" sum="Нийт" string="Ажилласан цаг"
+								   column_invisible="parent.payslip_type != 'advance'"
+								   readonly="state != 'draft'"/>
+							<field name="prepayment_amount" width="130px" sum="Нийт"
+								   column_invisible="parent.payslip_type != 'advance'"
+								   readonly="state != 'draft'"/>
+							<field name="month_work_days" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="month_work_hours" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="worked_days" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="worked_hours" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="overtime_hours" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="overtime_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="computed_salary" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="vacation_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="performance_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="other_allowance_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="allowance_total" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="gross_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="advance_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="ndsh_employee_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="ndsh_company_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="pit_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="pit_percent" width="70px" string="%" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="phone_deduction_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="receivable_deduction_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="deduction_total" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
+							<field name="net_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="employee_register" width="110px" optional="show"/>
 							<field name="employee_id" column_invisible="1"/>
+							<field name="payslip_type" column_invisible="1"/>
 							<field name="state" column_invisible="1"/>
 						</tree>
 					</xpath>
 
 				</data>
+			</field>
+		</record>
+
+		<record id="hr_payslip_run_inherit_tree" model="ir.ui.view">
+			<field name="name">hr.payslip.run.tree.mn.inherit</field>
+			<field name="model">hr.payslip.run</field>
+			<field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="payslip_type"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="hr_payslip_run_inherit_filter" model="ir.ui.view">
+			<field name="name">hr.payslip.run.search.mn.inherit</field>
+			<field name="model">hr.payslip.run</field>
+			<field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_filter"/>
+			<field name="arch" type="xml">
+				<xpath expr="//search" position="inside">
+					<filter name="advance" string="Урьдчилгаа цалин" domain="[('payslip_type', '=', 'advance')]"/>
+					<filter name="final" string="Сүүл цалин" domain="[('payslip_type', '=', 'final')]"/>
+					<group expand="0" string="Group By">
+						<filter name="group_payslip_type" string="Цалингийн төрөл" context="{'group_by': 'payslip_type'}"/>
+					</group>
+				</xpath>
 			</field>
 		</record>
 
