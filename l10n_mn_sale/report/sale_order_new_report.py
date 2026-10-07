@@ -168,7 +168,8 @@ class SaleOrderNewReport(models.TransientModel):
         domain = [
             ('journal_id', 'in', journal_ids),
             ('account_id', 'in', self._get_income_account_ids(data)),
-            ('parent_state', '=', 'posted'),
+            # parent_state нь хадгалагдсан хуулбар тул хоцорч болно; Орлого үр дүнгийн тайлан шиг нэхэмжлэлээс шалгана
+            ('move_id.state', '=', 'posted'),
             ('date', '>=', data['start_date']),
             ('date', '<=', data['end_date']),
         ]
