@@ -101,13 +101,22 @@ class SaleOrderCommonReport(models.TransientModel):
                    u'Харилцагч', u'Хэрэглэгч', u'Ангилал', u'Нийт үнэ (НӨАТ-гүй)', u'НӨАТ',
                    u'Нийт үнэ (НӨАТ-тай)']
         last_col = len(headers) - 1
-        sheet.set_column(7, 7, 28)
+        sheet.set_landscape()
+        sheet.set_margins(left=0.3, right=0.3, top=0.5, bottom=0.5)
+        sheet.fit_to_pages(1, 0)
+        sheet.repeat_rows(3)
+        # Мөр, огноо, нэхэмжлэх, захиалга, харилцагчийн №, харилцагч, хэрэглэгч, ангилал, 3 дүн
+        for col, width in enumerate([6, 14, 17, 17, 15, 32, 18, 26, 20, 18, 20]):
+            sheet.set_column(col, col, width)
+        title_wrap = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'border': 1, 'bold': True,
+                                          'font_size': 12, 'bg_color': '#FBCEB1', 'text_wrap': True})
         sheet.merge_range(0, 0, 0, last_col, u'Борлуулалтын тайлан хураангуй', title)
-        sheet.merge_range(1, 0, 1, 2, u'%s' % data['company_name'], head)
-        sheet.merge_range(1, last_col - 1, 1, last_col,
+        sheet.merge_range(1, 0, 1, 3, u'%s' % data['company_name'], head)
+        sheet.merge_range(1, last_col - 2, 1, last_col,
                           u'Огноо: %s - %s' % (data['start_date'], data['end_date']), head)
+        sheet.set_row(3, 32)
         for col, header in enumerate(headers):
-            sheet.write(3, col, header, title)
+            sheet.write(3, col, header, title_wrap)
 
         # (бичилт, ангилал) -> НӨАТ-гүй дүн
         rows = {}

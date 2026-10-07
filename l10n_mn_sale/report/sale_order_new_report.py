@@ -199,8 +199,17 @@ class SaleOrderNewReport(models.TransientModel):
             return u'Лиценз борлуулалт'
         return u'Хүргэгдсэн бараа'
 
+    # Хөл дүнтэй K-Q баганууд
+    AMOUNT_COLUMNS = 'KLMNOPQ'
+
+    def _write_amounts(self, sheet, rowx, values, fmt, totals):
+        """K-Q баганын утгыг бичиж, хөл дүнд нэмнэ."""
+        for col, value in zip(self.AMOUNT_COLUMNS, values):
+            sheet.write("%s%s" % (col, rowx), value, fmt)
+            totals[col] = totals.get(col, 0.0) + (value or 0.0)
+
     def _write_income_lines(self, workbook, sheet, rowx, data, data_left, data_center, data_right,
-                            title, data_bold_left):
+                            title, data_bold_left, totals):
         """Орлогын дансны мөр бүрээр: дүн = кредит - дебит (НӨАТ-гүй, компанийн валютаар)."""
         sheet.write("R%s" % (rowx - 1), u'Ангилал', title)
         sheet.write("S%s" % (rowx - 1), u'Данс', title)
@@ -232,13 +241,9 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("H%s" % rowx, "%s" % (aml.product_id.brand_id.name or ''), data_left)
             sheet.write("I%s" % rowx, aml.product_id.name or aml.name or aml.account_id.name, data_left)
             sheet.write("J%s" % rowx, aml.product_uom_id.name or '', data_left)
-            sheet.write("K%s" % rowx, sale_line.product_uom_qty if sale_line else qty, data_right)
-            sheet.write("L%s" % rowx, qty, data_right)
-            sheet.write("M%s" % rowx, unit_cost, data_right)
-            sheet.write("N%s" % rowx, total_cost, data_right)
-            sheet.write("O%s" % rowx, amount - total_cost, data_right)
-            sheet.write("P%s" % rowx, aml.price_unit, data_right)
-            sheet.write("Q%s" % rowx, amount, data_right)
+            self._write_amounts(sheet, rowx, [sale_line.product_uom_qty if sale_line else qty, qty, unit_cost,
+                                              total_cost, amount - total_cost, aml.price_unit, amount],
+                                data_right, totals)
             sheet.write("R%s" % rowx, category, data_left)
             sheet.write("S%s" % rowx, '%s %s' % (aml.account_id.code, aml.account_id.name), data_left)
             num += 1
@@ -252,7 +257,9 @@ class SaleOrderNewReport(models.TransientModel):
                                     title, data_left, data_right, data_bold_left):
         """Ангилал болон данс тус бүрийн нийлбэр тусдаа хуудсанд — Орлого үр дүнгийн тайлантай тулгахад."""
         summary_sheet = workbook.add_worksheet(u'Ангилал')
-        summary_sheet.set_column(0, 0, 40)
+        summary_sheet.set_paper(9)
+        summary_sheet.fit_to_pages(1, 0)
+        summary_sheet.set_column(0, 0, 60)
         summary_sheet.set_column(1, 1, 25)
         summary_sheet.write('A1', u'Ангилал', title)
         summary_sheet.write('B1', u'Орлого (НӨАТ-гүй)', title)
@@ -262,7 +269,9 @@ class SaleOrderNewReport(models.TransientModel):
             summary_sheet.write('B%s' % srow, amount, data_right)
             srow += 1
         summary_sheet.write('A%s' % srow, u'Нийт (Борлуулалтын орлого (цэвэр))', data_bold_left)
-        summary_sheet.write_formula('B%s' % srow, '=SUM(B2:B%s)' % (srow - 1), data_bold_left)
+        # Томъёоны бодсон утгыг хадгална — "Харах" (LibreOffice → PDF) томъёог дахин боддоггүй
+        summary_sheet.write_formula('B%s' % srow, '=SUM(B2:B%s)' % (srow - 1), data_bold_left,
+                                    sum(summary.values()))
 
         # Данс тус бүрээр — Орлого үр дүнгийн тайлантай тулгахад
         srow += 2
@@ -275,7 +284,8 @@ class SaleOrderNewReport(models.TransientModel):
             summary_sheet.write('B%s' % srow, amount, data_right)
             srow += 1
         summary_sheet.write('A%s' % srow, u'Нийт', data_bold_left)
-        summary_sheet.write_formula('B%s' % srow, '=SUM(B%s:B%s)' % (first_row, srow - 1), data_bold_left)
+        summary_sheet.write_formula('B%s' % srow, '=SUM(B%s:B%s)' % (first_row, srow - 1), data_bold_left,
+                                    sum(account_summary.values()))
 
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
@@ -333,21 +343,28 @@ class SaleOrderNewReport(models.TransientModel):
             'num_format': '#,##0.00'
         })
 
+        is_income = data['target_move'] == 'invoiced'
+        last_col = 'S' if is_income else 'Q'
+
+        # Өргөн хүснэгт тул хэвтээ, өргөнөөрөө 1 хуудсанд, урт нь хэдэн ч хуудас байж болно
         sheet.set_paper(9)
+        sheet.set_landscape()
         sheet.center_horizontally()
-        sheet.fit_to_pages(1, 0.5)
+        sheet.set_margins(left=0.3, right=0.3, top=0.5, bottom=0.5)
+        sheet.fit_to_pages(1, 0)
+        sheet.repeat_rows(3)
         sheet.set_column(0, 7, 15)
         sheet.set_column(8, 8, 40)
         sheet.set_column(9, 17, 15)
 
         rowx = 1
-        sheet.merge_range("A%s:Q%s" % (rowx, rowx), u'Борлуулалтын тайлан дэлгэрэнгүй', title)
+        sheet.merge_range("A%s:%s%s" % (rowx, last_col, rowx), u'Борлуулалтын тайлан дэлгэрэнгүй', title)
         rowx += 1
         sheet.merge_range("A%s:D%s" % (rowx, rowx), u'%s' % (data['company_name']), head)
         sheet.merge_range("O%s:Q%s" % (rowx, rowx), u'Огноо: %s - %s' % (data['start_date'], data['end_date']), head)
         rowx += 2
+        totals = {}
 
-        is_income = data['target_move'] == 'invoiced'
         sheet.write("A%s" % rowx, u'Мөр', title)
         sheet.write('B%s' % rowx, u'Санхүүгийн огноо' if is_income else u'Батлагдсан огноо', title)
         sheet.write("C%s" % rowx, u'Захиалга / Нэхэмжлэх №' if is_income else u'Захиалгын №', title)
@@ -369,9 +386,9 @@ class SaleOrderNewReport(models.TransientModel):
 
         if is_income:
             rowx = self._write_income_lines(workbook, sheet, rowx, data, data_left, data_center, data_right,
-                                            title, data_bold_left)
+                                            title, data_bold_left, totals)
             return self._write_footer(workbook, output, sheet, rowx, response, get_file,
-                                      data_bold_left, data_bold_center)
+                                      data_bold_left, data_bold_center, totals)
 
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").date()
@@ -430,27 +447,21 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("H%s" % rowx, "%s" % line.product_id.brand_id.name, data_left)
             sheet.write("I%s" % rowx, line.product_id.name, data_left)
             sheet.write("J%s" % rowx, line.product_uom.name, data_left)
-            sheet.write("K%s" % rowx, line.product_uom_qty, data_right)
-            sheet.write("L%s" % rowx, delivered_qty, data_right)
-            sheet.write("M%s" % rowx, line.purchase_price, data_right)
-            sheet.write("N%s" % rowx, total_purchase_price, data_right)
-            sheet.write("O%s" % rowx, margin, data_right)
-            sheet.write("P%s" % rowx, line.price_unit, data_right)
-            sheet.write("Q%s" % rowx, price_total, data_right)
+            self._write_amounts(sheet, rowx, [line.product_uom_qty, delivered_qty, line.purchase_price,
+                                              total_purchase_price, margin, line.price_unit, price_total],
+                                data_right, totals)
             num += 1
             rowx += 1
         return self._write_footer(workbook, output, sheet, rowx, response, get_file,
-                                  data_bold_left, data_bold_center)
+                                  data_bold_left, data_bold_center, totals)
 
-    def _write_footer(self, workbook, output, sheet, rowx, response, get_file, data_bold_left, data_bold_center):
+    def _write_footer(self, workbook, output, sheet, rowx, response, get_file, data_bold_left, data_bold_center,
+                      totals):
         sheet.merge_range('A%s:J%s' % (rowx, rowx), u'Нийт дүн:', data_bold_left)
-        sheet.write('K%s' % rowx, '=SUM(K2:K%s)' % (rowx - 1), data_bold_center)
-        sheet.write('L%s' % rowx, '=SUM(L2:L%s)' % (rowx - 1), data_bold_center)
-        sheet.write('M%s' % rowx, '=SUM(M2:M%s)' % (rowx - 1), data_bold_center)
-        sheet.write('N%s' % rowx, '=SUM(N2:N%s)' % (rowx - 1), data_bold_center)
-        sheet.write('O%s' % rowx, '=SUM(O2:O%s)' % (rowx - 1), data_bold_center)
-        sheet.write('P%s' % rowx, '=SUM(P2:P%s)' % (rowx - 1), data_bold_center)
-        sheet.write('Q%s' % rowx, '=SUM(Q2:Q%s)' % (rowx - 1), data_bold_center)
+        # Томъёоны бодсон утгыг хадгална — "Харах" (LibreOffice → PDF) томъёог дахин боддоггүй
+        for col in self.AMOUNT_COLUMNS:
+            sheet.write_formula('%s%s' % (col, rowx), '=SUM(%s2:%s%s)' % (col, col, rowx - 1),
+                                data_bold_center, totals.get(col, 0.0))
 
         rowx += 1
         sheet.write("C%s" % (rowx + 3),
