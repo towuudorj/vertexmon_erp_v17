@@ -257,7 +257,7 @@ class HrPayslip(models.Model):
         rules = self.env['hr.salary.rule'].search([
             ('code', '=', 'ADVP'), ('company_id', 'in', [company.id, False])])
         rule = rules.filtered(lambda r: r.company_id == company)[:1] or rules[:1] \
-            or self.env.ref('l10n_mn_payroll.advp_salary_rule')
+            or self.env.ref('l10n_mn_payroll.adv_salary_rule')
         accounts = rule.sudo().account_debit | rule.sudo().account_credit
         wrong = accounts.filtered(lambda a: a.company_id not in company.parent_ids)
         if wrong:
