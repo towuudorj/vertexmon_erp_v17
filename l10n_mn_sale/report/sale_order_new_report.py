@@ -3,7 +3,7 @@
 import io
 import json
 import xlsxwriter
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import date_utils
 from datetime import datetime
 
@@ -21,10 +21,30 @@ class SaleOrderNewReport(models.TransientModel):
     date_from = fields.Date('Date Start', default=fields.Date.context_today)
     date_to = fields.Date("Date Stop", default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
-    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked')],
+    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked'),
+                                    ('invoiced', 'Орлогын данс (санхүүгийн бичилт)')],
                                    string='States', default='posted', required=True)
     is_license = fields.Boolean(string='License', default=False)
     partner_id = fields.Many2one('res.partner', string='Customer')
+    account_ids = fields.Many2many('account.account', string='Орлогын данс',
+                                   default=lambda self: self._default_account_ids(),
+                                   help='Орлого үр дүнгийн тайлангийн "Борлуулалтын орлого (цэвэр)" мөрийн дансууд.')
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.account_ids = self._default_account_ids(self.company_id)
+
+    def _default_account_ids(self, company=None):
+        account_obj = self.env['account.account']
+        company = company or self.env.company
+        # Орлого үр дүнгийн тайлантай ижил ангиллын дансууд (l10n_mn_account_report суусан үед)
+        if 'income_id' in account_obj._fields:
+            accounts = account_obj.search([('company_id', '=', company.id),
+                                           ('income_id.name', 'ilike', 'Борлуулалтын орлого')])
+            if accounts:
+                return accounts
+        return account_obj.search([('company_id', '=', company.id), ('code', '=like', '51%'),
+                                   ('account_type', 'in', ('income', 'income_other'))])
 
     def get_report_data(self):
         data = super(SaleOrderNewReport, self).get_report_data()
@@ -37,6 +57,7 @@ class SaleOrderNewReport(models.TransientModel):
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
             'partner_id': self.partner_id.id,
+            'account_ids': self.account_ids.ids,
         })
         return data
 
@@ -133,6 +154,128 @@ class SaleOrderNewReport(models.TransientModel):
             amount_total += self._get_picking_amount_total_by_line(picking, sign=sign, currency=currency).get(line, 0.0)
         return amount_total
 
+    def _get_income_account_ids(self, data):
+        """Орлого үр дүнгийн тайлантай яг ижил дансны жагсаалт (дэд дансуудыг оруулна)."""
+        account_ids = data.get('account_ids') or []
+        if account_ids and 'profit.excel.report' in self.env:
+            return self.env['profit.excel.report'].action_account_ids(account_ids)
+        return account_ids
+
+    def _get_income_move_lines(self, data):
+        """Орлого үр дүнгийн тайлантай ижил шүүлт: батлагдсан, нээлт/хаалтын бус журнал, санхүүгийн огноо."""
+        journal_ids = self.env['account.journal'].search([
+            ('company_id', '=', data['company_id']), ('type', 'not in', ('opening', 'closing'))]).ids
+        domain = [
+            ('journal_id', 'in', journal_ids),
+            ('account_id', 'in', self._get_income_account_ids(data)),
+            ('parent_state', '=', 'posted'),
+            ('date', '>=', data['start_date']),
+            ('date', '<=', data['end_date']),
+        ]
+        if data['sales_user_id']:
+            domain.append(('move_id.invoice_user_id', '=', data['sales_user_id']))
+        if data['partner_id']:
+            domain.append(('partner_id', '=', data['partner_id']))
+        return self.env['account.move.line'].search(domain, order='date desc, move_id, id')
+
+    def _get_income_category(self, aml):
+        """Орлогын мөрийн эх үүсвэр — Орлого үр дүнгийн тайлантай зөрүүг задлахад хэрэглэнэ."""
+        move = aml.move_id
+        sale_lines = aml.sale_line_ids
+        if move.move_type == 'entry':
+            return u'Гар бичилт (нэхэмжлэлгүй)'
+        if move.move_type == 'out_refund':
+            return u'Буцаалт / кредит нэхэмжлэл'
+        # Төслийн нэхэмжлэл ихэвчлэн урьдчилгаа/хувиар нэхэмжлэгддэг тул түрүүлж шалгана
+        has_project = 'project_id' in sale_lines._fields and any(sale_lines.mapped('project_id'))
+        if (aml.account_id.code or '').startswith('5103') or has_project:
+            return u'Төслийн орлого'
+        if not sale_lines:
+            return u'Захиалгагүй нэхэмжлэл'
+        if any(sale_lines.mapped('is_downpayment')):
+            return u'Урьдчилгаа нэхэмжлэл'
+        if any(sale_lines.order_id.mapped('is_license')):
+            return u'Лиценз борлуулалт'
+        return u'Хүргэгдсэн бараа'
+
+    def _write_income_lines(self, workbook, sheet, rowx, data, data_left, data_center, data_right,
+                            title, data_bold_left):
+        """Орлогын дансны мөр бүрээр: дүн = кредит - дебит (НӨАТ-гүй, компанийн валютаар)."""
+        sheet.write("R%s" % (rowx - 1), u'Ангилал', title)
+        sheet.write("S%s" % (rowx - 1), u'Данс', title)
+        sheet.set_column(17, 18, 30)
+        summary = {}
+        account_summary = {}
+        num = 1
+        for aml in self._get_income_move_lines(data):
+            category = self._get_income_category(aml)
+            summary[category] = summary.get(category, 0.0) - aml.balance
+            account_name = '%s %s' % (aml.account_id.code, aml.account_id.name)
+            account_summary[account_name] = account_summary.get(account_name, 0.0) - aml.balance
+            sale_line = aml.sale_line_ids[:1]
+            order = sale_line.order_id
+            move = aml.move_id
+            amount = -aml.balance
+            # Буцаалтын нэхэмжлэл тоо, өртгийг хасах тэмдэгтэй болгоно
+            sign = -1.0 if amount < 0 else 1.0
+            qty = sign * abs(aml.quantity)
+            unit_cost = sale_line.purchase_price if sale_line else aml.product_id.standard_price
+            total_cost = unit_cost * qty
+            sheet.write("A%s" % rowx, num, data_center)
+            sheet.write("B%s" % rowx, "%s" % aml.date, data_left)
+            sheet.write("C%s" % rowx, ', '.join(aml.sale_line_ids.order_id.mapped('name')) or move.name, data_left)
+            sheet.write("D%s" % rowx, "%s" % (aml.partner_id.code or ''), data_left)
+            sheet.write("E%s" % rowx, "%s" % (aml.partner_id.name or ''), data_left)
+            sheet.write("F%s" % rowx, "%s" % ((order.user_id or move.invoice_user_id).name or ''), data_left)
+            sheet.write("G%s" % rowx, "%s" % (aml.product_id.default_code or ''), data_left)
+            sheet.write("H%s" % rowx, "%s" % (aml.product_id.brand_id.name or ''), data_left)
+            sheet.write("I%s" % rowx, aml.product_id.name or aml.name or aml.account_id.name, data_left)
+            sheet.write("J%s" % rowx, aml.product_uom_id.name or '', data_left)
+            sheet.write("K%s" % rowx, sale_line.product_uom_qty if sale_line else qty, data_right)
+            sheet.write("L%s" % rowx, qty, data_right)
+            sheet.write("M%s" % rowx, unit_cost, data_right)
+            sheet.write("N%s" % rowx, total_cost, data_right)
+            sheet.write("O%s" % rowx, amount - total_cost, data_right)
+            sheet.write("P%s" % rowx, aml.price_unit, data_right)
+            sheet.write("Q%s" % rowx, amount, data_right)
+            sheet.write("R%s" % rowx, category, data_left)
+            sheet.write("S%s" % rowx, '%s %s' % (aml.account_id.code, aml.account_id.name), data_left)
+            num += 1
+            rowx += 1
+
+        self._write_income_summary_sheet(workbook, summary, account_summary,
+                                         title, data_left, data_right, data_bold_left)
+        return rowx
+
+    def _write_income_summary_sheet(self, workbook, summary, account_summary,
+                                    title, data_left, data_right, data_bold_left):
+        """Ангилал болон данс тус бүрийн нийлбэр тусдаа хуудсанд — Орлого үр дүнгийн тайлантай тулгахад."""
+        summary_sheet = workbook.add_worksheet(u'Ангилал')
+        summary_sheet.set_column(0, 0, 40)
+        summary_sheet.set_column(1, 1, 25)
+        summary_sheet.write('A1', u'Ангилал', title)
+        summary_sheet.write('B1', u'Орлого (НӨАТ-гүй)', title)
+        srow = 2
+        for category, amount in sorted(summary.items(), key=lambda x: -abs(x[1])):
+            summary_sheet.write('A%s' % srow, category, data_left)
+            summary_sheet.write('B%s' % srow, amount, data_right)
+            srow += 1
+        summary_sheet.write('A%s' % srow, u'Нийт (Борлуулалтын орлого (цэвэр))', data_bold_left)
+        summary_sheet.write_formula('B%s' % srow, '=SUM(B2:B%s)' % (srow - 1), data_bold_left)
+
+        # Данс тус бүрээр — Орлого үр дүнгийн тайлантай тулгахад
+        srow += 2
+        first_row = srow + 1
+        summary_sheet.write('A%s' % srow, u'Данс', title)
+        summary_sheet.write('B%s' % srow, u'Орлого (НӨАТ-гүй)', title)
+        srow += 1
+        for account_name, amount in sorted(account_summary.items()):
+            summary_sheet.write('A%s' % srow, account_name, data_left)
+            summary_sheet.write('B%s' % srow, amount, data_right)
+            srow += 1
+        summary_sheet.write('A%s' % srow, u'Нийт', data_bold_left)
+        summary_sheet.write_formula('B%s' % srow, '=SUM(B%s:B%s)' % (first_row, srow - 1), data_bold_left)
+
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -203,9 +346,10 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.merge_range("O%s:Q%s" % (rowx, rowx), u'Огноо: %s - %s' % (data['start_date'], data['end_date']), head)
         rowx += 2
 
+        is_income = data['target_move'] == 'invoiced'
         sheet.write("A%s" % rowx, u'Мөр', title)
-        sheet.write('B%s' % rowx, u'Батлагдсан огноо', title)
-        sheet.write("C%s" % rowx, u'Захиалгын №', title)
+        sheet.write('B%s' % rowx, u'Санхүүгийн огноо' if is_income else u'Батлагдсан огноо', title)
+        sheet.write("C%s" % rowx, u'Захиалга / Нэхэмжлэх №' if is_income else u'Захиалгын №', title)
         sheet.write("D%s" % rowx, u'Харилцагчийн №', title)
         sheet.write("E%s" % rowx, u'Харилцагч', title)
         sheet.write("F%s" % rowx, u'Хэрэглэгч', title)
@@ -214,13 +358,19 @@ class SaleOrderNewReport(models.TransientModel):
         sheet.write("I%s" % rowx, u'Барааны нэр', title)
         sheet.write("J%s" % rowx, u'Нэгж', title)
         sheet.write("K%s" % rowx, u'Захиалгын тоо', title)
-        sheet.write("L%s" % rowx, u'Хүргэсэн тоо', title)
+        sheet.write("L%s" % rowx, u'Нэхэмжилсэн тоо' if is_income else u'Хүргэсэн тоо', title)
         sheet.write("M%s" % rowx, u'Нэгжийн өртөг', title)
         sheet.write("N%s" % rowx, u'Нийт өртөг', title)
         sheet.write("O%s" % rowx, u'Ашиг', title)
         sheet.write("P%s" % rowx, u'Нэгжийн үнэ', title)
-        sheet.write("Q%s" % rowx, u'Нийт үнэ', title)
+        sheet.write("Q%s" % rowx, u'Борлуулалтын орлого (НӨАТ-гүй)' if is_income else u'Нийт үнэ', title)
         rowx += 1
+
+        if is_income:
+            rowx = self._write_income_lines(workbook, sheet, rowx, data, data_left, data_center, data_right,
+                                            title, data_bold_left)
+            return self._write_footer(workbook, output, sheet, rowx, response, get_file,
+                                      data_bold_left, data_bold_center)
 
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").date()
@@ -288,6 +438,10 @@ class SaleOrderNewReport(models.TransientModel):
             sheet.write("Q%s" % rowx, price_total, data_right)
             num += 1
             rowx += 1
+        return self._write_footer(workbook, output, sheet, rowx, response, get_file,
+                                  data_bold_left, data_bold_center)
+
+    def _write_footer(self, workbook, output, sheet, rowx, response, get_file, data_bold_left, data_bold_center):
         sheet.merge_range('A%s:J%s' % (rowx, rowx), u'Нийт дүн:', data_bold_left)
         sheet.write('K%s' % rowx, '=SUM(K2:K%s)' % (rowx - 1), data_bold_center)
         sheet.write('L%s' % rowx, '=SUM(L2:L%s)' % (rowx - 1), data_bold_center)

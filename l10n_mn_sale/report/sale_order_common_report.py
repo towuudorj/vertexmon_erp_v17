@@ -3,7 +3,7 @@
 import io
 import json
 import xlsxwriter
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import date_utils
 from datetime import datetime
 
@@ -20,9 +20,17 @@ class SaleOrderCommonReport(models.TransientModel):
     date_from=fields.Date('Date Start',default=fields.Date.context_today)
     date_to=fields.Date("Date Stop",default=fields.Date.context_today)
     sales_user_id = fields.Many2one('res.users', string='Salesperson')
-    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked')],
+    target_move = fields.Selection([('posted', 'Posted'), ('all', 'All'), ('picked', 'Picked'),
+                                    ('invoiced', 'Орлогын данс (санхүүгийн бичилт)')],
                                     required=True, string='States', default='posted')
     is_license = fields.Boolean(string='License', default=False)
+    account_ids = fields.Many2many('account.account', string='Орлогын данс',
+                                   default=lambda self: self.env['sale.order.new.report']._default_account_ids(),
+                                   help='Орлого үр дүнгийн тайлангийн "Борлуулалтын орлого (цэвэр)" мөрийн дансууд.')
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.account_ids = self.env['sale.order.new.report']._default_account_ids(self.company_id)
 
     def get_report_data(self):
         data = super(SaleOrderCommonReport, self).get_report_data()
@@ -34,6 +42,8 @@ class SaleOrderCommonReport(models.TransientModel):
             'target_move': self.target_move,
             'sales_user_id': self.sales_user_id.id,
             'is_license': self.is_license,
+            'partner_id': False,
+            'account_ids': self.account_ids.ids,
         })
         return data
     
@@ -81,6 +91,68 @@ class SaleOrderCommonReport(models.TransientModel):
             tax_base_line['quantity'] = sign * delivered_qty
             tax_base_lines.append(tax_base_line)
         return tax_base_lines
+
+    def _write_income_report(self, workbook, sheet, data, head, title, data_left, data_right,
+                             data_center, data_bold_center):
+        """Орлого үр дүнгийн тайлантай таарах хураангуй: нэхэмжлэл/бичилт × ангилал бүрээр нэг мөр.
+        Мөр сонгох, ангилах логикийг Борлуулалтын тайлан дэлгэрэнгүйгээс авна."""
+        detail_report = self.env['sale.order.new.report']
+        headers = [u'Мөр', u'Санхүүгийн огноо', u'Нэхэмжлэх №', u'Захиалгын №', u'Харилцагчийн №',
+                   u'Харилцагч', u'Хэрэглэгч', u'Ангилал', u'Нийт үнэ (НӨАТ-гүй)', u'НӨАТ',
+                   u'Нийт үнэ (НӨАТ-тай)']
+        last_col = len(headers) - 1
+        sheet.set_column(7, 7, 28)
+        sheet.merge_range(0, 0, 0, last_col, u'Борлуулалтын тайлан хураангуй', title)
+        sheet.merge_range(1, 0, 1, 2, u'%s' % data['company_name'], head)
+        sheet.merge_range(1, last_col - 1, 1, last_col,
+                          u'Огноо: %s - %s' % (data['start_date'], data['end_date']), head)
+        for col, header in enumerate(headers):
+            sheet.write(3, col, header, title)
+
+        # (бичилт, ангилал) -> НӨАТ-гүй дүн
+        rows = {}
+        summary = {}
+        account_summary = {}
+        for aml in detail_report._get_income_move_lines(data):
+            category = detail_report._get_income_category(aml)
+            amount = -aml.balance
+            key = (aml.move_id, category)
+            rows[key] = rows.get(key, 0.0) + amount
+            summary[category] = summary.get(category, 0.0) + amount
+            account_name = '%s %s' % (aml.account_id.code, aml.account_id.name)
+            account_summary[account_name] = account_summary.get(account_name, 0.0) + amount
+
+        rowx = 4
+        num = 1
+        totals = [0.0, 0.0, 0.0]
+        for (move, category), amount in sorted(rows.items(), key=lambda x: (x[0][0].date, x[0][0].name)):
+            currency = move.company_id.currency_id
+            # Нэхэмжлэлийн НӨАТ-ыг НӨАТ-гүй дүнд эзлэх хувиар хуваарилна (буцаалтад хоёулаа хасах тэмдэгтэй).
+            # Гар бичилтэд НӨАТ-гүй дүн 0 тул НӨАТ 0.
+            untaxed = move.amount_untaxed_signed
+            tax = currency.round(move.amount_tax_signed * amount / untaxed) if untaxed else 0.0
+            orders = move.line_ids.sale_line_ids.order_id
+            user = orders[:1].user_id or move.invoice_user_id
+            values = [num, '%s' % move.date, move.name, ', '.join(orders.mapped('name')),
+                      move.partner_id.code or '', move.partner_id.name or '', user.name or '', category,
+                      amount, tax, amount + tax]
+            for col, value in enumerate(values):
+                fmt = data_center if col == 0 else data_right if col >= 8 else data_left
+                sheet.write(rowx, col, value, fmt)
+            totals[0] += amount
+            totals[1] += tax
+            totals[2] += amount + tax
+            num += 1
+            rowx += 1
+
+        sheet.merge_range(rowx, 0, rowx, 7, u'Нийт дүн:', data_bold_center)
+        for col, total in enumerate(totals, start=8):
+            sheet.write(rowx, col, total, data_bold_center)
+        sheet.write(rowx + 3, 2, u"Хянасан ажилтан: ..................................................../                                            /")
+        sheet.write(rowx + 4, 2, u"Тайлан гаргасан: ..................................................../                                            /")
+
+        detail_report._write_income_summary_sheet(workbook, summary, account_summary,
+                                                  title, data_left, data_right, data_bold_center)
 
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
@@ -138,6 +210,17 @@ class SaleOrderCommonReport(models.TransientModel):
         sheet.fit_to_pages(1, 0.5)
         sheet.set_column(0, 0, 5)
         sheet.set_column(1, 9, 18)
+
+        if data['target_move'] == 'invoiced':
+            self._write_income_report(workbook, sheet, data, head, title, data_left, data_right,
+                                      data_center, data_bold_center)
+            workbook.close()
+            output.seek(0)
+            if get_file:
+                return output.read()
+            response.stream.write(output.read())
+            output.close()
+            return
 
         is_picked = data['target_move'] == 'picked'
 

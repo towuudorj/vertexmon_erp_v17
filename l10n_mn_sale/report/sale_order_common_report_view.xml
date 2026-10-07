@@ -13,7 +13,12 @@
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="sales_user_id"/>
-                        <field name="is_license"/>
+                        <!-- Орлого үр дүнтэй тулгахад лиценз, лицензийн бус бүх орлого орно -->
+                        <field name="is_license" invisible="target_move == 'invoiced'"/>
+                        <field name="account_ids" widget="many2many_tags"
+                               invisible="target_move != 'invoiced'"
+                               required="target_move == 'invoiced'"
+                               domain="[('company_id', '=', company_id)]"/>
                     </group>
                     <footer>
                         <button name="action_print_xls_report" string="Export" type="object" class="oe_highlight" />
