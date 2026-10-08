@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Үе шатгүй төсөлд даалгавар үүсгэхэд автоматаар холбогдох анхдагч үе шат -->
+    <record id="task_type_requisition" model="project.task.type">
+        <field name="name">Шаардах</field>
+        <field name="sequence">0</field>
+    </record>
+
+</odoo>

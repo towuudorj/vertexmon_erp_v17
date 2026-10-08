@@ -250,6 +250,13 @@
                 </button>
                 <button
                     class="oe_stat_button"
+                    name="action_view_products_line"
+                    type="object"
+                    icon="fa-cubes">
+                    <field string="Үлдэгдэлтэй бараа" name="remaining_product_count" widget="statinfo" />
+                </button>
+                <button
+                    class="oe_stat_button"
                     name="action_view_invoice"
                     type="object"
                     icon="fa-dollar">
@@ -264,6 +271,49 @@
     </record>
     <record id="project.open_view_project_all_group_stage_tree_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
+    </record>
+
+    <!-- Төслийн бүтээгдэхүүнийг шүүлтүүртэйгээр харах (төслийн "Үлдэгдэлтэй бараа" товчоос) -->
+    <record id="project_products_line_remaining_tree" model="ir.ui.view">
+        <field name="name">project.products.line.remaining.tree</field>
+        <field name="model">project.products.line</field>
+        <field name="arch" type="xml">
+            <tree string="Төслийн бүтээгдэхүүн" create="0" edit="0" delete="0"
+                  decoration-success="last_qty == 0" decoration-danger="last_qty &lt; 0">
+                <field name="sequence" column_invisible="1"/>
+                <field name="product_id"/>
+                <field name="name" optional="hide"/>
+                <field name="product_uom"/>
+                <field name="product_qty" string="Тоо хэмжээ" sum="Нийт"/>
+                <field name="purchase_type" optional="show"/>
+                <field name="purchase_manager_id" optional="show"/>
+                <field name="qty_available" string="Нөөцөнд байгаа тоо"/>
+                <field name="qty_delivered" string="Зарлага хийгдсэн тоо"/>
+                <field name="last_qty" string="Үлдэгдэл тоо"/>
+                <field name="cost_price" optional="show"/>
+                <field name="cost_total" sum="Нийт" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_products_line_remaining_search" model="ir.ui.view">
+        <field name="name">project.products.line.remaining.search</field>
+        <field name="model">project.products.line</field>
+        <field name="arch" type="xml">
+            <search string="Төслийн бүтээгдэхүүн">
+                <field name="product_id"/>
+                <field name="purchase_manager_id"/>
+                <filter name="has_remaining" string="Үлдэгдэлтэй" domain="[('last_qty', '!=', 0)]"/>
+                <filter name="fully_delivered" string="Бүрэн зарлагадсан" domain="[('last_qty', '=', 0)]"/>
+                <separator/>
+                <filter name="local" string="Дотоод" domain="[('purchase_type', '=', 'local')]"/>
+                <filter name="foreign" string="Гадаад" domain="[('purchase_type', '=', 'foreign')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_purchase_type" string="Худалдан авалтын төрөл" context="{'group_by': 'purchase_type'}"/>
+                    <filter name="group_purchase_manager" string="Худалдан авалтын менежер" context="{'group_by': 'purchase_manager_id'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
 </odoo>

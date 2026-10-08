@@ -23,6 +23,7 @@
     """,
     "depends" : [
                  'project',
+                 'sale_project',  # invoice_count-ийн эрхийг дарж бичихийн тулд түүний дараа ачаалагдана
                  'base',
                  'stock',
                  'purchase_requisition',
@@ -37,6 +38,7 @@
             'security/security_view.xml',
             'data/ir_sequence_data.xml',
             'data/rule.xml',
+            'data/project_task_type_data.xml',
             'wizard/foreign_purchase_request_wizard.xml',
             'wizard/local_purchase_request_wizard.xml',
             'wizard/make_package_task_wizard.xml',

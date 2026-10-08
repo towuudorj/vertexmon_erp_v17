@@ -84,6 +84,23 @@ class ProjectTask(models.Model):
         self.write({'state': '03_approved'})
         return True
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Үе шатгүй төсөлд даалгавар "Байхгүй" (stage хоосон) болдог тул анхдагч "Шаардах" үе шатыг холбоно
+        default_project_id = self.env.context.get('default_project_id')
+        project_ids = {vals.get('project_id') or default_project_id for vals in vals_list} - {False, None}
+        projects_without_stage = self.env['project.project'].browse(project_ids).exists().filtered(
+            lambda project: not project.type_ids)
+        if projects_without_stage:
+            stage = self.env.ref('l10n_mn_project.task_type_requisition', raise_if_not_found=False)
+            if stage:
+                projects_without_stage.sudo().write({'type_ids': [(4, stage.id)]})
+        tasks = super(ProjectTask, self).create(vals_list)
+        # Канбаны "Байхгүй" баганаас stage_id=False ирдэг тул үе шатгүй үлдсэнийг төслийн эхний үе шатад оруулна
+        for task in tasks.filtered(lambda t: not t.stage_id and t.project_id):
+            task.stage_id = task.stage_find(task.project_id.id, [('fold', '=', False)])
+        return tasks
+
     def create_picking(self):
         picking = False
         out_picking = False

@@ -7,6 +7,7 @@ import json
 from odoo import api, fields, models, _
 import datetime
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
+from odoo.tools import float_compare
 
 
 class ProjectProject(models.Model):
@@ -95,6 +96,7 @@ class ProjectProject(models.Model):
     crm_ids = fields.Many2many('crm.lead', string='Crm ids')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
     picking_count = fields.Integer(string='Picking count', compute="action_picking_count")
+    remaining_product_count = fields.Integer(string='Үлдэгдэлтэй бараа', compute='_compute_remaining_product_count')
     state = fields.Selection([('planned','Planned'),
                               ('confirm','Confirm'),
                               ('process','Process'),
@@ -110,7 +112,9 @@ class ProjectProject(models.Model):
     project_total_profit = fields.Monetary(string='Project Total Profit', compute='_compute_cost_profit')
     account_analytic_line_ids = fields.Many2many('account.analytic.line', string='Account analytic', compute='_compute_analytic_line_ids')
     bbo_account_id = fields.Many2one('account.account', string=u'Данс')
-    invoice_count = fields.Integer(compute='_compute_invoice_count')
+    # sale_project энэ талбарыг account.group_account_readonly-оор хязгаарладаг тул төслийн менежер зэрэг
+    # нэхэмжлэл унших эрхтэй ч санхүүгийн эрхгүй хэрэглэгчид "Нэхэмжлэхүүд" товч хоосон харагддаг байсан
+    invoice_count = fields.Integer(compute='_compute_invoice_count', groups='base.group_user')
     tax_id = fields.Many2one(comodel_name='account.tax', ondelete='cascade', check_company=True)
 
     def write(self, vals):
@@ -505,6 +509,26 @@ class ProjectProject(models.Model):
 
         return action
     
+    def _compute_remaining_product_count(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for project in self:
+            project.remaining_product_count = len(project.products_line.filtered(
+                lambda line: float_compare(line.last_qty, 0.0, precision_digits=precision) != 0))
+
+    def action_view_products_line(self):
+        """Төслийн бүтээгдэхүүнийг тусдаа жагсаалтаар — анхдагчаар үлдэгдэл нь 0 болоогүй бараа."""
+        self.ensure_one()
+        return {
+            'name': _('%s — Бүтээгдэхүүн', self.name),
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.products.line',
+            'view_mode': 'tree',
+            'views': [(self.env.ref('l10n_mn_project.project_products_line_remaining_tree').id, 'tree')],
+            'search_view_id': self.env.ref('l10n_mn_project.project_products_line_remaining_search').id,
+            'domain': [('project_id', '=', self.id)],
+            'context': {'search_project_id': self.id, 'search_default_has_remaining': 1},
+        }
+
     def action_view_crm_lead(self, purchases=False):
         if not purchases:
             purchases = self.mapped('crm_ids')

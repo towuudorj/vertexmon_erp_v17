@@ -3,7 +3,7 @@
 from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, float_compare
 
 
 
@@ -87,7 +87,7 @@ class ProjectProductsLine(models.Model):
     is_task = fields.Boolean(string='Task', default=False)
     is_purchase = fields.Boolean(string='Purchase', default=False)
     purchase_manager_id = fields.Many2one('res.users', string='Purchase Manager')
-    last_qty = fields.Float(string='Last qty', compute="_action_compute_qty")
+    last_qty = fields.Float(string='Last qty', compute="_action_compute_qty", search='_search_last_qty')
     pur_qty = fields.Float(string='Purchase qty')
     picking_ids = fields.Many2many('stock.picking', string='Picking')
     change_cost = fields.Float(string='Change cost', compute="action_change_cost")
@@ -178,6 +178,24 @@ class ProjectProductsLine(models.Model):
     def _action_compute_qty(self):
         for line in self:
             line.last_qty = line.product_qty - line.qty_delivered
+
+    def _search_last_qty(self, operator, value):
+        """Үлдэгдэл тоо хадгалагддаггүй (зарлагаас тооцоолно) тул мөр бүрээр тооцоолж шүүнэ.
+        Төслөөс нээхэд (search_project_id) зөвхөн тухайн төслийн мөрийг тооцно."""
+        # float_compare(last_qty, value)-ийн үр дүнг (-1/0/1) оператороор шалгана
+        compare = {
+            '=': lambda res: res == 0, '!=': lambda res: res != 0,
+            '>': lambda res: res > 0, '>=': lambda res: res >= 0,
+            '<': lambda res: res < 0, '<=': lambda res: res <= 0,
+        }.get(operator)
+        if compare is None:
+            raise UserError(_('Үлдэгдэл тоогоор "%s" нөхцлөөр шүүх боломжгүй.', operator))
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        project_id = self.env.context.get('search_project_id')
+        lines = self.search([('project_id', '=', project_id)] if project_id else [])
+        matched = lines.filtered(lambda line: compare(float_compare(line.last_qty, value or 0.0,
+                                                                    precision_digits=precision)))
+        return [('id', 'in', matched.ids)]
             
     @api.onchange('cost_price')
     def onchange_cost_price(self):
