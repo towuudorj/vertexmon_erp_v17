@@ -139,7 +139,9 @@
             	<field name="journal_id" string="Журнал" required="state == 'process'"/>
             	<field name="bbo_account_id" string="Данс" required="state == 'process'"/>
             	<field name="close_date" string="Хаасан огноо"/>
-            	<field name="close_move_id" readonly="1"/>
+            	<!-- Хаалтын бичилт нь журналын бичилт (entry); төслийн менежер зэрэг зөвхөн нэхэмжлэл унших
+            	     эрхтэй хэрэглэгчид харагдвал төсөл нээгдэхгүй (AccessError) -->
+            	<field name="close_move_id" readonly="1" groups="account.group_account_readonly"/>
             	<field name="invoice_id" readonly="1"/>
                 <field name="contract_number" readonly="state in ('confirm','done')" />
                 <field name="contract_amount" widget="monetary" readonly="state in ('confirm','done')"/>

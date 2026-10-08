@@ -805,13 +805,16 @@ class ProjectProject(models.Model):
         }
 
     def _compute_cost_profit(self):
+        # Зөвхөн нийт дүн харуулдаг тул sudo: журналын бичилт унших эрхгүй төслийн менежер төслөө нээж чадахгүй байсан
         for obj in self:
-            if obj.state == 'done' and obj.close_move_id:
-                obj.project_total_cost = sum(obj.close_move_id.line_ids.mapped('debit'))
-                obj.project_total_profit = obj.contract_amount - sum(obj.close_move_id.line_ids.mapped('debit'))
+            sudo_obj = obj.sudo()
+            if obj.state == 'done' and sudo_obj.close_move_id:
+                total_cost = sum(sudo_obj.close_move_id.line_ids.mapped('debit'))
+                obj.project_total_cost = total_cost
+                obj.project_total_profit = obj.contract_amount - total_cost
             else:
-                project_analytic_line_ids = self.env['account.analytic.line'].search([('account_id', '=', obj.analytic_account_id.id)])
-                project_aml_ids = self.env['account.move.line'].browse(project_analytic_line_ids.mapped('move_line_id').ids)
+                project_analytic_line_ids = self.env['account.analytic.line'].sudo().search([('account_id', '=', obj.analytic_account_id.id)])
+                project_aml_ids = project_analytic_line_ids.mapped('move_line_id')
                 total_cost = sum(project_aml_ids.mapped('credit'))
                 obj.project_total_cost = total_cost
                 obj.project_total_profit = obj.contract_amount - total_cost
