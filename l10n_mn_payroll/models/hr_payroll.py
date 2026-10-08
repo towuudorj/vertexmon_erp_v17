@@ -196,7 +196,6 @@ class HrPayslip(models.Model):
             elif slip.state == 'draft':
                 # Батлагдсан хуудасны дүнг гэрээ өөрчлөгдсөн ч хөндөхгүй
                 # Ажиллах ёстой цаг 0 бол цагаар хуваахгүй, бүтэн цалингаас бодно
-                # print(slp.contract_id.contract_type_id and slp.contract_id.contract_type_id.code == 'Part-Time', '\n\n\n')
                 if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
                     slip.prepayment_amount = slip.company_id.currency_id.round(
                         slip.contract_id.wage * slip.advance_worked_hours)
