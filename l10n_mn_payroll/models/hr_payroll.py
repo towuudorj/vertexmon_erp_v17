@@ -198,7 +198,7 @@ class HrPayslip(models.Model):
                 # Ажиллах ёстой цаг 0 бол цагаар хуваахгүй, бүтэн цалингаас бодно
                 if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
                     slip.prepayment_amount = slip.company_id.currency_id.round(
-                        slip.contract_id.wage * slip.advance_worked_hours)
+                        slip.contract_id.wage * slip.advance_must_hours * 0.4)
                 else:
                     ratio = (slip.advance_worked_hours / slip.advance_must_hours
                              if slip.advance_must_hours else 1.0)
