@@ -332,8 +332,21 @@
             <field name="amount_python_compute">result = inputs.ADV and inputs.ADV.amount</field>
             <field name="active">True</field>
         </record>
-        
-        
+
+        <!-- Урьдчилгаа цалингийн хуудсанд дангаар үүсдэг мөр. Цалингийн бүтцэд нэмэхгүй.
+             Дт/Кт дансыг энэ дүрэм дээр тохируулж урьдчилгаа олгох бичилт үүснэ. -->
+        <record id="advp_salary_rule" model="hr.salary.rule">
+            <field name="name">Урьдчилгаа цалин олгох</field>
+            <field name="sequence">151</field>
+            <field name="code">ADVP</field>
+            <field name="category_id" ref="adv_salary_salary_category"/>
+            <field name="appears_on_payslip">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">0</field>
+            <!-- Данс компани бүрээр өөр тул UI дээр тохируулна: Дт 70010001 Цалингийн зардал / Кт 33010001 Цалингийн өглөг -->
+            <field name="active">True</field>
+        </record>
 
         
         <record id="give_salary_rule" model="hr.salary.rule">
