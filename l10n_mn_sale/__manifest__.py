@@ -39,6 +39,7 @@
                 'data/mail_template_data.xml',
                 'data/cron_data.xml',
                 'security/security_view.xml',
+                'security/stock_picking_sale_rule.xml',
                 'report/mn_crm_invoice_not_signature.xml',
                 'report/mn_crm_invoice_signature.xml',
                 'report/mn_crm_invoice_percentage_signature.xml',

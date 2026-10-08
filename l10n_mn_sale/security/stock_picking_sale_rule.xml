@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Борлуулалтын захиалга харагдаж байгаа бол түүний агуулахын баримт (хүргэлт, буцаалт) ч харагдана.
+        Дүрмүүд нь борлуулалтын захиалгын дүрмүүдийг sale_id-аар давтана — захиалгын дүрэм өөрчлөгдвөл энд ч тааруулна:
+          * sale.sale_order_personal_rule (Борлуулагч)
+          * "All Sale order" (Бүх сэжим; UI-аар үүсгэсэн дүрэм)
+        Зөвхөн унших эрх нэмнэ. Odoo ижил загварын бүлгийн дүрмүүдийг "эсвэл"-ээр нэгтгэдэг тул
+        одоо байгаа "Stock picking" дүрмийг өөрчлөхгүйгээр өргөтгөнө.
+    -->
+    <record id="stock_picking_rule_sale_salesman" model="ir.rule">
+        <field name="name">Stock picking: харагдах борлуулалтын захиалгынх (Борлуулагч)</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain_force">[
+            ('sale_id', '!=', False),
+            '|', '|',
+                ('sale_id.user_id', '=', user.id),
+                ('sale_id.user_id', '=', False),
+                ('sale_id.together_sales_id', '=', user.id),
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="stock_picking_rule_sale_all_leads" model="ir.rule">
+        <field name="name">Stock picking: харагдах борлуулалтын захиалгынх (Бүх сэжим)</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field name="domain_force">[
+            ('sale_id', '!=', False),
+            '|', '|', '|', '|', '|', '|', '|',
+                ('sale_id.user_id.employee_id.parent_id', '=', user.employee_id.id),
+                ('sale_id.user_id.employee_id.coach_id', '=', user.employee_id.id),
+                ('sale_id.together_sales_id.employee_id.parent_id', '=', user.employee_id.id),
+                ('sale_id.together_sales_id.employee_id.coach_id', '=', user.employee_id.id),
+                ('sale_id.user_id.employee_id.department_id', '=', user.employee_id.department_id.id),
+                ('sale_id.together_sales_id.employee_id.department_id', '=', user.employee_id.department_id.id),
+                ('sale_id.user_id.employee_id', '=', False),
+                ('sale_id.together_sales_id.employee_id', '=', False),
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

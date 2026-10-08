@@ -392,6 +392,15 @@ class SaleOrder(models.Model):
             sale.related_purchase_order_ids = purchase_orders
             sale.related_purchase_order_count = len(purchase_orders)
 
+    def action_view_delivery(self):
+        # Хүргэлт харагдахгүй үед (эрхийн дүрэм, устгагдсан г.м.) picking_ids хоосон ирж
+        # Odoo-гийн _get_action_view_picking pickings[0] дээр IndexError өгдөг
+        if not self.picking_ids:
+            raise UserError(_('Энэ захиалгад танд харагдах хүргэлт алга. Хүргэлт устгагдсан, '
+                              'эсвэл танд харах эрх байхгүй байж болно (хүргэлт нь захиалгын борлуулагч, '
+                              'хүргэлтийг үүсгэсэн болон хариуцсан хэрэглэгчид харагдана).'))
+        return super(SaleOrder, self).action_view_delivery()
+
     def action_view_related_purchase_orders(self):
         self.ensure_one()
         purchases = self.related_purchase_order_ids
