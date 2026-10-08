@@ -242,7 +242,7 @@ class CrmLead(models.Model):
     untax_amount = fields.Float(string='Untax amount', compute='_compute_amount_total')
     tax_amount = fields.Float(string='Tax amount', compute='_compute_amount_total')
     crm_type = fields.Selection([('crm', u'Борлуулалт'),
-                                 ('stock',u'Нөөцөнд авах')], string='CRM type', default='crm')
+                                 ('stock',u'Нөөцөнд авах')], string='CRM type', default='crm', required=True)
     is_purchase = fields.Boolean(string='Is purchase', default=False, tracking=True)
     cancel_reason = fields.Text(string='Cancel reason')
     break_reason = fields.Text(string='Break reason')
