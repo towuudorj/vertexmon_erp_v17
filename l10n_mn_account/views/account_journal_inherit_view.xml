@@ -8,6 +8,7 @@
                 <field name="inherit_id" ref="account.view_account_journal_form"/>
                 <field name="arch" type="xml">
                     <xpath expr='//sheet/group/group/field[@name="type"]' position="after">
+                        <field name="show_on_dashboard"/>
                         <field name="is_po_return"/>
                         <field name="is_so_return"/>
                         <field name="default_debit_account_id" invisible="type not in ('opening', 'closing')"/>
