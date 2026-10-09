@@ -249,4 +249,4 @@ class AccountBankStatementLine(models.Model):
                     ).mapped('balance')
                 )
             else:
-                rec.company_a,mount = 0.0
+                rec.company_amount = 0.0
