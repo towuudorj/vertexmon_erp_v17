@@ -333,26 +333,34 @@ class HrPayslip(models.Model):
                 'company_id': self.employee_id.company_id.id
             })
             line_vals = hr_hour_record.hour_record(employee_id=employee_id)
+            work_day = 0
+            work_hour = 0
+            worked_day = 0
+            worked_hour = 0
             if 'due_day' in line_vals.keys() and 'work_day' in line_vals.keys():
-                must_work = {
-                    'name': _("Must work"),
-                    'sequence': 1,
-                    'code': 'MUST_WORK',
-                    'number_of_days': line_vals['due_day'],
-                    'number_of_hours': round(line_vals['due_time'], 2),
-                    'contract_id': contracts.id
-                }
-                worked = {
-                    'name': _("Worked"),
-                    'sequence': 1,
-                    'code': 'WORK100',
-                    'number_of_days': line_vals['work_day'],
-                    'number_of_hours': round(line_vals['work_time'] + line_vals['free_time1'], 2),
-                    'contract_id': contracts.id
-                }
+                work_day = line_vals['due_day']
+                work_hour = round(line_vals['due_time'], 2)
+                worked_day = line_vals['work_day']
+                worked_hour = round(line_vals['work_time'] + line_vals['free_time1'], 2)
+            must_work = {
+                'name': _("Must work"),
+                'sequence': 1,
+                'code': 'MUST_WORK',
+                'number_of_days': work_day,
+                'number_of_hours': work_hour,
+                'contract_id': contracts.id
+            }
+            worked = {
+                'name': _("Worked"),
+                'sequence': 1,
+                'code': 'WORK100',
+                'number_of_days': worked_day,
+                'number_of_hours': worked_hour,
+                'contract_id': contracts.id
+            }
 
-                res.append(must_work)
-                res.append(worked)
+            res.append(must_work)
+            res.append(worked)
         return res
 
     @api.model
