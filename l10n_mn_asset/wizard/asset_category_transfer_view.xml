@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_asset_category_transfer_form" model="ir.ui.view">
+            <field name="name">account.asset.category.transfer.form</field>
+            <field name="model">account.asset.category.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Ангилал шилжүүлэх">
+                    <group>
+                        <field name="asset_id"/>
+                        <field name="old_category_id"/>
+                        <field name="category_id" options="{'no_create': True}"/>
+                        <field name="transfer_date"/>
+                        <field name="depreciation_months"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <footer>
+                        <button string="Шилжүүлэх" name="action_transfer" type="object" class="btn-primary"
+                                confirm="Хуучин хөрөнгө хаагдаж, үлдэгдэл өртгөөр шинэ хөрөнгө үүснэ. Үргэлжлүүлэх үү?"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_asset_category_transfer" model="ir.actions.act_window">
+            <field name="name">Ангилал шилжүүлэх</field>
+            <field name="res_model">account.asset.category.transfer</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="om_account_asset.model_account_asset_asset"/>
+            <field name="binding_view_types">form</field>
+        </record>
+    </data>
+</odoo>

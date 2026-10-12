@@ -81,8 +81,10 @@ class AccountAssetCategory(models.Model):
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
-    
-    def _write_amount(self):        
+
+    value_residual = fields.Monetary(compute='_amount_residual', string='Residual Value', store=True)
+
+    def _write_amount(self):
         for record in self:
             self._cr.execute('select sum(amount) from account_asset_asset_capitalization where asset_id = '+str(record.id))
             sum_caps = self._cr.fetchone()

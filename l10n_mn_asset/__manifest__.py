@@ -44,6 +44,7 @@
             'wizard/account_asset_detail_report_view.xml',
             'wizard/stock_to_asset_wizard_view.xml',
             'wizard/asset_sale_view.xml',
+            'wizard/asset_category_transfer_view.xml',
             'views/mn_asset_inherit.xml',
             'views/account_asset_category_view.xml',
             'views/asset_location_view.xml',

@@ -280,14 +280,19 @@ class AccountAssetDetailReport(models.TransientModel):
 
             qry = f"""
                         select
-                        	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub1.*
+                        	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub.name, sub1.*
                         FROM (
                         	select 
-            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as acc_dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date < '{data['start_date']}' AND aadl.move_check = True
+            	                              AND aadl.is_sale_line IS NOT TRUE AND aadl.is_scrap_line IS NOT TRUE
+            	                              AND (disp.dep_date IS NULL OR disp.dep_date > '{data['end_date']}') THEN aadl.amount ELSE 0 END) as acc_dep_balance,
             	                COALESCE(SUM(CASE WHEN aaa.method_end BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state = 'close' and aadl.is_sale_line = True
             	                                       THEN aadl.amount ELSE 0 END), 0) as expense_dep,
             	                SUM(CASE WHEN aadl.sequence = 2 THEN aadl.amount ELSE 0 END) as month_dep,
-            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state not in ('close', 'scrap') THEN aadl.amount ELSE 0 END) as dep_balance,
+            	                SUM(CASE WHEN aadl.depreciation_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aadl.move_check = True
+            	                              AND aadl.is_sale_line IS NOT TRUE AND aadl.is_scrap_line IS NOT TRUE
+            	                              AND (disp.dep_date IS NULL OR disp.dep_date > '{data['end_date']}') THEN aadl.amount ELSE 0 END) as dep_balance,
+            	                aaa.id as asset_id,
             	                aaa.name,
             	                aac.id as category_id,
             	                al.id as location_id,
@@ -295,15 +300,21 @@ class AccountAssetDetailReport(models.TransientModel):
             	                al.name as location
             	            from account_asset_asset aaa
                             LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
+                            LEFT JOIN (
+                                select asset_id, max(depreciation_date) as dep_date
+                                from account_asset_depreciation_line
+                                where is_scrap_line = True or is_sale_line = True
+                                group by asset_id
+                            ) as disp on disp.asset_id = aaa.id
             	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
             	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
             	            {where}
-            	            GROUP BY aaa.name, aac.id, al.id
+            	            GROUP BY aaa.id, aaa.name, aac.id, al.id
                         ) as sub
                         left join (
-                        	select aaa.name,
-            	            	COALESCE(SUM(CASE WHEN aaa.date < '{data['start_date']}' then aaa.value else 0 end), 0) as start_balance,
-            	                COALESCE(count(distinct CASE WHEN aaa.date < '{data['start_date']}' then aaa.id else null end), 0) as start_count,
+                        	select aaa.id as sub1_asset_id, aaa.name as sub1_name,
+            	            	COALESCE(SUM(CASE WHEN aaa.date < '{data['start_date']}' AND (line.dep_date IS NULL OR line.dep_date >= '{data['start_date']}') then aaa.value else 0 end), 0) as start_balance,
+            	                COALESCE(count(distinct CASE WHEN aaa.date < '{data['start_date']}' AND (line.dep_date IS NULL OR line.dep_date >= '{data['start_date']}') then aaa.id else null end), 0) as start_count,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN aaa.value else 0 end), 0) as income_balance,
             	                COALESCE(SUM(CASE WHEN aaa.date BETWEEN '{data['start_date']}' AND '{data['end_date']}' THEN 1 ELSE 0 END), 0) as income_count,
             	                COALESCE(SUM(CASE WHEN line.dep_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state in ('close', 'scrap') THEN aaa.value ELSE 0 END), 0) as expense_balance,
@@ -314,9 +325,12 @@ class AccountAssetDetailReport(models.TransientModel):
                                 from account_asset_depreciation_line
                                 where is_scrap_line = True or is_sale_line = True
                             ) as line on line.asset_id = aaa.id
-                            where line.rank = 1 or line.rank is null
-            	            GROUP BY aaa.name
-                        ) as sub1 on sub1.name = sub.name
+                            where (line.rank = 1 or line.rank is null)
+                                AND aaa.state != 'draft' AND aaa.active = True AND aaa.company_id = {data['company_id']}
+                                {f"AND aaa.category_id = {data['category_id']}" if data['category_id'] else ''}
+                                {f"AND aaa.owner_id = {data['owner_id']}" if data['owner_id'] else ''}
+            	            GROUP BY aaa.id, aaa.name
+                        ) as sub1 on sub1.sub1_asset_id = sub.asset_id
                         {'ORDER BY sub.category_id' if data['group_by_category'] else ''}
             """
 

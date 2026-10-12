@@ -52,6 +52,9 @@
                     <xpath expr='//field[@name="state"]' position="attributes">
                         <attribute name="string">Төлөв</attribute>
                     </xpath>
+                    <xpath expr='//field[@name="value_residual"]' position="attributes">
+                        <attribute name="sum">Нийт</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
