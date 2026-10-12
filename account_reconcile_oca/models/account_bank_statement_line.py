@@ -269,11 +269,21 @@ class AccountBankStatementLine(models.Model):
                         )
             else:
                 suspense_line = line
+        lines_ok = can_reconcile
         if not float_is_zero(
             total_amount, precision_digits=self.company_id.currency_id.decimal_places
         ):
             can_reconcile = False
             if suspense_line:
+                if (
+                    lines_ok
+                    and self.partner_id
+                    and suspense_line["account_id"][0]
+                    and suspense_line["account_id"][0]
+                    != self.journal_id.suspense_account_id.id
+                ):
+                    # Үлдэгдэл нь харилцагчийн өглөг/авлагын данс руу орсон бол тулгаж болно
+                    can_reconcile = True
                 suspense_line.update(
                     {
                         "amount": -total_amount,
