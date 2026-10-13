@@ -104,12 +104,12 @@ class AccountAssetDetailReport(models.TransientModel):
         sheet.set_column(3, 19, 15)
         start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
         sheet.merge_range("A1:B1", u'Байгууллагын нэр: %s' % (data['company_name']), header_txt)
-        sheet.merge_range("A3:L3" if data['is_extra'] else 'A3:Q3', u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
-        sheet.merge_range("I1:L1" if data['is_extra'] else 'N1:Q1',  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
-        sheet.merge_range("J2:L2" if data['is_extra'] else 'O2:Q2',  u'191 тоот тушаалаар батлав.', header_txt)
-        sheet.merge_range("K4:L4" if data['is_extra'] else 'P4:Q4', u'Дэлгэрэнгүй бүртгэл',header_txt)
-        sheet.write("L5" if data['is_extra'] else 'Q5', u'ҮХ-1 №....', header_txt)
-        sheet.write("E5" if data['is_extra'] else 'L5', u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
+        sheet.merge_range("A3:M3" if data['is_extra'] else 'A3:Q3', u'Үндсэн хөрөнгийн дэлгэрэнгүй тайлан', head)
+        sheet.merge_range("J1:M1" if data['is_extra'] else 'N1:Q1',  u'Санхүү Эдийн Засгийн сайдын 2002 оны', header_txt)
+        sheet.merge_range("K2:M2" if data['is_extra'] else 'O2:Q2',  u'191 тоот тушаалаар батлав.', header_txt)
+        sheet.merge_range("L4:M4" if data['is_extra'] else 'P4:Q4', u'Дэлгэрэнгүй бүртгэл',header_txt)
+        sheet.write("M5" if data['is_extra'] else 'Q5', u'ҮХ-1 №....', header_txt)
+        sheet.write("F5" if data['is_extra'] else 'L5', u'Тайлант %s - %s'%(start_date,data['end_date']), header_txt)
         rowx = 7
         asset_obj = self.env['account.asset.asset']
         num = 1
@@ -119,15 +119,16 @@ class AccountAssetDetailReport(models.TransientModel):
             sheet.merge_range("B%s:B%s" % (rowx, rowx + 1), u'Хөрөнгийн ангилал', title)
             sheet.merge_range("C%s:C%s" % (rowx, rowx + 1), u'Үндсэн хөрөнгийн нэр', title)
             sheet.merge_range("D%s:D%s" % (rowx, rowx + 1), u'Хөрөнгийн дугаар', title)
-            sheet.merge_range("E%s:E%s" % (rowx, rowx + 1), u'Ашиглалтанд орсон он сар өдөр', title)
-            sheet.merge_range("F%s:F%s" % (rowx, rowx + 1), u'Ашиглах жил', title)
-            sheet.merge_range("G%s:G%s" % (rowx, rowx + 1), u'Эхний үлдэгдэл', title)
-            sheet.merge_range("H%s:J%s" % (rowx, rowx), u'Элэгдэл', title)
-            sheet.write("H%s" % (rowx + 1), u'Хуримтдлагдсан', title)
-            sheet.write("I%s" % (rowx + 1), u'Сарын', title)
-            sheet.write("J%s" % (rowx + 1), u'Элэгдлийн дүн', title)
-            sheet.merge_range("K%s:K%s" % (rowx, rowx + 1), u'Зарлагадсан', title)
-            sheet.merge_range("L%s:L%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
+            sheet.merge_range("E%s:E%s" % (rowx, rowx + 1), u'Хөрөнгө эзэмшигч', title)
+            sheet.merge_range("F%s:F%s" % (rowx, rowx + 1), u'Ашиглалтанд орсон он сар өдөр', title)
+            sheet.merge_range("G%s:G%s" % (rowx, rowx + 1), u'Ашиглах жил', title)
+            sheet.merge_range("H%s:H%s" % (rowx, rowx + 1), u'Эхний үлдэгдэл', title)
+            sheet.merge_range("I%s:K%s" % (rowx, rowx), u'Элэгдэл', title)
+            sheet.write("I%s" % (rowx + 1), u'Хуримтдлагдсан', title)
+            sheet.write("J%s" % (rowx + 1), u'Сарын', title)
+            sheet.write("K%s" % (rowx + 1), u'Элэгдлийн дүн', title)
+            sheet.merge_range("L%s:L%s" % (rowx, rowx + 1), u'Зарлагадсан', title)
+            sheet.merge_range("M%s:M%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
             rowx = 9
             domain = [('company_id', '=', data['company_id']), ('state', '!=', 'draft')]
             if data['category_id']:
@@ -157,8 +158,6 @@ class AccountAssetDetailReport(models.TransientModel):
                         if data['group_by'] == 'location':
                             if not last_group_data['last_row'] or last_group_data['last_id'] != line.asset_location_id.id:
                                 if last_group_data['last_row']:
-                                    sheet.write('G%s' % last_group_data['last_row'],
-                                                "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('H%s' % last_group_data['last_row'],
                                                 "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('I%s' % last_group_data['last_row'],
@@ -169,9 +168,11 @@ class AccountAssetDetailReport(models.TransientModel):
                                                 "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('L%s' % last_group_data['last_row'],
                                                 "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('M%s' % last_group_data['last_row'],
+                                                "=SUM(M%s:M%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                 last_group_data['seq'] += 1
                                 sheet.write("A%s"%rowx, last_group_data['seq'], data_center)
-                                sheet.merge_range("B%s:F%s" % (rowx, rowx), line.asset_location_id.name, title)
+                                sheet.merge_range("B%s:G%s" % (rowx, rowx), line.asset_location_id.name, title)
                                 last_group_data['last_id'] = line.asset_location_id.id
                                 last_group_data['last_row'] = rowx
                                 rowx += 1
@@ -180,8 +181,6 @@ class AccountAssetDetailReport(models.TransientModel):
                         if data['group_by'] == 'category':
                             if not last_group_data['last_row'] or last_group_data['last_id'] != line.category_id.id:
                                 if last_group_data['last_row']:
-                                    sheet.write('G%s' % last_group_data['last_row'],
-                                                "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('H%s' % last_group_data['last_row'],
                                                 "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('I%s' % last_group_data['last_row'],
@@ -192,9 +191,11 @@ class AccountAssetDetailReport(models.TransientModel):
                                                 "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                     sheet.write('L%s' % last_group_data['last_row'],
                                                 "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                                    sheet.write('M%s' % last_group_data['last_row'],
+                                                "=SUM(M%s:M%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                                 last_group_data['seq'] += 1
                                 sheet.write("A%s" % rowx, last_group_data['seq'], data_center)
-                                sheet.merge_range("B%s:F%s" % (rowx, rowx), line.category_id.name, title)
+                                sheet.merge_range("B%s:G%s" % (rowx, rowx), line.category_id.name, title)
                                 last_group_data['last_id'] = line.category_id.id
                                 last_group_data['last_row'] = rowx
                                 rowx += 1
@@ -205,32 +206,33 @@ class AccountAssetDetailReport(models.TransientModel):
                     sheet.write("B%s"%rowx, line.category_id.name, data_left)
                     sheet.write("C%s"%rowx, line.name, data_left)
                     sheet.write("D%s"%rowx, line.code, data_left)
-                    sheet.write("E%s"%rowx, '%s'%line.date, data_left)
-                    sheet.write("F%s"%rowx, line.method_number/12, data_left)
+                    sheet.write("E%s"%rowx, line.owner_id.name or '', data_left)
+                    sheet.write("F%s"%rowx, '%s'%line.date, data_left)
+                    sheet.write("G%s"%rowx, line.method_number/12, data_left)
                     dep_line = line.depreciation_line_ids.search([('depreciation_date', '<', data['start_date']),
                                                                   ('move_check', '=', True ),
                                                                   ('asset_id', '=', line.id)], order='depreciation_date desc', limit=1)
-                    sheet.write("G%s"%rowx, dep_line.remaining_value if dep_line else line.value, data_left)
-                    sheet.write("H%s"%rowx, dep_line.depreciated_value if dep_line else 0, data_left)
+                    sheet.write("H%s"%rowx, dep_line.remaining_value if dep_line else line.value, data_left)
+                    sheet.write("I%s"%rowx, dep_line.depreciated_value if dep_line else 0, data_left)
 
                     month_dep = 0
                     for de in line.depreciation_line_ids:
                         if de.sequence != 1:
                             month_dep = de.amount
                             break
-                    sheet.write("I%s"%rowx, month_dep, data_left)
+                    sheet.write("J%s"%rowx, month_dep, data_left)
 
                     dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and not x.is_sale_line and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
                     if dep_lines:
                         date_between_dep = sum(dep_lines.mapped('amount'))
                     else:
                         date_between_dep = 0
-                    sheet.write("J%s" % rowx, date_between_dep, data_left)
+                    sheet.write("K%s" % rowx, date_between_dep, data_left)
                     sale_line = False
                     if line.state=='close':
                         sale_line = line.depreciation_line_ids.filtered(lambda x: x.is_sale_line)
-                    sheet.write("K%s" % rowx, sale_line.amount if sale_line else 0, data_left)
-                    sheet.write("L%s" % rowx, '=G%s-J%s-K%s' % (rowx, rowx, rowx), data_left)
+                    sheet.write("L%s" % rowx, sale_line.amount if sale_line else 0, data_left)
+                    sheet.write("M%s" % rowx, '=H%s-K%s-L%s' % (rowx, rowx, rowx), data_left)
                     total_g += dep_line.remaining_value if dep_line else line.value
                     total_h += dep_line.depreciated_value if dep_line else 0
                     total_i += month_dep
@@ -242,8 +244,6 @@ class AccountAssetDetailReport(models.TransientModel):
                 if data['group_by']:
                     if data['group_by'] == 'location':
                         if last_group_data['last_row']:
-                            sheet.write('G%s' % last_group_data['last_row'],
-                                        "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('H%s' % last_group_data['last_row'],
                                         "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('I%s' % last_group_data['last_row'],
@@ -252,10 +252,10 @@ class AccountAssetDetailReport(models.TransientModel):
                                         "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('K%s' % last_group_data['last_row'],
                                         "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('L%s' % last_group_data['last_row'],
+                                        "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                     if data['group_by'] == 'category':
                         if last_group_data['last_row']:
-                            sheet.write('G%s' % last_group_data['last_row'],
-                                        "=SUM(G%s:G%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('H%s' % last_group_data['last_row'],
                                         "=SUM(H%s:H%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('I%s' % last_group_data['last_row'],
@@ -264,13 +264,15 @@ class AccountAssetDetailReport(models.TransientModel):
                                         "=SUM(J%s:J%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('K%s' % last_group_data['last_row'],
                                         "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
-                sheet.merge_range("A%s:F%s" % (rowx, rowx), u'Нийт', title)
-                sheet.write("G%s" % rowx, total_g, data_left)
-                sheet.write("H%s" % rowx, total_h, data_left)
-                sheet.write("I%s" % rowx, total_i, data_left)
-                sheet.write("J%s" % rowx, total_j, data_left)
-                sheet.write("K%s" % rowx, total_k, data_left)
-                sheet.write("L%s" % rowx, total_l, data_left)
+                            sheet.write('L%s' % last_group_data['last_row'],
+                                        "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                sheet.merge_range("A%s:G%s" % (rowx, rowx), u'Нийт', title)
+                sheet.write("H%s" % rowx, total_g, data_left)
+                sheet.write("I%s" % rowx, total_h, data_left)
+                sheet.write("J%s" % rowx, total_i, data_left)
+                sheet.write("K%s" % rowx, total_j, data_left)
+                sheet.write("L%s" % rowx, total_k, data_left)
+                sheet.write("M%s" % rowx, total_l, data_left)
         else:
             where = f"WHERE aaa.state!='draft' AND aaa.active=True AND aaa.company_id = {data['company_id']} "
             if data['category_id']:
