@@ -2,6 +2,10 @@
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
 from odoo import api, fields, models, tools, _
 from datetime import date, datetime, time, timedelta
+from odoo.tools import date_utils
+import io
+import json
+import xlsxwriter
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
                
 class ResourceCalendar(models.Model): 
@@ -52,11 +56,248 @@ class HrPayslipRun(models.Model):
     advance_run_id = fields.Many2one('hr.payslip.run', string='Урьдчилгаа цалингийн багц',
                                      domain="[('payslip_type', '=', 'advance'), ('state', '=', 'done'), ('id', '!=', id)]",
                                      help='Сүүл цалин бодоход энэ багцын урьдчилгааг ADV суутгалд татна.')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
 
     @api.onchange('payslip_type')
     def _onchange_payslip_type(self):
         if self.payslip_type == 'advance':
             self.advance_run_id = False
+
+    def get_report_data(self):
+        data = {
+            'self_id': self.id
+        }
+        return data
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
+        return {
+            'type': 'ir.actions.report',
+            'report_type': 'xlsx',
+            'data': {'model': 'hr.payslip.run',
+                     'output_format': 'xlsx',
+                     'options': json.dumps(data, default=date_utils.json_default),
+                     'report_name': self.name}
+        }
+
+
+    def get_xlsx_report(self, data, response, get_file=False):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+        head = workbook.add_format({
+            'align': 'center',
+            'bold': True,
+            'font_size': 14
+        })
+
+        title = workbook.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            'border': 1,
+            'bold': True,
+            'text_wrap': True,
+            'font_size': 12,
+            'bg_color': '#FBCEB1',
+            'color': 'black'
+        })
+
+        data_right = workbook.add_format({
+            'align': 'right',
+            'border': 1,
+            'text_wrap': True,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
+        data_left = workbook.add_format({
+            'align': 'left',
+            'border': 1,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
+        data_left_borderless = workbook.add_format({
+            'align': 'left',
+            'border': 0,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
+        data_bold_center = workbook.add_format({
+            'align': 'center',
+            'bold': True,
+            'border': 1,
+            'font_size': 12,
+            'num_format': '#,##0.00'
+        })
+        header_txt = workbook.add_format({
+                                    'align': 'center',
+                                    'bold': True,
+                                    'font_size': 12,
+                                    'border': 1,
+                                    'text_wrap': True,
+                                    })
+        sheet.set_paper(9)
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0.5)
+        sheet.set_column(0, 0, 5)
+        sheet.set_column(1, 27, 18)
+
+        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id'))
+        sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
+        sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
+        sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'урьдчилгаа цалин' if self_obj.payslip_type=='advance' else 'сүүл цалин'), head)
+        rowx = 3
+        colly = 0
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'№', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Овог', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Нэр', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Хэлтэс тасаг', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Дансны дугаар', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Үндсэн цалин', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Сарын ажлын хоног', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Сарын ажлын фонд цаг', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Ажилласан хоног СС', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Ажилласан цаг СС', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Илүү цаг', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Илүү цагийн нэмэгдэл', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Бодогдсон цалин', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Амралтын мөнгө', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Гүйцэтгэлийн нэмэгдэл', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Бусад нэмэгдэл СС', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Нэмэгдлийн дүн', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Олговол зохих', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'НДШ төлөв', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Урьдчилгаа цалин СС', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'НДШ-Даатгуулагчаас', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'НДШ Ажил олгогчоос', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'ХАОАТ', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Утасны суутгал', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Ажилчдаас авлага', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Суутгалын дүн', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Гарт олгох', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'Регистр №', title)
+        rowx += 2
+
+        number = 1
+        for slip in self_obj.slip_ids:
+            account_number = ''
+            if slip.employee_id.work_contact_id.bank_ids:
+                account_number = slip.employee_id.work_contact_id.bank_ids[0].account_number
+            colly = 0
+            sheet.write(rowx, colly, number, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.employee_id.last_name, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.employee_id.name, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.employee_id.department_id.name or '', data_left)
+            colly += 1
+            sheet.write(rowx, colly, account_number, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.contract_id.wage, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.month_work_days, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.month_work_hours, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.worked_days, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.overtime_hours, data_left)
+            colly += 1
+            sheet.write(rowx, colly, slip.overtime_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.computed_salary, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.vacation_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.performance_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.other_allowance_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.allowance_total, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.gross_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.advance_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.advance_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.ndsh_employee_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.ndsh_company_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.ndsh_company_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.pit_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.phone_deduction_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.receivable_deduction_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.deduction_total, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.net_amount, data_right)
+            colly += 1
+            sheet.write(rowx, colly, slip.employee_id.ssnid, data_right)
+            rowx += 1
+
+        sheet.merge_range(rowx, 0, rowx,  4, u'Нийт дүн:', data_bold_center)
+        rowx += 1
+        sheet.write("F%s" % rowx, '=sum(F6:F%s)' % (rowx - 1), header_txt)
+        sheet.write("G%s" % rowx, '=sum(G6:G%s)' % (rowx - 1), header_txt)
+        sheet.write("H%s" % rowx, '=sum(H6:H%s)' % (rowx - 1), header_txt)
+        sheet.write("I%s" % rowx, '=sum(I6:I%s)' % (rowx - 1), header_txt)
+        sheet.write("J%s" % rowx, '=sum(J6:J%s)' % (rowx - 1), header_txt)
+        sheet.write("K%s" % rowx, '=sum(K6:K%s)' % (rowx - 1), header_txt)
+        sheet.write("L%s" % rowx, '=sum(L6:L%s)' % (rowx - 1), header_txt)
+        sheet.write("M%s" % rowx, '=sum(M6:M%s)' % (rowx - 1), header_txt)
+        sheet.write("N%s" % rowx, '=sum(N6:N%s)' % (rowx - 1), header_txt)
+        sheet.write("O%s" % rowx, '=sum(O6:O%s)' % (rowx - 1), header_txt)
+        sheet.write("P%s" % rowx, '=sum(P6:P%s)' % (rowx - 1), header_txt)
+        sheet.write("Q%s" % rowx, '=sum(Q6:Q%s)' % (rowx - 1), header_txt)
+        sheet.write("R%s" % rowx, '=sum(R6:R%s)' % (rowx - 1), header_txt)
+        sheet.write("S%s" % rowx, '=sum(S6:S%s)' % (rowx - 1), header_txt)
+        sheet.write("T%s" % rowx, '=sum(T6:T%s)' % (rowx - 1), header_txt)
+        sheet.write("U%s" % rowx, '=sum(U6:U%s)' % (rowx - 1), header_txt)
+        sheet.write("V%s" % rowx, '=sum(V6:V%s)' % (rowx - 1), header_txt)
+        sheet.write("W%s" % rowx, '=sum(W6:W%s)' % (rowx - 1), header_txt)
+        sheet.write("X%s" % rowx, '=sum(X6:X%s)' % (rowx - 1), header_txt)
+        sheet.write("Y%s" % rowx, '=sum(Y6:Y%s)' % (rowx - 1), header_txt)
+        sheet.write("Z%s" % rowx, '=sum(Z6:Z%s)' % (rowx - 1), header_txt)
+        sheet.write("AA%s" % rowx, '=sum(AA6:AA%s)' % (rowx - 1), header_txt)
+        sheet.write("AB%s" % rowx, '', header_txt)
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()
+        return
 
 # Цалингийн хуудсын багцын жагсаалтын багана -> цалингийн дүрмийн код(ууд)
 PAYSLIP_COLUMN_CODES = {
@@ -127,7 +368,6 @@ class HrPayslip(models.Model):
     ndsh_employee_amount = fields.Float(string='НДШ-Даатгуулагчаас', compute='_compute_payslip_columns', store=True)
     ndsh_company_amount = fields.Float(string='НДШ Ажил олгогчоос', compute='_compute_payslip_columns', store=True)
     pit_amount = fields.Float(string='ХАОАТ', compute='_compute_payslip_columns', store=True)
-    pit_percent = fields.Float(string='ХАОАТ %', compute='_compute_payslip_columns', store=True)
     phone_deduction_amount = fields.Float(string='Утасны суутгал', compute='_compute_payslip_columns', store=True)
     receivable_deduction_amount = fields.Float(string='Ажилчдаас авлага', compute='_compute_payslip_columns', store=True)
     deduction_total = fields.Float(string='Суутгалын дүн', compute='_compute_payslip_columns', store=True)
@@ -141,10 +381,10 @@ class HrPayslip(models.Model):
             slip.employee_first_name = emp.name
             slip.employee_department_id = emp.department_id
             slip.employee_bank_account = emp.bank_account_id.acc_number
-            slip.employee_register = emp['register_number'] if 'register_number' in emp._fields else False
+            slip.employee_register = emp['ssnid'] if 'ssnid' in emp._fields else False
 
     @api.depends('line_ids.code', 'line_ids.total',
-                 'worked_days_line_ids.code', 'worked_days_line_ids.number_of_days')
+                 'worked_days_line_ids.code', 'worked_days_line_ids.number_of_days', 'worked_days_line_ids.number_of_hours')
     def _compute_payslip_columns(self):
         for slip in self:
             totals = {}
@@ -163,10 +403,14 @@ class HrPayslip(models.Model):
             # Бусад нэмэгдэл = Нэмэгдлийн дүнгээс амралтын мөнгө, гүйцэтгэлийн нэмэгдлийг хассан үлдэгдэл
             vals['other_allowance_amount'] = (vals['allowance_total'] - vals['vacation_amount']
                                               - vals['performance_amount'])
-            vals['pit_percent'] = vals['pit_amount'] / vals['wage_amount'] * 100 if vals['wage_amount'] else 0.0
             # Урьдчилгааны хуудсанд BS дүрэм бодогдохгүй тул гэрээний цалинг харуулна
+            if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
+                vals['wage_amount'] = slip.contract_id.wage * vals['month_work_hours']
             if slip.payslip_type == 'advance' and not vals['wage_amount']:
-                vals['wage_amount'] = slip.contract_id.wage
+                if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
+                    vals['wage_amount'] = slip.contract_id.wage * slip.advance_must_hours
+                else:
+                    vals['wage_amount'] = slip.contract_id.wage
             slip.update(vals)
 
     @api.depends('payslip_run_id.payslip_type')

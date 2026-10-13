@@ -57,7 +57,6 @@
 							<field name="ndsh_employee_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="ndsh_company_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="pit_amount" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
-							<field name="pit_percent" width="70px" string="%" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="phone_deduction_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="receivable_deduction_amount" width="110px" sum="Нийт" optional="show" column_invisible="parent.payslip_type == 'advance'"/>
 							<field name="deduction_total" width="110px" sum="Нийт" column_invisible="parent.payslip_type == 'advance'"/>
@@ -68,7 +67,10 @@
 							<field name="state" column_invisible="1"/>
 						</tree>
 					</xpath>
-
+					<xpath expr='//button[@name="done_payslip_run"]' position="after">
+						<button string="Хэвлэх" name="action_print_xls_report" type="object"
+								class="oe_highlight"/>
+					</xpath>
 				</data>
 			</field>
 		</record>
