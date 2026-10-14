@@ -23,7 +23,7 @@
 			        </div>
 			        
 			        <p style="text-align:center; font-size:14px; font-weight: bold;">
-			        	НЭХЭМЖЛЭХ №: <t t-esc="o.ot_code"/>
+			        	НЭХЭМЖЛЭХ №: <t t-esc="o.ot_code or o.name"/>
 			        </p>
 					
 					<table style="width: 99%; margin-left: 15px; font-size: 11px; border:transparent 1px solid; ">
