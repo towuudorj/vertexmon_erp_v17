@@ -425,6 +425,23 @@ class AccountMove(models.Model):
         # Дотор нь бусад бичилт батлагдахад дахин шалгахгүй
         return super(AccountMove, self.with_context(check_missing_product=False)).action_post()
 
+    def _check_receivable_payable_partner(self):
+        """Авлага, өглөгийн данстай журналын мөрөнд харилцагч заавал сонгогдсон байх ёстой."""
+        for move in self:
+            lines = move.line_ids.filtered(
+                lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable') and not l.partner_id)
+            if lines:
+                raise UserError(_(
+                    "Авлага, өглөгийн данс сонгосон мөрөнд харилцагч заавал сонгоно уу!\n"
+                    "Баримт: %(move)s\nДанс: %(accounts)s",
+                    move=move.display_name,
+                    accounts=', '.join(lines.mapped('account_id.display_name')),
+                ))
+
+    def _post(self, soft=True):
+        self.filtered(lambda m: m.state == 'draft' or not soft)._check_receivable_payable_partner()
+        return super()._post(soft=soft)
+
     def button_create_landed_costs(self):
         """Create a `stock.landed.cost` record associated to the account move of `self`, each
         `stock.landed.costs` lines mirroring the current `account.move.line` of self.
