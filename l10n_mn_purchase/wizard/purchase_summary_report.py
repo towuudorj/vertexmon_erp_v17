@@ -5,7 +5,8 @@ import json
 import xlsxwriter
 from odoo import fields, models
 from odoo.tools import date_utils
-from datetime import datetime
+import pytz
+from datetime import datetime, time, timedelta
 
 class PurchaseOrderCommonReport(models.TransientModel):
     """
@@ -149,8 +150,12 @@ class PurchaseOrderCommonReport(models.TransientModel):
                     ('receipt_status', '!=', 'pending')
                 ]
         if not is_picked:
-            domain.append(('date_approve', '>=', data['start_date']))
-            domain.append(('date_approve', '<=', data['end_date']))
+            # date_approve нь UTC-ээр хадгалагддаг тул хэрэглэгчийн цагийн бүсээр өдрийн хил хязгаарыг тооцно
+            user_tz = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+            start_dt = user_tz.localize(datetime.combine(start_date, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+            end_dt = user_tz.localize(datetime.combine(end_date + timedelta(days=1), time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+            domain.append(('date_approve', '>=', start_dt))
+            domain.append(('date_approve', '<', end_dt))
 
         if data['purchase_user_id']:
             domain.append(('user_id', '=', data['purchase_user_id']))
@@ -164,14 +169,14 @@ class PurchaseOrderCommonReport(models.TransientModel):
         if is_picked:
             for purchase in purchase_order_id:
                 for picking_id in purchase.picking_ids:
-                    if picking_id.state == 'done' and not picking_id.return_id and start_date <= picking_id.date_done.date() <= end_date:
+                    if picking_id.state == 'done' and not picking_id.return_id and start_date <= fields.Datetime.context_timestamp(self, picking_id.date_done).date() <= end_date:
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
                         total_noat = 0
                         total_with_noat_mnt = 0
                         total_with_noat = 0
                         for line in picking_purchase_line_id:
-                            currency_rate = self.env['res.currency.rate'].search([('company_id','=',purchase.company_id.id),('currency_id','=',line.currency_id.id),('name','=',str(picking_id.date_done.date()))])
+                            currency_rate = self.env['res.currency.rate'].search([('company_id','=',purchase.company_id.id),('currency_id','=',line.currency_id.id),('name','=',fields.Datetime.context_timestamp(self, picking_id.date_done).date())])
                             curr_rate = currency_rate.inverse_company_rate if currency_rate else purchase.currency_rate
                             price_unit = line.price_unit
                             if line.discount:
@@ -216,7 +221,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
                 else:
                     sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
             for item in sorted_data:
-                sheet.write("A%s" % rowx, item['date_done'], datetime_format)
+                sheet.write("A%s" % rowx, fields.Datetime.context_timestamp(self, item['date_done']).replace(tzinfo=None), datetime_format)
                 sheet.write("B%s" % rowx, item['order_id'].name, data_left)
                 sheet.write("C%s" % rowx, "%s" % item['order_id'].partner_id.code, data_left)
                 sheet.write("D%s" % rowx, "%s" % item['order_id'].partner_id.name, data_left)
@@ -231,7 +236,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
                 rowx += 1
         else:
             for line in purchase_order_id:
-                convert_date = fields.Date.from_string(line.date_approve)
+                convert_date = fields.Datetime.context_timestamp(self, line.date_approve).date()
                 sheet.write("A%s"%rowx, "%s"%convert_date, data_right)
                 sheet.write("B%s"%rowx, line.name, data_left)
                 sheet.write("C%s"%rowx, "%s"%line.partner_id.code, data_left)
