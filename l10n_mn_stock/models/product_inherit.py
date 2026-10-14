@@ -88,6 +88,7 @@ class ProductTemplate(models.Model):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('product.product_category_all')
 
+    name = fields.Char(tracking=True)
     model = fields.Char(string='Model',required=True, tracking=True)
     distributor_ids = fields.Many2one('res.partner', string='Distributer', domain=[("is_distributor","=",True)])
     distributor_id = fields.Many2one('distributor.register', string='Distributer')
