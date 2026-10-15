@@ -53,6 +53,18 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="crm_invoice_desc_new_mn" model="ir.actions.report">
+            <field name="name">CRM/Нэхэмжлэл /Тайлбартай/</field>
+            <field name="model">crm.lead</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_sale.report_mn_crm_invoice_desc</field>
+            <field name="report_file">l10n_mn_sale.mn_crm_invoice_desc</field>
+            <field name="print_report_name">'invoice_%s' % (object.name)</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="binding_type">report</field>
+        </record>
+
         <record id="crm_invoice_percentage_new_mn" model="ir.actions.report">
             <field name="name">CRM/Нэхэмжлэл /Хувиар/</field>
             <field name="model">crm.lead</field>

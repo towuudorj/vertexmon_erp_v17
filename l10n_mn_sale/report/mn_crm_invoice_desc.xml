@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+        <template id="report_mn_crm_invoice_desc_data">
+        	<t t-call="web.external_layout">
+			<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+				<div class="page" style="margin-left:20px; margin-right:20px; margin-top:-20px;">
+                	<div class="row mb64">
+			            <div class="col-6">
+			            	<p style="text-align: left;">
+			            		<img t-attf-src="data:image/jpg;base64,{{request.env.user.company_id.logo}}" style="width:190px;height:60px;"/>
+			            	</p>
+			            </div>
+			            <!-- <div class="col-6">
+			            	<p style="text-align:right;font-size: 12px;margin-right:5%; margin-top:-100px;">
+							<span>Сангийн сайдын 2017 оны</span>
+							<br/>
+							<span>347 дугаар тушаалын хавсралт</span>
+							<br/>
+							<span>НХМаягт Т-1</span>
+							</p>
+			            </div> -->
+			        </div>
+			        
+			        <p style="text-align:center; font-size:14px; font-weight: bold;">
+			        	НЭХЭМЖЛЭХ №: <t t-esc="o.code"/>
+			        </p>
+					
+					<table style="width: 99%; margin-left: 15px; font-size: 11px; border:transparent 1px solid; ">
+						<tr>
+							<td colspan="2" style="width: 50%; padding: 3px;  vertical-align: top;">
+								<span  style="font-weight: bold; margin-bottom: 15px;">Нэхэмжлэгч:</span>
+							</td>
+							<td colspan="2"  style="width: 50%; padding: 3px;  vertical-align: top;">
+								<span style="font-weight: bold; margin-bottom: 15px;">Төлөгч:</span>
+								</td>
+								</tr>
+							<tr>
+										<td style="width: 15%; padding: 3px; ">Байгууллагын нэр:</td>
+										<td style="width: 35%; padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.company_id.name"/></b></td>
+										<td style="width: 15%; padding: 3px;">Байгууллагын нэр:</td>
+										<td style="width: 35%; padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_id.name"/></b></td>
+									</tr>
+									<tr>
+										<td style="padding: 3px; border: none;">Хаяг:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.company_id.street"/></td>
+										<td style="padding: 3px;">Хаяг:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;">
+											<t t-esc="', '.join(filter(None, [
+												o.partner_id.street,
+												o.partner_id.street2,
+												o.partner_id.city,
+												o.partner_id.state_id.name if o.partner_id.state_id else '',
+												o.partner_id.zip,
+												o.partner_id.country_id.name if o.partner_id.country_id else ''
+											]))"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 3px; border: none;">Утас:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.user_id.mobile"/>, <t t-esc="o.company_id.partner_id.phone or o.company_id.phone"/></td>
+										<td style="padding: 3px;">Утас:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_id.phone or o.partner_id.mobile"/></td>
+									
+									</tr>
+									<tr>
+										<td style="padding: 3px; border: none;">Регистрийн дугаар:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.company_id.vat"/></td>
+										<td style="padding: 3px;">Регистрийн дугаар:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_id.vat"/></td>
+									</tr>
+									<tr>
+										<td style="padding: 3px;">Банкны нэр:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><b><t t-esc="o.partner_bank_id.bank_id.name"/></b></td>
+										<td style="padding: 3px;">Төлбөр төлөх хугацаа:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;">
+											<t t-set="days" t-value="o.expire_day or 0"/>
+											<t t-set="due_date" t-value="(o.send_date + datetime.timedelta(days=days))"/>
+											<t t-esc="due_date.strftime('%Y-%m-%d')"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 3px;">Банкны данс:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.acc_number"/></td>
+										<td style="padding: 3px;">Нэхэмжлэхийн огноо:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.send_date"/></td>
+									</tr>
+									<tr>
+										<td style="padding: 3px;">IBAN:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.partner_bank_id.iban"/></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td style="padding: 3px;">Цахим хаяг:</td>
+										<td style="padding: 3px; border-bottom: 1px solid black;"><t t-esc="o.user_id.email"/></td>
+										<td></td>
+										<td></td>
+									</tr>
+							
+									
+					</table>
+
+					<table style="width: 99%; font-size:11px;text-align: center;  border-collapse: collapse; border: transparent 1px solid; margin-left: 15px; padding-top:1px;">
+                		<t t-set="discount" t-value="false"/>
+						<t class="border-black" t-foreach="o.lead_line_ids" t-as="line">
+							<t t-if="line.discount &gt; 0.0">
+								<t t-set="discount" t-value="true"/>
+							</t>
+							<t t-else="line.discount==0.0">
+								<t t-set="discount" t-value="false"/>
+							</t>
+						</t>
+						<t t-if="discount==false">
+						
+						<tr class="border-black">
+                			<td style="padding: 3px; width: 5%; border: 1px solid black; font-weight: bold;">№:</td>
+                			<td style="padding: 3px; width: 40%; border: 1px solid black; font-weight: bold;">Барааны нэр</td>
+                			<td style="padding: 3px; width: 20%; border: 1px solid black; font-weight: bold;">Тайлбар</td>
+                			<td style="padding: 3px; width: 10%; border: 1px solid black; font-weight: bold;">Тоо хэмжээ</td>
+							<td style="padding: 3px; width: 15%; border: 1px solid black; font-weight: bold;">Хэмжих нэгж</td>
+                			<td style="padding: 3px; width: 10%; border: 1px solid black; font-weight: bold;">Нэгж үнэ</td>
+                			<td style="padding: 3px; width: 15%; border: 1px solid black; font-weight: bold;">НӨАТ-гүй Нийт үнэ</td>
+                		</tr>
+                		<t t-set="i" t-value="1"/>
+						<tr class="border-black" t-foreach="o.lead_line_ids" t-as="line">
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
+		                        <t t-esc="line.product_id.name or line.name"/>
+		                    </td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: left;"><t t-if="line.product_id"><span t-field="line.name"/></t></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.qty"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.uom_id.name"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.sale_price/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-esc="line.price_subtotal/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							<t t-set="i" t-value="i+1"/>
+		                </tr>
+						<tr style="border:none;">
+							<td rowspan="5" colspan="5" style="padding: 3px; border: none;  text-align: center;"> </td>					
+							<td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Дүн</td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							<br/>
+		                </tr>
+                		<tr class="border-black">
+		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> НӨАТ 10%</td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+		                </tr>
+						<tr class="border-black">
+		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Нийт дүн</td>
+							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+		                	<br/>
+		                </tr>
+						</t>
+						<t t-if="discount==true">
+						
+						<tr class="border-black">
+                			<td style="padding: 3px; width: 5%; border: 1px solid black; font-weight: bold;">№:</td>
+                			<td style="padding: 3px; width: 40%; border: 1px solid black; font-weight: bold;">Барааны нэр</td>
+                			<td style="padding: 3px; width: 20%; border: 1px solid black; font-weight: bold;">Тайлбар</td>
+                			<td style="padding: 3px; width: 10%; border: 1px solid black; font-weight: bold;">Тоо хэмжээ</td>
+							<td style="padding: 3px; width: 15%; border: 1px solid black; font-weight: bold;">Хэмжих нэгж</td>
+                			<td style="padding: 3px; width: 10%; border: 1px solid black; font-weight: bold;">Нэгж үнэ</td>
+							<td style="padding: 3px; width: 5%; border: 1px solid black; font-weight: bold;">Хөнгөлөлт</td>
+                			<td style="padding: 3px; width: 15%; border: 1px solid black; font-weight: bold;">НӨАТ-гүй Нийт үнэ</td>
+                		</tr>
+                		<t t-set="i" t-value="1"/>
+						<tr class="border-black" t-foreach="o.lead_line_ids" t-as="line">
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;">  <span t-esc="i"/> </td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: left;">
+		                        <t t-esc="line.product_id.name or line.name"/>
+		                    </td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: left;"><t t-if="line.product_id"><span t-field="line.name"/></t></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.qty"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-field="line.uom_id.name"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.sale_price/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							<td style="padding: 5px; border: 1px solid black;  text-align: center;"> <span t-esc="line.discount"/></td>
+
+							<td style="padding: 5px; border: 1px solid black;  text-align: right;"> <span t-esc="line.price_subtotal/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							<t t-set="i" t-value="i+1"/>
+		                </tr>
+						<tr style="border:none;">
+							<td rowspan="5" colspan="6" style="padding: 3px; border: none;  text-align: center;"> </td>					
+							<td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Дүн</td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.untax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+							
+		                </tr>
+                		<tr class="border-black">
+		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> НӨАТ 10%</td>
+							<td style="padding: 3px; border: 1px solid black;  text-align: right;"> <span t-field="o.tax_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+		                </tr>
+						<tr class="border-black">
+		                    <td style="padding: 3px; font-weight: bold; border: 1px solid black;  text-align: center;"> Нийт дүн</td>
+							<td style="padding: 2px; border: 1px solid black;  text-align: right;"> <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+		                	<br/>
+		                </tr>
+						</t>
+
+
+                	</table>
+		        	<br/>
+		        	
+                	<!--<p style="margin-left:1%; margin-right:5%;">Мөнгөн дүн (үсгээр): <span t-field="o.amount_text"/> болно.</p> -->
+					
+				
+				<table style="width: 99%; font-size:11px;border-collapse: collapse; border: 1px solid black; margin-left:20px; padding-top:1px;">
+				<p style="margin-left:15px; margin-right:5%; font-size:11px;">Мөнгөн дүн (үсгээр): <span t-field="o.amount_text"/> болно.</p>
+				</table>
+				<table style="margin-right:1%; margin-left:15px; width: 99%; text-align: center; position: relative;  border-spacing: 0;  border: transparent 1px solid;">
+					<tr style="border: transparent 1px solid;">
+						<td style="text-align:left; width: 30%; border:none !important; border-spacing: 0; font-size:11px;">Ерөнхий нягтлан бодогч:  </td>
+					</tr>
+					<tr>
+						<td style="text-align:left; padding-top:15px; width: 50%; border:none !important; border-spacing: 0; font-size:11px;">
+							<span>Борлуулалтын менежер:  </span>
+						</td>
+						<td style="padding:2px; font-size:14px; width:40%; position: absolute; border:none; top: -10px;">
+							<img t-attf-src="data:image/jpg;base64,{{o.user_id.signature_image}}" style="width:160px;height:100px; "/>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:left; padding-top:15px; width: 50%; border:none !important; border-spacing: 0; font-size:11px;">
+							<span>Хүлээн авсан:  </span>
+						</td>
+						<td style="padding:2px; font-size:18px; width:40%; position: absolute; border:none; top: -15px;">
+							<img t-attf-src="data:image/jpg;base64,{{o.company_id.company_stamp}}" style="width:210px;height:190px;"/>
+						</td>
+					</tr>
+				</table>
+			
+                </div>
+            </t>
+			
+        </template>
+
+        <template id="report_mn_crm_invoice_desc">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_mn_sale.report_mn_crm_invoice_desc_data" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
