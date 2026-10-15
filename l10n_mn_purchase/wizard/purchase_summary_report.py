@@ -169,7 +169,10 @@ class PurchaseOrderCommonReport(models.TransientModel):
         if is_picked:
             for purchase in purchase_order_id:
                 for picking_id in purchase.picking_ids:
-                    if picking_id.state == 'done' and not picking_id.return_id and start_date <= fields.Datetime.context_timestamp(self, picking_id.date_done).date() <= end_date:
+                    if picking_id.state == 'done' and picking_id.picking_type_code in ('incoming', 'outgoing') and start_date <= fields.Datetime.context_timestamp(self, picking_id.date_done).date() <= end_date:
+                        # Орлого (буцаасныг дахин авсан орлого орно) +, нийлүүлэгч рүү буцаасан зарлага −
+                        is_return = picking_id.picking_type_code == 'outgoing'
+                        sign = -1 if is_return else 1
                         picking_purchase_line_id = purchase.order_line.filtered(lambda l: any(move.picking_id == picking_id for move in l.move_ids))
                         total_without_noat = 0
                         total_noat = 0
@@ -202,10 +205,11 @@ class PurchaseOrderCommonReport(models.TransientModel):
 
                         picking_total_value_dict.append({
                             'currency' : purchase.currency_id.name,
-                            'total_without_noat' : total_without_noat,
-                            'total_noat': total_noat,
-                            'total_with_noat': total_with_noat,
-                            'total_with_noat_mnt': total_with_noat_mnt,
+                            'total_without_noat' : sign * total_without_noat,
+                            'total_noat': sign * total_noat,
+                            'total_with_noat': sign * total_with_noat,
+                            'total_with_noat_mnt': sign * total_with_noat_mnt,
+                            'is_return': is_return,
                             'date_done': picking_id.date_done,
                             'order_id': purchase
                         })
@@ -222,7 +226,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
                     sorted_data = sorted(picking_total_value_dict, key=lambda x: x["date_done"])
             for item in sorted_data:
                 sheet.write("A%s" % rowx, fields.Datetime.context_timestamp(self, item['date_done']).replace(tzinfo=None), datetime_format)
-                sheet.write("B%s" % rowx, item['order_id'].name, data_left)
+                sheet.write("B%s" % rowx, u'%s (Буцаалт)' % item['order_id'].name if item['is_return'] else item['order_id'].name, data_left)
                 sheet.write("C%s" % rowx, "%s" % item['order_id'].partner_id.code, data_left)
                 sheet.write("D%s" % rowx, "%s" % item['order_id'].partner_id.name, data_left)
                 sheet.write("E%s" % rowx, item['currency'], data_right)
