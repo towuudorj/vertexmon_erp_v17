@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 CLOSED_LEAD_STATUSES = ('done', 'cancel', 'break')
 CLOSED_TASK_STATES = ('1_done', '1_canceled')
@@ -44,7 +48,7 @@ class ProductMergeReassignWizard(models.TransientModel):
 
         log_lines = []
 
-        sale_lines = self.env['sale.order.line'].search([
+        sale_lines = self.env['sale.order.line'].sudo().search([
             ('product_id', '=', source.id),
             ('order_id.state', 'in', ('draft', 'sent', 'sale')),
         ]).filtered(lambda l: l.qty_delivered < l.product_uom_qty)
@@ -59,7 +63,7 @@ class ProductMergeReassignWizard(models.TransientModel):
         for order in sale_lines.mapped('order_id'):
             self._notify_responsible(order, order.user_id, source, target)
 
-        purchase_lines = self.env['purchase.order.line'].search([
+        purchase_lines = self.env['purchase.order.line'].sudo().search([
             ('product_id', '=', source.id),
             ('order_id.state', 'in', ('draft', 'sent', 'to approve', 'purchase')),
         ]).filtered(lambda l: l.qty_received < l.product_qty)
@@ -74,7 +78,7 @@ class ProductMergeReassignWizard(models.TransientModel):
         for order in purchase_lines.mapped('order_id'):
             self._notify_responsible(order, order.user_id, source, target)
 
-        pending_moves = self.env['stock.move'].search([
+        pending_moves = self.env['stock.move'].sudo().search([
             ('product_id', '=', source.id),
             ('state', 'not in', ('done', 'cancel')),
         ])
@@ -90,7 +94,7 @@ class ProductMergeReassignWizard(models.TransientModel):
         for picking in pending_moves.mapped('picking_id'):
             self._notify_responsible(picking, picking.user_id, source, target)
 
-        crm_lines = self.env['crm.lead.line'].search([
+        crm_lines = self.env['crm.lead.line'].sudo().search([
             ('product_id', '=', source.id),
             ('state', '=', 'draft'),
             ('lead_id.active', '=', True),
@@ -107,22 +111,56 @@ class ProductMergeReassignWizard(models.TransientModel):
         for lead in crm_lines.mapped('lead_id'):
             self._notify_responsible(lead, lead.user_id, source, target)
 
-        project_lines = self.env['project.products.line'].search([
+        project_lines = self.env['project.products.line'].sudo().search([
             ('product_id', '=', source.id),
             ('project_id.state', '!=', 'done'),
         ])
-        for line in project_lines:
+        _logger.info(
+            'Product merge %s -> %s: project lines %s',
+            source.display_name, target.display_name,
+            [(l.id, l.project_id.name, l.project_id.state, l.product_qty, l.qty_delivered) for l in project_lines])
+        # Зарлага хийгдсэн мөрийн барааг солих боломжгүй (project.products.line.write).
+        # Зарлагадсан хэсгийг хуучин бараан дээр үлдээж, зарлага хийгдээгүй үлдсэн
+        # тоог шинэ бараатай мөр болгон салгана. Бүрэн зарлагадсан мөрийг орхино.
+        project_lines_to_move = project_lines.filtered(lambda l: l.qty_delivered <= 0)
+        for line in project_lines - project_lines_to_move:
+            delivered = line.qty_delivered
+            remaining = line.product_qty - delivered
+            if remaining <= 0:
+                continue
+            line.write({
+                'product_qty': delivered,
+                'price_total': line.price_unit * delivered,
+                'cost_total': line.cost_price * delivered,
+            })
+            new_line = line.copy({
+                'product_id': target.id,
+                'product_qty': remaining,
+                'price_total': line.price_unit * remaining,
+                'cost_total': line.cost_price * remaining,
+            })
+            # create() нь өртгийг шинэ барааны стандарт өртгөөр дардаг тул хуучныг сэргээнэ
+            new_line.write({'cost_price': line.cost_price, 'cost_total': line.cost_price * remaining,
+                            'name': line.name})
+            log_lines.append((0, 0, {
+                'category': _('Төслийн барааны мөр (зарлагагүй %s тоог салгав)') % remaining,
+                'document_name': line.project_id.name,
+                'res_model': 'project.project',
+                'res_id': line.project_id.id,
+            }))
+            self._notify_responsible(line.project_id, line.project_id.user_id, source, target)
+        for line in project_lines_to_move:
             log_lines.append((0, 0, {
                 'category': _('Төслийн барааны мөр'),
                 'document_name': line.project_id.name,
                 'res_model': 'project.project',
                 'res_id': line.project_id.id,
             }))
-        project_lines.write({'product_id': target.id})
-        for project in project_lines.mapped('project_id'):
+        project_lines_to_move.write({'product_id': target.id})
+        for project in project_lines_to_move.mapped('project_id'):
             self._notify_responsible(project, project.user_id, source, target)
 
-        task_lines = self.env['task.products.line'].search([
+        task_lines = self.env['task.products.line'].sudo().search([
             ('product_id', '=', source.id),
             ('task_id.state', 'not in', CLOSED_TASK_STATES),
         ])

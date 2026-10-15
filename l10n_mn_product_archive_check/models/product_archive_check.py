@@ -43,13 +43,14 @@ class ProductProduct(models.Model):
         if self.qty_available:
             errors.append(_('Агуулахад %s үлдэгдэлтэй байна') % self.qty_available)
 
-        def _with_qty(records, doc_field, qty_field, label=lambda doc: doc.name):
+        def _with_qty(records, doc_field, qty_field, label=lambda doc: doc.name, qty_label=_('тоо')):
             """'Doc1 (тоо: 9.0), Doc2 (тоо: 3.0)' - same document lines are summed."""
             totals = {}
             for rec in records:
                 doc = rec[doc_field]
-                totals[doc] = totals.get(doc, 0.0) + rec[qty_field]
-            return ', '.join(_('%s (тоо: %s)') % (label(doc), qty) for doc, qty in totals.items())
+                qty = qty_field(rec) if callable(qty_field) else rec[qty_field]
+                totals[doc] = totals.get(doc, 0.0) + qty
+            return ', '.join('%s (%s: %s)' % (label(doc), qty_label, qty) for doc, qty in totals.items())
 
         sale_lines = self.env['sale.order.line'].sudo().search([
             ('product_id', '=', self.id),
@@ -89,19 +90,21 @@ class ProductProduct(models.Model):
         project_lines = self.env['project.products.line'].sudo().search([
             ('product_id', '=', self.id),
             ('project_id.state', '!=', 'done'),
-        ])
+        ]).filtered(lambda l: l.product_qty - l.qty_delivered > 0)  # бүрэн зарлагадсан мөр саад болохгүй
         if project_lines:
             errors.append(_('Дуусаагүй Төсөл [%s] ашиглаж байна')
-                           % _with_qty(project_lines, 'project_id', 'product_qty'))
+                           % _with_qty(project_lines, 'project_id', 'last_qty',
+                                     qty_label=_('зарлагагүй үлдэгдэл')))
 
         task_lines = self.env['task.products.line'].sudo().search([
             ('product_id', '=', self.id),
             ('task_id.state', 'not in', CLOSED_TASK_STATES),
-        ])
+        ]).filtered(lambda l: l.product_qty - l.qty_delivered > 0)  # бүрэн зарлагадсан мөр саад болохгүй
         if task_lines:
             errors.append(_('Дуусаагүй Төслийн ажил [%s] ашиглаж байна')
-                           % _with_qty(task_lines, 'task_id', 'product_qty',
-                                     lambda task: '%s / %s' % (task.project_id.name or '-', task.name)))
+                           % _with_qty(task_lines, 'task_id', lambda l: l.product_qty - l.qty_delivered,
+                                     lambda task: '%s / %s' % (task.project_id.name or '-', task.name),
+                                     qty_label=_('зарлагагүй үлдэгдэл')))
 
         return errors
 
