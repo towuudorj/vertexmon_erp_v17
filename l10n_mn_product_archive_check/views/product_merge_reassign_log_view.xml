@@ -9,7 +9,7 @@
                   action="action_open_document" type="object">
                 <header>
                     <button name="%(action_product_merge_reassign_wizard)d" type="action" string="Шилжүүлэг"
-                            class="btn-primary" display="always"/>
+                            class="btn-primary" display="always" groups="stock.group_stock_manager"/>
                 </header>
                 <field name="date"/>
                 <field name="source_product_id"/>

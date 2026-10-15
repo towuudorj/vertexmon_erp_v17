@@ -28,6 +28,7 @@
         <field name="res_model">product.merge.reassign.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
     </record>
 
 
