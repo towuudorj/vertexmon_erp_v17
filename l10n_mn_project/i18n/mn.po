@@ -657,3 +657,27 @@ msgstr "Төрөл"
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_project__warehouse_id
 msgid "Warehouse"
 msgstr "Агуулах"
+#. module: l10n_mn_project
+#: model:ir.model.fields,field_description:l10n_mn_project.field_crm_lead_line__project_planned_qty
+msgid "Project planned qty"
+msgstr "Төсөлд төлөвлөсөн тоо"
+
+#. module: l10n_mn_project
+#: model:ir.model.fields,help:l10n_mn_project.field_crm_lead_line__project_planned_qty
+msgid ""
+"Same warehouse projects planned (not yet delivered) quantity of this product."
+msgstr ""
+"Ижил агуулахын төслүүдэд энэ бараагаар төлөвлөгдсөн (зарлага хийгдээгүй) "
+"тоо."
+
+#. module: l10n_mn_project
+#. odoo-python
+#: code:addons/l10n_mn_project/models/crm_lead_line.py:0
+#, python-format
+msgid ""
+"\"%(product)s\": %(planned)s planned in projects (%(projects)s), not "
+"delivered yet. Forecasted: %(forecast)s, free after projects: %(free)s"
+msgstr ""
+"\"%(product)s\": төсөлд %(planned)s төлөвлөгдсөн (%(projects)s), агуулахаас "
+"гараагүй байна. Урьдчилсан таамаг: %(forecast)s, төслүүдийн дараах чөлөөт: "
+"%(free)s"

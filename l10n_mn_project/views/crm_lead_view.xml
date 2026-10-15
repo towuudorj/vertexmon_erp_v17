@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_lead_project_planned_qty_form_view" model="ir.ui.view">
+        <field name="name">crm.lead.form.project.planned.qty</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="l10n_mn_sale.crm_lead_inherit_mn_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lead_line_ids']/tree/field[@name='pre_qty']" position="after">
+                <field name="project_planned_qty" widget="project_planned_qty" readonly="1" optional="show"/>
+                <field name="project_planned_info" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

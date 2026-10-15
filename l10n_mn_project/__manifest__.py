@@ -45,6 +45,7 @@
             'wizard/project_invoice_wizard.xml',
             'views/project_project_views.xml',
             'views/project_task_view.xml',
+            'views/crm_lead_view.xml',
             'views/purchase_requisition_view.xml',
             'views/stock_picking_view.xml',
             'views/invoice_view_inherit.xml',
@@ -53,6 +54,11 @@
             'views/menu_view.xml',
 
                 ],
+    "assets": {
+        "web.assets_backend": [
+            "l10n_mn_project/static/src/js/project_planned_qty_field.js",
+        ],
+    },
     "auto_install": False,
     "installable": True,
 }
