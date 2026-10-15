@@ -6,6 +6,8 @@ from odoo.tools import date_utils
 import io
 import json
 import xlsxwriter
+import base64
+import openpyxl
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
                
 class ResourceCalendar(models.Model): 
@@ -80,6 +82,17 @@ class HrPayslipRun(models.Model):
                      'report_name': self.name}
         }
 
+    def action_open_import_wizard(self):
+        self.ensure_one()
+        return {
+            'name': _('Цалингийн тайлан импортлох'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.payslip.run.import.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_run_id': self.id},
+        }
+
 
     def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
@@ -137,11 +150,22 @@ class HrPayslipRun(models.Model):
                                     })
         sheet.set_paper(9)
         sheet.center_horizontally()
-        sheet.fit_to_pages(1, 0.5)
+        sheet.fit_to_pages(1, 0)
         sheet.set_column(0, 0, 5)
         sheet.set_column(1, 27, 18)
 
-        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id'))
+        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self
+        max_ceiling = 7920000.0
+        si_rule = self.env['hr.salary.rule'].search([
+            ('code', '=', 'SI11'),
+            '|', ('company_id', '=', self_obj.company_id.id if self_obj else False), ('company_id', '=', False)
+        ], limit=1)
+        if si_rule and si_rule.amount_python_compute:
+            import re
+            m = re.search(r'momn_min_salary\s*=\s*(\d+)', si_rule.amount_python_compute)
+            if m:
+                max_ceiling = float(m.group(1)) * 10
+
         sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
         sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
         sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'урьдчилгаа цалин' if self_obj.payslip_type=='advance' else 'сүүл цалин'), head)
@@ -202,6 +226,19 @@ class HrPayslipRun(models.Model):
         sheet.merge_range(rowx, colly , rowx+1, colly, u'Гарт олгох', title)
         colly += 1
         sheet.merge_range(rowx, colly , rowx+1, colly, u'Регистр №', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'ID', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'EMP_NDSH_RATE', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'COMP_NDSH_RATE', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'MAX_NDSH_CEIL', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'PIT_RATE', title)
+        colly += 1
+        sheet.merge_range(rowx, colly , rowx+1, colly, u'PIT_RELIEF', title)
+        sheet.set_column(28, colly, None, None, {'hidden': True})
         rowx += 2
 
         number = 1
@@ -212,60 +249,136 @@ class HrPayslipRun(models.Model):
             colly = 0
             sheet.write(rowx, colly, number, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.employee_id.last_name, data_left)
+            sheet.write(rowx, colly, slip.employee_id.last_name or '', data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.employee_id.name, data_left)
+            sheet.write(rowx, colly, slip.employee_id.name or '', data_left)
             colly += 1
             sheet.write(rowx, colly, slip.employee_id.department_id.name or '', data_left)
             colly += 1
             sheet.write(rowx, colly, account_number, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.contract_id.wage, data_left)
+            sheet.write(rowx, colly, slip.wage_amount or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.month_work_days, data_left)
+            sheet.write(rowx, colly, slip.month_work_days or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.month_work_hours, data_left)
+            sheet.write(rowx, colly, slip.month_work_hours or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.worked_days, data_left)
+            sheet.write(rowx, colly, slip.worked_days or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.overtime_hours, data_left)
+            sheet.write(rowx, colly, slip.worked_hours or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.overtime_amount, data_right)
+            sheet.write(rowx, colly, slip.overtime_hours or 0.0, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.computed_salary, data_right)
+            sheet.write(rowx, colly, u'=F%s/H%s*K%s*1.5' % (rowx + 1, rowx + 1, rowx + 1), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.vacation_amount, data_right)
+            sheet.write(rowx, colly, u'=F%s/H%s*J%s+L%s' % (rowx + 1, rowx + 1, rowx + 1, rowx + 1), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.performance_amount, data_right)
+            sheet.write(rowx, colly, slip.vacation_amount or 0.0, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.other_allowance_amount, data_right)
+            sheet.write(rowx, colly, slip.performance_amount or 0.0, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.allowance_total, data_right)
+            sheet.write(rowx, colly, slip.other_allowance_amount or 0.0, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.gross_amount, data_right)
+            sheet.write(rowx, colly, '=SUM(N%s:P%s)' % (rowx + 1, rowx + 1), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.advance_amount, data_right)
+            sheet.write(rowx, colly, '=M%s+Q%s' % (rowx + 1, rowx + 1), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.advance_amount, data_right)
+            ndsh_state = 'Төлнө' if slip.ndsh_employee_amount else 'Төлөхгүй'
+            sheet.write(rowx, colly, ndsh_state, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.ndsh_employee_amount, data_right)
+            adv_val = slip.prepayment_amount if slip.payslip_type == 'advance' else (slip.advance_amount or 0.0)
+            sheet.write(rowx, colly, adv_val, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.ndsh_company_amount, data_right)
+            r_num = rowx + 1
+
+            has_ndsh = bool(slip.ndsh_employee_amount or (slip.contract_id.insurance_type_id and slip.contract_id.insurance_type_id.insurance_percent_employee > 0))
+            if has_ndsh and slip.payslip_type != 'advance':
+                emp_ndsh_rate = (slip.contract_id.insurance_type_id.insurance_percent_employee / 100.0) if slip.contract_id.insurance_type_id else 0.115
+                comp_ndsh_rate = (slip.contract_id.insurance_type_id.insurance_percent_employer / 100.0) if slip.contract_id.insurance_type_id else 0.125
+            else:
+                emp_ndsh_rate = 0.0
+                comp_ndsh_rate = 0.0
+
+            pit_rate = 0.10 if slip.payslip_type != 'advance' else 0.0
+
+            # U: НДШ-Даатгуулагчаас
+            if slip.payslip_type == 'advance':
+                sheet.write(rowx, colly, 0.0, data_right)
+            else:
+                sheet.write(rowx, colly, u'=ROUND(MIN(R%s,AF%s)*AD%s, 2)' % (r_num, r_num, r_num), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.ndsh_company_amount, data_right)
+
+            # V: НДШ Ажил олгогчоос
+            if slip.payslip_type == 'advance':
+                sheet.write(rowx, colly, 0.0, data_right)
+            else:
+                sheet.write(rowx, colly, u'=ROUND(R%s*AE%s, 2)' % (r_num, r_num), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.pit_amount, data_right)
+
+            # W: ХАОАТ
+            if slip.payslip_type == 'advance':
+                sheet.write(rowx, colly, 0.0, data_right)
+            else:
+                sheet.write(rowx, colly, u'=ROUND(MAX(0, (R%s-U%s)*AG%s-AH%s), 2)' % (r_num, r_num, r_num, r_num), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.phone_deduction_amount, data_right)
+
+            # X: Утасны суутгал
+            sheet.write(rowx, colly, slip.phone_deduction_amount or 0.0, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.receivable_deduction_amount, data_right)
+
+            # Y: Ажилчдаас авлага
+            sheet.write(rowx, colly, slip.receivable_deduction_amount or 0.0, data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.deduction_total, data_right)
+
+            # Z: Суутгалын дүн
+            sheet.write(rowx, colly, '=Y%s+X%s+W%s+U%s+T%s' % (r_num, r_num, r_num, r_num, r_num), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.net_amount, data_right)
+
+            # AA: Гарт олгох
+            if slip.payslip_type == 'advance':
+                sheet.write(rowx, colly, slip.prepayment_amount or slip.net_amount or 0.0, data_right)
+            else:
+                sheet.write(rowx, colly, '=R%s-Z%s' % (r_num, r_num), data_right)
             colly += 1
-            sheet.write(rowx, colly, slip.employee_id.ssnid, data_right)
+
+            # AB: Регистр №
+            sheet.write(rowx, colly, slip.employee_id.ssnid or slip.employee_id.identification_id or '', data_right)
+            colly += 1
+
+            # AC: ID (Hidden)
+            sheet.write(rowx, colly, slip.id, data_right)
+            colly += 1
+
+            # AD: EMP_NDSH_RATE (Hidden)
+            sheet.write(rowx, colly, emp_ndsh_rate, data_right)
+            colly += 1
+
+            # AE: COMP_NDSH_RATE (Hidden)
+            sheet.write(rowx, colly, comp_ndsh_rate, data_right)
+            colly += 1
+
+            # AF: MAX_NDSH_CEIL (Hidden)
+            sheet.write(rowx, colly, max_ceiling, data_right)
+            colly += 1
+
+            # AG: PIT_RATE (Hidden)
+            sheet.write(rowx, colly, pit_rate, data_right)
+            colly += 1
+
+            # AH: PIT_RELIEF (Hidden)
+            if slip.payslip_type == 'advance':
+                sheet.write(rowx, colly, 0.0, data_right)
+            else:
+                relief_formula = (
+                    u'=IF(R%s-U%s<=500000,20000,IF(R%s-U%s<=1000000,18000,IF(R%s-U%s<=1500000,16000,'
+                    u'IF(R%s-U%s<=2000000,14000,IF(R%s-U%s<=2500000,12000,IF(R%s-U%s<=3000000,10000,0))))))'
+                    % (r_num, r_num, r_num, r_num, r_num, r_num, r_num, r_num, r_num, r_num, r_num, r_num)
+                )
+                sheet.write(rowx, colly, relief_formula, data_right)
+            colly += 1
+
             rowx += 1
+            number += 1
 
         sheet.merge_range(rowx, 0, rowx,  4, u'Нийт дүн:', data_bold_center)
         rowx += 1
@@ -282,7 +395,7 @@ class HrPayslipRun(models.Model):
         sheet.write("P%s" % rowx, '=sum(P6:P%s)' % (rowx - 1), header_txt)
         sheet.write("Q%s" % rowx, '=sum(Q6:Q%s)' % (rowx - 1), header_txt)
         sheet.write("R%s" % rowx, '=sum(R6:R%s)' % (rowx - 1), header_txt)
-        sheet.write("S%s" % rowx, '=sum(S6:S%s)' % (rowx - 1), header_txt)
+        sheet.write("S%s" % rowx, '', header_txt)
         sheet.write("T%s" % rowx, '=sum(T6:T%s)' % (rowx - 1), header_txt)
         sheet.write("U%s" % rowx, '=sum(U6:U%s)' % (rowx - 1), header_txt)
         sheet.write("V%s" % rowx, '=sum(V6:V%s)' % (rowx - 1), header_txt)
@@ -292,10 +405,21 @@ class HrPayslipRun(models.Model):
         sheet.write("Z%s" % rowx, '=sum(Z6:Z%s)' % (rowx - 1), header_txt)
         sheet.write("AA%s" % rowx, '=sum(AA6:AA%s)' % (rowx - 1), header_txt)
         sheet.write("AB%s" % rowx, '', header_txt)
+        sheet.write("AC%s" % rowx, '', header_txt)
+        sheet.write("AD%s" % rowx, '', header_txt)
+        sheet.write("AE%s" % rowx, '', header_txt)
+        sheet.write("AF%s" % rowx, '', header_txt)
+        sheet.write("AG%s" % rowx, '', header_txt)
+        sheet.write("AH%s" % rowx, '', header_txt)
 
         workbook.close()
         output.seek(0)
-        response.stream.write(output.read())
+        if get_file:
+            res_data = output.getvalue()
+            output.close()
+            return res_data
+        if response:
+            response.stream.write(output.read())
         output.close()
         return
 
@@ -306,11 +430,12 @@ PAYSLIP_COLUMN_CODES = {
     'month_work_hours': ('MWT',),
     'worked_days': ('WDD',),
     'worked_hours': ('WDT',),
-    'overtime_hours': ('OTH',),
-    'overtime_amount': ('OT',),
+    'overtime_hours': ('OVER',),
+    'overtime_amount': ('OVERADD',),
     'computed_salary': ('CBS',),
     'vacation_amount': ('RS',),
     'performance_amount': ('KPI',),
+    'other_allowance_amount': ('OTA',),
     'allowance_total': ('ADT',),
     'gross_amount': ('CS',),
     'advance_amount': ('ADV',),
@@ -323,6 +448,30 @@ PAYSLIP_COLUMN_CODES = {
     # ADVP мөр зөвхөн урьдчилгаа цалингийн хуудсанд байна
     'net_amount': ('GIVE', 'ADVP'),
 }
+
+# Excel тайлангийн толгой баганууд -> PAYSLIP_COLUMN_CODES түлхүүрийн харгалзаа
+PAYSLIP_HEADER_TO_COLUMN_KEY = [
+    (('Сарын ажлын хоног',), 'month_work_days'),
+    (('Сарын ажлын фонд цаг', 'Сарын ажлын цаг'), 'month_work_hours'),
+    (('Ажилласан хоног СС', 'Ажилласан хоног'), 'worked_days'),
+    (('Ажилласан цаг СС', 'Ажилласан цаг'), 'worked_hours'),
+    (('Илүү цаг',), 'overtime_hours'),
+    (('Илүү цагийн нэмэгдэл',), 'overtime_amount'),
+    (('Бодогдсон цалин',), 'computed_salary'),
+    (('Амралтын мөнгө',), 'vacation_amount'),
+    (('Гүйцэтгэлийн нэмэгдэл',), 'performance_amount'),
+    (('Бусад нэмэгдэл СС', 'Бусад нэмэгдэл'), 'other_allowance_amount'),
+    (('Нэмэгдлийн дүн',), 'allowance_total'),
+    (('Олговол зохих',), 'gross_amount'),
+    (('Урьдчилгаа цалин СС', 'Урьдчилгаа цалин'), 'advance_amount'),
+    (('НДШ-Даатгуулагчаас', 'НДШ даатгуулагчаас', 'НДШ - Даатгуулагчаас'), 'ndsh_employee_amount'),
+    (('НДШ Ажил олгогчоос', 'НДШ ажил олгогчоос', 'НДШ - Ажил олгогчоос'), 'ndsh_company_amount'),
+    (('ХАОАТ', 'ХХОАТ'), 'pit_amount'),
+    (('Утасны суутгал',), 'phone_deduction_amount'),
+    (('Ажилчдаас авлага',), 'receivable_deduction_amount'),
+    (('Суутгалын дүн',), 'deduction_total'),
+    (('Гарт олгох',), 'net_amount'),
+]
 
 
 class HrPayslip(models.Model):
@@ -400,9 +549,6 @@ class HrPayslip(models.Model):
                 vals['month_work_days'] = worked_days.get('MUST_WORK', 0.0)
             if not vals['worked_days']:
                 vals['worked_days'] = worked_days.get('WORK100', 0.0)
-            # Бусад нэмэгдэл = Нэмэгдлийн дүнгээс амралтын мөнгө, гүйцэтгэлийн нэмэгдлийг хассан үлдэгдэл
-            vals['other_allowance_amount'] = (vals['allowance_total'] - vals['vacation_amount']
-                                              - vals['performance_amount'])
             # Урьдчилгааны хуудсанд BS дүрэм бодогдохгүй тул гэрээний цалинг харуулна
             if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
                 vals['wage_amount'] = slip.contract_id.wage * vals['month_work_hours']
@@ -1077,3 +1223,334 @@ class HrPayslip(models.Model):
         # end contract loop
 
         return list(result_dict.values())
+
+
+class HrPayslipRunImportWizard(models.TransientModel):
+    _name = 'hr.payslip.run.import.wizard'
+    _description = 'Hr Payslip Run Import Wizard'
+
+    run_id = fields.Many2one('hr.payslip.run', string='Цалингийн багц', required=True)
+    data_file = fields.Binary(string='Excel файл', required=True)
+    filename = fields.Char(string='Файлын нэр')
+
+    def action_import(self):
+        self.ensure_one()
+        if not self.data_file:
+            raise UserError(_('Excel файлаа сонгоно уу!'))
+
+        file_data = base64.b64decode(self.data_file)
+        try:
+            wb = openpyxl.load_workbook(filename=io.BytesIO(file_data), data_only=True)
+        except Exception as e:
+            raise UserError(_('Excel файл уншихад алдаа гарлаа: %s') % str(e))
+
+        sheet = wb.active
+
+        # 1. Баганын нэрсийг олох (Мөр 4 болон 5 дээрх толгой баганууд)
+        header_map = {}
+        for r in range(4, 6):
+            rows = list(sheet.iter_rows(min_row=r, max_row=r, values_only=True))
+            if not rows:
+                continue
+            row_cells = rows[0]
+            for col_idx, cell in enumerate(row_cells):
+                if cell is not None and str(cell).strip():
+                    name = str(cell).strip()
+                    if name not in header_map:
+                        header_map[name] = col_idx
+
+        updated_count = 0
+        run = self.run_id
+
+        def get_val(row_vals, header_names, default=None):
+            if isinstance(header_names, str):
+                header_names = (header_names,)
+            for h in header_names:
+                idx = header_map.get(h)
+                if idx is not None and idx < len(row_vals):
+                    val = row_vals[idx]
+                    if val is not None and str(val).strip() != '':
+                        try:
+                            return float(val)
+                        except (ValueError, TypeError):
+                            return default
+            return default
+
+        for row in sheet.iter_rows(min_row=6, values_only=True):
+            if not any(row):
+                continue
+            first_val = str(row[0]).strip() if row[0] is not None else ''
+            if 'Нийт' in first_val or 'Нийт дүн' in first_val:
+                break
+
+            # Ажилтны цалингийн хуудсыг олох:
+            # 1-рт: Нуусан ID баганаар
+            slip = False
+            id_idx = header_map.get('ID')
+            if id_idx is not None and id_idx < len(row) and row[id_idx]:
+                try:
+                    s_id = int(row[id_idx])
+                    slip = run.slip_ids.filtered(lambda s: s.id == s_id)
+                except (ValueError, TypeError):
+                    pass
+
+            # 2-рт: Регистр № баганаар
+            if not slip:
+                reg_idx = header_map.get('Регистр №')
+                if reg_idx is not None and reg_idx < len(row) and row[reg_idx]:
+                    reg = str(row[reg_idx]).strip().upper()
+                    slip = run.slip_ids.filtered(
+                        lambda s: (s.employee_id.ssnid and s.employee_id.ssnid.strip().upper() == reg) or
+                                  (s.employee_id.identification_id and s.employee_id.identification_id.strip().upper() == reg)
+                    )
+
+            # 3-рт: Нэр баганаар
+            if not slip:
+                name_idx = header_map.get('Нэр')
+                if name_idx is not None and name_idx < len(row) and row[name_idx]:
+                    emp_name = str(row[name_idx]).strip()
+                    slip = run.slip_ids.filtered(lambda s: s.employee_id.name and s.employee_id.name.strip() == emp_name)
+
+            if not slip:
+                continue
+
+            slip = slip[0]
+            contract = slip.contract_id or slip.employee_id.contract_id or self.env['hr.contract'].search([('employee_id', '=', slip.employee_id.id)], limit=1)
+
+            # -------------------------------------------------------------
+            # A. hr.payslip.worked_days шинэчлэх
+            # -------------------------------------------------------------
+            must_work = slip.worked_days_line_ids.filtered(lambda w: w.code == 'MUST_WORK')
+            old_mwd = must_work[0].number_of_days if must_work else (slip.month_work_days or 0.0)
+            old_mwt = must_work[0].number_of_hours if must_work else (slip.month_work_hours or 0.0)
+
+            work100 = slip.worked_days_line_ids.filtered(lambda w: w.code == 'WORK100')
+            old_wdd = work100[0].number_of_days if work100 else (slip.worked_days or 0.0)
+            old_wdt = work100[0].number_of_hours if work100 else (slip.worked_hours or 0.0)
+
+            mwd = get_val(row, ('Сарын ажлын хоног',), default=old_mwd)
+            mwt = get_val(row, ('Сарын ажлын фонд цаг', 'Сарын ажлын цаг'), default=old_mwt)
+            wdd = get_val(row, ('Ажилласан хоног СС', 'Ажилласан хоног'), default=old_wdd)
+            wdt = get_val(row, ('Ажилласан цаг СС', 'Ажилласан цаг'), default=old_wdt)
+
+            if must_work:
+                must_work.write({'number_of_days': mwd, 'number_of_hours': mwt})
+            elif mwd or mwt:
+                must_work = self.env['hr.payslip.worked_days'].create({
+                    'payslip_id': slip.id,
+                    'contract_id': contract.id if contract else False,
+                    'name': _('Must work'),
+                    'code': 'MUST_WORK',
+                    'number_of_days': mwd,
+                    'number_of_hours': mwt,
+                    'sequence': 1,
+                })
+
+            if work100:
+                work100.write({'number_of_days': wdd, 'number_of_hours': wdt})
+            elif wdd or wdt:
+                work100 = self.env['hr.payslip.worked_days'].create({
+                    'payslip_id': slip.id,
+                    'contract_id': contract.id if contract else False,
+                    'name': _('Worked'),
+                    'code': 'WORK100',
+                    'number_of_days': wdd,
+                    'number_of_hours': wdt,
+                    'sequence': 1,
+                })
+
+            wd_changed = (
+                round(mwd, 2) != round(old_mwd, 2) or
+                round(mwt, 2) != round(old_mwt, 2) or
+                round(wdd, 2) != round(old_wdd, 2) or
+                round(wdt, 2) != round(old_wdt, 2)
+            )
+
+            # -------------------------------------------------------------
+            # B. hr.payslip.line болон input шинэчлэх
+            # -------------------------------------------------------------
+            def update_input(code, val):
+                if not code:
+                    return
+                # Шууд кодоор slip.input_line_ids-аас хайх
+                inps = slip.input_line_ids.filtered(lambda i: i.code == code)
+                # Тухайн дүрмийн input_ids-ээс мөн хайх
+                rule = self.env['hr.salary.rule'].search([
+                    ('code', '=', code),
+                    '|', ('company_id', '=', slip.company_id.id), ('company_id', '=', False)
+                ], limit=1)
+                if rule and rule.input_ids:
+                    target_codes = [inp_def.code for inp_def in rule.input_ids]
+                    rule_inps = slip.input_line_ids.filtered(lambda i: i.code in target_codes)
+                    inps = inps | rule_inps
+                    if not inps and val:
+                        self.env['hr.payslip.input'].create({
+                            'payslip_id': slip.id,
+                            'contract_id': contract.id if contract else False,
+                            'name': rule.input_ids[0].name or code,
+                            'code': rule.input_ids[0].code or code,
+                            'amount': val,
+                        })
+                        return
+
+                if inps:
+                    inps.write({'amount': val})
+
+            def update_line(codes, val):
+                if not codes:
+                    return None
+                line = False
+                for c in codes:
+                    matched = slip.line_ids.filtered(lambda l: l.code == c)
+                    if matched:
+                        line = matched[0]
+                        break
+                if line:
+                    line.with_context(skip_recompute_following=True).write({
+                        'amount': val,
+                        'quantity': 1.0,
+                        'rate': 100.0,
+                        'total': val,
+                    })
+                    return line
+                elif val:
+                    # Хоногийн дүрэм (MWD, WDD)-ийг slip.line_ids дээр шинээр үүсгэхгүй
+                    if any(c in ('MWD', 'WDD') for c in codes):
+                        return None
+
+                    # Ажилтны бүтцэд байгаа дүрмийг эхлээд хайх
+                    rule = False
+                    if slip.struct_id:
+                        for c in codes:
+                            r = slip.struct_id.rule_ids.filtered(lambda x: x.code == c)
+                            if r:
+                                rule = r[0]
+                                break
+                    if not rule:
+                        primary_code = codes[0]
+                        if slip.payslip_type == 'advance' and 'ADVP' in codes:
+                            primary_code = 'ADVP'
+                        rule = self.env['hr.salary.rule'].search([
+                            ('code', '=', primary_code),
+                            '|', ('company_id', '=', slip.company_id.id), ('company_id', '=', False)
+                        ], limit=1)
+                    if rule:
+                        new_line = self.env['hr.payslip.line'].with_context(skip_recompute_following=True).create({
+                            'slip_id': slip.id,
+                            'salary_rule_id': rule.id,
+                            'contract_id': contract.id if contract else False,
+                            'employee_id': slip.employee_id.id,
+                            'name': rule.name,
+                            'code': rule.code,
+                            'category_id': rule.category_id.id,
+                            'sequence': rule.sequence,
+                            'appears_on_payslip': rule.appears_on_payslip,
+                            'amount': val,
+                            'quantity': 1.0,
+                            'rate': 100.0,
+                            'total': val,
+                        })
+                        return new_line
+                return None
+
+            if slip.payslip_type == 'advance':
+                adv_amt = get_val(row, ('Гарт олгох', 'Урьдчилгаа цалин СС', 'Урьдчилгаа цалин'), default=slip.prepayment_amount or 0.0)
+                slip.write({
+                    'advance_must_hours': mwt,
+                    'advance_worked_hours': wdt,
+                    'prepayment_amount': adv_amt,
+                })
+                update_line(('ADVP', 'GIVE'), adv_amt)
+                update_input('ADV', adv_amt)
+                update_input('ADVP', adv_amt)
+                # Хэрэв урьдчилгаа цалингийн хуудсанд MWT, WDT мөр байвал мөн шинэчлэх
+                for col_key, val in [('month_work_hours', mwt), ('worked_hours', wdt)]:
+                    codes = PAYSLIP_COLUMN_CODES.get(col_key, ())
+                    if codes and slip.line_ids.filtered(lambda l: l.code in codes):
+                        updated = update_line(codes, val)
+                        if updated:
+                            update_input(updated.code, val)
+            else:
+                # Сүүл цалин:
+                changed_lines = []
+
+                # Ажилласан цаг, өдөр (worked_days) өөрчлөгдсөн бол харгалзах дүрмийн мөрүүдийг шинэчлэх
+                if wd_changed:
+                    for wd_code, wd_val in [('MWT', mwt), ('WDT', wdt), ('MWD', mwd), ('WDD', wdd)]:
+                        w_lines = slip.line_ids.filtered(lambda l: l.code == wd_code)
+                        if w_lines:
+                            if round(wd_val, 2) != round(w_lines[0].amount, 2):
+                                mod_line = update_line((wd_code,), wd_val)
+                                if mod_line and mod_line not in changed_lines:
+                                    changed_lines.append(mod_line)
+                                update_input(wd_code, wd_val)
+                        elif wd_val and wd_code in ('MWT', 'WDT'):
+                            if slip.struct_id and slip.struct_id.rule_ids.filtered(lambda r: r.code == wd_code):
+                                new_line = update_line((wd_code,), wd_val)
+                                if new_line and new_line not in changed_lines:
+                                    changed_lines.append(new_line)
+                                update_input(wd_code, wd_val)
+
+                # Excel тайлангийн багануудаар шалгаж зөвхөн өөрчлөгдсөн утгуудыг бичих
+                for header_names, col_key in PAYSLIP_HEADER_TO_COLUMN_KEY:
+                    if col_key in ('month_work_days', 'month_work_hours', 'worked_days', 'worked_hours'):
+                        continue
+
+                    # Хэрэв багц дээр урьдчилгаа цалингийн багц (advance_run_id) сонгогдсон бол урьдчилгаа цалинг Excel-ээс өөрчлөхгүй
+                    if col_key == 'advance_amount' and run.advance_run_id:
+                        continue
+
+                    codes = PAYSLIP_COLUMN_CODES.get(col_key, ())
+                    if not codes:
+                        continue
+                    val = get_val(row, header_names, default=None)
+                    if val is None:
+                        continue
+
+                    existing_lines = slip.line_ids.filtered(lambda l: l.code in codes)
+                    if existing_lines:
+                        cur_amt = sum(l.amount for l in existing_lines)
+                        if round(val, 2) != round(cur_amt, 2):
+                            target_line = update_line(codes, val)
+                            if target_line and target_line not in changed_lines:
+                                changed_lines.append(target_line)
+                            if target_line:
+                                update_input(target_line.code, val)
+                                # Олон кодтой багана (жишээ нь EDE, PAY, FAULT) байвал сонгогдоогүй бусад мөр/input-ийг 0 болгох
+                                for c in codes:
+                                    if c != target_line.code:
+                                        other_lines = slip.line_ids.filtered(lambda l: l.code == c)
+                                        if other_lines and round(other_lines[0].amount, 2) != 0.0:
+                                            update_line((c,), 0.0)
+                                            update_input(c, 0.0)
+                    elif val:
+                        target_line = update_line(codes, val)
+                        if target_line and target_line not in changed_lines:
+                            changed_lines.append(target_line)
+                        if target_line:
+                            update_input(target_line.code, val)
+
+                # Хэрэв мөр өөрчлөгдсөн бол хамгийн бага sequence-тэй мөрнөөс эхлэн дараах дүрмүүдийг дахин бодох
+                if changed_lines:
+                    min_seq = min(l.sequence for l in changed_lines)
+                    trigger_line = slip.line_ids.filtered(lambda l: l.sequence == min_seq)[:1]
+                    if trigger_line:
+                        if not trigger_line.contract_id and contract:
+                            trigger_line.contract_id = contract
+                        trigger_line.action_recompute_following_lines()
+
+            # Дүнгийн багануудыг дахин тооцоолох
+            slip._compute_payslip_columns()
+            updated_count += 1
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Амжилттай'),
+                'message': _('Нийт %s ажилтны цагийн болон цалингийн мэдээлэл амжилттай импортлогдлоо.') % updated_count,
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

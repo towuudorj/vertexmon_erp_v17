@@ -371,7 +371,7 @@ class HrAttendance(models.Model):
                 }
                 response = requests.get(url, headers=headers, params=data)
                 response_json = response.json()
-                if not response_json['result']:
+                if 'result' not in response_json:
                     continue
                 if response_json.get('success', False) and 'result' in response_json:
                     for line in response_json['result']['attendance']:
@@ -449,39 +449,63 @@ class HrAttendance(models.Model):
                             continue
         return None
 
-    def _cron_update_attendance(self):
+    def _cron_update_attendance(self, last_days=10):
         microsoft_value_obj = self.env['microsoft.api.value'].sudo().search([], limit=1)
+        if not microsoft_value_obj:
+            _logger.warning("Microsoft API Value тохиргоо олдсонгүй. _cron_update_attendance алгаслаа.")
+            return
+
         token = get_token(microsoft_value_obj)
-        if token['token_type'] and token['access_token']:
+        if token and token.get('token_type') and token.get('access_token'):
             token = token['token_type'] + ' ' + token['access_token']
         else:
-            raise ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(token))
+            raise ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s' % str(token))
 
         site_id = get_site_id(microsoft_value_obj, token)
-
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'attendance_list_name', 'attendance_list_id')
-        date_range = fields.Datetime.now()
-        date_range = date_range - relativedelta(days=30)
-        attendance_ids = self.env['hr.attendance'].sudo().search(['|', ('share_point_id', '=', ''), ('share_point_id', '=', False)])
+
+        # last_days хувьсагчаар өнөөдрөөс хойших өдрүүдийг тооцох
+        if isinstance(last_days, int) and last_days > 0:
+            date_range = fields.Datetime.now() - relativedelta(days=last_days)
+        else:
+            date_range = fields.Datetime.now() - relativedelta(days=10)
+
+        # 1. Шинэ ирцүүд: share_point_id байхгүй бөгөөд сүүлийн last_days өдрүүд доторх
+        domain_new = [
+            '|', ('share_point_id', '=', ''), ('share_point_id', '=', False),
+            ('check_in', '>=', date_range)
+        ]
+        attendance_ids = self.env['hr.attendance'].sudo().search(domain_new)
         headers = {
             "Authorization": token,
             "Content-Type": "application/json"
         }
         attendance_ids.push_to_sharepoint(headers, site_id, list_id)
-        changed_att_ids = self.env['hr.attendance'].sudo().search([
+
+        # 2. Өөрчлөгдсөн ирцүүд: сүүлийн last_days өдрүүдэд засагдсан бөгөөд дээрх жагсаалтад ороогүй
+        domain_changed = [
             ('write_date', '>=', date_range),
             ('id', 'not in', attendance_ids.ids)
-        ])
+        ]
+        changed_att_ids = self.env['hr.attendance'].sudo().search(domain_changed)
         changed_att_ids.push_to_sharepoint(headers, site_id, list_id)
 
-    def push_to_sharepoint(self, headers, site_id, list_id):
+    def push_to_sharepoint(self, headers, site_id, list_id, timeout=10):
+        company_id = self.env.company.id or self.env['res.company'].sudo().search([], limit=1, order='id asc').id
+        hour_record_model = self.env['hr.hour.record']
+
         for att in self:
             try:
-                if att.share_point_id == '' or not att.share_point_id:
+                employee = att.employee_id
+                if not employee or not att.check_in:
+                    continue
+
+                is_new = (att.share_point_id == '' or not att.share_point_id)
+                if is_new:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
                 else:
                     url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items/{att.share_point_id}/fields"
-                employee = att.employee_id
+
                 check_in = att.check_in.strftime('%Y-%m-%dT%H:%M:%SZ')
 
                 if att.check_out:
@@ -495,13 +519,20 @@ class HrAttendance(models.Model):
                 worked_hour = f"{hours:02d}:{minutes:02d}"
                 local_check_in = att.check_in + timedelta(hours=8)
                 local_date = local_check_in.date()
-                hr_hour_record = self.env['hr.hour.record'].new({
-                    'start_date': datetime.combine(local_date, dt_time(0, 1)) - timedelta(hours=8),
-                    'end_date': datetime.combine(local_date, dt_time(23, 59)) - timedelta(hours=8),
-                    'company_id': self.env['res.company'].search([], limit=1, order='id asc').id
-                })
-                line_vals = hr_hour_record.hour_record(employee_id=att.employee_id)
-                los_time = line_vals.get('miss_time', 0) if line_vals else 0
+
+                los_time = 0.0
+                try:
+                    hr_hour_record = hour_record_model.new({
+                        'start_date': datetime.combine(local_date, dt_time(0, 1)) - timedelta(hours=8),
+                        'end_date': datetime.combine(local_date, dt_time(23, 59)) - timedelta(hours=8),
+                        'company_id': company_id
+                    })
+                    line_vals = hr_hour_record.hour_record(employee_id=att.employee_id)
+                    los_time = line_vals.get('miss_time', 0.0) if line_vals else 0.0
+                except Exception as ex_hr:
+                    _logger.warning("Ажилтан %s-ийн хоцролтын цаг бодоход алдаа гарлаа: %s", employee.name, ex_hr)
+                    los_time = 0.0
+
                 body = {
                     "Title": employee.last_name or '',
                     "first_name": employee.name or '',
@@ -512,16 +543,37 @@ class HrAttendance(models.Model):
                     "loss_time": str(round(los_time, 2)),
                     "emp_id": employee.id,
                 }
-                if att.share_point_id == '' or not att.share_point_id:
+                if is_new:
                     body = {"fields": body}
-                    response = requests.post(url, headers=headers, json=body)
+                    response = requests.post(url, headers=headers, json=body, timeout=timeout)
                 else:
-                    response = requests.patch(url, headers=headers, json=body)
-                response_json = response.json()
-                if response_json.get('id', False):
-                    att.share_point_id = response_json.get('id')
-                    self.env.cr.commit()
+                    response = requests.patch(url, headers=headers, json=body, timeout=timeout)
 
+                # Rate limiting (429) шалгах
+                if response.status_code == 429:
+                    retry_after = int(response.headers.get('Retry-After', 5))
+                    _logger.warning("Microsoft Graph rate limit (429) ирлээ. Ирц ID: %s. %s секунд хүлээнэ.", att.id, retry_after)
+                    time.sleep(retry_after)
+                    if is_new:
+                        response = requests.post(url, headers=headers, json=body, timeout=timeout)
+                    else:
+                        response = requests.patch(url, headers=headers, json=body, timeout=timeout)
+
+                if response.status_code in (200, 201):
+                    response_json = response.json()
+                    if is_new and response_json.get('id', False):
+                        att.share_point_id = response_json.get('id')
+                    self.env.cr.commit()
+                else:
+                    _logger.warning(
+                        "SharePoint руу ирц ID %s илгээхэд алдаа гарлаа: Status %s, Response: %s",
+                        att.id, response.status_code, response.text[:200]
+                    )
+
+            except requests.exceptions.Timeout:
+                self.env.cr.rollback()
+                _logger.error("SharePoint руу ирц ID %s илгээхэд timeout гарлаа (хязгаар: %sс)", att.id, timeout)
+                continue
             except Exception as e:
                 self.env.cr.rollback()
                 _logger.error("error accured on push_attendance_to_microsoft error:%s\n", e)
