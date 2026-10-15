@@ -43,55 +43,64 @@ class ProductProduct(models.Model):
         if self.qty_available:
             errors.append(_('Агуулахад %s үлдэгдэлтэй байна') % self.qty_available)
 
-        sale_orders = self.env['sale.order.line'].sudo().search([
+        def _with_qty(records, doc_field, qty_field, doc_name='name'):
+            """'Doc1 (тоо: 9.0), Doc2 (тоо: 3.0)' - same document lines are summed."""
+            totals = {}
+            for rec in records:
+                doc = rec[doc_field]
+                totals[doc] = totals.get(doc, 0.0) + rec[qty_field]
+            return ', '.join(_('%s (тоо: %s)') % (doc[doc_name], qty) for doc, qty in totals.items())
+
+        sale_lines = self.env['sale.order.line'].sudo().search([
             ('product_id', '=', self.id),
             ('order_id.state', 'in', ('draft', 'sent')),
-        ]).mapped('order_id')
-        if sale_orders:
-            errors.append(_('Ноорог төлөвтэй Борлуулалтын захиалга (%s) ашиглаж байна')
-                           % ', '.join(sale_orders.mapped('name')))
+        ])
+        if sale_lines:
+            errors.append(_('Ноорог төлөвтэй Борлуулалтын захиалга [%s] ашиглаж байна')
+                           % _with_qty(sale_lines, 'order_id', 'product_uom_qty'))
 
-        purchase_orders = self.env['purchase.order.line'].sudo().search([
+        purchase_lines = self.env['purchase.order.line'].sudo().search([
             ('product_id', '=', self.id),
             ('order_id.state', 'in', ('draft', 'sent', 'to approve')),
-        ]).mapped('order_id')
-        if purchase_orders:
-            errors.append(_('Ноорог төлөвтэй Худалдан авалтын захиалга (%s) ашиглаж байна')
-                           % ', '.join(purchase_orders.mapped('name')))
+        ])
+        if purchase_lines:
+            errors.append(_('Ноорог төлөвтэй Худалдан авалтын захиалга [%s] ашиглаж байна')
+                           % _with_qty(purchase_lines, 'order_id', 'product_qty'))
 
-        draft_pickings = self.env['stock.move'].sudo().search([
+        draft_moves = self.env['stock.move'].sudo().search([
             ('product_id', '=', self.id),
             ('state', '=', 'draft'),
-        ]).mapped('picking_id')
-        if draft_pickings:
-            errors.append(_('Ноорог төлөвтэй Агуулахын шилжилт (%s) ашиглаж байна')
-                           % ', '.join(draft_pickings.mapped('name')))
+            ('picking_id', '!=', False),
+        ])
+        if draft_moves:
+            errors.append(_('Ноорог төлөвтэй Агуулахын шилжилт [%s] ашиглаж байна')
+                           % _with_qty(draft_moves, 'picking_id', 'product_uom_qty'))
 
-        crm_leads = self.env['crm.lead.line'].sudo().search([
+        lead_lines = self.env['crm.lead.line'].sudo().search([
             ('product_id', '=', self.id),
             ('state', '=', 'draft'),
             ('lead_id.active', '=', True),
             ('lead_id.new_status', 'not in', CLOSED_LEAD_STATUSES),
-        ]).mapped('lead_id')
-        if crm_leads:
-            errors.append(_('Идэвхтэй CRM боломж (%s) ашиглаж байна')
-                           % ', '.join(crm_leads.mapped('name')))
+        ])
+        if lead_lines:
+            errors.append(_('Идэвхтэй CRM боломж [%s] ашиглаж байна')
+                           % _with_qty(lead_lines, 'lead_id', 'qty'))
 
-        projects = self.env['project.products.line'].sudo().search([
+        project_lines = self.env['project.products.line'].sudo().search([
             ('product_id', '=', self.id),
             ('project_id.state', '!=', 'done'),
-        ]).mapped('project_id')
-        if projects:
-            errors.append(_('Дуусаагүй Төсөл (%s) ашиглаж байна')
-                           % ', '.join(projects.mapped('name')))
+        ])
+        if project_lines:
+            errors.append(_('Дуусаагүй Төсөл [%s] ашиглаж байна')
+                           % _with_qty(project_lines, 'project_id', 'product_qty'))
 
-        tasks = self.env['task.products.line'].sudo().search([
+        task_lines = self.env['task.products.line'].sudo().search([
             ('product_id', '=', self.id),
             ('task_id.state', 'not in', CLOSED_TASK_STATES),
-        ]).mapped('task_id')
-        if tasks:
-            errors.append(_('Дуусаагүй Төслийн ажил (%s) ашиглаж байна')
-                           % ', '.join(tasks.mapped('name')))
+        ])
+        if task_lines:
+            errors.append(_('Дуусаагүй Төслийн ажил [%s] ашиглаж байна')
+                           % _with_qty(task_lines, 'task_id', 'product_qty'))
 
         return errors
 
