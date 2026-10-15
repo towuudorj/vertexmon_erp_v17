@@ -245,7 +245,7 @@ class HrPayslipRun(models.Model):
         for slip in self_obj.slip_ids:
             account_number = ''
             if slip.employee_id.work_contact_id.bank_ids:
-                account_number = slip.employee_id.work_contact_id.bank_ids[0].account_number
+                account_number = slip.employee_id.work_contact_id.bank_ids[0].acc_number
             colly = 0
             sheet.write(rowx, colly, number, data_left)
             colly += 1
