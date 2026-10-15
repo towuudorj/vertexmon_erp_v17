@@ -43,13 +43,13 @@ class ProductProduct(models.Model):
         if self.qty_available:
             errors.append(_('Агуулахад %s үлдэгдэлтэй байна') % self.qty_available)
 
-        def _with_qty(records, doc_field, qty_field, doc_name='name'):
+        def _with_qty(records, doc_field, qty_field, label=lambda doc: doc.name):
             """'Doc1 (тоо: 9.0), Doc2 (тоо: 3.0)' - same document lines are summed."""
             totals = {}
             for rec in records:
                 doc = rec[doc_field]
                 totals[doc] = totals.get(doc, 0.0) + rec[qty_field]
-            return ', '.join(_('%s (тоо: %s)') % (doc[doc_name], qty) for doc, qty in totals.items())
+            return ', '.join(_('%s (тоо: %s)') % (label(doc), qty) for doc, qty in totals.items())
 
         sale_lines = self.env['sale.order.line'].sudo().search([
             ('product_id', '=', self.id),
@@ -100,7 +100,8 @@ class ProductProduct(models.Model):
         ])
         if task_lines:
             errors.append(_('Дуусаагүй Төслийн ажил [%s] ашиглаж байна')
-                           % _with_qty(task_lines, 'task_id', 'product_qty'))
+                           % _with_qty(task_lines, 'task_id', 'product_qty',
+                                     lambda task: '%s / %s' % (task.project_id.name or '-', task.name)))
 
         return errors
 
