@@ -93,7 +93,8 @@ class EmployeeSharePointSync(models.Model):
             return _graph(method, url, headers, body)
 
         def sync_simple(list_key_name, list_key_id, records, id_field, values):
-            """Departments / jobs: one row per record id, Title (and more) as in Odoo"""
+            """Departments / jobs: one row per record id, Title (and more) as in Odoo. Marks them synced, so
+            push_hr_info_to_microsoft (which adds every unmarked one) doesn't add them a second time."""
             list_id = get_list_id(microsoft_value_obj, site_id, token, list_key_name, list_key_id)
             base = GRAPH.format(site=site_id, list=list_id)
             rows = defaultdict(list)
@@ -101,7 +102,11 @@ class EmployeeSharePointSync(models.Model):
                 rows[_odoo_id(item.get('fields', {}), id_field)].append(item)
             for record in records:
                 want = {id_field: record.id, **values(record)}
-                found = rows.get(record.id) or []
+                found = sorted(rows.get(record.id) or [], key=lambda r: int(r['id']))
+                for extra in found[1:]:
+                    write('DELETE', f"{base}/{extra['id']}")
+                    report[f'{id_field}: duplicate removed'] += 1
+                    _logger.info("SharePoint sync: remove 2nd row %s of %s %s", extra['id'], id_field, record.id)
                 if not found:
                     write('POST', base, {'fields': want})
                     report[f'{id_field}: added'] += 1
@@ -109,6 +114,8 @@ class EmployeeSharePointSync(models.Model):
                 elif any(not _same(found[0].get('fields', {}).get(k), v) for k, v in want.items()):
                     write('PATCH', f"{base}/{found[0]['id']}/fields", want)
                     report[f'{id_field}: updated'] += 1
+                if not dry_run and not record.is_sync_microsoft:
+                    record.is_sync_microsoft = True
 
         try:
             sync_simple('department_list_name', 'department_list_id', self.env['hr.department'].sudo().search([]), 'department_id',
