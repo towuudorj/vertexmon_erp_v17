@@ -5,3 +5,4 @@ from . import hr_leave_type
 from . import res_partner
 from . import attendance_edit_request
 from . import sharepoint_employee_sync
+from . import vmcc_graph_subscription

@@ -30,6 +30,10 @@ class AttendanceEditRequest(models.Model):
         if not session:
             return
         headers, site_id, microsoft_value_obj, token = session
+        try:
+            self._vmcc_ensure_subscriptions(session)
+        except Exception:
+            _logger.exception("Graph subscription")
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'att_edit_req_list_name', 'att_edit_req_list_id')
         done = set(self.sudo().search([]).mapped('share_point_id'))
         attendance_obj = self.env['hr.attendance'].sudo()
