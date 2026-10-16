@@ -238,15 +238,21 @@ class HrAttendance(models.Model):
                     "pageSize": HIK_PAGE_SIZE,
                     "queryInfo": {
                         "personCode": code,
-                        "beginTime": f"{begin_date}T00:00:00+08:00",
-                        "endTime": f"{end_date}T23:59:59+08:00",
+                        # HikCentral refuses "+08:00" ("beginTime parameter error"); this is the form it takes
+                        "beginTime": f"{begin_date}T00:00:00 05:00",
+                        "endTime": f"{end_date}T23:59:59 08:00",
                         "sortInfo": {"sortField": 1, "sortType": 1},
                     },
                 }
             }
             headers = build_headers(method, accept, content_type, APP_KEY, APP_SECRET, API_PATH)
             response = requests.post(url, json=body, headers=headers, verify=False, timeout=HTTP_TIMEOUT)
-            records = (response.json().get('data') or {}).get('record') or []
+            result = response.json()
+            if str(result.get('code')) != '0':
+                # a refused request is an error, not an empty answer
+                _logger.error("HikCentral %s кодын ирцийг буцаасангүй: %s %s", code, result.get('code'), result.get('msg'))
+                return
+            records = (result.get('data') or {}).get('record') or []
             yield from records
             if len(records) < HIK_PAGE_SIZE:
                 return
