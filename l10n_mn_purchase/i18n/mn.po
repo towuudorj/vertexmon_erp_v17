@@ -650,3 +650,8 @@ msgstr "Захиалгын огноо"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
 msgstr "Шинэ үнийн санал"
+
+#. module: l10n_mn_purchase
+#: model:ir.model.fields,field_description:l10n_mn_purchase.field_purchase_expense_report__show_customs_vat
+msgid "Show customs VAT"
+msgstr "НӨАТ-гааль харуулах"

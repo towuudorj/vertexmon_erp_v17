@@ -18,9 +18,48 @@ class PurchaseExpenseReport(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Product')
     category_id = fields.Many2one('product.category', string='Category')
     is_detailed = fields.Boolean(string='Detailed Report', default=False)
+    show_customs_vat = fields.Boolean(string='Show customs VAT', default=False)
     purchase_type = fields.Selection([('local', 'Local'),
                                         ('foreign' , 'Foreign')], string='Purchase type',
                                         default='local', required=True)
+
+    def _customs_vat_share(self, cost, moves):
+        """Landed cost-ийн vendor bill дээрх "НӨАТ-гааль" (өртөгт шингэдэггүй) дүнгээс өгөгдсөн
+        move-уудын хувийг бодно. НӨАТ-ын суурь = барааны өртөг + Гаалийн албан татвар тул
+        move бүрийн (former_cost + хуваарилагдсан гаалийн албан татвар)-ын харьцаагаар хуваана."""
+        bill = cost.vendor_bill_id.sudo()
+        if not bill or not moves:
+            return 0.0
+        vat = sum(bill.invoice_line_ids.filtered(
+            lambda l: l.product_id.name == u'НӨАТ-гааль').mapped('balance'))
+        if not vat:
+            return 0.0
+        duty_lines = cost.cost_lines.filtered(lambda l: l.product_id.name == u'Гаалийн албан татвар')
+        base = {}
+        for adj in cost.valuation_adjustment_lines:
+            if adj.move_id not in base:
+                base[adj.move_id] = adj.former_cost
+            if adj.cost_line_id in duty_lines:
+                base[adj.move_id] += adj.additional_landed_cost
+        total = sum(base.values())
+        return vat * sum(base.get(move, 0.0) for move in moves) / total if total else 0.0
+
+    def _customs_vat_fallback(self, order, value, handled_costs=None):
+        """Өртөг шингэх зардал (landed cost) үүсээгүй/батлагдаагүй гаалийн нэхэмжлэхийн НӨАТ-гаалийг
+        нэхэмжлэхийн Худалдан авалтуудын (po_ids) барааны үнийн харьцаагаар хуваана."""
+        handled_costs = handled_costs or self.env['stock.landed.cost']
+        total = 0.0
+        bills = self.env['account.move'].sudo().search([
+            ('po_ids', 'in', order.id), ('move_type', '=', 'in_invoice'), ('state', '=', 'posted')])
+        for bill in bills:
+            if bill.landed_costs_ids.filtered(lambda c: c in handled_costs):
+                continue  # landed cost-оор нарийн тооцогдсон
+            vat = sum(bill.invoice_line_ids.filtered(
+                lambda l: l.product_id.name == u'НӨАТ-гааль').mapped('balance'))
+            goods = sum(po.amount_untaxed * po.currency_rate for po in bill.po_ids)
+            if vat and goods:
+                total += vat * value / goods
+        return total
 
     def action_print_xls_report(self):
         data = {
@@ -31,6 +70,7 @@ class PurchaseExpenseReport(models.TransientModel):
             'product_id': self.product_id.id,
             'category_id': self.category_id.id,
             'is_detailed': self.is_detailed,
+            'show_customs_vat': self.show_customs_vat,
             'purchase_type':self.purchase_type
         }
         return {
@@ -117,6 +157,8 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("AB%s"%rowx, u'Хүргэсэн тоо', header_txt)
             sheet.write("AC%s"%rowx, u'Хүргэгдсэн нийт дүн', header_txt)
             sheet.write("AD%s"%rowx, u'Гаалийн мэдүүлгийн дугаар', header_txt)
+            if data.get('show_customs_vat'):
+                sheet.write("AE%s"%rowx, u'НӨАТ-гааль', header_txt)
             rowx +=1
 
             if data['product_id']:
@@ -261,6 +303,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 custom_tax_cost = 0.0
                 declaration_cost = 0.0
                 clearance_cost = 0.0
+                cost_moves = {}
                 quantity = 0
                 vat_declaration = []
                 freight_partner = ''
@@ -283,6 +326,8 @@ class PurchaseExpenseReport(models.TransientModel):
                         if exp['vat_declaration'] not in vat_declaration:
                             vat_declaration.append(exp['vat_declaration'])
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
+                        if st_line.cost_id:
+                            cost_moves[st_line.cost_id] = cost_moves.get(st_line.cost_id, self.env['stock.move']) | self.env['stock.move'].browse(purchase_data['move_id'])
 
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
@@ -315,6 +360,10 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("AB%s"%rowx, quantity, text_right)
                 sheet.write("AC%s"%rowx, purchase_data['price_unit'] * quantity * curr_rate, text_right)
                 sheet.write("AD%s"%rowx, vat_declaration, text_right)
+                if data.get('show_customs_vat'):
+                    sheet.write("AE%s"%rowx, sum(self._customs_vat_share(cost, moves) for cost, moves in cost_moves.items())
+                                                  + self._customs_vat_fallback(self.env['purchase.order'].browse(purchase_data['order_id']), purchase_data['product_qty'] * purchase_data['price_unit'] * purchase_data['currency_rate'],
+                                                                               self.env['stock.landed.cost'].browse([c.id for c in cost_moves])), text_right)
 
                 
                 rowx +=1
@@ -339,6 +388,9 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("AA%s"%rowx, '', header_txt)
             sheet.write("AB%s"%rowx, '=sum(AB2:AB%s)'%(rowx-1), header_txt)
             sheet.write("AC%s"%rowx, '', header_txt)
+            if data.get('show_customs_vat'):
+                sheet.write("AD%s"%rowx, '', header_txt)
+                sheet.write("AE%s"%rowx, '=sum(AE2:AE%s)'%(rowx-1), header_txt)
 
         else:
             rowx += 3
@@ -362,6 +414,8 @@ class PurchaseExpenseReport(models.TransientModel):
             sheet.write("R%s"%rowx, u'Нийт зардал', header_txt)
             sheet.write("S%s"%rowx, u'Нийт зардал+өртөг', header_txt)
             sheet.write("T%s"%rowx, u'Тээврийн компани', header_txt)
+            if data.get('show_customs_vat'):
+                sheet.write("U%s"%rowx, u'НӨАТ-гааль', header_txt)
             rowx +=1
             purchase_orders = self.env['purchase.order'].search([
                 ('date_planned', '>=', data['start_date']),
@@ -393,6 +447,7 @@ class PurchaseExpenseReport(models.TransientModel):
                 custom_tax_cost = 0.0
                 declaration_cost = 0.0
                 clearance_cost = 0.0
+                cost_moves = {}
                 total_cost = 0.0
                 freight_partner = ''
                 for exp_pro in expense_product_ids:
@@ -412,6 +467,8 @@ class PurchaseExpenseReport(models.TransientModel):
                     stock_line_obj = self.env['stock.landed.cost.lines'].sudo()
                     for exp in expense_data_ids:
                         st_line = stock_line_obj.browse(exp['cost_line_id'])
+                        if st_line.cost_id:
+                            cost_moves[st_line.cost_id] = cost_moves.get(st_line.cost_id, self.env['stock.move']) | self.env['stock.valuation.adjustment.lines'].sudo().browse(exp['id']).move_id
                         if exp_pro.name == u'Тээврийн зардал' and st_line.product_id.id == exp_pro.id:
                             frieght_cost += exp['additional_landed_cost']
                             if st_line.cost_id.vendor_bill_id.partner_id.name !=False:
@@ -435,6 +492,16 @@ class PurchaseExpenseReport(models.TransientModel):
                 sheet.write("R%s"%rowx,  total_cost, text_right)
                 sheet.write("S%s"%rowx,  total_cost+total_amount, text_right)
                 sheet.write("T%s"%rowx,  u'%s'%freight_partner, text_right)
+                if data.get('show_customs_vat'):
+                    # Тухайн захиалгын move-ууд дээрх батлагдсан landed cost-уудыг шууд олно
+                    vat_cost_moves = {}
+                    for adj in self.env['stock.valuation.adjustment.lines'].sudo().search([
+                            ('move_id.purchase_line_id.order_id', '=', purchase_data.id),
+                            ('cost_id.state', '=', 'done')]):
+                        vat_cost_moves[adj.cost_id] = vat_cost_moves.get(adj.cost_id, self.env['stock.move']) | adj.move_id
+                    sheet.write("U%s"%rowx,  sum(self._customs_vat_share(cost, moves) for cost, moves in vat_cost_moves.items())
+                                + self._customs_vat_fallback(purchase_data, purchase_data.amount_untaxed * purchase_data.currency_rate,
+                                                             self.env['stock.landed.cost'].browse([c.id for c in vat_cost_moves])), text_right)
 
                 
                 rowx +=1
