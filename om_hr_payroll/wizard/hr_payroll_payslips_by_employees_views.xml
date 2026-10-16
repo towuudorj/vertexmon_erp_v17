@@ -13,7 +13,8 @@
                 <newline/>
                 <field name="payslip_run_id" invisible="1"/>
                 <field name="dep_id" invisible="1"/>
-                <field name="employee_ids" nolabel="1" domain="[('department_id', '=', dep_id)] if dep_id else []"/>
+                <field name="created_emp_ids" invisible="1"/>
+                <field name="employee_ids" nolabel="1" domain="[('contract_id', '!=', False),('department_id', '=', dep_id),('id', 'not in', created_emp_ids)] if dep_id else [('contract_id', '!=', False),('id', 'not in', created_emp_ids)]"/>
                 <footer>
                     <button icon="fa-cogs" string="Generate" name="compute_sheet" type="object" class="oe_highlight"/>
                     <button string="Цуцлах" class="btn-secondary" special="cancel" data-hotkey="x"/>

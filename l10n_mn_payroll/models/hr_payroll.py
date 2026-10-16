@@ -151,10 +151,92 @@ class HrPayslipRun(models.Model):
         sheet.set_paper(9)
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0)
+        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self
+
+        if self_obj.payslip_type == 'advance':
+            # -------------------------------------------------------------
+            # Урьдчилгаа цалингийн тайлан (Зөвхөн 7 багана + нуусан ID)
+            # Баганууд: №, Овог, Нэр, Хэлтэс тасаг, Дансны дугаар, Урьдчилгаа цалин СС, Регистр, ID
+            # -------------------------------------------------------------
+            sheet.set_column(0, 0, 5)
+            sheet.set_column(1, 2, 15)
+            sheet.set_column(3, 4, 20)
+            sheet.set_column(5, 5, 22)
+            sheet.set_column(6, 6, 15)
+            sheet.set_column(7, 7, None, None, {'hidden': True})
+
+            sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
+            sheet.merge_range(1, 0, 1, 6, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
+            sheet.merge_range("A3:G3", '%s %s' % (self_obj.name, 'урьдчилгаа цалин'), head)
+
+            rowx = 3
+            sheet.merge_range(rowx, 0, rowx+1, 0, u'№', title)
+            sheet.merge_range(rowx, 1, rowx+1, 1, u'Овог', title)
+            sheet.merge_range(rowx, 2, rowx+1, 2, u'Нэр', title)
+            sheet.merge_range(rowx, 3, rowx+1, 3, u'Хэлтэс тасаг', title)
+            sheet.merge_range(rowx, 4, rowx+1, 4, u'Дансны дугаар', title)
+            sheet.merge_range(rowx, 5, rowx+1, 5, u'Урьдчилгаа цалин СС', title)
+            sheet.merge_range(rowx, 6, rowx+1, 6, u'Регистр', title)
+            sheet.merge_range(rowx, 7, rowx+1, 7, u'ID', title)
+            rowx += 2
+
+            number = 1
+            for slip in self_obj.slip_ids:
+                account_number = ''
+                if slip.employee_id.work_contact_id.bank_ids:
+                    b = slip.employee_id.work_contact_id.bank_ids[0]
+                    account_number = getattr(b, 'acc_number', getattr(b, 'account_number', '')) or ''
+                elif slip.employee_bank_account:
+                    account_number = slip.employee_bank_account
+                elif slip.employee_id.bank_account_id:
+                    account_number = slip.employee_id.bank_account_id.acc_number or ''
+
+                adv_val = 0.0
+                advp_line = slip.line_ids.filtered(lambda l: l.code == 'ADVP')
+                if advp_line:
+                    adv_val = advp_line[0].total or advp_line[0].amount or 0.0
+                if not adv_val:
+                    adv_val = slip.prepayment_amount or slip.net_amount or 0.0
+
+                reg_no = slip.employee_id.ssnid or slip.employee_id.identification_id or ''
+
+                sheet.write(rowx, 0, number, data_left)
+                sheet.write(rowx, 1, slip.employee_id.last_name or '', data_left)
+                sheet.write(rowx, 2, slip.employee_id.name or '', data_left)
+                sheet.write(rowx, 3, slip.employee_id.department_id.name or '', data_left)
+                sheet.write(rowx, 4, account_number, data_left)
+                sheet.write(rowx, 5, adv_val, data_right)
+                sheet.write(rowx, 6, reg_no, data_right)
+                sheet.write(rowx, 7, slip.id, data_right)
+
+                rowx += 1
+                number += 1
+
+            sheet.merge_range(rowx, 0, rowx, 4, u'Нийт дүн:', data_bold_center)
+            rowx += 1
+            if rowx - 1 >= 6:
+                sheet.write("F%s" % rowx, '=sum(F6:F%s)' % (rowx - 1), header_txt)
+            else:
+                sheet.write("F%s" % rowx, 0.0, header_txt)
+            sheet.write("G%s" % rowx, '', header_txt)
+            sheet.write("H%s" % rowx, '', header_txt)
+
+            workbook.close()
+            output.seek(0)
+            if get_file:
+                res_data = output.getvalue()
+                output.close()
+                return res_data
+            if response:
+                response.stream.write(output.read())
+            output.close()
+            return
+
+        # -------------------------------------------------------------
+        # Сүүл цалингийн тайлан (28 багана + томьёонууд + нуусан баганууд)
+        # -------------------------------------------------------------
         sheet.set_column(0, 0, 5)
         sheet.set_column(1, 27, 18)
-
-        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self
         max_ceiling = 7920000.0
         si_rule = self.env['hr.salary.rule'].search([
             ('code', '=', 'SI11'),
@@ -168,7 +250,7 @@ class HrPayslipRun(models.Model):
 
         sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
         sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
-        sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'урьдчилгаа цалин' if self_obj.payslip_type=='advance' else 'сүүл цалин'), head)
+        sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'сүүл цалин'), head)
         rowx = 3
         colly = 0
         sheet.merge_range(rowx, colly , rowx+1, colly, u'№', title)
@@ -245,7 +327,12 @@ class HrPayslipRun(models.Model):
         for slip in self_obj.slip_ids:
             account_number = ''
             if slip.employee_id.work_contact_id.bank_ids:
-                account_number = slip.employee_id.work_contact_id.bank_ids[0].acc_number
+                b = slip.employee_id.work_contact_id.bank_ids[0]
+                account_number = getattr(b, 'acc_number', getattr(b, 'account_number', '')) or ''
+            elif slip.employee_bank_account:
+                account_number = slip.employee_bank_account
+            elif slip.employee_id.bank_account_id:
+                account_number = slip.employee_id.bank_account_id.acc_number or ''
             colly = 0
             sheet.write(rowx, colly, number, data_left)
             colly += 1
@@ -257,7 +344,7 @@ class HrPayslipRun(models.Model):
             colly += 1
             sheet.write(rowx, colly, account_number, data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.wage_amount or 0.0, data_left)
+            sheet.write(rowx, colly, slip.contract_id.wage or 0.0, data_left)
             colly += 1
             sheet.write(rowx, colly, slip.month_work_days or 0.0, data_left)
             colly += 1
@@ -451,6 +538,7 @@ PAYSLIP_COLUMN_CODES = {
 
 # Excel тайлангийн толгой баганууд -> PAYSLIP_COLUMN_CODES түлхүүрийн харгалзаа
 PAYSLIP_HEADER_TO_COLUMN_KEY = [
+    (('Үндсэн цалин',), 'wage_amount'),
     (('Сарын ажлын хоног',), 'month_work_days'),
     (('Сарын ажлын фонд цаг', 'Сарын ажлын цаг'), 'month_work_hours'),
     (('Ажилласан хоног СС', 'Ажилласан хоног'), 'worked_days'),
@@ -599,7 +687,7 @@ class HrPayslip(models.Model):
     def write(self, vals):
         res = super(HrPayslip, self).write(vals)
         # Урьдчилгааны хувь, дүнг гараар зассан бол мөрийг шууд шинэчилнэ
-        if {'prepayment_amount', 'advance_must_hours', 'advance_worked_hours'} & set(vals):
+        if not self.env.context.get('skip_compute_advance') and {'prepayment_amount', 'advance_must_hours', 'advance_worked_hours'} & set(vals):
             self.filtered(lambda s: s.payslip_type == 'advance' and s.state == 'draft')._compute_advance_sheet()
         return res
 
@@ -1255,9 +1343,11 @@ class HrPayslipRunImportWizard(models.TransientModel):
             row_cells = rows[0]
             for col_idx, cell in enumerate(row_cells):
                 if cell is not None and str(cell).strip():
-                    name = str(cell).strip()
-                    if name not in header_map:
-                        header_map[name] = col_idx
+                    raw_name = str(cell).strip()
+                    clean_name = ' '.join(raw_name.split())
+                    for n in (raw_name, clean_name):
+                        if n not in header_map:
+                            header_map[n] = col_idx
 
         updated_count = 0
         run = self.run_id
@@ -1267,20 +1357,31 @@ class HrPayslipRunImportWizard(models.TransientModel):
                 header_names = (header_names,)
             for h in header_names:
                 idx = header_map.get(h)
+                if idx is None:
+                    idx = header_map.get(' '.join(h.split()))
                 if idx is not None and idx < len(row_vals):
                     val = row_vals[idx]
                     if val is not None and str(val).strip() != '':
                         try:
                             return float(val)
                         except (ValueError, TypeError):
-                            return default
+                            clean_str = str(val).strip()
+                            if clean_str in ('-', '—', '–'):
+                                return 0.0
+                            try:
+                                clean_val = clean_str.replace(',', '').replace(' ', '').replace("'", '').strip()
+                                if clean_val in ('-', '—', '–'):
+                                    return 0.0
+                                return float(clean_val)
+                            except (ValueError, TypeError):
+                                return default
             return default
 
         for row in sheet.iter_rows(min_row=6, values_only=True):
             if not any(row):
                 continue
             first_val = str(row[0]).strip() if row[0] is not None else ''
-            if 'Нийт' in first_val or 'Нийт дүн' in first_val:
+            if 'Нийт' in first_val or 'Нийт дүн' in first_val or any(c is not None and 'Нийт дүн' in str(c) for c in row[:5]):
                 break
 
             # Ажилтны цалингийн хуудсыг олох:
@@ -1289,37 +1390,138 @@ class HrPayslipRunImportWizard(models.TransientModel):
             id_idx = header_map.get('ID')
             if id_idx is not None and id_idx < len(row) and row[id_idx]:
                 try:
-                    s_id = int(row[id_idx])
+                    s_id = int(float(str(row[id_idx]).strip()))
                     slip = run.slip_ids.filtered(lambda s: s.id == s_id)
                 except (ValueError, TypeError):
                     pass
 
-            # 2-рт: Регистр № баганаар
+            # 2-рт: Регистр / Регистр № баганаар
             if not slip:
-                reg_idx = header_map.get('Регистр №')
+                reg_idx = header_map.get('Регистр')
+                if reg_idx is None:
+                    reg_idx = header_map.get('Регистр №')
+                if reg_idx is None:
+                    reg_idx = header_map.get('Регистрийн дугаар')
                 if reg_idx is not None and reg_idx < len(row) and row[reg_idx]:
-                    reg = str(row[reg_idx]).strip().upper()
+                    val = row[reg_idx]
+                    if isinstance(val, float) and val.is_integer():
+                        reg = str(int(val)).strip().upper()
+                    else:
+                        reg = str(val).strip().upper()
                     slip = run.slip_ids.filtered(
                         lambda s: (s.employee_id.ssnid and s.employee_id.ssnid.strip().upper() == reg) or
                                   (s.employee_id.identification_id and s.employee_id.identification_id.strip().upper() == reg)
                     )
 
-            # 3-рт: Нэр баганаар
+            # 3-рт: Нэр баганаар (давхардсан бол Овог баганаар нягтлах)
             if not slip:
                 name_idx = header_map.get('Нэр')
                 if name_idx is not None and name_idx < len(row) and row[name_idx]:
                     emp_name = str(row[name_idx]).strip()
-                    slip = run.slip_ids.filtered(lambda s: s.employee_id.name and s.employee_id.name.strip() == emp_name)
+                    matched_slips = run.slip_ids.filtered(lambda s: s.employee_id.name and s.employee_id.name.strip() == emp_name)
+                    if len(matched_slips) > 1:
+                        last_name_idx = header_map.get('Овог')
+                        if last_name_idx is not None and last_name_idx < len(row) and row[last_name_idx]:
+                            ln = str(row[last_name_idx]).strip()
+                            refined = matched_slips.filtered(lambda s: s.employee_id.last_name and s.employee_id.last_name.strip() == ln)
+                            if refined:
+                                matched_slips = refined
+                    slip = matched_slips
 
             if not slip:
                 continue
 
             slip = slip[0]
-            contract = slip.contract_id or slip.employee_id.contract_id or self.env['hr.contract'].search([('employee_id', '=', slip.employee_id.id)], limit=1)
+            is_advance = (run.payslip_type == 'advance') or (slip.payslip_type == 'advance')
+
+            # Гэрээг олох
+            contract = slip.contract_id or slip.employee_id.contract_id
+            if not contract and hasattr(slip, 'get_contract'):
+                contract_ids = slip.get_contract(slip.employee_id, slip.date_from, slip.date_to)
+                if contract_ids:
+                    contract = self.env['hr.contract'].browse(contract_ids[0])
+            if not contract:
+                contract = self.env['hr.contract'].sudo().search([
+                    ('employee_id', '=', slip.employee_id.id),
+                    ('company_id', '=', slip.company_id.id),
+                    ('state', 'in', ('open', 'close', 'draft')),
+                ], order='state asc, date_start desc, id desc', limit=1)
+            if not contract:
+                contract = self.env['hr.contract'].sudo().search([
+                    ('employee_id', '=', slip.employee_id.id),
+                ], order='state asc, date_start desc, id desc', limit=1)
+
+            if contract and not slip.contract_id:
+                slip.contract_id = contract
+
+            c_id = (contract.id if contract else False) or (slip.contract_id.id if slip.contract_id else False)
 
             # -------------------------------------------------------------
+            # Урьдчилгаа цалингийн импорт:
+            # "Урьдчилгаа цалин СС" баганад орж ирсэн утгыг ADVP кодтой hr.payslip.line-д оруулна
+            # -------------------------------------------------------------
+            if is_advance:
+                adv_amt = get_val(row, ('Урьдчилгаа цалин СС', 'Урьдчилгаа цалин', 'Гарт олгох'), default=None)
+                if adv_amt is not None:
+                    slip.with_context(skip_compute_advance=True).write({'prepayment_amount': adv_amt})
+                    advp_lines = slip.line_ids.filtered(lambda l: l.code == 'ADVP')
+                    if advp_lines:
+                        advp_lines[0].with_context(skip_recompute_following=True).write({
+                            'amount': adv_amt,
+                            'total': adv_amt,
+                            'quantity': 1.0,
+                            'rate': 100.0,
+                        })
+                        if len(advp_lines) > 1:
+                            advp_lines[1:].unlink()
+                    else:
+                        rule = False
+                        if hasattr(slip, '_get_advance_rule'):
+                            try:
+                                rule = slip._get_advance_rule()
+                            except Exception:
+                                pass
+                        if not rule:
+                            rule = self.env['hr.salary.rule'].search([
+                                ('code', '=', 'ADVP'),
+                                '|', ('company_id', '=', slip.company_id.id), ('company_id', '=', False)
+                            ], limit=1)
+                        if rule:
+                            if not c_id:
+                                raise UserError(_("'%s' ажилтанд хөдөлмөрийн гэрээ бүртгэгдээгүй байна! Цалин тооцохын тулд гэрээг бүртгэнэ үү.") % slip.employee_id.name)
+                            self.env['hr.payslip.line'].with_context(skip_recompute_following=True).create({
+                                'slip_id': slip.id,
+                                'salary_rule_id': rule.id,
+                                'contract_id': c_id,
+                                'employee_id': slip.employee_id.id,
+                                'name': rule.name,
+                                'code': rule.code,
+                                'category_id': rule.category_id.id if rule.category_id else False,
+                                'sequence': rule.sequence or 100,
+                                'appears_on_payslip': rule.appears_on_payslip,
+                                'condition_select': 'none',
+                                'amount_select': 'fix',
+                                'register_id': rule.register_id.id if rule.register_id else False,
+                                'amount': adv_amt,
+                                'quantity': 1.0,
+                                'rate': 100.0,
+                                'total': adv_amt,
+                            })
+                    for inp_code in ('ADV', 'ADVP'):
+                        inps = slip.input_line_ids.filtered(lambda i: i.code == inp_code)
+                        if inps:
+                            inps.write({'amount': adv_amt})
+                slip._compute_payslip_columns()
+                updated_count += 1
+                continue
+
+            # -------------------------------------------------------------
+            # Сүүл цалин:
             # A. hr.payslip.worked_days шинэчлэх
             # -------------------------------------------------------------
+            if not c_id:
+                raise UserError(_("'%s' ажилтанд хөдөлмөрийн гэрээ бүртгэгдээгүй байна! Цалин тооцохын тулд гэрээг бүртгэнэ үү.") % slip.employee_id.name)
+
             must_work = slip.worked_days_line_ids.filtered(lambda w: w.code == 'MUST_WORK')
             old_mwd = must_work[0].number_of_days if must_work else (slip.month_work_days or 0.0)
             old_mwt = must_work[0].number_of_hours if must_work else (slip.month_work_hours or 0.0)
@@ -1338,7 +1540,7 @@ class HrPayslipRunImportWizard(models.TransientModel):
             elif mwd or mwt:
                 must_work = self.env['hr.payslip.worked_days'].create({
                     'payslip_id': slip.id,
-                    'contract_id': contract.id if contract else False,
+                    'contract_id': c_id,
                     'name': _('Must work'),
                     'code': 'MUST_WORK',
                     'number_of_days': mwd,
@@ -1351,7 +1553,7 @@ class HrPayslipRunImportWizard(models.TransientModel):
             elif wdd or wdt:
                 work100 = self.env['hr.payslip.worked_days'].create({
                     'payslip_id': slip.id,
-                    'contract_id': contract.id if contract else False,
+                    'contract_id': c_id,
                     'name': _('Worked'),
                     'code': 'WORK100',
                     'number_of_days': wdd,
@@ -1386,7 +1588,7 @@ class HrPayslipRunImportWizard(models.TransientModel):
                     if not inps and val:
                         self.env['hr.payslip.input'].create({
                             'payslip_id': slip.id,
-                            'contract_id': contract.id if contract else False,
+                            'contract_id': c_id,
                             'name': rule.input_ids[0].name or code,
                             'code': rule.input_ids[0].code or code,
                             'amount': val,
@@ -1438,7 +1640,7 @@ class HrPayslipRunImportWizard(models.TransientModel):
                         new_line = self.env['hr.payslip.line'].with_context(skip_recompute_following=True).create({
                             'slip_id': slip.id,
                             'salary_rule_id': rule.id,
-                            'contract_id': contract.id if contract else False,
+                            'contract_id': c_id,
                             'employee_id': slip.employee_id.id,
                             'name': rule.name,
                             'code': rule.code,
@@ -1453,91 +1655,73 @@ class HrPayslipRunImportWizard(models.TransientModel):
                         return new_line
                 return None
 
-            if slip.payslip_type == 'advance':
-                adv_amt = get_val(row, ('Гарт олгох', 'Урьдчилгаа цалин СС', 'Урьдчилгаа цалин'), default=slip.prepayment_amount or 0.0)
-                slip.write({
-                    'advance_must_hours': mwt,
-                    'advance_worked_hours': wdt,
-                    'prepayment_amount': adv_amt,
-                })
-                update_line(('ADVP', 'GIVE'), adv_amt)
-                update_input('ADV', adv_amt)
-                update_input('ADVP', adv_amt)
-                # Хэрэв урьдчилгаа цалингийн хуудсанд MWT, WDT мөр байвал мөн шинэчлэх
-                for col_key, val in [('month_work_hours', mwt), ('worked_hours', wdt)]:
-                    codes = PAYSLIP_COLUMN_CODES.get(col_key, ())
-                    if codes and slip.line_ids.filtered(lambda l: l.code in codes):
-                        updated = update_line(codes, val)
-                        if updated:
-                            update_input(updated.code, val)
-            else:
-                # Сүүл цалин:
-                changed_lines = []
+            # Сүүл цалингийн дүрмийн мөрүүдийг шинэчлэх
+            changed_lines = []
 
-                # Ажилласан цаг, өдөр (worked_days) өөрчлөгдсөн бол харгалзах дүрмийн мөрүүдийг шинэчлэх
-                if wd_changed:
-                    for wd_code, wd_val in [('MWT', mwt), ('WDT', wdt), ('MWD', mwd), ('WDD', wdd)]:
-                        w_lines = slip.line_ids.filtered(lambda l: l.code == wd_code)
-                        if w_lines:
-                            if round(wd_val, 2) != round(w_lines[0].amount, 2):
-                                mod_line = update_line((wd_code,), wd_val)
-                                if mod_line and mod_line not in changed_lines:
-                                    changed_lines.append(mod_line)
-                                update_input(wd_code, wd_val)
-                        elif wd_val and wd_code in ('MWT', 'WDT'):
-                            if slip.struct_id and slip.struct_id.rule_ids.filtered(lambda r: r.code == wd_code):
-                                new_line = update_line((wd_code,), wd_val)
-                                if new_line and new_line not in changed_lines:
-                                    changed_lines.append(new_line)
-                                update_input(wd_code, wd_val)
+            # Ажилласан цаг, өдөр (worked_days) өөрчлөгдсөн бол харгалзах дүрмийн мөрүүдийг шинэчлэх
+            if wd_changed:
+                for wd_code, wd_val in [('MWT', mwt), ('WDT', wdt), ('MWD', mwd), ('WDD', wdd)]:
+                    w_lines = slip.line_ids.filtered(lambda l: l.code == wd_code)
+                    if w_lines:
+                        if round(wd_val, 2) != round(w_lines[0].amount, 2):
+                            mod_line = update_line((wd_code,), wd_val)
+                            if mod_line and mod_line not in changed_lines:
+                                changed_lines.append(mod_line)
+                            update_input(wd_code, wd_val)
+                    elif wd_val and wd_code in ('MWT', 'WDT'):
+                        if slip.struct_id and slip.struct_id.rule_ids.filtered(lambda r: r.code == wd_code):
+                            new_line = update_line((wd_code,), wd_val)
+                            if new_line and new_line not in changed_lines:
+                                changed_lines.append(new_line)
+                            update_input(wd_code, wd_val)
 
-                # Excel тайлангийн багануудаар шалгаж зөвхөн өөрчлөгдсөн утгуудыг бичих
-                for header_names, col_key in PAYSLIP_HEADER_TO_COLUMN_KEY:
-                    if col_key in ('month_work_days', 'month_work_hours', 'worked_days', 'worked_hours'):
-                        continue
+            # Excel тайлангийн багануудаар шалгаж зөвхөн өөрчлөгдсөн утгуудыг бичих
+            for header_names, col_key in PAYSLIP_HEADER_TO_COLUMN_KEY:
+                if col_key in ('month_work_days', 'month_work_hours', 'worked_days', 'worked_hours'):
+                    continue
 
-                    # Хэрэв багц дээр урьдчилгаа цалингийн багц (advance_run_id) сонгогдсон бол урьдчилгаа цалинг Excel-ээс өөрчлөхгүй
-                    if col_key == 'advance_amount' and run.advance_run_id:
-                        continue
+                # Хэрэв багц дээр урьдчилгаа цалингийн багц (advance_run_id) сонгогдсон бол урьдчилгаа цалинг Excel-ээс өөрчлөхгүй
+                if col_key == 'advance_amount' and run.advance_run_id:
+                    continue
 
-                    codes = PAYSLIP_COLUMN_CODES.get(col_key, ())
-                    if not codes:
-                        continue
-                    val = get_val(row, header_names, default=None)
-                    if val is None:
-                        continue
+                codes = PAYSLIP_COLUMN_CODES.get(col_key, ())
+                if not codes:
+                    continue
+                val = get_val(row, header_names, default=None)
+                if val is None:
+                    continue
 
-                    existing_lines = slip.line_ids.filtered(lambda l: l.code in codes)
-                    if existing_lines:
-                        cur_amt = sum(l.amount for l in existing_lines)
-                        if round(val, 2) != round(cur_amt, 2):
-                            target_line = update_line(codes, val)
-                            if target_line and target_line not in changed_lines:
-                                changed_lines.append(target_line)
-                            if target_line:
-                                update_input(target_line.code, val)
-                                # Олон кодтой багана (жишээ нь EDE, PAY, FAULT) байвал сонгогдоогүй бусад мөр/input-ийг 0 болгох
-                                for c in codes:
-                                    if c != target_line.code:
-                                        other_lines = slip.line_ids.filtered(lambda l: l.code == c)
-                                        if other_lines and round(other_lines[0].amount, 2) != 0.0:
-                                            update_line((c,), 0.0)
-                                            update_input(c, 0.0)
-                    elif val:
+                existing_lines = slip.line_ids.filtered(lambda l: l.code in codes)
+                if existing_lines:
+                    cur_amt = sum(l.amount for l in existing_lines)
+                    if round(val, 2) != round(cur_amt, 2):
                         target_line = update_line(codes, val)
                         if target_line and target_line not in changed_lines:
                             changed_lines.append(target_line)
                         if target_line:
                             update_input(target_line.code, val)
+                            # Олон кодтой багана (жишээ нь EDE, PAY, FAULT) байвал сонгогдоогүй бусад мөр/input-ийг 0 болгох
+                            for c in codes:
+                                if c != target_line.code:
+                                    other_lines = slip.line_ids.filtered(lambda l: l.code == c)
+                                    if other_lines and round(other_lines[0].amount, 2) != 0.0:
+                                        update_line((c,), 0.0)
+                                        update_input(c, 0.0)
+                elif val:
+                    target_line = update_line(codes, val)
+                    if target_line and target_line not in changed_lines:
+                        changed_lines.append(target_line)
+                    if target_line:
+                        update_input(target_line.code, val)
 
-                # Хэрэв мөр өөрчлөгдсөн бол хамгийн бага sequence-тэй мөрнөөс эхлэн дараах дүрмүүдийг дахин бодох
-                if changed_lines:
-                    min_seq = min(l.sequence for l in changed_lines)
-                    trigger_line = slip.line_ids.filtered(lambda l: l.sequence == min_seq)[:1]
-                    if trigger_line:
-                        if not trigger_line.contract_id and contract:
-                            trigger_line.contract_id = contract
-                        trigger_line.action_recompute_following_lines()
+            # Хэрэв мөр өөрчлөгдсөн бол хамгийн бага sequence-тэй мөрнөөс эхлэн дараах дүрмүүдийг дахин бодох
+            if changed_lines:
+                min_seq = min(l.sequence for l in changed_lines)
+                trigger_line = slip.line_ids.filtered(lambda l: l.sequence == min_seq)[:1]
+                if trigger_line:
+                    if not trigger_line.contract_id and contract:
+                        trigger_line.contract_id = contract
+                    trigger_line.action_recompute_following_lines()
 
             # Дүнгийн багануудыг дахин тооцоолох
             slip._compute_payslip_columns()

@@ -15,9 +15,14 @@ class HrPayslipEmployees(models.TransientModel):
     )
     payslip_run_id = fields.Many2one(
         'hr.payslip.run',
-        string='Payslip Batch',
+        string='Created employees',
         default=lambda self: self.env.context.get('active_id')
         if self.env.context.get('active_model') == 'hr.payslip.run' else False
+    )
+    created_emp_ids = fields.Many2many(
+        'hr.employee',
+        string='Payslip Batch',
+        compute='_compute_created_emp_ids',
     )
     dep_id = fields.Many2one(
         'hr.department',
@@ -55,3 +60,12 @@ class HrPayslipEmployees(models.TransientModel):
             payslips += self.env['hr.payslip'].create(res)
         payslips.compute_sheet()
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.onchange('payslip_run_id')
+    def _compute_created_emp_ids(self):
+        for obj in self:
+            if self.env.context.get('active_model') == 'hr.payslip.run':
+                slip_run = self.env['hr.payslip.run'].browse(self.env.context.get('active_id'))
+                obj.created_emp_ids = slip_run.slip_ids.mapped('employee_id')
+            else:
+                obj.created_emp_ids = False
