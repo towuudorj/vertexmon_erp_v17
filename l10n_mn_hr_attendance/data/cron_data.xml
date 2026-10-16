@@ -55,6 +55,19 @@
         <field name="active">True</field>
     </record>
 
+    <!-- Nightly: SharePoint's people lists follow Odoo (added, updated, archived ones removed). Off until tried with dry_run. -->
+    <record id="ir_cron_sync_employees_sharepoint" model="ir.cron">
+        <field name="name">Microsoft: Ажилтнуудыг SharePoint-тэй тулгах</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_employees_to_sharepoint()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=18, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+    </record>
+
     <record id="ir_cron_get_att_edit_req" model="ir.cron">
         <field name="name">Microsoft: Ирц нөхөн засах хүсэлт</field>
         <field name="model_id" ref="model_attendance_edit_request"/>
