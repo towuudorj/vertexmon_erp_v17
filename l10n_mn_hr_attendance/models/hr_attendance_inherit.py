@@ -263,6 +263,8 @@ class HrAttendance(models.Model):
 
         return {
             'app_leave_normal': find('payroll'),
+            # Timely's paid leave
+            'salary_leave': find('payroll'),
             'payroll': find('payroll'),
             'unpayroll': find('unpayroll'),
             'overtime_regular_request': find('over_time'),
