@@ -15,13 +15,13 @@ class HrPayslipEmployees(models.TransientModel):
     )
     payslip_run_id = fields.Many2one(
         'hr.payslip.run',
-        string='Created employees',
+        string='Payslip Batch',
         default=lambda self: self.env.context.get('active_id')
         if self.env.context.get('active_model') == 'hr.payslip.run' else False
     )
     created_emp_ids = fields.Many2many(
         'hr.employee',
-        string='Payslip Batch',
+        string='Created employees',
         compute='_compute_created_emp_ids',
     )
     dep_id = fields.Many2one(
