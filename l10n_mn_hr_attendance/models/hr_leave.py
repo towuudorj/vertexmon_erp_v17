@@ -7,10 +7,13 @@ from dateutil import parser
 import pytz
 from pytz import timezone
 from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
+import logging
+
+_logger = logging.getLogger(__name__)
 
 hour_min_to_selection = {
     '0:0': '0',
-    '0:5': '0.5',
+    '0:30': '0.5',
     '1:0': '1',
     '1:30': '1.5',
     '2:0': '2',
@@ -70,68 +73,70 @@ class HrLeave(models.Model):
 
 
     def get_approved_leaves(self):
-        leave_obj = self.env['hr.leave'].sudo()
-        microsoft_value_obj = self.env['microsoft.api.value'].sudo().search([], limit=1)
-        token = get_token(microsoft_value_obj)
-        if token['token_type'] and token['access_token']:
-            token = token['token_type'] + ' ' + token['access_token']
-        else:
-            raise ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(token))
-
-        site_id = get_site_id(microsoft_value_obj, token)
-
+        """Approved leave requests from SharePoint (AttendanceRequest: VMC Connect / the Power App, approved by the
+        manager and then HR in Teams) → validated hr.leave, each once (sharepoint_id)."""
+        from .hr_attendance_inherit import graph_list_items
+        session = self.env['hr.attendance']._graph_session()
+        if not session:
+            return
+        headers, site_id, microsoft_value_obj, token = session
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'leave_list_name', 'leave_list_id')
+        leave_obj = self.env['hr.leave'].sudo()
+        done = set(leave_obj.search([('sharepoint_id', '!=', False)]).mapped('sharepoint_id'))
+        payroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'payroll')], limit=1)
+        unpayroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'unpayroll')], limit=1)
+        tz = timezone('Asia/Ulaanbaatar')
 
-        leaves = self.env['hr.leave'].sudo().search([('sharepoint_id', '!=', False)])
-        sharepoint_ids = leaves.mapped('sharepoint_id')
+        def local(value):
+            return parser.isoparse(value).astimezone(tz)
 
-        url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items?$expand=fields"
-        # url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/columns"
+        def hour(dt):
+            # the half hour it falls in (the selection has :00 and :30 only)
+            return hour_min_to_selection[f"{dt.hour}:{'30' if dt.minute >= 30 else '0'}"]
 
-        headers = {
-            "Authorization": token,
-        }
-        response = requests.get(url, headers=headers, json={})
-        response_json = response.json()
-        payroll_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'payroll')], limit=1)
-        unpayroll_leave_type_id = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'unpayroll')], limit=1)
-        response_json = response_json.get('value', [])
-        for leave in response_json:
+        for item in graph_list_items(headers, site_id, list_id, "fields/status eq 'approved'"):
+            data = item.get('fields', {})
+            sp_id = int(data.get('id') or item.get('id') or 0)
+            if not sp_id or sp_id in done or data.get('status') != 'approved':
+                continue
             try:
-                data = leave.get('fields', {})
-                if data['status'] == 'approved' and data['id'] and int(data['id']) not in sharepoint_ids:
-                    employee = self.env['hr.employee'].search([('ssnid', '=', data['_x0420__x0435__x0433__x0438__x04'])], limit=1)
-                    if data['typeDate'] and data['typeDate'] == 'Цагаар':
-                        start_date = data['_x042d__x0445__x043b__x044d__x04']
-                        end_date = data['_x0414__x0443__x0443__x0441__x04']
+                with self.env.cr.savepoint():
+                    employee = self.env['hr.employee'].search([('ssnid', '=', data.get('_x0420__x0435__x0433__x0438__x04'))], limit=1) \
+                        if data.get('_x0420__x0435__x0433__x0438__x04') else self.env['hr.employee']
+                    email = (data.get('_x0411__x0430__x0442__x043b__x040') or '').strip()
+                    if not employee and email:
+                        employee = self.env['hr.employee'].search([('work_email', '=ilike', email)], limit=1)
+                    if not employee:
+                        _logger.warning("Чөлөөний хүсэлт %s: ажилтан олдсонгүй (%s)", sp_id, email)
+                        continue
+                    # «byHour» is what the lists keep (attTypeDate); «Цагаар» is its title
+                    by_hour = data.get('typeDate') in ('byHour', 'Цагаар')
+                    if by_hour:
+                        start = local(data['_x042d__x0445__x043b__x044d__x04'])
+                        end = local(data['_x0414__x0443__x0443__x0441__x04'])
                     else:
-                        start_date = data['beginDate']
-                        end_date = data['endDate']
-
-                    tz = timezone('Asia/Ulaanbaatar')
-                    start_date = parser.isoparse(start_date).astimezone(tz)
-                    end_date = parser.isoparse(end_date).astimezone(tz)
-
-                    leave_vals =  {
-                        'holiday_status_id': payroll_leave_type_id.id if data['typeSalary'] == 'salary' else unpayroll_leave_type_id.id,
-                        'request_unit_hours': True if data['typeDate'] == 'Цагаар' else False,
-                        'employee_id': employee.id if employee else False,
-                        'sharepoint_id': data['id'],
+                        start = local(data['beginDate'])
+                        end = local(data.get('endDate') or data['beginDate'])
+                    vals = {
+                        'holiday_status_id': (payroll_type if data.get('typeSalary') == 'salary' else unpayroll_type).id,
+                        'request_unit_hours': by_hour,
+                        'employee_id': employee.id,
+                        'sharepoint_id': sp_id,
+                        'request_date_from': str(start.date()),
+                        'request_date_to': str(end.date()),
+                        # approved in Teams already: validated without another round in Odoo
                         'state': 'validate',
                     }
-                    if data['typeDate'] == 'Цагаар':
-                        leave_vals.update({'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date()),
-                                           'request_hour_from': hour_min_to_selection[str(start_date.hour) + ':' + str(start_date.minute)],
-                                           'request_hour_to': hour_min_to_selection[str(end_date.hour) + ':' + str(end_date.minute)]
-                                           })
-
-                    else:
-                        leave_vals.update({'request_date_from': str(start_date.date()), 'request_date_to': str(end_date.date())})
+                    if by_hour:
+                        vals.update({'request_hour_from': hour(start), 'request_hour_to': hour(end)})
+                    if data.get('reason'):
+                        vals['private_name'] = data['reason'][:200]
                     leave_obj.with_context(
                         tracking_disable=True,
                         mail_activity_automation_skip=True,
                         leave_fast_create=True,
-                        leave_skip_state_check=True
-                    ).create(leave_vals)
+                        leave_skip_state_check=True,
+                    ).create(vals)
+                self.env.cr.commit()
             except Exception:
-                continue
+                _logger.exception("Чөлөөний хүсэлт %s-ийг оруулж чадсангүй (дараа дахин оролдоно)", sp_id)
