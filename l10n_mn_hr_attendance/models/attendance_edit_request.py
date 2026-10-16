@@ -1,51 +1,57 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
-from pytz import timezone
 from dateutil import parser
+import pytz
+import logging
+from .hr_attendance_inherit import graph_list_items
+
+_logger = logging.getLogger(__name__)
+
+
+def sp_utc(value):
+    """A SharePoint date as naive UTC (how Odoo stores datetimes)"""
+    return parser.isoparse(value).astimezone(pytz.UTC).replace(tzinfo=None) if value else False
 
 
 class AttendanceEditRequest(models.Model):
     _name = 'attendance.edit.request'
     _description = "Attendance Edit Request"
 
+    # the SharePoint item (AttendanceEditRequest list) already applied
     share_point_id = fields.Integer(string='Sharepoint id')
 
     def _cron_get_attendance_request(self):
-        req_obj = self.sudo()
-        attendance_obj = self.env['hr.attendance'].sudo()
-        microsoft_value_obj = self.env['microsoft.api.value'].sudo().search([], limit=1)
-        token = get_token(microsoft_value_obj)
-        if token['token_type'] and token['access_token']:
-            token = token['token_type'] + ' ' + token['access_token']
-        else:
-            raise ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(token))
-
-        site_id = get_site_id(microsoft_value_obj, token)
-
+        """Approved attendance edit requests (VMC Connect / the Power App, approved by the manager and then HR in
+        Teams) → the hr.attendance they are about. The attendance is then locked (manual_lock): the HikCentral /
+        Timely sync leaves it alone, and the next push sends it to SharePoint."""
+        session = self.env['hr.attendance']._graph_session()
+        if not session:
+            return
+        headers, site_id, microsoft_value_obj, token = session
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'att_edit_req_list_name', 'att_edit_req_list_id')
-
-        leaves = req_obj.sudo().search([])
-        sharepoint_ids = leaves.mapped('share_point_id')
-
-        url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items?$expand=fields"
-
-        headers = {
-            "Authorization": token,
-        }
-        response = requests.get(url, headers=headers, json={})
-        response_json = response.json()
-        response_json = response_json.get('value', [])
-        for leave in response_json:
-            try:
-                data = leave.get('fields', {})
-                if data['state'] == 'Батлагдсан' and data['id'] and int(data['id']) not in sharepoint_ids:
-                    attendance_id = attendance_obj.search([('id', '=', int(data['attendance_odoo_id']))], limit=1)
-                    if attendance_id:
-                        check_in = parser.isoparse(data['check_in'])
-                        check_out = parser.isoparse(data['check_out'])
-                        check_in = check_in.strftime("%Y-%m-%d %H:%M:%S")
-                        check_out = check_out.strftime("%Y-%m-%d %H:%M:%S")
-                        attendance_id.write({'check_in': check_in, 'check_out': check_out})
-                        req_obj.create({'share_point_id': int(data['id'])})
-            except Exception:
+        done = set(self.sudo().search([]).mapped('share_point_id'))
+        attendance_obj = self.env['hr.attendance'].sudo()
+        for item in graph_list_items(headers, site_id, list_id, "fields/state eq 'Батлагдсан'"):
+            data = item.get('fields', {})
+            sp_id = int(data.get('id') or item.get('id') or 0)
+            if not sp_id or sp_id in done or data.get('state') != 'Батлагдсан':
                 continue
+            try:
+                with self.env.cr.savepoint():
+                    attendance = attendance_obj.browse(int(data.get('attendance_odoo_id') or 0)).exists()
+                    check_in = sp_utc(data.get('check_in'))
+                    check_out = sp_utc(data.get('check_out'))
+                    if attendance and check_in:
+                        attendance.write({
+                            'check_in': check_in,
+                            # no check-out asked for: the day keeps one time, as the sync writes it
+                            'check_out': check_out if check_out and check_out > check_in else check_in,
+                            'manual_lock': True,
+                        })
+                    else:
+                        _logger.warning("Ирц засах хүсэлт %s: ирц (%s) эсвэл ирсэн цаг олдсонгүй", sp_id, data.get('attendance_odoo_id'))
+                    self.sudo().create({'share_point_id': sp_id})
+                self.env.cr.commit()
+            except Exception:
+                _logger.exception("Ирц засах хүсэлт %s-ийг оруулж чадсангүй (дараа дахин оролдоно)", sp_id)

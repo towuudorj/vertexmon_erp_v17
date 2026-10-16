@@ -11,10 +11,25 @@
                     <xpath expr='//field[@name="overtime_hours"]' position="replace">
                         <field name="loss_time"/>
                     </xpath>
+                    <xpath expr='//field[@name="check_out"]' position="after">
+                        <field name="manual_lock" optional="show" readonly="1"/>
+                    </xpath>
                 </data>
             </field>
         </record>
 
+
+        <!-- corrected through an approved edit request: the sync leaves it alone; HR can unlock it -->
+        <record id="hr_attendance_mn_form_view" model="ir.ui.view">
+            <field name="name">hr.attendance.mn.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="check_out"]' position="after">
+                    <field name="manual_lock"/>
+                </xpath>
+            </field>
+        </record>
 
          <record id="hr_attendance_calendar_view" model="ir.ui.view">
             <field name="name">hr.attendance.calendar</field>
