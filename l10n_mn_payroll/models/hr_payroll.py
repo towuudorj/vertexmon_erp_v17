@@ -338,7 +338,11 @@ class HrPayslipRun(models.Model):
             colly += 1
             sheet.write(rowx, colly, slip.employee_id.last_name or '', data_left)
             colly += 1
-            sheet.write(rowx, colly, slip.employee_id.name or '', data_left)
+            name = slip.employee_id.name
+            if name and '.' in name:
+                list = name.split(".")
+                name = list[0] if len(list[1]) == 1 else list[1]
+            sheet.write(rowx, colly, name or '', data_left)
             colly += 1
             sheet.write(rowx, colly, slip.employee_id.department_id.name or '', data_left)
             colly += 1
