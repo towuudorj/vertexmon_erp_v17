@@ -13,7 +13,7 @@
 
 {
     'name': 'Mongolian Account',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting',
     'sequence': 35,
     "author" : "AIBI Development Team",
@@ -25,7 +25,8 @@
                 'account',
                 'om_account_accountant',
                 'product',
-                'account_statement_base'
+                'account_statement_base',
+                'purchase',
                 ],
     'data': [
             'security/ir.model.access.csv',

@@ -182,7 +182,11 @@ class AccountMove(models.Model):
         domain="[('id', 'in', suitable_journal_ids)]",
     )
     partner_type_id = fields.Many2one('partner.type.register', string='Partner type')
-    po_ids = fields.Many2many('purchase.order', string='Purchase Orders', domain="[('state', '=', 'purchase')]")
+    # Тусдаа relation хүснэгт: өгөгдмөл нэр (account_move_purchase_order_rel) нь purchase.order.invoice_ids-тэй
+    # давхцаж, PO-ийн invoice_ids дахин тооцоологдох бүрт гараар оруулсан Баримтын дугаар устдаг байсан.
+    po_ids = fields.Many2many('purchase.order', 'account_move_po_ids_rel', 'move_id', 'purchase_order_id',
+                              string='Purchase Orders', domain="[('state', '=', 'purchase')]",
+                              compute='_compute_po_ids', store=True, readonly=False, copy=True)
     has_landed_costs = fields.Boolean(compute='_compute_has_landed_costs')
     invoice_date_due = fields.Date(string='Төлбөр хийх хугацаа', readonly=True)
     vat_declaration = fields.Char(string='VAT Declaration')
@@ -193,6 +197,12 @@ class AccountMove(models.Model):
                                      default='parent_approve')
     invisible_approve_to_parent = fields.Boolean(compute='_compute_invisible_approve_to_parent')
     parent_notif_sent = fields.Boolean(default=False)
+
+    @api.depends('invoice_line_ids.purchase_line_id')
+    def _compute_po_ids(self):
+        # Худалдан авалтаас үүссэн нэхэмжлэлийн PO-г нэмнэ, гараар оруулсныг хэвээр үлдээнэ
+        for move in self:
+            move.po_ids |= move.invoice_line_ids.purchase_line_id.order_id
 
     def write(self, vals):
         current_po_id_dict = {}
