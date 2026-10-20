@@ -59,10 +59,16 @@
             
             'views/account_partner_balance_report_view.xml',
             'views/account_move_overdue_view.xml',
+            'views/account_analytic_account_lock_view.xml',
             'views/menu_view.xml',
 
 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mn_account/static/src/js/analytic_distribution_lock.js',
+        ],
+    },
     'test': [],
     'installable': True,
     'auto_install': False,

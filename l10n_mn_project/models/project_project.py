@@ -352,6 +352,8 @@ class ProjectProject(models.Model):
             line.invoice_id = invoice_id.id
 
             line.state = 'done'
+            # Хаалтын бичилт батлагдсаны дараа түгжинэ: архивлахгүй, тайланд харагдсаар байна
+            line.analytic_account_id.sudo().action_lock(reason=_('Төсөл хаагдсан: %s', line.name))
         
     # def action_done(self):
     #     account_move_obj = self.env['account.move']
