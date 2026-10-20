@@ -14,6 +14,9 @@
                     <xpath expr='//field[@name="check_out"]' position="after">
                         <field name="manual_lock" optional="show" readonly="1"/>
                     </xpath>
+                    <xpath expr='//tree' position='attributes'>
+                        <attribute name="create">0</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -28,6 +31,9 @@
                 <xpath expr='//field[@name="check_out"]' position="after">
                     <field name="manual_lock"/>
                 </xpath>
+                <xpath expr='//form' position='attributes'>
+                    <attribute name="create">0</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -35,7 +41,8 @@
             <field name="name">hr.attendance.calendar</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <calendar string="Attendance" date_start="check_in" date_stop="check_out" color="employee_id">
+                <calendar string="Attendance" date_start="check_in" date_stop="check_out" color="employee_id" create="0"
+                          delete="0">
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
