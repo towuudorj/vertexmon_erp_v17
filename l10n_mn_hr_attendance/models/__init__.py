@@ -6,3 +6,5 @@ from . import res_partner
 from . import attendance_edit_request
 from . import sharepoint_employee_sync
 from . import res_company
+
+from . import vmcc_delivery_reminder

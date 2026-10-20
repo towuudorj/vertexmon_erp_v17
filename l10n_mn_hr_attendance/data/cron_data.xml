@@ -68,6 +68,18 @@
         <field name="active">False</field>
     </record>
 
+    <!-- VMC Connect: every two hours (it sends only 08:00–20:00, Monday to Saturday) the delivery staff hear about late deliveries -->
+    <record id="ir_cron_vmcc_delivery_reminders" model="ir.cron">
+        <field name="name">Microsoft: Хоцорсон хүргэлтийн сануулга</field>
+        <field name="model_id" ref="model_attendance_edit_request"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_delivery_reminders()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
     <record id="ir_cron_get_att_edit_req" model="ir.cron">
         <field name="name">Microsoft: Ирц нөхөн засах хүсэлт</field>
         <field name="model_id" ref="model_attendance_edit_request"/>
