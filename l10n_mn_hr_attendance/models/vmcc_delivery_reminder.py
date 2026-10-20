@@ -18,7 +18,7 @@ UB = timezone(timedelta(hours=8))
 GRAPH = "https://graph.microsoft.com/v1.0/sites/{site}/lists"
 TEAMS_APP_ID = '8984c2ca-1f3f-47df-bf46-e6e3edc42b4d'
 DELIVERY_NEW = 'Шинэ'
-HOURS = (8, 20)  # Ulaanbaatar, Monday to Saturday
+HOURS = (8, 19)  # Ulaanbaatar working hours, Monday to Saturday
 
 
 def _when(value):
