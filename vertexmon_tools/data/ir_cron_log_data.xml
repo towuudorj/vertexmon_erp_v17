@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Товлосон үйлдлийн логийг хэдэн хоног хадгалах (0 бол устгахгүй) -->
+        <record id="cron_log_retention_days" model="ir.config_parameter">
+            <field name="key">vertexmon_tools.cron_log_retention_days</field>
+            <field name="value">90</field>
+        </record>
+    </data>
+</odoo>

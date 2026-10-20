@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="ir_cron_log_tree_view" model="ir.ui.view">
+            <field name="name">ir.cron.log.tree</field>
+            <field name="model">ir.cron.log</field>
+            <field name="arch" type="xml">
+                <tree string="Scheduled Action Logs" create="0" edit="0"
+                      decoration-danger="state == 'failed'">
+                    <field name="start_date"/>
+                    <field name="cron_id"/>
+                    <field name="trigger_type"/>
+                    <field name="triggered_by_id" optional="hide"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="end_date" optional="hide"/>
+                    <field name="duration" sum="Total"/>
+                    <field name="state" widget="badge"
+                           decoration-success="state == 'success'"
+                           decoration-danger="state == 'failed'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ir_cron_log_form_view" model="ir.ui.view">
+            <field name="name">ir.cron.log.form</field>
+            <field name="model">ir.cron.log</field>
+            <field name="arch" type="xml">
+                <form string="Scheduled Action Log" create="0" edit="0">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="cron_id"/>
+                                <field name="trigger_type"/>
+                                <field name="user_id"/>
+                                <field name="triggered_by_id" invisible="not triggered_by_id"/>
+                            </group>
+                            <group>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="duration"/>
+                            </group>
+                        </group>
+                        <group string="Error" invisible="not error_message">
+                            <field name="error_message" nolabel="1" colspan="2" class="font-monospace"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="ir_cron_log_search_view" model="ir.ui.view">
+            <field name="name">ir.cron.log.search</field>
+            <field name="model">ir.cron.log</field>
+            <field name="arch" type="xml">
+                <search string="Scheduled Action Logs">
+                    <field name="cron_id"/>
+                    <field name="error_message"/>
+                    <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                    <filter name="success" string="Success" domain="[('state', '=', 'success')]"/>
+                    <separator/>
+                    <filter name="manual" string="Manual" domain="[('trigger_type', '=', 'manual')]"/>
+                    <filter name="scheduled" string="Scheduled" domain="[('trigger_type', '=', 'scheduled')]"/>
+                    <separator/>
+                    <filter name="start_date" string="Start" date="start_date"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_cron" string="Scheduled Action" context="{'group_by': 'cron_id'}"/>
+                        <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_day" string="Day" context="{'group_by': 'start_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="ir_cron_log_action" model="ir.actions.act_window">
+            <field name="name">Scheduled Action Logs</field>
+            <field name="res_model">ir.cron.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="ir_cron_log_search_view"/>
+        </record>
+
+        <menuitem id="menu_ir_cron_log"
+                  action="ir_cron_log_action"
+                  parent="base.menu_automation"
+                  sequence="3"
+        />
+
+        <record id="ir_cron_view_form_inherit_log" model="ir.ui.view">
+            <field name="name">ir.cron.view.form.inherit.log</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/h1" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="fa-history"
+                                invisible="not id">
+                            <field name="log_count" widget="statinfo" string="Logs"/>
+                        </button>
+                    </div>
+                </xpath>
+                <field name="doall" position="after">
+                    <field name="last_log_state" widget="badge"
+                           decoration-success="last_log_state == 'success'"
+                           decoration-danger="last_log_state == 'failed'"
+                           invisible="not last_log_state"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="ir_cron_view_tree_inherit_log" model="ir.ui.view">
+            <field name="name">ir.cron.view.tree.inherit.log</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="numbercall" position="after">
+                    <field name="last_log_state" widget="badge" optional="show"
+                           decoration-success="last_log_state == 'success'"
+                           decoration-danger="last_log_state == 'failed'"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

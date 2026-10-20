@@ -285,3 +285,122 @@ msgstr "Буцах"
 #: model:ir.model,name:vertexmon_tools.model_xls_report_base
 msgid "xls.report.base"
 msgstr ""
+
+#. module: vertexmon_tools
+#: model:ir.model,name:vertexmon_tools.model_ir_cron_log
+msgid "Scheduled Action Log"
+msgstr "Товлосон үйлдлийн лог"
+
+#. module: vertexmon_tools
+#: model:ir.actions.act_window,name:vertexmon_tools.ir_cron_log_action
+#: model:ir.ui.menu,name:vertexmon_tools.menu_ir_cron_log
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_tree_view
+msgid "Scheduled Action Logs"
+msgstr "Товлосон үйлдлийн лог"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__cron_id
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Scheduled Action"
+msgstr "Товлосон үйлдэл"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__user_id
+msgid "Run As"
+msgstr "Гүйцэтгэгч хэрэглэгч"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__triggered_by_id
+msgid "Triggered By"
+msgstr "Гараар ажиллуулсан"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__trigger_type
+msgid "Trigger"
+msgstr "Эхлүүлсэн төрөл"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron_log__trigger_type__scheduled
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Scheduled"
+msgstr "Товлосон"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron_log__trigger_type__manual
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Manual"
+msgstr "Гараар"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__start_date
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Start"
+msgstr "Эхэлсэн"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__end_date
+msgid "End"
+msgstr "Дууссан"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__duration
+msgid "Duration (sec)"
+msgstr "Хугацаа (сек)"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__state
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron_log__state__success
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron__last_log_state__success
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Success"
+msgstr "Амжилттай"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron_log__state__failed
+#: model:ir.model.fields.selection,name:vertexmon_tools.selection__ir_cron__last_log_state__failed
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Failed"
+msgstr "Алдаатай"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron_log__error_message
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_form_view
+msgid "Error"
+msgstr "Алдаа"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron__log_ids
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_view_form_inherit_log
+msgid "Logs"
+msgstr "Лог"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron__log_count
+msgid "Log Count"
+msgstr "Логийн тоо"
+
+#. module: vertexmon_tools
+#: model:ir.model.fields,field_description:vertexmon_tools.field_ir_cron__last_log_state
+msgid "Last Run Status"
+msgstr "Сүүлд ажилласан төлөв"
+
+#. module: vertexmon_tools
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_tree_view
+msgid "Total"
+msgstr "Нийт"
+
+#. module: vertexmon_tools
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Day"
+msgstr "Өдөр"
+
+#. module: vertexmon_tools
+#: model_terms:ir.ui.view,arch_db:vertexmon_tools.ir_cron_log_search_view
+msgid "Group By"
+msgstr "Бүлэглэх"

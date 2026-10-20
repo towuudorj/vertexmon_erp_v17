@@ -12,11 +12,13 @@
     "data": [
         'security/ir.model.access.csv',
         'data/microsoft_api_value_data.xml',
+        'data/ir_cron_log_data.xml',
         'views/res_users_view.xml',
         'views/report_base_view.xml',
         'views/microsoft_api_value_view.xml',
         'views/user_role_view.xml',
         'views/user_setting_view.xml',
+        'views/ir_cron_log_view.xml',
         'views/menu.xml',
     ],
     'assets': {

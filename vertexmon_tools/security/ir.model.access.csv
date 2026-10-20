@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_microsoft_api_value,microsoft.api.value,model_microsoft_api_value,base.group_user,1,1,0,0
 access_user_role,user.role,model_user_role,base.group_user,1,1,1,1
 access_user_setting,user.setting,model_user_setting,base.group_user,1,1,1,1
+access_ir_cron_log,ir.cron.log,model_ir_cron_log,base.group_system,1,0,0,1
