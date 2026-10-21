@@ -26,6 +26,7 @@ class product_detail_report(models.TransientModel):
                                     default=fields.Date.context_today)
     categ_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
+    brand_id = fields.Many2one('product.brand', string=u'Брэнд')
     warehouse_ids = fields.Many2many('stock.warehouse','stock_warehouse_product_rel','report_id','warehouse_ids', string=u'Агуулах')
     type = fields.Selection([('quantity',u'Тоогоор'),
                              ('cost',u'Өртгөөр')], string=u'Төрөл', required=True)
@@ -40,6 +41,7 @@ class product_detail_report(models.TransientModel):
             'warehouse_ids': self.warehouse_ids.ids,
             'categ_id':self.categ_id.id,
             'product_id': self.product_id.id,
+            'brand_id': self.brand_id.id,
             'is_transection':self.is_transection,
             'hide_zero_qty': self.hide_zero_qty,
             'type':self.type
@@ -857,7 +859,10 @@ class product_detail_report(models.TransientModel):
                     for line in products:
                         product.append(line['product_id'])
             rowx = 6
-            for line in product_obj.browse(product):
+            product_records = product_obj.browse(product)
+            if data.get('brand_id'):
+                product_records = product_records.filtered(lambda p: p.brand_id.id == data['brand_id'])
+            for line in product_records:
                 f_income_qty = 0.0
                 f_income_price = 0.0
                 f_expense_qty = 0.0

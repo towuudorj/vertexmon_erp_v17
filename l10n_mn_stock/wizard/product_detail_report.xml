@@ -13,6 +13,7 @@
 						<field name="hide_zero_qty"/>
 						<field name="product_id"/>
 						<field name="categ_id"/>
+						<field name="brand_id"/>
 						<field name="type"/>
 						<field name="start_date"/>
 						<field name="end_date"/>

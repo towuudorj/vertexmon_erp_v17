@@ -30,7 +30,8 @@
                  'stock_delivery',
                  'stock_landed_costs',
                  'l10n_mn_account',
-                 'vertexmon_tools'
+                 'vertexmon_tools',
+                 'rt_product_brand'
                  ],
     "data" : [
                 'data/sequence_data.xml',

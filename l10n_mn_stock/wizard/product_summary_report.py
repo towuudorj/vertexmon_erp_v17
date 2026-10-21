@@ -25,6 +25,7 @@ class ProductSummaryReport(models.TransientModel):
                            default=fields.Date.context_today)
     categ_id = fields.Many2one('product.category', string=u'Барааны ангилал')
     product_id = fields.Many2one('product.product', string=u'Бараа')
+    brand_id = fields.Many2one('product.brand', string=u'Брэнд')
     is_transaction = fields.Boolean(string='Is transaction')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_warehouse_product_summary_rel', 'report_id',
                                      'warehouse_ids', string=u'Агуулах')
@@ -44,6 +45,7 @@ class ProductSummaryReport(models.TransientModel):
             'warehouse_ids': self.warehouse_ids.ids,
             'categ_id': self.categ_id.id,
             'product_id': self.product_id.id,
+            'brand_id': self.brand_id.id,
             'type': self.type,
             'is_transaction':self.is_transaction,
             'dont_show_inventory_count':self.dont_show_inventory_count,
@@ -163,6 +165,8 @@ class ProductSummaryReport(models.TransientModel):
                                                                  ('detailed_type', '=', 'product')])
             else:
                 product_ids = self.env['product.product'].search([('detailed_type', '=', 'product')])
+        if data.get('brand_id'):
+            product_ids = product_ids.filtered(lambda p: p.brand_id.id == data['brand_id'])
 
         if data['type'] == 'cost':
             sheet.merge_range('J3:M3', u'Тайлант хугацаа: %s - %s' % (data['date_from'], data['date_to']), head_title)

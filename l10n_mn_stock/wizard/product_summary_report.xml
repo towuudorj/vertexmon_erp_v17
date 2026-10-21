@@ -12,6 +12,7 @@
 						<field name="location_ids" invisible="1"/>
 						<field name="product_id"/>
 						<field name="categ_id"/>
+						<field name="brand_id"/>
 						<field name="is_transaction" string="Гүйлгээтэй бараа татах"/>
 						<field name="type"/>
 						<field name="dont_show_inventory_count"/>
