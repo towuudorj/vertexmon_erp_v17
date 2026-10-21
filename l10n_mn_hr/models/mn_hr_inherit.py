@@ -427,6 +427,17 @@ class Employee(models.Model):
             pass
         self.write({'employee_age': now_age})
         return True
+
+    def export_certificate_of_employment(self):
+        self.ensure_one()
+        action = {
+            'name': u"Тодорхойлолт гаргах",
+            'type': 'ir.actions.act_window',
+            'res_model': 'employment.certificate',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+        return action
     
 class EmployeePublic(models.Model):
     _inherit = "hr.employee.public"

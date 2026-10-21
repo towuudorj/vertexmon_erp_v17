@@ -53,7 +53,6 @@ class HrApplicant(models.Model):
     def action_contract(self):
             contract_obj = self.env['hr.contract']
             for line in self:
-                print('line.partner_id', line.employee_id.id)
                 contract_id = contract_obj.search([('employee_id', '=', line.employee_id.id)])
                 if contract_id:
                     raise UserError(_('Contract already exists for this employee.'))

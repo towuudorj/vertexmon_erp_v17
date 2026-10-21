@@ -123,5 +123,8 @@ access_employee_kpi_manager,employee.kpi,model_employee_kpi,hr.group_hr_manager,
 access_employee_kpi_user,employee.kpi,model_employee_kpi,hr.group_hr_user,1,1,1,0
 access_employee_kpi_line_manager,employee.kpi.line,model_employee_kpi_line,hr.group_hr_manager,1,1,1,1
 access_employee_kpi_line_user,employee.kpi.line,model_employee_kpi_line,hr.group_hr_user,1,1,1,0
-access_contract_decree_conf_user,contract.decree.conf,model_contract_decree_conf,hr.group_hr_user,1,1,0,0
+access_contract_decree_conf_manager,contract.decree.conf,model_contract_decree_conf,hr.group_hr_manager,1,1,1,1
+access_contract_decree_conf_user,contract.decree.conf,model_contract_decree_conf,hr.group_hr_user,1,1,1,1
+access_contract_configuration_line_manager,contract.configuration.line,model_contract_configuration_line,hr.group_hr_manager,1,1,1,1
 access_contract_configuration_line_user,contract.configuration.line,model_contract_configuration_line,hr.group_hr_user,1,1,1,1
+access_employment_certificate_admin,employment.certificate,model_employment_certificate,hr.group_hr_manager,1,1,1,1

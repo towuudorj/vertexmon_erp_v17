@@ -53,6 +53,7 @@
             'report/reference_report_view.xml',
             'report/handover_act_report_view.xml',
             'report/report_view.xml',
+            'wizard/employment_certificate.xml',
             'views/new_hr_employee_view.xml',
             'views/mn_hr_inherit_view.xml',
             'views/driver_type_view.xml',

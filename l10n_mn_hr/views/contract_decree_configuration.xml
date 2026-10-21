@@ -7,6 +7,10 @@
         <field name="arch" type="xml">
             <tree string="Contract Decree Configuration">
                 <field name="name"/>
+                <field name="code"/>
+                <field name="model_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="type"/>
             </tree>
         </field>
     </record>
@@ -16,30 +20,57 @@
         <field name="model">contract.decree.conf</field>
         <field name="arch" type="xml">
             <form string="Contract Decree Configuration">
-                <h2>
-                    <field name="name" readonly="1"/>
-                </h2>
-                <group>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Жишээ: Ажилтаны Тодорхойлолт/Eng/" required="1"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="type"/>
-                        <field name="file_name" invisible="1"/>
-                        <field name="file" filename="file_name" options="{'accept': '.docx'}"/>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="type"/>
+                            <field name="file_name" invisible="1"/>
+                            <field name="file" filename="file_name" options="{'accept': '.docx'}"/>
+                        </group>
                     </group>
-                </group>
-                <group>
-                    <group colspan="8">
-                        <field name="line_ids">
-                            <tree editable="bottom">
-                                <field name="parent_model" invisible="1" column_invisible="1"/>
-                                <field name="text"/>
-                                <field name="field" domain="[('model_id', '=', parent_model)]"/>
-                                <field name="field2"/>
-                                <field name="field3"/>
-                            </tree>
-                        </field>
-                    </group>
-                </group>
+                    <notebook>
+                        <page string="Орлуулах талбарууд (Lines)">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="parent_model" invisible="1" column_invisible="1"/>
+                                    <field name="text"/>
+                                    <field name="field" domain="[('model_id', '=', parent_model)]"/>
+                                    <field name="field2"/>
+                                    <field name="field3"/>
+                                    <field name="hel"/>
+                                    <field name="bichwer"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="contract_decree_configuration_search_view">
+        <field name="name">contract.decree.conf.search</field>
+        <field name="model">contract.decree.conf</field>
+        <field name="arch" type="xml">
+            <search string="Search Contract Decree Configuration">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="model_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Компани" name="group_by_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Модель" name="group_by_model" domain="[]" context="{'group_by': 'model_id'}"/>
+                    <filter string="Төрөл" name="group_by_type" domain="[]" context="{'group_by': 'type'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -49,6 +80,12 @@
         <field name="res_model">contract.decree.conf</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="contract_decree_configuration_tree_view"/>
+        <field name="search_view_id" ref="contract_decree_configuration_search_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Шинэ гэрээ, тодорхойлолтын загвар тохиргоо үүсгэх
+            </p>
+        </field>
     </record>
 
     <menuitem

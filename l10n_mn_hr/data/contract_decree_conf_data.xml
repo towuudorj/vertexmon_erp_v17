@@ -12,5 +12,17 @@
             <field name="code">probationary_employee</field>
             <field name="model_char">hr.contract</field>
         </record>
+
+        <record id="employment_certificate_mn" model="contract.decree.conf">
+            <field name="name">Ажилтаны Тодорхойлолт/Мн/</field>
+            <field name="code">employment_certificate_mn</field>
+            <field name="model_char">hr.employee</field>
+        </record>
+
+        <record id="employment_certificate_en" model="contract.decree.conf">
+            <field name="name">Ажилтаны Тодорхойлолт/Eng/</field>
+            <field name="code">employment_certificate_en</field>
+            <field name="model_char">hr.employee</field>
+        </record>
     </data>
 </odoo>

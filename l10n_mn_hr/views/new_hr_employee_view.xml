@@ -62,6 +62,9 @@
                     <field name="work_contact_id" invisible="1"/>
                     <header>
                         <button name="%(hr.plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" invisible="not active"/>
+                        <button name="export_certificate_of_employment" string="Тодорхойлолт гаргах"
+								groups="hr.group_hr_manager"
+								type="object"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">

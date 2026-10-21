@@ -1817,6 +1817,11 @@ msgid "Exhibition"
 msgstr "Үзэсгэлэн"
 
 #. module: l10n_mn_hr
+#: model_terms:ir.ui.view,arch_db:l10n_mn_hr.employment_certificate_view
+msgid "Export"
+msgstr "Хэвлэх"
+
+#. module: l10n_mn_hr
 #: model_terms:ir.ui.view,arch_db:l10n_mn_hr.hr_contract_inherit_form
 msgid "Export permanent contract"
 msgstr "Үндсэн ажилтаны гэрээ"
@@ -2613,6 +2618,7 @@ msgid "Khoroo"
 msgstr "Хороо"
 
 #. module: l10n_mn_hr
+#: model:ir.model.fields,field_description:l10n_mn_hr.field_employment_certificate__lang
 #: model_terms:ir.ui.view,arch_db:l10n_mn_hr.view_employee_new_form
 msgid "Language"
 msgstr "Хэл"

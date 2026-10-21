@@ -14,5 +14,20 @@
 	        <field name="name">Илүү цаг батлах</field>
         </record>
 
+        <!-- Multi-Company Rules for Contract Decree Configuration -->
+        <record id="contract_decree_conf_multi_company_rule" model="ir.rule">
+            <field name="name">Contract Decree Conf Multi-Company</field>
+            <field name="model_id" ref="model_contract_decree_conf"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+        <record id="contract_configuration_line_multi_company_rule" model="ir.rule">
+            <field name="name">Contract Configuration Line Multi-Company</field>
+            <field name="model_id" ref="model_contract_configuration_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
     </data>
 </odoo>

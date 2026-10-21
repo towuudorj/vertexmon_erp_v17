@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    	<record id="employment_certificate_view" model="ir.ui.view">
+			<field name="name">employment.certificate</field>
+			<field name="model">employment.certificate</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="lang"/>
+							<field name="certificate_to"/>
+						</group>
+					</group>
+					<footer>
+						<button name="export_certificate" string="Export" type="object"
+							class="oe_highlight" />
+
+						<button string="Хаах" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+    </data>
+</odoo>

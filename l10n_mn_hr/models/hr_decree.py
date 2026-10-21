@@ -12,14 +12,16 @@ class HrContract(models.Model):
 
     def export_permanent_employee_contract(self):
         self.ensure_one()
-        conf = self.env['contract.decree.conf'].search([('code', '=', 'permanent_employee')], limit=1)
+        company = self.company_id or self.employee_id.company_id or self.env.company
+        conf = self.env['contract.decree.conf'].get_conf('permanent_employee', company_id=company)
         if conf and conf.file and conf.line_ids:
             return conf.action_download_docx(self.id)
         return None
 
     def export_probationary_employee_contract(self):
         self.ensure_one()
-        conf = self.env['contract.decree.conf'].search([('code', '=', 'probationary_employee')], limit=1)
+        company = self.company_id or self.employee_id.company_id or self.env.company
+        conf = self.env['contract.decree.conf'].get_conf('probationary_employee', company_id=company)
         if conf and conf.file and conf.line_ids:
             return conf.action_download_docx(self.id)
         return None

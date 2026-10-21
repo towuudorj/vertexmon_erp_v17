@@ -274,6 +274,11 @@
                             	</field>  
                              </page>
                       </page>
+					<xpath expr="//header" position="inside">
+						<button name="export_certificate_of_employment" string="Тодорхойлолт гаргах"
+								groups="hr.group_hr_manager"
+								type="object"/>
+					</xpath>
             	</data>
            </field>
         </record>
