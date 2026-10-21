@@ -88,8 +88,8 @@
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:right;">
                                                     <span t-field="line.product_uom_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/>
                                                 </td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                                 <t t-set="i" t-value="i+1"/>
                                             </t>
                                         </tr>
@@ -106,15 +106,15 @@
                                 
                                 <tr>
                                     <td colspan="5" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"><b>Дүн</b></td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"><b>НӨАТ</b></td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"> <b>Нийт дүн /НӨАТ орсон/</b> </td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                             </tbody>
                             </t>
@@ -141,9 +141,9 @@
                                                 <td style="border: 1px solid black; font-size:11px; padding:5px; text-align:right;">
                                                     <span t-field="line.product_uom_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/>
                                                 </td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.price_unit/1.1" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                                 <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-esc="line.discount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
-                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                                <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;"><span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                             
                                                 <t t-set="i" t-value="i+1"/>
                                             </t>
@@ -162,15 +162,15 @@
   
                                 <tr>
                                     <td colspan="6" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"><b>Дүн</b></td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"><b>НӨАТ</b></td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" style="border: 1px solid black; font-size:11px; padding:3px; text-align:center;"> <b>Нийт дүн /НӨАТ орсон/</b> </td>
-                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                    <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;"><span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
                                 </tr>
                             </tbody>
                     

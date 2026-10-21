@@ -4,6 +4,7 @@
         <template id="stock_picking_expense_picked_data">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="o">
+                    <t t-set="doc_currency" t-value="o.sale_id.currency_id or o.company_id.currency_id"/>
                     <t t-if="o.picking_type_code != 'outgoing'">
                         <div class="page">
                             <div class="row mb64">
@@ -139,11 +140,11 @@
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
                                                         <span t-esc="move.sale_price"
-                                                              t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                              t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
                                                         <span t-esc="move.price_subtotal"
-                                                              t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                              t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                                     </td>
                                                 </t>
                                                 <t t-set="i" t-value="i+1"/>
@@ -169,7 +170,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_untaxed"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -179,7 +180,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_tax"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -189,7 +190,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_total"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -243,7 +244,7 @@
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
                                                         <span t-esc="move.sale_price"
-                                                              t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                              t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
                                                         <span t-esc="move.discount"
@@ -251,7 +252,7 @@
                                                     </td>
                                                     <td style="border: 1px solid black; font-size:11px; padding:4px; text-align:right;">
                                                         <span t-esc="move.price_subtotal"
-                                                              t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                              t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                                     </td>
                                                 </t>
                                                 <t t-set="i" t-value="i+1"/>
@@ -278,7 +279,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_untaxed"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -288,7 +289,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_tax"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -298,7 +299,7 @@
                                             </td>
                                             <td style="border: 1px solid black; font-size:11px; padding:3px; text-align:right;">
                                                 <span t-esc="picked_total"
-                                                      t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                      t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc_currency}"/>
                                             </td>
                                         </tr>
                                     </tbody>
