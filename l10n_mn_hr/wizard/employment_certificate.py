@@ -8,8 +8,8 @@ class EmploymentCertificate(models.TransientModel):
     employee_id = fields.Many2one('hr.employee', string="Employee",
                                   default=lambda self: self.env.context.get('active_id')
                                     if self.env.context.get('active_model') == 'hr.employee' else False)
-    lang = fields.Selection([('en', u'Англи'), ('mn', u'Монгол')], required=True, default='mn', string="Language")
-    certificate_to = fields.Char(string=u"Тодорхойлолт хүргэх")
+    lang = fields.Selection([('en', 'Англи'), ('mn', 'Монгол')], required=True, default='mn', string="Language")
+    certificate_to = fields.Char(string="Тодорхойлолт хүргэх")
 
     def export_certificate(self):
         self.ensure_one()
@@ -17,9 +17,7 @@ class EmploymentCertificate(models.TransientModel):
         code = 'employment_certificate_en' if self.lang == 'en' else 'employment_certificate_mn'
         location = company.street2 if self.lang == 'en' else company.street
 
-        conf = self.env['contract.decree.conf'].get_conf(code, company_id=company)
-        if conf and conf.file and conf.line_ids:
-            return conf.action_download_docx(self.employee_id.id, custom_dict={'hurgeh': self.certificate_to, 'hayag': location})
+        conf = self.env['contract.decree.conf'].sudo().get_conf(code, company_id=company)
+        if conf and conf.file and conf.sudo().line_ids:
+            return conf.sudo().action_download_docx(self.employee_id.id, custom_dict={'hurgeh': self.certificate_to, 'hayag': location})
         return None
-
-

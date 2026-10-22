@@ -128,3 +128,6 @@ access_contract_decree_conf_user,contract.decree.conf,model_contract_decree_conf
 access_contract_configuration_line_manager,contract.configuration.line,model_contract_configuration_line,hr.group_hr_manager,1,1,1,1
 access_contract_configuration_line_user,contract.configuration.line,model_contract_configuration_line,hr.group_hr_user,1,1,1,1
 access_employment_certificate_admin,employment.certificate,model_employment_certificate,hr.group_hr_manager,1,1,1,1
+access_contract_decree_conf_base,contract.decree.conf,model_contract_decree_conf,base.group_user,1,0,0,0
+access_contract_configuration_line_base,contract.configuration.line,model_contract_configuration_line,base.group_user,1,0,0,0
+access_employment_certificate_user,employment.certificate,model_employment_certificate,base.group_user,1,1,1,1

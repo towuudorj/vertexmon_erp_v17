@@ -24,14 +24,14 @@ class ContractDecreeConfiguration(models.Model):
             company_id = company_id.id
 
         # 1. Search for configuration specific to the company
-        conf = self.search([
+        conf = self.sudo().search([
             ('code', '=', code),
             ('company_id', '=', company_id),
         ], limit=1)
 
         # 2. If not found, search for global configuration (no company set)
         if not conf:
-            conf = self.search([
+            conf = self.sudo().search([
                 ('code', '=', code),
                 ('company_id', '=', False),
             ], limit=1)
@@ -48,18 +48,18 @@ class ContractDecreeConfiguration(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('model_char') and not vals.get('model_id'):
-                model_id = self.env['ir.model'].search([('model', '=', vals['model_char'])], limit=1)
+                model_id = self.env['ir.model'].sudo().search([('model', '=', vals['model_char'])], limit=1)
                 if model_id:
                     vals['model_id'] = model_id.id
             elif vals.get('model_id') and not vals.get('model_char'):
-                model_rec = self.env['ir.model'].browse(vals['model_id'])
+                model_rec = self.env['ir.model'].sudo().browse(vals['model_id'])
                 if model_rec:
                     vals['model_char'] = model_rec.model
         return super(ContractDecreeConfiguration, self).create(vals_list)
 
     def write(self, vals):
         if vals.get('model_id') and not vals.get('model_char'):
-            model_rec = self.env['ir.model'].browse(vals['model_id'])
+            model_rec = self.env['ir.model'].sudo().browse(vals['model_id'])
             if model_rec:
                 vals['model_char'] = model_rec.model
         return super(ContractDecreeConfiguration, self).write(vals)

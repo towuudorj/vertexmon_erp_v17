@@ -13,17 +13,17 @@ class HrContract(models.Model):
     def export_permanent_employee_contract(self):
         self.ensure_one()
         company = self.company_id or self.employee_id.company_id or self.env.company
-        conf = self.env['contract.decree.conf'].get_conf('permanent_employee', company_id=company)
-        if conf and conf.file and conf.line_ids:
-            return conf.action_download_docx(self.id)
+        conf = self.env['contract.decree.conf'].sudo().get_conf('permanent_employee', company_id=company)
+        if conf and conf.file and conf.sudo().line_ids:
+            return conf.sudo().action_download_docx(self.id)
         return None
 
     def export_probationary_employee_contract(self):
         self.ensure_one()
         company = self.company_id or self.employee_id.company_id or self.env.company
-        conf = self.env['contract.decree.conf'].get_conf('probationary_employee', company_id=company)
-        if conf and conf.file and conf.line_ids:
-            return conf.action_download_docx(self.id)
+        conf = self.env['contract.decree.conf'].sudo().get_conf('probationary_employee', company_id=company)
+        if conf and conf.file and conf.sudo().line_ids:
+            return conf.sudo().action_download_docx(self.id)
         return None
 
     def _compute_decree_count(self):

@@ -1,4 +1,4 @@
-from odoo import http, fields
+from odoo import http, fields, SUPERUSER_ID
 from odoo.http import request, content_disposition
 import base64
 from io import BytesIO
@@ -277,16 +277,18 @@ class DocxController(http.Controller):
                 if k not in custom_dict:
                     custom_dict[k] = v
 
-        conf = request.env['contract.decree.conf'].browse(conf_id)
+        sudo_env = request.env(user=SUPERUSER_ID)
+        conf = sudo_env['contract.decree.conf'].browse(conf_id)
 
-        if not conf.file:
+        if not conf.exists() or not conf.file:
             return request.not_found()
 
         file_content = base64.b64decode(conf.file)
 
         doc = Document(BytesIO(file_content))
 
-        model_obj = request.env[conf.model_id.model].browse(record_id) if (conf.model_id and record_id) else False
+        model_name = conf.model_id.model if conf.model_id else conf.model_char
+        model_obj = sudo_env[model_name].browse(record_id) if (model_name and record_id) else False
         replacements_dict = self.get_replacement_dict(conf.line_ids, model_obj, custom_dict=custom_dict, conf=conf)
 
         # Perform replacement across all text: body, shapes, textboxes, tables, headers, footers
@@ -335,6 +337,16 @@ class DocxController(http.Controller):
         else:
             custom_dict = {}
 
+        base_env = model_obj.env if model_obj else (line_ids.env if line_ids else (conf.env if conf else request.env))
+        sudo_env = base_env(user=SUPERUSER_ID)
+
+        if line_ids:
+            line_ids = line_ids.with_env(sudo_env)
+        if model_obj:
+            model_obj = model_obj.with_env(sudo_env)
+        if conf:
+            conf = conf.with_env(sudo_env)
+
         if not conf and line_ids:
             try:
                 conf = line_ids[0].contract_conf_id
@@ -351,13 +363,12 @@ class DocxController(http.Controller):
                 is_doc_english = True
 
         if not is_doc_english and line_ids:
-            english_count = sum(1 for l in line_ids if l.hel == 'english_count')
+            english_count = sum(1 for l in line_ids if l.hel == 'english')
             if english_count > 0 and english_count >= (len(line_ids) / 2):
                 is_doc_english = True
 
         replacement_dict = {}
         jumpable_types = ['many2many', 'one2many', 'many2one']
-        env = model_obj.env if model_obj else (line_ids.env if line_ids else request.env)
 
         for line in line_ids:
             if not line.text:
@@ -373,7 +384,7 @@ class DocxController(http.Controller):
             lang = 'en_US' if hel == 'english' else 'mn_MN'
 
             line_model_obj = model_obj.with_context(lang=lang) if model_obj else False
-            line_env = env(context=dict(env.context, lang=lang)) if env else False
+            line_env = sudo_env(context=dict(sudo_env.context, lang=lang))
 
             value = False
             field2 = False
