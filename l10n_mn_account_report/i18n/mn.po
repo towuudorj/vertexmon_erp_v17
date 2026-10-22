@@ -943,6 +943,158 @@ msgstr "Залруулгын журнал"
 msgid "Equity Changes Journal"
 msgstr "Өмчид гарсан өөрчлөлтийн журнал"
 
+#. module: l10n_mn_account_report
+msgid "Income report annual plan"
+msgstr "Орлогын тайлангийн жилийн төлөвлөгөө"
 
+#. module: l10n_mn_account_report
+msgid "Income report annual plan line"
+msgstr "Орлогын тайлангийн жилийн төлөвлөгөөний мөр"
 
+#. module: l10n_mn_account_report
+msgid "Income report plan execution"
+msgstr "Орлогын тайлангийн төлөвлөгөөний гүйцэтгэл"
 
+#. module: l10n_mn_account_report
+msgid "Income plan execution report"
+msgstr "Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан"
+
+#. module: l10n_mn_account_report
+msgid "Income report plan execution report"
+msgstr "Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан"
+
+#. module: l10n_mn_account_report
+msgid "Name"
+msgstr "Нэр"
+
+#. module: l10n_mn_account_report
+msgid "Year"
+msgstr "Жил"
+
+#. module: l10n_mn_account_report
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_account_report
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_account_report
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_account_report
+msgid "Set to draft"
+msgstr "Ноорог болгох"
+
+#. module: l10n_mn_account_report
+msgid "Lines"
+msgstr "Мөрүүд"
+
+#. module: l10n_mn_account_report
+msgid "Plan"
+msgstr "Төлөвлөгөө"
+
+#. module: l10n_mn_account_report
+msgid "January"
+msgstr "1-р сар"
+
+#. module: l10n_mn_account_report
+msgid "February"
+msgstr "2-р сар"
+
+#. module: l10n_mn_account_report
+msgid "March"
+msgstr "3-р сар"
+
+#. module: l10n_mn_account_report
+msgid "April"
+msgstr "4-р сар"
+
+#. module: l10n_mn_account_report
+msgid "May"
+msgstr "5-р сар"
+
+#. module: l10n_mn_account_report
+msgid "June"
+msgstr "6-р сар"
+
+#. module: l10n_mn_account_report
+msgid "July"
+msgstr "7-р сар"
+
+#. module: l10n_mn_account_report
+msgid "August"
+msgstr "8-р сар"
+
+#. module: l10n_mn_account_report
+msgid "September"
+msgstr "9-р сар"
+
+#. module: l10n_mn_account_report
+msgid "October"
+msgstr "10-р сар"
+
+#. module: l10n_mn_account_report
+msgid "November"
+msgstr "11-р сар"
+
+#. module: l10n_mn_account_report
+msgid "December"
+msgstr "12-р сар"
+
+#. module: l10n_mn_account_report
+msgid "Q1"
+msgstr "1-р улирал"
+
+#. module: l10n_mn_account_report
+msgid "Q2"
+msgstr "2-р улирал"
+
+#. module: l10n_mn_account_report
+msgid "Q3"
+msgstr "3-р улирал"
+
+#. module: l10n_mn_account_report
+msgid "Q4"
+msgstr "4-р улирал"
+
+#. module: l10n_mn_account_report
+msgid "Year total"
+msgstr "Жилийн дүн"
+
+#. module: l10n_mn_account_report
+msgid "Total"
+msgstr "Нийт"
+
+#. module: l10n_mn_account_report
+msgid "Period"
+msgstr "Үе"
+
+#. module: l10n_mn_account_report
+msgid "Quarter"
+msgstr "Улирал"
+
+#. module: l10n_mn_account_report
+msgid "Month"
+msgstr "Сар"
+
+#. module: l10n_mn_account_report
+msgid "%(year)s annual plan"
+msgstr "%(year)s оны жилийн төлөвлөгөө"
+
+#. module: l10n_mn_account_report
+msgid "The plan for this year already exists in this company!"
+msgstr "Энэ компани дээр тухайн жилийн төлөвлөгөө аль хэдийн үүссэн байна!"
+
+#. module: l10n_mn_account_report
+msgid "This income report type is already in the plan!"
+msgstr "Энэ орлогын тайлангийн төрөл төлөвлөгөөнд аль хэдийн орсон байна!"
+
+#. module: l10n_mn_account_report
+msgid "There is no plan for the year %s."
+msgstr "%s оны төлөвлөгөө байхгүй байна."
+
+#. module: l10n_mn_account_report
+msgid "All Posted Entries"
+msgstr "Бүх батлагдсан бичилтүүд"

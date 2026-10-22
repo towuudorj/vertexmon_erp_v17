@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<record id="income_plan_report_view" model="ir.ui.view">
+			<field name="name">income.plan.report.form</field>
+			<field name="model">income.plan.report</field>
+			<field name="arch" type="xml">
+				<form string="Report Options">
+					<group colspan="4">
+						<field name="company_id" widget="selection"/>
+						<field name="target_move"/>
+						<field name="period_type" widget="radio" options="{'horizontal': true}"/>
+						<field name="year"/>
+						<field name="quarter" invisible="period_type != 'quarter'"
+							   required="period_type == 'quarter'"/>
+						<field name="month" invisible="period_type != 'month'"
+							   required="period_type == 'month'"/>
+					</group>
+					<footer>
+						<button name="action_print_xls_report" string="Export" type="object" class="oe_highlight"/>
+						<button string="Close" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_income_plan_report" model="ir.actions.act_window">
+			<field name="name">Income plan execution report</field>
+			<field name="res_model">income.plan.report</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="income_plan_report_view"/>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem
+				id="mn_account_income_plan_report"
+				name="Income plan execution report"
+				parent="account_mn_reports"
+				action="action_income_plan_report"
+				sequence="3" />
+
+	</data>
+</odoo>

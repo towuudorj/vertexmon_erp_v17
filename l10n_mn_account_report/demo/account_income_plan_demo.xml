@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+
+		<!-- 2026 оны төлөвлөгөө. Q1 төлөвлөгөө = Q1 гүйцэтгэл / 0.9 тул Q1-ийн гүйцэтгэл 90% гарна.
+			 Q2-Q4 нь Q1-ийн сарын дүнгээс 5%-иар өссөн төлөвлөгөө. -->
+		<record id="demo_account_income_plan_2026" model="account.income.plan">
+			<field name="year">2026</field>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
+
+		<!-- Борлуулалтын орлого (цэвэр): Q1 гүйцэтгэл 12390984252.07 -->
+		<record id="demo_income_plan_line_sales" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_one"/>
+			<field name="m01">4589253426.69</field><field name="m02">4589253426.69</field><field name="m03">4589253426.70</field>
+			<field name="m04">4818716098.02</field><field name="m05">4818716098.02</field><field name="m06">4818716098.04</field>
+			<field name="m07">4818716098.02</field><field name="m08">4818716098.02</field><field name="m09">4818716098.04</field>
+			<field name="m10">4818716098.02</field><field name="m11">4818716098.02</field><field name="m12">4818716098.04</field>
+		</record>
+
+		<!-- Борлуулалтын өртөг: Q1 гүйцэтгэл 11145095300.92 -->
+		<record id="demo_income_plan_line_cogs" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_two"/>
+			<field name="m01">4127813074.41</field><field name="m02">4127813074.41</field><field name="m03">4127813074.42</field>
+			<field name="m04">4334203728.13</field><field name="m05">4334203728.13</field><field name="m06">4334203728.14</field>
+			<field name="m07">4334203728.13</field><field name="m08">4334203728.13</field><field name="m09">4334203728.14</field>
+			<field name="m10">4334203728.13</field><field name="m11">4334203728.13</field><field name="m12">4334203728.14</field>
+		</record>
+
+		<!-- Хүүний орлого: Q1 гүйцэтгэл 1032360.87 -->
+		<record id="demo_income_plan_line_interest" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_five"/>
+			<field name="m01">382355.88</field><field name="m02">382355.88</field><field name="m03">382355.87</field>
+			<field name="m04">401473.67</field><field name="m05">401473.67</field><field name="m06">401473.66</field>
+			<field name="m07">401473.67</field><field name="m08">401473.67</field><field name="m09">401473.66</field>
+			<field name="m10">401473.67</field><field name="m11">401473.67</field><field name="m12">401473.66</field>
+		</record>
+
+		<!-- Бусад орлого: Q1 гүйцэтгэл -34146728.45 -->
+		<record id="demo_income_plan_line_other_income" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_eight"/>
+			<field name="m01">-12646936.46</field><field name="m02">-12646936.46</field><field name="m03">-12646936.47</field>
+			<field name="m04">-13279283.28</field><field name="m05">-13279283.28</field><field name="m06">-13279283.29</field>
+			<field name="m07">-13279283.28</field><field name="m08">-13279283.28</field><field name="m09">-13279283.29</field>
+			<field name="m10">-13279283.28</field><field name="m11">-13279283.28</field><field name="m12">-13279283.29</field>
+		</record>
+
+		<!-- Борлуулалт маркетингийн зардал: Q1 гүйцэтгэл 62689157.82 -->
+		<record id="demo_income_plan_line_marketing" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_nine"/>
+			<field name="m01">23218206.60</field><field name="m02">23218206.60</field><field name="m03">23218206.60</field>
+			<field name="m04">24379116.93</field><field name="m05">24379116.93</field><field name="m06">24379116.93</field>
+			<field name="m07">24379116.93</field><field name="m08">24379116.93</field><field name="m09">24379116.93</field>
+			<field name="m10">24379116.93</field><field name="m11">24379116.93</field><field name="m12">24379116.93</field>
+		</record>
+
+		<!-- Ерөнхий ба удирдлагын зардал: Q1 гүйцэтгэл 1831557167.22 -->
+		<record id="demo_income_plan_line_admin" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_ten"/>
+			<field name="m01">678354506.38</field><field name="m02">678354506.38</field><field name="m03">678354506.37</field>
+			<field name="m04">712272231.70</field><field name="m05">712272231.70</field><field name="m06">712272231.69</field>
+			<field name="m07">712272231.70</field><field name="m08">712272231.70</field><field name="m09">712272231.69</field>
+			<field name="m10">712272231.70</field><field name="m11">712272231.70</field><field name="m12">712272231.69</field>
+		</record>
+
+		<!-- Санхүүгийн зардал: Q1 гүйцэтгэл 31076195.82 -->
+		<record id="demo_income_plan_line_finance" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_eleven"/>
+			<field name="m01">11509702.16</field><field name="m02">11509702.16</field><field name="m03">11509702.15</field>
+			<field name="m04">12085187.27</field><field name="m05">12085187.27</field><field name="m06">12085187.26</field>
+			<field name="m07">12085187.27</field><field name="m08">12085187.27</field><field name="m09">12085187.26</field>
+			<field name="m10">12085187.27</field><field name="m11">12085187.27</field><field name="m12">12085187.26</field>
+		</record>
+
+		<!-- Бусад зардал: Q1 гүйцэтгэл 21897085.00 -->
+		<record id="demo_income_plan_line_other_expense" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_twelve"/>
+			<field name="m01">8110031.48</field><field name="m02">8110031.48</field><field name="m03">8110031.48</field>
+			<field name="m04">8515533.05</field><field name="m05">8515533.05</field><field name="m06">8515533.05</field>
+			<field name="m07">8515533.05</field><field name="m08">8515533.05</field><field name="m09">8515533.05</field>
+			<field name="m10">8515533.05</field><field name="m11">8515533.05</field><field name="m12">8515533.05</field>
+		</record>
+
+		<!-- Гадаад валютын ханшийн зөрүүний олз (гарз): Q1 гүйцэтгэл -24634421.36 -->
+		<record id="demo_income_plan_line_fx_gain" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_thirteen"/>
+			<field name="m01">-9123859.76</field><field name="m02">-9123859.76</field><field name="m03">-9123859.77</field>
+			<field name="m04">-9580052.75</field><field name="m05">-9580052.75</field><field name="m06">-9580052.76</field>
+			<field name="m07">-9580052.75</field><field name="m08">-9580052.75</field><field name="m09">-9580052.76</field>
+			<field name="m10">-9580052.75</field><field name="m11">-9580052.75</field><field name="m12">-9580052.76</field>
+		</record>
+
+		<!-- Үндсэн хөрөнгө данснаас хассаны олз (гарз): Q1 гүйцэтгэл 77512077.40 -->
+		<record id="demo_income_plan_line_fixed_asset" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_fourtheen"/>
+			<field name="m01">28708176.81</field><field name="m02">28708176.81</field><field name="m03">28708176.82</field>
+			<field name="m04">30143585.65</field><field name="m05">30143585.65</field><field name="m06">30143585.66</field>
+			<field name="m07">30143585.65</field><field name="m08">30143585.65</field><field name="m09">30143585.66</field>
+			<field name="m10">30143585.65</field><field name="m11">30143585.65</field><field name="m12">30143585.66</field>
+		</record>
+
+		<!-- Орлого татварын зардал: Q1 гүйцэтгэл 103221.80 -->
+		<record id="demo_income_plan_line_tax" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_ninetheen"/>
+			<field name="m01">38230.30</field><field name="m02">38230.30</field><field name="m03">38230.29</field>
+			<field name="m04">40141.82</field><field name="m05">40141.82</field><field name="m06">40141.80</field>
+			<field name="m07">40141.82</field><field name="m08">40141.82</field><field name="m09">40141.80</field>
+			<field name="m10">40141.82</field><field name="m11">40141.82</field><field name="m12">40141.80</field>
+		</record>
+
+		<!-- Гадаад валютын хөрвүүлэлтийн зөрүү: Q1 гүйцэтгэл -36528991.69 -->
+		<record id="demo_income_plan_line_fx_translation" model="account.income.plan.line">
+			<field name="plan_id" ref="demo_account_income_plan_2026"/>
+			<field name="income_type_id" ref="account_income_type_twentyone"/>
+			<field name="m01">-13529256.18</field><field name="m02">-13529256.18</field><field name="m03">-13529256.18</field>
+			<field name="m04">-14205718.99</field><field name="m05">-14205718.99</field><field name="m06">-14205718.99</field>
+			<field name="m07">-14205718.99</field><field name="m08">-14205718.99</field><field name="m09">-14205718.99</field>
+			<field name="m10">-14205718.99</field><field name="m11">-14205718.99</field><field name="m12">-14205718.99</field>
+		</record>
+
+	</data>
+</odoo>

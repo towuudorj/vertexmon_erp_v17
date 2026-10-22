@@ -38,3 +38,9 @@ access_account_partner_ledger_excel_report_manager,account.partner.ledger.excel.
 access_multi_balance_sheet_excel_user,multi.balance.sheet.excel,model_multi_company_balance_sheet,account.group_account_user,1,0,0,0
 access_multi_balance_sheet_excel_manager,multi.balance.sheet.excel,model_multi_company_balance_sheet,account.group_account_manager,1,1,1,1
 access_ledger_report_group_option_user,ledger.report.group.option,model_ledger_report_group_option,base.group_user,1,0,0,0
+access_account_income_plan_user,account.income.plan,model_account_income_plan,account.group_account_user,1,0,0,0
+access_account_income_plan_manager,account.income.plan,model_account_income_plan,account.group_account_manager,1,1,1,1
+access_account_income_plan_line_user,account.income.plan.line,model_account_income_plan_line,account.group_account_user,1,0,0,0
+access_account_income_plan_line_manager,account.income.plan.line,model_account_income_plan_line,account.group_account_manager,1,1,1,1
+access_income_plan_report_user,income.plan.report,model_income_plan_report,account.group_account_user,1,1,1,1
+access_income_plan_report_manager,income.plan.report,model_income_plan_report,account.group_account_manager,1,1,1,1

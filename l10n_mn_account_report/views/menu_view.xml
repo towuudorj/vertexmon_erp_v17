@@ -72,6 +72,13 @@
 				action="action_account_income_type_tree_view" />
 				
 		<menuitem
+				name="Income report annual plan"
+				id="menu_income_plan"
+				parent="account.menu_finance_entries"
+				sequence="10"
+				action="action_account_income_plan" />
+
+		<menuitem
 				name="Balance report type"
 				id="menu_balance_type"
 				parent="account.account_account_menu"

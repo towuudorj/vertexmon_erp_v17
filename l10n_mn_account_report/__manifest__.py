@@ -56,13 +56,18 @@
             'views/statement_cash_flow_excel_report_view.xml',
             'views/account_balance_type_view.xml',
             'views/account_income_type_view.xml',
+            'views/account_income_plan_view.xml',
             'views/equity_configure_view_report.xml',
             'views/account_account_inherit_view.xml',
             'wizard/account_partner_ledger_excel_report.xml',
             'views/multi_company_balance_sheet_view.xml',
             'views/menu_view.xml',
+            'views/income_plan_report_view.xml',
             
 
+    ],
+    'demo': [
+        'demo/account_income_plan_demo.xml',
     ],
     'assets': {
         'web.assets_backend': [
