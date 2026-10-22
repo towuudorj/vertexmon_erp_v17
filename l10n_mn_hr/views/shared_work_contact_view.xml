@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_employee_shared_contact_filter" model="ir.ui.view">
+        <field name="name">hr.employee.search.shared.contact</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="l10n_mn_hr.view_employee_new_filter"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter name="shared_work_contact" string="Ажлын контакт давхардсан"
+                        domain="[('shared_work_contact', '=', True)]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_partner_multiple_employees_filter" model="ir.ui.view">
+        <field name="name">res.partner.search.multiple.employees</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter name="multiple_employees" string="Олон ажилтантай харилцагч"
+                        domain="[('has_multiple_employees', '=', True)]"
+                        groups="hr.group_hr_user"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+</odoo>

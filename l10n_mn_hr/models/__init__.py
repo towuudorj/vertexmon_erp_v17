@@ -28,3 +28,4 @@ from . import res_users
 from . import kpi_template
 from . import employee_kpi
 from . import contract_decree_configuration
+from . import shared_work_contact

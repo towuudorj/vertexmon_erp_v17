@@ -390,6 +390,9 @@
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
                                         <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'default_create_employee_id': id}" widget="many2one_avatar_user"/>
+                                        <field name="work_contact_id" string="Ажлын контакт" groups="hr.group_hr_manager"
+                                               context="{'default_name': name, 'default_email': work_email, 'default_mobile': mobile_phone}"
+                                               help="Ажилтны и-мэйл, гар утас энэ контакт дээр хадгалагдана. Хоёр ажилтан нэг контакт хуваалцаж болохгүй."/>
                                         <field name="attendance_id" groups="hr.group_hr_manager"/>
                                         <field name="timely_id" groups="hr.group_hr_manager"/>
                                     </group>

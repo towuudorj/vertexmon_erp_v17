@@ -30,6 +30,10 @@ class ResPartner(models.Model):
                                        ('010','010 Self'),
                                        ('011','011 Contract partner')], string='Partner group', default='001', required=True)
      
+     # Ажилтны гэх мэт харилцагчид авлага/өглөгийн данс заавал шаардлагагүй
+     property_account_payable_id = fields.Many2one(required=False)
+     property_account_receivable_id = fields.Many2one(required=False)
+
      _sql_constraints = [
         ('unique_vat', 'unique(vat)', 'This vat is already assigned to another contact. Please make sure you assign a unique vat to this contact.'),
     ]
