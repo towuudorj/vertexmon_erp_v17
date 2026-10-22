@@ -944,157 +944,254 @@ msgid "Equity Changes Journal"
 msgstr "Өмчид гарсан өөрчлөлтийн журнал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_income_plan
+#: model:ir.ui.menu,name:l10n_mn_account_report.menu_income_plan
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_account_income_plan
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_income_plan_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_income_plan_tree_view
 msgid "Income report annual plan"
 msgstr "Орлогын тайлангийн жилийн төлөвлөгөө"
 
 #. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_account_income_plan_line
 msgid "Income report annual plan line"
 msgstr "Орлогын тайлангийн жилийн төлөвлөгөөний мөр"
 
 #. module: l10n_mn_account_report
+#: model:ir.model,name:l10n_mn_account_report.model_income_plan_report
 msgid "Income report plan execution"
-msgstr "Орлогын тайлангийн төлөвлөгөөний гүйцэтгэл"
+msgstr "Орлогын төлөвлөгөөний гүйцэтгэл"
 
 #. module: l10n_mn_account_report
-msgid "Income plan execution report"
-msgstr "Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан"
-
-#. module: l10n_mn_account_report
-msgid "Income report plan execution report"
-msgstr "Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан"
-
-#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan__name
 msgid "Name"
 msgstr "Нэр"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__company_id
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan__year
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__year
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__period_type__year
 msgid "Year"
 msgstr "Жил"
 
 #. module: l10n_mn_account_report
-msgid "Draft"
-msgstr "Ноорог"
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan__state
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__target_move
+msgid "State"
+msgstr "Төлөв"
 
 #. module: l10n_mn_account_report
-msgid "Confirmed"
-msgstr "Батлагдсан"
-
-#. module: l10n_mn_account_report
-msgid "Confirm"
-msgstr "Батлах"
-
-#. module: l10n_mn_account_report
-msgid "Set to draft"
-msgstr "Ноорог болгох"
-
-#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan__line_ids
 msgid "Lines"
 msgstr "Мөрүүд"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_income_plan__state__draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__account_income_plan__state__confirmed
+msgid "Confirmed"
+msgstr "Батлагдсан"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__plan_id
 msgid "Plan"
 msgstr "Төлөвлөгөө"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__income_type_id
+msgid "Income report type"
+msgstr "Орлогын тайлангийн төрөл"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m01
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__1
 msgid "January"
 msgstr "1-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m02
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__2
 msgid "February"
 msgstr "2-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m03
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__3
 msgid "March"
 msgstr "3-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m04
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__4
 msgid "April"
 msgstr "4-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m05
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__5
 msgid "May"
 msgstr "5-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m06
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__6
 msgid "June"
 msgstr "6-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m07
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__7
 msgid "July"
 msgstr "7-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m08
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__8
 msgid "August"
 msgstr "8-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m09
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__9
 msgid "September"
 msgstr "9-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m10
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__10
 msgid "October"
 msgstr "10-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m11
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__11
 msgid "November"
 msgstr "11-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__m12
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__month__12
 msgid "December"
 msgstr "12-р сар"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__q1
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__quarter__1
 msgid "Q1"
 msgstr "1-р улирал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__q2
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__quarter__2
 msgid "Q2"
 msgstr "2-р улирал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__q3
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__quarter__3
 msgid "Q3"
 msgstr "3-р улирал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__q4
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__quarter__4
 msgid "Q4"
 msgstr "4-р улирал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_account_income_plan_line__year_total
 msgid "Year total"
 msgstr "Жилийн дүн"
 
 #. module: l10n_mn_account_report
-msgid "Total"
-msgstr "Нийт"
-
-#. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__period_type
 msgid "Period"
 msgstr "Үе"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__quarter
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__period_type__quarter
 msgid "Quarter"
 msgstr "Улирал"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields,field_description:l10n_mn_account_report.field_income_plan_report__month
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__period_type__month
 msgid "Month"
 msgstr "Сар"
 
 #. module: l10n_mn_account_report
-msgid "%(year)s annual plan"
-msgstr "%(year)s оны жилийн төлөвлөгөө"
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__target_move__posted
+msgid "All Posted Entries"
+msgstr "Бүх батлагдсан бичилтүүд"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.fields.selection,name:l10n_mn_account_report.selection__income_plan_report__target_move__all
+msgid "All Entries"
+msgstr "Бүх бичилтүүд"
+
+#. module: l10n_mn_account_report
+#: model:ir.ui.menu,name:l10n_mn_account_report.mn_account_income_plan_report
+#: model:ir.actions.act_window,name:l10n_mn_account_report.action_income_plan_report
+msgid "Income plan execution report"
+msgstr "Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_income_plan_form_view
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_income_plan_form_view
+msgid "Set to draft"
+msgstr "Ноорог болгох"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.account_income_plan_form_view
+msgid "Total"
+msgstr "Нийт"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.income_plan_report_view
+msgid "Report Options"
+msgstr "Тайлангийн сонголт"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.income_plan_report_view
+msgid "Export"
+msgstr "Экспорт"
+
+#. module: l10n_mn_account_report
+#: model_terms:ir.ui.view,arch_db:l10n_mn_account_report.income_plan_report_view
+msgid "Close"
+msgstr "Хаах"
+
+#. module: l10n_mn_account_report
+#: model:ir.model.constraint,message:l10n_mn_account_report.constraint_account_income_plan_company_year_uniq
 msgid "The plan for this year already exists in this company!"
 msgstr "Энэ компани дээр тухайн жилийн төлөвлөгөө аль хэдийн үүссэн байна!"
 
 #. module: l10n_mn_account_report
+#: model:ir.model.constraint,message:l10n_mn_account_report.constraint_account_income_plan_line_plan_income_type_uniq
 msgid "This income report type is already in the plan!"
 msgstr "Энэ орлогын тайлангийн төрөл төлөвлөгөөнд аль хэдийн орсон байна!"
 
 #. module: l10n_mn_account_report
-msgid "There is no plan for the year %s."
-msgstr "%s оны төлөвлөгөө байхгүй байна."
+#: code:addons/l10n_mn_account_report/models/account_income_plan.py:0
+msgid "%(year)s annual plan"
+msgstr "%(year)s оны жилийн төлөвлөгөө"
 
 #. module: l10n_mn_account_report
-msgid "All Posted Entries"
-msgstr "Бүх батлагдсан бичилтүүд"
+#: code:addons/l10n_mn_account_report/wizard/income_plan_report.py:0
+msgid "There is no plan for the year %s."
+msgstr "%s оны төлөвлөгөө байхгүй байна."

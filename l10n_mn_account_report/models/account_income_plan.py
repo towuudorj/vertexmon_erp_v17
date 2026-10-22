@@ -11,7 +11,7 @@ class AccountIncomePlan(models.Model):
     _inherit = ['mail.thread']
     _order = 'year desc, id desc'
 
-    name = fields.Char(string='Name', compute='_compute_name', store=True)
+    name = fields.Char(string='Name', compute='_compute_name')
     company_id = fields.Many2one('res.company', string='Company', required=True,
                                  default=lambda self: self.env.company)
     year = fields.Integer(string='Year', required=True,
