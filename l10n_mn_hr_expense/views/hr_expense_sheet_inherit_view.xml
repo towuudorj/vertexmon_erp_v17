@@ -29,5 +29,27 @@
             </field>
         </record>
 
+        <record id="hr_expense_sheet_tree_inherit_view" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.tree.mn.partner</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="partner_id" string="Харилцагч" optional="show" readonly="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_expense_tree_inherit_partner_view" model="ir.ui.view">
+            <field name="name">hr.expense.tree.mn.partner</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="sheet_partner_id" string="Харилцагч" optional="show"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </odoo>

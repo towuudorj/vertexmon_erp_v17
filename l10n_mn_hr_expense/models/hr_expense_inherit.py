@@ -172,6 +172,7 @@ class HrExpense(models.Model):
     _inherit = 'hr.expense'
 
     sharepoint_id = fields.Integer("Share Point ID")
+    sheet_partner_id = fields.Many2one('res.partner', string='Partner', related='sheet_id.partner_id')
 
     @api.model
     def default_get(self, fields):
