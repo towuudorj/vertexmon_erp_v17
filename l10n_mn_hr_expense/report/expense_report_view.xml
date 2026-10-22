@@ -130,7 +130,7 @@
                             <td style="padding:3px; padding-bottom:10px;">Захирал:......................................./ Х.Баяржаргал /</td>
                         </t>
                         <t t-if="o.company_id.id==4">
-                            <td style="padding:3px; padding-bottom:10px;">Захирал:......................................./ Ө.Батмөнх /</td>
+                            <td style="padding:3px; padding-bottom:10px;">Захирал:......................................./ М.Хишигмөнх /</td>
                         </t>
                         <td style="padding:3px;">Төлөх хугацаа</td>
                     </tr>

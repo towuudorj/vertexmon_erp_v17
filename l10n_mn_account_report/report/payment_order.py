@@ -21,6 +21,7 @@ class payment_order_reportsd(models.TransientModel):
         st_data = st_line_obj.browse(active_ids)
         data = {
             'company_name': st_data.company_id.name,
+            'director_name': u'М.Хишигмөнх' if st_data.company_id.id == 4 else u'Д.Мэндсайхан',
             'date': st_data.date,
             'partner_name': st_data.partner_id.name,
             'amount': st_data.amount,
@@ -178,7 +179,7 @@ class payment_order_reportsd(models.TransientModel):
         sheet.write('D15', u'Төлбөрийн зориулалт', border_center)
         sheet.write('E15', '', border_center)
 
-        sheet.write('B16', u'Захирал:................../ Д.Мэндсайхан /')
+        sheet.write('B16', u'Захирал:................../ %s /' % data['director_name'])
         sheet.write('C16', u'Банкинд гүйлгээ хийсэн .... оны ... сарын ... өдөр', text_wrap)
         sheet.write('D16', u'Төлөх хугацаа', border_center)
         sheet.write('E16', '', border_center)
