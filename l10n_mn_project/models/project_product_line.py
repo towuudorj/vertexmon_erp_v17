@@ -125,16 +125,26 @@ class ProjectProductsLine(models.Model):
         return super(ProjectProductsLine, self).write(vals)
     
     
+    @api.depends('product_id', 'cost_price', 'project_id.purchase_ids.state',
+                 'project_id.purchase_ids.order_line.price_unit')
     def action_change_cost(self):
+        """Өртгийн өөрчлөлт: тухайн барааны төслийн худалдан авалтын үнийг (₮) хугацааны дарааллаар
+        дундажлан, сүүлчийн өртөг үнийг гаргана: cost = (өмнөх өртөг + худалдан авалтын үнэ) / 2.
+        Эхний утга нь мөрийн Өртөг үнэ (cost_price). Худалдан авалт байхгүй бол cost_price хэвээр."""
         for line in self:
-            cost = 0
-            for lines in line.project_id.purchase_ids:
-                for list in lines.order_line:
-                    cost = ((list.price_unit * lines.currency_rate) + line.change_cost)/2
+            cost = line.cost_price
+            orders = line.project_id.purchase_ids.filtered(
+                lambda po: po.state in ('purchase', 'done')).sorted(
+                lambda po: (po.date_approve or po.date_order or po.create_date, po.id))
+            for order in orders:
+                company_currency = order.company_id.currency_id
+                date = (order.date_approve or order.date_order or fields.Date.context_today(self))
+                for po_line in order.order_line.filtered(lambda l: l.product_id == line.product_id):
+                    price = order.currency_id._convert(
+                        po_line.price_unit, company_currency, order.company_id, date)
+                    cost = (cost + price) / 2
             line.change_cost = cost
-            
-    
-    
+
     def compute_delivery_cost(self):
         for line in self:
             delivery_cost = 0

@@ -179,8 +179,8 @@
                             <field name="delivery_cost" string="Нийт зарлагын өртөг"/>
                             <field name="last_qty" string="Үлдэгдэл тоо"/>
                             <field name="cost_price" widget="monetary"/>
-                            <field name="price_unit" widget="monetary"/>
                             <field name="change_cost" readonly="1" optional = "hide"/>
+                            <field name="price_unit" widget="monetary"/>
                             <field name="cost_total" sum="Total Cost" force_save="1"/>
                             <field name="price_total" sum="Total Price" force_save="1"/>
                         </tree>

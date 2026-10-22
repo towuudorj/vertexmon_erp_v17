@@ -182,7 +182,7 @@ msgstr "Нэхэмжлэл үүсгэх"
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__change_cost
 msgid "Change cost"
-msgstr "Өртөгийн өөрчлөлт"
+msgstr "Бодит өртөг"
 
 #. module: l10n_mn_project
 #: model:ir.model.fields,field_description:l10n_mn_project.field_project_products_line__product_uom
