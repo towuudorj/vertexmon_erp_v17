@@ -128,6 +128,8 @@ class HrAttendance(models.Model):
         help="Батлагдсан засах хүсэлтээр өөрчлөгдсөн. HikCentral/Timely-гийн татан авалт энэ ирцийг дахин өөрчлөхгүй.",
         copy=False,
     )
+    check_in_location = fields.Char('Орсон байршил')
+    check_out_location = fields.Char('Гарсан байршил')
 
     def create_check_in(self, employee_id, lat, long):
         """Create a check-in record with the given latitude and longitude."""
@@ -160,7 +162,7 @@ class HrAttendance(models.Model):
 
     # ---- One merge for every source ----
 
-    def _merge_punch(self, employee, day, check_in, check_out):
+    def _merge_punch(self, employee, day, check_in, check_out, check_in_location=False, check_out_location=False):
         """A day's punches from any source: keeps the earliest check-in and the latest check-out.
         check_in / check_out are naive UTC datetimes or False. Days locked by an approved correction stay as they are."""
         if not check_in and not check_out:
@@ -171,7 +173,8 @@ class HrAttendance(models.Model):
         attendances = self.sudo().search(
             [('employee_id', '=', employee.id), ('check_in', '>=', start), ('check_in', '<=', end)], order='check_in')
         if not attendances:
-            self.sudo().create({'employee_id': employee.id, 'check_in': check_in, 'check_out': check_out})
+            self.sudo().create({'employee_id': employee.id, 'check_in': check_in, 'check_out': check_out,
+                                'check_in_location': check_in_location, 'check_out_location': check_out_location})
             return
         # the day's first attendance carries the day (more than one only when entered by hand)
         attendance = attendances[0]
@@ -182,6 +185,10 @@ class HrAttendance(models.Model):
             vals['check_in'] = check_in
         if not attendance.check_out or check_out > attendance.check_out:
             vals['check_out'] = check_out
+        if check_in_location and not attendance.check_in_location:
+            vals['check_in_location'] = check_out_location
+        if check_out_location and not attendance.check_out_location:
+            vals['check_out_location'] = check_out_location
         if vals:
             attendance.write(vals)
 
@@ -333,7 +340,14 @@ class HrAttendance(models.Model):
                     continue
                 for key, value in list(line['attd'].items()):
                     try:
-                        self._merge_punch(employee, fields.Date.from_string(key), timely_time(value.get('clockIn')), timely_time(value.get('clockOut')))
+                        check_in_location = False
+                        check_out_location = False
+                        if value.get('clockInSource'):
+                            check_in_location = value.get('clockInSource').get('name', False)
+                        if value.get('clockOutSource'):
+                            check_out_location = value.get('clockOutSource').get('name', False)
+                        self._merge_punch(employee, fields.Date.from_string(key), timely_time(value.get('clockIn')), timely_time(value.get('clockOut')),
+                                          check_in_location=check_in_location, check_out_location=check_out_location)
                         self._timely_requests(employee, value.get('requests'), leave_types)
                     except Exception:
                         _logger.exception("Timely: %s %s өдрийн ирц", employee.name, key)
@@ -447,6 +461,8 @@ class HrAttendance(models.Model):
                     "worked_hours": f"{hours:02d}:{minutes:02d}",
                     "loss_time": str(round(los_time, 2)),
                     "emp_id": employee.id,
+                    "check_in_location": att.check_in_location,
+                    "check_out_location": att.check_out_location,
                 }
                 send = (lambda: requests.post(url, headers=headers, json={"fields": body}, timeout=timeout)) if is_new else \
                     (lambda: requests.patch(url, headers=headers, json=body, timeout=timeout))

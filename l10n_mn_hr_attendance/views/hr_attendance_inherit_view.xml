@@ -31,6 +31,10 @@
                 <xpath expr='//field[@name="check_out"]' position="after">
                     <field name="manual_lock"/>
                 </xpath>
+                <xpath expr='//field[@name="worked_hours"]' position="after">
+                    <field name="check_in_location" invisible="not check_in_location"/>
+                    <field name="check_out_location" invisible="not check_out_location"/>
+                </xpath>
                 <xpath expr='//form' position='attributes'>
                     <attribute name="create">0</attribute>
                 </xpath>
