@@ -83,7 +83,8 @@
                 'views/menu_view.xml',
                 'views/sale_order_action_list_view.xml',
                 'data/sales_dashboard_data.xml',
-                ],
+                'data/spreadsheet_dashboard_data.xml',
+    ],
     "assets": {
         "spreadsheet.o_spreadsheet": [
             "l10n_mn_sale/static/src/dashboard/funnel_chart/funnel_chart.js",

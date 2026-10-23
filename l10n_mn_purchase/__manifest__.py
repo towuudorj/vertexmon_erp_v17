@@ -28,7 +28,8 @@
                  'purchase_stock',
                  'l10n_mn_account',
                  'purchase_requisition',
-                 'spreadsheet_dashboard_purchase'
+                 'spreadsheet_dashboard_purchase',
+                 'spreadsheet_dashboard_purchase_stock'
                  ],
     "data" : [
               "security/ir.model.access.csv",
