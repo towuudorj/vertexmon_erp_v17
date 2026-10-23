@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Crm Lead Line" create="0" editable="bottom" decoration-success="priority == 'normal'" decoration-danger="priority == 'high'">
                         <field name="lead_id" string="Сэжим нэр" readonly="1"/>
+                        <field name="lead_code" string="CRM Код" readonly="1"/>
                         <field name="product_id" readonly="1"/>
                         <field name="name" readonly="1"/>
                         <field name="request_type" optional="show" readonly="1"/>

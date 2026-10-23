@@ -19,6 +19,7 @@ class CrmLeadLine(models.Model):
     qty = fields.Float(string='Quantity')
     price_subtotal = fields.Float(string='Price subtotal')
     lead_id = fields.Many2one('crm.lead', string='Lead')
+    lead_code = fields.Char(related='lead_id.code', string='CRM Код', store=False)
     request_line_id = fields.Many2one('purchase.requisition.line', string='Request line')
     currency_id = fields.Many2one('res.currency', string='Currency')
     purchase_user_id = fields.Many2one('res.users', string='Purchase user', domain="[('is_purchase_manager','=',True)]")
