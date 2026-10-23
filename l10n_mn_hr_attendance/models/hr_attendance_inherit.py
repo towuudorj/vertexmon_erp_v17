@@ -461,8 +461,8 @@ class HrAttendance(models.Model):
                     "worked_hours": f"{hours:02d}:{minutes:02d}",
                     "loss_time": str(round(los_time, 2)),
                     "emp_id": employee.id,
-                    "check_in_location": att.check_in_location,
-                    "check_out_location": att.check_out_location,
+                    "check_in_location": att.check_in_location or 'Office',
+                    "check_out_location": att.check_out_location or 'Office',
                 }
                 send = (lambda: requests.post(url, headers=headers, json={"fields": body}, timeout=timeout)) if is_new else \
                     (lambda: requests.patch(url, headers=headers, json=body, timeout=timeout))
