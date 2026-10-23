@@ -154,11 +154,11 @@
                                 name="confirm_purchase"/>
 
                             <button string="Цуцлах" type="action"
-                                invisible="new_status == 'cancel'" 
+                                invisible="new_status in ('cancel', 'done')" 
                                 name="%(action_crm_cancel_reason_view)d"/>
                             <button string="Хойшлуулах" type="action"
                                 
-                                invisible="new_status == 'break'" 
+                                invisible="new_status in ('break', 'done')" 
                                 name="%(action_crm_break_reason_view)d"/>
                         </xpath>
 
