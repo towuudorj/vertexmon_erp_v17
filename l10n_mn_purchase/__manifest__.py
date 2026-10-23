@@ -27,7 +27,8 @@
                  'purchase',
                  'purchase_stock',
                  'l10n_mn_account',
-                 'purchase_requisition'
+                 'purchase_requisition',
+                 'spreadsheet_dashboard_purchase'
                  ],
     "data" : [
               "security/ir.model.access.csv",
@@ -44,7 +45,8 @@
               "wizard/purchase_expense_report_view.xml",
               "wizard/purchase_order_template_report_view.xml",
               "views/menu_view.xml",
-              "views/purchase_order_action_list_view.xml"
+              "views/purchase_order_action_list_view.xml",
+              "data/vendors_dashboard_data.xml"
                 ],
     "auto_install": False,
     "installable": True,

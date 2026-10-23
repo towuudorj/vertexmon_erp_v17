@@ -7,6 +7,10 @@ class PurchaseOrder(models.Model):
 
     partner_type = fields.Many2one('partner.type.register', string='Partner type')
     currency_rate = fields.Float(string='Currency rate', digits=(12, 6), compute="_compute_currency_rate")
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Company Currency')
+    amount_untaxed_company = fields.Monetary(
+        string='Untaxed Amount (Company Currency)', currency_field='company_currency_id',
+        compute='_compute_amount_untaxed_company', store=True)
     sales_partner_id = fields.Many2one('res.partner', string='Sales Partners')
     purchase_type = fields.Selection([('local', 'Local'),
                                         ('foreign' , 'Foreign')], string='Purchase type',
@@ -167,6 +171,13 @@ class PurchaseOrder(models.Model):
             )
         return picking
 
+
+    @api.depends('amount_untaxed', 'currency_id', 'company_id', 'date_approve', 'date_order')
+    def _compute_amount_untaxed_company(self):
+        for order in self:
+            date = order.date_approve or order.date_order or fields.Date.context_today(order)
+            order.amount_untaxed_company = order.currency_id._convert(
+                order.amount_untaxed, order.company_id.currency_id, order.company_id, date)
 
     @api.onchange('currency_id')
     def _compute_currency_rate(self):

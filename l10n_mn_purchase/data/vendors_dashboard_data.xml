@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spreadsheet_dashboard_purchase.spreadsheet_dashboard_vendors" model="spreadsheet.dashboard">
+        <field name="spreadsheet_binary_data" type="base64" file="l10n_mn_purchase/data/files/vendors_dashboard.json"/>
+    </record>
+</odoo>
