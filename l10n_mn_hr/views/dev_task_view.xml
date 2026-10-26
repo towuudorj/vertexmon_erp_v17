@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Даалгаврын төрөл -->
+    <record id="view_dev_task_type_tree" model="ir.ui.view">
+        <field name="name">dev.task.type.tree</field>
+        <field name="model">dev.task.type</field>
+        <field name="arch" type="xml">
+            <tree string="Даалгаврын төрөл" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="department_id" placeholder="Бүх алба"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dev_task_type" model="ir.actions.act_window">
+        <field name="name">Даалгаврын төрөл</field>
+        <field name="res_model">dev.task.type</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <!-- Даалгавар -->
+    <record id="view_dev_task_form" model="ir.ui.view">
+        <field name="name">dev.task.form</field>
+        <field name="model">dev.task</field>
+        <field name="arch" type="xml">
+            <form string="Даалгавар">
+                <field name="is_reviewer" invisible="1"/>
+                <field name="is_assignee" invisible="1"/>
+                <header>
+                    <button name="action_start" string="Эхлүүлэх" type="object" class="btn-primary"
+                            invisible="state != 'new' or (assignee_id and not is_assignee)"/>
+                    <button name="action_review" string="Шалгуулах" type="object" class="btn-primary"
+                            invisible="state != 'in_progress' or not is_assignee"
+                            confirm="Шалгах ажилтанд шилжүүлэх үү? (Өөр хүн бол шалгана уу гэсэн имэйл илгээгдэнэ)"/>
+                    <button name="action_done" string="Дуусгах" type="object" class="btn-primary"
+                            invisible="state != 'review' or not is_reviewer"/>
+                    <button name="action_return" string="Буцаах" type="object"
+                            invisible="state != 'review' or not is_reviewer"/>
+                    <button name="action_done" string="Дуусгах (менежер)" type="object"
+                            invisible="state != 'review' or is_reviewer"
+                            groups="l10n_mn_hr.group_dev_task_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,in_progress,review,done"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Хугацаа хэтэрсэн" bg_color="text-bg-danger"
+                            invisible="not is_overdue"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Даалгаврын гарчиг..." readonly="state == 'done'"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="department_id" options="{'no_create': True}" readonly="state != 'new'"/>
+                            <field name="type_id" options="{'no_create': True, 'no_open': True}"
+                                   readonly="state != 'new'"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="module_name" placeholder="Жишээ: Борлуулалт / Нэхэмжлэл"/>
+                            <field name="plan_line_id" options="{'no_create': True}"
+                                   readonly="state == 'done' or not is_assignee"/>
+                        </group>
+                        <group>
+                            <field name="requester_id" widget="many2one_avatar_user"/>
+                            <field name="allowed_assignee_ids" invisible="1"/>
+                            <field name="assignee_id" widget="many2one_avatar_user"
+                                   options="{'no_create': True}" readonly="state == 'done'"/>
+                            <field name="reviewer_id" widget="many2one_avatar_user" options="{'no_create': True}"
+                                   readonly="state == 'done'" placeholder="Хоосон бол үүсгэсэн ажилтан шалгана"/>
+                            <field name="date_deadline" readonly="state == 'done'"/>
+                            <field name="is_overdue" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Тайлбар" name="description">
+                            <field name="description" placeholder="Даалгаврын шаардлагыг дэлгэрэнгүй бичнэ үү..."
+                                   readonly="state != 'new'"/>
+                        </page>
+                        <page string="Гүйцэтгэл" name="result">
+                            <field name="result_note" placeholder="Хийгдсэн ажлын тайлбар..."
+                                   readonly="state in ('new', 'done') or not is_assignee"/>
+                        </page>
+                        <page string="Огноо" name="dates">
+                            <group>
+                                <field name="create_date" string="Бүртгэсэн огноо"/>
+                                <field name="date_start"/>
+                                <field name="date_review"/>
+                                <field name="date_done"/>
+                                <field name="is_on_time"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dev_task_tree" model="ir.ui.view">
+        <field name="name">dev.task.tree</field>
+        <field name="model">dev.task</field>
+        <field name="arch" type="xml">
+            <tree string="Даалгавар" decoration-danger="is_overdue" decoration-muted="state == 'done'">
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="type_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="module_name" optional="hide"/>
+                <field name="requester_id" widget="many2one_avatar_user"/>
+                <field name="assignee_id" widget="many2one_avatar_user"/>
+                <field name="review_user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="plan_line_id" optional="hide"/>
+                <field name="date_deadline"/>
+                <field name="date_done" optional="hide"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'" decoration-warning="state == 'in_progress'"
+                       decoration-primary="state == 'review'" decoration-success="state == 'done'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_dev_task_kanban" model="ir.ui.view">
+        <field name="name">dev.task.kanban</field>
+        <field name="model">dev.task</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" records_draggable="0"
+                    group_create="0" group_delete="0" group_edit="0" quick_create="0">
+                <field name="state"/>
+                <field name="is_overdue"/>
+                <field name="type_color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="d-flex justify-content-between">
+                                    <strong><field name="name"/></strong>
+                                    <span t-attf-class="o_tag o_tag_color_#{record.type_color.raw_value or 0} badge rounded-pill">
+                                        <field name="type_id"/>
+                                    </span>
+                                </div>
+                                <div class="mt-1"><field name="title"/></div>
+                                <div class="small text-muted"><field name="department_id"/></div>
+                                <div t-if="record.date_deadline.raw_value"
+                                     t-attf-class="small mt-1 #{record.is_overdue.raw_value ? 'text-danger' : 'text-muted'}">
+                                    <i class="fa fa-clock-o" title="Хугацаа"/> <field name="date_deadline"/>
+                                </div>
+                                <div class="oe_kanban_bottom_left mt-2">
+                                    <field name="priority" widget="priority"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="requester_id" widget="many2one_avatar_user"/>
+                                    <field name="assignee_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dev_task_search" model="ir.ui.view">
+        <field name="name">dev.task.search</field>
+        <field name="model">dev.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="type_id"/>
+                <field name="department_id"/>
+                <field name="requester_id"/>
+                <field name="assignee_id"/>
+                <field name="review_user_id"/>
+                <filter name="my_requests" string="Миний үүсгэсэн" domain="[('requester_id', '=', uid)]"/>
+                <filter name="my_tasks" string="Миний гүйцэтгэх" domain="[('assignee_id', '=', uid)]"/>
+                <filter name="to_review" string="Миний шалгах" domain="[('review_user_id', '=', uid), ('state', '=', 'review')]"/>
+                <separator/>
+                <filter name="not_done" string="Дуусаагүй" domain="[('state', '!=', 'done')]"/>
+                <filter name="overdue" string="Хугацаа хэтэрсэн"
+                        domain="[('state', '!=', 'done'), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Бүлэглэх">
+                    <filter name="group_state" string="Төлөв" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Төрөл" context="{'group_by': 'type_id'}"/>
+                    <filter name="group_department" string="Гүйцэтгэх алба" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_assignee" string="Гүйцэтгэгч" context="{'group_by': 'assignee_id'}"/>
+                    <filter name="group_requester" string="Үүсгэсэн" context="{'group_by': 'requester_id'}"/>
+                    <filter name="group_plan" string="Ажлын төлөвлөгөө" context="{'group_by': 'plan_line_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dev_task_pivot" model="ir.ui.view">
+        <field name="name">dev.task.pivot</field>
+        <field name="model">dev.task</field>
+        <field name="arch" type="xml">
+            <pivot string="Даалгаврын шинжилгээ">
+                <field name="assignee_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_dev_task" model="ir.actions.act_window">
+        <field name="name">Бүх даалгавар</field>
+        <field name="res_model">dev.task</field>
+        <field name="view_mode">kanban,tree,form,pivot</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Шинэ даалгавар бүртгэнэ үү</p>
+        </field>
+    </record>
+
+    <record id="action_dev_task_my" model="ir.actions.act_window">
+        <field name="name">Миний даалгавар</field>
+        <field name="res_model">dev.task</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">['|', '|', ('requester_id', '=', uid), ('assignee_id', '=', uid), ('review_user_id', '=', uid)]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

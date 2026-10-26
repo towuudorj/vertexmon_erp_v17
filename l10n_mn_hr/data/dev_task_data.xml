@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_dev_task" model="ir.sequence">
+            <field name="name">Даалгавар</field>
+            <field name="code">dev.task</field>
+            <field name="prefix">DEV/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Анхны даалгаврын төрлүүд (Даалгавар -> Даалгаврын төрөл цэснээс нэмж, албатай холбоно) -->
+        <record id="dev_task_type_change" model="dev.task.type">
+            <field name="name">Өөрчлөлт</field>
+            <field name="sequence">10</field>
+            <field name="color">4</field>
+        </record>
+        <record id="dev_task_type_development" model="dev.task.type">
+            <field name="name">Хөгжүүлэлт</field>
+            <field name="sequence">20</field>
+            <field name="color">2</field>
+        </record>
+        <record id="dev_task_type_other" model="dev.task.type">
+            <field name="name">Бусад ажил</field>
+            <field name="sequence">90</field>
+            <field name="color">0</field>
+        </record>
+    </data>
+    <!-- noupdate биш: загвар өөрчлөгдөхөд Upgrade-ээр шинэчлэгдэнэ -->
+    <data>
+    
+        <record id="mail_template_dev_task_review" model="mail.template">
+            <field name="name">Даалгавар: Шалгана уу</field>
+            <field name="model_id" ref="model_dev_task"/>
+            <field name="subject">[{{ object.name }}] Даалгавар гүйцэтгэгдсэн тул шалгана уу</field>
+            <field name="email_from">{{ (object.assignee_id.email_formatted or user.email_formatted) }}</field>
+            <!-- Хүлээн авагчийг dev.task._send_review_mail тодорхойлно (шалгагч + үүсгэсэн ажилтан) -->
+            <field name="email_to">{{ object.review_user_id.email_formatted }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p>Сайн байна уу,</p>
+    <p><strong t-out="object.name or ''"/> дугаартай даалгаврыг гүйцэтгэсэн тул шалгана уу.</p>
+    <table style="border-collapse: collapse; margin: 12px 0;">
+        <tr><td style="padding: 4px 12px 4px 0;"><strong>Гарчиг:</strong></td><td t-out="object.title or ''"/></tr>
+        <tr><td style="padding: 4px 12px 4px 0;"><strong>Төрөл:</strong></td>
+            <td t-out="object.type_id.name or ''"/></tr>
+        <tr><td style="padding: 4px 12px 4px 0;"><strong>Даалгавар үүсгэсэн:</strong></td><td t-out="object.requester_id.name or ''"/></tr>
+        <tr><td style="padding: 4px 12px 4px 0;"><strong>Шалгах ажилтан:</strong></td><td t-out="object.review_user_id.name or ''"/></tr>
+        <tr><td style="padding: 4px 12px 4px 0;"><strong>Гүйцэтгэсэн:</strong></td><td t-out="object.assignee_id.name or ''"/></tr>
+        <tr t-if="object.date_deadline"><td style="padding: 4px 12px 4px 0;"><strong>Дуусгах хугацаа:</strong></td><td t-out="format_date(object.date_deadline)"/></tr>
+    </table>
+    <div t-if="not is_html_empty(object.result_note)">
+        <p><strong>Гүйцэтгэлийн тайлбар:</strong></p>
+        <div t-out="object.result_note"/>
+    </div>
+    <p style="margin: 16px 0;">
+        <a t-att-href="'/web#id=%s&amp;model=dev.task&amp;view_type=form' % object.id"
+           style="background-color: #875A7B; padding: 8px 16px; color: #fff; text-decoration: none; border-radius: 4px;">
+            Даалгаврыг нээх
+        </a>
+    </p>
+    <p>Шалгах ажилтан шалгаад зөв бол <strong>"Дуусгах"</strong>, засвар шаардлагатай бол <strong>"Буцаах"</strong> товчийг дарна уу.</p>
+    <p>Хүндэтгэсэн,<br/><t t-out="object.assignee_id.name or ''"/></p>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

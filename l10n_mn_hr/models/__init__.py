@@ -27,5 +27,8 @@ from . import resource_calendar
 from . import res_users
 from . import kpi_template
 from . import employee_kpi
+from . import kpi_period
+from . import kpi_work_plan
+from . import dev_task
 from . import contract_decree_configuration
 from . import shared_work_contact

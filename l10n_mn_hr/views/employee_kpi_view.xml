@@ -12,7 +12,8 @@
                     <field name="kpi_template_id"/>
                     <field name="date_type"/>
                     <field name="period_year"/>
-                    <field name="total_achieved_percentage"/>
+                    <field name="total_achieved_percentage" widget="percentage"/>
+                    <field name="is_eligible"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -26,9 +27,13 @@
                     <header>
                         <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'draft' or can_approve == False"/>
                         <button name="action_cancel" string="Cancel" type="object" class="oe_highlight" invisible="state == 'draft' or can_approve == False"/>
+                        <button name="action_compute_from_plans" string="Ажлын төлөвлөгөөнөөс тооцох" type="object" invisible="state != 'draft'"/>
+                        <button name="%(action_report_kpi_evaluation)d" string="Хэвлэх" type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="KPI олгоно" bg_color="text-bg-success" invisible="not is_eligible or state == 'draft'"/>
+                        <widget name="web_ribbon" title="Босго хүрээгүй" bg_color="text-bg-danger" invisible="is_eligible or state == 'draft'"/>
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="employee_id" readonly="state == 'approved'"/>
@@ -36,6 +41,15 @@
                             <field name="company_id" readonly="1"/>
                             <field name="department_id" readonly="1"/>
                             <field name="job_id" readonly="1"/>
+                            <field name="job_title" readonly="state == 'approved'"/>
+                            <field name="manager_title" readonly="state == 'approved'"/>
+                            <field name="period_label"/>
+                            <field name="date_evaluation" readonly="state == 'approved'"/>
+                            <field name="approver_id" readonly="state == 'approved'" options="{'no_create': True}"/>
+                            <field name="approver_title" readonly="state == 'approved'"/>
+                            <field name="kpi_amount_note" readonly="state == 'approved'"/>
+                            <field name="min_score" widget="percentage" readonly="state == 'approved'"/>
+                            <field name="is_eligible"/>
                             <field name="kpi_template_id" readonly="state == 'approved'"/>
                             <field name="date_type" readonly="1"/>
                             <field name="period_year" readonly="state == 'approved'"/>
@@ -51,9 +65,27 @@
                                 <field name="line_ids" nolabel="1" readonly="state == 'approved'">
                                     <tree editable="bottom" create="false" delete="false" open_form_view="false">
                                         <field name="template_line_id" invisible="1" force_save="1"/>
+                                        <field name="sequence" column_invisible="1"/>
                                         <field name="name" readonly="1" force_save="1" options="{'no_open': True}"/>
+                                        <field name="criteria" optional="hide"/>
+                                        <field name="source" optional="show"/>
+                                        <field name="target" optional="show"/>
+                                        <field name="calc_method" column_invisible="1"/>
                                         <field name="weight_percentage" readonly="1" force_save="1" sum="Total Weight Percentage" widget="percentage"/>
+                                        <field name="achievement" widget="percentage"/>
                                         <field name="achieved_percentage" sum="Total Achieved Percentage" widget="percentage"/>
+                                        <field name="evaluator" optional="show"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Ажлын төлөвлөгөө" name="work_plans">
+                                <field name="work_plan_ids">
+                                    <tree>
+                                        <field name="period_label"/>
+                                        <field name="progress_avg" widget="progressbar"/>
+                                        <field name="rating_avg" widget="progressbar"/>
+                                        <field name="extra_rating_avg" widget="progressbar"/>
+                                        <field name="state" widget="badge"/>
                                     </tree>
                                 </field>
                             </page>
@@ -67,10 +99,32 @@
             </field>
         </record>
 
+        <record id="view_employee_kpi_search" model="ir.ui.view">
+            <field name="name">employee.kpi.search</field>
+            <field name="model">employee.kpi</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="employee_id"/>
+                    <field name="period_year"/>
+                    <filter name="mine" string="Миний" domain="[('user_id', '=', uid)]"/>
+                    <filter name="my_team" string="Миний баг" domain="[('manager_user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="draft" string="Ноорог" domain="[('state', '=', 'draft')]"/>
+                    <filter name="eligible" string="KPI олгох" domain="[('is_eligible', '=', True)]"/>
+                    <group expand="0" string="Бүлэглэх">
+                        <filter name="group_year" string="Он" context="{'group_by': 'period_year'}"/>
+                        <filter name="group_employee" string="Ажилтан" context="{'group_by': 'employee_id'}"/>
+                        <filter name="group_template" string="Загвар" context="{'group_by': 'kpi_template_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_employee_kpi" model="ir.actions.act_window">
             <field name="name">Employee KPI</field>
             <field name="res_model">employee.kpi</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_employee_kpi_search"/>
         </record>
     </data>
 </odoo>

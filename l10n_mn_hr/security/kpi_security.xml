@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_dev_task" model="ir.module.category">
+        <field name="name">KPI / Ажлын төлөвлөгөө, Даалгавар</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="group_dev_task_user" model="res.groups">
+        <field name="name">Хэрэглэгч (даалгавар үүсгэгч)</field>
+        <field name="category_id" ref="module_category_dev_task"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_dev_task_developer" model="res.groups">
+        <field name="name">Бүх даалгавар харах</field>
+        <field name="category_id" ref="module_category_dev_task"/>
+        <field name="implied_ids" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+
+    <record id="group_dev_task_manager" model="res.groups">
+        <field name="name">Менежер</field>
+        <field name="category_id" ref="module_category_dev_task"/>
+        <field name="implied_ids" eval="[(4, ref('group_dev_task_developer'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Бүх дотоод хэрэглэгч даалгавар бүртгэх боломжтой -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+
+    <!-- Энгийн хэрэглэгч зөвхөн өөрийн үүсгэсэн / хариуцсан даалгаврыг харна -->
+    <record id="rule_dev_task_user_own" model="ir.rule">
+        <field name="name">Даалгавар: өөрийн / албаны</field>
+        <field name="model_id" ref="model_dev_task"/>
+        <field name="domain_force">['|', '|', '|', ('requester_id', '=', user.id), ('assignee_id', '=', user.id), ('review_user_id', '=', user.id), ('department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+
+    <record id="rule_dev_task_developer_all" model="ir.rule">
+        <field name="name">Даалгавар: бүгдийг</field>
+        <field name="model_id" ref="model_dev_task"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_developer'))]"/>
+    </record>
+
+    <record id="rule_dev_task_company" model="ir.rule">
+        <field name="name">Даалгавар: олон компани</field>
+        <field name="model_id" ref="model_dev_task"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Ажлын төлөвлөгөө: өөрийн болон шууд харьяа ажилтны -->
+    <record id="rule_kpi_work_plan_own_team" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөө: өөрийн / багийн</field>
+        <field name="model_id" ref="model_kpi_work_plan"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), ('manager_user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+    <record id="rule_kpi_work_plan_line_own_team" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөөний мөр: өөрийн / багийн</field>
+        <field name="model_id" ref="model_kpi_work_plan_line"/>
+        <field name="domain_force">['|', ('plan_id.user_id', '=', user.id), ('plan_id.manager_user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+
+    <!-- Ажилтны KPI: ажилтан өөрийнхөө хуудсыг зөвхөн харна, шууд удирдлага засна -->
+    <record id="rule_kpi_evaluation_own_read" model="ir.rule">
+        <field name="name">Ажилтны KPI: өөрийн (унших)</field>
+        <field name="model_id" ref="model_employee_kpi"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="rule_kpi_evaluation_team" model="ir.rule">
+        <field name="name">Ажилтны KPI: шууд удирдлага</field>
+        <field name="model_id" ref="model_employee_kpi"/>
+        <field name="domain_force">[('manager_user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+    <record id="rule_kpi_evaluation_line_own_read" model="ir.rule">
+        <field name="name">Ажилтны KPIны мөр: өөрийн (унших)</field>
+        <field name="model_id" ref="model_employee_kpi_line"/>
+        <field name="domain_force">[('employee_kpi_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="rule_kpi_evaluation_line_team" model="ir.rule">
+        <field name="name">Ажилтны KPIны мөр: шууд удирдлага</field>
+        <field name="model_id" ref="model_employee_kpi_line"/>
+        <field name="domain_force">[('employee_kpi_id.manager_user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_user'))]"/>
+    </record>
+
+    <!-- KPI менежер бүгдийг -->
+    <record id="rule_kpi_work_plan_manager" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөө: менежер</field>
+        <field name="model_id" ref="model_kpi_work_plan"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_manager'))]"/>
+    </record>
+    <record id="rule_kpi_work_plan_line_manager" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөөний мөр: менежер</field>
+        <field name="model_id" ref="model_kpi_work_plan_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_manager'))]"/>
+    </record>
+    <record id="rule_kpi_evaluation_manager" model="ir.rule">
+        <field name="name">Ажилтны KPI: менежер</field>
+        <field name="model_id" ref="model_employee_kpi"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_manager'))]"/>
+    </record>
+    <record id="rule_kpi_evaluation_line_manager" model="ir.rule">
+        <field name="name">Ажилтны KPIны мөр: менежер</field>
+        <field name="model_id" ref="model_employee_kpi_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_dev_task_manager'))]"/>
+    </record>
+
+    <!-- HR ажилтнууд өмнөх шигээ бүх KPI-г харна (дээрх дүрмүүд тэднийг хязгаарлахгүй байх) -->
+    <record id="rule_employee_kpi_hr_user" model="ir.rule">
+        <field name="name">Ажилтны KPI: Хүний нөөц</field>
+        <field name="model_id" ref="model_employee_kpi"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+    <record id="rule_employee_kpi_line_hr_user" model="ir.rule">
+        <field name="name">Ажилтны KPI мөр: Хүний нөөц</field>
+        <field name="model_id" ref="model_employee_kpi_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+
+    <record id="rule_kpi_work_plan_hr_read" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөө: Хүний нөөц (унших)</field>
+        <field name="model_id" ref="model_kpi_work_plan"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="rule_kpi_work_plan_line_hr_read" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөөний мөр: Хүний нөөц (унших)</field>
+        <field name="model_id" ref="model_kpi_work_plan_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Олон компани -->
+    <record id="rule_kpi_work_plan_company" model="ir.rule">
+        <field name="name">Ажлын төлөвлөгөө: олон компани</field>
+        <field name="model_id" ref="model_kpi_work_plan"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

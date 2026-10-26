@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kpi_work_plan_form" model="ir.ui.view">
+        <field name="name">kpi.work.plan.form</field>
+        <field name="model">kpi.work.plan</field>
+        <field name="arch" type="xml">
+            <form string="Ажлын төлөвлөгөө">
+                <field name="is_employee" invisible="1"/>
+                <field name="is_manager" invisible="1"/>
+                <header>
+                    <button name="action_send_approval" string="Батлуулахаар илгээх" type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Батлах" type="object" class="btn-primary"
+                            invisible="state != 'to_approve' or not is_manager"/>
+                    <button name="action_submit" string="Гүйцэтгэл илгээх" type="object" class="btn-primary"
+                            invisible="state != 'approved'"
+                            confirm="Гүйцэтгэлийг шууд удирдлагад дүгнүүлэхээр илгээх үү?"/>
+                    <button name="action_evaluate" string="Дүгнэх" type="object" class="btn-primary"
+                            invisible="state != 'submitted' or not is_manager"/>
+                    <button name="action_reject" string="Буцаах" type="object"
+                            invisible="state not in ('to_approve', 'submitted') or not is_manager"/>
+                    <button name="%(action_report_kpi_work_plan)d" string="Хэвлэх" type="action"/>
+                    <button name="action_reset_draft" string="Ноорог болгох" type="object"
+                            invisible="state == 'draft'" groups="l10n_mn_hr.group_dev_task_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tasks" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" string="Даалгавар"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="job_title" readonly="state != 'draft'"/>
+                            <field name="manager_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="period_type" widget="radio" options="{'horizontal': true}"
+                                   readonly="state != 'draft'"/>
+                            <field name="year" options="{'format': false}" readonly="state != 'draft'"/>
+                            <field name="quarter" readonly="state != 'draft' or period_type == 'month'"/>
+                            <field name="month" invisible="period_type != 'month'"
+                                   required="period_type == 'month'" readonly="state != 'draft'"/>
+                            <label for="date_from" string="Хугацаа"/>
+                            <div class="o_row">
+                                <field name="date_from"/> - <field name="date_to"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="progress_avg" widget="progressbar"/>
+                            <field name="rating_avg" widget="progressbar"/>
+                        </group>
+                        <group>
+                            <field name="date_approved"/>
+                            <field name="date_submitted"/>
+                            <field name="date_evaluated"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Төлөвлөгөөт ажлууд" name="lines">
+                            <field name="line_ids" readonly="state == 'done'" context="{'default_is_extra': False}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="general_work" readonly="parent.state != 'draft'"/>
+                                    <field name="name" readonly="parent.state != 'draft'"/>
+                                    <field name="result" readonly="parent.state not in ('draft', 'approved')"/>
+                                    <field name="date_deadline" readonly="parent.state != 'draft'"/>
+                                    <field name="status" readonly="parent.state != 'approved'"/>
+                                    <field name="progress" readonly="parent.state != 'approved'"/>
+                                    <field name="rating" readonly="parent.state != 'submitted' or not parent.is_manager"/>
+                                    <field name="task_count" optional="show"/>
+                                    <field name="is_extra" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Бусад ажлын биелэлт" name="extra"
+                              invisible="state in ('draft', 'to_approve')">
+                            <p class="text-muted">Ажлын төлөвлөгөөнд тусгагдаагүй, удирдлагаас өгсөн үүрэг даалгавар.</p>
+                            <field name="extra_line_ids" readonly="state not in ('approved', 'submitted')"
+                                   context="{'default_is_extra': True}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="result"/>
+                                    <field name="date_deadline"/>
+                                    <field name="status"/>
+                                    <field name="progress"/>
+                                    <field name="rating" readonly="parent.state != 'submitted' or not parent.is_manager"/>
+                                    <field name="is_extra" column_invisible="1"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="extra_progress_avg" widget="progressbar"/>
+                                <field name="extra_rating_avg" widget="progressbar"/>
+                            </group>
+                        </page>
+                        <page string="Удирдлагын тайлбар" name="note">
+                            <field name="note" readonly="not is_manager"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_kpi_work_plan_tree" model="ir.ui.view">
+        <field name="name">kpi.work.plan.tree</field>
+        <field name="model">kpi.work.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Ажлын төлөвлөгөө">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="job_title" optional="hide"/>
+                <field name="period_label"/>
+                <field name="manager_id" optional="show"/>
+                <field name="progress_avg" widget="progressbar"/>
+                <field name="rating_avg" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'" decoration-warning="state in ('to_approve', 'submitted')"
+                       decoration-primary="state == 'approved'" decoration-success="state == 'done'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_kpi_work_plan_search" model="ir.ui.view">
+        <field name="name">kpi.work.plan.search</field>
+        <field name="model">kpi.work.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="manager_id"/>
+                <field name="year"/>
+                <filter name="my_plans" string="Миний төлөвлөгөө" domain="[('user_id', '=', uid)]"/>
+                <filter name="my_team" string="Миний баг" domain="[('manager_user_id', '=', uid)]"/>
+                <filter name="to_action" string="Миний батлах / дүгнэх"
+                        domain="[('manager_user_id', '=', uid), ('state', 'in', ('to_approve', 'submitted'))]"/>
+                <separator/>
+                <filter name="quarterly" string="Улирлын" domain="[('period_type', '=', 'quarter')]"/>
+                <filter name="monthly" string="Сарын" domain="[('period_type', '=', 'month')]"/>
+                <group expand="0" string="Бүлэглэх">
+                    <filter name="group_employee" string="Ажилтан" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_year" string="Он" context="{'group_by': 'year'}"/>
+                    <filter name="group_quarter" string="Улирал" context="{'group_by': 'quarter'}"/>
+                    <filter name="group_state" string="Төлөв" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_kpi_work_plan_my" model="ir.actions.act_window">
+        <field name="name">Миний ажлын төлөвлөгөө</field>
+        <field name="res_model">kpi.work.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_my_plans': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Улирал эсвэл сарын ажлын төлөвлөгөөгөө үүсгэнэ үү</p>
+        </field>
+    </record>
+
+    <record id="action_kpi_work_plan_team" model="ir.actions.act_window">
+        <field name="name">Багийн ажлын төлөвлөгөө</field>
+        <field name="res_model">kpi.work.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_my_team': 1}</field>
+    </record>
+
+</odoo>

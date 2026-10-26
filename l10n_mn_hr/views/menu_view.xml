@@ -19,9 +19,20 @@
 		<menuitem id="menu_reference_register" name="Reference Register" parent="hr.menu_hr_employee_payroll" action="action_reference_register"/>
 
 		<menuitem id="menu_kpi_root" name="KPI" parent="hr.menu_hr_root" sequence="70"/>
-		<menuitem id="menu_kpi_template" name="KPI Template" parent="menu_kpi_root" action="action_kpi_template" sequence="10"/>
 		<menuitem id="menu_employee_kpi" name="Employee KPI" parent="menu_kpi_root" action="action_employee_kpi" sequence="20"/>
+		<!-- Ажлын төлөвлөгөө, ERP даалгавар -->
+		<menuitem id="menu_kpi_work_plan" name="Ажлын төлөвлөгөө" parent="menu_kpi_root" sequence="5"/>
+		<menuitem id="menu_kpi_work_plan_my" name="Миний төлөвлөгөө" parent="menu_kpi_work_plan" action="action_kpi_work_plan_my" sequence="10"/>
+		<menuitem id="menu_kpi_work_plan_team" name="Багийн төлөвлөгөө (батлах / дүгнэх)" parent="menu_kpi_work_plan" action="action_kpi_work_plan_team" sequence="20"/>
+		<menuitem id="menu_dev_task" name="Даалгавар" parent="menu_kpi_root" sequence="30"/>
+		<menuitem id="menu_dev_task_my" name="Миний даалгавар" parent="menu_dev_task" action="action_dev_task_my" sequence="10"/>
+		<menuitem id="menu_dev_task_all" name="Бүх даалгавар" parent="menu_dev_task" action="action_dev_task" sequence="20" groups="l10n_mn_hr.group_dev_task_developer"/>
 		<menuitem id="hr.menu_human_resources_configuration" name="Configuration" parent="hr.menu_hr_root" groups="hr.group_hr_manager" sequence="300"/>
+		<!-- Хүний нөөц -> Тохиргоо -> KPI -->
+		<menuitem id="menu_kpi_config" name="KPI" parent="hr.menu_human_resources_configuration" sequence="40"/>
+		<menuitem id="menu_kpi_template" name="KPI Template" parent="menu_kpi_config" action="action_kpi_template" sequence="10"/>
+		<menuitem id="menu_kpi_line_section" name="KPI хэсэг" parent="menu_kpi_config" action="action_kpi_line_section" sequence="20"/>
+		<menuitem id="menu_dev_task_type" name="Даалгаврын төрөл" parent="menu_kpi_config" action="action_dev_task_type" sequence="30"/>
 		<menuitem id="hr.menu_expense" name="Expense" parent="hr.menu_hr_root" sequence="50"/>
 		<menuitem id="hr.menu_holidays" name="Holidays" parent="hr.menu_hr_root" sequence="60"/>
 

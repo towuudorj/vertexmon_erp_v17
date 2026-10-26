@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="kpi_section_sales" model="kpi.line.section">
+            <field name="name">Компанийн борлуулалт</field>
+        </record>
+        <record id="kpi_section_work_plan" model="kpi.line.section">
+            <field name="name">Алба нэгжийн ажлын төлөвлөгөөний биелэлт</field>
+        </record>
+        <record id="kpi_section_management_task" model="kpi.line.section">
+            <field name="name">Удирдлагаас өгсөн үүрэг, даалгавар</field>
+        </record>
+
+        <record id="kpi_template_erp_developer" model="kpi.template">
+            <field name="name">ERP хөгжүүлэгч</field>
+            <field name="date_type">session</field>
+            <field name="approver_title">Гүйцэтгэх захирал</field>
+            <field name="kpi_amount_note">Үндсэн цалингийн 50% хүртэлх дүн</field>
+            <field name="min_score">0.8</field>
+        </record>
+        <record id="kpi_template_erp_developer_line1" model="kpi.template.line">
+            <field name="template_id" ref="kpi_template_erp_developer"/>
+            <field name="sequence">1</field>
+            <field name="name" ref="kpi_section_sales"/>
+            <field name="criteria">Боруулалтын төлөвлөгөө биелэлт</field>
+            <field name="source">Дотоод тайлан</field>
+            <field name="target">Тухайн улирлын борлуулалтын төлөвлөгөөний биелэлт:
+- 80%-100% бол гүйцэтгэлээр
+- 60%-79% бол 50%
+- 59%-с бага бол 0%-р тооцно.</field>
+            <field name="weight_percentage">0.2</field>
+            <field name="source_type">manual</field>
+            <field name="calc_method">scale</field>
+            <field name="evaluator">Шууд удирдлага</field>
+        </record>
+        <record id="kpi_template_erp_developer_line2" model="kpi.template.line">
+            <field name="template_id" ref="kpi_template_erp_developer"/>
+            <field name="sequence">2</field>
+            <field name="name" ref="kpi_section_work_plan"/>
+            <field name="criteria" type="html"><p><b>Ажлын төлөвлөгөөний биелэлт</b></p><p>/Ажлын төлөвлөгөөг ERP багаас улирал бүрийн эхний сарын 10-ны дотор удирдлагуудад илгээн баталгаажуулсан байх/</p></field>
+            <field name="source">Тайлан</field>
+            <field name="target">Тайлант хугацааны ажлын төлөвлөгөөний биелэлт</field>
+            <field name="weight_percentage">0.7</field>
+            <field name="source_type">work_plan</field>
+            <field name="calc_method">direct</field>
+            <field name="evaluator">Шууд удирдлага</field>
+        </record>
+        <record id="kpi_template_erp_developer_line3" model="kpi.template.line">
+            <field name="template_id" ref="kpi_template_erp_developer"/>
+            <field name="sequence">3</field>
+            <field name="name" ref="kpi_section_management_task"/>
+            <field name="criteria">Удирдлагын зүгээс өгсөн үүрэг даалгавар</field>
+            <field name="source">Удирдлагын үнэлгээ</field>
+            <field name="target">Ажлын төлөвлөгөөнд тусгагдсанаас бусад ажлын биелэлт</field>
+            <field name="weight_percentage">0.1</field>
+            <field name="source_type">extra</field>
+            <field name="calc_method">direct</field>
+            <field name="evaluator">Шууд удирдлага</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_kpi_landscape" model="report.paperformat">
+        <field name="name">KPI A4 хэвтээ</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_kpi_evaluation" model="ir.actions.report">
+        <field name="name">Ажлын гүйцэтгэлийг дүгнэх хуудас (KPI)</field>
+        <field name="model">employee.kpi</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_mn_hr.report_kpi_evaluation</field>
+        <field name="report_file">l10n_mn_hr.report_kpi_evaluation</field>
+        <field name="print_report_name">'KPI - %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_kpi_landscape"/>
+        <field name="binding_model_id" ref="l10n_mn_hr.model_employee_kpi"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_kpi_work_plan" model="ir.actions.report">
+        <field name="name">Ажлын төлөвлөгөө, гүйцэтгэл</field>
+        <field name="model">kpi.work.plan</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_mn_hr.report_kpi_work_plan</field>
+        <field name="report_file">l10n_mn_hr.report_kpi_work_plan</field>
+        <field name="print_report_name">'Ажлын төлөвлөгөө - %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_kpi_landscape"/>
+        <field name="binding_model_id" ref="model_kpi_work_plan"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="kpi_report_style">
+        <style>
+            .kpi-report { font-family: 'Times New Roman', serif; font-size: 12px; color: #000; }
+            .kpi-report table.kpi-table { width: 100%; border-collapse: collapse; }
+            .kpi-report table.kpi-table th, .kpi-report table.kpi-table td {
+                border: 1px dotted #000; padding: 3px 4px; vertical-align: middle; }
+            .kpi-report table.kpi-table th { text-align: center; font-weight: bold; }
+            .kpi-report table.kpi-plan th { background-color: #cfeaf6; }
+            .kpi-report .kpi-total td { background-color: #ffff66; font-weight: bold; }
+            .kpi-report .pre { white-space: pre-line; }
+            .kpi-report .text-c { text-align: center; }
+            .kpi-report .text-r { text-align: right; }
+            .kpi-report table.kpi-info td { padding: 1px 8px 1px 0; border: none; }
+            .kpi-report .kpi-head td { border: none; font-size: 13px; }
+            .kpi-report .criteria p { margin: 0; }
+        </style>
+    </template>
+
+    <!-- Ажлын төлөвлөгөөний хүснэгт (дангаар болон KPI хуудасны хавсралтаар хэвлэгдэнэ) -->
+    <template id="kpi_work_plan_table">
+        <h4 style="font-weight: bold; margin: 0 0 4px 0;" t-esc="plan.employee_id.name"/>
+        <t t-set="groups" t-value="plan._get_report_groups()"/>
+        <t t-set="n_lines" t-value="len(plan.line_ids)"/>
+        <table class="kpi-table kpi-plan">
+            <thead>
+                <tr>
+                    <th style="width: 6%;" t-esc="plan.period_type == 'month' and ('%s-р сар' % plan.month) or ('Q%s' % plan.quarter)"/>
+                    <th style="width: 13%;">Ерөнхий ажил</th>
+                    <th style="width: 21%;">Хийгдэх ажлууд</th>
+                    <th style="width: 30%;">Үр дүн (шинэчлэлт)</th>
+                    <th style="width: 8%;">Хийгдсэн байх сүүлийн хугацаа</th>
+                    <th style="width: 8%;">Төлөв</th>
+                    <th style="width: 7%;">Гүйцэтгэл (%)</th>
+                    <th style="width: 7%;">Үнэлгээ (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="groups" t-as="grp">
+                    <t t-foreach="grp['lines']" t-as="line">
+                        <tr>
+                            <td t-if="grp_first and line_first" t-att-rowspan="n_lines"/>
+                            <td t-if="line_first" t-att-rowspan="len(grp['lines'])" t-esc="grp['name']"/>
+                            <td class="pre" t-esc="line.name"/>
+                            <td class="pre" t-esc="line.result or ''"/>
+                            <td class="text-r" t-esc="line.date_deadline and line.date_deadline.strftime('%m/%d/%Y') or ''"/>
+                            <td class="text-c"><span t-field="line.status"/></td>
+                            <td class="text-r" t-esc="'{:.0f}%'.format(line.progress)"/>
+                            <td class="text-r" t-esc="line.rating and ('{:.0f}%'.format(line.rating)) or ''"/>
+                        </tr>
+                    </t>
+                </t>
+                <tr class="kpi-total">
+                    <td colspan="5"/>
+                    <td class="text-c">Үнэлгээ</td>
+                    <td class="text-r" t-esc="'{:.0f}%'.format(plan.progress_avg)"/>
+                    <td class="text-r" t-esc="plan.rating_avg and ('{:.0f}%'.format(plan.rating_avg)) or ''"/>
+                </tr>
+                <t t-set="extras" t-value="plan.extra_line_ids"/>
+                <tr t-if="not extras">
+                    <td style="font-weight: bold;" class="text-c">Бусад ажлын биелэлт</td>
+                    <td/><td/><td/><td/><td class="text-c">-</td><td/><td/>
+                </tr>
+                <t t-foreach="extras" t-as="line">
+                    <tr>
+                        <td t-if="line_first" t-att-rowspan="len(extras)" style="font-weight: bold;" class="text-c">
+                            Бусад ажлын биелэлт
+                        </td>
+                        <td/>
+                        <td class="pre" t-esc="line.name"/>
+                        <td class="pre" t-esc="line.result or ''"/>
+                        <td class="text-r" t-esc="line.date_deadline and line.date_deadline.strftime('%m/%d/%Y') or ''"/>
+                        <td class="text-c"><span t-field="line.status"/></td>
+                        <td class="text-r" t-esc="'{:.0f}%'.format(line.progress)"/>
+                        <td class="text-r" t-esc="line.rating and ('{:.0f}%'.format(line.rating)) or ''"/>
+                    </tr>
+                </t>
+                <tr class="kpi-total">
+                    <td colspan="5"/>
+                    <td class="text-c">Үнэлгээ</td>
+                    <td class="text-r" t-esc="extras and ('{:.0f}%'.format(plan.extra_progress_avg)) or ''"/>
+                    <td class="text-r" t-esc="extras and ('{:.0f}%'.format(plan.extra_rating_avg)) or ''"/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="report_kpi_work_plan">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="plan">
+                <t t-call="web.basic_layout">
+                    <t t-call="l10n_mn_hr.kpi_report_style"/>
+                    <div class="page kpi-report">
+                        <h3 class="text-c" style="font-weight: bold;">
+                            АЖЛЫН ТӨЛӨВЛӨГӨӨ, ГҮЙЦЭТГЭЛ - <t t-esc="(plan.period_label or '').upper()"/>
+                        </h3>
+                        <t t-call="l10n_mn_hr.kpi_work_plan_table"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_kpi_evaluation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-call="l10n_mn_hr.kpi_report_style"/>
+                    <div class="page kpi-report">
+                        <table style="width: 100%;" class="kpi-head">
+                            <tr>
+                                <td style="width: 25%;" t-esc="(o.company_id.name or '').upper()"/>
+                                <td style="width: 45%;">БАТЛАВ. <t t-esc="(o.approver_title or '').upper()"/>:</td>
+                                <td style="width: 30%;" t-esc="(o.approver_id.name or '').upper()"/>
+                            </tr>
+                        </table>
+                        <h4 class="text-c" style="font-weight: bold; margin: 14px 0 10px 0;">
+                            АЖЛЫН ГҮЙЦЭТГЭЛИЙГ ДҮГНЭХ ХУУДАС (KPI)
+                        </h4>
+
+                        <div style="font-weight: bold;">1. Урамшууллын мэдээлэл</div>
+                        <table class="kpi-info" style="margin-left: 40px;">
+                            <tr><td><b>Албан тушаал:</b></td><td t-esc="o.job_title or ''"/></tr>
+                            <tr><td><b>Үнэлгээ хийсэн хугацаа:</b></td>
+                                <td t-esc="o.date_evaluation and o.date_evaluation.strftime('%Y.%m.%d') or '……………'"/></tr>
+                            <tr><td><b>Хугацаа:</b></td><td t-esc="o.period_label or ''"/></tr>
+                            <tr><td><b>KPI 100%-д ногдох мөнгөн дүн</b></td><td t-esc="o.kpi_amount_note or ''"/></tr>
+                            <tr><td><b>KPI олгох босго үнэлгээ</b></td>
+                                <td><t t-esc="'{:.0f}%'.format(o.min_score * 100)"/> ба түүнээс дээш</td></tr>
+                        </table>
+
+                        <div style="font-weight: bold; margin: 12px 0 6px 0;">
+                            2. Ажлын гүйцэтгэлийн үнэлгээ KPI тооцох үндсэн үзүүлэлтүүд
+                        </div>
+                        <table class="kpi-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 3%;">№</th>
+                                    <th style="width: 13%;">Гүйцэтгэлийн гол үзүүлэлт</th>
+                                    <th style="width: 16%;">Шалгуур үзүүлэлт</th>
+                                    <th style="width: 10%;">Гүйцэтгэл тооцох эх сурвалж</th>
+                                    <th style="width: 23%;">Зорилтот үр дүн / Хэмжүүр</th>
+                                    <th style="width: 8%;">Ажлын гүйцэтгэлд эзлэх жин (%)</th>
+                                    <th style="width: 9%;">Тайлант улирлын гүйцэтгэл, үр дүн</th>
+                                    <th style="width: 8%;">Гүйцэтгэлийн эзлэх хувь</th>
+                                    <th style="width: 10%;">Үнэлэх хэлтэс, албан тушаалтан</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids.sorted(lambda l: (l.sequence, l.id))" t-as="line" style="height: 60px;">
+                                    <td class="text-r" t-esc="line_index + 1"/>
+                                    <td t-esc="line.name.name"/>
+                                    <td class="criteria" t-out="line.criteria or ''"/>
+                                    <td class="text-c" t-esc="line.source or ''"/>
+                                    <td class="pre" t-esc="line.target or ''"/>
+                                    <td class="text-c" t-esc="'{:.0f}%'.format(line.weight_percentage * 100)"/>
+                                    <td class="text-r" t-esc="line.achievement and ('{:.0f}%'.format(line.achievement * 100)) or ''"/>
+                                    <td class="text-c" t-esc="'{:.0f}%'.format(line.achieved_percentage * 100)"/>
+                                    <td t-esc="line.evaluator or ''"/>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td/><td/>
+                                    <td>НИЙТ</td>
+                                    <td/><td/>
+                                    <td class="text-c" t-esc="'{:.0f}%'.format(sum(o.line_ids.mapped('weight_percentage')) * 100)"/>
+                                    <td/>
+                                    <td class="text-c" t-esc="'{:.0f}%'.format(o.total_achieved_percentage * 100)"/>
+                                    <td/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="width: 100%; margin-top: 24px;" class="kpi-head">
+                            <tr style="height: 40px;">
+                                <td style="width: 32%;"/>
+                                <td style="width: 28%;">Ажилтан:</td>
+                                <td>
+                                    <t t-esc="o.employee_id.name"/>
+                                    <t t-if="o.job_title"> /<t t-esc="o.job_title"/>/</t>
+                                </td>
+                            </tr>
+                            <tr style="height: 40px;">
+                                <td/>
+                                <td>Шууд удирдлага:</td>
+                                <td>
+                                    <t t-esc="o.manager_employee_id.name or ''"/>
+                                    <t t-if="o.manager_title"> /<t t-esc="o.manager_title"/>/</t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Хавсралт: ажлын төлөвлөгөөний гүйцэтгэл -->
+                    <t t-foreach="o.work_plan_ids" t-as="plan">
+                        <div class="page kpi-report" style="page-break-before: always;">
+                            <t t-call="l10n_mn_hr.kpi_work_plan_table"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
