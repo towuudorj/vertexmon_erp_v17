@@ -59,6 +59,7 @@
             'report/report_view.xml',
             'report/kpi_report.xml',
             'wizard/employment_certificate.xml',
+            'wizard/kpi_work_plan_copy.xml',
             'views/new_hr_employee_view.xml',
             'views/shared_work_contact_view.xml',
             'views/mn_hr_inherit_view.xml',

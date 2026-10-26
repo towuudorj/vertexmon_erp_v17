@@ -4,7 +4,7 @@
         <field name="name">kpi.work.plan.form</field>
         <field name="model">kpi.work.plan</field>
         <field name="arch" type="xml">
-            <form string="Ажлын төлөвлөгөө">
+            <form string="Ажлын төлөвлөгөө" duplicate="0">
                 <field name="is_employee" invisible="1"/>
                 <field name="is_manager" invisible="1"/>
                 <header>
@@ -20,6 +20,8 @@
                     <button name="action_reject" string="Буцаах" type="object"
                             invisible="state not in ('to_approve', 'submitted') or not is_manager"/>
                     <button name="%(action_report_kpi_work_plan)d" string="Хэвлэх" type="action"/>
+                    <button name="%(action_kpi_work_plan_copy)d" string="Хуулбарлах" type="action"
+                            context="{'default_plan_id': id}"/>
                     <button name="action_reset_draft" string="Ноорог болгох" type="object"
                             invisible="state == 'draft'" groups="l10n_mn_hr.group_dev_task_manager"/>
                     <field name="state" widget="statusbar"/>

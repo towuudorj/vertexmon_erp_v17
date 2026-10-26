@@ -148,3 +148,4 @@ access_kpi_line_section_dev_manager,kpi.line.section.dev.manager,model_kpi_line_
 access_dev_task_type_user,dev.task.type.user,model_dev_task_type,group_dev_task_user,1,0,0,0
 access_dev_task_type_manager,dev.task.type.manager,model_dev_task_type,group_dev_task_manager,1,1,1,1
 access_dev_task_type_hr,dev.task.type.hr,model_dev_task_type,hr.group_hr_manager,1,1,1,1
+access_kpi_work_plan_copy_user,kpi.work.plan.copy.user,model_kpi_work_plan_copy,group_dev_task_user,1,1,1,1

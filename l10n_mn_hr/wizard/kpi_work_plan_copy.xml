@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kpi_work_plan_copy_form" model="ir.ui.view">
+        <field name="name">kpi.work.plan.copy.form</field>
+        <field name="model">kpi.work.plan.copy</field>
+        <field name="arch" type="xml">
+            <form string="Ажлын төлөвлөгөө хуулбарлах">
+                <group>
+                    <group string="Шинэ төлөвлөгөө">
+                        <field name="plan_id"/>
+                        <field name="employee_id" options="{'no_create': True}"/>
+                        <field name="period_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="year" options="{'format': false}"/>
+                        <field name="quarter" readonly="period_type == 'month'" required="period_type == 'quarter'"/>
+                        <field name="month" invisible="period_type != 'month'" required="period_type == 'month'"/>
+                        <label for="date_from" string="Хугацаа"/>
+                        <div class="o_row">
+                            <field name="date_from"/> - <field name="date_to"/>
+                        </div>
+                    </group>
+                    <group string="Юуг хуулах">
+                        <field name="copy_lines"/>
+                        <field name="copy_extra"/>
+                        <field name="shift_deadline"/>
+                        <field name="line_count"/>
+                    </group>
+                </group>
+                <p class="text-muted">
+                    Хуулсан мөрүүдийн гүйцэтгэл, үнэлгээ, үр дүн, төлөв хоосон болж, шинэ төлөвлөгөө "Төлөвлөж буй" төлөвтэй үүснэ.
+                </p>
+                <footer>
+                    <button name="action_copy" string="Хуулбарлах" type="object" class="btn-primary"/>
+                    <button string="Болих" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_kpi_work_plan_copy" model="ir.actions.act_window">
+        <field name="name">Ажлын төлөвлөгөө хуулбарлах</field>
+        <field name="res_model">kpi.work.plan.copy</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_kpi_work_plan"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>
