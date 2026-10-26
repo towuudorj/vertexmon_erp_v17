@@ -1,0 +1,3130 @@
+{
+  "version": 12,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 9,
+      "rowNumber": 85,
+      "cells": {
+        "A7": {
+          "style": 1,
+          "content": "[Төслийн төлвөөр](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"project.project\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Төслүүд төлвөөр\"})",
+          "border": 1
+        },
+        "B7": {
+          "style": 2,
+          "border": 1
+        },
+        "C7": {
+          "style": 2,
+          "border": 1
+        },
+        "D7": {
+          "style": 2,
+          "border": 1
+        },
+        "A8": {
+          "border": 2
+        },
+        "B8": {
+          "border": 2
+        },
+        "C8": {
+          "border": 2
+        },
+        "D8": {
+          "border": 2
+        },
+        "F7": {
+          "style": 1,
+          "content": "[Алба тус бүрийн гэрээний дүн](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"department_id\"],\"graph_measure\":\"contract_amount\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"department_id\"]},\"modelName\":\"project.project\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Алба тус бүрийн гэрээний дүн\"})",
+          "border": 1
+        },
+        "G7": {
+          "style": 2,
+          "border": 1
+        },
+        "H7": {
+          "style": 2,
+          "border": 1
+        },
+        "I7": {
+          "style": 2,
+          "border": 1
+        },
+        "F8": {
+          "border": 2
+        },
+        "G8": {
+          "border": 2
+        },
+        "H8": {
+          "border": 2
+        },
+        "I8": {
+          "border": 2
+        },
+        "A19": {
+          "style": 1,
+          "content": "[Алба болгоноор төслийн хураангуй](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"contract_amount\",\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"project.project\",\"views\":[[false,\"pivot\"],[false,\"list\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Алба болгоноор төслийн хураангуй\"})",
+          "border": 1
+        },
+        "B19": {
+          "style": 2,
+          "border": 1
+        },
+        "C19": {
+          "style": 2,
+          "border": 1
+        },
+        "D19": {
+          "style": 2,
+          "border": 1
+        },
+        "A20": {
+          "style": 3,
+          "content": "=_t(\"Алба\")",
+          "border": 2
+        },
+        "B20": {
+          "style": 6,
+          "content": "=_t(\"Нийт дүн (₮)\")",
+          "border": 2
+        },
+        "C20": {
+          "style": 6,
+          "content": "=_t(\"Төслийн тоо\")",
+          "border": 2
+        },
+        "D20": {
+          "style": 6,
+          "content": "=_t(\"Дундаж дүн (₮)\")",
+          "border": 2
+        },
+        "F19": {
+          "style": 1,
+          "content": "[Төслийн менежерүүдээр хураангуй](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"contract_amount\",\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"project.project\",\"views\":[[false,\"pivot\"],[false,\"list\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Төслийн менежерүүдээр хураангуй\"})",
+          "border": 1
+        },
+        "G19": {
+          "style": 2,
+          "border": 1
+        },
+        "H19": {
+          "style": 2,
+          "border": 1
+        },
+        "I19": {
+          "style": 2,
+          "border": 1
+        },
+        "F20": {
+          "style": 3,
+          "content": "=_t(\"Төслийн менежер\")",
+          "border": 2
+        },
+        "G20": {
+          "style": 6,
+          "content": "=_t(\"Нийт дүн (₮)\")",
+          "border": 2
+        },
+        "H20": {
+          "style": 6,
+          "content": "=_t(\"Төслийн тоо\")",
+          "border": 2
+        },
+        "I20": {
+          "style": 6,
+          "content": "=_t(\"Дундаж дүн (₮)\")",
+          "border": 2
+        },
+        "A21": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",1)"
+        },
+        "B21": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",1)"
+        },
+        "C21": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",1)"
+        },
+        "D21": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(A21=\"\",\"\",IFERROR(B21/C21,0))"
+        },
+        "F21": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",1)"
+        },
+        "G21": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",1)"
+        },
+        "H21": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",1)"
+        },
+        "I21": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(F21=\"\",\"\",IFERROR(G21/H21,0))"
+        },
+        "A22": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",2)"
+        },
+        "B22": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",2)"
+        },
+        "C22": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",2)"
+        },
+        "D22": {
+          "format": 1,
+          "content": "=IF(A22=\"\",\"\",IFERROR(B22/C22,0))"
+        },
+        "F22": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",2)"
+        },
+        "G22": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",2)"
+        },
+        "H22": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",2)"
+        },
+        "I22": {
+          "format": 1,
+          "content": "=IF(F22=\"\",\"\",IFERROR(G22/H22,0))"
+        },
+        "A23": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",3)"
+        },
+        "B23": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",3)"
+        },
+        "C23": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",3)"
+        },
+        "D23": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(A23=\"\",\"\",IFERROR(B23/C23,0))"
+        },
+        "F23": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",3)"
+        },
+        "G23": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",3)"
+        },
+        "H23": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",3)"
+        },
+        "I23": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(F23=\"\",\"\",IFERROR(G23/H23,0))"
+        },
+        "A24": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",4)"
+        },
+        "B24": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",4)"
+        },
+        "C24": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",4)"
+        },
+        "D24": {
+          "format": 1,
+          "content": "=IF(A24=\"\",\"\",IFERROR(B24/C24,0))"
+        },
+        "F24": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",4)"
+        },
+        "G24": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",4)"
+        },
+        "H24": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",4)"
+        },
+        "I24": {
+          "format": 1,
+          "content": "=IF(F24=\"\",\"\",IFERROR(G24/H24,0))"
+        },
+        "A25": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",5)"
+        },
+        "B25": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",5)"
+        },
+        "C25": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",5)"
+        },
+        "D25": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(A25=\"\",\"\",IFERROR(B25/C25,0))"
+        },
+        "F25": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",5)"
+        },
+        "G25": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",5)"
+        },
+        "H25": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",5)"
+        },
+        "I25": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(F25=\"\",\"\",IFERROR(G25/H25,0))"
+        },
+        "A26": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",6)"
+        },
+        "B26": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",6)"
+        },
+        "C26": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",6)"
+        },
+        "D26": {
+          "format": 1,
+          "content": "=IF(A26=\"\",\"\",IFERROR(B26/C26,0))"
+        },
+        "F26": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",6)"
+        },
+        "G26": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",6)"
+        },
+        "H26": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",6)"
+        },
+        "I26": {
+          "format": 1,
+          "content": "=IF(F26=\"\",\"\",IFERROR(G26/H26,0))"
+        },
+        "A27": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",7)"
+        },
+        "B27": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",7)"
+        },
+        "C27": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",7)"
+        },
+        "D27": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(A27=\"\",\"\",IFERROR(B27/C27,0))"
+        },
+        "F27": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",7)"
+        },
+        "G27": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",7)"
+        },
+        "H27": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",7)"
+        },
+        "I27": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(F27=\"\",\"\",IFERROR(G27/H27,0))"
+        },
+        "A28": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",8)"
+        },
+        "B28": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",8)"
+        },
+        "C28": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",8)"
+        },
+        "D28": {
+          "format": 1,
+          "content": "=IF(A28=\"\",\"\",IFERROR(B28/C28,0))"
+        },
+        "F28": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",8)"
+        },
+        "G28": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",8)"
+        },
+        "H28": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",8)"
+        },
+        "I28": {
+          "format": 1,
+          "content": "=IF(F28=\"\",\"\",IFERROR(G28/H28,0))"
+        },
+        "A29": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",9)"
+        },
+        "B29": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",9)"
+        },
+        "C29": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",9)"
+        },
+        "D29": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(A29=\"\",\"\",IFERROR(B29/C29,0))"
+        },
+        "F29": {
+          "style": 4,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",9)"
+        },
+        "G29": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",9)"
+        },
+        "H29": {
+          "style": 7,
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",9)"
+        },
+        "I29": {
+          "style": 7,
+          "format": 1,
+          "content": "=IF(F29=\"\",\"\",IFERROR(G29/H29,0))"
+        },
+        "A30": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",10)"
+        },
+        "B30": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(1,\"contract_amount\",\"#department_id\",10)"
+        },
+        "C30": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(1,\"__count\",\"#department_id\",10)"
+        },
+        "D30": {
+          "format": 1,
+          "content": "=IF(A30=\"\",\"\",IFERROR(B30/C30,0))"
+        },
+        "F30": {
+          "style": 5,
+          "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",10)"
+        },
+        "G30": {
+          "format": 1,
+          "content": "=ODOO.PIVOT(2,\"contract_amount\",\"#user_id\",10)"
+        },
+        "H30": {
+          "format": 2,
+          "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",10)"
+        },
+        "I30": {
+          "format": 1,
+          "content": "=IF(F30=\"\",\"\",IFERROR(G30/H30,0))"
+        },
+        "A32": {
+          "style": 1,
+          "content": "[Явагдаж буй төслүүд](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[[\"state\",\"=\",\"process\"]],\"context\":{\"group_by\":[]},\"modelName\":\"project.project\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Явагдаж буй төслүүд\"})",
+          "border": 1
+        },
+        "B32": {
+          "style": 2,
+          "border": 1
+        },
+        "C32": {
+          "style": 2,
+          "border": 1
+        },
+        "D32": {
+          "style": 2,
+          "border": 1
+        },
+        "A33": {
+          "style": 3,
+          "content": "=_t(\"Төслийн нэр\")",
+          "border": 2
+        },
+        "B33": {
+          "style": 3,
+          "content": "=_t(\"Захиалагч\")",
+          "border": 2
+        },
+        "C33": {
+          "style": 3,
+          "content": "=_t(\"Менежер\")",
+          "border": 2
+        },
+        "D33": {
+          "style": 6,
+          "content": "=_t(\"Гэрээний дүн (₮)\")",
+          "border": 2
+        },
+        "F32": {
+          "style": 1,
+          "content": "[Төлөвлөсөн төслүүд](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[[\"state\",\"=\",\"planned\"]],\"context\":{\"group_by\":[]},\"modelName\":\"project.project\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Төлөвлөсөн төслүүд\"})",
+          "border": 1
+        },
+        "G32": {
+          "style": 2,
+          "border": 1
+        },
+        "H32": {
+          "style": 2,
+          "border": 1
+        },
+        "I32": {
+          "style": 2,
+          "border": 1
+        },
+        "F33": {
+          "style": 3,
+          "content": "=_t(\"Төслийн нэр\")",
+          "border": 2
+        },
+        "G33": {
+          "style": 3,
+          "content": "=_t(\"Захиалагч\")",
+          "border": 2
+        },
+        "H33": {
+          "style": 3,
+          "content": "=_t(\"Менежер\")",
+          "border": 2
+        },
+        "I33": {
+          "style": 6,
+          "content": "=_t(\"Гэрээний дүн (₮)\")",
+          "border": 2
+        },
+        "A34": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,1,\"name\")"
+        },
+        "B34": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,1,\"partner_id\")"
+        },
+        "C34": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,1,\"user_id\")"
+        },
+        "D34": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,1,\"contract_amount\")"
+        },
+        "F34": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,1,\"name\")"
+        },
+        "G34": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,1,\"partner_id\")"
+        },
+        "H34": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,1,\"user_id\")"
+        },
+        "I34": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,1,\"contract_amount\")"
+        },
+        "A35": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,2,\"name\")"
+        },
+        "B35": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,2,\"partner_id\")"
+        },
+        "C35": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,2,\"user_id\")"
+        },
+        "D35": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,2,\"contract_amount\")"
+        },
+        "F35": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,2,\"name\")"
+        },
+        "G35": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,2,\"partner_id\")"
+        },
+        "H35": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,2,\"user_id\")"
+        },
+        "I35": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,2,\"contract_amount\")"
+        },
+        "A36": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,3,\"name\")"
+        },
+        "B36": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,3,\"partner_id\")"
+        },
+        "C36": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,3,\"user_id\")"
+        },
+        "D36": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,3,\"contract_amount\")"
+        },
+        "F36": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,3,\"name\")"
+        },
+        "G36": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,3,\"partner_id\")"
+        },
+        "H36": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,3,\"user_id\")"
+        },
+        "I36": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,3,\"contract_amount\")"
+        },
+        "A37": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,4,\"name\")"
+        },
+        "B37": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,4,\"partner_id\")"
+        },
+        "C37": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,4,\"user_id\")"
+        },
+        "D37": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,4,\"contract_amount\")"
+        },
+        "F37": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,4,\"name\")"
+        },
+        "G37": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,4,\"partner_id\")"
+        },
+        "H37": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,4,\"user_id\")"
+        },
+        "I37": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,4,\"contract_amount\")"
+        },
+        "A38": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,5,\"name\")"
+        },
+        "B38": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,5,\"partner_id\")"
+        },
+        "C38": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,5,\"user_id\")"
+        },
+        "D38": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,5,\"contract_amount\")"
+        },
+        "F38": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,5,\"name\")"
+        },
+        "G38": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,5,\"partner_id\")"
+        },
+        "H38": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,5,\"user_id\")"
+        },
+        "I38": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,5,\"contract_amount\")"
+        },
+        "A39": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,6,\"name\")"
+        },
+        "B39": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,6,\"partner_id\")"
+        },
+        "C39": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,6,\"user_id\")"
+        },
+        "D39": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,6,\"contract_amount\")"
+        },
+        "F39": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,6,\"name\")"
+        },
+        "G39": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,6,\"partner_id\")"
+        },
+        "H39": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,6,\"user_id\")"
+        },
+        "I39": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,6,\"contract_amount\")"
+        },
+        "A40": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,7,\"name\")"
+        },
+        "B40": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,7,\"partner_id\")"
+        },
+        "C40": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,7,\"user_id\")"
+        },
+        "D40": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,7,\"contract_amount\")"
+        },
+        "F40": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,7,\"name\")"
+        },
+        "G40": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,7,\"partner_id\")"
+        },
+        "H40": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,7,\"user_id\")"
+        },
+        "I40": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,7,\"contract_amount\")"
+        },
+        "A41": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,8,\"name\")"
+        },
+        "B41": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,8,\"partner_id\")"
+        },
+        "C41": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,8,\"user_id\")"
+        },
+        "D41": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,8,\"contract_amount\")"
+        },
+        "F41": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,8,\"name\")"
+        },
+        "G41": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,8,\"partner_id\")"
+        },
+        "H41": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,8,\"user_id\")"
+        },
+        "I41": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,8,\"contract_amount\")"
+        },
+        "A42": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,9,\"name\")"
+        },
+        "B42": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,9,\"partner_id\")"
+        },
+        "C42": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,9,\"user_id\")"
+        },
+        "D42": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,9,\"contract_amount\")"
+        },
+        "F42": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,9,\"name\")"
+        },
+        "G42": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,9,\"partner_id\")"
+        },
+        "H42": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,9,\"user_id\")"
+        },
+        "I42": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,9,\"contract_amount\")"
+        },
+        "A43": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,10,\"name\")"
+        },
+        "B43": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,10,\"partner_id\")"
+        },
+        "C43": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,10,\"user_id\")"
+        },
+        "D43": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,10,\"contract_amount\")"
+        },
+        "F43": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,10,\"name\")"
+        },
+        "G43": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,10,\"partner_id\")"
+        },
+        "H43": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,10,\"user_id\")"
+        },
+        "I43": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,10,\"contract_amount\")"
+        },
+        "A44": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,11,\"name\")"
+        },
+        "B44": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,11,\"partner_id\")"
+        },
+        "C44": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,11,\"user_id\")"
+        },
+        "D44": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,11,\"contract_amount\")"
+        },
+        "F44": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,11,\"name\")"
+        },
+        "G44": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,11,\"partner_id\")"
+        },
+        "H44": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,11,\"user_id\")"
+        },
+        "I44": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,11,\"contract_amount\")"
+        },
+        "A45": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,12,\"name\")"
+        },
+        "B45": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,12,\"partner_id\")"
+        },
+        "C45": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,12,\"user_id\")"
+        },
+        "D45": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,12,\"contract_amount\")"
+        },
+        "F45": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,12,\"name\")"
+        },
+        "G45": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,12,\"partner_id\")"
+        },
+        "H45": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,12,\"user_id\")"
+        },
+        "I45": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,12,\"contract_amount\")"
+        },
+        "A46": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,13,\"name\")"
+        },
+        "B46": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,13,\"partner_id\")"
+        },
+        "C46": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,13,\"user_id\")"
+        },
+        "D46": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,13,\"contract_amount\")"
+        },
+        "F46": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,13,\"name\")"
+        },
+        "G46": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,13,\"partner_id\")"
+        },
+        "H46": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,13,\"user_id\")"
+        },
+        "I46": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,13,\"contract_amount\")"
+        },
+        "A47": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,14,\"name\")"
+        },
+        "B47": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,14,\"partner_id\")"
+        },
+        "C47": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,14,\"user_id\")"
+        },
+        "D47": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,14,\"contract_amount\")"
+        },
+        "F47": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,14,\"name\")"
+        },
+        "G47": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,14,\"partner_id\")"
+        },
+        "H47": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,14,\"user_id\")"
+        },
+        "I47": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,14,\"contract_amount\")"
+        },
+        "A48": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,15,\"name\")"
+        },
+        "B48": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,15,\"partner_id\")"
+        },
+        "C48": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,15,\"user_id\")"
+        },
+        "D48": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,15,\"contract_amount\")"
+        },
+        "F48": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,15,\"name\")"
+        },
+        "G48": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,15,\"partner_id\")"
+        },
+        "H48": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,15,\"user_id\")"
+        },
+        "I48": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,15,\"contract_amount\")"
+        },
+        "A49": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,16,\"name\")"
+        },
+        "B49": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,16,\"partner_id\")"
+        },
+        "C49": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,16,\"user_id\")"
+        },
+        "D49": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,16,\"contract_amount\")"
+        },
+        "F49": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,16,\"name\")"
+        },
+        "G49": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,16,\"partner_id\")"
+        },
+        "H49": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,16,\"user_id\")"
+        },
+        "I49": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,16,\"contract_amount\")"
+        },
+        "A50": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,17,\"name\")"
+        },
+        "B50": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,17,\"partner_id\")"
+        },
+        "C50": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,17,\"user_id\")"
+        },
+        "D50": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,17,\"contract_amount\")"
+        },
+        "F50": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,17,\"name\")"
+        },
+        "G50": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,17,\"partner_id\")"
+        },
+        "H50": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,17,\"user_id\")"
+        },
+        "I50": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,17,\"contract_amount\")"
+        },
+        "A51": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,18,\"name\")"
+        },
+        "B51": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,18,\"partner_id\")"
+        },
+        "C51": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,18,\"user_id\")"
+        },
+        "D51": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,18,\"contract_amount\")"
+        },
+        "F51": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,18,\"name\")"
+        },
+        "G51": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,18,\"partner_id\")"
+        },
+        "H51": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,18,\"user_id\")"
+        },
+        "I51": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,18,\"contract_amount\")"
+        },
+        "A52": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,19,\"name\")"
+        },
+        "B52": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,19,\"partner_id\")"
+        },
+        "C52": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,19,\"user_id\")"
+        },
+        "D52": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,19,\"contract_amount\")"
+        },
+        "F52": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,19,\"name\")"
+        },
+        "G52": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,19,\"partner_id\")"
+        },
+        "H52": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,19,\"user_id\")"
+        },
+        "I52": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,19,\"contract_amount\")"
+        },
+        "A53": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,20,\"name\")"
+        },
+        "B53": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,20,\"partner_id\")"
+        },
+        "C53": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,20,\"user_id\")"
+        },
+        "D53": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,20,\"contract_amount\")"
+        },
+        "F53": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,20,\"name\")"
+        },
+        "G53": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,20,\"partner_id\")"
+        },
+        "H53": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,20,\"user_id\")"
+        },
+        "I53": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,20,\"contract_amount\")"
+        },
+        "A54": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,21,\"name\")"
+        },
+        "B54": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,21,\"partner_id\")"
+        },
+        "C54": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,21,\"user_id\")"
+        },
+        "D54": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,21,\"contract_amount\")"
+        },
+        "F54": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,21,\"name\")"
+        },
+        "G54": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,21,\"partner_id\")"
+        },
+        "H54": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,21,\"user_id\")"
+        },
+        "I54": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,21,\"contract_amount\")"
+        },
+        "A55": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,22,\"name\")"
+        },
+        "B55": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,22,\"partner_id\")"
+        },
+        "C55": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,22,\"user_id\")"
+        },
+        "D55": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,22,\"contract_amount\")"
+        },
+        "F55": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,22,\"name\")"
+        },
+        "G55": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,22,\"partner_id\")"
+        },
+        "H55": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,22,\"user_id\")"
+        },
+        "I55": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,22,\"contract_amount\")"
+        },
+        "A56": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,23,\"name\")"
+        },
+        "B56": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,23,\"partner_id\")"
+        },
+        "C56": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,23,\"user_id\")"
+        },
+        "D56": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,23,\"contract_amount\")"
+        },
+        "F56": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,23,\"name\")"
+        },
+        "G56": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,23,\"partner_id\")"
+        },
+        "H56": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,23,\"user_id\")"
+        },
+        "I56": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,23,\"contract_amount\")"
+        },
+        "A57": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,24,\"name\")"
+        },
+        "B57": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,24,\"partner_id\")"
+        },
+        "C57": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,24,\"user_id\")"
+        },
+        "D57": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,24,\"contract_amount\")"
+        },
+        "F57": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,24,\"name\")"
+        },
+        "G57": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,24,\"partner_id\")"
+        },
+        "H57": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,24,\"user_id\")"
+        },
+        "I57": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,24,\"contract_amount\")"
+        },
+        "A58": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,25,\"name\")"
+        },
+        "B58": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,25,\"partner_id\")"
+        },
+        "C58": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,25,\"user_id\")"
+        },
+        "D58": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,25,\"contract_amount\")"
+        },
+        "F58": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,25,\"name\")"
+        },
+        "G58": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,25,\"partner_id\")"
+        },
+        "H58": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,25,\"user_id\")"
+        },
+        "I58": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,25,\"contract_amount\")"
+        },
+        "A59": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,26,\"name\")"
+        },
+        "B59": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,26,\"partner_id\")"
+        },
+        "C59": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,26,\"user_id\")"
+        },
+        "D59": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,26,\"contract_amount\")"
+        },
+        "F59": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,26,\"name\")"
+        },
+        "G59": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,26,\"partner_id\")"
+        },
+        "H59": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,26,\"user_id\")"
+        },
+        "I59": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,26,\"contract_amount\")"
+        },
+        "A60": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,27,\"name\")"
+        },
+        "B60": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,27,\"partner_id\")"
+        },
+        "C60": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,27,\"user_id\")"
+        },
+        "D60": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,27,\"contract_amount\")"
+        },
+        "F60": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,27,\"name\")"
+        },
+        "G60": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,27,\"partner_id\")"
+        },
+        "H60": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,27,\"user_id\")"
+        },
+        "I60": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,27,\"contract_amount\")"
+        },
+        "A61": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,28,\"name\")"
+        },
+        "B61": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,28,\"partner_id\")"
+        },
+        "C61": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,28,\"user_id\")"
+        },
+        "D61": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,28,\"contract_amount\")"
+        },
+        "F61": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,28,\"name\")"
+        },
+        "G61": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,28,\"partner_id\")"
+        },
+        "H61": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,28,\"user_id\")"
+        },
+        "I61": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,28,\"contract_amount\")"
+        },
+        "A62": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,29,\"name\")"
+        },
+        "B62": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,29,\"partner_id\")"
+        },
+        "C62": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,29,\"user_id\")"
+        },
+        "D62": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,29,\"contract_amount\")"
+        },
+        "F62": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,29,\"name\")"
+        },
+        "G62": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,29,\"partner_id\")"
+        },
+        "H62": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,29,\"user_id\")"
+        },
+        "I62": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,29,\"contract_amount\")"
+        },
+        "A63": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,30,\"name\")"
+        },
+        "B63": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,30,\"partner_id\")"
+        },
+        "C63": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,30,\"user_id\")"
+        },
+        "D63": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,30,\"contract_amount\")"
+        },
+        "F63": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,30,\"name\")"
+        },
+        "G63": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,30,\"partner_id\")"
+        },
+        "H63": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,30,\"user_id\")"
+        },
+        "I63": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,30,\"contract_amount\")"
+        },
+        "A64": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,31,\"name\")"
+        },
+        "B64": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,31,\"partner_id\")"
+        },
+        "C64": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,31,\"user_id\")"
+        },
+        "D64": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,31,\"contract_amount\")"
+        },
+        "F64": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,31,\"name\")"
+        },
+        "G64": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,31,\"partner_id\")"
+        },
+        "H64": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,31,\"user_id\")"
+        },
+        "I64": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,31,\"contract_amount\")"
+        },
+        "A65": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,32,\"name\")"
+        },
+        "B65": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,32,\"partner_id\")"
+        },
+        "C65": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,32,\"user_id\")"
+        },
+        "D65": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,32,\"contract_amount\")"
+        },
+        "F65": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,32,\"name\")"
+        },
+        "G65": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,32,\"partner_id\")"
+        },
+        "H65": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,32,\"user_id\")"
+        },
+        "I65": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,32,\"contract_amount\")"
+        },
+        "A66": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,33,\"name\")"
+        },
+        "B66": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,33,\"partner_id\")"
+        },
+        "C66": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,33,\"user_id\")"
+        },
+        "D66": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,33,\"contract_amount\")"
+        },
+        "F66": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,33,\"name\")"
+        },
+        "G66": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,33,\"partner_id\")"
+        },
+        "H66": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,33,\"user_id\")"
+        },
+        "I66": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,33,\"contract_amount\")"
+        },
+        "A67": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,34,\"name\")"
+        },
+        "B67": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,34,\"partner_id\")"
+        },
+        "C67": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,34,\"user_id\")"
+        },
+        "D67": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,34,\"contract_amount\")"
+        },
+        "F67": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,34,\"name\")"
+        },
+        "G67": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,34,\"partner_id\")"
+        },
+        "H67": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,34,\"user_id\")"
+        },
+        "I67": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,34,\"contract_amount\")"
+        },
+        "A68": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,35,\"name\")"
+        },
+        "B68": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,35,\"partner_id\")"
+        },
+        "C68": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,35,\"user_id\")"
+        },
+        "D68": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,35,\"contract_amount\")"
+        },
+        "F68": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,35,\"name\")"
+        },
+        "G68": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,35,\"partner_id\")"
+        },
+        "H68": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,35,\"user_id\")"
+        },
+        "I68": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,35,\"contract_amount\")"
+        },
+        "A69": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,36,\"name\")"
+        },
+        "B69": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,36,\"partner_id\")"
+        },
+        "C69": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,36,\"user_id\")"
+        },
+        "D69": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,36,\"contract_amount\")"
+        },
+        "F69": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,36,\"name\")"
+        },
+        "G69": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,36,\"partner_id\")"
+        },
+        "H69": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,36,\"user_id\")"
+        },
+        "I69": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,36,\"contract_amount\")"
+        },
+        "A70": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,37,\"name\")"
+        },
+        "B70": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,37,\"partner_id\")"
+        },
+        "C70": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,37,\"user_id\")"
+        },
+        "D70": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,37,\"contract_amount\")"
+        },
+        "F70": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,37,\"name\")"
+        },
+        "G70": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,37,\"partner_id\")"
+        },
+        "H70": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,37,\"user_id\")"
+        },
+        "I70": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,37,\"contract_amount\")"
+        },
+        "A71": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,38,\"name\")"
+        },
+        "B71": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,38,\"partner_id\")"
+        },
+        "C71": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,38,\"user_id\")"
+        },
+        "D71": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,38,\"contract_amount\")"
+        },
+        "F71": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,38,\"name\")"
+        },
+        "G71": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,38,\"partner_id\")"
+        },
+        "H71": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,38,\"user_id\")"
+        },
+        "I71": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,38,\"contract_amount\")"
+        },
+        "A72": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,39,\"name\")"
+        },
+        "B72": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,39,\"partner_id\")"
+        },
+        "C72": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,39,\"user_id\")"
+        },
+        "D72": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,39,\"contract_amount\")"
+        },
+        "F72": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,39,\"name\")"
+        },
+        "G72": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,39,\"partner_id\")"
+        },
+        "H72": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,39,\"user_id\")"
+        },
+        "I72": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,39,\"contract_amount\")"
+        },
+        "A73": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,40,\"name\")"
+        },
+        "B73": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,40,\"partner_id\")"
+        },
+        "C73": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,40,\"user_id\")"
+        },
+        "D73": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,40,\"contract_amount\")"
+        },
+        "F73": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,40,\"name\")"
+        },
+        "G73": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,40,\"partner_id\")"
+        },
+        "H73": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,40,\"user_id\")"
+        },
+        "I73": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,40,\"contract_amount\")"
+        },
+        "A74": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,41,\"name\")"
+        },
+        "B74": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,41,\"partner_id\")"
+        },
+        "C74": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,41,\"user_id\")"
+        },
+        "D74": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,41,\"contract_amount\")"
+        },
+        "F74": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,41,\"name\")"
+        },
+        "G74": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,41,\"partner_id\")"
+        },
+        "H74": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,41,\"user_id\")"
+        },
+        "I74": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,41,\"contract_amount\")"
+        },
+        "A75": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,42,\"name\")"
+        },
+        "B75": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,42,\"partner_id\")"
+        },
+        "C75": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,42,\"user_id\")"
+        },
+        "D75": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,42,\"contract_amount\")"
+        },
+        "F75": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,42,\"name\")"
+        },
+        "G75": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,42,\"partner_id\")"
+        },
+        "H75": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,42,\"user_id\")"
+        },
+        "I75": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,42,\"contract_amount\")"
+        },
+        "A76": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,43,\"name\")"
+        },
+        "B76": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,43,\"partner_id\")"
+        },
+        "C76": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,43,\"user_id\")"
+        },
+        "D76": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,43,\"contract_amount\")"
+        },
+        "F76": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,43,\"name\")"
+        },
+        "G76": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,43,\"partner_id\")"
+        },
+        "H76": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,43,\"user_id\")"
+        },
+        "I76": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,43,\"contract_amount\")"
+        },
+        "A77": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,44,\"name\")"
+        },
+        "B77": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,44,\"partner_id\")"
+        },
+        "C77": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,44,\"user_id\")"
+        },
+        "D77": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,44,\"contract_amount\")"
+        },
+        "F77": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,44,\"name\")"
+        },
+        "G77": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,44,\"partner_id\")"
+        },
+        "H77": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,44,\"user_id\")"
+        },
+        "I77": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,44,\"contract_amount\")"
+        },
+        "A78": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,45,\"name\")"
+        },
+        "B78": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,45,\"partner_id\")"
+        },
+        "C78": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,45,\"user_id\")"
+        },
+        "D78": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,45,\"contract_amount\")"
+        },
+        "F78": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,45,\"name\")"
+        },
+        "G78": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,45,\"partner_id\")"
+        },
+        "H78": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,45,\"user_id\")"
+        },
+        "I78": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,45,\"contract_amount\")"
+        },
+        "A79": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,46,\"name\")"
+        },
+        "B79": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,46,\"partner_id\")"
+        },
+        "C79": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,46,\"user_id\")"
+        },
+        "D79": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,46,\"contract_amount\")"
+        },
+        "F79": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,46,\"name\")"
+        },
+        "G79": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,46,\"partner_id\")"
+        },
+        "H79": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,46,\"user_id\")"
+        },
+        "I79": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,46,\"contract_amount\")"
+        },
+        "A80": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,47,\"name\")"
+        },
+        "B80": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,47,\"partner_id\")"
+        },
+        "C80": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,47,\"user_id\")"
+        },
+        "D80": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,47,\"contract_amount\")"
+        },
+        "F80": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,47,\"name\")"
+        },
+        "G80": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,47,\"partner_id\")"
+        },
+        "H80": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,47,\"user_id\")"
+        },
+        "I80": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,47,\"contract_amount\")"
+        },
+        "A81": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,48,\"name\")"
+        },
+        "B81": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,48,\"partner_id\")"
+        },
+        "C81": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,48,\"user_id\")"
+        },
+        "D81": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,48,\"contract_amount\")"
+        },
+        "F81": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,48,\"name\")"
+        },
+        "G81": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,48,\"partner_id\")"
+        },
+        "H81": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,48,\"user_id\")"
+        },
+        "I81": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,48,\"contract_amount\")"
+        },
+        "A82": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,49,\"name\")"
+        },
+        "B82": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,49,\"partner_id\")"
+        },
+        "C82": {
+          "style": 4,
+          "content": "=ODOO.LIST(1,49,\"user_id\")"
+        },
+        "D82": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(1,49,\"contract_amount\")"
+        },
+        "F82": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,49,\"name\")"
+        },
+        "G82": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,49,\"partner_id\")"
+        },
+        "H82": {
+          "style": 4,
+          "content": "=ODOO.LIST(2,49,\"user_id\")"
+        },
+        "I82": {
+          "style": 7,
+          "format": 1,
+          "content": "=ODOO.LIST(2,49,\"contract_amount\")"
+        },
+        "A83": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,50,\"name\")"
+        },
+        "B83": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,50,\"partner_id\")"
+        },
+        "C83": {
+          "style": 5,
+          "content": "=ODOO.LIST(1,50,\"user_id\")"
+        },
+        "D83": {
+          "format": 1,
+          "content": "=ODOO.LIST(1,50,\"contract_amount\")"
+        },
+        "F83": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,50,\"name\")"
+        },
+        "G83": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,50,\"partner_id\")"
+        },
+        "H83": {
+          "style": 5,
+          "content": "=ODOO.LIST(2,50,\"user_id\")"
+        },
+        "I83": {
+          "format": 1,
+          "content": "=ODOO.LIST(2,50,\"contract_amount\")"
+        }
+      },
+      "cols": {
+        "0": {
+          "size": 165
+        },
+        "1": {
+          "size": 110
+        },
+        "2": {
+          "size": 95
+        },
+        "3": {
+          "size": 105
+        },
+        "4": {
+          "size": 50
+        },
+        "5": {
+          "size": 165
+        },
+        "6": {
+          "size": 110
+        },
+        "7": {
+          "size": 95
+        },
+        "8": {
+          "size": 105
+        }
+      },
+      "rows": {
+        "6": {
+          "size": 40
+        },
+        "18": {
+          "size": 40
+        },
+        "19": {
+          "size": 40
+        },
+        "31": {
+          "size": 40
+        },
+        "32": {
+          "size": 40
+        }
+      },
+      "merges": [],
+      "conditionalFormats": [],
+      "figures": [
+        {
+          "id": "ca211dbd-4c43-4ee3-9eba-8a10e0b77ece",
+          "x": 0,
+          "y": 0,
+          "width": 140,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Нийт төсөл",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D2"
+          }
+        },
+        {
+          "id": "fa787221-194a-49c0-821d-45bac5e94d4d",
+          "x": 150,
+          "y": 0,
+          "width": 140,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Хэрэгжиж буй төсөл",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D3"
+          }
+        },
+        {
+          "id": "3f60b5d6-3b6d-4321-98ea-800df04ec055",
+          "x": 300,
+          "y": 0,
+          "width": 140,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Төлөвлөсөн төсөл",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D4"
+          }
+        },
+        {
+          "id": "972abb30-c9cb-4d68-b03a-f2ec9441e90f",
+          "x": 450,
+          "y": 0,
+          "width": 140,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Дууссан төсөл",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D5"
+          }
+        },
+        {
+          "id": "2f3c04b5-ca1c-4438-87bf-28e6890cfd5f",
+          "x": 600,
+          "y": 0,
+          "width": 195,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Нийт гэрээний дүн (₮)",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D6"
+          }
+        },
+        {
+          "id": "8546b916-c2ff-4c02-9b7b-beb5e612a533",
+          "x": 805,
+          "y": 0,
+          "width": 195,
+          "height": 120,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": "Хэрэгжиж буй дүн (₮)",
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!D7"
+          }
+        },
+        {
+          "id": "a086c0eb-894a-4220-a9a5-1dc3824d8ec0",
+          "x": 0,
+          "y": 178,
+          "width": 475,
+          "height": 230,
+          "tag": "chart",
+          "data": {
+            "title": "",
+            "id": "a086c0eb-894a-4220-a9a5-1dc3824d8ec0",
+            "background": "#FFFFFF",
+            "legendPosition": "right",
+            "metaData": {
+              "groupBy": [
+                "state"
+              ],
+              "measure": "__count",
+              "order": null,
+              "resModel": "project.project"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+              },
+              "domain": [],
+              "groupBy": [
+                "state"
+              ],
+              "orderBy": []
+            },
+            "type": "odoo_pie"
+          }
+        },
+        {
+          "id": "28a1e9bf-dc74-4ba7-8366-39a8a23e024d",
+          "x": 525,
+          "y": 178,
+          "width": 475,
+          "height": 230,
+          "tag": "chart",
+          "data": {
+            "title": "",
+            "id": "28a1e9bf-dc74-4ba7-8366-39a8a23e024d",
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": [
+                "department_id"
+              ],
+              "measure": "contract_amount",
+              "order": null,
+              "resModel": "project.project"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "contract_amount"
+              },
+              "domain": [],
+              "groupBy": [
+                "department_id"
+              ],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true
+    },
+    {
+      "id": "sheet_data",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "cells": {
+        "A1": {
+          "style": 3,
+          "content": "=_t(\"KPI\")"
+        },
+        "B1": {
+          "style": 3,
+          "content": "=_t(\"Current\")"
+        },
+        "C1": {
+          "style": 3,
+          "content": "=_t(\"Previous\")"
+        },
+        "D1": {
+          "style": 3,
+          "content": "=_t(\"Formatted\")"
+        },
+        "A2": {
+          "content": "=_t(\"Нийт төсөл\")"
+        },
+        "B2": {
+          "content": "=ODOO.PIVOT(5,\"__count\")"
+        },
+        "C2": {
+          "content": "=ODOO.PIVOT(6,\"__count\")"
+        },
+        "D2": {
+          "content": "=FORMAT.LARGE.NUMBER(B2)"
+        },
+        "A3": {
+          "content": "=_t(\"Хэрэгжиж буй төсөл\")"
+        },
+        "B3": {
+          "content": "=ODOO.PIVOT(4,\"__count\",\"state\",\"process\")"
+        },
+        "C3": {
+          "content": "0"
+        },
+        "D3": {
+          "content": "=FORMAT.LARGE.NUMBER(B3)"
+        },
+        "A4": {
+          "content": "=_t(\"Төлөвлөсөн төсөл\")"
+        },
+        "B4": {
+          "content": "=ODOO.PIVOT(4,\"__count\",\"state\",\"planned\")"
+        },
+        "C4": {
+          "content": "0"
+        },
+        "D4": {
+          "content": "=FORMAT.LARGE.NUMBER(B4)"
+        },
+        "A5": {
+          "content": "=_t(\"Дууссан төсөл\")"
+        },
+        "B5": {
+          "content": "=ODOO.PIVOT(4,\"__count\",\"state\",\"done\")"
+        },
+        "C5": {
+          "content": "0"
+        },
+        "D5": {
+          "content": "=FORMAT.LARGE.NUMBER(B5)"
+        },
+        "A6": {
+          "content": "=_t(\"Нийт гэрээний дүн\")"
+        },
+        "B6": {
+          "format": 1,
+          "content": "=ROUND(ODOO.PIVOT(5,\"contract_amount\"))"
+        },
+        "C6": {
+          "format": 1,
+          "content": "=ROUND(ODOO.PIVOT(6,\"contract_amount\"))"
+        },
+        "D6": {
+          "style": 7,
+          "format": 1,
+          "content": "=B6"
+        },
+        "A7": {
+          "content": "=_t(\"Хэрэгжиж буй гэрээний дүн\")"
+        },
+        "B7": {
+          "format": 1,
+          "content": "=ROUND(ODOO.PIVOT(4,\"contract_amount\",\"state\",\"process\"))"
+        },
+        "C7": {
+          "format": 1,
+          "content": "0"
+        },
+        "D7": {
+          "style": 7,
+          "format": 1,
+          "content": "=B7"
+        }
+      },
+      "cols": {
+        "0": {
+          "size": 220
+        },
+        "1": {
+          "size": 150
+        },
+        "2": {
+          "size": 150
+        },
+        "3": {
+          "size": 200
+        }
+      },
+      "rows": {},
+      "merges": [],
+      "conditionalFormats": [],
+      "figures": [],
+      "areGridLinesVisible": true,
+      "isVisible": true
+    }
+  ],
+  "entities": {},
+  "styles": {
+    "1": {
+      "textColor": "#01666b",
+      "bold": true,
+      "fontSize": 16
+    },
+    "2": {
+      "bold": true,
+      "fontSize": 16
+    },
+    "3": {
+      "bold": true
+    },
+    "4": {
+      "fillColor": "#f2f2f2",
+      "textColor": "#741b47"
+    },
+    "5": {
+      "textColor": "#741b47"
+    },
+    "6": {
+      "align": "right",
+      "bold": true
+    },
+    "7": {
+      "fillColor": "#f2f2f2"
+    }
+  },
+  "formats": {
+    "1": "#,##0",
+    "2": "0",
+    "3": "yyyy-mm-dd"
+  },
+  "borders": {
+    "1": {
+      "bottom": [
+        "thin",
+        "#000"
+      ]
+    },
+    "2": {
+      "top": [
+        "thin",
+        "#000"
+      ]
+    }
+  },
+  "revisionId": "START_REVISION",
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ","
+    }
+  },
+  "chartOdooMenusReferences": {},
+  "odooVersion": 12,
+  "lists": {
+    "1": {
+      "columns": [
+        "sequence_name",
+        "name",
+        "partner_id",
+        "department_id",
+        "user_id",
+        "contract_amount",
+        "date_start",
+        "date"
+      ],
+      "domain": [
+        [
+          "state",
+          "=",
+          "process"
+        ]
+      ],
+      "model": "project.project",
+      "context": {},
+      "orderBy": [
+        {
+          "name": "contract_amount",
+          "asc": false
+        }
+      ],
+      "id": "1",
+      "name": "Явагдаж буй төслүүд"
+    },
+    "2": {
+      "columns": [
+        "sequence_name",
+        "name",
+        "partner_id",
+        "department_id",
+        "user_id",
+        "contract_amount",
+        "date_start",
+        "date"
+      ],
+      "domain": [
+        [
+          "state",
+          "=",
+          "planned"
+        ]
+      ],
+      "model": "project.project",
+      "context": {},
+      "orderBy": [
+        {
+          "name": "contract_amount",
+          "asc": false
+        }
+      ],
+      "id": "2",
+      "name": "Төлөвлөсөн төслүүд"
+    }
+  },
+  "listNextId": 3,
+  "pivots": {
+    "1": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "contract_amount"
+      },
+      "domain": [
+        [
+          "department_id",
+          "!=",
+          false
+        ]
+      ],
+      "id": "1",
+      "measures": [
+        {
+          "field": "contract_amount"
+        },
+        {
+          "field": "__count"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [
+        "department_id"
+      ],
+      "name": "Төслүүд алба хэлтсээр",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "contract_amount",
+        "order": "desc"
+      }
+    },
+    "2": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "contract_amount"
+      },
+      "domain": [
+        [
+          "user_id",
+          "!=",
+          false
+        ]
+      ],
+      "id": "2",
+      "measures": [
+        {
+          "field": "contract_amount"
+        },
+        {
+          "field": "__count"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [
+        "user_id"
+      ],
+      "name": "Төслүүд менежерээр",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "contract_amount",
+        "order": "desc"
+      }
+    },
+    "3": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "contract_amount"
+      },
+      "domain": [
+        [
+          "partner_id",
+          "!=",
+          false
+        ]
+      ],
+      "id": "3",
+      "measures": [
+        {
+          "field": "contract_amount"
+        },
+        {
+          "field": "__count"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [
+        "partner_id"
+      ],
+      "name": "Төслүүд харилцагчаар",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "contract_amount",
+        "order": "desc"
+      }
+    },
+    "4": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "__count"
+      },
+      "domain": [],
+      "id": "4",
+      "measures": [
+        {
+          "field": "__count"
+        },
+        {
+          "field": "contract_amount"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [
+        "state"
+      ],
+      "name": "Төслүүд төлвөөр",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "__count",
+        "order": "desc"
+      }
+    },
+    "5": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "__count"
+      },
+      "domain": [],
+      "id": "5",
+      "measures": [
+        {
+          "field": "__count"
+        },
+        {
+          "field": "contract_amount"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [],
+      "name": "Нийт статистик - одоо",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "__count",
+        "order": "desc"
+      }
+    },
+    "6": {
+      "colGroupBys": [],
+      "context": {
+        "group_by_no_leaf": 1,
+        "group_by": [],
+        "graph_measure": "__count"
+      },
+      "domain": [],
+      "id": "6",
+      "measures": [
+        {
+          "field": "__count"
+        },
+        {
+          "field": "contract_amount"
+        }
+      ],
+      "model": "project.project",
+      "rowGroupBys": [],
+      "name": "Нийт статистик - өмнөх",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          []
+        ],
+        "measure": "__count",
+        "order": "desc"
+      }
+    }
+  },
+  "pivotNextId": 7,
+  "globalFilters": [
+    {
+      "id": "9064f171-e8db-4014-99b6-5e63b43e2ac0",
+      "type": "date",
+      "label": "Хугацаа",
+      "defaultValue": "all_time",
+      "rangeType": "relative",
+      "defaultsToCurrentPeriod": false,
+      "pivotFields": {
+        "1": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "3": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "4": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "5": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "6": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": -1
+        }
+      },
+      "listFields": {
+        "1": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "graphFields": {
+        "28a1e9bf-dc74-4ba7-8366-39a8a23e024d": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "a086c0eb-894a-4220-a9a5-1dc3824d8ec0": {
+          "field": "create_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      }
+    },
+    {
+      "id": "e3e1179a-fe90-4376-a9e7-d2ec16148368",
+      "type": "relation",
+      "label": "Алба",
+      "modelName": "hr.department",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year",
+      "defaultsToCurrentPeriod": false,
+      "pivotFields": {
+        "1": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "3": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "4": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "5": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "6": {
+          "field": "department_id",
+          "type": "many2one"
+        }
+      },
+      "listFields": {
+        "1": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "department_id",
+          "type": "many2one"
+        }
+      },
+      "graphFields": {
+        "28a1e9bf-dc74-4ba7-8366-39a8a23e024d": {
+          "field": "department_id",
+          "type": "many2one"
+        },
+        "a086c0eb-894a-4220-a9a5-1dc3824d8ec0": {
+          "field": "department_id",
+          "type": "many2one"
+        }
+      }
+    },
+    {
+      "id": "9a191f3b-916e-40d0-a063-4fa44ef9e356",
+      "type": "relation",
+      "label": "Төслийн менежер",
+      "modelName": "res.users",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year",
+      "defaultsToCurrentPeriod": false,
+      "pivotFields": {
+        "1": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "3": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "4": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "5": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "6": {
+          "field": "user_id",
+          "type": "many2one"
+        }
+      },
+      "listFields": {
+        "1": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "user_id",
+          "type": "many2one"
+        }
+      },
+      "graphFields": {
+        "28a1e9bf-dc74-4ba7-8366-39a8a23e024d": {
+          "field": "user_id",
+          "type": "many2one"
+        },
+        "a086c0eb-894a-4220-a9a5-1dc3824d8ec0": {
+          "field": "user_id",
+          "type": "many2one"
+        }
+      }
+    },
+    {
+      "id": "df7525d3-d15e-44ee-bae5-3280e38e8de7",
+      "type": "relation",
+      "label": "Захиалагч",
+      "modelName": "res.partner",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year",
+      "defaultsToCurrentPeriod": false,
+      "pivotFields": {
+        "1": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "3": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "4": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "5": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "6": {
+          "field": "partner_id",
+          "type": "many2one"
+        }
+      },
+      "listFields": {
+        "1": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "2": {
+          "field": "partner_id",
+          "type": "many2one"
+        }
+      },
+      "graphFields": {
+        "28a1e9bf-dc74-4ba7-8366-39a8a23e024d": {
+          "field": "partner_id",
+          "type": "many2one"
+        },
+        "a086c0eb-894a-4220-a9a5-1dc3824d8ec0": {
+          "field": "partner_id",
+          "type": "many2one"
+        }
+      }
+    }
+  ]
+}
