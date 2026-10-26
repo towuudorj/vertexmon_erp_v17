@@ -25,6 +25,8 @@
                  'project',
                  'sale_project',  # invoice_count-ийн эрхийг дарж бичихийн тулд түүний дараа ачаалагдана
                  'base',
+                 'hr',
+                 'spreadsheet_dashboard',
                  'stock',
                  'purchase_requisition',
                  'purchase',
@@ -39,6 +41,7 @@
             'data/ir_sequence_data.xml',
             'data/rule.xml',
             'data/project_task_type_data.xml',
+            'data/dashboards.xml',
             'wizard/foreign_purchase_request_wizard.xml',
             'wizard/local_purchase_request_wizard.xml',
             'wizard/make_package_task_wizard.xml',

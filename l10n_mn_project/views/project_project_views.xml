@@ -30,6 +30,8 @@
 				<field name="product_count"/>        		
         	</xpath>
             <xpath expr="//field[@name='stage_id']" position="replace">
+                <field name="department_id" optional="show"/>
+                <field name="contract_amount" widget="monetary" optional="show"/>
                 <field name="state"/>
             </xpath>
         </field>
@@ -125,6 +127,7 @@
             
             <xpath expr="//field[@name='user_id']" position="replace">
                 <field name="user_id" readonly="state in ('confirm','done')" />
+                <field name="department_id" readonly="state in ('confirm','done')" />
             </xpath>
 
             <xpath expr="//field[@name='date_start']" position="replace">
@@ -220,6 +223,7 @@
             
             <xpath expr="//field[@name='name']" position="after">
                 <field name="sequence_name"/>
+                <field name="department_id"/>
             </xpath>            
         </field>
     </record>

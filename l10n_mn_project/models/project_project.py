@@ -66,6 +66,31 @@ class ProjectProject(models.Model):
             
 
     sequence_name = fields.Char("Sequence", copy=False)
+    department_id = fields.Many2one(
+        'hr.department', 
+        string='Department', 
+        compute='_compute_department_id', 
+        store=True, 
+        readonly=False, 
+        index=True
+    )
+
+    @api.depends('user_id')
+    def _compute_department_id(self):
+        for project in self:
+            if project.user_id:
+                emp = self.env['hr.employee'].search([
+                    ('user_id', '=', project.user_id.id),
+                    ('company_id', '=', project.company_id.id)
+                ], limit=1)
+                if not emp:
+                    emp = self.env['hr.employee'].search([
+                        ('user_id', '=', project.user_id.id)
+                    ], limit=1)
+                project.department_id = emp.department_id if emp else False
+            elif not project.department_id:
+                project.department_id = False
+
     contract_number = fields.Char(string='Contract Number', copy=False)
     contract_amount = fields.Float(string='Contract Amount', digits='Product Price')
     quality_amount = fields.Float(string='Quality Amount')

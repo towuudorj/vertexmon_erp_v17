@@ -138,7 +138,7 @@ msgstr "Бүтээгдэхүүн үйлчилгээний нэр"
 #. module: l10n_mn_vat
 #: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__barcode
 msgid "Barcode"
-msgstr "Баркод
+msgstr "Баркод"
 
 #. module: l10n_mn_vat
 #: model:ir.model.fields,field_description:l10n_mn_vat.field_vat_data_line__barcode_type
