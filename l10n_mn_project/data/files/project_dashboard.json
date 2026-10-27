@@ -2398,7 +2398,26 @@
               ],
               "orderBy": []
             },
-            "type": "odoo_pie"
+            "type": "odoo_pie",
+            "fieldMatching": {
+              "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+                "chain": "department_id",
+                "type": "many2one"
+              },
+              "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+                "chain": "partner_id",
+                "type": "many2one"
+              }
+            }
           }
         },
         {
@@ -2435,7 +2454,26 @@
               "orderBy": []
             },
             "type": "odoo_bar",
-            "verticalAxisPosition": "left"
+            "verticalAxisPosition": "left",
+            "fieldMatching": {
+              "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+                "chain": "department_id",
+                "type": "many2one"
+              },
+              "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+                "chain": "partner_id",
+                "type": "many2one"
+              }
+            }
           }
         }
       ],
@@ -2628,7 +2666,7 @@
     }
   },
   "chartOdooMenusReferences": {},
-  "odooVersion": 12,
+  "odooVersion": 4,
   "lists": {
     "1": {
       "columns": [
@@ -2657,7 +2695,26 @@
         }
       ],
       "id": "1",
-      "name": "Явагдаж буй төслүүд"
+      "name": "Явагдаж буй төслүүд",
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
+      }
     },
     "2": {
       "columns": [
@@ -2686,7 +2743,26 @@
         }
       ],
       "id": "2",
-      "name": "Төлөвлөсөн төслүүд"
+      "name": "Төлөвлөсөн төслүүд",
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
+      }
     }
   },
   "listNextId": 3,
@@ -2726,6 +2802,25 @@
         ],
         "measure": "contract_amount",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     },
     "2": {
@@ -2763,6 +2858,25 @@
         ],
         "measure": "contract_amount",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     },
     "3": {
@@ -2800,6 +2914,25 @@
         ],
         "measure": "contract_amount",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     },
     "4": {
@@ -2831,6 +2964,25 @@
         ],
         "measure": "__count",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     },
     "5": {
@@ -2860,6 +3012,25 @@
         ],
         "measure": "__count",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     },
     "6": {
@@ -2889,6 +3060,25 @@
         ],
         "measure": "__count",
         "order": "desc"
+      },
+      "fieldMatching": {
+        "9064f171-e8db-4014-99b6-5e63b43e2ac0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": -1
+        },
+        "e3e1179a-fe90-4376-a9e7-d2ec16148368": {
+          "chain": "department_id",
+          "type": "many2one"
+        },
+        "9a191f3b-916e-40d0-a063-4fa44ef9e356": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "df7525d3-d15e-44ee-bae5-3280e38e8de7": {
+          "chain": "partner_id",
+          "type": "many2one"
+        }
       }
     }
   },
@@ -2898,7 +3088,7 @@
       "id": "9064f171-e8db-4014-99b6-5e63b43e2ac0",
       "type": "date",
       "label": "Хугацаа",
-      "defaultValue": "all_time",
+      "defaultValue": null,
       "rangeType": "relative",
       "defaultsToCurrentPeriod": false,
       "pivotFields": {
