@@ -36,7 +36,7 @@
             <field name="email_from">{{ (object.assignee_id.email_formatted or user.email_formatted) }}</field>
             <!-- Хүлээн авагчийг dev.task._send_review_mail тодорхойлно (шалгагч + үүсгэсэн ажилтан) -->
             <field name="email_to">{{ object.review_user_id.email_formatted }}</field>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p>Сайн байна уу,</p>
