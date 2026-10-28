@@ -32,7 +32,8 @@
                  'hr_holidays',
                  'hr_contract',
                  'om_account_accountant',
-                 'l10n_mn_account'
+                 'l10n_mn_account',
+                 'vertexmon_tools'
                 ],
     'data': [
             'data/account_journal_data.xml',

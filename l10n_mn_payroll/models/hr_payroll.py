@@ -515,6 +515,19 @@ class HrPayslipRun(models.Model):
         return
 
 # Цалингийн хуудсын багцын жагсаалтын багана -> цалингийн дүрмийн код(ууд)
+PAYSLIP_OUTPUT_COLUMN_CODES = {
+    'wage_amount': ('BS',),
+    'overtime_amount': ('OVERADD',),
+    'computed_salary': ('CBS',),
+    'allowance_total': ('ADT',),
+    'gross_amount': ('CS',),
+    'ndsh_employee_amount': ('SI11', 'SI15', 'SI10'),
+    'ndsh_company_amount': ('NDSH',),
+    'pit_amount': ('LLL',),
+    'deduction_total': ('TE',),
+    'net_amount': ('GIVE', 'ADVP'),
+}
+
 PAYSLIP_COLUMN_CODES = {
     'wage_amount': ('BS',),
     'month_work_days': ('MWD',),
@@ -593,24 +606,24 @@ class HrPayslip(models.Model):
     employee_register = fields.Char(string='Регистр №', compute='_compute_employee_info')
 
     wage_amount = fields.Float(string='Үндсэн цалин', compute='_compute_payslip_columns', store=True)
-    month_work_days = fields.Float(string='Сарын ажлын хоног', compute='_compute_payslip_columns', store=True)
-    month_work_hours = fields.Float(string='Сарын ажлын фонд цаг', compute='_compute_payslip_columns', store=True)
-    worked_days = fields.Float(string='Ажилласан хоног', compute='_compute_payslip_columns', store=True)
-    worked_hours = fields.Float(string='Ажилласан цаг', compute='_compute_payslip_columns', store=True)
-    overtime_hours = fields.Float(string='Илүү цаг', compute='_compute_payslip_columns', store=True)
+    month_work_days = fields.Float(string='Сарын ажлын хоног')
+    month_work_hours = fields.Float(string='Сарын ажлын фонд цаг')
+    worked_days = fields.Float(string='Ажилласан хоног')
+    worked_hours = fields.Float(string='Ажилласан цаг')
+    overtime_hours = fields.Float(string='Илүү цаг')
     overtime_amount = fields.Float(string='Илүү цагийн нэмэгдэл', compute='_compute_payslip_columns', store=True)
     computed_salary = fields.Float(string='Бодогдсон цалин', compute='_compute_payslip_columns', store=True)
-    vacation_amount = fields.Float(string='Амралтын мөнгө', compute='_compute_payslip_columns', store=True)
-    performance_amount = fields.Float(string='Гүйцэтгэлийн нэмэгдэл', compute='_compute_payslip_columns', store=True)
-    other_allowance_amount = fields.Float(string='Бусад нэмэгдэл', compute='_compute_payslip_columns', store=True)
+    vacation_amount = fields.Float(string='Амралтын мөнгө')
+    performance_amount = fields.Float(string='Гүйцэтгэлийн нэмэгдэл')
+    other_allowance_amount = fields.Float(string='Бусад нэмэгдэл')
     allowance_total = fields.Float(string='Нэмэгдлийн дүн', compute='_compute_payslip_columns', store=True)
     gross_amount = fields.Float(string='Олговол зохих', compute='_compute_payslip_columns', store=True)
-    advance_amount = fields.Float(string='Урьдчилгаа цалин', compute='_compute_payslip_columns', store=True)
+    advance_amount = fields.Float(string='Урьдчилгаа цалин')
     ndsh_employee_amount = fields.Float(string='НДШ-Даатгуулагчаас', compute='_compute_payslip_columns', store=True)
     ndsh_company_amount = fields.Float(string='НДШ Ажил олгогчоос', compute='_compute_payslip_columns', store=True)
     pit_amount = fields.Float(string='ХАОАТ', compute='_compute_payslip_columns', store=True)
-    phone_deduction_amount = fields.Float(string='Утасны суутгал', compute='_compute_payslip_columns', store=True)
-    receivable_deduction_amount = fields.Float(string='Ажилчдаас авлага', compute='_compute_payslip_columns', store=True)
+    phone_deduction_amount = fields.Float(string='Утасны суутгал')
+    receivable_deduction_amount = fields.Float(string='Ажилчдаас авлага')
     deduction_total = fields.Float(string='Суутгалын дүн', compute='_compute_payslip_columns', store=True)
     net_amount = fields.Float(string='Гарт олгох', compute='_compute_payslip_columns', store=True)
 
@@ -624,8 +637,7 @@ class HrPayslip(models.Model):
             slip.employee_bank_account = emp.bank_account_id.acc_number
             slip.employee_register = emp['ssnid'] if 'ssnid' in emp._fields else False
 
-    @api.depends('line_ids.code', 'line_ids.total',
-                 'worked_days_line_ids.code', 'worked_days_line_ids.number_of_days', 'worked_days_line_ids.number_of_hours')
+    @api.depends('line_ids.code', 'line_ids.total')
     def _compute_payslip_columns(self):
         for slip in self:
             totals = {}
@@ -633,17 +645,11 @@ class HrPayslip(models.Model):
                 totals[line.code] = totals.get(line.code, 0.0) + line.total
             vals = {
                 field_name: sum(totals.get(code, 0.0) for code in codes)
-                for field_name, codes in PAYSLIP_COLUMN_CODES.items()
+                for field_name, codes in PAYSLIP_OUTPUT_COLUMN_CODES.items()
             }
-            # Хоногийн дүрэм байхгүй бол ажилласан өдрийн мөрөөс авна
-            worked_days = {wd.code: wd.number_of_days for wd in slip.worked_days_line_ids}
-            if not vals['month_work_days']:
-                vals['month_work_days'] = worked_days.get('MUST_WORK', 0.0)
-            if not vals['worked_days']:
-                vals['worked_days'] = worked_days.get('WORK100', 0.0)
             # Урьдчилгааны хуудсанд BS дүрэм бодогдохгүй тул гэрээний цалинг харуулна
             if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
-                vals['wage_amount'] = slip.contract_id.wage * vals['month_work_hours']
+                vals['wage_amount'] = slip.contract_id.wage * slip.month_work_hours
             if slip.payslip_type == 'advance' and not vals['wage_amount']:
                 if slip.contract_id.contract_type_id and slip.contract_id.contract_type_id.code == 'Part-Time':
                     vals['wage_amount'] = slip.contract_id.wage * slip.advance_must_hours
@@ -688,17 +694,144 @@ class HrPayslip(models.Model):
                         slip.contract_id.wage * 40 / 100.0 * ratio)
 
 
+    def _update_worked_days_record(self, code, field_name, value):
+        self.ensure_one()
+        wd = self.worked_days_line_ids.filtered(lambda w: w.code == code)
+        c_id = self.contract_id.id or (
+            self.get_contract(self.employee_id, self.date_from, self.date_to)[:1].id
+            if self.date_from and self.date_to else False
+        )
+        val = value or 0.0
+        if wd:
+            if round(wd[0][field_name] or 0.0, 2) != round(val, 2):
+                wd[0].with_context(skip_sync_payslip=True).write({field_name: val})
+        elif val:
+            name_map = {
+                'MUST_WORK': _('Must work'),
+                'WORK100': _('Worked'),
+            }
+            self.env['hr.payslip.worked_days'].with_context(skip_sync_payslip=True).create({
+                'payslip_id': self.id,
+                'contract_id': c_id,
+                'name': name_map.get(code, code),
+                'code': code,
+                field_name: val,
+                'sequence': 1,
+            })
+
+    def _update_input_record(self, code, value, alt_codes=None):
+        self.ensure_one()
+        all_codes = [code] + (alt_codes or [])
+        inps = self.input_line_ids.filtered(lambda i: i.code in all_codes)
+        c_id = self.contract_id.id or (
+            self.get_contract(self.employee_id, self.date_from, self.date_to)[:1].id
+            if self.date_from and self.date_to else False
+        )
+        val = value or 0.0
+        if inps:
+            target = inps[0]
+            if round(target.amount or 0.0, 2) != round(val, 2):
+                target.with_context(skip_sync_payslip=True).write({'amount': val})
+            for other in inps[1:]:
+                if other.amount:
+                    other.with_context(skip_sync_payslip=True).write({'amount': 0.0})
+        elif val:
+            rule_input = self.env['hr.rule.input'].search([('code', 'in', all_codes)], limit=1)
+            name = rule_input.name if rule_input else code
+            actual_code = rule_input.code if rule_input else code
+            self.env['hr.payslip.input'].with_context(skip_sync_payslip=True).create({
+                'payslip_id': self.id,
+                'contract_id': c_id,
+                'name': name,
+                'code': actual_code,
+                'amount': val,
+            })
+
+    def _sync_inputs_to_columns(self):
+        for slip in self:
+            wd_days = {wd.code: wd.number_of_days for wd in slip.worked_days_line_ids}
+            wd_hours = {wd.code: wd.number_of_hours for wd in slip.worked_days_line_ids}
+            inps = {inp.code: inp.amount for inp in slip.input_line_ids}
+            vals = {}
+            if 'MUST_WORK' in wd_days and not slip.month_work_days:
+                vals['month_work_days'] = wd_days['MUST_WORK']
+            if 'MUST_WORK' in wd_hours and not slip.month_work_hours:
+                vals['month_work_hours'] = wd_hours['MUST_WORK']
+            if 'WORK100' in wd_days and not slip.worked_days:
+                vals['worked_days'] = wd_days['WORK100']
+            if 'WORK100' in wd_hours and not slip.worked_hours:
+                vals['worked_hours'] = wd_hours['WORK100']
+            if 'OVER' in inps and not slip.overtime_hours:
+                vals['overtime_hours'] = inps['OVER']
+            if 'RS' in inps and not slip.vacation_amount:
+                vals['vacation_amount'] = inps['RS']
+            if 'KPI' in inps and not slip.performance_amount:
+                vals['performance_amount'] = inps['KPI']
+            if 'OTA' in inps and not slip.other_allowance_amount:
+                vals['other_allowance_amount'] = inps['OTA']
+            if ('PHONE_DEDUCTION' in inps or 'PH' in inps) and not slip.phone_deduction_amount:
+                vals['phone_deduction_amount'] = inps.get('PHONE_DEDUCTION', inps.get('PH', 0.0))
+            if any(c in inps for c in ('EDE', 'PAY', 'FAULT')) and not slip.receivable_deduction_amount:
+                vals['receivable_deduction_amount'] = sum(inps.get(c, 0.0) for c in ('EDE', 'PAY', 'FAULT'))
+            if 'ADV' in inps and not slip.advance_amount:
+                vals['advance_amount'] = inps['ADV']
+            if vals:
+                super(HrPayslip, slip).write(vals)
+
     def write(self, vals):
         res = super(HrPayslip, self).write(vals)
         # Урьдчилгааны хувь, дүнг гараар зассан бол мөрийг шууд шинэчилнэ
         if not self.env.context.get('skip_compute_advance') and {'prepayment_amount', 'advance_must_hours', 'advance_worked_hours'} & set(vals):
             self.filtered(lambda s: s.payslip_type == 'advance' and s.state == 'draft')._compute_advance_sheet()
+
+        # Input/worked_days sync
+        input_or_wd_fields = {
+            'month_work_days', 'month_work_hours', 'worked_days', 'worked_hours',
+            'overtime_hours', 'vacation_amount', 'performance_amount',
+            'other_allowance_amount', 'phone_deduction_amount',
+            'receivable_deduction_amount', 'advance_amount'
+        }
+        if not self.env.context.get('skip_sync_inputs') and (input_or_wd_fields & set(vals)):
+            for slip in self:
+                if 'month_work_days' in vals:
+                    slip._update_worked_days_record('MUST_WORK', 'number_of_days', vals['month_work_days'])
+                    slip._update_input_record('MWD', vals['month_work_days'])
+                if 'month_work_hours' in vals:
+                    slip._update_worked_days_record('MUST_WORK', 'number_of_hours', vals['month_work_hours'])
+                    slip._update_input_record('MWT', vals['month_work_hours'])
+                if 'worked_days' in vals:
+                    slip._update_worked_days_record('WORK100', 'number_of_days', vals['worked_days'])
+                    slip._update_input_record('WDD', vals['worked_days'])
+                if 'worked_hours' in vals:
+                    slip._update_worked_days_record('WORK100', 'number_of_hours', vals['worked_hours'])
+                    slip._update_input_record('WDT', vals['worked_hours'])
+                if 'overtime_hours' in vals:
+                    slip._update_input_record('OVER', vals['overtime_hours'])
+                if 'vacation_amount' in vals:
+                    slip._update_input_record('RS', vals['vacation_amount'])
+                if 'performance_amount' in vals:
+                    slip._update_input_record('KPI', vals['performance_amount'])
+                if 'other_allowance_amount' in vals:
+                    slip._update_input_record('OTA', vals['other_allowance_amount'])
+                if 'phone_deduction_amount' in vals:
+                    slip._update_input_record('PHONE_DEDUCTION', vals['phone_deduction_amount'], alt_codes=['PH'])
+                if 'receivable_deduction_amount' in vals:
+                    slip._update_input_record('EDE', vals['receivable_deduction_amount'], alt_codes=['PAY', 'FAULT'])
+                if 'advance_amount' in vals:
+                    if not slip.payslip_run_id.advance_run_id:
+                        slip._update_input_record('ADV', vals['advance_amount'])
+
+        if not self.env.context.get('skip_recompute_sheet') and (input_or_wd_fields & set(vals)):
+            draft_slips = self.filtered(lambda s: s.payslip_type != 'advance' and s.state == 'draft')
+            if draft_slips:
+                draft_slips.with_context(skip_sync_payslip=True, skip_recompute_sheet=True).compute_sheet()
         return res
 
     def compute_sheet(self):
         advance_slips = self.filtered(lambda s: s.payslip_type == 'advance')
         final_slips = self - advance_slips
         final_slips._apply_advance_inputs()
+        final_slips._sync_inputs_to_columns()
         res = super(HrPayslip, final_slips).compute_sheet()
         advance_slips._compute_advance_sheet()
         return res
@@ -882,7 +1015,31 @@ class HrPayslip(models.Model):
                     else 0.0
                 )
 
+        class DummyInput:
+            amount = 0.0
+            def __getattr__(self, _):
+                return 0.0
+            def __float__(self):
+                return 0.0
+            def __bool__(self):
+                return False
+
+        class DummyWorkedDay:
+            number_of_days = 0.0
+            number_of_hours = 0.0
+            def __getattr__(self, _):
+                return 0.0
+            def __float__(self):
+                return 0.0
+            def __bool__(self):
+                return False
+
         class InputLine(BrowsableObject):
+
+            def __getattr__(self, attr):
+                if attr in self.dict:
+                    return self.dict[attr]
+                return DummyInput()
 
             def sum(self, code, from_date, to_date=None):
                 if to_date is None:
@@ -908,6 +1065,11 @@ class HrPayslip(models.Model):
                 return self.env.cr.fetchone()[0] or 0.0
 
         class WorkedDays(BrowsableObject):
+
+            def __getattr__(self, attr):
+                if attr in self.dict:
+                    return self.dict[attr]
+                return DummyWorkedDay()
 
             def _sum(self, code, from_date, to_date=None):
                 if to_date is None:
@@ -1742,3 +1904,93 @@ class HrPayslipRunImportWizard(models.TransientModel):
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
+class HrPayslipWorkedDays(models.Model):
+    _inherit = 'hr.payslip.worked_days'
+
+    def write(self, vals):
+        res = super().write(vals)
+        if not self.env.context.get('skip_sync_payslip'):
+            for wd in self:
+                if wd.payslip_id and wd.payslip_id.state == 'draft':
+                    slip = wd.payslip_id
+                    sync_vals = {}
+                    if wd.code == 'MUST_WORK':
+                        if 'number_of_days' in vals:
+                            sync_vals['month_work_days'] = wd.number_of_days
+                            slip._update_input_record('MWD', wd.number_of_days)
+                        if 'number_of_hours' in vals:
+                            sync_vals['month_work_hours'] = wd.number_of_hours
+                            slip._update_input_record('MWT', wd.number_of_hours)
+                    elif wd.code == 'WORK100':
+                        if 'number_of_days' in vals:
+                            sync_vals['worked_days'] = wd.number_of_days
+                            slip._update_input_record('WDD', wd.number_of_days)
+                        if 'number_of_hours' in vals:
+                            sync_vals['worked_hours'] = wd.number_of_hours
+                            slip._update_input_record('WDT', wd.number_of_hours)
+                    if sync_vals:
+                        slip.with_context(skip_sync_inputs=True, skip_sync_payslip=True, skip_recompute_sheet=True).write(sync_vals)
+                    slip.with_context(skip_sync_payslip=True, skip_recompute_sheet=True).compute_sheet()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        if not self.env.context.get('skip_sync_payslip'):
+            for wd in records:
+                if wd.payslip_id and wd.payslip_id.state == 'draft':
+                    wd.write({})
+        return records
+
+
+class HrPayslipInput(models.Model):
+    _inherit = 'hr.payslip.input'
+
+    def write(self, vals):
+        res = super().write(vals)
+        if not self.env.context.get('skip_sync_payslip'):
+            for inp in self:
+                if inp.payslip_id and inp.payslip_id.state == 'draft':
+                    slip = inp.payslip_id
+                    sync_vals = {}
+                    if inp.code == 'OVER':
+                        sync_vals['overtime_hours'] = inp.amount
+                    elif inp.code == 'RS':
+                        sync_vals['vacation_amount'] = inp.amount
+                    elif inp.code == 'KPI':
+                        sync_vals['performance_amount'] = inp.amount
+                    elif inp.code == 'OTA':
+                        sync_vals['other_allowance_amount'] = inp.amount
+                    elif inp.code in ('PHONE_DEDUCTION', 'PH'):
+                        sync_vals['phone_deduction_amount'] = inp.amount
+                    elif inp.code in ('EDE', 'PAY', 'FAULT'):
+                        sync_vals['receivable_deduction_amount'] = sum(
+                            i.amount for i in slip.input_line_ids if i.code in ('EDE', 'PAY', 'FAULT')
+                        )
+                    elif inp.code == 'ADV' and not slip.payslip_run_id.advance_run_id:
+                        sync_vals['advance_amount'] = inp.amount
+                    elif inp.code == 'MWD':
+                        sync_vals['month_work_days'] = inp.amount
+                        slip._update_worked_days_record('MUST_WORK', 'number_of_days', inp.amount)
+                    elif inp.code == 'MWT':
+                        sync_vals['month_work_hours'] = inp.amount
+                        slip._update_worked_days_record('MUST_WORK', 'number_of_hours', inp.amount)
+                    elif inp.code == 'WDD':
+                        sync_vals['worked_days'] = inp.amount
+                        slip._update_worked_days_record('WORK100', 'number_of_days', inp.amount)
+                    elif inp.code == 'WDT':
+                        sync_vals['worked_hours'] = inp.amount
+                        slip._update_worked_days_record('WORK100', 'number_of_hours', inp.amount)
+                    if sync_vals:
+                        slip.with_context(skip_sync_inputs=True, skip_sync_payslip=True, skip_recompute_sheet=True).write(sync_vals)
+                    slip.with_context(skip_sync_payslip=True, skip_recompute_sheet=True).compute_sheet()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        if not self.env.context.get('skip_sync_payslip'):
+            for inp in records:
+                if inp.payslip_id and inp.payslip_id.state == 'draft':
+                    inp.write({})
+        return records

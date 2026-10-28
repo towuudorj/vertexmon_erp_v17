@@ -24,7 +24,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:l10n_mn_payroll.hr_payroll_prepayment_tree_view
 #, python-format
 msgid "Hr payroll prepayment"
-msgstr "Урьчилгаа цалин"
+msgstr "Урьдчилгаа цалин"
 
 #. module: l10n_mn_payroll
 #. openerp-web
@@ -208,7 +208,7 @@ msgstr "Ажилтан"
 #: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_salary_month_range_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_mn_payroll.hr_salary_month_range_tree_view
 msgid "Salary Month Range"
-msgstr "Цалингын мөчлөг"
+msgstr "Цалингийн мөчлөг"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_shift_holiday_register__shift_days
@@ -1166,7 +1166,7 @@ msgstr "Татварын орлогын төрөл"
 #: model:ir.actions.act_window,name:l10n_mn_payroll.action_ndsh_report_import
 #: model:ir.ui.menu,name:l10n_mn_payroll.ndsh_report_import_menu
 msgid "Ndsh import report"
-msgstr "НДШ импторт загвар"
+msgstr "НДШ импорт загвар"
 
 #. module: l10n_mn_payroll
 #: model:ir.model.fields,field_description:l10n_mn_payroll.field_vat_income_type__company_id

@@ -1,0 +1,241 @@
+/* =========================================================================
+   VERTEXMON TOOLS: REUSABLE STICKY HEADER & STICKY COLUMNS FOR X2MANY / LIST
+   
+   Хэрэглээ:
+   1. Дээш/доош гүйлгэхэд хүснэгтийн толгойг (header) дээд ирмэгт үлдээх:
+      <field name="slip_ids" class="o_x2many_sticky_header"/>
+      эсвэл: <tree class="o_x2many_sticky_header" ...>
+
+   2. Баруун/зүүн тийш хэвтээ гүйлгэхэд эхний N баганыг хананд нааж үлдээх (Freeze Panes):
+      - 1-р баганыг үлдээх:   class="o_sticky_first_col"   (эсвэл o_sticky_col_1)
+      - Эхний 2 баганыг:    class="o_sticky_first_2_cols"  (эсвэл o_sticky_col_2)
+      - Эхний 3 баганыг:    class="o_sticky_first_3_cols"  (эсвэл o_sticky_col_3)
+      - Эхний 4 баганыг:    class="o_sticky_first_4_cols"  (эсвэл o_sticky_col_4)
+
+   3. Толгой болон эхний багануудыг хамтад нь үлдээх:
+      <field name="slip_ids" class="o_x2many_sticky_header o_sticky_first_3_cols"/>
+      эсвэл: <tree class="o_x2many_sticky_header o_sticky_first_3_cols" ...>
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   ҮНДСЭН ХУВЬСАГЧИД (CSS VARIABLES FALLBACKS)
+   ------------------------------------------------------------------------- */
+:root {
+    --o-sticky-col-1-width: 45px;
+    --o-sticky-col-2-width: 92px;
+    --o-sticky-col-3-width: 92px;
+    --o-sticky-col-4-width: 92px;
+    --o-sticky-shadow: 3px 0 5px -2px rgba(0, 0, 0, 0.18);
+}
+
+/* =========================================================================
+   1. VERTICAL STICKY HEADER (ДЭЭШ/ДООШ ГҮЙЛГЭХЭД ТОЛГОЙ НААЛДАХ)
+   ========================================================================= */
+.o_form_view .o_x2many_sticky_header .o_list_renderer,
+.o_form_view .o_field_x2many.o_x2many_sticky_header .o_list_renderer,
+.o_form_view .o_field_widget.o_x2many_sticky_header .o_list_renderer,
+.o_form_view .o_list_renderer.o_x2many_sticky_header,
+.o_form_view .o_list_renderer:has(table.o_x2many_sticky_header),
+.o_form_view .o_list_renderer:has(.o_x2many_sticky_header) {
+    overflow: visible !important;
+}
+
+.o_form_view .o_x2many_sticky_header .o_list_renderer .o_list_table thead,
+.o_form_view .o_field_x2many.o_x2many_sticky_header .o_list_renderer .o_list_table thead,
+.o_form_view .o_field_widget.o_x2many_sticky_header .o_list_renderer .o_list_table thead,
+.o_form_view .o_list_renderer.o_x2many_sticky_header .o_list_table thead,
+.o_form_view .o_list_table.o_x2many_sticky_header thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.o_form_view .o_x2many_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_field_x2many.o_x2many_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_field_widget.o_x2many_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_list_renderer.o_x2many_sticky_header .o_list_table thead th,
+.o_form_view .o_list_table.o_x2many_sticky_header thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    box-shadow: inset 0 -1px 0 var(--border-color, #dee2e6), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+}
+
+.o_form_view .o_x2many_sticky_header .o_list_renderer .o_list_table thead th.o_list_actions_header,
+.o_form_view .o_field_x2many.o_x2many_sticky_header .o_list_renderer .o_list_table thead th.o_list_actions_header,
+.o_form_view .o_list_renderer.o_x2many_sticky_header .o_list_table thead th.o_list_actions_header {
+    z-index: 11;
+}
+
+/* Товч нэршлээр ашиглах алиас */
+.o_form_view .o_sticky_header .o_list_renderer,
+.o_form_view .o_field_x2many.o_sticky_header .o_list_renderer,
+.o_form_view .o_field_widget.o_sticky_header .o_list_renderer,
+.o_form_view .o_list_renderer.o_sticky_header,
+.o_form_view .o_list_renderer:has(.o_sticky_header) {
+    overflow: visible !important;
+}
+
+.o_form_view .o_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_field_x2many.o_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_field_widget.o_sticky_header .o_list_renderer .o_list_table thead th,
+.o_form_view .o_list_renderer.o_sticky_header .o_list_table thead th,
+.o_form_view .o_list_table.o_sticky_header thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    box-shadow: inset 0 -1px 0 var(--border-color, #dee2e6), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================================================
+   2. HORIZONTAL STICKY COLUMNS (ХЭВТЭЭ СКРОЛЛ ХИЙХЭД БАГАНУУД НААЛДАХ)
+   ========================================================================= */
+
+/* БАГАНА 1: Зүүн хананд (left: 0) наалдах */
+:is(.o_sticky_first_col, .o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+    .o_sticky_col_1, .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+    .o_x2many_sticky_col_1, .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(1),
+table.o_list_table:is(.o_sticky_first_col, .o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+                      .o_sticky_col_1, .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+                      .o_x2many_sticky_col_1, .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    :is(thead th, tbody td, tfoot td):nth-child(1) {
+    position: sticky !important;
+    left: 0px !important;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    z-index: 5 !important;
+}
+
+/* БАГАНА 2: 1-р баганын баруун талд наалдах */
+:is(.o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+    .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+    .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(2),
+table.o_list_table:is(.o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+                      .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+                      .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    :is(thead th, tbody td, tfoot td):nth-child(2) {
+    position: sticky !important;
+    left: var(--o-sticky-col-1-width, 45px) !important;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    z-index: 5 !important;
+}
+
+/* БАГАНА 3: 1 болон 2-р баганын дараа наалдах */
+:is(.o_sticky_first_3_cols, .o_sticky_first_4_cols,
+    .o_sticky_col_3, .o_sticky_col_4,
+    .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(3),
+table.o_list_table:is(.o_sticky_first_3_cols, .o_sticky_first_4_cols,
+                      .o_sticky_col_3, .o_sticky_col_4,
+                      .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    :is(thead th, tbody td, tfoot td):nth-child(3) {
+    position: sticky !important;
+    left: calc(var(--o-sticky-col-1-width, 45px) + var(--o-sticky-col-2-width, 92px)) !important;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    z-index: 5 !important;
+}
+
+/* БАГАНА 4: 1, 2, 3-р баганын дараа наалдах */
+:is(.o_sticky_first_4_cols, .o_sticky_col_4, .o_x2many_sticky_col_4)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(4),
+table.o_list_table:is(.o_sticky_first_4_cols, .o_sticky_col_4, .o_x2many_sticky_col_4)
+    :is(thead th, tbody td, tfoot td):nth-child(4) {
+    position: sticky !important;
+    left: calc(var(--o-sticky-col-1-width, 45px) + var(--o-sticky-col-2-width, 92px) + var(--o-sticky-col-3-width, 92px)) !important;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    z-index: 5 !important;
+}
+
+/* -------------------------------------------------------------------------
+   ХАМГИЙН БАРУУН ТАЛЫН НААЛДАХ БАГАНЫН СҮҮДЭР / ЗААГ (RIGHT ELEVATION SHADOW)
+   ------------------------------------------------------------------------- */
+:is(.o_sticky_first_col, .o_sticky_col_1, .o_x2many_sticky_col_1)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(1),
+table.o_list_table:is(.o_sticky_first_col, .o_sticky_col_1, .o_x2many_sticky_col_1)
+    :is(thead th, tbody td, tfoot td):nth-child(1) {
+    box-shadow: var(--o-sticky-shadow) !important;
+}
+
+:is(.o_sticky_first_2_cols, .o_sticky_col_2, .o_x2many_sticky_col_2)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(2),
+table.o_list_table:is(.o_sticky_first_2_cols, .o_sticky_col_2, .o_x2many_sticky_col_2)
+    :is(thead th, tbody td, tfoot td):nth-child(2) {
+    box-shadow: var(--o-sticky-shadow) !important;
+}
+
+:is(.o_sticky_first_3_cols, .o_sticky_col_3, .o_x2many_sticky_col_3)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(3),
+table.o_list_table:is(.o_sticky_first_3_cols, .o_sticky_col_3, .o_x2many_sticky_col_3)
+    :is(thead th, tbody td, tfoot td):nth-child(3) {
+    box-shadow: var(--o-sticky-shadow) !important;
+}
+
+:is(.o_sticky_first_4_cols, .o_sticky_col_4, .o_x2many_sticky_col_4)
+    table.o_list_table :is(thead th, tbody td, tfoot td):nth-child(4),
+table.o_list_table:is(.o_sticky_first_4_cols, .o_sticky_col_4, .o_x2many_sticky_col_4)
+    :is(thead th, tbody td, tfoot td):nth-child(4) {
+    box-shadow: var(--o-sticky-shadow) !important;
+}
+
+/* -------------------------------------------------------------------------
+   ТОЛГОЙ МӨР (THEAD TH) ОГТЛОЛЦОЛ: ДЭЭД ТАЛДАА Ч, ХАЖУУДАА Ч НААЛДАХ
+   Дээд талын z-index 20 байх тул гүйж буй баганууд болон энгийн толгойнуудын
+   дээгүүр саадгүй харагдана.
+   ------------------------------------------------------------------------- */
+:is(.o_sticky_first_col, .o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+    .o_sticky_col_1, .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+    .o_x2many_sticky_col_1, .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    table.o_list_table thead th:is(:nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4)),
+table.o_list_table:is(.o_sticky_first_col, .o_sticky_first_2_cols, .o_sticky_first_3_cols, .o_sticky_first_4_cols,
+                      .o_sticky_col_1, .o_sticky_col_2, .o_sticky_col_3, .o_sticky_col_4,
+                      .o_x2many_sticky_col_1, .o_x2many_sticky_col_2, .o_x2many_sticky_col_3, .o_x2many_sticky_col_4)
+    thead th:is(:nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4)) {
+    top: 0 !important;
+    z-index: 20 !important;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+}
+
+/* -------------------------------------------------------------------------
+   МӨР ДЭЭР ХУЛГАНА ОЧИХ (HOVER) БОЛОН ИДЭВХТЭЙ (SELECTED) ТӨЛӨВ
+   ------------------------------------------------------------------------- */
+/* АНХААР: Odoo-гийн анхдагч --table-hover-bg нь тунгалаг (rgba 0.055) тул
+   түүнийг ашиглавал гүйж буй багануудын тоо/бичиг нэвт харагдаж давхацдаг.
+   Тиймээс заавал цулгуй (opaque) #f1f3f5 өнгөөр таглана. */
+table.o_list_table tbody tr.o_data_row:hover :is(td, th):nth-child(1),
+table.o_list_table tbody tr.o_data_row:hover :is(td, th):nth-child(2),
+table.o_list_table tbody tr.o_data_row:hover :is(td, th):nth-child(3),
+table.o_list_table tbody tr.o_data_row:hover :is(td, th):nth-child(4) {
+    background-color: #f1f3f5 !important;
+}
+
+table.o_list_table tbody tr.o_data_row:focus-within :is(td, th):nth-child(1),
+table.o_list_table tbody tr.o_data_row:focus-within :is(td, th):nth-child(2),
+table.o_list_table tbody tr.o_data_row:focus-within :is(td, th):nth-child(3),
+table.o_list_table tbody tr.o_data_row:focus-within :is(td, th):nth-child(4),
+table.o_list_table tbody tr.o_data_row.o_selected_row :is(td, th):nth-child(1),
+table.o_list_table tbody tr.o_data_row.o_selected_row :is(td, th):nth-child(2),
+table.o_list_table tbody tr.o_data_row.o_selected_row :is(td, th):nth-child(3),
+table.o_list_table tbody tr.o_data_row.o_selected_row :is(td, th):nth-child(4) {
+    background-color: var(--o-form-lightsecondary, #e9ecef) !important;
+}
+
+/* =========================================================================
+   3. ДОТРОО СКРОЛЛ ХИЙДЭГ ХЭЛБЭР (OPTION 1: SCROLLABLE CONTAINER)
+   ========================================================================= */
+.o_form_view .o_x2many_scrollable .o_list_renderer,
+.o_form_view .o_field_x2many.o_x2many_scrollable .o_list_renderer {
+    max-height: 450px;
+    overflow: auto !important;
+}
+
+.o_form_view .o_x2many_scrollable .o_list_renderer .o_list_table thead th,
+.o_form_view .o_field_x2many.o_x2many_scrollable .o_list_renderer .o_list_table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--o-view-background-color, #ffffff) !important;
+    box-shadow: inset 0 -1px 0 var(--border-color, #dee2e6);
+}

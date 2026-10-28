@@ -1373,7 +1373,7 @@ msgstr "Цалингийн зэрэглэл"
 #. module: om_hr_payroll
 #: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
-msgstr "Цалингин тооцоолол"
+msgstr "Цалингийн тооцоолол"
 
 #. module: om_hr_payroll
 #: model:ir.model,name:om_hr_payroll.model_hr_salary_rule

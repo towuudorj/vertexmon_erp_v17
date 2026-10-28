@@ -18,7 +18,39 @@
                             <field name="prepayment_amount" invisible="payslip_type != 'advance'"
                                    readonly="state != 'draft'"/>
                         </xpath>
-
+                        <xpath expr="//notebook" position="inside">
+                            <page string="Цалингийн үзүүлэлтүүд" name="mn_payroll_summary" invisible="payslip_type == 'advance'">
+                                <group>
+                                    <group string="Ажлын цаг, хоног">
+                                        <field name="month_work_days" readonly="state != 'draft'"/>
+                                        <field name="month_work_hours" readonly="state != 'draft'"/>
+                                        <field name="worked_days" readonly="state != 'draft'"/>
+                                        <field name="worked_hours" readonly="state != 'draft'"/>
+                                        <field name="overtime_hours" readonly="state != 'draft'"/>
+                                        <field name="overtime_amount" readonly="1"/>
+                                    </group>
+                                    <group string="Олговор, нэмэгдэл">
+                                        <field name="wage_amount" readonly="1"/>
+                                        <field name="computed_salary" readonly="1"/>
+                                        <field name="vacation_amount" readonly="state != 'draft'"/>
+                                        <field name="performance_amount" readonly="state != 'draft'"/>
+                                        <field name="other_allowance_amount" readonly="state != 'draft'"/>
+                                        <field name="allowance_total" readonly="1"/>
+                                        <field name="gross_amount" readonly="1"/>
+                                    </group>
+                                    <group string="Суутгал ба Гарт олгох">
+                                        <field name="advance_amount" readonly="state != 'draft'"/>
+                                        <field name="ndsh_employee_amount" readonly="1"/>
+                                        <field name="ndsh_company_amount" readonly="1"/>
+                                        <field name="pit_amount" readonly="1"/>
+                                        <field name="phone_deduction_amount" readonly="state != 'draft'"/>
+                                        <field name="receivable_deduction_amount" readonly="state != 'draft'"/>
+                                        <field name="deduction_total" readonly="1"/>
+                                        <field name="net_amount" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </xpath>
                     </data>
                 </field>
             </record>

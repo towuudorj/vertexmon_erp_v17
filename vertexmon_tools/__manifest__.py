@@ -8,7 +8,7 @@
     "author": "Vertexmon",
     "application": False,
     "installable": True,
-    "depends": ["base", "hr"],
+    "depends": ["base", "web", "hr"],
     "data": [
         'security/ir.model.access.csv',
         'data/microsoft_api_value_data.xml',
@@ -23,7 +23,8 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'vertexmon_tools/static/src/css/*.css'
+            'vertexmon_tools/static/src/css/*.css',
+            'vertexmon_tools/static/src/js/sticky_column.esm.js',
         ]
     }
 }
