@@ -128,6 +128,11 @@ class HrAttendance(models.Model):
         help="Батлагдсан засах хүсэлтээр өөрчлөгдсөн. HikCentral/Timely-гийн татан авалт энэ ирцийг дахин өөрчлөхгүй.",
         copy=False,
     )
+    edit_note = fields.Char(
+        string='Засварын тайлбар',
+        help="Батлагдсан засах хүсэлтийн шалтгаан, засахаас өмнөх цаг, батлагчийн тайлбар (VMC Connect / Teams).",
+        copy=False,
+    )
     check_in_location = fields.Char('Орсон байршил')
     check_out_location = fields.Char('Гарсан байршил')
 

@@ -86,6 +86,7 @@ class HrLeave(models.Model):
         payroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'payroll')], limit=1)
         unpayroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'unpayroll')], limit=1)
         tz = timezone('Asia/Ulaanbaatar')
+        created = leave_obj.browse()
 
         def local(value):
             return parser.isoparse(value).astimezone(tz)
@@ -131,7 +132,7 @@ class HrLeave(models.Model):
                         vals.update({'request_hour_from': hour(start), 'request_hour_to': hour(end)})
                     if data.get('reason'):
                         vals['private_name'] = data['reason'][:200]
-                    leave_obj.with_context(
+                    created |= leave_obj.with_context(
                         tracking_disable=True,
                         mail_activity_automation_skip=True,
                         leave_fast_create=True,
@@ -140,3 +141,39 @@ class HrLeave(models.Model):
                 self.env.cr.commit()
             except Exception:
                 _logger.exception("Чөлөөний хүсэлт %s-ийг оруулж чадсангүй (дараа дахин оролдоно)", sp_id)
+        if created:
+            # the leave is in: the lost time SharePoint shows for those days takes it off now
+            try:
+                created.push_attendance_to_sharepoint()
+            except Exception:
+                _logger.exception("Чөлөөний өдрүүдийн ирцийг SharePoint руу дахин илгээж чадсангүй")
+
+    def push_attendance_to_sharepoint(self):
+        """The lost time (loss_time) of a day's attendance in SharePoint is worked out when the row is pushed, and an
+        approved leave takes its hours off it (hr.hour.record). The push only repeats the last days, so for a leave on
+        an older day, or approved after the push, SharePoint would keep the old number: push the attendance these
+        leaves cover again."""
+        from .hr_attendance_inherit import day_bounds_utc
+        attendance_obj = self.env['hr.attendance'].sudo()
+        session = attendance_obj._graph_session()
+        if not session:
+            return
+        headers, site_id, microsoft_value_obj, token = session
+        list_id = get_list_id(microsoft_value_obj, site_id, token, 'attendance_list_name', 'attendance_list_id')
+        attendances = attendance_obj
+        for leave in self.sudo():
+            if not leave.employee_id or not leave.request_date_from:
+                continue
+            first = day_bounds_utc(leave.request_date_from)[0]
+            last = day_bounds_utc(leave.request_date_to or leave.request_date_from)[1]
+            attendances |= attendance_obj.search(
+                [('employee_id', '=', leave.employee_id.id), ('check_in', '>=', first), ('check_in', '<=', last)])
+        attendances.push_to_sharepoint(headers, site_id, list_id)
+
+    @api.model
+    def refresh_attendance_in_sharepoint(self, since):
+        """One-off, for leaves that came before the above: push again the attendance of every SharePoint leave from a
+        date on, e.g. env['hr.leave'].refresh_attendance_in_sharepoint('2026-10-01'). Returns how many leaves it went through."""
+        leaves = self.sudo().search([('sharepoint_id', '!=', False), ('state', '=', 'validate'), ('request_date_from', '>=', since)])
+        leaves.push_attendance_to_sharepoint()
+        return len(leaves)

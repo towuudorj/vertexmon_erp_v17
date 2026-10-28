@@ -13,6 +13,7 @@
                     </xpath>
                     <xpath expr='//field[@name="check_out"]' position="after">
                         <field name="manual_lock" optional="show" readonly="1"/>
+                        <field name="edit_note" optional="show" readonly="1"/>
                     </xpath>
                     <xpath expr='//tree' position='attributes'>
                         <attribute name="create">0</attribute>
@@ -30,6 +31,7 @@
             <field name="arch" type="xml">
                 <xpath expr='//field[@name="check_out"]' position="after">
                     <field name="manual_lock"/>
+                    <field name="edit_note" invisible="not edit_note"/>
                 </xpath>
                 <xpath expr='//field[@name="worked_hours"]' position="after">
                     <field name="check_in_location" invisible="not check_in_location"/>
