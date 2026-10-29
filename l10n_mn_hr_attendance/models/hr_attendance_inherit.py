@@ -396,7 +396,12 @@ class HrAttendance(models.Model):
         if not microsoft_value_obj:
             _logger.warning("Microsoft API Value тохиргоо олдсонгүй")
             return None
-        token = get_token(microsoft_value_obj)
+        try:
+            token = get_token(microsoft_value_obj)
+        except MicrosoftUnreachable as e:
+            # сүлжээ/DNS түр тасарсан: алгасаад дараагийн удаа дахин оролдоно (тохиргооны алдаа биш)
+            _logger.warning("Microsoft Graph: %s", e)
+            return None
         if not (token and token.get('token_type') and token.get('access_token')):
             raise ValidationError(u'Алдаа гарлаа. Алдааны мэдээлэл:\n %s' % str(token))
         token = token['token_type'] + ' ' + token['access_token']
