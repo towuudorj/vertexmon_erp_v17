@@ -39,6 +39,8 @@ HIK_PAGE_SIZE = 100
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # SharePoint item id of a push whose answer never came (the item may exist): look it up by odoo_id next time
 SP_PENDING = '?'
+# advisory lock namespace ("SP") held per attendance from the lookup to the commit of its push
+SP_LOCK = 0x5350
 _logger = logging.getLogger(__name__)
 
 
@@ -440,6 +442,12 @@ class HrAttendance(models.Model):
         hour_record_model = self.env['hr.hour.record']
         for att in self:
             try:
+                # another process is pushing it right now (a manual run beside the scheduled one, the edit or
+                # leave cron; a manual run's cron lock goes at its first commit): leave it to that one, or both add it
+                self.env.cr.execute("SELECT pg_try_advisory_xact_lock(%s, %s)", (SP_LOCK, att.id))
+                if not self.env.cr.fetchone()[0]:
+                    _logger.info("SharePoint: ирц ID %s-ийг өөр процесс яг одоо илгээж байна, алгаслаа", att.id)
+                    continue
                 employee = att.employee_id
                 if not employee or not att.check_in:
                     continue
