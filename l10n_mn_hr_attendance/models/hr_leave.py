@@ -1,8 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+import base64
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import parser
 import pytz
 from pytz import timezone
@@ -83,10 +84,24 @@ class HrLeave(models.Model):
         list_id = get_list_id(microsoft_value_obj, site_id, token, 'leave_list_name', 'leave_list_id')
         leave_obj = self.env['hr.leave'].sudo()
         done = set(leave_obj.search([('sharepoint_id', '!=', False)]).mapped('sharepoint_id'))
-        payroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'payroll')], limit=1)
-        unpayroll_type = self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', 'unpayroll')], limit=1)
+        def api_type(sub_type):
+            return self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', sub_type)], limit=1)
+
+        # typeSalary as VMC Connect writes it: the list's paid code, annual leave, overtime and sick; anything else is
+        # the list's unpaid code (the Power App's two). Annual leave is HR's own type, not an API one (its sub-type is
+        # shared with «Нөхөн амралт»): the one whose Code is ANNUAL. Without an allocation for the person Odoo
+        # refuses it, and it is tried again each run until HR allocates the days.
+        types = {
+            'salary': api_type('payroll'),
+            'annual': self.env['hr.leave.type'].search([('code', '=ilike', 'ANNUAL')], limit=1),
+            'overtime': api_type('over_time'),
+            'sick': api_type('sick'),
+        }
+        unpayroll_type = api_type('unpayroll')
         tz = timezone('Asia/Ulaanbaatar')
         created = leave_obj.browse()
+        # VMC Connect's side lists (VMCC_Log, VMCC_Files), looked up once a run
+        edits, log, lists = self.env['attendance.edit.request'].sudo(), {}, {}
 
         def local(value):
             return parser.isoparse(value).astimezone(tz)
@@ -118,8 +133,14 @@ class HrLeave(models.Model):
                     else:
                         start = local(data['beginDate'])
                         end = local(data.get('endDate') or data['beginDate'])
+                    kind = data.get('typeSalary')
+                    leave_type = types.get(kind, unpayroll_type)
+                    if not leave_type:
+                        # never as another type (overtime as unpaid leave would cut the pay): tried again once it is there
+                        _logger.warning("Чөлөөний хүсэлт %s: «%s»-д тохирох чөлөөний төрөл (use_in_api) Odoo-д алга", sp_id, kind)
+                        continue
                     vals = {
-                        'holiday_status_id': (payroll_type if data.get('typeSalary') == 'salary' else unpayroll_type).id,
+                        'holiday_status_id': leave_type.id,
                         'request_unit_hours': by_hour,
                         'employee_id': employee.id,
                         'sharepoint_id': sp_id,
@@ -131,13 +152,31 @@ class HrLeave(models.Model):
                     if by_hour:
                         vals.update({'request_hour_from': hour(start), 'request_hour_to': hour(end)})
                     if data.get('reason'):
-                        vals['private_name'] = data['reason'][:200]
-                    created |= leave_obj.with_context(
+                        vals['private_name'] = data['reason']
+                    # sick leave: the doctor's note handed in with it, fetched first (a failure tries it all again)
+                    note = None
+                    if kind == 'sick':
+                        sick_note = edits._vmcc_extras(headers, site_id, f"AttendanceRequest#{sp_id}", log, quiet=False).get('sickNote') or {}
+                        if sick_note.get('item'):
+                            content = edits._vmcc_file(headers, site_id, sick_note['item'], lists)
+                            if content is None:
+                                _logger.warning("Чөлөөний хүсэлт %s: акт «%s» VMCC_Files-д алга", sp_id, sick_note.get('name'))
+                            else:
+                                note = (sick_note.get('name') or 'акт', content)
+                    leave = leave_obj.with_context(
                         tracking_disable=True,
                         mail_activity_automation_skip=True,
                         leave_fast_create=True,
                         leave_skip_state_check=True,
                     ).create(vals)
+                    if kind == 'overtime':
+                        # (with the context above: a validated leave may be changed)
+                        leave.write(leave._vmcc_overtime_duration(start, end, by_hour))
+                    if note:
+                        # on the leave: its supporting documents and the chatter
+                        self.env['ir.attachment'].sudo().create(
+                            {'name': note[0], 'datas': base64.b64encode(note[1]), 'res_model': 'hr.leave', 'res_id': leave.id})
+                    created |= leave
                 self.env.cr.commit()
             except Exception:
                 _logger.exception("Чөлөөний хүсэлт %s-ийг оруулж чадсангүй (дараа дахин оролдоно)", sp_id)
@@ -147,6 +186,30 @@ class HrLeave(models.Model):
                 created.push_attendance_to_sharepoint()
             except Exception:
                 _logger.exception("Чөлөөний өдрүүдийн ирцийг SharePoint руу дахин илгээж чадсангүй")
+
+    def _vmcc_overtime_duration(self, start, end, by_hour):
+        """Odoo counts a leave by the working schedule, and overtime is outside it (evenings, days off), where that
+        comes to nothing. hr.hour.record pays number_of_hours (under a day) or number_of_days × the day's hours, so
+        those are set to what was worked: the hours asked for, or a day's hours for each day off of a by-day request.
+        start, end: Ulaanbaatar datetimes."""
+        self.ensure_one()
+        calendar = self.resource_calendar_id or self.employee_id.resource_calendar_id
+        per_day = (calendar.hours_per_day if calendar else 0) or 8.0
+        if by_hour:
+            hours = max(0.0, (end - start).total_seconds() / 3600)
+            return {'number_of_hours': round(hours, 2), 'number_of_days': round(hours / per_day, 4)}
+        days = 0
+        day = start.date()
+        while day <= end.date():
+            if calendar:
+                tz = pytz.timezone(calendar.tz or 'Asia/Ulaanbaatar')
+                first = tz.localize(datetime.combine(day, datetime.min.time()))
+                off = not calendar.get_work_hours_count(first, first + timedelta(days=1), compute_leaves=True)
+            else:
+                off = day.weekday() >= 5
+            days += 1 if off else 0
+            day += timedelta(days=1)
+        return {'number_of_hours': days * per_day, 'number_of_days': days}
 
     def push_attendance_to_sharepoint(self):
         """The lost time (loss_time) of a day's attendance in SharePoint is worked out when the row is pushed, and an

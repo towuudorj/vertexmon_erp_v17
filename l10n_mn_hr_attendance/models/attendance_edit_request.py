@@ -1,4 +1,5 @@
 import json
+import requests
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.addons.vertexmon_tools.controllers.microsoft_controllers import *
@@ -27,19 +28,37 @@ class AttendanceEditRequest(models.Model):
     # the SharePoint item (AttendanceEditRequest list) already applied
     share_point_id = fields.Integer(string='Sharepoint id')
 
-    def _vmcc_extras(self, headers, site_id, sp_id, log):
-        """What VMC Connect keeps for a request in VMCC_Log, as the list has no column for it: the reason, the old
-        times, the steps (history). Power App requests have none. log: the VMCC_Log id, looked up once a run."""
+    def _vmcc_extras(self, headers, site_id, key, log, quiet=True):
+        """What VMC Connect keeps for a row in VMCC_Log («AttendanceEdditRequest#12», «AttendanceRequest#7»), the
+        lists having no column for it: an edit's reason, old times and steps; a sick leave's note. Power App requests
+        have none. log: the VMCC_Log id, looked up once a run. quiet: a failure gives {} rather than raising."""
         try:
             if 'id' not in log:
                 log['id'] = self._vmcc_list_id(headers, site_id, 'VMCC_Log')
             if log['id']:
-                for item in graph_list_items(headers, site_id, log['id'], f"fields/Title eq 'AttendanceEdditRequest#{sp_id}'"):
+                for item in graph_list_items(headers, site_id, log['id'], f"fields/Title eq '{key}'"):
                     return json.loads(item.get('fields', {}).get('Data') or '{}')
         except Exception:
+            if not quiet:
+                raise
             # the note is only a note: the attendance is corrected anyway
-            _logger.warning("Ирц засах хүсэлт %s: VMCC_Log-оос тайлбарыг уншиж чадсангүй", sp_id, exc_info=True)
+            _logger.warning("%s: VMCC_Log-оос уншиж чадсангүй", key, exc_info=True)
         return {}
+
+    def _vmcc_file(self, headers, site_id, item_id, lists):
+        """A file VMC Connect put in its files library (VMCC_Files), by its item id there: (bytes) or None when it
+        is gone. Other failures raise, so the caller tries again later. lists: ids looked up once a run."""
+        if 'files' not in lists:
+            lists['files'] = self._vmcc_list_id(headers, site_id, 'VMCC_Files')
+        if not lists['files']:
+            raise ValueError("VMCC_Files сан олдсонгүй")
+        url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{lists['files']}/items/{int(item_id)}/driveItem/content"
+        # Graph answers with a short-lived download link (another host: requests drops the Authorization there)
+        response = requests.get(url, headers={'Authorization': headers['Authorization']}, timeout=60)
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return response.content
 
     def _edit_note(self, data, extras, attendance):
         """What HR sees on the corrected attendance: why it was asked for, the times it had, who approved and what
@@ -90,7 +109,7 @@ class AttendanceEditRequest(models.Model):
                     check_out = sp_utc(data.get('check_out'))
                     if attendance and check_in:
                         # before the write: the note keeps the times the day had
-                        note = self._edit_note(data, self._vmcc_extras(headers, site_id, sp_id, log), attendance)
+                        note = self._edit_note(data, self._vmcc_extras(headers, site_id, f"AttendanceEdditRequest#{sp_id}", log), attendance)
                         attendance.write({
                             'check_in': check_in,
                             # no check-out asked for: the day keeps one time, as the sync writes it
