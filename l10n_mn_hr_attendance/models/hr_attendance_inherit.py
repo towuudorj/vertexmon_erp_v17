@@ -11,7 +11,9 @@
 #    attendances on one day no longer stop the run, the time range is +08:00, requests time out;
 #  * Timely: empty credentials are caught, the leave's start minute is the start's, unknown request codes are
 #    skipped and logged instead of failing;
-#  * SharePoint: a push that timed out is matched by odoo_id next time instead of being added twice.
+#  * SharePoint: a row is looked up by odoo_id before it is added, so a push whose answer was lost (timeout,
+#    Graph error, a failed commit) isn't added twice; when the lookup fails nothing is added until next time.
+#    A row deleted in SharePoint is added again on the next run (attendance changed in the last 10 days).
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 import time
@@ -425,11 +427,13 @@ class HrAttendance(models.Model):
         changed.push_to_sharepoint(headers, site_id, list_id)
 
     def _sp_find_by_odoo_id(self, headers, site_id, list_id, timeout):
-        url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
-        response = requests.get(url, headers={**headers, 'Prefer': 'HonorNonIndexedQueriesWarningMayFailRandomly'},
-                                params={'$filter': f'fields/odoo_id eq {self.id}', '$select': 'id', '$top': 1}, timeout=timeout)
-        values = (response.json().get('value') or []) if response.status_code == 200 else []
-        return values[0]['id'] if values else False
+        """SharePoint item id of this attendance, or False; raises when Graph can't tell. Of several rows (added
+        twice before), the newest: the one an earlier push kept updating."""
+        ids = sorted(int(item['id']) for item in graph_list_items(headers, site_id, list_id, f"fields/odoo_id eq {self.id}", timeout))
+        if len(ids) > 1:
+            _logger.warning("SharePoint-д ирц ID %s давхар байна (%s): %s-ийг шинэчилнэ, бусдыг гараар устгана уу",
+                            self.id, ', '.join(map(str, ids)), ids[-1])
+        return str(ids[-1]) if ids else False
 
     def push_to_sharepoint(self, headers, site_id, list_id, timeout=10):
         company_id = self.env.company.id or self.env['res.company'].sudo().search([], limit=1, order='id asc').id
@@ -439,8 +443,15 @@ class HrAttendance(models.Model):
                 employee = att.employee_id
                 if not employee or not att.check_in:
                     continue
-                if att.share_point_id == SP_PENDING:
-                    att.share_point_id = att._sp_find_by_odoo_id(headers, site_id, list_id, timeout) or False
+                if not att.share_point_id or att.share_point_id == SP_PENDING:
+                    # it may be there already (the answer to an earlier add was lost): look before adding
+                    try:
+                        found = att._sp_find_by_odoo_id(headers, site_id, list_id, timeout)
+                    except requests.exceptions.RequestException as e:
+                        _logger.warning("SharePoint-оос ирц ID %s-ийг хайж чадсангүй, дараа нэмнэ: %s", att.id, e)
+                        continue
+                    if found != (att.share_point_id or False):
+                        att.share_point_id = found
                 is_new = not att.share_point_id
                 base = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/items"
                 url = base if is_new else f"{base}/{att.share_point_id}/fields"
@@ -493,6 +504,11 @@ class HrAttendance(models.Model):
                 if response.status_code in (200, 201):
                     if is_new and response.json().get('id'):
                         att.share_point_id = response.json()['id']
+                    self.env.cr.commit()
+                elif response.status_code == 404 and not is_new:
+                    # its row was deleted in SharePoint (e.g. with a duplicate): the next run adds it again
+                    _logger.warning("SharePoint-д ирц ID %s-ийн мөр %s устгагдсан байна, дараа дахин нэмнэ", att.id, att.share_point_id)
+                    att.share_point_id = False
                     self.env.cr.commit()
                 else:
                     _logger.warning("SharePoint руу ирц ID %s илгээхэд алдаа: %s %s", att.id, response.status_code, response.text[:200])
