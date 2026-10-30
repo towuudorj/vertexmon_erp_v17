@@ -130,13 +130,13 @@ class AccountAssetDetailReport(models.TransientModel):
             sheet.merge_range("L%s:L%s" % (rowx, rowx + 1), u'Зарлагадсан', title)
             sheet.merge_range("M%s:M%s" % (rowx, rowx + 1), u'Үлдэгдэл өртөг', title)
             rowx = 9
-            domain = [('company_id', '=', data['company_id']), ('state', '!=', 'draft')]
+            # Тайлант үеийн эцсийн огнооны байдлаар: дараа нь орсон хөрөнгийг хасч, дараа нь хаагдсаныг оруулна
+            domain = [('company_id', '=', data['company_id']), ('state', '!=', 'draft'), ('date', '<=', data['end_date'])]
             if data['category_id']:
                 domain.append(('category_id', '=', data['category_id']))
             if data['owner_id']:
                 domain.append(('owner_id', '=', data['owner_id']))
-            if not data['see_closed_scraped']:
-                domain.append(('state', 'not in', ['close', 'scrap']))
+            end_date = fields.Date.to_date(data['end_date'])
             order_by = ""
             if data['group_by'] == 'category':
                 order_by = u'category_id asc, '
@@ -145,6 +145,8 @@ class AccountAssetDetailReport(models.TransientModel):
             order_by += u'name asc, '
 
             asset_id = asset_obj.search(domain, order=order_by + 'date asc')
+            if not data['see_closed_scraped']:
+                asset_id = asset_id.filtered(lambda a: not a._mn_closed_date() or a._mn_closed_date() > end_date)
 
             if asset_id:
                 total_g = 0
@@ -209,11 +211,12 @@ class AccountAssetDetailReport(models.TransientModel):
                     sheet.write("E%s"%rowx, line.owner_id.name or '', data_left)
                     sheet.write("F%s"%rowx, '%s'%line.date, data_left)
                     sheet.write("G%s"%rowx, line.method_number/12, data_left)
-                    dep_line = line.depreciation_line_ids.search([('depreciation_date', '<', data['start_date']),
-                                                                  ('move_check', '=', True ),
-                                                                  ('asset_id', '=', line.id)], order='depreciation_date desc', limit=1)
-                    sheet.write("H%s"%rowx, dep_line.remaining_value if dep_line else line.value, data_left)
-                    sheet.write("I%s"%rowx, dep_line.depreciated_value if dep_line else 0, data_left)
+                    # Самбарын remaining_value/depreciated_value талбар заримдаа зөрдөг тул бичигдсэн дүнгээс тооцно
+                    posted_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and not x.is_sale_line and not x.is_scrap_line)
+                    opening_dep = sum(posted_lines.filtered(lambda x: str(x.depreciation_date) < data['start_date']).mapped('amount'))
+                    opening_value = line.value - opening_dep
+                    sheet.write("H%s"%rowx, opening_value, data_left)
+                    sheet.write("I%s"%rowx, opening_dep, data_left)
 
                     month_dep = 0
                     for de in line.depreciation_line_ids:
@@ -222,23 +225,20 @@ class AccountAssetDetailReport(models.TransientModel):
                             break
                     sheet.write("J%s"%rowx, month_dep, data_left)
 
-                    dep_lines = line.depreciation_line_ids.filtered(lambda x: x.move_check and not x.is_sale_line and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
-                    if dep_lines:
-                        date_between_dep = sum(dep_lines.mapped('amount'))
-                    else:
-                        date_between_dep = 0
+                    dep_lines = posted_lines.filtered(lambda x: data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
+                    date_between_dep = sum(dep_lines.mapped('amount'))
                     sheet.write("K%s" % rowx, date_between_dep, data_left)
-                    sale_line = False
-                    if line.state=='close':
-                        sale_line = line.depreciation_line_ids.filtered(lambda x: x.is_sale_line)
-                    sheet.write("L%s" % rowx, sale_line.amount if sale_line else 0, data_left)
+                    # Зөвхөн тайлант үед борлуулсан/акталсан дүн
+                    disposal_lines = line.depreciation_line_ids.filtered(lambda x: (x.is_sale_line or x.is_scrap_line) and data['start_date'] <= str(x.depreciation_date) <= data['end_date'])
+                    disposal_amount = sum(disposal_lines.mapped('amount'))
+                    sheet.write("L%s" % rowx, disposal_amount, data_left)
                     sheet.write("M%s" % rowx, '=H%s-K%s-L%s' % (rowx, rowx, rowx), data_left)
-                    total_g += dep_line.remaining_value if dep_line else line.value
-                    total_h += dep_line.depreciated_value if dep_line else 0
+                    total_g += opening_value
+                    total_h += opening_dep
                     total_i += month_dep
                     total_j += date_between_dep
-                    # total_k += 0
-                    total_l += (dep_line.remaining_value if dep_line else line.value) - date_between_dep - (sale_line.amount if sale_line else 0)
+                    total_k += disposal_amount
+                    total_l += opening_value - date_between_dep - disposal_amount
                     num += 1
                     rowx += 1
                 if data['group_by']:
@@ -254,6 +254,8 @@ class AccountAssetDetailReport(models.TransientModel):
                                         "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('L%s' % last_group_data['last_row'],
                                         "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('M%s' % last_group_data['last_row'],
+                                        "=SUM(M%s:M%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                     if data['group_by'] == 'category':
                         if last_group_data['last_row']:
                             sheet.write('H%s' % last_group_data['last_row'],
@@ -266,6 +268,8 @@ class AccountAssetDetailReport(models.TransientModel):
                                         "=SUM(K%s:K%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                             sheet.write('L%s' % last_group_data['last_row'],
                                         "=SUM(L%s:L%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
+                            sheet.write('M%s' % last_group_data['last_row'],
+                                        "=SUM(M%s:M%s)" % (last_group_data['last_row']+1, rowx - 1), data_right)
                 sheet.merge_range("A%s:G%s" % (rowx, rowx), u'Нийт', title)
                 sheet.write("H%s" % rowx, total_g, data_left)
                 sheet.write("I%s" % rowx, total_h, data_left)
@@ -274,12 +278,20 @@ class AccountAssetDetailReport(models.TransientModel):
                 sheet.write("L%s" % rowx, total_k, data_left)
                 sheet.write("M%s" % rowx, total_l, data_left)
         else:
-            where = f"WHERE aaa.state!='draft' AND aaa.active=True AND aaa.company_id = {data['company_id']} "
+            where = f"WHERE aaa.state!='draft' AND aaa.active=True AND aaa.company_id = {data['company_id']} AND aaa.date <= '{data['end_date']}' "
             if data['category_id']:
                 where += f"AND aac.id = '{data['category_id']}' "
             if data['owner_id']:
                 where += f"AND aaa.owner_id = '{data['owner_id']}' "
 
+            # Данснаас хассан огноо: борлуулсан/акталсан мөр, мөргүй акталсан бол scrap_date
+            disposal_qry = """
+                                select a.id as asset_id,
+                                    COALESCE(max(l.depreciation_date), CASE WHEN a.state = 'scrap' THEN a.scrap_date END) as dep_date
+                                from account_asset_asset a
+                                left join account_asset_depreciation_line l on l.asset_id = a.id and (l.is_scrap_line = True or l.is_sale_line = True)
+                                group by a.id
+            """
             qry = f"""
                         select
                         	sub.category_id, sub.location_id, sub.category, sub.location, sub.acc_dep_balance, sub.expense_dep, sub.month_dep, sub.dep_balance, sub.name, sub1.*
@@ -302,12 +314,7 @@ class AccountAssetDetailReport(models.TransientModel):
             	                al.name as location
             	            from account_asset_asset aaa
                             LEFT JOIN account_asset_depreciation_line aadl on aadl.asset_id = aaa.id
-                            LEFT JOIN (
-                                select asset_id, max(depreciation_date) as dep_date
-                                from account_asset_depreciation_line
-                                where is_scrap_line = True or is_sale_line = True
-                                group by asset_id
-                            ) as disp on disp.asset_id = aaa.id
+                            LEFT JOIN ({disposal_qry}) as disp on disp.asset_id = aaa.id
             	            LEFT JOIN account_asset_category aac on aac.id = aaa.category_id
             	            LEFT JOIN asset_location al on al.id = aaa.asset_location_id
             	            {where}
@@ -322,13 +329,9 @@ class AccountAssetDetailReport(models.TransientModel):
             	                COALESCE(SUM(CASE WHEN line.dep_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state in ('close', 'scrap') THEN aaa.value ELSE 0 END), 0) as expense_balance,
             	                COALESCE(SUM(CASE WHEN line.dep_date BETWEEN '{data['start_date']}' AND '{data['end_date']}' AND aaa.state in ('close', 'scrap') THEN 1 ELSE 0 END), 0) as expense_count
                             from account_asset_asset aaa
-                            left join (
-                                select depreciation_date as dep_date, asset_id, RANK() OVER (PARTITION BY asset_id ORDER BY depreciation_date DESC) AS rank
-                                from account_asset_depreciation_line
-                                where is_scrap_line = True or is_sale_line = True
-                            ) as line on line.asset_id = aaa.id
-                            where (line.rank = 1 or line.rank is null)
-                                AND aaa.state != 'draft' AND aaa.active = True AND aaa.company_id = {data['company_id']}
+                            left join ({disposal_qry}) as line on line.asset_id = aaa.id
+                            where aaa.state != 'draft' AND aaa.active = True AND aaa.company_id = {data['company_id']}
+                                AND aaa.date <= '{data['end_date']}'
                                 {f"AND aaa.category_id = {data['category_id']}" if data['category_id'] else ''}
                                 {f"AND aaa.owner_id = {data['owner_id']}" if data['owner_id'] else ''}
             	            GROUP BY aaa.id, aaa.name

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="account_asset_gl_reconcile_view" model="ir.ui.view">
+            <field name="name">account.asset.gl.reconcile.form</field>
+            <field name="model">account.asset.gl.reconcile</field>
+            <field name="arch" type="xml">
+                <form string="ҮХ-ийн бүртгэлийг ГБ-тэй тулгах">
+                    <p class="text-muted">
+                        Сонгосон огнооны байдлаар ангиллын өртөг, элэгдлийн данс бүрийн ГБ-ийн үлдэгдлийг
+                        хөрөнгийн бүртгэлтэй тулгаж, зөрүүг харьцах дансаар хаасан НООРОГ бичилт үүсгэнэ.
+                        Бүртгэлийн алдааг (давхардсан хөрөнгө г.м.) эхлээд засна уу.
+                    </p>
+                    <group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="date"/>
+                            <field name="category_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="offset_account_id"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not warning">
+                        <field name="warning"/>
+                    </div>
+                    <field name="line_ids" readonly="1">
+                        <tree>
+                            <field name="account_id"/>
+                            <field name="account_kind"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="register_balance" sum="Нийт"/>
+                            <field name="gl_balance" sum="Нийт"/>
+                            <field name="difference" sum="Нийт"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_compute" string="Тооцоолох" type="object" class="oe_highlight"/>
+                        <button name="action_create_move" string="Залруулах бичилт үүсгэх" type="object"
+                            invisible="not line_ids"/>
+                        <button string="Хаах" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_asset_gl_reconcile" model="ir.actions.act_window">
+            <field name="name">ҮХ-ийн бүртгэлийг ГБ-тэй тулгах</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.asset.gl.reconcile</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_asset_gl_reconcile_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

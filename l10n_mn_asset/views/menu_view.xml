@@ -7,6 +7,7 @@
 		<menuitem id="asset_location_menu" name="Asset location" parent="account.account_management_menu" action="action_asset_location_tree_view"/>
 		<menuitem id="asset_move_menu" sequence="102" name="Account asset move" parent="account.menu_finance_entries_management" action="action_account_asset_move_tree_view"/>
 		<menuitem id="stock_to_asset_wizard_menu" sequence="103" name="Барааг хөрөнгөд шилжүүлэх" parent="account.menu_finance_entries_management" action="action_stock_to_asset_wizard"/>
+		<menuitem id="account_asset_gl_reconcile_menu" sequence="104" name="ҮХ-ийг ГБ-тэй тулгах" parent="account.menu_finance_entries_management" action="action_account_asset_gl_reconcile" groups="account.group_account_manager"/>
 
 </data>
 </odoo>

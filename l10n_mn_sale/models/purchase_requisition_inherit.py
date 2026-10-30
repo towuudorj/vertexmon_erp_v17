@@ -51,7 +51,7 @@ class PurchaseRequisition(models.Model):
                             ('done','Done'),
                             ('cancel','Cancel')], string='Status', default='new')
     total_amount = fields.Float(string='Total amount', compute='_compute_total_amount')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
     price_change = fields.Boolean(string='Price change')
     currency_date = fields.Date(string='Currency date', default=fields.Date.today)
     currency_rate = fields.Float(string='Currency rate')

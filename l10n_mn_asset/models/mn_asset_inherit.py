@@ -106,8 +106,29 @@ class AccountAssetAsset(models.Model):
     scrap_id = fields.Many2one('account.move', string='Scrap move')
     asset_location_id = fields.Many2one('asset.location', string='Asset location')
     state = fields.Selection(selection_add=[('scrap', 'Scrap')], ondelete={'scrap': 'cascade'},)
-    
-    
+
+    def _mn_disposal_date(self):
+        """Борлуулсан/акталсан огноо, данснаас хасаагүй бол False."""
+        self.ensure_one()
+        disposal_lines = self.depreciation_line_ids.filtered(lambda x: x.is_sale_line or x.is_scrap_line)
+        if disposal_lines:
+            return max(disposal_lines.mapped('depreciation_date'))
+        if self.state == 'scrap':
+            return self.scrap_date
+        return False
+
+    def _mn_closed_date(self):
+        """Хаагдсан огноо: данснаас хассан, эсвэл бүрэн элэгдэж хаагдсан огноо."""
+        self.ensure_one()
+        if self.state not in ('close', 'scrap'):
+            return False
+        disposal_date = self._mn_disposal_date()
+        if disposal_date:
+            return disposal_date
+        posted_lines = self.depreciation_line_ids.filtered(lambda x: x.move_check)
+        return max(posted_lines.mapped('depreciation_date')) if posted_lines else self.date
+
+
     def action_asset_scrap(self):
         account_move_obj = self.env['account.move']
         depreciation_line_obj = self.env['account.asset.depreciation.line']
