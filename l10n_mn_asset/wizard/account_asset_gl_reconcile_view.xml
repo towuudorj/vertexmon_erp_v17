@@ -21,6 +21,7 @@
                         <group>
                             <field name="journal_id"/>
                             <field name="offset_account_id"/>
+                            <field name="ignore_unmapped" invisible="not warning"/>
                         </group>
                     </group>
                     <div class="alert alert-warning" role="alert" invisible="not warning">
@@ -28,6 +29,7 @@
                     </div>
                     <field name="line_ids" readonly="1">
                         <tree>
+                            <field name="category_id"/>
                             <field name="account_id"/>
                             <field name="account_kind"/>
                             <field name="currency_id" column_invisible="1"/>

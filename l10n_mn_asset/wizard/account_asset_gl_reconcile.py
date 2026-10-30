@@ -34,11 +34,12 @@ class AccountAssetGlReconcile(models.TransientModel):
     offset_account_id = fields.Many2one('account.account', string='Харьцах данс', required=True,
                                         default=_default_offset_account,
                                         domain="[('company_id', '=', company_id), ('deprecated', '=', False)]")
+    ignore_unmapped = fields.Boolean(string='Холбогдоогүй дансыг үл тооцох')
     line_ids = fields.One2many('account.asset.gl.reconcile.line', 'wizard_id', string='Тулгалт')
     warning = fields.Text(string='Анхааруулга', readonly=True)
 
     def _get_categories(self):
-        categories = self.category_ids or self.env['account.asset.category'].search(
+        categories = self.category_ids._origin or self.env['account.asset.category'].search(
             [('company_id', '=', self.company_id.id)])
         for category in categories:
             if not category.account_asset_id or not category.account_depreciation_id:
@@ -79,30 +80,39 @@ class AccountAssetGlReconcile(models.TransientModel):
             ['account_id'], ['balance:sum'])
         return {account: balance for account, balance in groups}
 
-    def _get_warning(self):
+    def _get_unmapped_balances(self):
         all_categories = self.env['account.asset.category'].search([('company_id', '=', self.company_id.id)])
         mapped_accounts = all_categories.mapped('account_asset_id') | all_categories.mapped('account_depreciation_id')
         unmapped = self._get_gl_balances([('account_id.account_type', '=', 'asset_fixed'),
                                           ('account_id', 'not in', mapped_accounts.ids)])
         currency = self.company_id.currency_id
-        rows = ['%s %s: %s' % (account.code, account.name, '{:,.2f}'.format(balance))
-                for account, balance in sorted(unmapped.items(), key=lambda x: x[0].code)
-                if not currency.is_zero(balance)]
-        if not rows:
+        return {account: balance for account, balance in unmapped.items() if not currency.is_zero(balance)}
+
+    def _get_warning(self):
+        unmapped = self._get_unmapped_balances()
+        if not unmapped:
             return False
+        rows = ['%s %s: %s' % (account.code, account.name, '{:,.2f}'.format(balance))
+                for account, balance in sorted(unmapped.items(), key=lambda x: x[0].code)]
         return _("Дараах үндсэн хөрөнгийн данс аль ч ангилалд холбогдоогүй ч үлдэгдэлтэй тул тулгалтад орохгүй. "
-                 "Ангиллын дансыг засах эсвэл дахин ангилах бичилт хийнэ үү:\n%s") % '\n'.join(rows)
+                 "Ангиллын дансыг засах эсвэл дахин ангилах бичилт хийнэ үү. "
+                 "Санаатай орхих бол 'Холбогдоогүй дансыг үл тооцох'-ыг сонгоно уу:\n%s") % '\n'.join(rows)
 
     def action_compute(self):
         self.ensure_one()
         categories = self._get_categories()
         cost_accounts = categories.mapped('account_asset_id')
         accounts = cost_accounts | categories.mapped('account_depreciation_id')
+        account_category = {}
+        for category in categories:
+            account_category.setdefault(category.account_asset_id, category)
+            account_category.setdefault(category.account_depreciation_id, category)
         register = self._get_register_balances(categories)
         gl = self._get_gl_balances([('account_id', 'in', accounts.ids)])
         currency = self.company_id.currency_id
         self.line_ids = [(5, 0, 0)] + [(0, 0, {
             'account_id': account.id,
+            'category_id': account_category[account].id,
             'account_kind': 'cost' if account in cost_accounts else 'depreciation',
             'register_balance': currency.round(register.get(account, 0.0)),
             'gl_balance': currency.round(gl.get(account, 0.0)),
@@ -124,6 +134,9 @@ class AccountAssetGlReconcile(models.TransientModel):
         if lock_date and self.date <= lock_date:
             raise UserError(_('%s хүртэлх хугацаа хаагдсан тул залруулах бичилтийг түүнээс хойших огноогоор үүсгэнэ үү.')
                             % lock_date)
+        # Холбогдоогүй дансны үлдэгдэл тулгалтын дараа ч ГБ-д давхар үлдэнэ
+        if not self.ignore_unmapped and self._get_unmapped_balances():
+            raise UserError(self._get_warning())
         self.action_compute()
         currency = self.company_id.currency_id
         label = _('ҮХ-ийн бүртгэлтэй тулгасан залруулга')
@@ -171,6 +184,7 @@ class AccountAssetGlReconcileLine(models.TransientModel):
     _description = 'Asset register to general ledger reconciliation line'
 
     wizard_id = fields.Many2one('account.asset.gl.reconcile', required=True, ondelete='cascade')
+    category_id = fields.Many2one('account.asset.category', string='Ангилал')
     account_id = fields.Many2one('account.account', string='Данс', required=True)
     account_kind = fields.Selection([('cost', 'Өртөг'), ('depreciation', 'Хуримтлагдсан элэгдэл')], string='Төрөл')
     currency_id = fields.Many2one(related='wizard_id.company_id.currency_id')
