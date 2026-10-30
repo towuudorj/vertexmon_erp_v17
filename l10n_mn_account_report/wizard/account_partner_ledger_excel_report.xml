@@ -28,6 +28,7 @@
                                 <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                 <field name="target_move"/>
                                 <field name="account_id"/>
+                                <field name="partner_group"/>
                                 <field name="partner_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
                             </group>
                         </group>

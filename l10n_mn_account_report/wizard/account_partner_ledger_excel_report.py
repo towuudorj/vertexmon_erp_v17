@@ -22,6 +22,18 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
                                          ('supplier',u'Өглөгийн данс'),
                                          ('customer_supplier',u'Өглөг авлагийн данс')],u'Харилцагчийн',required=True,default='customer')
     partner_ids = fields.Many2many('res.partner', 'ledger_report_partner_ids', 'report_id', 'partner_id', u'Харилцагч')
+    partner_group = fields.Selection([
+        ('001', u'001 Борлуулалтын харилцагч ААН, компаниуд'),
+        ('002', u'002 Ажилтан'),
+        ('003', u'003 Банк'),
+        ('004', u'004 Төрийн харилцагч байгууллагууд'),
+        ('005', u'005 Тээврийн компаниуд'),
+        ('006', u'006 Нийлүүлэгч байгууллага/Гадаад/'),
+        ('007', u'007 Нийлүүлэгч байгууллага/Дотоод/'),
+        ('008', u'008 Маркетингийн харилцагч'),
+        ('010', u'010 Хувь хүмүүс'),
+        ('011', u'011 Гэрээт харилцагч'),
+    ], string=u'Харилцагчийн бүлэг')
     is_extra = fields.Boolean(u'Задаргаатай эсэх')
     is_show_matched = fields.Boolean(u'Холбогдсон гүйлгээ')
     start_date = fields.Date(u'Эхлэх огноо',default=lambda *a: time.strftime('%Y-%m-01'))
@@ -41,6 +53,7 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
             'result_selection': self.result_selection,
             'account_id': self.account_id.id,
             'partner_ids': self.partner_ids.ids or False,
+            'partner_group': self.partner_group,
             'is_extra': self.is_extra,
             'res_id': self.id,
             'account_journal_ids': self.account_journal_ids.ids
@@ -188,6 +201,8 @@ class AccountPartnerLedgerExcelReport(models.TransientModel):
         select = ""
         if self_obj.partner_ids:
             where += f" and rp.id in (%s)" % ", ".join(str(p_id) for p_id in self_obj.partner_ids.ids)
+        if self_obj.partner_group:
+            where += f" and rp.partner_group = '{self_obj.partner_group}'"
 
         if self_obj.group_option_ids:
             for i in range(len(self_obj.group_option_ids)):
