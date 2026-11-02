@@ -309,13 +309,21 @@ class PurchaseRequisitionLine(models.Model):
 
 
     def write(self, vals):
-        if 'price_unit' in vals:
-            self.requisition_id.message_post(
-                    body=_(u'%s барааны хуучин үнэ %s шинэ үнэ %s') % (
-                        self.product_description_variants, self.price_unit, vals['price_unit']))
-            if self.requisition_id.crm_lead_id:
-                self.requisition_id.crm_lead_id.message_post(
-                        body=_(u'%s барааны судалсан үнэ %s') % (self.product_description_variants, vals['price_unit']))
+        for line in self:
+            product_name = line.product_description_variants or line.product_id.display_name
+            if 'price_unit' in vals:
+                line.requisition_id.message_post(
+                        body=_(u'%s барааны хуучин үнэ %s шинэ үнэ %s') % (
+                            product_name, line.price_unit, vals['price_unit']))
+                if line.requisition_id.crm_lead_id:
+                    line.requisition_id.crm_lead_id.message_post(
+                            body=_(u'%s барааны судалсан үнэ %s') % (product_name, vals['price_unit']))
+            if 'product_qty' in vals and line.product_qty != vals['product_qty']:
+                body = _(u'%s барааны хуучин тоо %s шинэ тоо %s') % (
+                    product_name, line.product_qty, vals['product_qty'])
+                line.requisition_id.message_post(body=body)
+                if line.requisition_id.crm_lead_id:
+                    line.requisition_id.crm_lead_id.message_post(body=body)
 
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
