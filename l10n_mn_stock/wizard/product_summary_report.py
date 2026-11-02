@@ -183,6 +183,7 @@ class ProductSummaryReport(models.TransientModel):
         income_dict = {}
         expense_dict = {}
         svl_beg_dict = {}
+        svl_end_dict = {}
         svl_in_dict = {}
 
         if product_ids:
@@ -277,6 +278,18 @@ class ProductSummaryReport(models.TransientModel):
                 ''', (data['company_id'], date_from_dt_min))
                 svl_beg_dict = {r[0]: (float(r[1] or 0), float(r[2] or 0)) for r in self._cr.fetchall()}
 
+                # Ending SVL values (date <= date_to) for cost mode (ending balance depends ONLY on date_to)
+                self._cr.execute(f'''
+                    SELECT svl.product_id, SUM(svl.value), SUM(svl.quantity)
+                    FROM stock_valuation_layer svl
+                    LEFT JOIN stock_move sm ON svl.stock_move_id = sm.id
+                    WHERE svl.company_id = %s
+                      {svl_prod_cond}
+                      AND COALESCE(sm.date, svl.create_date) <= %s
+                    GROUP BY svl.product_id
+                ''', (data['company_id'], date_to_dt_max))
+                svl_end_dict = {r[0]: (float(r[1] or 0), float(r[2] or 0)) for r in self._cr.fetchall()}
+
                 # 4. Period incoming SVL values (date_from <= date <= date_to)
                 sm_prod_cond = f"AND sm.product_id IN {product_pids}" if len(product_pids) > 1 else f"AND sm.product_id = {product_pids[0]}"
                 self._cr.execute(f'''
@@ -343,7 +356,16 @@ class ProductSummaryReport(models.TransientModel):
                 avg_c, std_c = cost_dict.get(pro.id, (0.0, 0.0))
                 fallback_cost = avg_c or std_c or 0.0
 
-                # Эхний үлдэгдлийн өртөг (G)
+                end_val, end_svl_qty = svl_end_dict.get(pro.id, (0.0, 0.0))
+                if last_qty <= 0.0:
+                    last_price = 0.0
+                else:
+                    if end_svl_qty > 0.0 and end_val > 0.0:
+                        end_unit_cost = end_val / end_svl_qty
+                        last_price = round(last_qty * end_unit_cost, 2)
+                    else:
+                        last_price = round(last_qty * fallback_cost, 2)
+
                 beg_val, beg_svl_qty = svl_beg_dict.get(pro.id, (0.0, 0.0))
                 if f_bal_qty <= 0.0:
                     f_bal_price = 0.0
@@ -354,29 +376,37 @@ class ProductSummaryReport(models.TransientModel):
                     else:
                         f_bal_price = round(f_bal_qty * fallback_cost, 2)
 
-                # Орлогын өртөг (I)
-                in_price = round(float(svl_in_dict.get(pro.id, 0.0)), 2)
-                if in_price <= 0.0 and in_qty > 0.0:
-                    in_price = round(in_qty * fallback_cost, 2)
-
-                avail_qty = f_bal_qty + in_qty
-                avail_val = f_bal_price + in_price
-
-                # Эцсийн үлдэгдлийн өртөг (M) ба Зарлагын өртөг (K)
-                # Математик уялдаа: f_bal_price + in_price - ex_price = last_price
-                if last_qty <= 0.0:
-                    last_price = 0.0
-                    ex_price = avail_val
-                elif ex_qty <= 0.0:
+                if in_qty <= 0.0 and ex_qty <= 0.0:
+                    in_price = 0.0
                     ex_price = 0.0
-                    last_price = avail_val
+                    f_bal_price = last_price
+                elif ex_qty <= 0.0 and in_qty > 0.0:
+                    ex_price = 0.0
+                    in_price = round(last_price - f_bal_price, 2)
+                    if in_price < 0.0:
+                        svl_in = round(float(svl_in_dict.get(pro.id, 0.0)), 2)
+                        in_price = svl_in if svl_in > 0.0 else round(in_qty * fallback_cost, 2)
+                        f_bal_price = round(last_price - in_price, 2)
+                elif in_qty <= 0.0 and ex_qty > 0.0:
+                    in_price = 0.0
+                    ex_price = round(f_bal_price - last_price, 2)
+                    if ex_price < 0.0:
+                        ex_price = round(ex_qty * fallback_cost, 2)
+                        f_bal_price = round(last_price + ex_price, 2)
                 else:
-                    if avail_qty > 0.0 and avail_val > 0.0:
-                        period_cost = avail_val / avail_qty
+                    svl_in = round(float(svl_in_dict.get(pro.id, 0.0)), 2)
+                    if svl_in > 0.0:
+                        in_price = svl_in
                     else:
-                        period_cost = fallback_cost
-                    last_price = round(last_qty * period_cost, 2)
-                    ex_price = round(avail_val - last_price, 2)
+                        if end_svl_qty > 0.0 and end_val > 0.0:
+                            in_price = round(in_qty * (end_val / end_svl_qty), 2)
+                        else:
+                            in_price = round(in_qty * fallback_cost, 2)
+
+                    ex_price = round(f_bal_price + in_price - last_price, 2)
+                    if ex_price < 0.0:
+                        in_price = round(in_price + abs(ex_price), 2)
+                        ex_price = 0.0
 
                 if data.get('hide_zero_qty') and f_bal_qty == 0.0 and in_qty == 0.0 and ex_qty == 0.0:
                     continue
