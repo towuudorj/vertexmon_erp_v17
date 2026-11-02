@@ -20,7 +20,13 @@
             name="Account bank statement line"
             sequence="29"
             parent="account.menu_finance_entries_accounting_miscellaneous"/>
-        
+
+        <menuitem id="bank_statement_line_cash_move_check_menu"
+            action="action_bank_statement_line_cash_move_check"
+            name="Мөнгөн гүйлгээний төрөл шалгах"
+            sequence="30"
+            parent="account.menu_finance_entries_accounting_miscellaneous"/>
+
 
         <menuitem id="action_account_currency_equalization_menu"
             action="action_account_currency_equalization"

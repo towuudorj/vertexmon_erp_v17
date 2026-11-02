@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero
+from odoo.osv import expression
 
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
@@ -14,7 +15,51 @@ class AccountBankStatementLine(models.Model):
         string='Taxes',
         help='Taxes applied to this bank statement line.'
     )
-    
+    cash_move_type_group = fields.Selection(related='cash_move_type_id.group', string='Мөнгөн гүйлгээний бүлэг')
+    cash_move_type_state = fields.Selection([
+        ('missing', 'Сонгоогүй'),
+        ('wrong_direction', 'Чиглэл зөрсөн'),
+        ('ok', 'Зөв'),
+    ], string='Мөнгөн гүйлгээний төрлийн шалгалт', compute='_compute_cash_move_type_state',
+        search='_search_cash_move_type_state')
+
+    # Орлогын бүлэгт зөвхөн орлого (+), зарлагын бүлэгт зөвхөн зарлага (-) орно.
+    # Ханшийн зөрүү, тайланд нөлөөлөхгүй бүлэг аль ч чиглэлд зөв.
+    CASH_MOVE_INCOME_GROUPS = ('activities_income', 'investing_income', 'financing_income')
+    CASH_MOVE_EXPENSE_GROUPS = ('activities_expense', 'investing_expense', 'financing_expense')
+
+    @api.depends('amount', 'cash_move_type_id.group')
+    def _compute_cash_move_type_state(self):
+        for line in self:
+            group = line.cash_move_type_id.group
+            if not line.cash_move_type_id:
+                line.cash_move_type_state = 'missing'
+            elif (line.amount > 0 and group in self.CASH_MOVE_EXPENSE_GROUPS) or \
+                    (line.amount < 0 and group in self.CASH_MOVE_INCOME_GROUPS):
+                line.cash_move_type_state = 'wrong_direction'
+            else:
+                line.cash_move_type_state = 'ok'
+
+    def _search_cash_move_type_state(self, operator, value):
+        if operator not in ('=', '!=', 'in', 'not in'):
+            raise UserError(_('Unsupported operator: %s') % operator)
+        missing = [('cash_move_type_id', '=', False)]
+        wrong = expression.OR([
+            [('amount', '>', 0), ('cash_move_type_id.group', 'in', self.CASH_MOVE_EXPENSE_GROUPS)],
+            [('amount', '<', 0), ('cash_move_type_id.group', 'in', self.CASH_MOVE_INCOME_GROUPS)],
+        ])
+        domains = {
+            'missing': missing,
+            'wrong_direction': wrong,
+            'ok': expression.AND([[('cash_move_type_id', '!=', False)],
+                                  expression.distribute_not(['!'] + expression.normalize_domain(wrong))]),
+        }
+        values = value if isinstance(value, (list, tuple)) else [value]
+        result = expression.OR([domains[v] for v in values if v in domains]) or expression.FALSE_DOMAIN
+        if operator in ('!=', 'not in'):
+            result = expression.distribute_not(['!'] + expression.normalize_domain(result))
+        return result
+
 
     # =====================================================
     # PREPARE MOVE LINES (FULL FIXED)

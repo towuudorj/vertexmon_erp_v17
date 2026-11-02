@@ -32,6 +32,74 @@
             </record>
 
 
+            <!-- Мөнгөн гүйлгээний төрөл сонгоогүй, эсвэл дүнгийн чиглэлтэй (+/-) зөрсөн хуулгын мөрүүд.
+                 Засахдаа мөрүүдээ сонгоод Үйлдэл → Batch Update ашиглана (журналын бичилтийн мөрийг хамт шинэчилнэ). -->
+            <record model="ir.ui.view" id="account_bank_statement_line_cash_move_check_tree">
+                <field name="name">account.bank.statement.line.cash.move.check.tree</field>
+                <field name="model">account.bank.statement.line</field>
+                <field name="priority">99</field>
+                <field name="arch" type="xml">
+                    <tree string="Мөнгөн гүйлгээний төрөл шалгах" create="0" edit="0" delete="0"
+                          decoration-danger="cash_move_type_state == 'wrong_direction'"
+                          decoration-warning="cash_move_type_state == 'missing'">
+                        <field name="date"/>
+                        <field name="journal_id"/>
+                        <field name="statement_id" optional="show"/>
+                        <field name="payment_ref"/>
+                        <field name="partner_id"/>
+                        <field name="amount" sum="Нийт"/>
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="cash_move_type_id" string="Мөнгөн гүйлгээний төрөл"/>
+                        <field name="cash_move_type_group" optional="show"/>
+                        <field name="cash_move_type_state" widget="badge"
+                               decoration-danger="cash_move_type_state == 'wrong_direction'"
+                               decoration-warning="cash_move_type_state == 'missing'"
+                               decoration-success="cash_move_type_state == 'ok'"/>
+                        <field name="move_account_names" optional="hide"/>
+                        <field name="company_id" column_invisible="1"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="account_bank_statement_line_cash_move_check_search">
+                <field name="name">account.bank.statement.line.cash.move.check.search</field>
+                <field name="model">account.bank.statement.line</field>
+                <field name="priority">99</field>
+                <field name="arch" type="xml">
+                    <search>
+                        <field name="payment_ref"/>
+                        <field name="partner_id"/>
+                        <field name="journal_id"/>
+                        <field name="cash_move_type_id"/>
+                        <filter name="problem" string="Асуудалтай"
+                                domain="[('cash_move_type_state', 'in', ['missing', 'wrong_direction'])]"/>
+                        <filter name="missing" string="Төрөл сонгоогүй"
+                                domain="[('cash_move_type_state', '=', 'missing')]"/>
+                        <filter name="wrong_direction" string="Чиглэл зөрсөн"
+                                domain="[('cash_move_type_state', '=', 'wrong_direction')]"/>
+                        <separator/>
+                        <filter name="inbound" string="Орлого" domain="[('amount', '>', 0)]"/>
+                        <filter name="outbound" string="Зарлага" domain="[('amount', '&lt;', 0)]"/>
+                        <separator/>
+                        <filter name="date" string="Огноо" date="date"/>
+                        <group expand="0" string="Group By">
+                            <filter name="group_journal" string="Журнал" context="{'group_by': 'journal_id'}"/>
+                            <filter name="group_cash_move_type" string="Мөнгөн гүйлгээний төрөл" context="{'group_by': 'cash_move_type_id'}"/>
+                            <filter name="group_date" string="Огноо" context="{'group_by': 'date:month'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_bank_statement_line_cash_move_check">
+                <field name="name">Мөнгөн гүйлгээний төрөл шалгах</field>
+                <field name="res_model">account.bank.statement.line</field>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="account_bank_statement_line_cash_move_check_tree"/>
+                <field name="search_view_id" ref="account_bank_statement_line_cash_move_check_search"/>
+                <field name="context">{'search_default_problem': 1}</field>
+            </record>
+
             <record model="ir.actions.act_window" id="action_bank_statement_line_tree_view">
                 <field name="name">Account bank statement line</field>
                 <field name="res_model">account.bank.statement.line</field>
