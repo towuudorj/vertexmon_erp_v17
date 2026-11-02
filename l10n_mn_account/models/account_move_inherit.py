@@ -633,6 +633,19 @@ class AccountMoveLine(models.Model):
                                            store=True)
 
 
+    def write(self, vals):
+        res = super().write(vals)
+        # Журналын бичилтээс мөнгөний мөрийн төрлийг засвал банкны хуулгын мөрт буцааж дамжуулна
+        if 'cash_move_type_id' in vals and not self._context.get('skip_cash_move_type_sync'):
+            for st_line in self.move_id.statement_line_id:
+                liquidity_lines = st_line._seek_for_lines()[0]
+                changed = liquidity_lines & self
+                if changed and st_line.cash_move_type_id != changed[0].cash_move_type_id:
+                    st_line.with_context(skip_account_move_synchronization=True,
+                                         skip_cash_move_type_sync=True).write(
+                        {'cash_move_type_id': changed[0].cash_move_type_id.id})
+        return res
+
     def _prepare_analytic_distribution_line(self, distribution, account_ids, distribution_on_each_plan):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             analytic tags with analytic distribution.

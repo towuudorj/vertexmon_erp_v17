@@ -41,7 +41,7 @@
                 <field name="arch" type="xml">
                     <tree string="Мөнгөн гүйлгээний төрөл шалгах" create="0" edit="0" delete="0"
                           decoration-danger="cash_move_type_state == 'wrong_direction'"
-                          decoration-warning="cash_move_type_state == 'missing'">
+                          decoration-warning="cash_move_type_state == 'missing' or cash_move_type_mismatch">
                         <field name="date"/>
                         <field name="journal_id"/>
                         <field name="statement_id" optional="show"/>
@@ -51,6 +51,9 @@
                         <field name="currency_id" column_invisible="1"/>
                         <field name="cash_move_type_id" string="Мөнгөн гүйлгээний төрөл"/>
                         <field name="cash_move_type_group" optional="show"/>
+                        <field name="liquidity_cash_move_type_id" optional="show"
+                               decoration-danger="cash_move_type_mismatch"/>
+                        <field name="cash_move_type_mismatch" optional="show"/>
                         <field name="cash_move_type_state" widget="badge"
                                decoration-danger="cash_move_type_state == 'wrong_direction'"
                                decoration-warning="cash_move_type_state == 'missing'"
@@ -72,11 +75,13 @@
                         <field name="journal_id"/>
                         <field name="cash_move_type_id"/>
                         <filter name="problem" string="Асуудалтай"
-                                domain="[('cash_move_type_state', 'in', ['missing', 'wrong_direction'])]"/>
+                                domain="['|', ('cash_move_type_state', 'in', ['missing', 'wrong_direction']), ('cash_move_type_mismatch', '=', True)]"/>
                         <filter name="missing" string="Төрөл сонгоогүй"
                                 domain="[('cash_move_type_state', '=', 'missing')]"/>
                         <filter name="wrong_direction" string="Чиглэл зөрсөн"
                                 domain="[('cash_move_type_state', '=', 'wrong_direction')]"/>
+                        <filter name="journal_mismatch" string="Журналтай зөрсөн"
+                                domain="[('cash_move_type_mismatch', '=', True)]"/>
                         <separator/>
                         <filter name="inbound" string="Орлого" domain="[('amount', '>', 0)]"/>
                         <filter name="outbound" string="Зарлага" domain="[('amount', '&lt;', 0)]"/>

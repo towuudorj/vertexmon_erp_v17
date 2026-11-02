@@ -22,6 +22,10 @@ class AccountBankStatementLine(models.Model):
         ('ok', 'Зөв'),
     ], string='Мөнгөн гүйлгээний төрлийн шалгалт', compute='_compute_cash_move_type_state',
         search='_search_cash_move_type_state')
+    liquidity_cash_move_type_id = fields.Many2one('account.cash.move.type', string='Журналын мөнгөн гүйлгээний төрөл',
+                                                  compute='_compute_liquidity_cash_move_type')
+    cash_move_type_mismatch = fields.Boolean(string='Журналтай зөрсөн', compute='_compute_liquidity_cash_move_type',
+                                             search='_search_cash_move_type_mismatch')
 
     # Орлогын бүлэгт зөвхөн орлого (+), зарлагын бүлэгт зөвхөн зарлага (-) орно.
     # Ханшийн зөрүү, тайланд нөлөөлөхгүй бүлэг аль ч чиглэлд зөв.
@@ -39,6 +43,29 @@ class AccountBankStatementLine(models.Model):
                 line.cash_move_type_state = 'wrong_direction'
             else:
                 line.cash_move_type_state = 'ok'
+
+    @api.depends('cash_move_type_id', 'move_id.line_ids.cash_move_type_id')
+    def _compute_liquidity_cash_move_type(self):
+        for line in self:
+            liquidity_lines = line._seek_for_lines()[0] if line.move_id else self.env['account.move.line']
+            line.liquidity_cash_move_type_id = liquidity_lines[:1].cash_move_type_id
+            line.cash_move_type_mismatch = any(l.cash_move_type_id != line.cash_move_type_id for l in liquidity_lines)
+
+    def _search_cash_move_type_mismatch(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Unsupported operator: %s') % operator)
+        # Хуулгын мөр болон журналын мөнгөний мөрийн (журналын үндсэн данс) төрөл ялгаатай мөрүүд
+        self.env.cr.execute("""
+            SELECT DISTINCT st.id
+              FROM account_bank_statement_line st
+              JOIN account_move am ON am.id = st.move_id
+              JOIN account_journal j ON j.id = am.journal_id
+              JOIN account_move_line aml ON aml.move_id = st.move_id AND aml.account_id = j.default_account_id
+             WHERE aml.cash_move_type_id IS DISTINCT FROM st.cash_move_type_id
+        """)
+        ids = [r[0] for r in self.env.cr.fetchall()]
+        positive = (operator == '=') == bool(value)
+        return [('id', 'in' if positive else 'not in', ids)]
 
     def _search_cash_move_type_state(self, operator, value):
         if operator not in ('=', '!=', 'in', 'not in'):
@@ -60,6 +87,19 @@ class AccountBankStatementLine(models.Model):
             result = expression.distribute_not(['!'] + expression.normalize_domain(result))
         return result
 
+
+    def write(self, vals):
+        res = super().write(vals)
+        # Мөнгөн гүйлгээний төрлийг журналын бүх мөрийг дахин үүсгэлгүйгээр зөвхөн мөнгөний мөрөнд дамжуулна
+        # (_synchronize_to_moves тулгагдсан мөрүүдийг устгаж болзошгүй)
+        if 'cash_move_type_id' in vals and not self._context.get('skip_cash_move_type_sync'):
+            for st_line in self:
+                liquidity_lines = st_line._seek_for_lines()[0]
+                to_update = liquidity_lines.filtered(lambda l: l.cash_move_type_id != st_line.cash_move_type_id)
+                if to_update:
+                    to_update.with_context(skip_cash_move_type_sync=True).write(
+                        {'cash_move_type_id': st_line.cash_move_type_id.id})
+        return res
 
     # =====================================================
     # PREPARE MOVE LINES (FULL FIXED)
@@ -212,7 +252,7 @@ class AccountBankStatementLine(models.Model):
         trigger_fields = (
             'payment_ref', 'amount', 'amount_currency',
             'foreign_currency_id', 'currency_id',
-            'partner_id', 'tax_ids', 'cash_move_type_id'
+            'partner_id', 'tax_ids'
         )
 
         if not any(f in changed_fields for f in trigger_fields):

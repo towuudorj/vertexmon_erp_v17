@@ -118,6 +118,9 @@ class statement_cashflow_report(models.TransientModel):
         account_move_line_obj = self.env['account.move.line']
         cash_move_obj = self.env['account.cash.move.type']
         cash_ids = cash_move_obj.search([('company_id','=',data['company_id'])])
+        # Зөвхөн мөнгөн хөрөнгийн дансны мөрүүдийг тоолно: харьцсан дансны мөрөнд төрөл бөглөгдсөн бол
+        # мөнгөний мөртэйгөө харилцан хасагдаж гүйлгээ тайланд орохгүй болдог байсан
+        cash_line_domain = [('account_id.account_type', '=', 'asset_cash'), ('company_id', '=', data['company_id'])]
         sheet.write("A%s"%rowx, u'1',data_bold_left)
         sheet.write("B%s"%rowx, u'Үндсэн үйл ажиллагааны мөнгөн гүйлгээ',data_bold_left)
         sheet.write("C%s"%rowx, '', data_bold_right)
@@ -140,9 +143,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -150,9 +153,9 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount -=lines.credit
                 if len(state)==1:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -183,9 +186,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -193,9 +196,9 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount +=lines.credit
                 if len(state)==1:       
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -240,9 +243,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -250,9 +253,9 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount +=lines.credit
                 if len(state)==1:    
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_line_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -287,9 +290,9 @@ class statement_cashflow_report(models.TransientModel):
                 now_amount = 0.0
                 if len(state)==1:
                     
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_inv_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -297,9 +300,9 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount -=lines.credit
                 if len(state)==1:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_inv_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -344,9 +347,9 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 if len(state)==1:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 else:
-                    move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
+                    move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fi_exp.id),('date','<',data['start_date']),('parent_state','in',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -354,9 +357,9 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount -=lines.credit
                 if len(state)==1:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 else:
-                    now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
+                    now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fi_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','in',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -389,7 +392,7 @@ class statement_cashflow_report(models.TransientModel):
                 counts += 1
                 pre_amount = 0.0
                 now_amount = 0.0
-                move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fie_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
+                move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fie_exp.id),('date','<',data['start_date']),('parent_state','=',state)])
                 if move_line_ids !=[]:
                     for lines in move_line_ids:
                         if lines.debit >0.0:
@@ -397,7 +400,7 @@ class statement_cashflow_report(models.TransientModel):
                         else:
                             pre_amount -=lines.credit
                             
-                now_move_line_ids = account_move_line_obj.search([('cash_move_type_id','=',type_fie_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
+                now_move_line_ids = account_move_line_obj.search(cash_line_domain + [('cash_move_type_id','=',type_fie_exp.id),('date','>=',data['start_date']),('date','<=',data['end_date']),('parent_state','=',state)])
                 if now_move_line_ids !=[]:
                     for now_lines in now_move_line_ids:
                         if now_lines.debit >0.0:
@@ -434,7 +437,7 @@ class statement_cashflow_report(models.TransientModel):
                 pre_amount = 0.0
                 now_amount = 0.0
                 move_line_ids = account_move_line_obj.search(
-                    [('cash_move_type_id', '=', type_fie_exp.id),
+                    cash_line_domain + [('cash_move_type_id', '=', type_fie_exp.id),
                      ('date', '<', data['start_date']), ('parent_state', '=', state)])
                 if move_line_ids != []:
                     for lines in move_line_ids:
@@ -444,7 +447,7 @@ class statement_cashflow_report(models.TransientModel):
                             pre_amount -= lines.credit
 
                 now_move_line_ids = account_move_line_obj.search(
-                    [('cash_move_type_id', '=', type_fie_exp.id), ('date', '>=', data['start_date']),
+                    cash_line_domain + [('cash_move_type_id', '=', type_fie_exp.id), ('date', '>=', data['start_date']),
                      ('date', '<=', data['end_date']), ('parent_state', '=', state)])
                 if now_move_line_ids != []:
                     for now_lines in now_move_line_ids:
@@ -473,7 +476,7 @@ class statement_cashflow_report(models.TransientModel):
         pre_balance = 0.0
         accounts = []
 
-        account_ids = account_obj.search([('account_type','=','asset_cash')])
+        account_ids = account_obj.search([('account_type','=','asset_cash'), ('company_id', '=', data['company_id'])])
 
         for acc in account_ids:
                 accounts.append(acc.id)
