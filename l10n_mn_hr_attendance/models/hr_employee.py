@@ -246,7 +246,7 @@ class Employee(models.Model):
                 "late_hour": round(line_vals['miss_time'], 2) if line_vals.get('miss_time', False) else 0
             }
 
-            requests.patch(url, headers=headers, json=data)
+            requests.patch(url, headers=headers, json=data, timeout=REQUEST_TIMEOUT)
         except Exception as e:
             _logger.error('ERROR:%s' % e)
             return None

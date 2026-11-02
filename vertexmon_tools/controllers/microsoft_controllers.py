@@ -4,6 +4,7 @@ import requests
 from odoo.exceptions import UserError, ValidationError
 
 TOKEN_TIMEOUT = 30  # секунд
+REQUEST_TIMEOUT = 60  # секунд
 
 
 class MicrosoftUnreachable(UserError):
@@ -52,7 +53,7 @@ def get_site_id(microsoft_value_obj, token):
                 'Authorization': token,
             }
             try:
-                res = requests.get(url, headers=headers)
+                res = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
                 res = res.json()
                 microsoft_value_obj.site_id = res.get('id')
                 return res.get('id')
@@ -72,7 +73,7 @@ def get_list_id(microsoft_value_obj, site_id, token, list_name, list_id):
                 'Authorization': token,
             }
             try:
-                res = requests.get(url, headers=headers)
+                res = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
                 res = res.json()
                 if res.get('value', False):
                     for val in res.get('value'):

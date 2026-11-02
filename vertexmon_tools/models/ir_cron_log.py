@@ -113,6 +113,8 @@ class IrCron(models.Model):
 
     def method_direct_trigger(self):
         for cron in self:
+            # Cron өөр процесст ажиллаж байвал lock авч чадахгүй: энэ нь ажилласан run биш тул логлохгүй
+            cron._try_lock()
             start_time = time.time()
             try:
                 super(IrCron, cron).method_direct_trigger()
