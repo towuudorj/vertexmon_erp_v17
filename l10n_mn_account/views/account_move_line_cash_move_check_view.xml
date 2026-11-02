@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Мөнгөн гүйлгээний төрөл зөвхөн мөнгөн хөрөнгийн дансны мөрөнд байх ёстой.
+             Бусад дансны мөрөнд бөглөсөн төрлийг энд олж арилгана. -->
+        <record id="account_move_line_non_cash_move_type_tree" model="ir.ui.view">
+            <field name="name">account.move.line.non.cash.move.type.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <tree string="Мөнгөн бус дансанд сонгосон мөнгөн гүйлгээний төрөл" create="0" edit="0" delete="0">
+                    <header>
+                        <button name="action_clear_non_cash_move_type" type="object" string="Төрөл арилгах"
+                                confirm="Сонгосон мөрүүдээс мөнгөн гүйлгээний төрлийг арилгах уу?"/>
+                    </header>
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <field name="cash_move_type_id"/>
+                    <field name="debit" sum="Нийт"/>
+                    <field name="credit" sum="Нийт"/>
+                    <field name="parent_state" optional="hide"/>
+                    <field name="company_id" column_invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_move_line_non_cash_move_type_search" model="ir.ui.view">
+            <field name="name">account.move.line.non.cash.move.type.search</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="move_id"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="cash_move_type_id"/>
+                    <filter name="posted" string="Батлагдсан" domain="[('parent_state', '=', 'posted')]"/>
+                    <separator/>
+                    <filter name="date" string="Огноо" date="date"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_account" string="Данс" context="{'group_by': 'account_id'}"/>
+                        <filter name="group_journal" string="Журнал" context="{'group_by': 'journal_id'}"/>
+                        <filter name="group_cash_move_type" string="Мөнгөн гүйлгээний төрөл" context="{'group_by': 'cash_move_type_id'}"/>
+                        <filter name="group_date" string="Огноо" context="{'group_by': 'date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_move_line_non_cash_move_type" model="ir.actions.act_window">
+            <field name="name">Мөнгөн бус дансанд сонгосон төрөл</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account_move_line_non_cash_move_type_tree"/>
+            <field name="search_view_id" ref="account_move_line_non_cash_move_type_search"/>
+            <field name="domain">[('cash_move_type_id', '!=', False), ('account_id.account_type', '!=', 'asset_cash')]</field>
+            <field name="context">{'search_default_posted': 1}</field>
+        </record>
+
+    </data>
+</odoo>

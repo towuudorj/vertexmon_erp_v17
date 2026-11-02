@@ -53,6 +53,7 @@
             'views/product_product_inherit_view.xml',
             'views/account_account_inherit_view.xml',
             'views/account_bank_statement_line_view.xml',
+            'views/account_move_line_cash_move_check_view.xml',
             'views/res_partner_bank_inherit_view.xml',
             'views/bank_statement_line_form_reconcile_inherit_view.xml',
             'views/account_move_line_search_view.xml',

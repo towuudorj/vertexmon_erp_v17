@@ -646,6 +646,21 @@ class AccountMoveLine(models.Model):
                         {'cash_move_type_id': changed[0].cash_move_type_id.id})
         return res
 
+    def action_clear_non_cash_move_type(self):
+        """Мөнгөн хөрөнгийн бус дансны мөрөөс мөнгөн гүйлгээний төрлийг арилгана.
+        Мөнгөн дансны мөрүүдийг сонгосон байсан ч хөндөхгүй."""
+        lines = self.filtered(lambda l: l.cash_move_type_id and l.account_id.account_type != 'asset_cash')
+        lines.write({'cash_move_type_id': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _('%s мөрөөс мөнгөн гүйлгээний төрлийг арилгалаа.') % len(lines),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
     def _prepare_analytic_distribution_line(self, distribution, account_ids, distribution_on_each_plan):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             analytic tags with analytic distribution.
