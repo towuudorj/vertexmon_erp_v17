@@ -53,6 +53,12 @@
                     <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="attributes">
                 		<attribute name="groups">l10n_mn_stock.group_picking_receive</attribute>
                     </xpath>
+                    <xpath expr="//header" position="inside">
+                        <field name="missing_svl" invisible="1"/>
+                        <button name="create_account_entry_move" string="SVL үүсгэх" type="object"
+                                invisible="not missing_svl" groups="base.group_system"
+                                confirm="SVL байхгүй хөдөлгөөнүүдэд SVL болон санхүүгийн бичилт үүсгэх үү?"/>
+                    </xpath>
                     <xpath expr="//field[@name='location_id']" position="after">
                         <field name="approve_use_stamp" groups="l10n_mn_stock.group_picking_receive"/>
                     </xpath>
@@ -83,6 +89,18 @@
                     <xpath expr="//button[@name='button_validate' and contains(@class, 'oe_highlight')]" position="after">
                         <field name="can_approve_signature" invisible="1"/>
                 		<button name="link_signature" type="object" string="Link signature" invisible="not can_approve_signature"/>
+                    </xpath>
+                </field>
+            </record>
+
+            <record id="mn_stock_picking_search_missing_svl" model="ir.ui.view">
+                <field name="name">inherit.mn.stock.picking.search.missing.svl</field>
+                <field name="model">stock.picking</field>
+                <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//filter[@name='backorder']" position="after">
+                        <separator/>
+                        <filter name="missing_svl" string="SVL дутуу" domain="[('missing_svl', '=', True)]" groups="base.group_system"/>
                     </xpath>
                 </field>
             </record>

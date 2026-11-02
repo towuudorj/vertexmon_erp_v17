@@ -50,26 +50,50 @@ class stock_picking(models.Model):
     picking_type_code = fields.Selection(related='picking_type_id.code')
     signature_user_ids = fields.One2many('picking.signature.users', 'picking_id', string="Users signature")
     can_approve_signature = fields.Boolean(compute='_compute_signature_approval')
+    missing_svl = fields.Boolean(compute='_compute_missing_svl', search='_search_missing_svl')
 
+    def _get_moves_missing_svl(self):
+        # SVL үүсээгүй, дууссан, нөөцлөгдөх барааны хөдөлгөөнүүд
+        return self.move_ids.filtered(
+            lambda m: m.state == 'done' and m.product_id.type == 'product'
+            and not m.sudo().stock_valuation_layer_ids and (m._is_in() or m._is_out())
+        )
+
+    def _compute_missing_svl(self):
+        for picking in self:
+            picking.missing_svl = picking.state == 'done' and bool(picking._get_moves_missing_svl())
+
+    def _search_missing_svl(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        # Дотоод байрлал хооронд биш, SVL-гүй дууссан хөдөлгөөнүүдийг эхлээд шүүнэ
+        moves = self.env['stock.move'].sudo().search([
+            ('picking_id', '!=', False),
+            ('state', '=', 'done'),
+            ('product_id.type', '=', 'product'),
+            ('stock_valuation_layer_ids', '=', False),
+            '|', ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '!=', 'internal'),
+        ])
+        picking_ids = moves.filtered(lambda m: m._is_in() or m._is_out()).picking_id.ids
+        if (operator == '=') == value:
+            return [('id', 'in', picking_ids)]
+        return [('id', 'not in', picking_ids)]
 
     def create_account_entry_move(self):
-       for move in self.move_ids:
-        for ml in move.move_line_ids:
-            svl = self.env['stock.valuation.layer'].sudo().create({
-                'stock_move_id': move.id,
-                'product_id': move.product_id.id,
-                'quantity': ml.quantity,
-                'unit_cost': move.price_unit,
-                'value': ml.quantity * move.price_unit,
-                'company_id': move.company_id.id,
-            })
-    
-            move._account_entry_move(
-                qty=svl.quantity,
-                description=move.name,
-                svl_id=svl.id,   # ✅ FIX HERE
-                cost=svl.value
-            )
+        # Дууссан баримтын SVL байхгүй хөдөлгөөнүүдэд SVL болон санхүүгийн бичилт үүсгэнэ
+        if not self.env.user.has_group('base.group_system'):
+            raise UserError(_('Only Settings administrators can create valuation layers.'))
+        for picking in self:
+            if picking.state != 'done':
+                raise UserError(_('Only done transfers can create valuation layers.'))
+            svls = self.env['stock.valuation.layer']
+            for move in picking._get_moves_missing_svl():
+                move = move.with_company(move.company_id)
+                if move._is_in():
+                    svls |= move.sudo()._create_in_svl()
+                elif move._is_out():
+                    svls |= move.sudo()._create_out_svl()
+            svls._validate_accounting_entries()
 
     @api.model
     def create(self, vals):
