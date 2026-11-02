@@ -21,17 +21,30 @@
             sequence="29"
             parent="account.menu_finance_entries_accounting_miscellaneous"/>
 
+        <!-- Мөнгөн гүйлгээний шалгалтууд: Нягтлан бодох бүртгэл цэсэнд тусдаа бүлэг -->
+        <menuitem id="cash_move_check_root_menu"
+            name="Мөнгөн гүйлгээний шалгалт"
+            sequence="5"
+            parent="account.menu_finance_entries"
+            groups="account.group_account_user,account.group_account_manager"/>
+
         <menuitem id="bank_statement_line_cash_move_check_menu"
             action="action_bank_statement_line_cash_move_check"
             name="Мөнгөн гүйлгээний төрөл шалгах"
-            sequence="30"
-            parent="account.menu_finance_entries_accounting_miscellaneous"/>
+            sequence="10"
+            parent="cash_move_check_root_menu"/>
 
         <menuitem id="account_move_line_non_cash_move_type_menu"
             action="action_account_move_line_non_cash_move_type"
             name="Мөнгөн бус дансанд сонгосон төрөл"
-            sequence="31"
-            parent="account.menu_finance_entries_accounting_miscellaneous"/>
+            sequence="20"
+            parent="cash_move_check_root_menu"/>
+
+        <menuitem id="cash_flow_balance_check_menu"
+            action="action_cash_flow_balance_check"
+            name="Мөнгөн гүйлгээ ба Гүйлгээ балансын зөрүү"
+            sequence="30"
+            parent="cash_move_check_root_menu"/>
 
 
         <menuitem id="action_account_currency_equalization_menu"

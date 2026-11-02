@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="cash_flow_balance_check_form" model="ir.ui.view">
+        <field name="name">cash.flow.balance.check.form</field>
+        <field name="model">cash.flow.balance.check</field>
+        <field name="arch" type="xml">
+            <form string="Мөнгөн гүйлгээний тайлан ба Гүйлгээ балансын зөрүү">
+                <field name="checked" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="is_balanced" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="target_move" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <div invisible="not checked">
+                    <div class="alert alert-success" role="alert" invisible="not is_balanced">
+                        Мөнгөн гүйлгээний тайлан ба Гүйлгээ баланс тэнцэж байна.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="is_balanced">
+                        Зөрүү: <field name="difference" class="fw-bold"/>.
+                        Задаргааг доороос харна уу.
+                    </div>
+                    <notebook>
+                        <page string="Хураангуй" name="summary">
+                            <group>
+                                <group string="Гүйлгээ баланс (мөнгөн хөрөнгийн данснууд)">
+                                    <field name="tb_opening"/>
+                                    <field name="tb_debit"/>
+                                    <field name="tb_credit"/>
+                                    <field name="tb_net" class="fw-bold"/>
+                                    <field name="tb_closing" class="fw-bold"/>
+                                </group>
+                                <group string="Мөнгөн гүйлгээний тайлан (тайланд харагдах дүнгээр)">
+                                    <field name="cf_operating"/>
+                                    <field name="cf_investing"/>
+                                    <field name="cf_financing"/>
+                                    <field name="cf_exchange"/>
+                                    <field name="cf_net" class="fw-bold"/>
+                                    <field name="cf_opening"/>
+                                    <field name="cf_closing" class="fw-bold"/>
+                                </group>
+                            </group>
+                            <group string="Зөрүүний задаргаа">
+                                <group>
+                                    <label for="missing_amount"/>
+                                    <div class="o_row">
+                                        <field name="missing_amount"/>
+                                        <span>(<field name="missing_count" class="oe_inline"/> мөр)</span>
+                                        <button name="action_open_missing" type="object" string="Мөрүүд" class="btn-link"
+                                                icon="fa-list" invisible="not missing_count"/>
+                                    </div>
+                                    <label for="dummy_amount"/>
+                                    <div class="o_row">
+                                        <field name="dummy_amount"/>
+                                        <span>(<field name="dummy_count" class="oe_inline"/> мөр)</span>
+                                        <button name="action_open_dummy" type="object" string="Мөрүүд" class="btn-link"
+                                                icon="fa-list" invisible="not dummy_count"/>
+                                    </div>
+                                    <label for="report_error"/>
+                                    <div class="o_row">
+                                        <field name="report_error"/>
+                                        <span>(чиглэл зөрсөн <field name="wrong_count" class="oe_inline"/> мөр)</span>
+                                        <button name="action_open_wrong" type="object" string="Мөрүүд" class="btn-link"
+                                                icon="fa-list" invisible="not wrong_count"/>
+                                    </div>
+                                    <field name="difference" class="fw-bold"/>
+                                </group>
+                                <group>
+                                    <div class="text-muted small" colspan="2">
+                                        <p><b>Төрөл сонгоогүй</b>: Гүйлгээ балансад орсон ч мөнгөн гүйлгээний тайланд ороогүй.
+                                            Банкны хуулгын мөрөнд төрлийг нь сонгоно.</p>
+                                        <p><b>«Тайланд нөлөөлөхгүй»</b>: зориуд тайлангаас хассан (ихэвчлэн дансны хоорондын
+                                            шилжүүлэг). Дотоод шилжүүлгийн хоёр тал нийлээд тэг болно.</p>
+                                        <p><b>Тэмдэг / abs-ийн алдаа</b>: тайлан зарлагын болон хөрөнгө оруулалт, санхүүгийн
+                                            бүлгийн дүнг үнэмлэхүй утгаар авдаг, хөрөнгө оруулалтын орлогын кредит мөрийг
+                                            нэмдэг. Чиглэл зөрсөн мөрийн төрлийг засахад арилна.</p>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Төрөл тус бүрээр" name="types">
+                            <field name="type_line_ids">
+                                <tree decoration-danger="difference != 0">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="group"/>
+                                    <field name="cash_move_type_id"/>
+                                    <field name="debit" sum="Нийт"/>
+                                    <field name="credit" sum="Нийт"/>
+                                    <field name="true_net" sum="Нийт"/>
+                                    <field name="report_value"/>
+                                    <field name="report_effect" sum="Нийт"/>
+                                    <field name="difference" sum="Нийт"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Данс тус бүрээр" name="accounts">
+                            <field name="account_line_ids">
+                                <tree decoration-danger="difference != 0">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="account_id"/>
+                                    <field name="opening" sum="Нийт"/>
+                                    <field name="debit" sum="Нийт"/>
+                                    <field name="credit" sum="Нийт"/>
+                                    <field name="closing" sum="Нийт"/>
+                                    <field name="typed_amount" sum="Нийт"/>
+                                    <field name="dummy_amount" sum="Нийт"/>
+                                    <field name="missing_amount" sum="Нийт"/>
+                                    <field name="difference" sum="Нийт"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Асуудалтай мөрүүд" name="issues">
+                            <field name="issue_line_ids">
+                                <tree decoration-danger="category == 'wrong_direction'" decoration-muted="category == 'dummy'">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="category"/>
+                                    <field name="date"/>
+                                    <field name="move_id"/>
+                                    <field name="journal_id" optional="show"/>
+                                    <field name="account_id"/>
+                                    <field name="partner_id" optional="show"/>
+                                    <field name="name" optional="show"/>
+                                    <field name="cash_move_type_id"/>
+                                    <field name="internal_transfer" optional="show"/>
+                                    <field name="debit" sum="Нийт"/>
+                                    <field name="credit" sum="Нийт"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </div>
+                <footer>
+                    <button name="action_check" string="Шалгах" type="object" class="btn-primary"/>
+                    <button string="Хаах" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cash_flow_balance_check" model="ir.actions.act_window">
+        <field name="name">Мөнгөн гүйлгээ ба Гүйлгээ балансын зөрүү</field>
+        <field name="res_model">cash.flow.balance.check</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'extra-large'}</field>
+    </record>
+</odoo>
