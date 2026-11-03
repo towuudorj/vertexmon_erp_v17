@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_report_form_view" model="ir.ui.view">
+            <field name="name">purchase.order.report.form</field>
+            <field name="model">purchase.order.report</field>
+            <field name="arch" type="xml">
+                <form string="Захиалгын тайлан">
+                    <sheet>
+                        <group>
+                            <group string="Хугацаа ба Төрөл">
+                                <field name="company_id" widget="selection"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="date_type"/>
+                                <field name="purchase_type"/>
+                                <field name="receipt_status"/>
+                            </group>
+                            <group string="Шүүлтүүр">
+                                <field name="partner_id"/>
+                                <field name="sales_partner_id"/>
+                                <field name="category_id"/>
+                                <field name="product_id"/>
+                                <field name="user_id"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_print_xls_report" string="Хэвлэх" type="object" class="oe_highlight"/>
+                        <button name="action_preview_report" string="Харах" type="object" class="oe_highlight"/>
+                        <button string="Хаах" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_order_report" model="ir.actions.act_window">
+            <field name="name">Захиалгын тайлан</field>
+            <field name="res_model">purchase.order.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

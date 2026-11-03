@@ -42,6 +42,7 @@
               "views/purchase_requisition_inherit_view.xml",
               "views/freight_type_register_view.xml",
               "wizard/purchase_summary_report_view.xml",
+              "wizard/purchase_order_report_view.xml",
               "views/report_view.xml",
               "wizard/purchase_expense_report_view.xml",
               "wizard/purchase_order_template_report_view.xml",

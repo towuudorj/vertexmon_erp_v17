@@ -75,7 +75,6 @@
                     <field name="sales_partner_id"/>
                 </xpath>
                 <xpath expr="//field[@name='invoice_status']" position="after">
-                    <field name="receipt_status" optional="show"/>
                     <field name="payment_amount" widget="monetary" sum="Төлбөрийн үлдэгдэл" optional="show"/>
                 </xpath>
             </field>
