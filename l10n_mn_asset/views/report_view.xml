@@ -2,7 +2,73 @@
 <odoo>
     <data>
 
-        
+        <record id="paperformat_asset_owner_card" model="report.paperformat">
+            <field name="name">A4 хэвтээ (Хөрөнгө эзэмшигч)</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Үндсэн хөрөнгө > Хэвлэх -->
+        <record id="action_report_asset_owner_card" model="ir.actions.report">
+            <field name="name">Хөрөнгө эзэмшигчийн карт</field>
+            <field name="model">account.asset.asset</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_asset.asset_owner_card_template</field>
+            <field name="report_file">l10n_mn_asset.asset_owner_card_template</field>
+            <field name="print_report_name">'Хөрөнгө эзэмшигчийн карт - %s' % (object.owner_id.name or object.name)</field>
+            <field name="paperformat_id" ref="paperformat_asset_owner_card"/>
+            <field name="binding_model_id" ref="om_account_asset.model_account_asset_asset"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Ажилтан > Хэвлэх: ажилтны эзэмшиж буй хөрөнгүүд -->
+        <record id="action_report_employee_asset_owner_card" model="ir.actions.report">
+            <field name="name">Хөрөнгө эзэмшигчийн карт</field>
+            <field name="model">hr.employee</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_asset.employee_asset_owner_card_template</field>
+            <field name="report_file">l10n_mn_asset.employee_asset_owner_card_template</field>
+            <field name="print_report_name">'Хөрөнгө эзэмшигчийн карт - %s' % object.name</field>
+            <field name="paperformat_id" ref="paperformat_asset_owner_card"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        </record>
+
+        <!-- Excel татах: Action цэснээс -->
+        <record id="action_server_asset_owner_card_xlsx" model="ir.actions.server">
+            <field name="name">Хөрөнгө эзэмшигчийн карт (Excel)</field>
+            <field name="model_id" ref="om_account_asset.model_account_asset_asset"/>
+            <field name="binding_model_id" ref="om_account_asset.model_account_asset_asset"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = {
+    'type': 'ir.actions.act_url',
+    'url': '/l10n_mn_asset/asset_owner_card/xlsx/account.asset.asset?ids=%s' % ','.join(map(str, records.ids)),
+    'target': 'self',
+}</field>
+        </record>
+
+        <record id="action_server_employee_asset_owner_card_xlsx" model="ir.actions.server">
+            <field name="name">Хөрөнгө эзэмшигчийн карт (Excel)</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">action = {
+    'type': 'ir.actions.act_url',
+    'url': '/l10n_mn_asset/asset_owner_card/xlsx/hr.employee?ids=%s' % ','.join(map(str, records.ids)),
+    'target': 'self',
+}</field>
+        </record>
 
     </data>
 </odoo>

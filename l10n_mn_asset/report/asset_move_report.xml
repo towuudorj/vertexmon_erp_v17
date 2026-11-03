@@ -2,72 +2,122 @@
 <odoo>
     <data>
 
-        
-        <template id="asset_move_report">   
-   	 	    <t t-call="web.html_container">
-        	 <t t-foreach="docs" t-as="o">
-        	    <t t-call="web.external_layout">
-                    <div class="page">
-                        <table style="width:100%">
-                            <tr>
-                                <td width="70%" style="vertical-align:top;">
-                                    <h4>ҮНДСЭН ХӨРӨНГӨ ХҮЛЭЭН АВАХ, ШИЛЖҮҮЛЭХ БАРИМТ</h4>
-                                    <h4>№ <span t-field="o.statement_id.name"/>/<span t-field="o.sequence"/></h4>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <p class="small">НХМаягт МХ-1</p>
-                                    <p class="small">Сангийн сайдын 2017 оны дугаар сарын өдрийн тоот тушаалын хавсралт</p>
-                                </td>
-                            </tr>
-                        </table>
-                                
-                        <table class="table table-l10n_mn-header">
-			                <tr>
-                                <td><span>Байгууллагын нэр :</span> <b t-field="o.company_id.name"/></td>
-                            </tr>
-			                <tr>
-                                <td><span>Огноо :</span> <span t-field="o.date"/></td>
-                            </tr>
-			            </table>
-			            <table class="table table-l10n_mn-grid">
-			                <tr>
-                                <th>1.Цех, тасаг, хэсгийн нэр: </th>
-                                <th>2.Хөрөнгийн нэр, төрөл, код</th>
-                                <th>3.Бүртгэлийн дугаар </th>
-                                <th>4.Анхны өртөг (худалдан авсан үнэ) </th>
-                            </tr>
-			                <tr>
-                                <td><span t-field="o.department_id.name"/></td>
-                                <td><span t-field="o.asset_id.name"/></td>
-                                <td><span t-field="o.asset_id.code"/></td>
-                                <td><span t-field="o.asset_id.value"/></td>
-                            </tr>
-                            <tr>
-                                <th>5. өдрийн тоот тушаал (гэрээ/шийдвэр)-ийг үндэслэн  аас ашиглалтанд хүлээн авах (хүлээлгэн өгөх)   үзлэг шалгалт хийв.</th>
-                            </tr>
-                            <tr>
-                                <th>6. Хүлээн авах (хүлээлгэн өгөх) үед үндсэн хөрөнгө     байв.</th>
-                            </tr>
-                            <tr>
-                                <th>7. Элэгдлийн дүн        төгрөг, үлдэгдэл өртөг       төгрөг байв.</th>
-                            </tr>
+        <record id="action_report_asset_move" model="ir.actions.report">
+            <field name="name">Хөрөнгө шилжүүлэх акт</field>
+            <field name="model">account.asset.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mn_asset.asset_move_report</field>
+            <field name="report_file">l10n_mn_asset.asset_move_report</field>
+            <field name="print_report_name">'Хөрөнгө шилжүүлэх акт - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_account_asset_move"/>
+            <field name="binding_type">report</field>
+        </record>
 
-                        </table>
-                        <table class="table table-l10n_mn-header">
-                            <tr>
-                                <td><span>Тайлбар: </span> <span t-field="o.note"/></td>
-                            </tr>
-                        </table>
+        <template id="asset_move_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <div class="page" style="font-family: 'Times New Roman', serif; font-size: 13px;">
+                            <style>
+                                .asset-move-grid th, .asset-move-grid td {
+                                    border: 1px solid #000; padding: 4px 6px; vertical-align: middle;
+                                }
+                                .asset-move-grid th { text-align: center; }
+                                .asset-move-grid thead { display: table-header-group; }
+                                .asset-move-info td { padding: 3px 6px; }
+                                .asset-move-sign td { padding: 14px 4px; font-weight: bold; }
+                            </style>
+                            <table style="width: 100%; margin-bottom: 20px;">
+                                <tr>
+                                    <td t-if="o.company_id.logo" style="width: 1%; padding-right: 15px;">
+                                        <img t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 60px; max-width: 190px;" alt="Logo"/>
+                                    </td>
+                                    <td style="font-size: 16px; font-weight: bold;"><span t-field="o.company_id.name"/></td>
+                                    <td style="text-align: right;">Огноо: <b t-esc="o.date.strftime('%Y.%m.%d')"/></td>
+                                </tr>
+                            </table>
 
-                    </div>
+                            <h4 style="text-align: center; font-weight: bold;">ХӨРӨНГӨ ШИЛЖҮҮЛЭХ АКТ № <span t-field="o.name"/></h4>
 
+                            <table class="asset-move-info" style="width: 100%; margin: 15px 0;">
+                                <tr>
+                                    <td style="width: 18%;">Хүлээлгэн өгөгч:</td>
+                                    <td style="width: 32%; font-weight: bold;">
+                                        <t t-if="o.from_owner_id"><span t-field="o.from_owner_id.name"/>
+                                            <t t-if="o.from_owner_id.job_title"> / <span t-field="o.from_owner_id.job_title"/></t>
+                                        </t>
+                                        <t t-else="">Эзэмшигчгүй (шинээр олгох)</t>
+                                    </td>
+                                    <td style="width: 18%;">Хүлээн авагч:</td>
+                                    <td style="font-weight: bold;"><span t-field="o.to_owner_id.name"/>
+                                        <t t-if="o.to_owner_id.job_title"> / <span t-field="o.to_owner_id.job_title"/></t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Гарах байршил:</td>
+                                    <td><span t-field="o.asset_out_location_id.name"/></td>
+                                    <td>Хүлээн авагчийн хэлтэс:</td>
+                                    <td><span t-field="o.department_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Хүрэх байршил:</td>
+                                    <td><span t-field="o.asset_in_location_id.name"/></td>
+                                    <td>Төлөв:</td>
+                                    <td><span t-field="o.state"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="asset-move-grid" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 4%;">№</th>
+                                        <th style="width: 14%;">Хөрөнгийн код</th>
+                                        <th style="width: 28%;">Хөрөнгийн нэр</th>
+                                        <th style="width: 20%;">Ангилал</th>
+                                        <th style="width: 9%;">Огноо</th>
+                                        <th style="width: 12%;">Нийт дүн</th>
+                                        <th style="width: 13%;">Үлдэгдэл дүн</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.asset_ids" t-as="asset" style="page-break-inside: avoid;">
+                                        <td style="text-align: center;"><span t-esc="asset_index + 1"/></td>
+                                        <td><span t-esc="asset.code or ''"/></td>
+                                        <td><span t-esc="asset.name"/></td>
+                                        <td><span t-esc="asset.category_id.name"/></td>
+                                        <td style="text-align: center;"><span t-esc="asset.date and asset.date.strftime('%Y.%m.%d') or ''"/></td>
+                                        <td style="text-align: right;"><span t-esc="'{:,.2f}'.format(asset.value)"/></td>
+                                        <td style="text-align: right;"><span t-esc="'{:,.2f}'.format(asset.value_residual)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align: right; font-weight: bold;">Нийт</td>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="'{:,.2f}'.format(sum(o.asset_ids.mapped('value')))"/></td>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="'{:,.2f}'.format(sum(o.asset_ids.mapped('value_residual')))"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p t-if="o.note" style="margin-top: 10px;">Тайлбар: <span t-field="o.note"/></p>
+
+                            <table class="asset-move-sign" style="margin: 50px 0 0 10%; page-break-inside: avoid;">
+                                <tr>
+                                    <td style="width: 300px;">ХӨРӨНГӨ ШИЛЖҮҮЛЭХИЙГ ЗӨВШӨӨРСӨН:</td>
+                                    <td>/.........................................../<span t-esc="o.approved_user_id.name or '.......................................'"/>/</td>
+                                </tr>
+                                <tr>
+                                    <td>ХӨРӨНГӨ ХҮЛЭЭЛГЭЖ ӨГСӨН:</td>
+                                    <td>/.........................................../<span t-esc="o.from_owner_id.name or '.......................................'"/>/</td>
+                                </tr>
+                                <tr>
+                                    <td>ХӨРӨНГӨ ХҮЛЭЭН АВСАН:</td>
+                                    <td>/.........................................../<span t-esc="o.to_owner_id.name"/>/</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
                 </t>
             </t>
-         </t>
-     
-	</template>
-
-
+        </template>
 
     </data>
 </odoo>

@@ -16,6 +16,14 @@
                         <button name="action_asset_scrap"
                                 string="Хөрөнгө актлах" type="object" invisible="state != 'open'"
                                 confirm="The asset will be scrapped permanently. Continue?"/>
+                        <button name="action_asset_transfer" string="Шилжүүлэх" type="object"
+                                invisible="state not in ('draft', 'open')"/>
+                    </xpath>
+                    <xpath expr="//div[@name='button_box']" position="inside">
+                        <button name="action_view_asset_moves" type="object" class="oe_stat_button" icon="fa-exchange"
+                                invisible="asset_move_count == 0">
+                            <field name="asset_move_count" widget="statinfo" string="Шилжүүлэг"/>
+                        </button>
                     </xpath>
                     <xpath expr='//button[@name="set_to_close"]' position="attributes">
                         <attribute name="invisible">1</attribute>
@@ -31,7 +39,7 @@
                         <field name="scrap_date"/>
                         <field name="uom_id" readonly="state != 'draft'"/>
                         <field name="asset_location_id" invisible="1"/>
-                        <field name="owner_id"/>
+                        <field name="owner_id" readonly="state != 'draft'"/>
                         <field name="asset_qty" readonly="state != 'draft'"/>
                     </xpath>
                 </data>
@@ -69,6 +77,12 @@
                 </xpath>
                 <xpath expr='//filter[@name="closed"]' position="after">
                     <filter string="Актлагдсан" name="scrapped" domain="[('state', '=', 'scrap')]"/>
+                </xpath>
+                <xpath expr='//field[@name="category_id"]' position="before">
+                    <field name="owner_id" string="Хөрөнгө эзэмшигч"/>
+                </xpath>
+                <xpath expr='//filter[@name="category"]' position="after">
+                    <filter string="Хөрөнгө эзэмшигч" name="group_owner" context="{'group_by': 'owner_id'}"/>
                 </xpath>
             </field>
         </record>

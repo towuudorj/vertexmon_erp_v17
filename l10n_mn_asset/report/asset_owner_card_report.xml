@@ -2,7 +2,105 @@
 <odoo>
     <data>
 
-        
+        <!-- Хөрөнгө эзэмшигчийн карт: эзэмшигч бүрт нэг хуудас -->
+        <template id="asset_owner_card_document">
+            <t t-call="web.html_container">
+                <t t-foreach="groups" t-as="group">
+                    <t t-set="owner" t-value="group[0]"/>
+                    <t t-set="assets" t-value="group[1]"/>
+                    <t t-call="web.basic_layout">
+                        <div class="page" style="font-family: 'Times New Roman', serif; font-size: 13px;">
+                            <style>
+                                .asset-owner-card th, .asset-owner-card td {
+                                    border: 1px solid #000; padding: 4px 6px;
+                                    text-align: center; vertical-align: middle; font-weight: bold;
+                                }
+                                .asset-owner-card thead { display: table-header-group; }
+                                .asset-owner-card th { background-color: #fff; }
+                                .asset-owner-card td.amount { text-align: right; }
+                                .asset-owner-sign td { padding: 14px 4px; font-weight: bold; }
+                            </style>
+                            <table style="width: 100%; margin-bottom: 30px;">
+                                <tr>
+                                    <td t-if="company.logo" style="width: 1%; padding-right: 15px; vertical-align: middle;">
+                                        <img t-att-src="image_data_uri(company.logo)" style="max-height: 60px; max-width: 190px;" alt="Logo"/>
+                                    </td>
+                                    <td style="width: 22%; font-size: 16px; font-weight: bold;">
+                                        <span t-esc="company.name"/>
+                                    </td>
+                                    <td style="font-size: 16px; font-weight: bold;">Хөрөнгө эзэмшигч
+                                        <t t-if="owner">: <span t-esc="owner.name"/></t>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="asset-owner-card" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 4%;">№</th>
+                                        <th style="width: 8%;">Төлөв</th>
+                                        <th style="width: 11%;">Ангилал</th>
+                                        <th style="width: 8%;">Нийт дүн</th>
+                                        <th style="width: 7%;">Огноо</th>
+                                        <th style="width: 12%;">Хөрөнгийн код</th>
+                                        <th style="width: 17%;">Хөрөнгийн нэр</th>
+                                        <th style="width: 10%;">Хөрөнгө эзэмшигч</th>
+                                        <th style="width: 10%;">Өмнөх эзэмшигч</th>
+                                        <th style="width: 6%;">Шилжсэн огноо</th>
+                                        <th style="width: 8%;">Үлдэгдэл дүн</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="assets" t-as="asset" style="page-break-inside: avoid;">
+                                        <td><span t-esc="asset_index + 1"/></td>
+                                        <td><span t-esc="state_labels.get(asset.state, asset.state)"/></td>
+                                        <td><span t-esc="asset.category_id.name"/></td>
+                                        <td class="amount"><span t-esc="'{:,.2f}'.format(asset.value)"/></td>
+                                        <td><span t-esc="asset.date and asset.date.strftime('%Y.%m.%d') or ''"/></td>
+                                        <td><span t-esc="asset.code or ''"/></td>
+                                        <td><span t-esc="asset.name"/></td>
+                                        <td><span t-esc="asset.owner_id.name or ''"/></td>
+                                        <t t-set="prev" t-value="previous_owners.get(asset.id, ('', False))"/>
+                                        <td><span t-esc="prev[0]"/></td>
+                                        <td><span t-esc="prev[1] and prev[1].strftime('%Y.%m.%d') or ''"/></td>
+                                        <td class="amount"><span t-esc="'{:,.2f}'.format(asset.value_residual)"/></td>
+                                    </tr>
+                                    <tr t-if="len(assets) &gt; 1">
+                                        <td colspan="3" style="text-align: right;">Нийт</td>
+                                        <td class="amount"><span t-esc="'{:,.2f}'.format(sum(assets.mapped('value')))"/></td>
+                                        <td colspan="6"/>
+                                        <td class="amount"><span t-esc="'{:,.2f}'.format(sum(assets.mapped('value_residual')))"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="asset-owner-sign" style="margin: 60px 0 0 10%; page-break-inside: avoid;">
+                                <tr>
+                                    <td style="width: 320px;">ХӨРӨНГӨ ОЛГОХЫГ ЗӨВШӨӨРСӨН:</td>
+                                    <td>/.........................................../......................................................../</td>
+                                </tr>
+                                <tr>
+                                    <td>ХӨРӨНГӨ ХҮЛЭЭЛГЭЖ ӨГСӨН:</td>
+                                    <td>/.........................................../......................................................../</td>
+                                </tr>
+                                <tr>
+                                    <td>ХӨРӨНГӨ ХҮЛЭЭН АВСАН:</td>
+                                    <td>/.........................................../......................................................../</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="asset_owner_card_template">
+            <t t-call="l10n_mn_asset.asset_owner_card_document"/>
+        </template>
+
+        <template id="employee_asset_owner_card_template">
+            <t t-call="l10n_mn_asset.asset_owner_card_document"/>
+        </template>
 
     </data>
 </odoo>

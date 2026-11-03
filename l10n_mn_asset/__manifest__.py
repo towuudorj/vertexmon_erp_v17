@@ -13,7 +13,7 @@
 
 {
     'name': 'Mongolian Asset',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting',
     'sequence': 35,
     'author': 'AIBI Developer Team',
@@ -49,8 +49,11 @@
             'views/mn_asset_inherit.xml',
             'views/account_asset_category_view.xml',
             'views/asset_location_view.xml',
+            'report/asset_move_report.xml',
             'views/account_asset_move_view.xml',
             'absract_report_view.xml',
+            'views/report_view.xml',
+            'report/asset_owner_card_report.xml',
             'views/menu_view.xml',
 
 
