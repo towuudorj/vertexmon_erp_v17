@@ -13,6 +13,7 @@ class PurchaseOrderCommonReport(models.TransientModel):
         Худалдан авалтын тайлан хураангуй
     """
     _name = "purchase.summary.report"
+    _inherit = "xls.report.base"
     _description = "Purchase summary report"
     
     company_id=fields.Many2one('res.company', string='Company', required=True, 
@@ -27,16 +28,21 @@ class PurchaseOrderCommonReport(models.TransientModel):
     
     
 
-    def action_print_xls_report(self):
-        data = {
+    def get_report_data(self):
+        data = super(PurchaseOrderCommonReport, self).get_report_data()
+        data.update({
             'company_name': self.company_id.name,
             'company_id': self.company_id.id,
-            'start_date': self.date_from,
-            'end_date': self.date_to,
+            'start_date': str(self.date_from),
+            'end_date': str(self.date_to),
             'target_move': self.target_move,
-            'purchase_user_id': self.purchase_user_id.id,
+            'purchase_user_id': self.purchase_user_id.id if self.purchase_user_id else False,
             'order_by_p_order': self.order_by_p_order,
-        }
+        })
+        return data
+
+    def action_print_xls_report(self):
+        data = self.get_report_data()
         return {
             'type': 'ir.actions.report',
             'report_type': 'xlsx',
@@ -47,10 +53,12 @@ class PurchaseOrderCommonReport(models.TransientModel):
                      'report_name': 'Purchase order common report'}
         }
 
-    def get_xlsx_report(self, data, response):
+    def get_xlsx_report(self, data, response, get_file=False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
+        sheet.center_horizontally()
+        sheet.fit_to_pages(1, 0)
         head = workbook.add_format({
                                     'align': 'center', 
                                     'bold': True, 
@@ -268,6 +276,9 @@ class PurchaseOrderCommonReport(models.TransientModel):
 
 
         workbook.close()
+        if get_file:
+            output.seek(0)
+            return output.getvalue()
         output.seek(0)
         response.stream.write(output.read())
         output.close()

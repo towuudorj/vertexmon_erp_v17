@@ -24,6 +24,12 @@
                 action="action_purchase_order_template_report"
 				sequence="52" />
         <menuitem
+				id="purchase_order_report_menu"
+				name="Захиалгын тайлан"
+				parent="purchase.purchase_report_main"
+                action="action_purchase_order_report"
+				sequence="53" />
+        <menuitem
 				id="action_freight_type_register_menu"
 				name="Freight type register"
 				parent="purchase.menu_purchase_config"
