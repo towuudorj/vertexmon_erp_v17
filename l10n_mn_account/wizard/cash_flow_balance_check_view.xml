@@ -16,6 +16,7 @@
                     <group>
                         <field name="date_from"/>
                         <field name="date_to"/>
+                        <field name="transfer_days"/>
                     </group>
                 </group>
                 <div invisible="not checked">
@@ -72,6 +73,23 @@
                                     <field name="difference" class="fw-bold"/>
                                 </group>
                                 <group>
+                                    <label for="mismatch_amount" string="Шилжүүлгийн нөгөө тал өөр төрөлтэй"/>
+                                    <div class="o_row">
+                                        <field name="mismatch_amount" decoration-danger="mismatch_count"/>
+                                        <span>(<field name="mismatch_count" class="oe_inline"/> мөр)</span>
+                                        <button name="action_open_mismatch" type="object" string="Мөрүүд" class="btn-link"
+                                                icon="fa-list" invisible="not mismatch_count"/>
+                                    </div>
+                                    <field name="dummy_unmatched_count"/>
+                                    <div class="text-muted small" colspan="2">
+                                        <p><b>Шилжүүлгийн нөгөө тал өөр төрөлтэй</b>: нэг тал нь «Тайлан тооцохгүй», нөгөө тал нь
+                                            жинхэнэ төрөлтэй дансны хоорондын шилжүүлэг. Нөгөө талыг «Тайлан тооцохгүй» болговол
+                                            тухайн дүнгээр зөрүү буурна («Асуудалтай мөрүүд»-ээс мөр бүрээр засна).</p>
+                                        <p><b>Хосгүй «нөлөөлөхгүй» мөр</b>: нөгөө тал нь олдоогүй, эсвэл өөр сард бүртгэгдсэн.
+                                            Мөнгө компаниас бодитоор гарсан/орсон бол жинхэнэ төрлийг сонгоно.</p>
+                                    </div>
+                                </group>
+                                <group>
                                     <div class="text-muted small" colspan="2">
                                         <p><b>Төрөл сонгоогүй</b>: Гүйлгээ балансад орсон ч мөнгөн гүйлгээний тайланд ороогүй.
                                             Банкны хуулгын мөрөнд төрлийг нь сонгоно.</p>
@@ -117,7 +135,7 @@
                         </page>
                         <page string="Асуудалтай мөрүүд" name="issues">
                             <field name="issue_line_ids">
-                                <tree decoration-danger="category == 'wrong_direction'" decoration-muted="category == 'dummy'">
+                                <tree decoration-danger="category in ('wrong_direction', 'transfer_mismatch')" decoration-muted="category == 'dummy'">
                                     <field name="currency_id" column_invisible="1"/>
                                     <field name="category"/>
                                     <field name="date"/>
@@ -127,9 +145,17 @@
                                     <field name="partner_id" optional="show"/>
                                     <field name="name" optional="show"/>
                                     <field name="cash_move_type_id"/>
-                                    <field name="internal_transfer" optional="show"/>
+                                    <field name="internal_transfer" optional="hide"/>
                                     <field name="debit" sum="Нийт"/>
                                     <field name="credit" sum="Нийт"/>
+                                    <field name="paired_move_id" optional="show"/>
+                                    <field name="paired_account_id" optional="show"/>
+                                    <field name="paired_date" optional="hide"/>
+                                    <field name="paired_type_id" optional="show"/>
+                                    <button name="action_set_paired_type" type="object" string="Тайлан тооцохгүй болгох"
+                                            icon="fa-exchange" class="btn-link text-danger"
+                                            invisible="category != 'transfer_mismatch'"
+                                            confirm="Энэ мөрийн мөнгөн гүйлгээний төрлийг шилжүүлгийн нөгөө талынхтай ижил болгох уу?"/>
                                 </tree>
                             </field>
                         </page>
