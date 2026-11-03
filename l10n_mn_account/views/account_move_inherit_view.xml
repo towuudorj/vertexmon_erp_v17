@@ -46,6 +46,9 @@
                     <button name="approve_to_accountant" type="object" string="Reviewed" invisible="invisible_approve_to_parent or invoice_state == 'accountant_approve'"/>
                     <button name="action_send_parent_notif" type="object" string="send" invisible="parent_notif_sent or move_type not in ('in_invoice', 'out_invoice')"/>
                 </xpath>
+                <xpath expr='//button[@id="account_invoice_payment_btn"]' position="attributes">
+                    <attribute name="groups">account.group_account_user,account.group_account_manager</attribute>
+                </xpath>
             </data>
             </field>
         </record>

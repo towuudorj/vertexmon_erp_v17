@@ -32,7 +32,8 @@
                    position="after">
                 <button name="action_register_payment"
                         string="Register Payment" class="btn-secondary"
-                        type="object" invisible = "state != 'sale' or invoice_state != 'posted' or payment_status not in ('Not Paid', 'Partially Paid')"/>
+                        type="object" invisible = "state != 'sale' or invoice_state != 'posted' or payment_status not in ('Not Paid', 'Partially Paid')"
+                        groups="account.group_account_user,account.group_account_manager"/>
             </xpath>
         </field>
     </record>
