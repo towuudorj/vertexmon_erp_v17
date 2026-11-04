@@ -634,6 +634,36 @@ class AccountMoveLine(models.Model):
     country_origin = fields.Many2one('res.country', string='Country of Origin')
     counterpart_account_name = fields.Char(string='Counterpart Account', compute='_compute_counterpart_account_name',
                                            store=True)
+    is_liquidity_counterpart = fields.Boolean(
+        string='Хуулгын харьцсан тал нь мөнгөн данс', compute='_compute_is_liquidity_counterpart',
+        search='_search_is_liquidity_counterpart',
+        help='Банкны хуулгын бичилтэд журналын үндсэн данснаас өөр мөнгөн хөрөнгийн (банк, касс) дансны мөр. '
+             'Данс хоорондын шилжүүлгийг дамжин өнгөрөх дансаар биш шууд нөгөө банкны дансаар тулгасныг илтгэнэ.')
+
+    def _compute_is_liquidity_counterpart(self):
+        for line in self:
+            line.is_liquidity_counterpart = bool(
+                line.move_id.statement_line_id
+                and line.account_id.account_type == 'asset_cash'
+                and line.account_id != line.move_id.journal_id.default_account_id
+            )
+
+    def _search_is_liquidity_counterpart(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Unsupported operator: %s') % operator)
+        self.env.cr.execute("""
+            SELECT aml.id
+              FROM account_move_line aml
+              JOIN account_move am ON am.id = aml.move_id
+              JOIN account_journal j ON j.id = am.journal_id
+              JOIN account_account aa ON aa.id = aml.account_id
+             WHERE am.statement_line_id IS NOT NULL
+               AND aa.account_type = 'asset_cash'
+               AND aml.account_id IS DISTINCT FROM j.default_account_id
+        """)
+        ids = [r[0] for r in self.env.cr.fetchall()]
+        positive = (operator == '=') == bool(value)
+        return [('id', 'in' if positive else 'not in', ids)]
 
 
     def write(self, vals):

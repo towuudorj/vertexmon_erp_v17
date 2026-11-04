@@ -63,5 +63,62 @@
             <field name="context">{'search_default_posted': 1}</field>
         </record>
 
+        <!-- Банкны хуулгын бичилтэд харьцсан тал нь өөр банк/кассын данс болсон мөрүүд.
+             Данс хоорондын шилжүүлгийг дамжин өнгөрөх дансаар тулгаагүйгээс мөнгөн дансанд давхар орсныг илрүүлнэ. -->
+        <record id="account_move_line_liquidity_counterpart_tree" model="ir.ui.view">
+            <field name="name">account.move.line.liquidity.counterpart.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <tree string="Хуулгын харьцсан тал нь мөнгөн данс" create="0" edit="0" delete="0">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="journal_id" string="Хуулгын журнал"/>
+                    <field name="account_id" string="Харьцсан мөнгөн данс"/>
+                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="debit" sum="Нийт"/>
+                    <field name="credit" sum="Нийт"/>
+                    <field name="matching_number" optional="show"/>
+                    <field name="company_id" column_invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_move_line_liquidity_counterpart_search" model="ir.ui.view">
+            <field name="name">account.move.line.liquidity.counterpart.search</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="move_id"/>
+                    <field name="account_id"/>
+                    <field name="journal_id"/>
+                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <filter name="posted" string="Батлагдсан" domain="[('parent_state', '=', 'posted')]"/>
+                    <separator/>
+                    <filter name="date" string="Огноо" date="date"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_journal" string="Хуулгын журнал" context="{'group_by': 'journal_id'}"/>
+                        <filter name="group_account" string="Харьцсан мөнгөн данс" context="{'group_by': 'account_id'}"/>
+                        <filter name="group_date" string="Огноо" context="{'group_by': 'date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_move_line_liquidity_counterpart" model="ir.actions.act_window">
+            <field name="name">Хуулгын харьцсан тал нь мөнгөн данс</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account_move_line_liquidity_counterpart_tree"/>
+            <field name="search_view_id" ref="account_move_line_liquidity_counterpart_search"/>
+            <field name="domain">[('is_liquidity_counterpart', '=', True)]</field>
+            <field name="context">{'search_default_posted': 1}</field>
+        </record>
+
     </data>
 </odoo>
