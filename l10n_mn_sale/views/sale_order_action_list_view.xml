@@ -15,7 +15,7 @@
     </record>
 
     <record id="action_sale_order_pending" model="ir.actions.act_window">
-        <field name="name">Хянах</field>
+        <field name="name">Хяналт</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="view_id" ref="view_order_tree_inherit_crm_order"/>
@@ -26,13 +26,13 @@
     </record>
 
     <menuitem id="sale_order_pending_menu"
-        name="Хянах"
+        name="Хяналт"
         parent="sale.sale_menu_root"
         action="action_sale_order_pending"
         sequence="2"/>
 
     <menuitem id="crm_lead_my_activities_menu_daily"
-        name="Хянах"
+        name="Хяналт"
         parent="crm.crm_menu_root"
         action="crm.crm_lead_action_my_activities"
         sequence="2"/>

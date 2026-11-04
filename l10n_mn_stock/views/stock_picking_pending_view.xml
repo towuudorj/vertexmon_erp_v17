@@ -13,7 +13,7 @@
     </record>
 
     <menuitem id="stock_picking_pending_menu"
-        name="Хянах"
+        name="Хяналт"
         parent="stock.menu_stock_root"
         action="action_stock_picking_pending"
         sequence="2"/>

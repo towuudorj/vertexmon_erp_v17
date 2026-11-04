@@ -9,13 +9,15 @@
         
         <menuitem id="stock_product_quantity_page_mn_menu" name="Тооллогын хуудас" parent="stock.menu_warehouse_report" action="action_product_quantity_page"  />
 
-        <menuitem id="stock_requisition_template_report_mn_menu" name="Шаардах хуудасны загвар" parent="stock.menu_warehouse_report" action="action_stock_requisition_template_report"  />
+        <menuitem id="stock_template_report_root_menu" name="Загвар" parent="stock.menu_warehouse_report" sequence="999"/>
 
-        <menuitem id="stock_expense_template_report_mn_menu" name="Зарлагын баримтын загвар" parent="stock.menu_warehouse_report" action="action_stock_expense_template_report"  />
+        <menuitem id="stock_requisition_template_report_mn_menu" name="Шаардах хуудасны загвар" parent="stock_template_report_root_menu" action="action_stock_requisition_template_report" sequence="10"/>
 
-        <menuitem id="stock_income_template_report_mn_menu" name="Орлогын баримтын загвар" parent="stock.menu_warehouse_report" action="action_stock_income_template_report"  />
+        <menuitem id="stock_expense_template_report_mn_menu" name="Зарлагын баримтын загвар" parent="stock_template_report_root_menu" action="action_stock_expense_template_report" sequence="20"/>
 
-        <menuitem id="stock_workwear_template_report_mn_menu" name="Ажлын хувцас картын загвар" parent="stock.menu_warehouse_report" action="action_stock_workwear_template_report"  />
+        <menuitem id="stock_income_template_report_mn_menu" name="Орлогын баримтын загвар" parent="stock_template_report_root_menu" action="action_stock_income_template_report" sequence="30"/>
+
+        <menuitem id="stock_workwear_template_report_mn_menu" name="Ажлын хувцас картын загвар" parent="stock_template_report_root_menu" action="action_stock_workwear_template_report" sequence="40"/>
 
         <menuitem id="purchase_product_income_report_menu" name="Орлогын тайлан" parent="stock.menu_warehouse_report" action="action_purchase_product_income_report"  />
 

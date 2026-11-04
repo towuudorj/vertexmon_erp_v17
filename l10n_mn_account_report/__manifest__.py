@@ -28,7 +28,8 @@
                 'om_account_accountant',
                 'account_statement_base',
                 'om_fiscal_year',
-                'vertexmon_tools'
+                'vertexmon_tools',
+                'l10n_mn_account',
                 ],
     'data': [
             'data/account_balance_type_data.xml',

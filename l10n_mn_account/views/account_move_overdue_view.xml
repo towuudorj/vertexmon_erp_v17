@@ -23,10 +23,16 @@
         <field name="help">Батлагдсан ч хугацаа хэтэрч, бүрэн төлөгдөөгүй орлого болон худалдааны нэхэмжлэлүүд</field>
     </record>
 
-    <menuitem id="account_move_overdue_menu"
-        name="Хянах"
+    <!-- Хяналт: санхүүгийн шалгалт, тулгалтын цэсүүдийг нэг дор цуглуулна -->
+    <menuitem id="account_control_root_menu"
+        name="Хяналт"
         parent="account.menu_finance"
-        action="action_account_move_overdue"
         sequence="2"/>
+
+    <menuitem id="account_move_overdue_menu"
+        name="Хугацаа хэтэрсэн нэхэмжлэлүүд"
+        parent="account_control_root_menu"
+        action="action_account_move_overdue"
+        sequence="10"/>
 
 </odoo>

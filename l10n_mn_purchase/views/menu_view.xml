@@ -18,11 +18,16 @@
 
 
         <menuitem
+				id="purchase_template_report_root_menu"
+				name="Загвар"
+				parent="purchase.purchase_report_main"
+				sequence="999" />
+        <menuitem
 				id="purchase_order_template_report_menu"
 				name="Худалдан авалтын захиалгын загвар"
-				parent="purchase.purchase_report_main"
+				parent="purchase_template_report_root_menu"
                 action="action_purchase_order_template_report"
-				sequence="52" />
+				sequence="10" />
         <menuitem
 				id="purchase_order_report_menu"
 				name="Захиалгын тайлан"
@@ -47,7 +52,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="purchase_manual_root_menu" name="Гарын авлага" parent="purchase.menu_purchase_root" sequence="99"/>
+        <menuitem id="purchase_manual_root_menu" name="Гарын авлага" parent="purchase.menu_purchase_root" sequence="101"/>
         <menuitem id="purchase_manual_employee_menu" name="Худалдан авалтын ажилтан" parent="purchase_manual_root_menu" sequence="1" action="action_purchase_manual_employee_url" groups="purchase.group_purchase_user,purchase.group_purchase_manager"/>
         <menuitem id="purchase_manual_manager_menu" name="Худалдан авалтын менежер" parent="purchase_manual_root_menu" sequence="2" action="action_purchase_manual_manager_url" groups="purchase.group_purchase_manager"/>
 

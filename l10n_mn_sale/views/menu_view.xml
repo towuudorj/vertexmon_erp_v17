@@ -22,11 +22,11 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="sale_manual_root_menu" name="Гарын авлага" parent="sale.sale_menu_root" sequence="99"/>
+        <menuitem id="sale_manual_root_menu" name="Гарын авлага" parent="sale.sale_menu_root" sequence="49"/>
         <menuitem id="sale_manual_employee_menu" name="Борлуулалтын ажилтан" parent="sale_manual_root_menu" sequence="1" action="action_sales_manual_employee_url" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
         <menuitem id="sale_manual_manager_menu" name="Борлуулалтын менежер" parent="sale_manual_root_menu" sequence="2" action="action_sales_manual_manager_url" groups="sales_team.group_sale_manager"/>
 
-        <menuitem id="crm_manual_root_menu" name="Гарын авлага" parent="crm.crm_menu_root" sequence="99"/>
+        <menuitem id="crm_manual_root_menu" name="Гарын авлага" parent="crm.crm_menu_root" sequence="24"/>
         <menuitem id="crm_manual_employee_menu" name="Борлуулалтын ажилтан" parent="crm_manual_root_menu" sequence="1" action="action_sales_manual_employee_url" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
         <menuitem id="crm_manual_manager_menu" name="Борлуулалтын менежер" parent="crm_manual_root_menu" sequence="2" action="action_sales_manual_manager_url" groups="sales_team.group_sale_manager"/>
 
@@ -44,9 +44,11 @@
 
         <menuitem id="sale_order_common_report_menu" name="Борлуулалтын тайлан хураангуй"  parent="sale.menu_sale_report" sequence="1" action="action_sale_order_common_report"/>
 
-        <menuitem id="sale_order_template_report_menu" name="Борлуулалтын захиалгын загвар"  parent="sale.menu_sale_report" sequence="2" action="action_sale_order_template_report"/>
+        <menuitem id="sale_template_report_root_menu" name="Загвар" parent="sale.menu_sale_report" sequence="999"/>
 
-        <menuitem id="crm_quotation_template_report_menu" name="Үнийн саналын загвар"  parent="sale.menu_sale_report" sequence="3" action="action_crm_quotation_template_report"/>
+        <menuitem id="sale_order_template_report_menu" name="Борлуулалтын захиалгын загвар"  parent="sale_template_report_root_menu" sequence="10" action="action_sale_order_template_report"/>
+
+        <menuitem id="crm_quotation_template_report_menu" name="Үнийн саналын загвар"  parent="sale_template_report_root_menu" sequence="20" action="action_crm_quotation_template_report"/>
 
 
 

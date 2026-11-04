@@ -21,30 +21,27 @@
             sequence="29"
             parent="account.menu_finance_entries_accounting_miscellaneous"/>
 
-        <!-- Мөнгөн гүйлгээний шалгалтууд: Нягтлан бодох бүртгэл цэсэнд тусдаа бүлэг -->
-        <menuitem id="cash_move_check_root_menu"
-            name="Мөнгөн гүйлгээний шалгалт"
-            sequence="5"
-            parent="account.menu_finance_entries"
-            groups="account.group_account_user,account.group_account_manager"/>
-
+        <!-- Мөнгөн гүйлгээний шалгалтууд: Хяналт цэсэнд -->
         <menuitem id="bank_statement_line_cash_move_check_menu"
             action="action_bank_statement_line_cash_move_check"
             name="Мөнгөн гүйлгээний төрөл шалгах"
-            sequence="10"
-            parent="cash_move_check_root_menu"/>
+            sequence="20"
+            parent="account_control_root_menu"
+            groups="account.group_account_user,account.group_account_manager"/>
 
         <menuitem id="account_move_line_non_cash_move_type_menu"
             action="action_account_move_line_non_cash_move_type"
             name="Мөнгөн бус дансанд сонгосон төрөл"
-            sequence="20"
-            parent="cash_move_check_root_menu"/>
+            sequence="30"
+            parent="account_control_root_menu"
+            groups="account.group_account_user,account.group_account_manager"/>
 
         <menuitem id="cash_flow_balance_check_menu"
             action="action_cash_flow_balance_check"
             name="Мөнгөн гүйлгээ ба Гүйлгээ балансын зөрүү"
-            sequence="30"
-            parent="cash_move_check_root_menu"/>
+            sequence="40"
+            parent="account_control_root_menu"
+            groups="account.group_account_user,account.group_account_manager"/>
 
 
         <menuitem id="action_account_currency_equalization_menu"
@@ -83,13 +80,19 @@
             <field name="target">new</field>
         </record>
 
+        <!-- Загвар: баримтын хэвлэх загваруудыг Тайлан цэсний хамгийн доор бүлэглэнэ -->
+        <menuitem id="account_template_report_root_menu"
+            name="Загвар"
+            sequence="999"
+            parent="account.menu_finance_reports"/>
+
         <menuitem id="account_invoice_template_report_menu"
             action="action_account_invoice_template_report"
             name="Нэхэмжлэлийн загвар"
-            sequence="55"
-            parent="account.menu_finance_reports"/>
+            sequence="10"
+            parent="account_template_report_root_menu"/>
 
-        <menuitem id="account_manual_root_menu" name="Гарын авлага" parent="account.menu_finance" sequence="99"/>
+        <menuitem id="account_manual_root_menu" name="Гарын авлага" parent="account.menu_finance" sequence="34"/>
         <menuitem id="account_manual_employee_menu" name="Нягтлан бодогч" parent="account_manual_root_menu" sequence="1" action="action_account_manual_employee_url" groups="account.group_account_user,account.group_account_manager"/>
         <menuitem id="account_manual_manager_menu" name="Ахлах нягтлан бодогч" parent="account_manual_root_menu" sequence="2" action="action_account_manual_manager_url" groups="account.group_account_manager"/>
 
