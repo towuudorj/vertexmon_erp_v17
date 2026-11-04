@@ -46,7 +46,7 @@
         <menuitem id="account_move_line_liquidity_counterpart_menu"
             action="action_account_move_line_liquidity_counterpart"
             name="Хуулгын харьцсан тал нь мөнгөн данс"
-            sequence="35"
+            sequence="60"
             parent="account_control_root_menu"
             groups="account.group_account_user,account.group_account_manager"/>
 

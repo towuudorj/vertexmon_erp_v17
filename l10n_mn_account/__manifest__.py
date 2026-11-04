@@ -70,6 +70,7 @@
     'assets': {
         'web.assets_backend': [
             'l10n_mn_account/static/src/js/analytic_distribution_lock.js',
+            'l10n_mn_account/static/src/js/readonly_check_list.js',
         ],
     },
     'test': [],

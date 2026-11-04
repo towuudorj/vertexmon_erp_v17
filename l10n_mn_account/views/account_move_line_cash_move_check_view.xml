@@ -70,7 +70,7 @@
             <field name="model">account.move.line</field>
             <field name="priority">99</field>
             <field name="arch" type="xml">
-                <tree string="Хуулгын харьцсан тал нь мөнгөн данс" create="0" edit="0" delete="0">
+                <tree string="Хуулгын харьцсан тал нь мөнгөн данс" create="0" edit="0" delete="0" js_class="mn_readonly_check_list">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="journal_id" string="Хуулгын журнал"/>
