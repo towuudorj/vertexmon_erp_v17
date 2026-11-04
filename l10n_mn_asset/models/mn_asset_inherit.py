@@ -95,6 +95,7 @@ class AccountAssetAsset(models.Model):
             
 
     owner_id = fields.Many2one('hr.employee', string='Asset owner', tracking=True)
+    serial_number = fields.Char(tracking=True)
     is_closed = fields.Boolean(string='Asset account remove')
     uom_id = fields.Many2one('uom.uom', string='Uom')
     asset_qty = fields.Float(string='Asset qty', default=1.0)
