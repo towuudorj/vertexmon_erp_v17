@@ -37,6 +37,7 @@
             'wizard/account_currency_equalization_view.xml',
             'wizard/generate_opening_entries.xml',
             'wizard/account_bank_statement_line_batch_update_view.xml',
+            'wizard/account_partner_balance_transfer_view.xml',
             'wizard/account_invoice_template_report_view.xml',
             'wizard/account_move_missing_product_confirm_view.xml',
             'wizard/cash_flow_balance_check_view.xml',

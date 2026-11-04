@@ -43,6 +43,13 @@
             parent="account_control_root_menu"
             groups="account.group_account_user,account.group_account_manager"/>
 
+        <menuitem id="account_partner_balance_transfer_menu"
+            action="action_account_partner_balance_transfer"
+            name="Харилцагчийн үлдэгдэл шилжүүлэх"
+            sequence="50"
+            parent="account_control_root_menu"
+            groups="account.group_account_manager"/>
+
 
         <menuitem id="action_account_currency_equalization_menu"
             action="action_account_currency_equalization"

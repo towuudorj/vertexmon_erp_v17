@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_partner_balance_transfer" model="ir.ui.view">
+            <field name="name">account.partner.balance.transfer.form</field>
+            <field name="model">account.partner.balance.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Харилцагчийн үлдэгдэл шилжүүлэх">
+                    <div class="alert alert-info" role="alert">
+                        Сонгосон дансны харилцагч бүрийн үлдэгдлийг эсрэг бичилтээр тэглэж,
+                        "Үлдэгдэл төвлөрүүлэх харилцагч" руу (хоосон бол харилцагчгүй мөр рүү) шилжүүлнэ.
+                        Дансны нийт үлдэгдэл өөрчлөгдөхгүй.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="date"/>
+                            <field name="journal_id" options="{'no_create': True}"/>
+                            <field name="ref"/>
+                            <field name="auto_reconcile"/>
+                        </group>
+                        <group>
+                            <field name="target_partner_id" options="{'no_create': True}"/>
+                            <field name="available_partner_ids" invisible="1"/>
+                            <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="include_no_partner" invisible="not partner_ids"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <tree>
+                            <field name="account_id"/>
+                            <field name="partner_id"/>
+                            <field name="balance" sum="Нийт"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_compute" string="Тооцоолох" type="object" class="btn-primary"/>
+                        <button name="action_create_move" string="Бичилт үүсгэх" type="object" class="btn-primary"
+                                invisible="not line_ids"
+                                confirm="Харилцагчийн үлдэгдэл шилжүүлэх бичилтийг үүсгэж батлах уу?"/>
+                        <button string="Болих" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_partner_balance_transfer" model="ir.actions.act_window">
+            <field name="name">Харилцагчийн үлдэгдэл шилжүүлэх</field>
+            <field name="res_model">account.partner.balance.transfer</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

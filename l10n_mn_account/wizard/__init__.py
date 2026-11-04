@@ -4,3 +4,4 @@ from . import account_bank_statement_line_batch_update
 from . import account_invoice_template_report
 from . import account_move_missing_product_confirm
 from . import cash_flow_balance_check
+from . import account_partner_balance_transfer

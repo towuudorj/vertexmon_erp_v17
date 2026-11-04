@@ -437,6 +437,9 @@ class AccountMove(models.Model):
 
     def _check_receivable_payable_partner(self):
         """Авлага, өглөгийн данстай журналын мөрөнд харилцагч заавал сонгогдсон байх ёстой."""
+        # Харилцагчийн үлдэгдэл шилжүүлэх wizard (ахлах нягтлан) харилцагчгүй мөр рүү төвлөрүүлэхэд л алгасна
+        if self._context.get('skip_receivable_payable_partner_check'):
+            return
         for move in self:
             lines = move.line_ids.filtered(
                 lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable') and not l.partner_id)

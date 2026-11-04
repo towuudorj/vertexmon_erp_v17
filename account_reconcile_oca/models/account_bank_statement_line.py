@@ -803,6 +803,10 @@ class AccountBankStatementLine(models.Model):
         #for dt in self.reconcile_data_info['data']:
         #    if dt['cash_move_type_id'] == False:
         #        raise UserError(u"Мөнгөн гүйлгээний төрөл сонгоогүй байгаа тул сонгоно уу")
+        # "edit" горим батлагдсан бичилтэд мөр шууд нэмдэг тул _post-ийн шалгалт ажилладаггүй:
+        # авлага, өглөгийн мөрөнд харилцагч сонгосон эсэхийг энд шалгана (l10n_mn_account)
+        if hasattr(self.move_id, '_check_receivable_payable_partner'):
+            self.move_id._check_receivable_payable_partner()
         self.reconcile_data = False
         return result
 
