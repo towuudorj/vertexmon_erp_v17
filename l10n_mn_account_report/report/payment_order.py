@@ -21,7 +21,7 @@ class payment_order_reportsd(models.TransientModel):
         st_data = st_line_obj.browse(active_ids)
         data = {
             'company_name': st_data.company_id.name,
-            'director_name': u'М.Хишигмөнх' if st_data.company_id.id == 4 else u'Д.Мэндсайхан',
+            'director_name': u'М.Хишигмөнх' if st_data.company_id.id == 4 else u'Б.Өлзийт-Амгаланжаргал',
             'date': st_data.date,
             'partner_name': st_data.partner_id.name,
             'amount': st_data.amount,
