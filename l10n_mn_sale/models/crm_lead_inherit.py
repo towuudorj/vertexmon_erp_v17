@@ -381,6 +381,12 @@ class CrmLead(models.Model):
             for lines in line.lead_line_ids:
                 lines.state = 'cancel'
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_new_or_cancel(self):
+        locked_leads = self.filtered(lambda l: l.new_status not in ('new', 'cancel'))
+        if locked_leads:
+            raise UserError(_(u'Зөвхөн Шинэ эсвэл Цуцлагдсан төлөвтэй CRM устгах боломжтой: %s') % ', '.join(locked_leads.mapped(lambda l: l.code or l.name)))
+
     def create_quotation(self):
         for line in self:
             line.is_purchase == True
