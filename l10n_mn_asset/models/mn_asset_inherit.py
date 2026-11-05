@@ -6,6 +6,8 @@ from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 import calendar
 
+from ..wizard.asset_rename import RENAME_FIELDS
+
 class AccountAssetDepreciationLine(models.Model):
     _inherit = 'account.asset.depreciation.line'
     _description = 'Asset depreciation line'
@@ -111,12 +113,12 @@ class AccountAssetAsset(models.Model):
     state = fields.Selection(selection_add=[('scrap', 'Scrap')], ondelete={'scrap': 'cascade'},)
 
     def action_open_rename(self):
-        """Нэр/кодын хажуугийн ✎ товч: context-ийн rename_field-ээр wizard нээнэ."""
+        """Нэр/код/serial number-ийн хажуугийн ✎ товч: context-ийн rename_field-ээр wizard нээнэ."""
         self.ensure_one()
         field_name = self.env.context.get('rename_field', 'name')
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Хөрөнгийн нэр өөрчлөх' if field_name == 'name' else 'Хөрөнгийн код өөрчлөх',
+            'name': '%s өөрчлөх' % dict(RENAME_FIELDS)[field_name],
             'res_model': 'account.asset.rename',
             'view_mode': 'form',
             'target': 'new',

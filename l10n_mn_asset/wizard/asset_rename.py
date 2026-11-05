@@ -4,11 +4,11 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-RENAME_FIELDS = [('name', 'Хөрөнгийн нэр'), ('code', 'Хөрөнгийн код')]
+RENAME_FIELDS = [('name', 'Хөрөнгийн нэр'), ('code', 'Хөрөнгийн код'), ('serial_number', 'Serial Number')]
 
 
 class AccountAssetRename(models.TransientModel):
-    """Хөрөнгийн нэр/кодыг хуучин → шинэ утгаар солиж, chatter-т бүртгэнэ."""
+    """Хөрөнгийн нэр/код/serial number-ийг хуучин → шинэ утгаар солиж, chatter-т бүртгэнэ."""
     _name = 'account.asset.rename'
     _description = 'Хөрөнгийн нэр, код өөрчлөх'
 

@@ -31,7 +31,7 @@
                     <xpath expr='//sheet/group/group/field[@name="salvage_value"]' position="after">
                         <field name="write_up"/>
                     </xpath>
-                    <!-- Нэр, кодын хажууд ✎ товч: popup-аар хуучин → шинэ утгаар солино -->
+                    <!-- Нэр, код, serial number-ийн хажууд ✎ товч: popup-аар хуучин → шинэ утгаар солино -->
                     <xpath expr='//div[hasclass("oe_title")]/h1' position="replace">
                         <h1 class="d-flex align-items-center o_asset_rename_row">
                             <field name="name" placeholder="e.g. Laptop iBook" readonly="state != 'draft'"/>
@@ -51,9 +51,15 @@
                                     groups="account.group_account_manager"/>
                         </div>
                     </xpath>
-                    <!-- Serial number-ийг бүх төлөвт засна -->
-                    <xpath expr='//field[@name="serial_number"]' position="attributes">
-                        <attribute name="readonly">0</attribute>
+                    <xpath expr='//field[@name="serial_number"]' position="replace">
+                        <label for="serial_number"/>
+                        <div class="d-flex align-items-center o_asset_rename_row">
+                            <field name="serial_number" readonly="state != 'draft'"/>
+                            <button name="action_open_rename" type="object" icon="fa-pencil"
+                                    class="btn btn-link fs-5 ms-2 p-0" title="Serial Number өөрчлөх"
+                                    context="{'rename_field': 'serial_number'}" invisible="not id"
+                                    groups="account.group_account_manager"/>
+                        </div>
                     </xpath>
                     <xpath expr='//field[@name="state"]' position="replace">
                         <field name="state" widget="statusbar"/>
