@@ -46,6 +46,7 @@
             'wizard/asset_sale_view.xml',
             'wizard/asset_category_transfer_view.xml',
             'wizard/account_asset_gl_reconcile_view.xml',
+            'wizard/asset_rename_view.xml',
             'views/mn_asset_inherit.xml',
             'views/account_asset_category_view.xml',
             'views/asset_location_view.xml',
@@ -58,6 +59,11 @@
 
 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mn_asset/static/src/scss/asset_form.scss',
+        ],
+    },
     'test': [],
     'installable': True,
     'auto_install': False,

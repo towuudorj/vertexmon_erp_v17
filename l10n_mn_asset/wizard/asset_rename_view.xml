@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_asset_rename_form" model="ir.ui.view">
+            <field name="name">account.asset.rename.form</field>
+            <field name="model">account.asset.rename</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="asset_id" invisible="1"/>
+                        <field name="field_name" invisible="1"/>
+                        <field name="old_value"/>
+                        <field name="new_value" required="field_name == 'name'"/>
+                        <field name="reason" placeholder="Яагаад өөрчилж байгаа вэ?"/>
+                    </group>
+                    <footer>
+                        <button name="action_apply" string="Хадгалах" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Үл хэрэгсэх" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

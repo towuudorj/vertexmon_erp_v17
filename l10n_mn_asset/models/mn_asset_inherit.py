@@ -96,6 +96,8 @@ class AccountAssetAsset(models.Model):
 
     owner_id = fields.Many2one('hr.employee', string='Asset owner', tracking=True)
     serial_number = fields.Char(tracking=True)
+    name = fields.Char(tracking=True)
+    code = fields.Char(tracking=True)
     is_closed = fields.Boolean(string='Asset account remove')
     uom_id = fields.Many2one('uom.uom', string='Uom')
     asset_qty = fields.Float(string='Asset qty', default=1.0)
@@ -107,6 +109,19 @@ class AccountAssetAsset(models.Model):
     scrap_id = fields.Many2one('account.move', string='Scrap move')
     asset_location_id = fields.Many2one('asset.location', string='Asset location')
     state = fields.Selection(selection_add=[('scrap', 'Scrap')], ondelete={'scrap': 'cascade'},)
+
+    def action_open_rename(self):
+        """Нэр/кодын хажуугийн ✎ товч: context-ийн rename_field-ээр wizard нээнэ."""
+        self.ensure_one()
+        field_name = self.env.context.get('rename_field', 'name')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Хөрөнгийн нэр өөрчлөх' if field_name == 'name' else 'Хөрөнгийн код өөрчлөх',
+            'res_model': 'account.asset.rename',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_asset_id': self.id, 'default_field_name': field_name},
+        }
 
     def _mn_disposal_date(self):
         """Борлуулсан/акталсан огноо, данснаас хасаагүй бол False."""
