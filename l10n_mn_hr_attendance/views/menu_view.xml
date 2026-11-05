@@ -7,5 +7,12 @@
         </record>
         
 
+        <record id="action_attendance_manual_url" model="ir.actions.act_url">
+            <field name="name">Ирцийн гарын авлага</field>
+            <field name="url">/l10n_mn_hr_attendance/static/attendance_manual.html</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="attendance_manual_menu" name="Гарын авлага" parent="hr_attendance.menu_hr_attendance_root" sequence="99" action="action_attendance_manual_url" groups="hr_attendance.group_hr_attendance_officer"/>
+
     </data>
 </odoo>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цалингийн гарын авлага</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#FFFFFF; --card:#FFFFFF; --ink:#1E2521; --ink-soft:#57625B; --ink-faint:#8A948C; --line:#D9DCD1;
+    --jade:#29604F; --jade-ink:#1E4A3D; --jade-soft:#E3EEE8;
+    --seal:#9C3A2A; --seal-soft:#F6E3DE; --gold:#93691B; --gold-soft:#F2E8CE;
+    --shadow: 0 1px 2px rgba(30,37,33,.06), 0 8px 24px -12px rgba(30,37,33,.15); --radius: 10px;
+  }
+  *{box-sizing:border-box;} html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; font-size:15.5px; line-height:1.6; }
+  h1,h2,h3{ font-family:'IBM Plex Serif', ui-serif, Georgia, serif; text-wrap:balance; color:var(--ink); margin:0; }
+  code,.mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  a{ color:var(--jade-ink); }
+  .shell{ max-width:1180px; margin:0 auto; padding:0 24px 96px; }
+  .masthead{ padding:48px 0 32px; border-bottom:1px solid var(--line); margin-bottom:36px; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--jade); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--jade); display:inline-block; }
+  .masthead h1{ font-size:clamp(28px, 4vw, 42px); font-weight:600; letter-spacing:-.01em; }
+  .masthead p{ max-width:62ch; color:var(--ink-soft); font-size:16px; margin-top:12px; }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+  .chip{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.02em; color:var(--ink-soft); background:var(--card); border:1px solid var(--line); padding:5px 10px; border-radius:999px; }
+  .layout{ display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; align-items:start; }
+  nav.toc{ position:sticky; top:24px; display:flex; flex-direction:column; gap:2px; max-height:calc(100vh - 48px); overflow-y:auto; padding-right:8px; }
+  nav.toc a{ display:flex; gap:10px; align-items:baseline; padding:7px 8px; border-radius:7px; color:var(--ink-soft); text-decoration:none; font-size:13.5px; line-height:1.35; border-left:2px solid transparent; }
+  nav.toc a .n{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; width:16px; }
+  nav.toc a:hover{ background:var(--jade-soft); color:var(--ink); }
+  nav.toc a.active{ background:var(--jade-soft); color:var(--jade-ink); border-left-color:var(--jade); font-weight:600; }
+  nav.toc a.active .n{ color:var(--jade-ink); }
+  main{ display:flex; flex-direction:column; gap:56px; min-width:0; }
+  section{ scroll-margin-top:24px; }
+  .sec-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .sec-head .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--jade); background:var(--jade-soft); border-radius:6px; padding:3px 8px; }
+  .sec-head h2{ font-size:22px; font-weight:600; }
+  section > p{ color:var(--ink-soft); max-width:72ch; }
+  section > p.lead{ color:var(--ink); font-size:16px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+  ol.steps{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  ol.steps li{ display:grid; grid-template-columns:26px 1fr; gap:12px; padding-bottom:12px; border-bottom:1px dashed var(--line); }
+  ol.steps li:last-child{ border-bottom:none; padding-bottom:0; }
+  ol.steps li .idx{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--jade); background:var(--jade-soft); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  ol.steps li .txt{ color:var(--ink-soft); } ol.steps li .txt strong{ color:var(--ink); font-weight:600; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); }
+  th, td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ background:var(--jade-soft); color:var(--jade-ink); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; font-weight:600; white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:color-mix(in srgb, var(--jade-soft) 45%, transparent); }
+  td.mono, th.mono{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; }
+  .badge{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.02em; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .b-neutral{ background:var(--line); color:var(--ink-soft); }
+  .b-gold{ background:var(--gold-soft); color:var(--gold); }
+  .b-jade{ background:var(--jade-soft); color:var(--jade-ink); }
+  .b-seal{ background:var(--seal-soft); color:var(--seal); }
+  .btnlabel{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:12px; background:var(--ink); color:var(--paper); padding:3px 10px; border-radius:6px; }
+  .grouplabel{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11.5px; background:var(--seal-soft); color:var(--seal); padding:3px 9px; border-radius:6px; }
+  .callout{ display:grid; grid-template-columns:auto 1fr; gap:12px; padding:14px 16px; border-radius:var(--radius); border:1px solid var(--line); margin-top:16px; font-size:14px; }
+  .callout .ico{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px; padding-top:1px;}
+  .callout.info{ background:var(--jade-soft); border-color:transparent; } .callout.info .ico{ color:var(--jade-ink); }
+  .callout.warn{ background:var(--gold-soft); border-color:transparent; } .callout.warn .ico{ color:var(--gold); }
+  .callout.approve{ background:var(--seal-soft); border-color:transparent; } .callout.approve .ico{ color:var(--seal); }
+  .callout p{ margin:0; color:var(--ink); } .callout strong{ color:var(--ink); }
+  .flow{ display:grid; gap:14px; margin-top:20px; }
+  .flow-row{ display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:stretch; }
+  .flow-tag{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; }
+  .flow-track{ display:flex; flex-wrap:wrap; align-items:center; gap:0; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; }
+  .flow-node{ font-size:13px; padding:6px 12px; border-radius:7px; background:var(--jade-soft); color:var(--jade-ink); font-weight:600; white-space:nowrap; }
+  .flow-node.end-ok{ background:var(--jade); color:#fff; }
+  .flow-arrow{ color:var(--ink-faint); padding:0 10px; font-size:14px; }
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } @media (max-width:640px){ .two-col{ grid-template-columns:1fr; } }
+  footer{ margin-top:64px; padding-top:24px; border-top:1px solid var(--line); color:var(--ink-faint); font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  @media (max-width:900px){
+    .layout{ grid-template-columns:1fr; }
+    nav.toc{ position:static; flex-direction:row; overflow-x:auto; max-height:none; gap:6px; padding-bottom:10px; border-bottom:1px solid var(--line); margin-bottom:8px; }
+    nav.toc a{ border-left:none; border-bottom:2px solid transparent; flex-shrink:0; }
+    nav.toc a.active{ border-left-color:transparent; border-bottom-color:var(--jade); }
+  }
+  @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
+</style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow">Vertexmon ERP · Цалингийн модуль · Хүний нөөц, Цалингийн нягтлан бодогчид зориулав</div>
+    <h1>Цалингийн гарын авлага</h1>
+    <p>Сар бүрийн цалин бодох дараалал: ажилтны цагийн бүртгэл → батлах шат → урьдчилгаа цалин → сүүл цалингийн багц → тайлан, банкны файл, НДШ/ХХОАТ тайлан.</p>
+    <div class="meta-row">
+      <span class="chip">10 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
+      <span class="chip">Модуль: l10n_mn_payroll</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" id="toc">
+      <a href="#py1"><span class="n">1</span>Сарын дараалал</a>
+      <a href="#py2"><span class="n">2</span>Эрхийн бүлэг</a>
+      <a href="#py3"><span class="n">3</span>Тохиргоо</a>
+      <a href="#py4"><span class="n">4</span>Цагийн бүртгэл</a>
+      <a href="#py5"><span class="n">5</span>Урьдчилгаа цалин</a>
+      <a href="#py6"><span class="n">6</span>Цалингийн багц</a>
+      <a href="#py7"><span class="n">7</span>Ээлжийн амралт</a>
+      <a href="#py8"><span class="n">8</span>Тайлангууд</a>
+      <a href="#py9"><span class="n">9</span>Бусад</a>
+      <a href="#py10"><span class="n">10</span>Түгээмэл алдаа</a>
+    </nav>
+
+    <main>
+
+      <section id="py1">
+        <div class="sec-head"><span class="num">1</span><h2>Сар бүрийн цалин бодох дараалал</h2></div>
+        <div class="flow">
+          <div class="flow-row">
+            <div class="flow-tag">Урьдчилгаа</div>
+            <div class="flow-track">
+              <span class="flow-node">Цагийн бүртгэл (сарын эхний хагас)</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Урьдчилгаа цалингийн багц</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-ok">Банкны файл</span>
+            </div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-tag">Сүүл цалин</div>
+            <div class="flow-track">
+              <span class="flow-node">Цагийн бүртгэл (сар)</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Батлах → Зөвшөөрөх → Дуусгах</span><span class="flow-arrow">→</span>
+              <span class="flow-node">Сүүл цалингийн багц</span><span class="flow-arrow">→</span>
+              <span class="flow-node end-ok">Тайлан, НДШ, ХХОАТ</span>
+            </div>
+          </div>
+        </div>
+        <div class="callout info"><span class="ico">Эх өгөгдөл</span><p>Цагийн бүртгэл нь <strong>Ирц</strong> (HikCentral/Timely) ба <strong>батлагдсан чөлөө</strong>-өөс бодогддог. Ирц дутуу бол эхлээд <a href="/l10n_mn_hr_attendance/static/attendance_manual.html">Ирцийн гарын авлага</a>-ын дагуу засуулна.</p></div>
+      </section>
+
+      <section id="py2">
+        <div class="sec-head"><span class="num">2</span><h2>Эрхийн бүлэг</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Бүлэг</th><th>Юу хийх</th></tr></thead>
+            <tbody>
+              <tr><td><span class="grouplabel">ХНМ Батлах</span></td><td>Цагийн бүртгэл <span class="btnlabel">Тооцоолох</span>, <span class="btnlabel">Батлах</span>, <span class="btnlabel">Цуцлах</span>, <span class="btnlabel">Тайлан татах</span>.</td></tr>
+              <tr><td><span class="grouplabel">Албаны менежер Батлах</span></td><td>Батлагдсан цагийн бүртгэлийг <span class="btnlabel">Зөвшөөрөх</span>.</td></tr>
+              <tr><td><span class="grouplabel">ХНМ Дуусгах</span></td><td>Зөвшөөрөгдсөн бүртгэлийг <span class="btnlabel">Дуусгах</span> — цалин бодоход ашиглагдах эцсийн төлөв.</td></tr>
+              <tr><td><span class="grouplabel">Ээлжийн амралт бодох</span></td><td>Ээлжийн амралтын тооцоолол хийх.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="py3">
+        <div class="sec-head"><span class="num">3</span><h2>Тохиргоо (Payroll → Configuration)</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Цэс</th><th>Зориулалт</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Цалингийн мөчлөг</strong></td><td>Он, сар бүрийн цалингийн хугацаа — хоцролт, тайлан энэ мөчлөгөөр бодогдоно.</td></tr>
+              <tr><td><strong>Ажилласан өдөр бүртгэх</strong></td><td>Сарын ажлын хоног/цагийн норм (сарын ажлын фонд) — <span class="btnlabel">Батлах</span>.</td></tr>
+              <tr><td><strong>NDSH → Даатгуулагчийн төрөл</strong></td><td>НДШ-ийн төрөл, ажилтны шимтгэлийн хувь (HR менежер).</td></tr>
+              <tr><td><strong>NDSH → Ажлын мэргэжлийн ангилал, Улсын бүртгэл, Салбарын бүртгэл</strong></td><td>НДШ тайлангийн лавлах.</td></tr>
+              <tr><td><strong>Татварын орлогын төрөл</strong></td><td>ХХОАТ тайлангийн орлогын ангилал.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Хөдөлмөрийн гэрээ</strong>-нд үндсэн цалингаас гадна утасны, удирдлагын, хоол унааны, удаан жилийн, хэвийн бус нөхцөлийн нэмэгдэл, эрүүл мэнд/ослын даатгал, ваучер; <strong>Ажлын цагийн хуваарь</strong>-т ажлын цаг, үдийн цайны эхлэх/дуусах цагийг бөглөнө. Цалингийн журналын төрөл — <span class="badge b-neutral">Salary</span>.</p>
+      </section>
+
+      <section id="py4">
+        <div class="sec-head"><span class="num">4</span><h2>Ажилтны цагийн бүртгэл</h2></div>
+        <p>Цэс: <strong>Payroll → Цалингийн тооцоолол → Ажилтны цагийн бүртгэл</strong>.</p>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt"><strong>Шинэ</strong> — нэр, <strong>Эхлэх/Дуусах огноо</strong>, шаардлагатай бол <strong>Хэлтэс</strong> (хоосон бол компанийн бүх ажилтан), ажлын хоног/амралтын хоногийг бөглөнө.</div></li>
+          <li><span class="idx">2</span><div class="txt"><span class="btnlabel">Ажилтны мэдээлэл татах</span> — ирцийн код эсвэл Timely ID-тэй ажилтнуудыг ирц, чөлөөтэй нь мөрөөр татна.</div></li>
+          <li><span class="idx">3</span><div class="txt"><span class="btnlabel">Тооцоолох</span> — мөр бүрт ажиллах ёстой/ажилласан хоног ба цаг, өвчтэй, гадуур ажил, шөнийн цаг, ээлжийн амралт, тасалсан цаг, илүү цаг, баярын өдөр, хоцролт (минут), нийт тооцох цаг бодогдоно.</div></li>
+          <li><span class="idx">4</span><div class="txt"><span class="btnlabel">Тайлан</span> / <span class="btnlabel">Тайлан татах</span> — Excel-ээр хянана. Зөв бол <span class="btnlabel">Батлах</span> (ХНМ).</div></li>
+          <li><span class="idx">5</span><div class="txt">Албаны менежер <span class="btnlabel">Зөвшөөрөх</span> → ХНМ <span class="btnlabel">Дуусгах</span>.</div></li>
+        </ol>
+        <p>Төлөв: <span class="badge b-neutral">Draft</span> → <span class="badge b-gold">Confirmed</span> → <span class="badge b-jade">Posted</span> → <span class="badge b-jade">Done</span>. <span class="btnlabel">Цуцлах</span> (ХНМ) нь Ноорог ба Posted төлөвт харагдана; Confirmed ба Done төлөвт цуцлах боломжгүй.</p>
+        <div class="callout warn"><span class="ico">Анхаар</span><p>Ажилтанд ажлын цагийн хуваарь тохируулаагүй бол «…ажилтны ажлын цагийг тохируулаагүй байна!» алдаа гарна. Ирц засварыг (VMC Connect) цагийн бүртгэл <strong>Дуусгах</strong>-аас өмнө батлуулж дуусгаарай.</p></div>
+      </section>
+
+      <section id="py5">
+        <div class="sec-head"><span class="num">5</span><h2>Урьдчилгаа цалин</h2></div>
+        <p>Хоёр арга бий:</p>
+        <ul>
+          <li><strong>Payroll → Цалингийн тооцоолол → Урьдчилгаа цалин</strong>: огноо, хугацаа, хэлтэс, <strong>Цалингийн урьдчилгаа олгох хувь</strong>, ажлын хоног, журналыг бөглөж <span class="btnlabel">Ажилчид импортлох</span> → мөр бүрт урьдчилгаа, бусад төлбөр, гарт олгох дүн, <strong>Банкаар эсэх</strong> гарна → <span class="btnlabel">Батлах</span>.</li>
+          <li><strong>Цалингийн багц</strong>-ыг <span class="badge b-gold">Урьдчилгаа цалин</span> төрлөөр үүсгэх (6-р бүлэг): цалингийн дүрэм бодохгүй, зөвхөн урьдчилгааны (ADVP) мөр үүснэ; ажиллах ёстой/ажилласан цаг, урьдчилгаа олгох дүн харагдана.</li>
+        </ul>
+      </section>
+
+      <section id="py6">
+        <div class="sec-head"><span class="num">6</span><h2>Цалингийн багц (Payslip Batches)</h2></div>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt">Багцын дээд хэсэгт <strong>Цалингийн төрөл</strong>: <span class="badge b-gold">Урьдчилгаа цалин</span> эсвэл <span class="badge b-jade">Сүүл цалин</span>.</div></li>
+          <li><span class="idx">2</span><div class="txt">Сүүл цалинд <strong>Урьдчилгаа цалингийн багц</strong> (дууссан урьдчилгааны багц)-ыг сонговол ажилтан бүрийн урьдчилгаа <strong>ADV</strong> оролтод автоматаар татагдаж, суутгагдана.</div></li>
+          <li><span class="idx">3</span><div class="txt">Ажилтнуудаа нэмж цалингийн хуудсуудыг бодно. Хуудас бүрт: үндсэн цалин, сарын ажлын хоног/фонд цаг, ажилласан хоног/цаг, илүү цаг ба нэмэгдэл, бодогдсон цалин, амралтын мөнгө, гүйцэтгэлийн/бусад нэмэгдэл, олговол зохих, урьдчилгаа, НДШ (даатгуулагч/ажил олгогч), ХАОАТ, утасны суутгал, ажилчдаас авлага, гарт олгох.</div></li>
+          <li><span class="idx">4</span><div class="txt"><span class="btnlabel">Хэвлэх</span> — батлах гарын үсгийн мөртэй цалингийн тайлан (Excel). Урьдчилгааны багцад товч 7 баганатай (№, Овог, Нэр, Хэлтэс, Данс, Урьдчилгаа, Регистр).</div></li>
+          <li><span class="idx">5</span><div class="txt"><span class="btnlabel">Импортлох</span> (ноорог багцад) — Excel тайлангаас (толгой нь 4–5-р мөрөнд) дүнгүүдийг хуудсуудад буцааж оруулна. «-» тэмдэгтэй нүд 0 гэж уншигдана.</div></li>
+        </ol>
+        <p>Багцын жагсаалтад «Урьдчилгаа цалин» / «Сүүл цалин» шүүлтүүр, төрлөөр бүлэглэх боломжтой. Цалингийн хуудасны мөрийг засвал <strong>дараагийн мөрүүдийг дахин бодох</strong> үйлдлээр үлдсэн мөрүүдийг шинэчилнэ.</p>
+      </section>
+
+      <section id="py7">
+        <div class="sec-head"><span class="num">7</span><h2>Ээлжийн амралтын тооцоолол</h2></div>
+        <p>Цэс: <strong>Payroll → Цалингийн тооцоолол → Ээлжийн амралтын тооцоолол</strong> (<span class="grouplabel">Ээлжийн амралт бодох</span>). Ажилтан, <strong>амрах хоног</strong>-ийг оруулж <span class="btnlabel">Тооцоолох</span> — дундаж цалин, амралтын цалин, НДШ, ХХОАТ, гарт олгох дүн бодогдоно → <span class="btnlabel">Батлах</span>. Тайлан: <strong>Shift holiday report</strong>.</p>
+        <p>Жирэмсний амралт дуусахаас <strong>2 хоногийн өмнө</strong> ажилтанд (шууд удирдлага, хэлтсийн менежер, чөлөө батлагчийг CC-д) ажилд гарах өдрийн мэдэгдэл автоматаар очно.</p>
+      </section>
+
+      <section id="py8">
+        <div class="sec-head"><span class="num">8</span><h2>Тайлангууд (Payroll → Тайлан)</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Тайлан</th><th>Зориулалт</th></tr></thead>
+            <tbody>
+              <tr><td>Цалингийн тайлан</td><td>Хугацаа/хэлтсээр нэгтгэсэн цалингийн хүснэгт.</td></tr>
+              <tr><td>ХХОАТ тайлан</td><td>Хувь хүний орлогын албан татварын тайлан (татварын орлогын төрлөөр).</td></tr>
+              <tr><td>НДШ импорт загвар</td><td>НДШ-ийн системд оруулах загвар файл.</td></tr>
+              <tr><td>Гарт олгох цалин</td><td>Банкинд илгээх цалингийн шилжүүлгийн файл.</td></tr>
+              <tr><td>Ирцийн дэлгэрэнгүй тайлан / Ирцийн тайлан</td><td>Ажилтны ирцийн задаргаа (Excel).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="py9">
+        <div class="sec-head"><span class="num">9</span><h2>Бусад үйлдэл</h2></div>
+        <ul>
+          <li><strong>Дикрит бичилт үүсгэх</strong> — Ажилтны жагсаалтаас ажилтнуудыг сонгоод Action → «Дикрит бичилт үүсгэх»: <strong>Хувь</strong> (гэрээний цалингаас), <strong>Огноо</strong>, журналыг сонгож <span class="btnlabel">Бичилт үүсгэх</span>. Ажилтны дикритийн дебет/кредит дансаар бичилт үүснэ; ажилтан бүрт сард нэг удаа.</li>
+        </ul>
+      </section>
+
+      <section id="py10">
+        <div class="sec-head"><span class="num">10</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Мэдэгдэл</th><th>Учир шалтгаан / Шийдэл</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">… ажилтны ажлын цагийг тохируулаагүй байна!</td><td>Ажилтны/гэрээний ажлын цагийн хуваарийг бөглөнө.</td></tr>
+              <tr><td class="mono">… ажилтан дээр хөдөлмөрийн гэрээ үүсээгүй байна.</td><td>Ажилтанд идэвхтэй гэрээ үүсгэнэ.</td></tr>
+              <tr><td class="mono">No running contract found for the employee…</td><td>Сонгосон хугацаанд гэрээ идэвхгүй.</td></tr>
+              <tr><td class="mono">Цагийн бүртгэл үүсгээгүй эсвэл батлагдаагүй байгаа тул шалгана уу!</td><td>Тухайн хугацааны цагийн бүртгэлийг батлуулж дуусгана.</td></tr>
+              <tr><td class="mono">Ажилласан цаг болон ажиллах ёстой цаг 0 их байх ёстой…</td><td>Цагийн бүртгэлийн мөрийн цаг 0 — ирцийг шалгана.</td></tr>
+              <tr><td class="mono">Ажилласан сарын бүртгэл үүсгэнэ үү!</td><td>Тохиргоо → Ажилласан өдөр бүртгэх-д тухайн сарыг үүсгэнэ.</td></tr>
+              <tr><td class="mono">Амрах хоног ороогүй байгаа тул оруулана уу!</td><td>Ээлжийн амралтын мөрөнд хоног бөглөнө.</td></tr>
+              <tr><td class="mono">Excel файлаа сонгоно уу! / Excel файл уншихад алдаа гарлаа</td><td>Багц импортлоход файл сонгоогүй эсвэл загвар зөрсөн — «Хэвлэх»-ээр гарсан файлыг ашиглана.</td></tr>
+              <tr><td class="mono">Буцаалт хийгдсэн тул дахин буцаалт хийхгүй.</td><td>Цалингийн хуудсыг нэг удаа л буцаана.</td></tr>
+              <tr><td class="mono">… ажилтных сард нэг удаа үүсэх…</td><td>Дикрит бичилт тухайн сард аль хэдийн үүссэн.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <span>Vertexmon ERP · Цалингийн гарын авлага</span>
+        <span>Эх сурвалж: l10n_mn_payroll, om_hr_payroll модуль (Odoo 17)</span>
+      </footer>
+    </main>
+  </div>
+</div>
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){ links.forEach(function(l){ l.classList.remove('active'); }); links[idx].classList.add('active'); }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
+  })();
+</script>
+</body>
+</html>

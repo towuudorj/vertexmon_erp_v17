@@ -84,6 +84,29 @@
   }
   @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -92,30 +115,41 @@
     <h1>Худалдан авалтын ажилтны гарын авлага</h1>
     <p>Үнийн судалгаа хийхээс эхлээд захиалга бэлтгэж, хяналтанд илгээж, нэхэмжлэл авах хүртэлх алхмууд.</p>
     <div class="meta-row">
-      <span class="chip">10 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">11 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_purchase</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>Шинэ «Захиалгын тайлан»</li>
+        <li>«Шууд зарлагадах» урсгал (10-р бүлэг)</li>
+        <li>Үйлчилгээ төрлийн барааны нэхэмжлэл, шинжилгээний тархалт автомат</li>
+        <li>Үнийн судалгааны CRM Код багана, үнэ/тооны лог</li>
+        <li>Шинэ имэйл мэдэгдлүүд</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#p01"><span class="n">01</span>Ажлын урсгал</a>
-      <a href="#p02"><span class="n">02</span>Үнийн судалгаа</a>
-      <a href="#p03"><span class="n">03</span>Захиалга бэлтгэх</a>
-      <a href="#p04"><span class="n">04</span>Хяналтанд илгээх</a>
-      <a href="#p05"><span class="n">05</span>Дараагийн шат</a>
-      <a href="#p06"><span class="n">06</span>Нэхэмжлэл</a>
-      <a href="#p07"><span class="n">07</span>Тайлан ба мөрийн жагсаалт</a>
-      <a href="#p08"><span class="n">08</span>RFQ нэгтгэх</a>
-      <a href="#p09"><span class="n">09</span>Мэдэгдэл</a>
-      <a href="#p10"><span class="n">10</span>Түгээмэл алдаа</a>
+      <a href="#p01"><span class="n">1</span>Ажлын урсгал</a>
+      <a href="#p02"><span class="n">2</span>Үнийн судалгаа</a>
+      <a href="#p03"><span class="n">3</span>Захиалга бэлтгэх</a>
+      <a href="#p04"><span class="n">4</span>Хяналтанд илгээх</a>
+      <a href="#p05"><span class="n">5</span>Дараагийн шат</a>
+      <a href="#p06"><span class="n">6</span>Нэхэмжлэл</a>
+      <a href="#p07"><span class="n">7</span>Тайлан ба мөрийн жагсаалт</a>
+      <a href="#p08"><span class="n">8</span>RFQ нэгтгэх</a>
+      <a href="#p09"><span class="n">9</span>Мэдэгдэл</a>
+      <a href="#p10"><span class="n">10</span>Шууд зарлагадах</a>
+      <a href="#p11"><span class="n">11</span>Түгээмэл алдаа</a>
     </nav>
 
     <main>
 
       <section id="p01">
-        <div class="sec-head"><span class="num">01</span><h2>Ажлын урсгалын тойм</h2></div>
+        <div class="sec-head"><span class="num">1</span><h2>Ажлын урсгалын тойм</h2></div>
         <p class="lead">Худалдан авалтын ихэнх ажил Борлуулалт/CRM-ээс ирсэн <strong>Худалдан авалтын хүсэлт</strong>-ээс (purchase.requisition) эхэлдэг: борлуулагч Сэжим дээр мөрийг «Худалдан авалт» гэж тэмдэглэж, танд хуваарилсны дараа таны эрхэнд ирнэ.</p>
         <div class="flow">
           <div class="flow-row">
@@ -134,7 +168,7 @@
       </section>
 
       <section id="p02">
-        <div class="sec-head"><span class="num">02</span><h2>Үнийн судалгаа хийх (Худалдан авалтын хүсэлт)</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Үнийн судалгаа хийх (Худалдан авалтын хүсэлт)</h2></div>
         <p>Цэс: <strong>Purchase → Үнийн судалгааны хувиарлалт</strong>. Таны эрхэнд хуваарилагдсан мөр бүрд:</p>
         <div class="table-wrap">
           <table>
@@ -142,18 +176,19 @@
             <tbody>
               <tr><td><span class="badge b-neutral">Шинэ</span></td><td><span class="btnlabel">Quotation start</span></td><td>Судалгаа эхлэхэд дугаар автоматаар олгогдож, төлөв «Судлаж байгаа» болно.</td></tr>
               <tr><td><span class="badge b-gold">Судлаж байгаа</span></td><td><span class="btnlabel">Quotation end</span></td><td>Мөр бүрт нийлүүлэгч, үнэ, валют бөглөсний дараа дарна — судалсан үнэ Сэжим рүү буцаж очно, борлуулагчид имэйл мэдэгдэл очно.</td></tr>
-              <tr><td><span class="badge b-jade">Судалгаа дууссан</span></td><td>—</td><td>Борлуулалтын менежер «Зөвшөөрөх» дарахыг хүлээнэ (04-р бүлэг Борлуулалтын гарын авлагад дэлгэрэнгүй).</td></tr>
+              <tr><td><span class="badge b-jade">Судалгаа дууссан</span></td><td>—</td><td>Борлуулалтын менежер «Зөвшөөрөх» дарахыг хүлээнэ (<a href="/l10n_mn_sale/static/sales_manual_employee.html#s04">Борлуулалтын гарын авлагын 4-р бүлэг</a>т дэлгэрэнгүй).</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="callout warn">
-          <span class="ico">Заавал</span>
-          <p>«Quotation end» дарахаас өмнө мөр бүрт <strong>нийлүүлэгч</strong> болон <strong>үнэ/валют</strong> бөглөгдсөн байх ёстой — эсрэг тохиолдолд алдаа гарч зогсоно (09-р бүлэг).</p>
+        <p>Жагсаалтад <strong>CRM Код</strong> багана нэмэгдсэн — мөр аль Сэжимээс ирсэнийг шууд харна. Багц захиалгын <strong>Агуулах</strong> талбар Сэжимээс ирдэг тул зөвхөн уншигдана. Мөрийн <strong>үнэ</strong> эсвэл <strong>тоо хэмжээг</strong> өөрчлөх бүрд «хуучин → шинэ» тэмдэглэл Багц захиалга болон холбогдох Сэжимийн chatter-т бичигдэнэ. Судалгаа эхэлсэн («Судлаж байгаа») байсан ч борлуулагчийн шинээр нэмсэн мөрүүд Багц захиалгад орж ирнэ.</p>
+<div class="callout warn">
+<span class="ico">Заавал</span>
+<p>«Quotation end» дарахаас өмнө мөр бүрт <strong>нийлүүлэгч</strong> болон <strong>үнэ/валют</strong> бөглөгдсөн байх ёстой — эсрэг тохиолдолд алдаа гарч зогсоно (11-р бүлэг).</p>
         </div>
       </section>
 
       <section id="p03">
-        <div class="sec-head"><span class="num">03</span><h2>Захиалга (PO) бэлтгэх</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Захиалга (PO) бэлтгэх</h2></div>
         <p>Борлуулалтын менежер зөвшөөрсний дараа систем автоматаар <strong>Ноорог (draft)</strong> төлөвтэй Худалдан авалтын захиалга үүсгэдэг. Та үүн дээр:</p>
         <ol class="steps">
           <li><span class="idx">1</span><div class="txt">Мөр бүрийн тоо хэмжээ, нэгжийн үнийг шалгаж, шаардлагатай бол засна.</div></li>
@@ -163,7 +198,7 @@
       </section>
 
       <section id="p04">
-        <div class="sec-head"><span class="num">04</span><h2>Хяналтанд илгээх</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>Хяналтанд илгээх</h2></div>
         <p>Захиалга бэлэн болмогц <span class="btnlabel">Хяналтанд илгээх</span> (Request) товчийг дарна. Энэ модульд стандарт «Confirm Order» товч ажилтанд <strong>харагдахгүй</strong> — өөрөө шууд баталгаажуулах боломжгүй, зайлшгүй хяналтад орно.</p>
         <div class="callout info">
           <span class="ico">Санамж</span>
@@ -172,7 +207,7 @@
       </section>
 
       <section id="p05">
-        <div class="sec-head"><span class="num">05</span><h2>Дараагийн шат — хэн юу хийдэг</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Дараагийн шат — хэн юу хийдэг</h2></div>
         <div class="two-col">
           <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Батлагдвал</h3><p style="margin:0;">Захиалга «Purchase» төлөвт орж, бараа хүлээн авах/нэхэмжлэл авах боломжтой болно.</p></div>
           <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Буцаагдвал (Reject)</h3><p style="margin:0;">Захиалга дахин «Ноорог» болно — тэмдэглэсэн зүйлийг засаад дахин «Хяналтанд илгээх» дарна.</p></div>
@@ -181,8 +216,9 @@
       </section>
 
       <section id="p06">
-        <div class="sec-head"><span class="num">06</span><h2>Нэхэмжлэл (Bill) авах</h2></div>
-        <p>Захиалга «Purchase» төлөвтэй бөгөөд нэхэмжлээгүй мөр байвал <span class="btnlabel">Нэхэмжлэл үүсгэх</span> (Create Bill) товч гарна. Цонхноос сонгоно:</p>
+        <div class="sec-head"><span class="num">6</span><h2>Нэхэмжлэл (Bill) авах</h2></div>
+        <p><strong>Purchase → Хяналт</strong> цэс батлагдсан ч Хүлээн авалт, Нэхэмжлэл, Төлбөрийн аль нэг шат дуусаагүй захиалгуудыг харуулна.</p>
+<p>Захиалга «Purchase» төлөвтэй бөгөөд нэхэмжлээгүй мөр байвал <span class="btnlabel">Нэхэмжлэл үүсгэх</span> (Create Bill) товч гарна. Цонхноос сонгоно:</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Талбар</th><th>Сонголт</th></tr></thead>
@@ -192,47 +228,69 @@
             </tbody>
           </table>
         </div>
-        <div class="callout warn">
-          <span class="ico">Анхаар</span>
-          <p><strong>Урьдчилгаа төлбөр</strong> болон <strong>Эцсийн санхүүжилт</strong> төрлөөр нэг захиалгад зөвхөн нэг нэхэмжлэл үүсгэх боломжтой.</p>
+        <ul style="margin:10px 0 0; padding-left:20px; color:var(--ink-soft);">
+<li><strong>Үйлчилгээ</strong> төрлийн бараатай мөрөөс нэхэмжлэл үүсгэхэд нэхэмжлэлийн мөр урьдчилгааны бараа биш тухайн <strong>үйлчилгээний бараагаар</strong> үүснэ.</li>
+<li>Захиалга шинжилгээний данс (төсөл)-тэй бол нэхэмжлэлийн мөрөнд <strong>шинжилгээний тархалт</strong> 100% автоматаар бөглөгдөнө.</li>
+<li>Нэхэмжлэлийн <strong>Баримтын дугаар</strong>-т захиалга автоматаар холбогдоно (<a href="/l10n_mn_account/static/account_manual_employee.html#a04">Санхүүгийн гарын авлага</a>-г үзнэ үү).</li>
+</ul>
+<div class="callout warn">
+<span class="ico">Анхаар</span>
+<p><strong>Урьдчилгаа төлбөр</strong> болон <strong>Эцсийн санхүүжилт</strong> төрлөөр нэг захиалгад зөвхөн нэг нэхэмжлэл үүсгэх боломжтой.</p>
         </div>
       </section>
 
       <section id="p07">
-        <div class="sec-head"><span class="num">07</span><h2>Тайлан ба мөрийн жагсаалт</h2></div>
+        <div class="sec-head"><span class="num">7</span><h2>Тайлан ба мөрийн жагсаалт</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Цэс</th><th>Тайлбар</th></tr></thead>
             <tbody>
-              <tr><td>Purchase detail report</td><td>Худалдан авалтын дэлгэрэнгүй тайлан (.xlsx) — бараа/ангиллаар, дотоод/гадаадаар шүүнэ.</td></tr>
-              <tr><td>Purchase summary report</td><td>Худалдан авалтын хураангуй тайлан (.xlsx) — худалдан авагчаар шүүнэ.</td></tr>
+              <tr><td><strong>Захиалгын тайлан</strong> <span class="badge b-jade">шинэ</span></td><td>Захиалгын/батлагдсан огноогоор; Дотоод/Гадаад; Хүргэгдсэн эсэх (Бүрэн / Хэсэгчлэн / Хүлээгдэж буй); Нийлүүлэгч, Эцсийн хэрэглэгч, Барааны ангилал, Бараа, Худалдан авалтын ажилтан, Төлөвөөр шүүнэ. <span class="btnlabel">Харах</span> — дэлгэцэнд, <span class="btnlabel">Хэвлэх</span> — Excel.</td></tr>
+<tr><td>Purchase detail report</td><td>Худалдан авалтын дэлгэрэнгүй тайлан (.xlsx) — бараа/ангиллаар, дотоод/гадаадаар шүүнэ. <strong>Show customs VAT</strong> сонговол гаалийн НӨАТ-ыг тусад нь харуулна.</td></tr>
+              <tr><td>Purchase summary report</td><td>Худалдан авалтын хураангуй тайлан (.xlsx) — худалдан авагчаар шүүнэ. Буцаалтын дүн зөв хасагдана.</td></tr>
+<tr><td>Purchase expense report</td><td>Нэмэлт зардлын (тээвэр, гааль) тайлан — гаалийн татварын задаргаатай.</td></tr>
               <tr><td>Purchase Order Line / RFQ Line</td><td>Бүх захиалгын мөрийг нэг жагсаалтад хурдан харах (list/kanban/pivot).</td></tr>
             </tbody>
           </table>
         </div>
-        <p style="margin-top:10px;">Ажилтны эрхээр эдгээр тайланг үүсгэж болох ч <strong>устгах боломжгүй</strong> — устгах эрх зөвхөн менежерт байдаг.</p>
+        <p style="margin-top:10px;">Хэвлэх загварууд <strong>Reporting → Загвар</strong> дэд цэсэнд байрлана. Худалдан авалтын Dashboard-ын дүн компанийн валютаар (₮) хөрвүүлэгдэж харагдана. Ажилтны эрхээр эдгээр тайланг үүсгэж болох ч <strong>устгах боломжгүй</strong> — устгах эрх зөвхөн менежерт байдаг.</p>
       </section>
 
       <section id="p08">
-        <div class="sec-head"><span class="num">08</span><h2>RFQ нэгтгэх</h2></div>
+        <div class="sec-head"><span class="num">8</span><h2>RFQ нэгтгэх</h2></div>
         <p>Захиалгын жагсаалтаас хэд хэдэн RFQ сонгоод <strong>Action → Merge Orders</strong> ашиглан нэгтгэж болно (зөвхөн Ноорог/Илгээсэн төлөвтэй захиалгад л ажиллана).</p>
       </section>
 
       <section id="p09">
-        <div class="sec-head"><span class="num">09</span><h2>Мэдэгдэл (имэйл)</h2></div>
+        <div class="sec-head"><span class="num">9</span><h2>Мэдэгдэл (имэйл)</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Үйлдэл</th><th>Хэнд очих</th><th>Агуулга</th></tr></thead>
             <tbody>
               <tr><td>Та <span class="btnlabel">Quotation end</span> дарах (үнийн судалгаа дуусгах)</td><td>Сэжимийг үүсгэсэн борлуулагч</td><td>Судалсан үнэ Сэжим рүү буцаж очиж, судалгаа дууссаныг мэдэгдэнэ.</td></tr>
-              <tr><td>Захиалга «Confirm Order»-оор баталгаажих (Нягтлан бодогч/менежрийн шатанд)</td><td>Холбогдох Төсөл/CRM-ийн менежер (захиалга аналитик данстай бол)</td><td>«Худалдан авалтын захиалга: {дугаар} батлагдсан байна.»</td></tr>
+              <tr><td>Захиалга «Confirm Order»-оор баталгаажих (Нягтлан бодогч/менежрийн шатанд)</td><td>Холбогдох Төсөл/CRM-ийн менежер (захиалга аналитик данстай бол)</td><td>«Худалдан авалтын захиалга: {дугаар} батлагдсан байна.» — Төсөл, Төслийн менежер, Нийлүүлэгчийн мэдээлэлтэй.</td></tr>
+<tr><td>«Шууд зарлагадах» захиалга батлагдах</td><td>Худалдан авалтын ажилтан (та)</td><td>«Төслийн зарлагын баримт үүслээ: {дугаар}» — 10-р бүлгийг үзнэ үү.</td></tr>
+<tr><td>Дотоод худалдан авалтын бараа хүлээн авагдах</td><td>Худалдан авалтын ажилтан (та)</td><td>«Дотоод худалдан авалт: {дугаар} -ийн барааг хүлээн авлаа.»</td></tr>
+<tr><td>Төсөлд шууд зарлагадсан баримт «Done» болох</td><td>Худалдан авалтын ажилтан (та)</td><td>«Төслийн зарлагын баримт гарлаа: {дугаар}»</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
       <section id="p10">
-        <div class="sec-head"><span class="num">10</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
+<div class="sec-head"><span class="num">10</span><h2>Төслийн дотоод худалдан авалт — Шууд зарлагадах</h2></div>
+<p>Төслөөс <strong>Дотоод худалдан авалтын хүсэлт</strong> үүсгэхэд мөр бүрт <strong>Шууд зарлагадах</strong> гэж тэмдэглэж болно. Тэмдэглэсэн мөрөөс үүссэн захиалгын «Purchase delivery invoice» табд «Шууд зарлагадах» (зөвхөн унших) харагдана.</p>
+<ol class="steps">
+<li><span class="idx">1</span><div class="txt">Захиалга батлагдахад төслийн <strong>зарлагын баримт</strong> (төслийн ажиллагааны төрлөөр, төслийн шинжилгээний данстай, үнэ нь төслийн барааны жагсаалтын үнээр) автоматаар үүсч баталгаажина, төсөл болон төслийн барааны мөрүүдэд холбогдоно.</div></li>
+<li><span class="idx">2</span><div class="txt">Танд «Төслийн зарлагын баримт үүслээ» имэйл очно. Баримт агуулахын гарын үсгийн урсгалаар явж, «Done» болоход «Төслийн зарлагын баримт гарлаа» имэйл дахин очно.</div></li>
+</ol>
+<div class="callout info">
+<span class="ico">Санамж</span>
+<p>Дотоод худалдан авалтын захиалга үүсэхэд CRM/төслийн менежерт «батлана уу», дотоод худалдан авалтын ажилтнуудад «шалгана уу» гэсэн имэйл Төсөл, Төслийн менежер, Нийлүүлэгч, нийт дүнгийн мэдээлэлтэй очно.</p>
+</div>
+</section>
+<section id="p11">
+        <div class="sec-head"><span class="num">11</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Мэдэгдэл</th><th>Учир шалтгаан</th></tr></thead>
@@ -268,6 +326,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

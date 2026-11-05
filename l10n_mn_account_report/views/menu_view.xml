@@ -137,4 +137,11 @@
 			
 
                 
+
+		<record id="action_account_report_manual_url" model="ir.actions.act_url">
+			<field name="name">Санхүүгийн тайлан</field>
+			<field name="url">/l10n_mn_account_report/static/account_report_manual.html</field>
+			<field name="target">new</field>
+		</record>
+		<menuitem id="account_report_manual_menu" name="Санхүүгийн тайлан" parent="l10n_mn_account.account_manual_root_menu" sequence="4" action="action_account_report_manual_url" groups="account.group_account_user,account.group_account_manager"/>
 </odoo>

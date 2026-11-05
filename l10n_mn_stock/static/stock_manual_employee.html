@@ -84,6 +84,29 @@
   }
   @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -92,34 +115,44 @@
     <h1>Агуулахын ажилтны гарын авлага</h1>
     <p>Бараа хүлээн авах, салгах, буцаах, гарын үсгийн зөвшөөрлийн урсгал болон тооллого хийх өдөр тутмын ажлууд.</p>
     <div class="meta-row">
-      <span class="chip">9 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">10 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_stock</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>Backorder-т гарын үсгийн жагсаалт хуулагдана</li>
+        <li>Баримт дуусахад үүсгэсэн ажилтанд имэйл</li>
+        <li>Хэвлэмэлийн дүн валютаар, хэсэгчилсэн хүргэлтийн дүн хувиар</li>
+        <li>Брэнд шүүлтүүр, Reporting → Загвар, барааны нэр өөрчлөлтийн лог (9-р бүлэг)</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#w01"><span class="n">01</span>Ажлын урсгал</a>
-      <a href="#w02"><span class="n">02</span>Бараа хүлээн авах</a>
-      <a href="#w03"><span class="n">03</span>Хүлээн авсныг салгах</a>
-      <a href="#w04"><span class="n">04</span>Гарын үсэг, мэдэгдэл</a>
-      <a href="#w05"><span class="n">05</span>Буцаалт хийх</a>
-      <a href="#w06"><span class="n">06</span>Тооллого хийх</a>
-      <a href="#w07"><span class="n">07</span>Ноороглох (Back to draft)</a>
-      <a href="#w08"><span class="n">08</span>Агуулахын хязгаарлалт</a>
-      <a href="#w09"><span class="n">09</span>Түгээмэл алдаа</a>
+      <a href="#w01"><span class="n">1</span>Ажлын урсгал</a>
+      <a href="#w02"><span class="n">2</span>Бараа хүлээн авах</a>
+      <a href="#w03"><span class="n">3</span>Хүлээн авсныг салгах</a>
+      <a href="#w04"><span class="n">4</span>Гарын үсэг, мэдэгдэл</a>
+      <a href="#w05"><span class="n">5</span>Буцаалт хийх</a>
+      <a href="#w06"><span class="n">6</span>Тооллого хийх</a>
+      <a href="#w07"><span class="n">7</span>Ноороглох (Back to draft)</a>
+      <a href="#w08"><span class="n">8</span>Агуулахын хязгаарлалт</a>
+      <a href="#w09"><span class="n">9</span>Тайлан, бүртгэл</a>
+      <a href="#w10"><span class="n">10</span>Түгээмэл алдаа</a>
     </nav>
 
     <main>
 
       <section id="w01">
-        <div class="sec-head"><span class="num">01</span><h2>Ажлын урсгалын тойм</h2></div>
-        <p class="lead">Агуулахын ажилтны өдөр тутмын ажил гурван тэнхлэгтэй: <strong>хүлээн авалт/хүргэлт</strong> (picking), <strong>тооллого</strong> (inventory count), <strong>буцаалт</strong> (return). Гурвуулаа тодорхой эрхийн бүлэг шаарддаг тул та эсвэл багийн ахлагч эрхээ 02-08-р бүлгүүдтэй тулгаж шалгаарай.</p>
+        <div class="sec-head"><span class="num">1</span><h2>Ажлын урсгалын тойм</h2></div>
+        <p class="lead">Агуулахын ажилтны өдөр тутмын ажил гурван тэнхлэгтэй: <strong>хүлээн авалт/хүргэлт</strong> (picking), <strong>тооллого</strong> (inventory count), <strong>буцаалт</strong> (return). Гурвуулаа тодорхой эрхийн бүлэг шаарддаг тул та эсвэл багийн ахлагч эрхээ 2-8-р бүлгүүдтэй тулгаж шалгаарай.</p>
       </section>
 
       <section id="w02">
-        <div class="sec-head"><span class="num">02</span><h2>Бараа хүлээн авах / хүргэх</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Бараа хүлээн авах / хүргэх</h2></div>
         <p>Ирсэн барааг <strong>Receipts</strong>, гарах барааг <strong>Deliveries</strong> цэснээс нээнэ. Мөр бүрийн тоо хэмжээг шалгаад:</p>
         <div class="flow">
           <div class="flow-row">
@@ -136,14 +169,15 @@
           <p><span class="btnlabel">Confirm</span> болон <span class="btnlabel">Validate</span> товч зөвхөн <span class="grouplabel">Агуулахад хүлээн авах</span> бүлэгтэй хэрэглэгчид харагдана — зөвхөн ерөнхий агуулахын эрхээр (stock.group_stock_user) хангалтгүй.</p>
         </div>
         <p style="margin-top:14px;">Захиалгын хажууд «Гарын үсэг зөвшөөрсөн» (approve_use_stamp) нүд байвал тэмдэглэхэд таны нэр баталгаажуулагчаар бүртгэгдэнэ.</p>
+<p><strong>Inventory → Хяналт</strong> цэс батлагдсан ч гүйцэт хийгдээгүй, дутуу (backorder) үлдсэн шилжүүлгүүдийг жагсаана — өдөр бүр шалгаж дуусгаарай.</p>
         <div class="callout warn">
           <span class="ico">Төсөлтэй шилжүүлэг</span>
-          <p>Хэрэв шилжүүлэг дээр <strong>Аналитик данс</strong> (Төсөл) сонгогдсон бол: (1) мөр нэмэх (Add a line) боломжгүй болно, (2) <span class="btnlabel">Cancel</span> үйлдлийг зөвхөн <span class="grouplabel">Агуулахын менежер</span> хийж чадна, (3) шилжүүлэг Хүлээгдэж байгаа/Бэлэн төлөвтэй бөгөөд Аналитик данс аль хэдийн бөглөгдсөн бол уг талбарыг ч мөн зөвхөн Агуулахын менежер өөрчилж чадна. Эдгээрийн аль нэгийг ердийн ажилтан оролдвол алдааны мэдэгдэлтэй зогсоно — 09-р бүлгээс дэлгэрэнгүйг үзнэ үү.</p>
+          <p>Хэрэв шилжүүлэг дээр <strong>Аналитик данс</strong> (Төсөл) сонгогдсон бол: (1) мөр нэмэх (Add a line) боломжгүй болно, (2) <span class="btnlabel">Cancel</span> үйлдлийг зөвхөн <span class="grouplabel">Агуулахын менежер</span> хийж чадна, (3) шилжүүлэг Хүлээгдэж байгаа/Бэлэн төлөвтэй бөгөөд Аналитик данс аль хэдийн бөглөгдсөн бол уг талбарыг ч мөн зөвхөн Агуулахын менежер өөрчилж чадна. Эдгээрийн аль нэгийг ердийн ажилтан оролдвол алдааны мэдэгдэлтэй зогсоно — 10-р бүлгээс дэлгэрэнгүйг үзнэ үү.</p>
         </div>
       </section>
 
       <section id="w03">
-        <div class="sec-head"><span class="num">03</span><h2>Хүлээн авсан барааг салгах</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Хүлээн авсан барааг салгах</h2></div>
         <p>Хүлээж авсан мөр дээр бодит байдал ялгаатай (өөр бараа/тоо орж ирсэн) бол мөрийн зэргэлдээх <span class="btnlabel">Салгах</span> товч дарж «Хүлээн авсан бараа засварлах» цонхыг нээнэ.</p>
         <ol class="steps">
           <li><span class="idx">1</span><div class="txt">Шинэ мөр(үүд) нэмж, тус бүрийн бараа/тоо хэмжээг зөв бичнэ.</div></li>
@@ -157,7 +191,7 @@
       </section>
 
       <section id="w04">
-        <div class="sec-head"><span class="num">04</span><h2>Гарын үсэг зурах ба мэдэгдэл</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>Гарын үсэг зурах ба мэдэгдэл</h2></div>
         <p>Агуулахын зарлагын баримт (Хүргэлтийн баримт/Шаардах) үүсэх бүрт дараах дараалсан гарын үсгийн зөвшөөрлийн урсгал эхэлдэг. Захиалгын <strong>«Signature approves»</strong> табаас энэ урсгалыг бүхэлд нь харна.</p>
         <div class="table-wrap">
           <table>
@@ -175,16 +209,23 @@
           <li><span class="idx">1</span><div class="txt">Дээрх 5 хүн дараалан гарын үсгээ зурах ёстой. Таны ээлж ирэхэд (өмнөх бүх хүн зурсны дараа) л <span class="btnlabel">Гарын үсэг зурах</span> товч танд харагдана.</div></li>
           <li><span class="idx">2</span><div class="txt"><strong>Мэдэгдэл:</strong> хүн бүр зурах бүрд систем шууд дараагийн ээлжийн хүнд имэйл мэдэгдэл автоматаар илгээнэ — та хүн бүрт утсаар/чатаар сануулах шаардлагагүй. Хэн, хэзээ зурснаа системд нэрсийн жагсаалтаар харна.</div></li>
           <li><span class="idx">3</span><div class="txt">Бүгд зурсны дараа баримт <strong>Агуулахын нярав</strong> руу очиж, нярав сүүлд гарын үсэг зурснаар л бараа материал агуулахаас бодитоор гарна.</div></li>
-          <li><span class="idx">4</span><div class="txt">Мөн зэрэгцээгээр <strong>Нягтлан бодогч</strong> баримтын <strong>Анхан шатны баримт</strong>-ыг хэвлэнэ — энэ баримт дээр гарын үсэг зурсан хүн бүрийн нэр, дараалал системээс автоматаар хэвлэгдэнэ.</div></li>
-        </ol>
+          <li><span class="idx">4</span><div class="txt">Мөн зэрэгцээгээр <strong>Нягтлан бодогч</strong> баримтын <strong>Анхан шатны баримт</strong>-ыг хэвлэнэ — энэ баримт дээр гарын үсэг зурсан хүн бүрийн нэр, гарын үсгийн зураг тасархай шугамын дээр зөв байрлалаар автоматаар хэвлэгдэнэ.</div></li>
+<li><span class="idx">5</span><div class="txt"><strong>Дууссаны мэдэгдэл:</strong> баримт «Done» болоход түүнийг үүсгэсэн ажилтанд (эсвэл орлон гүйцэтгэгчид) «Зарлагын баримт / Шаардах {дугаар} дууссан төлөвт орлоо» имэйл очно. Борлуулалттай холбоотой бол захиалгын дугаар, харилцагчийн нэр хамт харагдана.</div></li>
+<li><span class="idx">6</span><div class="txt"><strong>Дутуу хүргэлт (Backorder):</strong> баримтыг хэсэгчлэн хүргээд үлдэгдлийг backorder болгоход эх баримтын гарын үсгийн жагсаалт (хүн, орлон гүйцэтгэгч, дараалал, зурсан төлөв) шинэ баримт руу <strong>хуулагдана</strong> — урсгалыг дахин эхлүүлэх шаардлагагүй.</div></li>
+</ol>
+<p>Гарын үсэг зуруулах хүсэлтийн имэйлд баримтын төрөл (Зарлагын баримт / Шаардах), дугаар, борлуулалтын ажилтан, борлуулалттай бол захиалга ба харилцагчийн нэр харагдана.</p>
         <div class="callout info">
           <span class="ico">Санамж</span>
           <p>Хэн нэг нь гарын үсэг зураагүй л бол баримт «Гарын үсэг зурсан эсэх» шалгуураас цааш урагшлахгүй — тухайн хүнд шууд хандаж сануулна уу. Хариуцсан хүн байхгүй үед «Орлон гүйцэтгэгч» бүртгэгдсэн бол тэр хүн ч мөн адил гарын үсэг зурж болно.</p>
         </div>
-      </section>
+      <div class="callout info">
+<span class="ico">Хэвлэмэл баримт</span>
+<p>Зарлагын баримтын хэвлэмэлд дүнгүүд захиалгын <strong>валютаар</strong> харагдана. Хэсэгчилсэн хүргэлтэд мөрийн дүн борлуулалтын мөрийн дүнгээс <strong>хүргэсэн тооны хувиар</strong> тооцогдоно; дууссан баримтын нийт дүн бодитоор хүргэсэн мөрүүдээр гарна.</p>
+</div>
+</section>
 
       <section id="w05">
-        <div class="sec-head"><span class="num">05</span><h2>Буцаалт хийх</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Буцаалт хийх</h2></div>
         <p>Захиалга дээрх <strong>Return</strong> товчоор буцаалтын баримт үүсгэнэ. Дараах тохиолдолд буцаалт хийх боломжгүй:</p>
         <div class="table-wrap">
           <table>
@@ -199,7 +240,7 @@
       </section>
 
       <section id="w06">
-        <div class="sec-head"><span class="num">06</span><h2>Тооллого хийх</h2></div>
+        <div class="sec-head"><span class="num">6</span><h2>Тооллого хийх</h2></div>
         <p>Цэс: <strong>Inventory → Operations → Тооллогын баримт</strong>. Тооллогын явц:</p>
         <div class="table-wrap">
           <table>
@@ -219,17 +260,25 @@
       </section>
 
       <section id="w07">
-        <div class="sec-head"><span class="num">07</span><h2>Цуцлагдсан баримтыг ноороглох</h2></div>
+        <div class="sec-head"><span class="num">7</span><h2>Цуцлагдсан баримтыг ноороглох</h2></div>
         <p>Цуцлагдсан (Cancel) хүргэлт/хүлээн авалтыг дахин нээх шаардлагатай бол <span class="btnlabel">Back to draft</span> товчийг дарна — энэ нь зөвхөн «Cancel» төлөвт байгаа баримтад л ажиллана, дурын нэвтэрсэн хэрэглэгчид нээлттэй.</p>
       </section>
 
       <section id="w08">
-        <div class="sec-head"><span class="num">08</span><h2>Агуулахын хязгаарлалт</h2></div>
+        <div class="sec-head"><span class="num">8</span><h2>Агуулахын хязгаарлалт</h2></div>
         <p>Тохиргоонд «Restrict Stock Warehouse» идэвхжсэн бол таны хэрэглэгчийн бүртгэлд оноогдсон агуулахаас бусад захиалга, байршил, хүргэлт танд харагдахгүй байж болно. Хэрэв өдөр тутам ажилладаг захиалга/байршил гэнэт алга болсон бол энэ тохиргооноос үүдэлтэй байж магадгүй — багийн ахлагчаас шалгуулна уу.</p>
       </section>
 
       <section id="w09">
-        <div class="sec-head"><span class="num">09</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
+<div class="sec-head"><span class="num">9</span><h2>Тайлан ба барааны бүртгэл</h2></div>
+<ul>
+<li><strong>Stock detail report</strong> болон <strong>Stock summary report</strong> (Бараа материалын хураангуй тайлан)-д <strong>Брэнд</strong> шүүлтүүр нэмэгдсэн. Хураангуй тайлан шинэчлэгдэж, «Тооллогын хөдөлгөөн харуулахгүй», «Хөдөлгөөнгүй эхний үлдэгдэл 0 барааг харуулахгүй» сонголтуудтай.</li>
+<li>Хэвлэх загварууд (Шаардах хуудас, Зарлагын баримт, Орлогын баримт, Ажлын хувцас карт) <strong>Inventory → Reporting → Загвар</strong> дэд цэс рүү шилжсэн.</li>
+<li>Барааны <strong>нэрийг өөрчлөх</strong> бүрт өөрчлөлт chatter-т бүртгэгдэнэ.</li>
+</ul>
+</section>
+<section id="w10">
+        <div class="sec-head"><span class="num">10</span><h2>Түгээмэл алдааны мэдэгдэл</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Мэдэгдэл</th><th>Учир шалтгаан</th></tr></thead>
@@ -267,6 +316,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

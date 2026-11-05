@@ -76,6 +76,29 @@
   }
   @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -84,33 +107,43 @@
     <h1>Төслийн менежерийн гарын авлага</h1>
     <p>Эрхийн бүлэг, төслийг санхүүгийн бичилттэйгээр хаах, «Явагдаж буй» төлөвт цоожлогдох талбарууд, харагдах эрхийн хязгаарлалт.</p>
     <div class="meta-row">
-      <span class="chip">8 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">9 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_project</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>Төсөл хаахад шинжилгээний данс түгжигдэнэ</li>
+        <li>Төслийн төсвийн 90%-ийн анхааруулга (8-р бүлэг)</li>
+        <li>Project Dashboard</li>
+        <li>Санхүүгийн эрхгүй менежер хаагдсан төслөө нээх боломжтой</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#prm01"><span class="n">01</span>Үүрэг тойм</a>
-      <a href="#prm02"><span class="n">02</span>Эрхийн бүлэг</a>
-      <a href="#prm03"><span class="n">03</span>Төсөл хаах</a>
-      <a href="#prm04"><span class="n">04</span>Цоожлогдох талбарууд</a>
-      <a href="#prm05"><span class="n">05</span>Харагдах эрх</a>
-      <a href="#prm06"><span class="n">06</span>Тохиргоо</a>
-      <a href="#prm07"><span class="n">07</span>Мэдэгдэл</a>
-      <a href="#prm08"><span class="n">08</span>Түгээмэл асуулт</a>
+      <a href="#prm01"><span class="n">1</span>Үүрэг тойм</a>
+      <a href="#prm02"><span class="n">2</span>Эрхийн бүлэг</a>
+      <a href="#prm03"><span class="n">3</span>Төсөл хаах</a>
+      <a href="#prm04"><span class="n">4</span>Цоожлогдох талбарууд</a>
+      <a href="#prm05"><span class="n">5</span>Харагдах эрх</a>
+      <a href="#prm06"><span class="n">6</span>Тохиргоо</a>
+      <a href="#prm07"><span class="n">7</span>Мэдэгдэл</a>
+      <a href="#prm08"><span class="n">8</span>Төсөв хянах, Dashboard</a>
+<a href="#prm09"><span class="n">9</span>Түгээмэл асуулт</a>
     </nav>
 
     <main>
 
       <section id="prm01">
-        <div class="sec-head"><span class="num">01</span><h2>Менежерийн үүргийн тойм</h2></div>
-        <p class="lead">Төслийн гишүүний гарын авлагад заасны дагуу гишүүд «Явагдаж буй» хүртэл төслийг өөрсдөө урагшлуулна. Менежер (болон Нягтлан бодогч/Ахлах нягтлан бодогч) үлдсэн хоёр цэгийг хариуцна: <strong>«Явагдаж буй» төслийн гол талбарыг засах</strong> ба <strong>төслийг санхүүгийн бичилттэйгээр хаах</strong>.</p>
+        <div class="sec-head"><span class="num">1</span><h2>Менежерийн үүргийн тойм</h2></div>
+        <p class="lead"><a href="/l10n_mn_project/static/project_manual_employee.html">Төслийн гишүүний гарын авлага</a>д заасны дагуу гишүүд «Явагдаж буй» хүртэл төслийг өөрсдөө урагшлуулна. Менежер (болон Нягтлан бодогч/Ахлах нягтлан бодогч) үлдсэн хоёр цэгийг хариуцна: <strong>«Явагдаж буй» төслийн гол талбарыг засах</strong> ба <strong>төслийг санхүүгийн бичилттэйгээр хаах</strong>.</p>
       </section>
 
       <section id="prm02">
-        <div class="sec-head"><span class="num">02</span><h2>Эрхийн бүлэг</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Эрхийн бүлэг</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Эрхийн бүлэг</th><th>Юунд ашиглагдана</th></tr></thead>
@@ -129,17 +162,22 @@
       </section>
 
       <section id="prm03">
-        <div class="sec-head"><span class="num">03</span><h2>Төслийг санхүүгийн бичилттэйгээр хаах</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Төслийг санхүүгийн бичилттэйгээр хаах</h2></div>
         <p><span class="btnlabel">Дууссан</span> товч дарахад систем автоматаар:</p>
         <ol class="steps">
           <li><span class="idx">1</span><div class="txt">Барааны жагсаалтаас харилцагчийн нэхэмжлэл (out_invoice) үүсгэж post хийнэ.</div></li>
           <li><span class="idx">2</span><div class="txt">Тохирох журналын бичилт (entry) үүсгэнэ.</div></li>
           <li><span class="idx">3</span><div class="txt">Төслийг «close_move_id»/«invoice_id»-тай холбож, төлөв «Дууссан» болгоно.</div></li>
-        </ol>
+<li><span class="idx">4</span><div class="txt">Хаалтын бичилт батлагдсаны дараа төслийн <strong>шинжилгээний данс түгжигдэнэ</strong> («Төсөл хаагдсан: …» шалтгаантай) — архивлагдахгүй, тайланд харагдсаар, гэхдээ шинэ гүйлгээнд сонгогдохгүй. Түгжээг зөвхөн Ахлах нягтлан бодогч тайлна.</div></li>
+</ol>
+<div class="callout info">
+<span class="ico">Эрх</span>
+<p>Хаалтын журналын бичилт (close_move_id) зөвхөн санхүүгийн унших эрхтэй хэрэглэгчид харагдана. Санхүүгийн эрхгүй төслийн менежер хаагдсан төслөө нээх, «Нийт өртөг/ашиг»-ийг харах боломжтой.</p>
+</div>
       </section>
 
       <section id="prm04">
-        <div class="sec-head"><span class="num">04</span><h2>«Явагдаж буй» төлөвт цоожлогдох талбарууд</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>«Явагдаж буй» төлөвт цоожлогдох талбарууд</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Талбарын бүлэг</th><th>Засах шаардлагатай эрх</th></tr></thead>
@@ -156,17 +194,17 @@
       </section>
 
       <section id="prm05">
-        <div class="sec-head"><span class="num">05</span><h2>Харагдах эрхийн хязгаарлалт</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Харагдах эрхийн хязгаарлалт</h2></div>
         <p>Ердийн Төслийн менежер зөвхөн өөрөө хариуцагчаар нь (user_id) орсон төслүүдийг харна. Компанийн бүх төслийг нэгэн зэрэг харах шаардлагатай хэрэглэгчид (ерөнхий менежер, admin) <span class="grouplabel">Администратор</span> бүлгийг нэмж өгнө.</p>
       </section>
 
       <section id="prm06">
-        <div class="sec-head"><span class="num">06</span><h2>Тохиргоо</h2></div>
+        <div class="sec-head"><span class="num">6</span><h2>Тохиргоо</h2></div>
         <p>Цэс: <strong>Project → Configuration</strong> — зөвхөн менежерт харагдана (Багийн бүртгэл — project_team — үүнд багтана; энэ нь Борлуулалтын CRM баг-аас тусдаа, зөвхөн төслийн гишүүдийг бүрдүүлэхэд ашиглагдана).</p>
       </section>
 
       <section id="prm07">
-        <div class="sec-head"><span class="num">07</span><h2>Мэдэгдэл (имэйл)</h2></div>
+        <div class="sec-head"><span class="num">7</span><h2>Мэдэгдэл (имэйл)</h2></div>
         <p>Хэрэв та ажилтны шууд удирдлагаар (HR-ийн зохион байгуулалтын бүтэц дэх «Manager») бүртгэгдсэн бол дараах имэйл танд шууд очно:</p>
         <div class="table-wrap">
           <table>
@@ -183,13 +221,27 @@
       </section>
 
       <section id="prm08">
-        <div class="sec-head"><span class="num">08</span><h2>Түгээмэл асуулт</h2></div>
+<div class="sec-head"><span class="num">8</span><h2>Төслийн төсөв хянах ба Dashboard</h2></div>
+<p><strong>Төсвийн анхааруулга:</strong> барааны маягтад <strong>«Төслийн төсөв хянах»</strong> (Худалдан авалтын хэмжих нэгжийн доор) тэмдэглэсэн бараагаар төслийн худалдан авалтын нэхэмжлэл батлагдах бүрт систем тухайн төслийн барааны мөрийн <strong>төлөвлөсөн дүнтэй</strong> харьцуулна. Батлагдсан нэхэмжлэлийн нийт дүн төлөвлөсөн дүнгийн <strong>90%</strong>-д хүрэхэд «Төслийн төсвийн анхааруулга: {төсөл} - {бараа}» имэйл очно:</p>
+<ul>
+<li>Төслийн хариуцагчийн шууд удирдлага,</li>
+<li>«Санхүүгийн шинжээч» ажлын байртай ажилтан,</li>
+<li>«Ахлах нягтлан бодогч» ажлын байртай ажилтан.</li>
+</ul>
+<p>Имэйлд Төсөл, Бараа, Нийт зарлагдсан дүн, Төлөвлөсөн дүн харагдана. Ажлын байрны нэр яг ийм бичигдсэн, ажлын имэйл бөглөгдсөн байх ёстой.</p>
+<p><strong>Project Dashboard:</strong> Dashboards → Project хэсэгт шинэчлэгдсэн төслийн самбар (Төслийн хэрэглэгч эрхтэй бүх хүнд) — одоо ба өмнөх үеийн нийт статистик, төслийн тоо ба гэрээний дүнг алба/хэлтэс, менежер, харилцагч, төлвөөр харуулж, Явагдаж буй болон Төлөвлөсөн төслүүдийн жагсаалттай. Гарчиг бүр дээр дарж холбогдох жагсаалт/pivot руу орно. Төслийн жагсаалтад <strong>Хэлтэс</strong>, <strong>Гэрээний дүн</strong> багана нэмэгдсэн.</p>
+<p><strong>CRM-тэй уялдаа:</strong> Сэжимийн барааны мөрөнд <strong>«Төсөлд төлөвлөсөн тоо»</strong> багана нь ижил агуулахын идэвхтэй төслүүдэд төлөвлөгдсөн, зарлагадаагүй тоог харуулж, борлуулагч төслийн нөөцийг зарчихахаас сэргийлнэ — төслийн барааны жагсаалтыг бодитоор нь байлгаарай.</p>
+</section>
+<section id="prm09">
+<div class="sec-head"><span class="num">9</span><h2>Түгээмэл асуулт</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Асуудал</th><th>Шалтгаан / Шийдэл</th></tr></thead>
             <tbody>
               <tr><td>Менежерт «Дууссан» товч харагдахгүй байна</td><td>account.group_account_manager бүлэг оноогоогүй — энэ бол цэвэр Төслийн менежерийн эрхээс тусдаа.</td></tr>
-              <tr><td>Гишүүн бус хүн бүх төслийг харж байна</td><td>«Администратор» бүлгийг зайлшгүй хэрэгтэй хүнд л оноож байгаарай.</td></tr>
+              <tr><td>Хаагдсан төслийн данс руу зардал бичиж чадахгүй байна</td><td>Төсөл хаагдахад шинжилгээний данс түгжигддэг — Ахлах нягтлан бодогчоор түгжээг түр тайлуулна.</td></tr>
+<tr><td>Төсвийн анхааруулга имэйл ирэхгүй байна</td><td>Бараанд «Төслийн төсөв хянах» тэмдэглээгүй, барааны мөрийн нийт дүн 0, эсвэл хүлээн авагчийн ажлын байр/имэйл буруу.</td></tr>
+<tr><td>Гишүүн бус хүн бүх төслийг харж байна</td><td>«Администратор» бүлгийг зайлшгүй хэрэгтэй хүнд л оноож байгаарай.</td></tr>
               <tr><td>«Явагдаж буй» төслийн дүн засагдахгүй байна</td><td>Энэ хамгаалалт зориудаар байгаа — Ахлах нягтлан бодогч/Нягтлан бодогч л засна.</td></tr>
               <tr><td>Зарлага хийгдсэн бараа мөрийг Ахлах нягтлан бодогч ч засаж чадахгүй байна</td><td>Учир зөв — зарлага хийгдсэн мөрийн Бараа/Тоо хэмжээний хамгаалалт эрхийн бүлгээс үл хамаарна.</td></tr>
             </tbody>
@@ -217,6 +269,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

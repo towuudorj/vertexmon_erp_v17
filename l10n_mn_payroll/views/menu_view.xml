@@ -27,5 +27,12 @@
 			<menuitem id="working_day_register_menu" name="Working day register" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_working_day_register_tree_view"/>
 			<menuitem id="vat_income_type_menu" name="VAT Income Type" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_vat_income_type_tree_view"/>
 			<menuitem id="salary_month_range_menu" name="Salary Month Range" parent="om_hr_payroll.menu_hr_payroll_configuration" action="action_hr_salary_month_range" sequence="100"/>
+
+			<record id="action_payroll_manual_url" model="ir.actions.act_url">
+				<field name="name">Цалингийн гарын авлага</field>
+				<field name="url">/l10n_mn_payroll/static/payroll_manual.html</field>
+				<field name="target">new</field>
+			</record>
+			<menuitem id="payroll_manual_menu" name="Гарын авлага" parent="om_hr_payroll.menu_hr_payroll_root" sequence="99" action="action_payroll_manual_url" groups="om_hr_payroll.group_hr_payroll_user,om_hr_payroll.group_hr_payroll_manager"/>
 	</data>
 </odoo>

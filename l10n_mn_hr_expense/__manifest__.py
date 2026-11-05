@@ -33,6 +33,7 @@
             'report/expense_report_view.xml',
             'views/hr_expense_sheet_inherit_view.xml',
             'views/report_view.xml',
+            'views/menu_view.xml',
     ],
     'assets':
         {

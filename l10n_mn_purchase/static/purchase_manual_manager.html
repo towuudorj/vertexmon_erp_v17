@@ -83,6 +83,29 @@
   }
   @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -92,32 +115,39 @@
     <p>Захиалга батлах эрхийн зөв хуваарилалт, хоёр шаттай баталгаажуулалт, тохиргоо болон тайлангийн бүрэн хяналт.</p>
     <div class="meta-row">
       <span class="chip">8 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_purchase</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>Захиалгын тайлан, Хяналт цэс</li>
+        <li>Dashboard компанийн валютаар, гаалийн НӨАТ, буцаалтын тооцоо</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#pm01"><span class="n">01</span>Үүрэг тойм</a>
-      <a href="#pm02"><span class="n">02</span>Эрхийн бүлэг</a>
-      <a href="#pm03"><span class="n">03</span>Захиалга батлах</a>
-      <a href="#pm04"><span class="n">04</span>Хоёр шаттай батлалт</a>
-      <a href="#pm05"><span class="n">05</span>Тохиргоо</a>
-      <a href="#pm06"><span class="n">06</span>Тайлан хяналт</a>
-      <a href="#pm07"><span class="n">07</span>Мэдэгдэл</a>
-      <a href="#pm08"><span class="n">08</span>Түгээмэл асуулт</a>
+      <a href="#pm01"><span class="n">1</span>Үүрэг тойм</a>
+      <a href="#pm02"><span class="n">2</span>Эрхийн бүлэг</a>
+      <a href="#pm03"><span class="n">3</span>Захиалга батлах</a>
+      <a href="#pm04"><span class="n">4</span>Хоёр шаттай батлалт</a>
+      <a href="#pm05"><span class="n">5</span>Тохиргоо</a>
+      <a href="#pm06"><span class="n">6</span>Тайлан хяналт</a>
+      <a href="#pm07"><span class="n">7</span>Мэдэгдэл</a>
+      <a href="#pm08"><span class="n">8</span>Түгээмэл асуулт</a>
     </nav>
 
     <main>
 
       <section id="pm01">
-        <div class="sec-head"><span class="num">01</span><h2>Менежерийн үүргийн тойм</h2></div>
-        <p class="lead">Худалдан авалтын ажилтны гарын авлагад тодорхойлсон урсгалд менежер (болон санхүүгийн шинжээч) 3 цэгт оролцоно: <strong>захиалга батлах/буцаах</strong>, <strong>тохиргоо (тээврийн төрөл г.м) удирдах</strong>, <strong>тайланд бүрэн CRUD эрхтэйгээр хяналт тавих</strong>.</p>
+        <div class="sec-head"><span class="num">1</span><h2>Менежерийн үүргийн тойм</h2></div>
+        <p class="lead"><a href="/l10n_mn_purchase/static/purchase_manual_employee.html">Худалдан авалтын ажилтны гарын авлага</a>д тодорхойлсон урсгалд менежер (болон санхүүгийн шинжээч) 3 цэгт оролцоно: <strong>захиалга батлах/буцаах</strong>, <strong>тохиргоо (тээврийн төрөл г.м) удирдах</strong>, <strong>тайланд бүрэн CRUD эрхтэйгээр хяналт тавих</strong>.</p>
       </section>
 
       <section id="pm02">
-        <div class="sec-head"><span class="num">02</span><h2>Эрхийн бүлэг — чухал ялгаа</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Эрхийн бүлэг — чухал ялгаа</h2></div>
         <div class="callout warn">
           <span class="ico">Чухал</span>
           <p>Захиалгыг <strong>«Хяналтанд илгээх» → «Confirm Order»</strong> болгож баталгаажуулах эрх нь <span class="grouplabel">Худалдан авалтын менежер</span> бүлэгт БИШ, харин <span class="grouplabel">Нягтлан бодогч</span> (l10n_mn_account.group_financial_analyst) бүлэгт байдаг. Худалдан авалтын менежерт зөвхөн энэ бүлгийг оноовол «Confirm Order»/«Reject» товч харагдахгүй байх магадлалтай — эдгээр 2 эрхийг тусад нь шалгаж, шаардлагатай бол хоёуланг нь нэг хүнд олгоно уу.</p>
@@ -127,7 +157,7 @@
             <thead><tr><th>Эрхийн бүлэг</th><th>Юунд ашиглагдана</th></tr></thead>
             <tbody>
               <tr><td><span class="grouplabel">Худалдан авалтын менежер</span> (purchase.group_purchase_manager)</td><td>Тохиргооны цэс, Тээврийн төрлийн бүртгэл/тайлангийн бүрэн CRUD (устгах эрх), «Approve Order» (хоёр шаттай баталгаажуулалтын 2-р шат), «Unlock».</td></tr>
-              <tr><td><span class="grouplabel">Нягтлан бодогч</span> (l10n_mn_account.group_financial_analyst)</td><td>Захиалгыг «Sent» төлвөөс «Confirm Order» / «Reject» хийх — бодит хяналтын шат.</td></tr>
+              <tr><td><span class="grouplabel">Нягтлан бодогч</span> (l10n_mn_account.group_financial_analyst; системд «Санхүүгийн шинжээч» нэртэй)</td><td>Захиалгыг «Sent» төлвөөс «Confirm Order» / «Reject» хийх — бодит хяналтын шат.</td></tr>
               <tr><td><span class="grouplabel">CRM хүсэлт батлах</span> (l10n_mn_sale.group_crm_request_confirm)</td><td>Худалдан авалтын хүсэлт үүсэх эх сурвалж болох Сэжимийг зөвшөөрөх — Борлуулалтын талд байдаг эрх, гэхдээ худалдан авалтын урсгалд шууд нөлөөтэй.</td></tr>
             </tbody>
           </table>
@@ -135,7 +165,7 @@
       </section>
 
       <section id="pm03">
-        <div class="sec-head"><span class="num">03</span><h2>Захиалга батлах / буцаах</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Захиалга батлах / буцаах</h2></div>
         <div class="flow">
           <div class="flow-row">
             <div class="flow-tag">Захиалгын явц</div>
@@ -151,7 +181,7 @@
       </section>
 
       <section id="pm04">
-        <div class="sec-head"><span class="num">04</span><h2>Хоёр шаттай баталгаажуулалт</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>Хоёр шаттай баталгаажуулалт</h2></div>
         <p>Компанийн тохиргоонд «two_step» баталгаажуулалт идэвхтэй бөгөөд захиалгын дүн тогтоосон хязгаараас дээш үед, Нягтлан бодогч «Confirm Order» дарсан ч захиалга шууд «Purchase» биш, харин <span class="badge b-gold">Батлуулахаар</span> (to approve) төлөвт зогсоно.</p>
         <div class="callout info">
           <span class="ico">Эцсийн шат</span>
@@ -160,17 +190,19 @@
       </section>
 
       <section id="pm05">
-        <div class="sec-head"><span class="num">05</span><h2>Тохиргоо</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Тохиргоо</h2></div>
         <p>Цэс: <strong>Purchase → Configuration</strong> — зөвхөн менежерт харагдана. Энд <strong>Freight type register</strong> (тээврийн төрлийн бүртгэл) байрладаг бөгөөд захиалга дээрх «Тээврийн төрөл» талбарын сонголтуудыг тодорхойлно.</p>
       </section>
 
       <section id="pm06">
-        <div class="sec-head"><span class="num">06</span><h2>Тайлан ба хяналт</h2></div>
-        <p>Ажилтнаас ялгаатай нь менежер тайлангийн бичлэгийг <strong>устгах</strong> эрхтэй. «Purchase summary report»-ийг <em>Худалдан авагчаар</em> (purchase_user_id) шүүж, ажилтан тус бүрийн ачааллыг харьцуулна уу.</p>
+        <div class="sec-head"><span class="num">6</span><h2>Тайлан ба хяналт</h2></div>
+        <p><strong>Захиалгын тайлан</strong> (Reporting цэс, шинэ) — огноо (захиалгын/батлагдсан), Дотоод/Гадаад, хүлээн авалтын байдал (Бүрэн / Хэсэгчлэн / Хүлээгдэж буй), нийлүүлэгч, эцсийн хэрэглэгч, ангилал, бараа, ажилтан, төлөвөөр шүүж дэлгэцэнд харах эсвэл Excel татна. Хүлээгдэж буй захиалгыг нийлүүлэгчээр нь хянахад тохиромжтой.</p>
+<p><strong>Purchase → Хяналт</strong> цэс батлагдсан ч Хүлээн авалт, Нэхэмжлэл, Төлбөр дуусаагүй захиалгуудыг харуулна. Purchase/Vendors Dashboard-ын дүн компанийн валютаар (батлагдсан огнооны ханшаар) тооцогдоно. Detail report-д гаалийн НӨАТ-ыг тусад нь харуулах сонголт, Summary report-д буцаалтын зөв тооцоо нэмэгдсэн. Хэвлэх загварууд <strong>Reporting → Загвар</strong>-д байрлана.</p>
+<p>Ажилтнаас ялгаатай нь менежер тайлангийн бичлэгийг <strong>устгах</strong> эрхтэй. «Purchase summary report»-ийг <em>Худалдан авагчаар</em> (purchase_user_id) шүүж, ажилтан тус бүрийн ачааллыг харьцуулна уу.</p>
       </section>
 
       <section id="pm07">
-        <div class="sec-head"><span class="num">07</span><h2>Мэдэгдэл (имэйл)</h2></div>
+        <div class="sec-head"><span class="num">7</span><h2>Мэдэгдэл (имэйл)</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Үйлдэл</th><th>Хэнд очих</th><th>Агуулга</th></tr></thead>
@@ -180,11 +212,12 @@
             </tbody>
           </table>
         </div>
-        <p style="margin-top:10px;">Мэдэгдэл ажиллахгүй байвал ажилтан/менежерийн и-мэйл хаяг эсвэл холбогдох Төслийн хариуцагч (user_id) буруу тохируулагдсан байж болзошгүй.</p>
+        <p style="margin-top:10px;">Төслийн «Шууд зарлагадах» дотоод худалдан авалт батлагдахад төслийн зарлагын баримт автоматаар үүсч, худалдан авалтын ажилтанд мэдэгдэл очно (<a href="/l10n_mn_purchase/static/purchase_manual_employee.html#p10">Ажилтны гарын авлагын 10-р бүлэг</a>). Бүх имэйл нэгдсэн загвартай (гол мэдээллийн хүснэгт + холбоос).</p>
+<p style="margin-top:10px;">Мэдэгдэл ажиллахгүй байвал ажилтан/менежерийн и-мэйл хаяг эсвэл холбогдох Төслийн хариуцагч (user_id) буруу тохируулагдсан байж болзошгүй.</p>
       </section>
 
       <section id="pm08">
-        <div class="sec-head"><span class="num">08</span><h2>Түгээмэл асуулт</h2></div>
+        <div class="sec-head"><span class="num">8</span><h2>Түгээмэл асуулт</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Асуудал</th><th>Шалтгаан / Шийдэл</th></tr></thead>
@@ -217,6 +250,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

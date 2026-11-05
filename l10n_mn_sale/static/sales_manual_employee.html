@@ -359,6 +359,29 @@
     nav.toc a{ transition: background .15s ease, color .15s ease; }
   }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -369,22 +392,34 @@
     <p>Сэжим (CRM lead) үүсгэхээс эхлээд захиалга батлуулж, гэрээ хийж, нэхэмжлэл үүсгэх хүртэлх бүх алхам. Систем дэх бодит товч, талбар, төлвийн нэрсээр бичсэн.</p>
     <div class="meta-row">
       <span class="chip">13 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_sale</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>CRM Төрөл заавал болсон</li>
+        <li>«Урьдчилан таамагласан тоо» ба «Төсөлд төлөвлөсөн тоо» баганууд</li>
+        <li>Багц захиалгын үнэ/тооны өөрчлөлт Сэжимийн chatter-т</li>
+        <li>Борлуулагч өөрийн захиалгын хүргэлтийг харах эрх</li>
+        <li>Тайлангийн «Орлогын данс (санхүүгийн бичилт)» горим ба ангилал</li>
+        <li>Хяналт цэс, Reporting → Загвар</li>
+        <li>«CRM/Нэхэмжлэл /Тайлбартай/» хэвлэмэл</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#s01"><span class="n">01</span>Ажлын урсгал</a>
-      <a href="#s02"><span class="n">02</span>Сэжим үүсгэх</a>
-      <a href="#s03"><span class="n">03</span>Барааны мөр</a>
-      <a href="#s04"><span class="n">04</span>Батлуулах, төлөв</a>
-      <a href="#s05"><span class="n">05</span>Худалдан авалт</a>
-      <a href="#s06"><span class="n">06</span>Захиалга (SO)</a>
-      <a href="#s07"><span class="n">07</span>Гэрээ үүсгэх</a>
-      <a href="#s08"><span class="n">08</span>Нэхэмжлэл</a>
-      <a href="#s09"><span class="n">09</span>Хүргэлт/төлбөр</a>
+      <a href="#s01"><span class="n">1</span>Ажлын урсгал</a>
+      <a href="#s02"><span class="n">2</span>Сэжим үүсгэх</a>
+      <a href="#s03"><span class="n">3</span>Барааны мөр</a>
+      <a href="#s04"><span class="n">4</span>Батлуулах, төлөв</a>
+      <a href="#s05"><span class="n">5</span>Худалдан авалт</a>
+      <a href="#s06"><span class="n">6</span>Захиалга (SO)</a>
+      <a href="#s07"><span class="n">7</span>Гэрээ үүсгэх</a>
+      <a href="#s08"><span class="n">8</span>Нэхэмжлэл</a>
+      <a href="#s09"><span class="n">9</span>Хүргэлт/төлбөр</a>
       <a href="#s10"><span class="n">10</span>Цуцлах</a>
       <a href="#s11"><span class="n">11</span>Тайлан</a>
       <a href="#s12"><span class="n">12</span>Мэдэгдэл</a>
@@ -395,7 +430,7 @@
 
       <!-- 01 -->
       <section id="s01">
-        <div class="sec-head"><span class="num">01</span><h2>Ажлын урсгалын тойм</h2></div>
+        <div class="sec-head"><span class="num">1</span><h2>Ажлын урсгалын тойм</h2></div>
         <p class="lead">Борлуулалт бүр <strong>Сэжим</strong> (CRM lead) дээрээс эхэлдэг. Түүн дээр барааны мөрүүдийг бөглөж батлуулахад, барааны төрлөөс хамааран гурван замын аль нэгээр урсгал явна:</p>
 
         <div class="flow">
@@ -430,13 +465,13 @@
 
         <div class="callout info">
           <span class="ico">Анхаар</span>
-          <p>«Батлах» ба «Зөвшөөрөх» товчнууд өөр эрхийн бүлэгт харьяалагддаг. Хэрэв танд харагдахгүй бол доор <a href="#s04">04-р бүлэгт</a> тайлбарласныг үзнэ үү.</p>
+          <p>«Батлах» ба «Зөвшөөрөх» товчнууд өөр эрхийн бүлэгт харьяалагддаг. Хэрэв танд харагдахгүй бол доор <a href="#s04">4-р бүлэгт</a> тайлбарласныг үзнэ үү.</p>
         </div>
       </section>
 
       <!-- 02 -->
       <section id="s02">
-        <div class="sec-head"><span class="num">02</span><h2>Сэжим (CRM lead) үүсгэх</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Сэжим (CRM lead) үүсгэх</h2></div>
         <p>Цэс: <strong>CRM → Борлуулалт → Opportunity → Шинэ</strong>. Шинэ бичлэг нээгээд дараах талбаруудыг бөглөнө.</p>
 
         <div class="table-wrap">
@@ -446,7 +481,7 @@
               <tr><td><strong>Төсөл</strong></td><td>Заавал. <strong>CBD</strong> албаны ажилтан төсөлгүй бол «CBD Борлуулалтын алба» сонгоно; <strong>PD</strong> албаных төсөлгүй бол «PD Төслийн алба» сонгоно; <strong>ASD</strong> алба хамаарах бодит төслөө сонгоно.</td></tr>
               <tr><td><strong>Үйлчлүүлэгч</strong></td><td>Хайлт хийж сонгоно, олдохгүй бол шинээр үүсгэнэ. Сонгосны дараа <strong>Имэйл</strong>, <strong>Утас</strong> зэрэг мэдээлэл автоматаар татагдана.</td></tr>
               <tr><td><strong>CRM сэжим нэр</strong></td><td>Хоосон орхивол үйлчлүүлэгчийн нэрээр автоматаар бөглөгдөнө.</td></tr>
-              <tr><td><strong>CRM Төрөл</strong></td><td><span class="badge b-jade">Сэжим бүртгэх</span> — бодит борлуулалт хийх. <span class="badge b-gold">Нөөцөнд авах</span> — дотоод нөөц нөхөх, захиалга үүсгэхгүй (Зам В).</td></tr>
+              <tr><td><strong>CRM Төрөл</strong></td><td><strong>Заавал.</strong> <span class="badge b-jade">Сэжим бүртгэх</span> — бодит борлуулалт хийх. <span class="badge b-gold">Нөөцөнд авах</span> — дотоод нөөц нөхөх, захиалга үүсгэхгүй (Зам В).</td></tr>
               <tr><td><strong>Пайз</strong></td><td>Үйлчлүүлэгчээс автоматаар татагдана (жишээ нь «Боловсруулах үйлдвэрлэл»).</td></tr>
               <tr><td><strong>Үнийн хуснэгт</strong></td><td>Үйлчлүүлэгчээс автоматаар татагдана.</td></tr>
               <tr><td><strong>Борлуулагч /нэмэлт/</strong></td><td>Хамтран борлуулж байгаа тохиолдолд хамааралтай ажилтнуудыг нэмж оруулна.</td></tr>
@@ -456,13 +491,13 @@
 
         <div class="callout info">
           <span class="ico">Навигаци</span>
-          <p>Дэлгэцийн дээд хэсэгт байгаа <span class="mono">⚙</span> (тохиргоо) товчны <strong>Хэвлэх</strong> дэд цэснээс «CRM Quotation» (Үнийн санал) болон «CRM Quotation No Sign» (Үнийн санал — Гарын үсэггүй) хэвлэмэл маягтуудыг гаргаж болно. Мөн дэлгэцийн баруун дээд буланд <strong>Нэхэмжлэл</strong>, <strong>Үнийн судалгаа</strong>, <strong>Purchase Order</strong>, <strong>Захиалгууд</strong>, <strong>Similar Leads</strong> гэсэн смарт товчнуудаар холбогдох бичлэгүүд рүү шууд шилжинэ.</p>
+          <p>Дэлгэцийн дээд хэсэгт байгаа <span class="mono">⚙</span> (тохиргоо) товчны <strong>Хэвлэх</strong> дэд цэснээс «CRM Quotation» (Үнийн санал) болон «CRM Quotation No Sign» (Үнийн санал — Гарын үсэггүй), мөн <strong>«CRM/Нэхэмжлэл /Тайлбартай/»</strong> (мөрийн тайлбартай нэхэмжлэх) хэвлэмэл маягтуудыг гаргаж болно. Мөн дэлгэцийн баруун дээд буланд <strong>Нэхэмжлэл</strong>, <strong>Үнийн судалгаа</strong>, <strong>Purchase Order</strong>, <strong>Захиалгууд</strong>, <strong>Similar Leads</strong> гэсэн смарт товчнуудаар холбогдох бичлэгүүд рүү шууд шилжинэ.</p>
         </div>
       </section>
 
       <!-- 03 -->
       <section id="s03">
-        <div class="sec-head"><span class="num">03</span><h2>Барааны мөр бөглөх</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Барааны мөр бөглөх</h2></div>
         <p>«Order line» табд бараа мөр бүрийг нэмнэ. Бараа бүртгэгдээгүй бол <strong>Тайлбар</strong> талбарт нэрийг нь бичээд Худалдан авалтын хэсэгт шинээр үүсгүүлж болно.</p>
 
         <div class="two-col">
@@ -489,12 +524,12 @@
             </ol>
           </div>
         </div>
-        <p style="margin-top:14px;">Ашгийн хувь (<em>margin_percent</em>) зарах болон судалсан үнээс автоматаар тооцогдоно. Ач холбогдол (Priority) <span class="badge b-jade">Энгийн</span> ногооноор, <span class="badge b-seal">Яаралтай</span> улаанаар мөрийн жагсаалтад тодруулагдана. Худалдан авалт хийгдэх хугацааны шинж чанарыг «Нэг удаагийн» эсвэл «Хуваагдах — жилийн туршид хуваагдаж борлуулагдах» гэж тэмдэглэж болно.</p>
+        <p style="margin-top:14px;"><strong>Урьдчилан таамагласан тоо</strong> багана нь тухайн барааны <strong>Сэжимийн агуулах</strong> (сонгоогүй бол борлуулалтын багийн агуулах)-д ирээдүйд байх тоог (forecast, virtual available) автоматаар харуулна — «Үнийн санал» төрөл сонгох эсэхээ үүгээр шийднэ. Хажуугийн <strong>Төсөлд төлөвлөсөн тоо</strong> багана нь ижил агуулахын идэвхтэй төслүүдэд энэ бараагаар төлөвлөгдсөн боловч агуулахаас гараагүй тоог харуулна; таны тоо төслүүдийн дараах чөлөөт үлдэгдлээс их бол «…төсөлд X төлөвлөгдсөн (төслүүд), … төслүүдийн дараах чөлөөт: Y» гэсэн анхааруулга гарна — тэр тохиолдолд «Үнийн санал» биш «Худалдаж авах» сонгоно. Ашгийн хувь (<em>margin_percent</em>) зарах болон судалсан үнээс автоматаар тооцогдоно. Ач холбогдол (Priority) <span class="badge b-jade">Энгийн</span> ногооноор, <span class="badge b-seal">Яаралтай</span> улаанаар мөрийн жагсаалтад тодруулагдана. Худалдан авалт хийгдэх хугацааны шинж чанарыг «Нэг удаагийн» эсвэл «Хуваагдах — жилийн туршид хуваагдаж борлуулагдах» гэж тэмдэглэж болно.</p>
       </section>
 
       <!-- 04 -->
       <section id="s04">
-        <div class="sec-head"><span class="num">04</span><h2>Батлуулах ба төлвийн шилжилт</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>Батлуулах ба төлвийн шилжилт</h2></div>
         <p>Сэжимийн төлөв (<span class="mono">new_status</span>) статус мөрөнд харагдана:</p>
 
         <div class="table-wrap">
@@ -504,7 +539,7 @@
               <tr><td><span class="badge b-neutral">Шинэ</span></td><td>Борлуулагч</td><td>Мөрүүдээ бөглөж дуусгана.</td></tr>
               <tr><td><span class="badge b-gold">Үнэ судлагдсан</span></td><td>Систем автомат</td><td>Ядаж нэг мөрөнд судалсан үнэ орсон үед автоматаар шилжинэ.</td></tr>
               <tr><td><span class="badge b-jade">Батлагдсан</span></td><td>CBD/PD/ASD албаны ажилтан, менежер → <span class="btnlabel">Батлах</span></td><td>Худалдан авалт шаардлагатай бол Албаны захиралд имэйл очно.</td></tr>
-              <tr><td><span class="badge b-jade">Дууссан</span></td><td>Албаны захирал → <span class="btnlabel">Зөвшөөрөх</span> <em>(эрх шаардана)</em></td><td>Борлуулалтын захиалга автоматаар үүсэж баталгаажина.</td></tr>
+              <tr><td><span class="badge b-jade">Дууссан</span></td><td>Албаны захирал → <span class="btnlabel">Зөвшөөрөх</span> <em>(эрх шаардана)</em></td><td>Борлуулалтын захиалга автоматаар үүсэж баталгаажина. Энэ төлөвт <span class="btnlabel">Цуцлах</span>, <span class="btnlabel">Хойшлуулах</span> товч нуугдана.</td></tr>
               <tr><td><span class="badge b-seal">Цуцлагдсан</span></td><td>Хэн ч → <span class="btnlabel">Цуцлах</span></td><td>Шалтгаан заавал бичнэ, бүх мөр цуцлагдана.</td></tr>
               <tr><td><span class="badge b-gold">Хойшлуулсан</span></td><td>Хэн ч → <span class="btnlabel">Хойшлуулах</span></td><td>Шалтгаан заавал бичнэ; дараа нь <span class="btnlabel">Шинэ</span> дарж дахин эхлүүлнэ.</td></tr>
             </tbody>
@@ -526,7 +561,7 @@
 
       <!-- 05 -->
       <section id="s05">
-        <div class="sec-head"><span class="num">05</span><h2>Худалдан авалтын хүсэлт</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Худалдан авалтын хүсэлт</h2></div>
         <p>Мөр дээр «Худалдан авалт» төрөл сонгож, <strong>Хариуцах худалдан авагч</strong>-ийг зөв оноосон бол л энэ мөр Худалдан авалтын багийн <span class="mono">Purchase → Үнийн судалгааны хувиарлалт</span> жагсаалтад бодитоор орж, тэдний талд боловсруулагдана.</p>
         <div class="callout info">
           <span class="ico">Санамж</span>
@@ -537,12 +572,16 @@
           <li><span class="idx">1</span><div class="txt">Холбогдох Худалдан авалтын хүсэлт «Судалгаа дууссан» төлөвт шилжинэ.</div></li>
           <li><span class="idx">2</span><div class="txt">Борлуулалтын захиалга автоматаар үүсэж баталгаажина.</div></li>
           <li><span class="idx">3</span><div class="txt">Анхны борлуулагчид үүссэн Захиалга болон Худалдан авалтын захиалга руу шууд хандах холбоос бүхий имэйл очно.</div></li>
-        </ol>
+</ol>
+<div class="callout info">
+<span class="ico">Шинэ</span>
+<p>Худалдан авалтын баг <strong>Багц захиалга</strong>-д үнийн судалгаа эхлүүлсэн байсан ч таны шинээр нэмсэн мөрүүд түүнд орсоор байна. Багц захиалгын мөрийн <strong>үнэ</strong> болон <strong>тоо хэмжээ</strong> өөрчлөгдөх бүрд «… барааны хуучин тоо X шинэ тоо Y» гэх мэт тэмдэглэл таны Сэжимийн chatter-т автоматаар бичигдэнэ.</p>
+</div>
       </section>
 
       <!-- 06 -->
       <section id="s06">
-        <div class="sec-head"><span class="num">06</span><h2>Борлуулалтын захиалга (Sale Order)</h2></div>
+        <div class="sec-head"><span class="num">6</span><h2>Борлуулалтын захиалга (Sale Order)</h2></div>
         <p>Захиалга Сэжимээс автоматаар үүсэх, эсвэл шууд <strong>Sales</strong> модулиас гараар нээж болно. Дугаар (жишээ нь <code class="mono">26091501001</code>) огноо + борлуулагчийн код + өдрийн дараалал дугаараар автоматаар бүрддэг тул гараар өөрчлөх шаардлагагүй.</p>
 
         <div class="table-wrap">
@@ -565,7 +604,7 @@
 
       <!-- 07 -->
       <section id="s07">
-        <div class="sec-head"><span class="num">07</span><h2>Гэрээ үүсгэх</h2></div>
+        <div class="sec-head"><span class="num">7</span><h2>Гэрээ үүсгэх</h2></div>
         <p>Баталгаажсан захиалга дээр <strong>«Create contract»</strong> товч дарж, харилцагч бүрт нэг гэрээ (Sales contract) үүсгэнэ. Дараах тохиолдолд боломжгүй:</p>
         <div class="two-col">
           <div class="callout warn"><span class="ico">Хориглоно</span><p>Захиалгын нийт дүн 0 бол.</p></div>
@@ -576,7 +615,7 @@
 
       <!-- 08 -->
       <section id="s08">
-        <div class="sec-head"><span class="num">08</span><h2>Нэхэмжлэл үүсгэх</h2></div>
+        <div class="sec-head"><span class="num">8</span><h2>Нэхэмжлэл үүсгэх</h2></div>
         <p>Захиалга дээрх <span class="btnlabel">Нэхэмжлэл үүсгэх</span> товч дарахад нээгдэх цонхонд <strong>Тогтмол дүн</strong> болон <strong>Төлбөрийн нөхцөл</strong> гэсэн хоёр сонголт байна.</p>
 
         <div class="table-wrap">
@@ -619,12 +658,16 @@
 
       <!-- 09 -->
       <section id="s09">
-        <div class="sec-head"><span class="num">09</span><h2>Хүргэлт ба төлбөрийн төлөв</h2></div>
-        <p>Захиалгын дэлгэц дээрээс шууд харагдана — тайлан татах шаардлагагүй:</p>
+        <div class="sec-head"><span class="num">9</span><h2>Хүргэлт ба төлбөрийн төлөв</h2></div>
+        <p>Захиалгын дэлгэц дээрээс шууд харагдана — тайлан татах шаардлагагүй. Мөн <strong>Sales → Хяналт</strong> цэс нь батлагдсан ч Хүргэлт, Нэхэмжлэл, Төлбөрийн аль нэг шат нь дуусаагүй захиалгуудыг («Хийгдэх ажил дутуу» шүүлтүүр) жагсаана. CRM апп-ын <strong>Хяналт</strong> цэс таны хийх ажлуудыг (activities) харуулна.</p>
         <div class="two-col">
           <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Хүргэлтийн төлөв</h3><p style="margin:0;">Агуулахаас бүрэн/хэсэгчлэн/хүргээгүй эсэх — жагсаалт болон захиалгын дэлгэцэнд шошгоор харагдана.</p></div>
           <div class="card"><h3 style="font-size:14px;margin-bottom:6px;">Төлбөрийн төлөв</h3><p style="margin:0;">Төлбөр төлөгдсөн эсэх, төлсөн дүн, үлдэгдэл дүн захиалга дээр шууд харагдана.</p></div>
-        </div>
+</div>
+<div class="callout info">
+<span class="ico">Хүргэлт харах</span>
+<p>Танд харагдаж буй борлуулалтын захиалгын хүргэлт, буцаалтыг (агуулахын баримт) та <strong>зөвхөн уншиж</strong> харах эрхтэй — өөрийн, хамтран борлуулагчийн, мөн «Бүх сэжим» эрхтэй бол харьяа ажилтан/хэлтсийн захиалгынх. Захиалгын <strong>Delivery</strong> смарт товч дарахад харагдах хүргэлт байхгүй бол алдааны оронд тайлбар мэдэгдэл гарна.</p>
+</div>
       </section>
 
       <!-- 10 -->
@@ -645,16 +688,17 @@
       <!-- 11 -->
       <section id="s11">
         <div class="sec-head"><span class="num">11</span><h2>Тайлан</h2></div>
-        <p>Цэс: <strong>Sales → Reporting</strong></p>
+        <p>Цэс: <strong>Sales → Reporting</strong>. Хэвлэх загварууд (Борлуулалтын захиалгын загвар, Үнийн саналын загвар) <strong>Reporting → Загвар</strong> дэд цэс рүү шилжсэн.</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Тайлан</th><th>Зориулалт</th></tr></thead>
             <tbody>
-              <tr><td>Борлуулалтын тайлан шинэ</td><td>Мөр бүрийн дэлгэрэнгүй харагдац.</td></tr>
-              <tr><td>Борлуулалтын тайлан хураангуй</td><td>Захиалга/борлуулагчаар нэгтгэсэн хураангуй харагдац.</td></tr>
-            </tbody>
-          </table>
-        </div>
+              <tr><td>Борлуулалтын тайлан дэлгэрэнгүй <span class="mono" style="color:var(--ink-faint);">(өмнө нь «шинэ»)</span></td><td>Мөр бүрийн дэлгэрэнгүй харагдац.</td></tr>
+<tr><td>Борлуулалтын тайлан хураангуй</td><td>Захиалга/борлуулагчаар нэгтгэсэн хураангуй харагдац.</td></tr>
+</tbody>
+</table>
+</div>
+<p style="margin-top:12px;">Хоёр тайлангийн <strong>Төлөв</strong> сонголтод <strong>«Орлогын данс (санхүүгийн бичилт)»</strong> нэмэгдсэн. Үүнийг сонговол <strong>Орлогын данс</strong> (заавал) сонгож, тайланг санхүүгийн огноо/нэхэмжлэхээр гаргана — Орлого үр дүнгийн тайлангийн «Борлуулалтын орлого (цэвэр)»-тэй тулгахад зориулсан (лиценз/лицензийн бус бүх орлого орно). Мөр бүр <em>Хүргэгдсэн бараа, Лиценз борлуулалт, Урьдчилгаа нэхэмжлэл, Төслийн орлого, Захиалгагүй нэхэмжлэл, Буцаалт / кредит нэхэмжлэл, Гар бичилт (нэхэмжлэлгүй)</em> гэсэн <strong>Ангилал</strong>-тай гарч, Excel-д ангилал ба дансаар нэгтгэсэн нэмэлт хуудас үүснэ. Тайлангийн дүнгүүд захиалгын валютаар харагдана.</p>
       </section>
 
       <!-- 12 -->
@@ -671,9 +715,10 @@
             </tbody>
           </table>
         </div>
-        <div class="callout warn">
-          <span class="ico">Анхаар</span>
-          <p>Мэдэгдэл зөв хүнд хүрэхийн тулд Албаны захирлын мэдээлэл болон тухайн хэрэглэгчийн (эсвэл харилцагчийн) имэйл хаяг зөв бүртгэлтэй байх шаардлагатай.</p>
+        <p>Бүх имэйл нэгдсэн загвартай: товч танилцуулга, гол үзүүлэлтүүдийн хүснэгт (дүн нь мянгатын тусгаарлагч, валютын нэртэй), бичлэг рүү орох «… →» холбоос.</p>
+<div class="callout warn">
+<span class="ico">Анхаар</span>
+<p>Мэдэгдэл зөв хүнд хүрэхийн тулд Албаны захирлын мэдээлэл болон тухайн хэрэглэгчийн (эсвэл харилцагчийн) имэйл хаяг зөв бүртгэлтэй байх шаардлагатай.</p>
         </div>
       </section>
 
@@ -689,7 +734,8 @@
               <tr><td class="mono">Бараа бүртгээгүй байгаа тул бүртгэнэ үү!</td><td>Барааны мөр огт байхгүй байхад «Батлах» дарсан.</td><td>Дор хаяж нэг мөр нэмнэ.</td></tr>
               <tr><td class="mono">Борлуулалтын захиалга үүссэн байна!</td><td>Тухайн Сэжимд аль хэдийн баталгаажсан захиалга байгаа.</td><td>Шинэ Сэжим үүсгэнэ, эсвэл одоо байгаа захиалга дээрээ ажиллана.</td></tr>
               <tr><td class="mono">Тоо 0-с их байх ёстой!</td><td>Мөрийн тоо хэмжээг сөрөг эсвэл 0 бичсэн.</td><td>Тоо хэмжээг эерэг тоогоор засна.</td></tr>
-              <tr><td class="mono">Contract already exists / Amount total is 0</td><td>Гэрээ өмнө үүссэн эсвэл захиалгын дүн 0.</td><td>Одоо байгаа гэрээг ашиглах, эсвэл захиалгад мөр нэмж дүнг гаргах.</td></tr>
+              <tr><td class="mono">Энэ захиалгад танд харагдах хүргэлт алга…</td><td>Хүргэлт устгагдсан, эсвэл танд харах эрх байхгүй (хүргэлт нь захиалгын борлуулагч, үүсгэсэн болон хариуцсан хэрэглэгчид харагдана).</td><td>Агуулахын ажилтан эсвэл менежерээс лавлана.</td></tr>
+<tr><td class="mono">Contract already exists / Amount total is 0</td><td>Гэрээ өмнө үүссэн эсвэл захиалгын дүн 0.</td><td>Одоо байгаа гэрээг ашиглах, эсвэл захиалгад мөр нэмж дүнг гаргах.</td></tr>
             </tbody>
           </table>
         </div>
@@ -720,6 +766,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_expense_manual_url" model="ir.actions.act_url">
+            <field name="name">Мөнгө хүсэх гарын авлага</field>
+            <field name="url">/l10n_mn_hr_expense/static/expense_manual.html</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="expense_manual_menu" name="Гарын авлага" parent="hr_expense.menu_hr_expense_root" sequence="99" action="action_expense_manual_url"/>
+    </data>
+</odoo>

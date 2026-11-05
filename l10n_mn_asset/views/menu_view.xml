@@ -9,5 +9,12 @@
 		<menuitem id="stock_to_asset_wizard_menu" sequence="103" name="Барааг хөрөнгөд шилжүүлэх" parent="account.menu_finance_entries_management" action="action_stock_to_asset_wizard"/>
 		<menuitem id="account_asset_gl_reconcile_menu" sequence="15" name="ҮХ-ийг ГБ-тэй тулгах" parent="l10n_mn_account.account_control_root_menu" action="action_account_asset_gl_reconcile" groups="account.group_account_manager"/>
 
+		<record id="action_asset_manual_url" model="ir.actions.act_url">
+			<field name="name">Үндсэн хөрөнгө</field>
+			<field name="url">/l10n_mn_asset/static/asset_manual.html</field>
+			<field name="target">new</field>
+		</record>
+		<menuitem id="asset_manual_menu" name="Үндсэн хөрөнгө" parent="l10n_mn_account.account_manual_root_menu" sequence="3" action="action_asset_manual_url" groups="account.group_account_user,account.group_account_manager"/>
+
 </data>
 </odoo>

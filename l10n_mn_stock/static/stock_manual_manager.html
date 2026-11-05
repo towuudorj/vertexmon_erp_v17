@@ -76,6 +76,29 @@
   }
   @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
 </style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -84,33 +107,42 @@
     <h1>Агуулахын менежерийн гарын авлага</h1>
     <p>Эрхийн бүлэг хуваарилалт, тооллого батлах, агуулах хязгаарлах тохиргоо, зардал баталгаажуулах хяналт.</p>
     <div class="meta-row">
-      <span class="chip">8 бүлэг</span>
-      <span class="chip">Шинэчилсэн: 2026.09.23</span>
+      <span class="chip">9 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
       <span class="chip">Модуль: l10n_mn_stock</span>
     </div>
+    <details class="mx-changes">
+      <summary>2026.11.05 шинэчлэлтээр нэмэгдсэн</summary>
+      <ul>
+        <li>SVL дутуу баримт ба «SVL үүсгэх» (8-р бүлэг)</li>
+        <li>Backorder гарын үсэг, дууссаны имэйл</li>
+        <li>Хяналт цэс, Брэнд шүүлтүүр</li>
+      </ul>
+    </details>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc">
-      <a href="#wm01"><span class="n">01</span>Үүрэг тойм</a>
-      <a href="#wm02"><span class="n">02</span>Эрхийн бүлэг</a>
-      <a href="#wm03"><span class="n">03</span>Тооллого батлах</a>
-      <a href="#wm04"><span class="n">04</span>Агуулах хязгаарлах</a>
-      <a href="#wm05"><span class="n">05</span>Зардал батлах</a>
-      <a href="#wm06"><span class="n">06</span>Тохиргоо, тайлан</a>
-      <a href="#wm07"><span class="n">07</span>Гарын үсэг, мэдэгдэл</a>
-      <a href="#wm08"><span class="n">08</span>Түгээмэл асуулт</a>
+      <a href="#wm01"><span class="n">1</span>Үүрэг тойм</a>
+      <a href="#wm02"><span class="n">2</span>Эрхийн бүлэг</a>
+      <a href="#wm03"><span class="n">3</span>Тооллого батлах</a>
+      <a href="#wm04"><span class="n">4</span>Агуулах хязгаарлах</a>
+      <a href="#wm05"><span class="n">5</span>Зардал батлах</a>
+      <a href="#wm06"><span class="n">6</span>Тохиргоо, тайлан</a>
+      <a href="#wm07"><span class="n">7</span>Гарын үсэг, мэдэгдэл</a>
+      <a href="#wm08"><span class="n">8</span>SVL дутуу баримт</a>
+<a href="#wm09"><span class="n">9</span>Түгээмэл асуулт</a>
     </nav>
 
     <main>
 
       <section id="wm01">
-        <div class="sec-head"><span class="num">01</span><h2>Менежерийн үүргийн тойм</h2></div>
-        <p class="lead">Агуулахын ажилтны гарын авлагад заасан өдөр тутмын үйл ажиллагааг менежер 4 цэгээр хянана: <strong>эрхийн бүлэг зөв хуваарилах</strong>, <strong>тооллогыг эцэслэн батлах</strong>, <strong>агуулах хоорондын хязгаарлалт тохируулах</strong>, <strong>холбогдох зардлыг цаг тухайд нь батлах</strong>.</p>
+        <div class="sec-head"><span class="num">1</span><h2>Менежерийн үүргийн тойм</h2></div>
+        <p class="lead"><a href="/l10n_mn_stock/static/stock_manual_employee.html">Агуулахын ажилтны гарын авлага</a>д заасан өдөр тутмын үйл ажиллагааг менежер 4 цэгээр хянана: <strong>эрхийн бүлэг зөв хуваарилах</strong>, <strong>тооллогыг эцэслэн батлах</strong>, <strong>агуулах хоорондын хязгаарлалт тохируулах</strong>, <strong>холбогдох зардлыг цаг тухайд нь батлах</strong>.</p>
       </section>
 
       <section id="wm02">
-        <div class="sec-head"><span class="num">02</span><h2>Эрхийн бүлэг</h2></div>
+        <div class="sec-head"><span class="num">2</span><h2>Эрхийн бүлэг</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Эрхийн бүлэг</th><th>Юунд ашиглагдана</th></tr></thead>
@@ -125,12 +157,12 @@
       </section>
 
       <section id="wm03">
-        <div class="sec-head"><span class="num">03</span><h2>Тооллого эцэслэн батлах</h2></div>
+        <div class="sec-head"><span class="num">3</span><h2>Тооллого эцэслэн батлах</h2></div>
         <p>Ажилтан тоолж дуусгасны дараа зөвхөн та <span class="btnlabel">Тооллого батлах</span> (Validate Inventory) дарж, тоолсон дүнг бодит нөөцөд буулгана. Энэ алхмыг хийхээс өмнө тоологдсон зөрүүг (Diff) заавал хянана уу — учир нь батласны дараа нөөцийн хөдөлгөөн шууд үүснэ.</p>
       </section>
 
       <section id="wm04">
-        <div class="sec-head"><span class="num">04</span><h2>Агуулах хооронд хязгаарлах тохиргоо</h2></div>
+        <div class="sec-head"><span class="num">4</span><h2>Агуулах хооронд хязгаарлах тохиргоо</h2></div>
         <p>Олон салбар/агуулахтай тохиолдолд ажилтан бүр зөвхөн өөрийн ажилладаг агуулахыг харахаар хязгаарлаж болно:</p>
         <ol class="steps">
           <li><span class="idx">1</span><div class="txt">Тохиргооноос «Restrict Stock Warehouse» идэвхжүүлнэ.</div></li>
@@ -140,27 +172,42 @@
       </section>
 
       <section id="wm05">
-        <div class="sec-head"><span class="num">05</span><h2>Холбогдох зардлыг цаг тухайд нь батлах</h2></div>
+        <div class="sec-head"><span class="num">5</span><h2>Холбогдох зардлыг цаг тухайд нь батлах</h2></div>
         <p>Худалдан авалттай (ялангуяа гадаад/импорт) холбоотой хүлээн авалтыг ажилтан баталгаажуулахын тулд эхлээд холбогдох нэмэлт зардал (тээвэр, гааль, бүрдүүлэлт) бүртгэгдэж, <strong>батлагдсан</strong> байх ёстой. Энэ шатыг хойшлуулбал агуулахын ажил зогсоно — «Зардал батлагдаагүй байгаа тул батлах боломжгүй» алдаа ажилтанд гардаг тул landed cost-ыг цаг алдалгүй шалгаж баталж байгаарай.</p>
       </section>
 
       <section id="wm06">
-        <div class="sec-head"><span class="num">06</span><h2>Тохиргоо, тайлан</h2></div>
-        <p>Цэс: <strong>Inventory → Configuration / Reporting</strong> — бүхэлдээ зөвхөн менежерт харагдана (Distributor register, Item group, Тооллогын хуудас, Орлогын тайлан, Stock summary/aged/sales report гэх мэт бүх тайлангийн менюг багтаана).</p>
+        <div class="sec-head"><span class="num">6</span><h2>Тохиргоо, тайлан</h2></div>
+        <p>Цэс: <strong>Inventory → Configuration / Reporting</strong> — бүхэлдээ зөвхөн менежерт харагдана (Distributor register, Item group, Тооллогын хуудас, Орлогын тайлан, Stock summary/aged/sales report гэх мэт бүх тайлангийн менюг багтаана). Хэвлэх загварууд <strong>Reporting → Загвар</strong> дэд цэс рүү шилжсэн. Stock detail/summary тайланд <strong>Брэнд</strong> шүүлтүүр нэмэгдэж, «Бараа материалын хураангуй тайлан»-гийн тооцоолол шинэчлэгдсэн.</p>
+<p><strong>Inventory → Хяналт</strong> цэс батлагдсан ч гүйцэт хийгдээгүй, backorder үлдсэн шилжүүлгүүдийг харуулна — багийн дутуу ажлыг долоо хоног бүр шалгана.</p>
       </section>
 
       <section id="wm07">
-        <div class="sec-head"><span class="num">07</span><h2>Гарын үсэг, мэдэгдэлийн хяналт</h2></div>
-        <p>Агуулахын зарлагын баримт (Хүргэлтийн баримт/Шаардах) бүрийн дагах 5 шаттай гарын үсгийн урсгалыг (Шаардах хуудас бичсэн ажилтан → Зөвшөөрсөн/Шууд удирдлага → Нягтлан бодогч → Нягтлан бодогч → Санхүү эрхэлсэн захирал) хариуцах хэрэглэгч бүрийг та тохируулна. Бүгд гарын үсэг зурсны дараа баримт Агуулахын нярав руу очиж, түүний гарын үсгээр л бараа материал бодитоор агуулахаас гардаг. Ажилтны гарын авлагад заасны дагуу ээлж ирэх бүрд систем дараагийн хүнд имэйл мэдэгдэл автоматаар илгээдэг.</p>
+        <div class="sec-head"><span class="num">7</span><h2>Гарын үсэг, мэдэгдэлийн хяналт</h2></div>
+        <p>Агуулахын зарлагын баримт (Хүргэлтийн баримт/Шаардах) бүрийн дагах 5 шаттай гарын үсгийн урсгалыг (Шаардах хуудас бичсэн ажилтан → Зөвшөөрсөн/Шууд удирдлага → Нягтлан бодогч → Нягтлан бодогч → Санхүү эрхэлсэн захирал) хариуцах хэрэглэгч бүрийг та тохируулна. Бүгд гарын үсэг зурсны дараа баримт Агуулахын нярав руу очиж, түүний гарын үсгээр л бараа материал бодитоор агуулахаас гардаг. <a href="/l10n_mn_stock/static/stock_manual_employee.html#w04">Ажилтны гарын авлага</a>д заасны дагуу ээлж ирэх бүрд систем дараагийн хүнд имэйл мэдэгдэл автоматаар илгээдэг.</p>
         <ol class="steps">
           <li><span class="idx">1</span><div class="txt">Шат тус бүрийн хариуцагчийг тохируулахдаа тухайн ажилтны имэйл хаяг бүртгэлтэй эсэхийг заавал шалгана — эс тэгвэл мэдэгдэл очихгүй, урсгал «зогсонги» байдалд орно.</div></li>
           <li><span class="idx">2</span><div class="txt">Ажилтан амралт/чөлөөтэй үед урсгал бүү тасал — тухайн шатанд <strong>«Орлон гүйцэтгэгч»</strong> (substitute_user) хэрэглэгч урьдчилан оноож өгнө.</div></li>
-          <li><span class="idx">3</span><div class="txt">Захиалга удаан хугацаанд нэг шатанд зогсож байвал (жишээ нь мэдэгдэл имэйл алдаатай, эсвэл хариуцагч байхгүй) шууд тухайн шатны хэрэглэгчид хандаж шалгаарай — систем автомат сануулга/эскалаци хийдэггүй.</div></li>
+          <li><span class="idx">3</span><div class="txt"><strong>Backorder</strong> үүсэхэд эх баримтын гарын үсгийн жагсаалт (зурсан төлөвтэйгээ) шинэ баримт руу хуулагдана. Баримт «Done» болоход үүсгэсэн ажилтанд дууссаны имэйл очно.</div></li>
+<li><span class="idx">4</span><div class="txt">Нягтлан бодогч/Кассир шатны хариуцагчийг ажлын байрны нэрээр хайдаг — ижил нэртэй хэд хэдэн ажлын байр байсан ч бүгдээс нь хайна.</div></li>
+<li><span class="idx">5</span><div class="txt">Захиалга удаан хугацаанд нэг шатанд зогсож байвал (жишээ нь мэдэгдэл имэйл алдаатай, эсвэл хариуцагч байхгүй) шууд тухайн шатны хэрэглэгчид хандаж шалгаарай — систем автомат сануулга/эскалаци хийдэггүй.</div></li>
         </ol>
       </section>
 
       <section id="wm08">
-        <div class="sec-head"><span class="num">08</span><h2>Түгээмэл асуулт</h2></div>
+<div class="sec-head"><span class="num">8</span><h2>Үнэлгээний бичилт (SVL) дутуу баримт</h2></div>
+<p>Дууссан хүлээн авалт/зарлагын баримтын зарим хөдөлгөөнд өртгийн үнэлгээ (Stock Valuation Layer) болон санхүүгийн бичилт үүсээгүй тохиолдол гарвал:</p>
+<ol class="steps">
+<li><span class="idx">1</span><div class="txt">Шилжүүлгийн жагсаалтын шүүлтүүрээс <strong>«SVL дутуу»</strong>-г сонгож ийм баримтуудыг олно.</div></li>
+<li><span class="idx">2</span><div class="txt">Баримтыг нээж толгой дахь <span class="btnlabel">SVL үүсгэх</span> товчийг дарж баталгаажуулна — орлого/зарлагын хөдөлгөөн бүрт SVL ба санхүүгийн бичилт үүснэ.</div></li>
+</ol>
+<div class="callout warn">
+<span class="ico">Эрх</span>
+<p>Шүүлтүүр ба товч зөвхөн <span class="grouplabel">Settings (Системийн админ)</span> эрхтэй хэрэглэгчид харагдана — танд байхгүй бол системийн админд баримтын дугаарыг илгээнэ үү. Дотоод байрлал хоорондын шилжүүлэг хамаарахгүй.</p>
+</div>
+</section>
+<section id="wm09">
+<div class="sec-head"><span class="num">9</span><h2>Түгээмэл асуулт</h2></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Асуудал</th><th>Шалтгаан / Шийдэл</th></tr></thead>
@@ -170,7 +217,8 @@
               <tr><td>Хэрэглэгч өөрийн харах ёстой захиалгаа олохгүй байна</td><td>«Restrict Stock Warehouse» тохиргоонд тухайн хэрэглэгч зөв агуулахад нэмэгдээгүй байж болзошгүй.</td></tr>
               <tr><td>Хүлээн авалт зогсчихсон, урагшлахгүй байна</td><td>Холбогдох landed cost зардал бүртгэгдээгүй эсвэл батлагдаагүй.</td></tr>
               <tr><td>Ажилтан төсөлтэй шилжүүлгийг цуцалж/Аналитик данс талбарыг өөрчилж чадахгүй байна</td><td>Учир зөв — энэ хоёр үйлдэл зөвхөн Агуулахын менежерт нээлттэй, ажилтан танд хандах ёстой.</td></tr>
-              <tr><td>Гарын үсгийн урсгалын дараагийн хүнд мэдэгдэл очихгүй байна</td><td>Тухайн шатны хариуцагчийн имэйл хаяг бүртгэгдээгүй эсвэл буруу байна.</td></tr>
+              <tr><td>Барааны тоо хэмжээ байгаа ч санхүүд өртөг бичигдээгүй</td><td>Баримт SVL-гүй дууссан — 8-р бүлгийн дагуу админаар «SVL үүсгэх» хийлгэнэ.</td></tr>
+<tr><td>Гарын үсгийн урсгалын дараагийн хүнд мэдэгдэл очихгүй байна</td><td>Тухайн шатны хариуцагчийн имэйл хаяг бүртгэгдээгүй эсвэл буруу байна.</td></tr>
             </tbody>
           </table>
         </div>
@@ -196,6 +244,65 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
   })();
 </script>
 </body>

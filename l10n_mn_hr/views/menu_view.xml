@@ -70,5 +70,12 @@
 		<menuitem id="menu_applicant_register" name="Applicant Register" parent="hr_recruitment.menu_hr_recruitment_root" sequence="10"/>
         <!-- <menuitem id="menu_applicant_register" name="Applicant Register" parent="menu_applicant_register_root" action="action_applicant_register"/> -->
 
+
+		<record id="action_hr_manual_url" model="ir.actions.act_url">
+			<field name="name">Хүний нөөцийн гарын авлага</field>
+			<field name="url">/l10n_mn_hr/static/hr_manual.html</field>
+			<field name="target">new</field>
+		</record>
+		<menuitem id="hr_manual_menu" name="Гарын авлага" parent="hr.menu_hr_root" sequence="250" action="action_hr_manual_url"/>
 	</data>
 </odoo>

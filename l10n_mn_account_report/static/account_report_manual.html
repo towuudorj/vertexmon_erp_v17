@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Санхүүгийн тайлангийн гарын авлага</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#FFFFFF; --card:#FFFFFF; --ink:#1E2521; --ink-soft:#57625B; --ink-faint:#8A948C; --line:#D9DCD1;
+    --jade:#29604F; --jade-ink:#1E4A3D; --jade-soft:#E3EEE8;
+    --seal:#9C3A2A; --seal-soft:#F6E3DE; --gold:#93691B; --gold-soft:#F2E8CE;
+    --shadow: 0 1px 2px rgba(30,37,33,.06), 0 8px 24px -12px rgba(30,37,33,.15); --radius: 10px;
+  }
+  *{box-sizing:border-box;} html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; font-size:15.5px; line-height:1.6; }
+  h1,h2,h3{ font-family:'IBM Plex Serif', ui-serif, Georgia, serif; text-wrap:balance; color:var(--ink); margin:0; }
+  code,.mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  a{ color:var(--jade-ink); }
+  .shell{ max-width:1180px; margin:0 auto; padding:0 24px 96px; }
+  .masthead{ padding:48px 0 32px; border-bottom:1px solid var(--line); margin-bottom:36px; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--jade); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--jade); display:inline-block; }
+  .masthead h1{ font-size:clamp(28px, 4vw, 42px); font-weight:600; letter-spacing:-.01em; }
+  .masthead p{ max-width:62ch; color:var(--ink-soft); font-size:16px; margin-top:12px; }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+  .chip{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.02em; color:var(--ink-soft); background:var(--card); border:1px solid var(--line); padding:5px 10px; border-radius:999px; }
+  .layout{ display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; align-items:start; }
+  nav.toc{ position:sticky; top:24px; display:flex; flex-direction:column; gap:2px; max-height:calc(100vh - 48px); overflow-y:auto; padding-right:8px; }
+  nav.toc a{ display:flex; gap:10px; align-items:baseline; padding:7px 8px; border-radius:7px; color:var(--ink-soft); text-decoration:none; font-size:13.5px; line-height:1.35; border-left:2px solid transparent; }
+  nav.toc a .n{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; width:16px; }
+  nav.toc a:hover{ background:var(--jade-soft); color:var(--ink); }
+  nav.toc a.active{ background:var(--jade-soft); color:var(--jade-ink); border-left-color:var(--jade); font-weight:600; }
+  nav.toc a.active .n{ color:var(--jade-ink); }
+  main{ display:flex; flex-direction:column; gap:56px; min-width:0; }
+  section{ scroll-margin-top:24px; }
+  .sec-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .sec-head .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--jade); background:var(--jade-soft); border-radius:6px; padding:3px 8px; }
+  .sec-head h2{ font-size:22px; font-weight:600; }
+  section > p{ color:var(--ink-soft); max-width:72ch; }
+  section > p.lead{ color:var(--ink); font-size:16px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+  ol.steps{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  ol.steps li{ display:grid; grid-template-columns:26px 1fr; gap:12px; padding-bottom:12px; border-bottom:1px dashed var(--line); }
+  ol.steps li:last-child{ border-bottom:none; padding-bottom:0; }
+  ol.steps li .idx{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--jade); background:var(--jade-soft); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  ol.steps li .txt{ color:var(--ink-soft); } ol.steps li .txt strong{ color:var(--ink); font-weight:600; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); }
+  th, td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ background:var(--jade-soft); color:var(--jade-ink); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; font-weight:600; white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:color-mix(in srgb, var(--jade-soft) 45%, transparent); }
+  td.mono, th.mono{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; }
+  .badge{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.02em; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .b-neutral{ background:var(--line); color:var(--ink-soft); }
+  .b-gold{ background:var(--gold-soft); color:var(--gold); }
+  .b-jade{ background:var(--jade-soft); color:var(--jade-ink); }
+  .b-seal{ background:var(--seal-soft); color:var(--seal); }
+  .btnlabel{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:12px; background:var(--ink); color:var(--paper); padding:3px 10px; border-radius:6px; }
+  .grouplabel{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11.5px; background:var(--seal-soft); color:var(--seal); padding:3px 9px; border-radius:6px; }
+  .callout{ display:grid; grid-template-columns:auto 1fr; gap:12px; padding:14px 16px; border-radius:var(--radius); border:1px solid var(--line); margin-top:16px; font-size:14px; }
+  .callout .ico{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px; padding-top:1px;}
+  .callout.info{ background:var(--jade-soft); border-color:transparent; } .callout.info .ico{ color:var(--jade-ink); }
+  .callout.warn{ background:var(--gold-soft); border-color:transparent; } .callout.warn .ico{ color:var(--gold); }
+  .callout.approve{ background:var(--seal-soft); border-color:transparent; } .callout.approve .ico{ color:var(--seal); }
+  .callout p{ margin:0; color:var(--ink); } .callout strong{ color:var(--ink); }
+  .flow{ display:grid; gap:14px; margin-top:20px; }
+  .flow-row{ display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:stretch; }
+  .flow-tag{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; }
+  .flow-track{ display:flex; flex-wrap:wrap; align-items:center; gap:0; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; }
+  .flow-node{ font-size:13px; padding:6px 12px; border-radius:7px; background:var(--jade-soft); color:var(--jade-ink); font-weight:600; white-space:nowrap; }
+  .flow-node.end-ok{ background:var(--jade); color:#fff; }
+  .flow-arrow{ color:var(--ink-faint); padding:0 10px; font-size:14px; }
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } @media (max-width:640px){ .two-col{ grid-template-columns:1fr; } }
+  footer{ margin-top:64px; padding-top:24px; border-top:1px solid var(--line); color:var(--ink-faint); font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  @media (max-width:900px){
+    .layout{ grid-template-columns:1fr; }
+    nav.toc{ position:static; flex-direction:row; overflow-x:auto; max-height:none; gap:6px; padding-bottom:10px; border-bottom:1px solid var(--line); margin-bottom:8px; }
+    nav.toc a{ border-left:none; border-bottom:2px solid transparent; flex-shrink:0; }
+    nav.toc a.active{ border-left-color:transparent; border-bottom-color:var(--jade); }
+  }
+  @media (prefers-reduced-motion: no-preference){ nav.toc a{ transition: background .15s ease, color .15s ease; } }
+</style>
+<style id="mx-extra">
+  .mx-tools{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .mx-search{ width:100%; font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--card); color:var(--ink); }
+  .mx-search:focus{ outline:2px solid var(--jade-soft); border-color:var(--jade); }
+  .mx-status{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); min-height:14px; }
+  .mx-btn{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--jade-ink); background:var(--jade-soft); border:none; border-radius:999px; padding:5px 10px; cursor:pointer; text-decoration:none; }
+  .mx-btn:hover{ background:var(--jade); color:#fff; }
+  .mx-hide{ display:none !important; }
+  mark.mx-hl{ background:var(--gold-soft); color:inherit; padding:0 1px; border-radius:2px; }
+  .mx-changes{ margin-top:18px; border:1px solid var(--line); border-radius:var(--radius); background:var(--jade-soft); padding:10px 16px; font-size:14px; }
+  .mx-changes summary{ cursor:pointer; font-weight:600; color:var(--jade-ink); }
+  .mx-changes ul{ margin:8px 0 2px; padding-left:20px; color:var(--ink); }
+  @media print{
+    nav.toc, .mx-tools, .mx-noprint{ display:none !important; }
+    .layout{ display:block; } .shell{ max-width:none; padding:0; }
+    .masthead{ padding:0 0 12px; margin-bottom:16px; }
+    main{ gap:24px; } body{ font-size:12px; }
+    section{ break-inside:auto; } .sec-head, .card, .callout, tr{ break-inside:avoid; }
+    .card, .table-wrap{ box-shadow:none; } a{ color:inherit; text-decoration:none; }
+    .mx-changes{ background:none; } .mx-changes[open] summary ~ *, .mx-changes summary ~ *{ display:block; }
+    .mx-hide{ display:block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow">Vertexmon ERP · Санхүүгийн тайлангийн модуль · Нягтлан бодогчид зориулав</div>
+    <h1>Санхүүгийн тайлангийн гарын авлага</h1>
+    <p>Санхүүгийн байдал, Орлого үр дүн, Мөнгөн гүйлгээ, Өмчийн өөрчлөлтийн тайлан; Гүйлгээ баланс, Ерөнхий дэвтэр/журнал, Касс харилцах, Харилцагчийн тайлан; Орлогын төлөвлөгөө; Касс/Төлбөрийн даалгавар хэвлэх; тайлангийн тохиргоо.</p>
+    <div class="meta-row">
+      <span class="chip">8 бүлэг</span>
+      <span class="chip">Шинэчилсэн: 2026.11.05</span>
+      <span class="chip">Модуль: l10n_mn_account_report</span>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="toc" id="toc">
+      <a href="#rp1"><span class="n">1</span>Цэсний бүтэц</a>
+      <a href="#rp2"><span class="n">2</span>Санхүүгийн тайлан</a>
+      <a href="#rp3"><span class="n">3</span>Монгол тайлан</a>
+      <a href="#rp4"><span class="n">4</span>Харилцагчийн тайлан</a>
+      <a href="#rp5"><span class="n">5</span>Орлогын төлөвлөгөө</a>
+      <a href="#rp6"><span class="n">6</span>Хэвлэх маягт</a>
+      <a href="#rp7"><span class="n">7</span>Тохиргоо</a>
+      <a href="#rp8"><span class="n">8</span>Хаалтын өмнөх шалгалт</a>
+    </nav>
+    <main>
+      <section id="rp1">
+        <div class="sec-head"><span class="num">1</span><h2>Цэсний бүтэц (Accounting → Reporting)</h2></div>
+        <div class="two-col">
+          <div class="card"><h3 style="font-size:15px;margin-bottom:8px">MN Account Reports</h3><p style="margin:0">Санхүү байдал нэгтгэл тайлан · Санхүүгийн байдлын тайлан · Statement cash flow report · Орлого үр дүнгийн тайлан · Өмчийн өөрчлөлтийн тайлан</p></div>
+          <div class="card"><h3 style="font-size:15px;margin-bottom:8px">Монгол тайлан (MN Report)</h3><p style="margin:0">Касс харилцахын тайлан · Харилцагчийн тайлан · Ерөнхий дэвтэр (1, 2) · Ерөнхий журнал (1, 2) · Гүйлгээ балансын тайлан · Орлогын төлөвлөгөөний гүйцэтгэл · Account asset detail report</p></div>
+        </div>
+        <p style="margin-top:12px">Ихэнх тайлан нь огноо/хугацаа, <strong>Батлагдсан гүйлгээ / Бүх гүйлгээ</strong> (ноорог орно) сонгоод Excel татдаг wizard.</p>
+      </section>
+      <section id="rp2">
+        <div class="sec-head"><span class="num">2</span><h2>Санхүүгийн тайлангууд</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Тайлан</th><th>Сонголт</th><th>Анхаарах</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Санхүүгийн байдлын тайлан</strong></td><td>Огноо, төлөв</td><td>Дансны «Баланс тайлангийн төрөл»-өөр мөрлөнө.</td></tr>
+            <tr><td><strong>Санхүү байдал нэгтгэл тайлан</strong></td><td>Санхүүгийн жил/хугацаа</td><td>Олон компанийн нэгтгэл.</td></tr>
+            <tr><td><strong>Орлого үр дүнгийн тайлан</strong></td><td>Эхлэх/дуусах огноо, төлөв</td><td>Дансны «Орлогын тайлангийн төрөл»-өөр мөрлөнө. Борлуулалтын «Орлогын данс» горимын тайлан (<a href="/l10n_mn_sale/static/sales_manual_manager.html">Борлуулалтын менежерийн гарын авлага</a>) «Борлуулалтын орлого (цэвэр)» мөртэй тулгагдах ёстой.</td></tr>
+            <tr><td><strong>Мөнгөн гүйлгээний тайлан</strong></td><td>Эхлэх/дуусах огноо, төлөв</td><td>Мөнгөн дансны мөр бүрийн <em>Мөнгөн гүйлгээний төрөл</em>-өөр бүрдэнэ — төрөл дутуу/буруу бол тайлан Гүйлгээ баланстай зөрнө (8-р бүлэг).</td></tr>
+            <tr><td><strong>Өмчийн өөрчлөлтийн тайлан</strong></td><td>Санхүүгийн жил, хугацаа</td><td>«Өмчийн өөрчлөлтийн тайлангийн тохиргоо» хийгдсэн, санхүүгийн жил үүссэн байх ёстой.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+      <section id="rp3">
+        <div class="sec-head"><span class="num">3</span><h2>Монгол тайлан</h2></div>
+        <ul>
+          <li><strong>Гүйлгээ балансын тайлан</strong> — хугацааны эхний үлдэгдэл, дебет, кредит, эцсийн үлдэгдэл данс бүрээр; <strong>Валютаар харах</strong> сонголттой.</li>
+          <li><strong>Ерөнхий дэвтэр</strong> — сонгосон данс(ууд)-ын гүйлгээ санхүүгийн жил/хугацаагаар. Гүйлгээгүй данс сонговол «Таны сонгосон данс дээр гүйлгээ байхгүй байна.» гарна.</li>
+          <li><strong>Ерөнхий журнал</strong> — журналын бичилтүүд хугацаагаар.</li>
+          <li><strong>Касс харилцахын тайлан</strong> — касс/харилцах данс(ууд)-ын гүйлгээ, <strong>By Currency</strong> (валютаар).</li>
+          <li><strong>Авлагын / Өглөгийн тайлан</strong> — харилцагчаар.</li>
+        </ul>
+      </section>
+      <section id="rp4">
+        <div class="sec-head"><span class="num">4</span><h2>Харилцагчийн тайлан</h2></div>
+        <p>Цэс: <strong>Монгол тайлан → Харилцагчийн тайлан</strong> (мөн <strong>Sales → Reporting</strong>-д). Сонголтууд:</p>
+        <ul>
+          <li><strong>Данс</strong> эсвэл төрөл: Авлагын данс / Өглөгийн данс / Өглөг авлагын данс; <strong>Журналууд</strong>.</li>
+          <li><strong>Харилцагч</strong>(ид) эсвэл <strong>Харилцагчийн бүлэг</strong> (001 Борлуулалтын харилцагч … 011 Гэрээт харилцагч).</li>
+          <li><strong>Задаргаатай эсэх</strong> — гүйлгээ бүрээр (гүйлгээний утга бүтэн харагдана); <strong>Холбогдсон гүйлгээ</strong> — тулгагдсан мөрүүдийг хамт харуулах.</li>
+        </ul>
+      </section>
+      <section id="rp5">
+        <div class="sec-head"><span class="num">5</span><h2>Орлогын төлөвлөгөө ба гүйцэтгэл</h2></div>
+        <ol class="steps">
+          <li><span class="idx">1</span><div class="txt"><strong>Accounting → Орлогын тайлангийн жилийн төлөвлөгөө</strong> — он сонгож, «Орлогын тайлангийн төрөл» бүрээр 1–12 сарын төлөвлөгөөг бөглөөд батална.</div></li>
+          <li><span class="idx">2</span><div class="txt"><strong>Монгол тайлан → Орлогын төлөвлөгөөний гүйцэтгэлийн тайлан</strong> — төлөвлөгөө ба бодит орлогыг сараар харьцуулна. Тухайн онд төлөвлөгөөгүй бол «There is no plan for the year …» гарна.</div></li>
+        </ol>
+      </section>
+      <section id="rp6">
+        <div class="sec-head"><span class="num">6</span><h2>Хэвлэх маягт</h2></div>
+        <ul>
+          <li>Банкны хуулгын мөр → Хэвлэх: <strong>Cash Order</strong> (кассын орлого/зарлагын баримт), <strong>Payment Order</strong> (төлбөрийн даалгавар), <strong>Payment Order /Transport/</strong>. Хуулгын мөрийн жагсаалтад мөр бүрээр хэвлэх товч бий.</li>
+          <li>Маягтын загвар: <strong>Accounting → Reporting → Загвар → Төлбөрийн даалгаврын загвар</strong>.</li>
+        </ul>
+      </section>
+      <section id="rp7">
+        <div class="sec-head"><span class="num">7</span><h2>Тайлангийн тохиргоо (Configuration → Accounting)</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Тохиргоо</th><th>Нөлөө</th></tr></thead>
+          <tbody>
+            <tr><td>Баланс тайлангийн төрөл</td><td>Данс бүрт оноож, Санхүүгийн байдлын тайлангийн мөрийг тодорхойлно.</td></tr>
+            <tr><td>Орлогын тайлангийн төрөл</td><td>Орлого үр дүнгийн тайлан ба орлогын төлөвлөгөөний мөр.</td></tr>
+            <tr><td>Өмчийн өөрчлөлтийн тайлангийн тохиргоо</td><td>Өмчийн өөрчлөлтийн тайлангийн багана/мөрийн данснууд.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout warn"><span class="ico">Анхаар</span><p>Шинэ данс нээх бүрт Баланс/Орлогын тайлангийн төрлийг оноохгүй бол тайланд орохгүй — нийт дүн ГБ-тэй зөрнө.</p></div>
+      </section>
+      <section id="rp8">
+        <div class="sec-head"><span class="num">8</span><h2>Тайлан гаргахын өмнөх шалгалт</h2></div>
+        <p>Сарын/жилийн тайлангаас өмнө <strong>Accounting → Хяналт</strong> цэсний шалгалтуудыг хийнэ (<a href="/l10n_mn_account/static/account_manual_employee.html#a07">Нягтлан бодогчийн гарын авлагын 7-р бүлэг</a>): мөнгөн гүйлгээний төрөл, мөнгөн бус дансны төрөл, Мөнгөн гүйлгээ ба ГБ-ийн зөрүү, ҮХ-ийг ГБ-тэй тулгах. Эдгээр нь тэг/хоосон байвал Мөнгөн гүйлгээний тайлан ба Санхүүгийн байдлын тайлан ГБ-тэй таарна.</p>
+      </section>
+      <footer><span>Vertexmon ERP · Санхүүгийн тайлангийн гарын авлага</span><span>Эх сурвалж: l10n_mn_account_report модуль (Odoo 17)</span></footer>
+    </main>
+  </div>
+</div>
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){ links.forEach(function(l){ l.classList.remove('active'); }); links[idx].classList.add('active'); }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ if(s) io.observe(s); });
+  })();
+</script>
+<script id="mx-extra">
+  (function(){
+    var INDEX = '/vertexmon_tools/static/manuals.html';
+    var meta = document.querySelector('.masthead .meta-row');
+    if(meta && location.pathname.indexOf('manuals.html') === -1){
+      var home = document.createElement('a'); home.className = 'mx-btn mx-noprint'; home.href = INDEX; home.textContent = '← Бүх гарын авлага';
+      meta.insertBefore(home, meta.firstChild);
+      var pr = document.createElement('button'); pr.className = 'mx-btn mx-noprint'; pr.type = 'button'; pr.textContent = 'Хэвлэх / PDF';
+      pr.onclick = function(){ window.print(); }; meta.appendChild(pr);
+    }
+    var toc = document.getElementById('toc');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!toc || !sections.length) return;
+    var box = document.createElement('div'); box.className = 'mx-tools';
+    box.innerHTML = '<input class="mx-search" type="search" placeholder="Хайх… ( / )" aria-label="Гарын авлагаас хайх"><div class="mx-status"></div>';
+    toc.insertBefore(box, toc.firstChild);
+    var input = box.querySelector('input'), status = box.querySelector('.mx-status');
+    function linkFor(sec){ return toc.querySelector('a[href="#' + sec.id + '"]'); }
+    function clearMarks(){
+      Array.prototype.slice.call(document.querySelectorAll('mark.mx-hl')).forEach(function(m){
+        var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+      });
+    }
+    function mark(root, q){
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(q) !== -1) nodes.push(n); }
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), frag = document.createDocumentFragment(), i = 0, j;
+        while((j = low.indexOf(q, i)) !== -1){
+          frag.appendChild(document.createTextNode(text.slice(i, j)));
+          var m = document.createElement('mark'); m.className = 'mx-hl'; m.textContent = text.slice(j, j + q.length); frag.appendChild(m);
+          i = j + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    var timer;
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var q = input.value.trim().toLowerCase(), found = 0, first = null;
+        sections.forEach(function(sec){
+          var hit = !q || sec.textContent.toLowerCase().indexOf(q) !== -1;
+          sec.classList.toggle('mx-hide', !hit);
+          var l = linkFor(sec); if(l) l.classList.toggle('mx-hide', !hit);
+          if(hit && q){ found++; mark(sec, q); if(!first) first = sec; }
+        });
+        status.textContent = !q ? '' : (found ? found + ' бүлэгт олдлоо' : 'Олдсонгүй');
+        if(first) first.scrollIntoView({block:'start'});
+      }, 200);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === '/' && document.activeElement !== input && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); input.focus(); }
+      if(e.key === 'Escape' && document.activeElement === input){ input.value = ''; input.dispatchEvent(new Event('input')); }
+    });
+  })();
+</script>
+</body>
+</html>
