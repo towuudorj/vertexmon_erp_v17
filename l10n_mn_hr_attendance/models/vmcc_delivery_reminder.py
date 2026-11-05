@@ -63,7 +63,7 @@ class DeliveryReminder(models.Model):
             for item in graph_list_items(headers, site_id, config_id, "fields/Title eq 'settings'"):
                 settings = json.loads(item.get('fields', {}).get('Data') or '{}')
         staff = [e for e in settings.get('deliveryStaff') or [] if e]
-        webhook = settings.get('chatWebhook') or ''
+        webhook = settings.get('deliveryWebhook') or settings.get('chatWebhook') or ''
 
         delivery_id = self._vmcc_list_id(headers, site_id, 'Delivery')
         if not delivery_id:
