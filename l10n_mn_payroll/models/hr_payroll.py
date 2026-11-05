@@ -166,7 +166,7 @@ class HrPayslipRun(models.Model):
             sheet.set_column(7, 7, None, None, {'hidden': True})
 
             sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
-            sheet.merge_range(1, 0, 1, 6, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
+            sheet.merge_range(1, 0, 1, 6, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Б.ӨЛЗИЙТ-АМГАЛАНТЖАРГАЛ', data_left_borderless)
             sheet.merge_range("A3:G3", '%s %s' % (self_obj.name, 'урьдчилгаа цалин'), head)
 
             rowx = 3
@@ -249,7 +249,7 @@ class HrPayslipRun(models.Model):
                 max_ceiling = float(m.group(1)) * 10
 
         sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
-        sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Д.МЭНДСАЙХАН', data_left_borderless)
+        sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Б.ӨЛЗИЙТ-АМГАЛАНТЖАРГАЛ', data_left_borderless)
         sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'сүүл цалин'), head)
         rowx = 3
         colly = 0
