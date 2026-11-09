@@ -31,7 +31,8 @@
                  'stock_landed_costs',
                  'l10n_mn_account',
                  'vertexmon_tools',
-                 'rt_product_brand'
+                 'rt_product_brand',
+                 'hr',
                  ],
     "data" : [
                 'data/sequence_data.xml',
@@ -69,6 +70,7 @@
                 'views/stock_quant_inherit_view.xml',
                 'views/stock_move_line_inherit_view.xml',
                 'views/stock_location_view.xml',
+                'views/supply_employee_balance_view.xml',
                 'data/supply_writeoff_data.xml',
                 'data/supply_writeoff_cron.xml',
                 'report/product_require_report_view.xml',

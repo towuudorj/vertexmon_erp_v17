@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="supply_employee_balance_tree" model="ir.ui.view">
+            <field name="name">supply.employee.balance.tree</field>
+            <field name="model">supply.employee.balance</field>
+            <field name="arch" type="xml">
+                <tree string="Ажилтны хангамж" create="0" edit="0" delete="0"
+                      decoration-danger="is_expired">
+                    <field name="partner_id"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="product_id"/>
+                    <field name="categ_id" optional="hide"/>
+                    <field name="uom_id" optional="show"/>
+                    <field name="first_issue_date" optional="hide"/>
+                    <field name="last_issue_date"/>
+                    <field name="validity_period" optional="show"/>
+                    <field name="expire_date"/>
+                    <field name="issued_qty" sum="Нийт" optional="hide"/>
+                    <field name="closed_qty" sum="Нийт" optional="hide"/>
+                    <field name="balance" sum="Нийт"/>
+                    <field name="expired_qty" sum="Нийт"/>
+                    <field name="unit_cost" optional="show"/>
+                    <field name="value" optional="show"/>
+                    <field name="is_expired" column_invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="supply_employee_balance_pivot" model="ir.ui.view">
+            <field name="name">supply.employee.balance.pivot</field>
+            <field name="model">supply.employee.balance</field>
+            <field name="arch" type="xml">
+                <pivot string="Ажилтны хангамж">
+                    <field name="partner_id" type="row"/>
+                    <field name="balance" type="measure"/>
+                    <field name="expired_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="supply_employee_balance_search" model="ir.ui.view">
+            <field name="name">supply.employee.balance.search</field>
+            <field name="model">supply.employee.balance</field>
+            <field name="arch" type="xml">
+                <search string="Ажилтны хангамж">
+                    <field name="partner_id"/>
+                    <field name="department_id"/>
+                    <field name="product_id"/>
+                    <field name="categ_id"/>
+                    <filter name="expired" string="Хугацаа дууссан" domain="[('is_expired', '=', True)]"/>
+                    <filter name="not_expired" string="Хугацаа дуусаагүй" domain="[('is_expired', '=', False)]"/>
+                    <filter name="no_validity" string="Ашиглах хугацаа тодорхойгүй" domain="[('validity_period', '=', 0)]"/>
+                    <separator/>
+                    <filter name="archived_employee" string="Ажлаас гарсан"
+                            domain="[('employee_id.active', '=', False)]"/>
+                    <group expand="1" string="Бүлэглэх">
+                        <filter name="group_partner" string="Ажилтан" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_department" string="Хэлтэс" context="{'group_by': 'department_id'}"/>
+                        <filter name="group_product" string="Бараа" context="{'group_by': 'product_id'}"/>
+                        <filter name="group_categ" string="Ангилал" context="{'group_by': 'categ_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_supply_employee_balance" model="ir.actions.act_window">
+            <field name="name">Ажилтны хангамж</field>
+            <field name="res_model">supply.employee.balance</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="search_view_id" ref="supply_employee_balance_search"/>
+            <field name="context">{'search_default_group_partner': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Ажилтан дээр хангамжийн үлдэгдэл алга.</p>
+                <p>Хангамжийн агуулахаас ажилтанд олгосон, буцаагдаагүй/хаагдаагүй бараа энд харагдана.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

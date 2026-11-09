@@ -49,6 +49,8 @@
         <!-- Үйл ажиллагаа → Хангамж бүлэг (Гүйлгээ-ний дараа) -->
         <menuitem id="stock_supply_root_menu" name="Хангамж" parent="stock.menu_stock_warehouse_mgmt" sequence="1"/>
 
+        <menuitem id="stock_supply_employee_balance_menu" name="Ажилтны хангамж" parent="stock_supply_root_menu" action="action_supply_employee_balance" sequence="5"/>
+
         <menuitem id="stock_supply_transfer_menu" name="Хангамж шилжүүлэх" parent="stock_supply_root_menu" action="action_supply_transfer_picking" sequence="10"/>
 
         <menuitem id="stock_supply_writeoff_menu" name="Хангамж хаах" parent="stock_supply_root_menu" action="action_supply_writeoff_picking" sequence="20"/>
