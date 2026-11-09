@@ -7,3 +7,4 @@ from . import stock_picking_return_inherit
 from . import stock_move_update_wizard
 from . import supply_product_report
 from . import stock_warehouse_flow_report
+from . import supply_writeoff_wizard

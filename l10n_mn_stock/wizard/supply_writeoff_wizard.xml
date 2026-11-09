@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="supply_writeoff_wizard_form" model="ir.ui.view">
+            <field name="name">supply.writeoff.wizard.form</field>
+            <field name="model">supply.writeoff.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Хугацаа дууссан хангамж хаах">
+                    <p class="text-muted">
+                        Олгосон огнооноос хойш барааны "Ашиглах хугацаа (сар)" өнгөрсөн, буцаагдаагүй
+                        хангамжийг ажилтан тус бүрээр ноорог "Хангамж хаах" баримт болгон үүсгэнэ.
+                        Нярав шалгаад батлахад хангамжийн тайлангаас хасагдана.
+                    </p>
+                    <group>
+                        <field name="expire_date"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_pickings" string="Ноорог үүсгэх" type="object" class="oe_highlight"/>
+                        <button string="Цуцлах" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_supply_writeoff_wizard" model="ir.actions.act_window">
+            <field name="name">Хугацаа дууссан хангамж хаах</field>
+            <field name="res_model">supply.writeoff.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

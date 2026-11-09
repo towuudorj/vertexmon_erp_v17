@@ -11,6 +11,26 @@
                         <field name="issue_date" readonly="0" force_save="1"/>
                     </xpath>
 
+                    <!-- Хангамж шилжүүлэх: Өгөх ажилтан -> Хүргэлтийн хаяг (хүлээн авах ажилтан) -->
+                    <xpath expr="//div[hasclass('o_td_label')][label[@for='partner_id']]" position="before">
+                        <field name="is_supply_transfer" invisible="1"/>
+                        <field name="is_supply_writeoff" invisible="1"/>
+                        <field name="supply_from_partner_id"
+                               invisible="not is_supply_transfer"
+                               required="is_supply_transfer"
+                               readonly="state not in ('draft',)"
+                               options="{'no_create': True}"/>
+                    </xpath>
+                    <xpath expr="//div[hasclass('o_td_label')]/label[@for='partner_id'][3]" position="attributes">
+                        <attribute name="invisible">picking_type_code in ['incoming', 'outgoing'] or is_supply_transfer or is_supply_writeoff</attribute>
+                    </xpath>
+                    <xpath expr="//div[hasclass('o_td_label')]/label[@for='partner_id'][3]" position="after">
+                        <label for="partner_id" string="Хүлээн авах ажилтан" style="font-weight:bold;"
+                               invisible="not is_supply_transfer"/>
+                        <label for="partner_id" string="Ажилтан" style="font-weight:bold;"
+                               invisible="not is_supply_writeoff"/>
+                    </xpath>
+
                     <xpath expr="//field[@name='origin']" position="after">
                     	<field name="is_work_out"/>
                         <field name="purchase_count"/>

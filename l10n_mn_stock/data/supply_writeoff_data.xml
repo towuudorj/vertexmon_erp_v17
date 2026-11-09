@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Ажилтанд олгосон хангамжийг хаах/актлах виртуал байрлал -->
+        <record id="stock_location_supply_writeoff" model="stock.location">
+            <field name="name">Хангамж актлах</field>
+            <field name="location_id" ref="stock.stock_location_locations_virtual"/>
+            <field name="usage">inventory</field>
+            <field name="company_id" eval="False"/>
+            <field name="supply_writeoff_location" eval="True"/>
+        </record>
+
+        <!-- Хангамж хаах: Харилцагч/Customers -> Хангамж актлах -->
+        <record id="picking_type_supply_writeoff" model="stock.picking.type">
+            <field name="name">Хангамж хаах</field>
+            <field name="code">internal</field>
+            <field name="sequence_code">WO</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="warehouse_id" search="[('code', '=', 'SUPP')]"/>
+            <field name="default_location_src_id" ref="stock.stock_location_customers"/>
+            <field name="default_location_dest_id" ref="stock_location_supply_writeoff"/>
+        </record>
+
+        <!-- Ажилтнаас ажилтанд хангамж шилжүүлэх виртуал байрлал -->
+        <record id="stock_location_supply_transfer" model="stock.location">
+            <field name="name">Хангамж шилжүүлэг</field>
+            <field name="location_id" ref="stock.stock_location_locations_virtual"/>
+            <field name="usage">inventory</field>
+            <field name="company_id" eval="False"/>
+            <field name="supply_transfer_location" eval="True"/>
+        </record>
+
+        <!-- Хангамж шилжүүлэх: Харилцагч/Customers -> Хангамж шилжүүлэг (Өгөх ажилтан -> Хүлээн авах ажилтан) -->
+        <record id="picking_type_supply_transfer" model="stock.picking.type">
+            <field name="name">Хангамж шилжүүлэх</field>
+            <field name="code">internal</field>
+            <field name="sequence_code">ST</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="warehouse_id" search="[('code', '=', 'SUPP')]"/>
+            <field name="default_location_src_id" ref="stock.stock_location_customers"/>
+            <field name="default_location_dest_id" ref="stock_location_supply_transfer"/>
+        </record>
+
+    </data>
+</odoo>

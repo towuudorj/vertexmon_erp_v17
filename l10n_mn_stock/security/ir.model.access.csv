@@ -22,6 +22,7 @@ access_stock_warehouse_flow_report,stock.warehouse.flow.report,model_stock_wareh
 access_stock_warehouse_flow_report_manager,stock.warehouse.flow.report,model_stock_warehouse_flow_report,stock.group_stock_manager,1,1,1,1
 access_stock_move_update_user,stock.move.update,model_stock_move_update,stock.group_stock_user,1,1,1,1
 access_supply_product_report,supply.product.report,model_supply_product_report,stock.group_stock_user,1,1,1,1
+access_supply_writeoff_wizard,supply.writeoff.wizard,model_supply_writeoff_wizard,stock.group_stock_user,1,1,1,1
 access_stock_requisition_template_report,stock.requisition.template.report,model_stock_requisition_template_report,stock.group_stock_user,1,1,1,1
 access_stock_requisition_template_report_manager,stock.requisition.template.report,model_stock_requisition_template_report,stock.group_stock_manager,1,1,1,1
 access_stock_expense_template_report,stock.expense.template.report,model_stock_expense_template_report,stock.group_stock_user,1,1,1,1

@@ -26,6 +26,35 @@
 
         <menuitem id="stock_supply_report_mn_menu" name="Stock Supply summary report" parent="stock.menu_warehouse_report" action="action_product_supply_report"  />
 
+        <!-- Хангамж хаах: ажилтанд олгосон хангамжийг буцаалтгүйгээр хаах/актлах -->
+        <record id="action_supply_writeoff_picking" model="ir.actions.act_window">
+            <field name="name">Хангамж хаах</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="domain" eval="[('picking_type_id', '=', ref('picking_type_supply_writeoff'))]"/>
+            <field name="context" eval="{'contact_display': 'partner_address', 'default_picking_type_id': ref('picking_type_supply_writeoff'), 'restricted_picking_type_code': 'internal'}"/>
+        </record>
+
+        <!-- Хангамж шилжүүлэх: ажилтнаас ажилтанд -->
+        <record id="action_supply_transfer_picking" model="ir.actions.act_window">
+            <field name="name">Хангамж шилжүүлэх</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="domain" eval="[('picking_type_id', '=', ref('picking_type_supply_transfer'))]"/>
+            <field name="context" eval="{'contact_display': 'partner_address', 'default_picking_type_id': ref('picking_type_supply_transfer'), 'restricted_picking_type_code': 'internal'}"/>
+        </record>
+
+        <!-- Үйл ажиллагаа → Хангамж бүлэг (Гүйлгээ-ний дараа) -->
+        <menuitem id="stock_supply_root_menu" name="Хангамж" parent="stock.menu_stock_warehouse_mgmt" sequence="1"/>
+
+        <menuitem id="stock_supply_transfer_menu" name="Хангамж шилжүүлэх" parent="stock_supply_root_menu" action="action_supply_transfer_picking" sequence="10"/>
+
+        <menuitem id="stock_supply_writeoff_menu" name="Хангамж хаах" parent="stock_supply_root_menu" action="action_supply_writeoff_picking" sequence="20"/>
+
+        <menuitem id="stock_supply_writeoff_wizard_menu" name="Хугацаа дууссан хангамж хаах" parent="stock_supply_root_menu" action="action_supply_writeoff_wizard" sequence="30"/>
+
         <menuitem id="product_aged_report_mn_menu" name="Product aged report" parent="stock.menu_warehouse_report" action="action_product_aged_report"  />
         
         <menuitem id="product_sales_report_mn_menu" name="Product sales report" parent="stock.menu_warehouse_report" action="action_product_sales_report"  />

@@ -9,6 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='return_location']" position='after'>
                     <field name="supply_location" groups="stock.group_stock_manager"/>
+                    <field name="supply_writeoff_location" groups="stock.group_stock_manager"/>
+                    <field name="supply_transfer_location" groups="stock.group_stock_manager"/>
                 </xpath>
             </field>
         </record>

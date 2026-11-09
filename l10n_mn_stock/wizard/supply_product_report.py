@@ -145,8 +145,38 @@ class SupplyProductReport(models.TransientModel):
 
         group_partner = data.get('group_by_partner', False)
         partner_where = ''
+        giver_partner_where = ''
         if data.get('partner_ids', False):
-            partner_where = 'AND rp.id in (%s) ' % ','.join(str(id) for id in data.get('partner_ids'))
+            partner_ids_str = ','.join(str(int(id)) for id in data.get('partner_ids'))
+            partner_where = 'AND COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) in (%s) ' % partner_ids_str
+            giver_partner_where = 'AND sp.supply_from_partner_id in (%s) ' % partner_ids_str
+
+        # Хангамж шилжүүлэх: өгсөн ажилтны талаас буцаалттай адил (+) хасна. Зөвхөн ажилтнаар бүлэглэхэд.
+        giver_union = f"""
+                UNION ALL
+                SELECT
+                    mv.id AS move_line_id,
+                    mv.move_id,
+                    mv.product_id,
+                    sp.supply_from_partner_id AS partner_id,
+                    mv.date::date AS move_date,
+                    mv.quantity,
+                    NULL::date AS issue_date,
+                    FALSE AS src_supply_location,
+                    TRUE AS dest_supply_location,
+                    FALSE AS dest_writeoff_location,
+                    FALSE AS dest_transfer_location
+                FROM stock_move_line mv
+                JOIN stock_move sm ON sm.id = mv.move_id
+                JOIN stock_picking sp ON sp.id = sm.picking_id
+                JOIN stock_location dest ON dest.id = mv.location_dest_id
+                JOIN res_partner rp ON rp.id = sp.supply_from_partner_id
+                WHERE mv.state = 'done'
+                  AND mv.date::date <= '{date_to}'
+                  AND rp.is_company = False
+                  AND dest.supply_transfer_location = TRUE
+                  {giver_partner_where}
+        """ if group_partner else ''
 
         issue_date_filter = fields.Date.to_date(data.get('issue_date_filter')) if data.get('filter_by_issue_date') and data.get('issue_date_filter') else False
 
@@ -162,14 +192,16 @@ class SupplyProductReport(models.TransientModel):
                     sp.issue_date AS issue_date,
 
                     sl.supply_location AS src_supply_location,
-                    dest.supply_location AS dest_supply_location
+                    dest.supply_location AS dest_supply_location,
+                    COALESCE(dest.supply_writeoff_location, FALSE) AS dest_writeoff_location,
+                    COALESCE(dest.supply_transfer_location, FALSE) AS dest_transfer_location
             
                 FROM stock_move_line mv
                 JOIN stock_move sm ON sm.id = mv.move_id
                 LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
                 JOIN stock_location sl ON sl.id = mv.location_id
                 JOIN stock_location dest ON dest.id = mv.location_dest_id
-                {'LEFT JOIN res_partner rp on rp.id = mv.partner_id' if group_partner else ''}
+                {'LEFT JOIN res_partner rp on rp.id = COALESCE(mv.partner_id, sm.partner_id, sp.partner_id)' if group_partner else ''}
                 WHERE mv.state = 'done'
                   AND mv.date::date <= '{date_to}'
                   {'AND rp.is_company = False '  if group_partner else ''}
@@ -177,7 +209,9 @@ class SupplyProductReport(models.TransientModel):
                   AND (
                         sl.supply_location = TRUE
                         OR dest.supply_location = TRUE
+                        {'OR dest.supply_writeoff_location = TRUE OR dest.supply_transfer_location = TRUE' if group_partner else ''}
                   )
+                {giver_union}
             ),
             
             signed_moves AS (
@@ -191,6 +225,10 @@ class SupplyProductReport(models.TransientModel):
                     CASE
                         WHEN src_supply_location = TRUE THEN -quantity
                         WHEN dest_supply_location = TRUE THEN quantity
+                        -- Хангамж хаах/актлах: ажилтны үлдэгдлийг буцаалттай адил хасна
+                        WHEN dest_writeoff_location = TRUE THEN quantity
+                        -- Хангамж шилжүүлэх: хүлээн авсан ажилтанд олголттой адил нэмнэ
+                        WHEN dest_transfer_location = TRUE THEN -quantity
                         ELSE 0
                     END AS signed_qty
             
@@ -277,16 +315,25 @@ class SupplyProductReport(models.TransientModel):
 
         partner_total = 0
         last_partner_id = False
+
+        def write_partner_subtotal(row):
+            # Ажилтны дэд дүн: мөрүүдтэй адил баганад (7-11), адил тэмдгээр
+            sheet.write(row, 7, p_total_quantity * -1, data_right)
+            sheet.write(row, 8, p_total_credit_quantity, data_right)
+            sheet.write(row, 9, p_total_debit_quantity, data_right)
+            sheet.write(row, 10, p_total_t_quantity * -1, data_right)
+            sheet.write(row, 11, round(p_total_value, 2), data_right)
         for line in data:
             product = product_obj.browse(line.get('p_id'))
             if group_partner:
                 if (isinstance(last_partner_id, bool) and not last_partner_id) or (isinstance(last_partner_id, int) and last_partner_id not in [int(line['partner_id']), 0]):
                     if last_group_rowx:
-                        sheet.write(last_group_rowx, 7, p_total_quantity, data_right)
-                        sheet.write(last_group_rowx, 8, p_total_debit_quantity, data_right)
-                        sheet.write(last_group_rowx, 9, p_total_credit_quantity, data_right)
-                        sheet.write(last_group_rowx, 10, p_total_t_quantity, data_right)
-                        sheet.write(last_group_rowx, 11, p_total_value, data_right)
+                        write_partner_subtotal(last_group_rowx)
+                        p_total_quantity = 0
+                        p_total_debit_quantity = 0
+                        p_total_credit_quantity = 0
+                        p_total_t_quantity = 0
+                        p_total_value = 0
                     sheet.merge_range(rowx, 0, rowx, 6, line['partner_name'], data_center_bold)
                     last_partner_id = int(line['partner_id'])
                     last_group_rowx = rowx
@@ -332,11 +379,7 @@ class SupplyProductReport(models.TransientModel):
             total_value += value
 
         if last_group_rowx:
-            sheet.write(last_group_rowx, 6, p_total_quantity if not group_partner else p_total_quantity*-1, data_right)
-            sheet.write(last_group_rowx, 7, p_total_debit_quantity if not group_partner else p_total_credit_quantity, data_right)
-            sheet.write(last_group_rowx, 8, p_total_credit_quantity if not group_partner else p_total_debit_quantity, data_right)
-            sheet.write(last_group_rowx, 9, p_total_t_quantity if not group_partner else p_total_t_quantity*-1, data_right)
-            sheet.write(last_group_rowx, 10, p_total_value, data_right)
+            write_partner_subtotal(last_group_rowx)
 
         rowx += 1
         sheet.merge_range(f'A%s:G%s' % (rowx, rowx), u'Нийт', data_center_bold)
