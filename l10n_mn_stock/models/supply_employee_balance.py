@@ -30,11 +30,11 @@ class SupplyEmployeeBalance(models.Model):
     is_expired = fields.Boolean(string='Хугацаа дууссан эсэх', readonly=True)
     first_issue_date = fields.Date(string='Анх олгосон огноо', readonly=True)
     last_issue_date = fields.Date(string='Сүүлд олгосон огноо', readonly=True)
-    validity_period = fields.Integer(string='Ашиглах хугацаа (сар)', readonly=True)
+    validity_period = fields.Integer(string='Ашиглах хугацаа (сар)', readonly=True, group_operator=False)
     expire_date = fields.Date(string='Дуусах огноо', readonly=True,
                               help='Сүүлд олгосон огноо + ашиглах хугацаа.')
-    unit_cost = fields.Float(string='Нэгж өртөг', compute='_compute_value', digits='Product Price')
-    value = fields.Float(string='Нийт өртөг', compute='_compute_value', digits='Product Price')
+    unit_cost = fields.Float(string='Нэгж өртөг', compute='_compute_value', digits=(16, 2))
+    value = fields.Float(string='Нийт өртөг', compute='_compute_value', digits=(16, 2))
 
     @api.depends('product_id', 'balance')
     def _compute_value(self):
@@ -50,10 +50,11 @@ class SupplyEmployeeBalance(models.Model):
                     SELECT COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id,
                            mv.product_id,
                            COALESCE(sp.issue_date, mv.date::date) AS issue_date,
-                           CASE WHEN COALESCE(sl.supply_location, FALSE)
+                           -- Агуулах хоорондын (дотоод -> дотоод) шилжүүлэг ажилтанд хамаарахгүй
+                           CASE WHEN (COALESCE(sl.supply_location, FALSE) AND dest.usage != 'internal')
                                      OR COALESCE(dest.supply_transfer_location, FALSE)
                                 THEN mv.quantity ELSE 0 END AS issued,
-                           CASE WHEN NOT COALESCE(sl.supply_location, FALSE)
+                           CASE WHEN sl.usage != 'internal'
                                      AND (COALESCE(dest.supply_location, FALSE)
                                           OR COALESCE(dest.supply_writeoff_location, FALSE))
                                 THEN mv.quantity ELSE 0 END AS closed
@@ -65,6 +66,7 @@ class SupplyEmployeeBalance(models.Model):
                     WHERE mv.state = 'done'
                       AND (sl.supply_location OR dest.supply_location
                            OR dest.supply_writeoff_location OR dest.supply_transfer_location)
+                      AND NOT COALESCE(sp.exclude_from_supply, FALSE)
 
                     UNION ALL
 
@@ -76,6 +78,7 @@ class SupplyEmployeeBalance(models.Model):
                     WHERE mv.state = 'done'
                       AND dest.supply_transfer_location
                       AND sp.supply_from_partner_id IS NOT NULL
+                      AND NOT COALESCE(sp.exclude_from_supply, FALSE)
                 ),
                 agg AS (
                     SELECT l.partner_id,

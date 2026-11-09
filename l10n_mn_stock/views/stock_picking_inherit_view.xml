@@ -9,12 +9,16 @@
                 <field name="arch" type="xml">                
                     <xpath expr="//field[@name='date_done']" position="after">
                         <field name="issue_date" readonly="0" force_save="1"/>
+                        <field name="exclude_from_supply" readonly="0"
+                               invisible="not is_supply_related and not exclude_from_supply"
+                               groups="stock.group_stock_manager"/>
                     </xpath>
 
                     <!-- Хангамж шилжүүлэх: Өгөх ажилтан -> Хүргэлтийн хаяг (хүлээн авах ажилтан) -->
                     <xpath expr="//div[hasclass('o_td_label')][label[@for='partner_id']]" position="before">
                         <field name="is_supply_transfer" invisible="1"/>
                         <field name="is_supply_writeoff" invisible="1"/>
+                        <field name="is_supply_related" invisible="1"/>
                         <field name="supply_from_partner_id"
                                invisible="not is_supply_transfer"
                                required="is_supply_transfer"

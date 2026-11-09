@@ -175,6 +175,7 @@ class SupplyProductReport(models.TransientModel):
                   AND mv.date::date <= '{date_to}'
                   AND rp.is_company = False
                   AND dest.supply_transfer_location = TRUE
+                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
                   {giver_partner_where}
         """ if group_partner else ''
 
@@ -211,6 +212,8 @@ class SupplyProductReport(models.TransientModel):
                         OR dest.supply_location = TRUE
                         {'OR dest.supply_writeoff_location = TRUE OR dest.supply_transfer_location = TRUE' if group_partner else ''}
                   )
+                  {"AND NOT (sl.usage = 'internal' AND dest.usage = 'internal')" if group_partner else ''}
+                  {"AND NOT COALESCE(sp.exclude_from_supply, FALSE)" if group_partner else ''}
                 {giver_union}
             ),
             

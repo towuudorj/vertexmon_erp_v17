@@ -16,18 +16,29 @@ class StockPickingSupply(models.Model):
         string='Хангамж хаах эсэх', compute='_compute_supply_flags')
     is_supply_transfer = fields.Boolean(
         string='Хангамж шилжүүлэх эсэх', compute='_compute_supply_flags')
+    is_supply_related = fields.Boolean(
+        string='Хангамжтай холбоотой эсэх', compute='_compute_supply_flags')
     supply_from_partner_id = fields.Many2one(
         'res.partner', string='Өгөх ажилтан', copy=False,
         domain=[('is_company', '=', False)],
         help='Хангамж шилжүүлэх баримт дээр хангамжаа өгч буй ажилтан. '
              'Хүлээн авах ажилтныг "Хүргэлтийн хаяг" талбарт сонгоно.')
 
-    @api.depends('picking_type_id', 'location_dest_id')
+    exclude_from_supply = fields.Boolean(
+        string='Хангамжид тооцохгүй', copy=False, tracking=True,
+        help='Сонговол энэ баримтын хөдөлгөөнийг ажилтны хангамжийн үлдэгдэл, тайлан, '
+             'хаах/шилжүүлэх тооцоонд оруулахгүй (жишээ нь хөрөнгөөр бүртгэсэн бараа, '
+             'андуурч үүсгэсэн баримт). Агуулахын үлдэгдэл, санхүүгийн бичилтэд нөлөөлөхгүй.')
+
+    @api.depends('picking_type_id', 'location_id', 'location_dest_id')
     def _compute_supply_flags(self):
         for picking in self:
             dest = picking.location_dest_id or picking.picking_type_id.default_location_dest_id
             picking.is_supply_writeoff = bool(dest.supply_writeoff_location)
             picking.is_supply_transfer = bool(dest.supply_transfer_location)
+            picking.is_supply_related = bool(
+                picking.is_supply_writeoff or picking.is_supply_transfer
+                or picking.location_id.supply_location or dest.supply_location)
 
     @api.model
     def _get_supply_balances(self, partner_ids=None, expire_date=None):
@@ -55,10 +66,11 @@ class StockPickingSupply(models.Model):
                 SELECT COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id,
                        mv.product_id,
                        COALESCE(sp.issue_date, mv.date::date) AS issue_date,
-                       CASE WHEN COALESCE(sl.supply_location, FALSE)
+                       -- Агуулах хоорондын (дотоод -> дотоод) шилжүүлэг ажилтанд хамаарахгүй
+                       CASE WHEN (COALESCE(sl.supply_location, FALSE) AND dest.usage != 'internal')
                                  OR COALESCE(dest.supply_transfer_location, FALSE)
                             THEN mv.quantity ELSE 0 END AS issued,
-                       CASE WHEN NOT COALESCE(sl.supply_location, FALSE)
+                       CASE WHEN sl.usage != 'internal'
                                  AND (COALESCE(dest.supply_location, FALSE)
                                       OR COALESCE(dest.supply_writeoff_location, FALSE))
                             THEN mv.quantity ELSE 0 END AS closed
@@ -70,6 +82,7 @@ class StockPickingSupply(models.Model):
                 WHERE mv.state = 'done'
                   AND (sl.supply_location OR dest.supply_location
                        OR dest.supply_writeoff_location OR dest.supply_transfer_location)
+                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
 
                 UNION ALL
 
@@ -82,6 +95,7 @@ class StockPickingSupply(models.Model):
                 WHERE mv.state = 'done'
                   AND dest.supply_transfer_location
                   AND sp.supply_from_partner_id IS NOT NULL
+                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
             )
             SELECT l.partner_id,
                    l.product_id,
