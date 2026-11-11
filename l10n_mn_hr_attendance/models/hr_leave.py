@@ -87,8 +87,9 @@ class HrLeave(models.Model):
         def api_type(sub_type):
             return self.env['hr.leave.type'].search([('use_in_api', '=', True), ('sub_type', '=', sub_type)], limit=1)
 
-        # typeSalary as VMC Connect writes it: the list's paid code, annual leave, overtime and sick; anything else is
-        # the list's unpaid code (the Power App's two). Annual leave is HR's own type, not an API one (its sub-type is
+        # typeSalary as VMC Connect writes it: the list's paid code, annual leave, overtime, sick and «Гадуур ажил» (work
+        # outside the office, paid: the paid type, the description says what it was); anything else is the list's unpaid
+        # code (the Power App's two). Annual leave is HR's own type, not an API one (its sub-type is
         # shared with «Нөхөн амралт»): the one whose Code is ANNUAL. Without an allocation for the person Odoo
         # refuses it, and it is tried again each run until HR allocates the days.
         types = {
@@ -96,6 +97,7 @@ class HrLeave(models.Model):
             'annual': self.env['hr.leave.type'].search([('code', '=ilike', 'ANNUAL')], limit=1),
             'overtime': api_type('over_time'),
             'sick': api_type('sick'),
+            'outwork': api_type('payroll'),
         }
         unpayroll_type = api_type('unpayroll')
         tz = timezone('Asia/Ulaanbaatar')
@@ -156,7 +158,9 @@ class HrLeave(models.Model):
                     if by_hour:
                         vals.update({'request_hour_from': hour(start),
                                      'request_hour_to': hour_min_to_selection['23:30'] if overnight else hour(end)})
-                    if data.get('reason'):
+                    if kind == 'outwork':
+                        vals['private_name'] = f"Гадуур ажил: {data['reason']}" if data.get('reason') else 'Гадуур ажил'
+                    elif data.get('reason'):
                         vals['private_name'] = data['reason']
                     # sick leave: the doctor's note handed in with it, fetched first (a failure tries it all again)
                     note = None

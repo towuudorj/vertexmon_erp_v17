@@ -122,6 +122,21 @@ def hik_time(value):
     return parser.isoparse(value).astimezone(pytz.UTC).replace(tzinfo=None)
 
 
+def leave_day_text(leave):
+    """One approved leave as HR reads it beside the attendance: «Цалинтай: 13:00–18:00, 5 цаг «Гадуур уулзалт»»"""
+    kind = leave.holiday_status_id.name or 'Чөлөө'
+    start = leave.date_from.replace(tzinfo=pytz.UTC).astimezone(UB)
+    end = leave.date_to.replace(tzinfo=pytz.UTC).astimezone(UB)
+    if leave.request_unit_hours or leave.request_unit_half:
+        hours = round((leave.date_to - leave.date_from).total_seconds() / 3600, 2)
+        span = f"{start:%H:%M}–{end:%H:%M}{' (+1 өдөр)' if end.date() > start.date() else ''}, {hours:g} цаг"
+    else:
+        first, last = leave.request_date_from or start.date(), leave.request_date_to or end.date()
+        span = 'бүтэн өдөр' if first == last else f"{first:%m/%d}–{last:%m/%d}, {leave.number_of_days:g} өдөр"
+    reason = (leave.private_name or '').strip()
+    return f"{kind}: {span}" + (f" «{reason}»" if reason else '')
+
+
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
@@ -137,6 +152,12 @@ class HrAttendance(models.Model):
         help="Батлагдсан засах хүсэлтийн шалтгаан, засахаас өмнөх цаг, батлагчийн тайлбар (VMC Connect / Teams).",
         copy=False,
     )
+    day_note = fields.Char(
+        string='Тайлбар',
+        compute='_compute_day_note',
+        help="Тухайн өдрийн батлагдсан чөлөө, илүү цаг (төрөл, цаг, шалтгаан) ба батлагдсан засах хүсэлт. Ирц нь чөлөөтэй "
+             "зөрвөл (жишээ нь гарсан цаг бүртгэгдээгүй) хүний нөөц эндээс харж гараар засна.",
+    )
     check_in_location = fields.Char('Орсон байршил')
     check_out_location = fields.Char('Гарсан байршил')
 
@@ -151,6 +172,36 @@ class HrAttendance(models.Model):
     def create_check_out(self, lat, long):
         """Create a check-out record with the given latitude and longitude."""
         self.write({'check_out': fields.Datetime.now()})
+
+    @api.depends('check_in', 'check_out', 'employee_id', 'edit_note')
+    def _compute_day_note(self):
+        """The day's approved leave (kind, hours, why), then its approved edit requests (edit_note): what HR needs to
+        judge a day that doesn't add up, e.g. in at 07:51, no check-out, paid leave 13:00–18:00 — the person may have
+        left at 11:00, so nothing is filled in for them; or a morning out of the office, then in at noon and out at
+        night. Worked out when read: a leave refused or changed later shows as it is now."""
+        def day_of(value):
+            return value.replace(tzinfo=pytz.UTC).astimezone(UB).date()
+        dated = self.filtered(lambda a: a.check_in and a.employee_id)
+        leaves = self.env['hr.leave'].sudo()
+        if dated:
+            leaves = leaves.search([
+                ('employee_id', 'in', dated.employee_id.ids),
+                ('state', '=', 'validate'),
+                ('date_from', '<=', day_bounds_utc(day_of(max(dated.mapped('check_in'))))[1]),
+                ('date_to', '>=', day_bounds_utc(day_of(min(dated.mapped('check_in'))))[0]),
+            ], order='date_from')
+        for att in self:
+            parts = []
+            if att.check_in and att.employee_id:
+                start, end = day_bounds_utc(day_of(att.check_in))
+                parts = [leave_day_text(l) for l in leaves
+                         if l.employee_id == att.employee_id and l.date_from <= end and l.date_to >= start]
+                # one punch alone (Odoo keeps it as both): the leave doesn't tell when the person left or came
+                if parts and (not att.check_out or att.check_out == att.check_in):
+                    parts.insert(0, 'Нэг л цаг бүртгэгдсэн')
+            if att.edit_note:
+                parts.append(f"Засвар: {att.edit_note}")
+            att.day_note = ' | '.join(parts) or False
 
     def _compute_loss_time(self):
         for rec in self:
@@ -195,7 +246,7 @@ class HrAttendance(models.Model):
         if not attendance.check_out or check_out > attendance.check_out:
             vals['check_out'] = check_out
         if check_in_location and not attendance.check_in_location:
-            vals['check_in_location'] = check_out_location
+            vals['check_in_location'] = check_in_location
         if check_out_location and not attendance.check_out_location:
             vals['check_out_location'] = check_out_location
         if vals:
