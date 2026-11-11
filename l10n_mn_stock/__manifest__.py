@@ -30,6 +30,7 @@
                  'stock_delivery',
                  'stock_landed_costs',
                  'l10n_mn_account',
+                 'l10n_mn_purchase',
                  'vertexmon_tools',
                  'rt_product_brand',
                  'hr',

@@ -384,6 +384,22 @@ class StockMoveLine(models.Model):
                 continue
             obj.related_partner_id = False
 
+    @api.depends('picking_id.partner_id', 'picking_id.purchase_id', 'move_id.purchase_line_id.order_id.partner_id',
+                 'move_id.purchase_line_id.sales_partner_id', 'move_id.purchase_line_id.order_id.sales_partner_id')
+    def _compute_doc_partners(self):
+        # Худалдан авалтын орлого: Бэлтгэн нийлүүлэгч = нийлүүлэгч, Хүргэлтийн хаяг = PO-гийн эцсийн хэрэглэгч
+        # Бусад (хүргэлт, буцаалт г.м): Хүргэлтийн хаяг = баримтын харилцагч
+        for line in self:
+            picking = line.picking_id
+            po_line = line.move_id.purchase_line_id
+            order = po_line.order_id or picking.purchase_id
+            if order:
+                line.supplier_partner_id = picking.partner_id or order.partner_id
+                line.delivery_partner_id = po_line.sales_partner_id or order.sales_partner_id
+            else:
+                line.supplier_partner_id = False
+                line.delivery_partner_id = picking.partner_id
+
     def _compute_related_order(self):
         for rec in self:
             # Хэрэглэгчид харагдахгүй агуулахын баримт / захиалга байж болох тул sudo-гоор уншина
@@ -436,6 +452,8 @@ class StockMoveLine(models.Model):
     analytic_id = fields.Many2one(related='picking_id.analytic_id', string=u"Төсөл", store=True)
     related_partner_id = fields.Many2one('res.partner', compute='_compute_related_partner_id')
     partner_id = fields.Many2one('res.partner',string='Хүргэлтийн хаяг',related='picking_id.partner_id',store=True)
+    delivery_partner_id = fields.Many2one('res.partner', string='Хүргэлтийн хаяг (эцсийн)', compute='_compute_doc_partners', store=True)
+    supplier_partner_id = fields.Many2one('res.partner', string='Бэлтгэн нийлүүлэгч', compute='_compute_doc_partners', store=True)
     related_order_model = fields.Char(compute='_compute_related_order')
     related_order_id = fields.Integer(compute='_compute_related_order')
 
