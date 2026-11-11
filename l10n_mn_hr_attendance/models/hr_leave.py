@@ -149,8 +149,13 @@ class HrLeave(models.Model):
                         # approved in Teams already: validated without another round in Odoo
                         'state': 'validate',
                     }
+                    # overtime past midnight (23:00–05:00 the next day): Odoo keeps an hourly leave inside one day (it moves
+                    # the end onto the first day, and an end before the start breaks date_check2), so it is made up to the
+                    # day's last half hour and its real end is set once it is there
+                    overnight = by_hour and end.date() > start.date()
                     if by_hour:
-                        vals.update({'request_hour_from': hour(start), 'request_hour_to': hour(end)})
+                        vals.update({'request_hour_from': hour(start),
+                                     'request_hour_to': hour_min_to_selection['23:30'] if overnight else hour(end)})
                     if data.get('reason'):
                         vals['private_name'] = data['reason']
                     # sick leave: the doctor's note handed in with it, fetched first (a failure tries it all again)
@@ -169,8 +174,10 @@ class HrLeave(models.Model):
                         leave_fast_create=True,
                         leave_skip_state_check=True,
                     ).create(vals)
+                    # (with the context above: a validated leave may be changed)
+                    if overnight:
+                        leave.write({'date_to': end.astimezone(pytz.utc).replace(tzinfo=None)})
                     if kind == 'overtime':
-                        # (with the context above: a validated leave may be changed)
                         leave.write(leave._vmcc_overtime_duration(start, end, by_hour))
                     if note:
                         # on the leave: its supporting documents and the chatter
