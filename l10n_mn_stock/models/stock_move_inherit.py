@@ -177,12 +177,35 @@ class StockMove(models.Model):
                 else:
                     if sale_line.price_subtotal>0.0 and sale_line.product_uom_qty >0.0:
                         total = (sale_line.price_subtotal/sale_line.product_uom_qty)*line.product_uom_qty
+            elif line.purchase_line_id:
+                total = line._purchase_line_amount('price_subtotal', line.product_uom_qty)
             else:
                 if line.product_uom_qty >0.0 and line.sale_prices >0.0:
                     total = line.product_uom_qty * line.sale_prices
                 else:
                     total = 0.0
             line.price_subtotal = total
+
+    def _purchase_line_amount(self, field_name, qty, convert=True):
+        """ Худалдан авалтын мөрийн дүнг (price_subtotal / price_tax / price_total) тухайн
+            тоо хэмжээнд хувь тэнцүүлж буцаана. convert=True бол компанийн валютаар,
+            үгүй бол PO-гийн валютаар. """
+        self.ensure_one()
+        po_line = self.purchase_line_id
+        if not po_line or not po_line.product_qty:
+            return 0.0
+        amount = po_line[field_name] * qty / po_line.product_qty
+        if not convert:
+            return amount
+        order = po_line.order_id
+        return order.currency_id._convert(
+            amount, self.company_id.currency_id, self.company_id, order.date_order or fields.Date.today())
+
+    @api.depends('purchase_line_id', 'product_uom_qty')
+    def _compute_purchase_currency_amount(self):
+        for line in self:
+            line.purchase_currency_id = line.purchase_line_id.order_id.currency_id
+            line.price_subtotal_currency = line._purchase_line_amount('price_subtotal', line.product_uom_qty, convert=False)
     
     @api.depends('picking_id')
     def _compute_list_price(self):
@@ -209,6 +232,8 @@ class StockMove(models.Model):
             total = 0.0
             if line.sale_line_id:
                 total = line.sale_line_id.price_subtotal * line._sale_line_qty_ratio()
+            elif line.purchase_line_id:
+                total = line._purchase_line_amount('price_subtotal', line.product_uom_qty)
             line.untaxed_amount = total
 
     @api.depends('picking_id', 'product_uom_qty')
@@ -217,6 +242,8 @@ class StockMove(models.Model):
             tax_amount = 0.0
             if line.sale_line_id:
                 tax_amount = line.sale_line_id.price_tax * line._sale_line_qty_ratio()
+            elif line.purchase_line_id:
+                tax_amount = line._purchase_line_amount('price_tax', line.product_uom_qty)
             line.tax_amount = tax_amount
 
     @api.depends('picking_id')
@@ -234,7 +261,10 @@ class StockMove(models.Model):
     untaxed_amount = fields.Float(string=u'Татваргүй үнэ',compute='_compute_untaxed_amount')
     tax_amount = fields.Float(string=u'Татваргүй үнэ',compute='_compute_tax_amount')
     discount = fields.Float(string=u'Хөнгөлөлт', compute='_compute_discount')
-    
+    purchase_currency_id = fields.Many2one('res.currency', string=u'PO валют', compute='_compute_purchase_currency_amount')
+    price_subtotal_currency = fields.Monetary(string=u'Нийт үнэ (валют)', currency_field='purchase_currency_id',
+                                              compute='_compute_purchase_currency_amount')
+
     def update_line(self):
         self.ensure_one()
         if self.picking_id.state not in ['done', 'cancel']:
@@ -275,6 +305,8 @@ class StockMoveLine(models.Model):
             sale_line_id = line.move_id.sale_line_id
             if sale_line_id:
                 total = sale_line_id.price_subtotal * line._sale_line_qty_ratio(sale_line_id)
+            elif line.move_id.purchase_line_id:
+                total = line.move_id._purchase_line_amount('price_subtotal', line.quantity)
             else:
                 total = line.quantity * line.sale_prices
 
@@ -296,6 +328,8 @@ class StockMoveLine(models.Model):
             sale_line_id = line.move_id.sale_line_id
             if sale_line_id:
                 untaxed_amount = sale_line_id.price_subtotal * line._sale_line_qty_ratio(sale_line_id)
+            elif line.move_id.purchase_line_id:
+                untaxed_amount = line.move_id._purchase_line_amount('price_subtotal', line.quantity)
             line.untaxed_amount = untaxed_amount
 
     @api.depends('picking_id', 'quantity')
@@ -305,6 +339,8 @@ class StockMoveLine(models.Model):
             sale_line_id = line.move_id.sale_line_id
             if sale_line_id:
                 tax_amount = sale_line_id.price_tax * line._sale_line_qty_ratio(sale_line_id)
+            elif line.move_id.purchase_line_id:
+                tax_amount = line.move_id._purchase_line_amount('price_tax', line.quantity)
             line.tax_amount = tax_amount
 
     
@@ -322,8 +358,10 @@ class StockMoveLine(models.Model):
         for line in self:
             cost_price = 0
             if line.location_usage in ['internal','transit'] and line.location_dest_usage not in ['internal','transit']:
-                if line.picking_id.analytic_id and line.picking_id.analytic_id.project_ids and line.picking_id.analytic_id.project_ids[0].products_line:
-                    product_line = line.picking_id.analytic_id.project_ids[0].products_line.filtered(lambda p_line: p_line.product_id.id == line.product_id.id)
+                # Хэрэглэгчид харагдахгүй агуулахын баримт байж болох тул sudo-гоор уншина
+                analytic = line.sudo().picking_id.analytic_id
+                if analytic and analytic.project_ids and analytic.project_ids[0].products_line:
+                    product_line = analytic.project_ids[0].products_line.filtered(lambda p_line: p_line.product_id.id == line.product_id.id)
                     if product_line:
                         cost_price = product_line[0].cost_price
                 if cost_price == 0.0:
@@ -335,7 +373,9 @@ class StockMoveLine(models.Model):
                 line.total_cost_price = 0
 
     def _compute_related_partner_id(self):
-        for obj in self:
+        for line in self:
+            # Хэрэглэгчид харагдахгүй агуулахын баримт / захиалга байж болох тул sudo-гоор уншина
+            obj = line.sudo()
             if obj.move_id and obj.move_id.purchase_line_id and obj.move_id.purchase_line_id.order_id:
                 obj.related_partner_id = obj.move_id.purchase_line_id.order_id.sales_partner_id.id
                 continue
@@ -345,7 +385,9 @@ class StockMoveLine(models.Model):
             obj.related_partner_id = False
 
     def _compute_related_order(self):
-        for line in self:
+        for rec in self:
+            # Хэрэглэгчид харагдахгүй агуулахын баримт / захиалга байж болох тул sudo-гоор уншина
+            line = rec.sudo()
             order = False
             model = False
             if line.move_id and line.move_id.sale_line_id and line.move_id.sale_line_id.order_id:

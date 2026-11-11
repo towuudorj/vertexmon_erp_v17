@@ -24,6 +24,10 @@ class stock_picking(models.Model):
     
     amount_total = fields.Float(string='Amount total',
           compute='_compute_amount')
+    purchase_currency_id = fields.Many2one('res.currency', string='PO валют',
+          compute='_compute_purchase_currency_amount')
+    amount_total_currency = fields.Monetary(string='Нийт дүн (валют)', currency_field='purchase_currency_id',
+          compute='_compute_purchase_currency_amount')
     amount_tax = fields.Float(string='Amount tax',
           compute='_compute_tax')
     amount_untaxed = fields.Float(string='Amount untaxed',
@@ -212,6 +216,25 @@ class stock_picking(models.Model):
             if line.amount_untaxed > 0.0:
                 total = line.amount_tax + line.amount_untaxed
             line.amount_total = total
+
+    @api.depends('state', 'move_ids.picked', 'move_ids.quantity', 'move_ids.purchase_line_id')
+    def _compute_purchase_currency_amount(self):
+        # PO нь компанийн валютаас өөр нэг валюттай бол тухайн валютаарх нийт дүнг
+        # хүлээн авч буй (Picked) мөрүүдийн Тоо хэмжээнээс тооцно
+        for picking in self:
+            currency = picking.move_ids.purchase_line_id.order_id.currency_id
+            total = 0.0
+            if len(currency) == 1 and currency != picking.company_id.currency_id:
+                moves = picking.move_ids_without_package.filtered(lambda m: m.state != 'cancel')
+                if picking.state != 'done':
+                    # Odoo-гийн батлах логиктой адил: нэг ч мөр Picked биш бол бүх мөрийг хүлээн авна
+                    picked_moves = moves.filtered('picked')
+                    moves = picked_moves or moves
+                total = sum(move._purchase_line_amount('price_total', move.quantity, convert=False) for move in moves)
+            else:
+                currency = False
+            picking.purchase_currency_id = currency
+            picking.amount_total_currency = total
 
     def _compute_tax(self):
         for lin in self:

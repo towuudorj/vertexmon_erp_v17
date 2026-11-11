@@ -64,6 +64,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            <t t-set="cur" t-value="o.purchase_currency_id"/>
                             <table class="width: 100%; table table-condensed">
                                 <thead>
                                     <tr>
@@ -87,6 +88,10 @@
                                             colspan="2">
                                             <strong>Хүлээн авсан</strong>
                                         </th>
+                                        <th t-if="cur" style=" width: 20%; border: 1px solid black; font-size:11px; padding:2px;"
+                                            colspan="2">
+                                            <strong>Валютаар (<t t-esc="cur.name"/>)</strong>
+                                        </th>
 
                                     </tr>
                                     <tr>
@@ -95,6 +100,14 @@
                                             <strong>Тоо</strong>
                                         </th>
                                         <th style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;"
+                                            class="text-right">
+                                            <strong>Дүн</strong>
+                                        </th>
+                                        <th t-if="cur" style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;"
+                                            class="text-right">
+                                            <strong>Нэгж үнэ</strong>
+                                        </th>
+                                        <th t-if="cur" style=" width: 10%; border: 1px solid black; font-size:11px; padding:2px;"
                                             class="text-right">
                                             <strong>Дүн</strong>
                                         </th>
@@ -130,6 +143,15 @@
                                                         <span t-esc="move.price_unit*move.product_uom_qty"
                                                               t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                     </td>
+                                                    <t t-if="cur">
+                                                        <t t-set="cur_amount" t-value="move._purchase_line_amount('price_subtotal', move.product_uom_qty, convert=False)"/>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                            <span t-esc="move.product_uom_qty and cur_amount / move.product_uom_qty or 0.0" t-options="{'widget': 'monetary', 'display_currency': cur}"/>
+                                                        </td>
+                                                        <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                            <span t-esc="cur_amount" t-options="{'widget': 'monetary', 'display_currency': cur}"/>
+                                                        </td>
+                                                    </t>
                                                 </t>
                                             </tr>
                                             <tr class="border-black">
@@ -140,6 +162,8 @@
                                                 <td style="padding: 3px; border: 1px solid black;  text-align: right;">
                                                     <t t-esc="sum([x for x in o.move_ids_without_package.mapped('product_uom_qty')])"/>
                                                 </td>
+                                                <td style="padding: 3px; border: 1px solid black;"></td>
+                                                <td t-if="cur" colspan="2" style="padding: 3px; border: 1px solid black;"></td>
                                             </tr>
                                         </t>
                                     </t>
@@ -173,6 +197,15 @@
                                                             <span t-esc="move.move_id.price_unit*move.quantity"
                                                                   t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                                         </td>
+                                                        <t t-if="cur">
+                                                            <t t-set="cur_amount" t-value="move.move_id._purchase_line_amount('price_subtotal', move.quantity, convert=False)"/>
+                                                            <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                                <span t-esc="move.quantity and cur_amount / move.quantity or 0.0" t-options="{'widget': 'monetary', 'display_currency': cur}"/>
+                                                            </td>
+                                                            <td style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                                                <span t-esc="cur_amount" t-options="{'widget': 'monetary', 'display_currency': cur}"/>
+                                                            </td>
+                                                        </t>
                                                     </t>
                                                 </t>
                                             </tr>
@@ -185,6 +218,7 @@
                                                     <t t-esc="sum([x for x in o.move_line_ids_without_package.mapped('quantity')])"/>
                                                 </td>
                                                 <td style="font-size:11px; padding: 3px; border: 1px solid black;  text-align: right;"></td>
+                                                <td t-if="cur" colspan="2" style="font-size:11px; padding: 3px; border: 1px solid black;"></td>
                                             </tr>
                                         </t>
                                     </t>
@@ -207,6 +241,12 @@
                                         <td style="border: 1px solid black; padding:2px;">
                                             <span t-esc="sum((line.quantity*line.move_id.price_unit) for line in o.move_line_ids_without_package)"
                                                   t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td t-if="cur" style="border: 1px solid black; padding:2px;"></td>
+                                        <td t-if="cur" style="border: 1px solid black; font-size:11px; padding:2px;" class="text-right">
+                                            <t t-if="o.state == 'done'" t-set="cur_total" t-value="sum(ml.move_id._purchase_line_amount('price_subtotal', ml.quantity, convert=False) for ml in o.move_line_ids_without_package if ml.product_id.type != 'service')"/>
+                                            <t t-else="" t-set="cur_total" t-value="sum(m._purchase_line_amount('price_subtotal', m.product_uom_qty, convert=False) for m in o.move_ids_without_package if m.product_id.type != 'service')"/>
+                                            <span t-esc="cur_total" t-options="{'widget': 'monetary', 'display_currency': cur}"/>
                                         </td>
                                     </tr>
                                 </tbody>
