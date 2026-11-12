@@ -1,0 +1,78 @@
+/* vertexmon_tools: <tree class="o_list_column_filter"> — баганын шүүлтүүрийн мөр */
+
+.o_list_table thead tr.o_list_cf_row > th {
+    padding: 2px 4px !important;
+    font-weight: normal;
+    cursor: default;
+    vertical-align: middle;
+}
+
+.o_list_cf_group {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border-color, #ced4da);
+    border-radius: 3px;
+    background-color: var(--o-view-background-color, #ffffff);
+    min-width: 60px;
+}
+
+.o_list_cf_group.o_list_cf_has_value {
+    border-color: var(--primary, #714b67);
+}
+
+.o_list_cf_op {
+    flex: 0 0 auto;
+    border: 0;
+    border-right: 1px solid var(--border-color, #ced4da);
+    background: transparent;
+    padding: 0 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.6;
+    min-width: 26px;
+    color: var(--body-color, #374151);
+}
+
+.o_list_cf_op:hover {
+    background-color: var(--gray-200, #e9ecef);
+}
+
+.o_list_cf_input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    padding: 0 4px;
+    font-size: 0.8rem;
+    background: transparent;
+}
+
+.o_list_cf_input:disabled {
+    background-color: var(--gray-100, #f8f9fa);
+}
+
+.o_list_cf_menu {
+    z-index: 1060;
+    min-width: 190px;
+    padding: 2px 0;
+}
+
+.o_list_cf_menu .dropdown-item {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+}
+
+.o_list_cf_menu_icon {
+    display: inline-block;
+    width: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 6px;
+}
+
+.o_list_cf_clear {
+    font-size: 0.8rem;
+    color: var(--danger, #dc3545) !important;
+    white-space: nowrap;
+}

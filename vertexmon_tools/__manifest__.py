@@ -25,6 +25,8 @@
         'web.assets_backend': [
             'vertexmon_tools/static/src/css/*.css',
             'vertexmon_tools/static/src/js/sticky_column.esm.js',
+            'vertexmon_tools/static/src/js/list_column_filter.esm.js',
+            'vertexmon_tools/static/src/xml/list_column_filter.xml',
         ]
     }
 }

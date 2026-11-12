@@ -28,7 +28,7 @@
 					</xpath>
 					<xpath expr="//field[@name='slip_ids']" position="inside">
 						<!-- Урьдчилгааны багцад зөвхөн урьдчилгааны дүнг мөр дээр засна; сүүл цалингийн баганууд нуугдана -->
-						<tree editable="bottom" create="0" open_form_view="True" class="o_x2many_sticky_header o_sticky_first_3_cols"
+						<tree editable="bottom" create="0" open_form_view="True" class="o_x2many_sticky_header o_sticky_first_3_cols o_list_column_filter"
 							  decoration-info="state == 'done'" decoration-muted="state == 'cancel'" limit="300">
 							<field name="employee_last_name" width="120px" readonly="1"/>
 							<field name="employee_first_name" width="120px" readonly="1"/>
