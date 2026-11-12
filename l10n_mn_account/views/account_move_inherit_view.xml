@@ -59,6 +59,10 @@
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
 	            <data>
+	                <!-- Баганаар шүүх мөр (vertexmon_tools) -->
+	                <xpath expr="//tree" position="attributes">
+	                    <attribute name="class" add="o_list_column_filter" separator=" "/>
+	                </xpath>
 	                <xpath expr='//tree/field[@name="debit"]' position="before">
 	                    <field name="cash_move_type_id" optional="hidden"/>
 	                </xpath>
@@ -75,6 +79,9 @@
             <field name="model">account.move</field>            
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">     
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class" add="o_list_column_filter" separator=" "/>
+                </xpath>
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="po_ids" widget="many2many_tags" optional="show"/>
                     <field name="vat_declaration" optional="show"/>

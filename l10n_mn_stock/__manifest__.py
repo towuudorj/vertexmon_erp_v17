@@ -79,6 +79,7 @@
                 'views/menu_view.xml',
                 'views/report_view.xml',
                 'views/stock_picking_pending_view.xml',
+                'views/stock_list_column_filter_view.xml',
                 ],
     'assets': {
         'web.assets_backend': [

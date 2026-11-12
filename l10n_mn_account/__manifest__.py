@@ -27,6 +27,7 @@
                 'product',
                 'account_statement_base',
                 'purchase',
+                'vertexmon_tools',
                 ],
     'data': [
             'security/ir.model.access.csv',
@@ -71,6 +72,7 @@
         'web.assets_backend': [
             'l10n_mn_account/static/src/js/analytic_distribution_lock.js',
             'l10n_mn_account/static/src/js/readonly_check_list.js',
+            'l10n_mn_account/static/src/xml/list_column_filter.xml',
         ],
     },
     'test': [],

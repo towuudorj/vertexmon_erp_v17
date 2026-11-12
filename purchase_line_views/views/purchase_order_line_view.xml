@@ -23,7 +23,7 @@
         <field name="name">purchase.order.line.tree.view</field>
         <field name="model">purchase.order.line</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree class="o_list_column_filter">
                 <field name="order_id"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>

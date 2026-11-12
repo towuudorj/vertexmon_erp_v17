@@ -46,7 +46,7 @@
         <field name="name">sale.order.line.quotation.view.tree</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree string="Quotation Lines" create="false" edit="false"
+            <tree string="Quotation Lines" create="false" edit="false" class="o_list_column_filter"
                   delete="false">
                 <field name="order_id"/>
                 <field name="order_partner_id"/>

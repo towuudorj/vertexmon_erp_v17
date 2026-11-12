@@ -1,57 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="vertexmon_tools.ListRenderer.ColumnFilter" t-inherit="web.ListRenderer" t-inherit-mode="extension">
-        <xpath expr="//table/thead/tr" position="after">
-            <tr t-if="hasColumnFilter" class="o_list_cf_row">
-                <th t-if="hasSelectors" class="o_list_cf_cell"/>
-                <t t-foreach="state.columns" t-as="column" t-key="column.id">
-                    <th t-if="column.type === 'field' and column.widget !== 'handle'" class="o_list_cf_cell"
-                        t-att-data-name="column.name">
-                        <t t-set="cfFilter" t-value="getColumnFilter(column)"/>
-                        <t t-set="cfOp" t-value="getColumnFilterOperator(column)"/>
-                        <div class="o_list_cf_group" t-att-class="{'o_list_cf_has_value': cfFilter.value or cfFilter.op === 'empty' or cfFilter.op === 'not_empty'}">
-                            <button type="button" class="o_list_cf_op" tabindex="-1"
-                                    t-att-title="cfOp.label"
-                                    t-on-click.stop="(ev) => this.toggleColumnFilterMenu(column, ev)">
-                                <t t-esc="cfOp.icon"/>
-                            </button>
-                            <input type="text" class="o_list_cf_input"
-                                   t-att-value="cfFilter.value"
-                                   t-att-disabled="cfFilter.op === 'empty' or cfFilter.op === 'not_empty'"
-                                   t-on-input="(ev) => this.onColumnFilterInput(column, ev)"
-                                   t-on-keydown="(ev) => this.onColumnFilterKeydown(column, ev)"
-                                   t-on-click.stop="() => {}"/>
-                        </div>
-                    </th>
-                    <th t-else="" class="o_list_cf_cell"/>
-                </t>
-                <th t-if="props.onOpenFormView" class="o_list_cf_cell"/>
-                <th t-if="displayOptionalFields or activeActions.onDelete" class="o_list_cf_cell o_list_cf_actions position-sticky end-0">
-                    <t t-if="columnFilterActive">
-                        <t t-set="cfCount" t-value="columnFilterCount"/>
-                        <button type="button" class="btn btn-link p-0 o_list_cf_clear"
-                                t-att-title="'Шүүлтүүр арилгах (' + cfCount.shown + ' / ' + cfCount.total + ')'"
-                                t-on-click.stop="clearColumnFilters">
-                            <i class="fa fa-filter"/><i class="fa fa-times ms-1"/>
+    <!--
+        Баганаар шүүх мөр ба нөхцөлийн цэс. web.ListRenderer-ийг t-inherit-mode="primary"-аар
+        хуулсан renderer-ууд (account.sectionAndNoteListRenderer, account.ListRenderer,
+        purchase.PurchaseListView ...) энэ extension-ийг авдаггүй тул тэдгээрт мөн эдгээр
+        sub-template-ийг t-call хийнэ (l10n_mn_account, l10n_mn_purchase модулиудад).
+    -->
+    <t t-name="vertexmon_tools.ListColumnFilterRow">
+        <tr t-if="hasColumnFilter" class="o_list_cf_row">
+            <th t-if="hasSelectors" class="o_list_cf_cell"/>
+            <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                <th t-if="isColumnFilterable(column)" class="o_list_cf_cell"
+                    t-att-data-name="column.name">
+                    <t t-set="cfFilter" t-value="getColumnFilter(column)"/>
+                    <t t-set="cfOp" t-value="getColumnFilterOperator(column)"/>
+                    <div class="o_list_cf_group" t-att-class="{'o_list_cf_has_value': cfFilter.value or cfFilter.op === 'empty' or cfFilter.op === 'not_empty'}">
+                        <button type="button" class="o_list_cf_op" tabindex="-1"
+                                t-att-title="cfOp.label"
+                                t-on-click.stop="(ev) => this.toggleColumnFilterMenu(column, ev)">
+                            <t t-esc="cfOp.icon"/>
                         </button>
-                    </t>
+                        <input type="text" class="o_list_cf_input"
+                               t-att-value="cfFilter.value"
+                               t-att-disabled="cfFilter.op === 'empty' or cfFilter.op === 'not_empty'"
+                               t-on-input="(ev) => this.onColumnFilterInput(column, ev)"
+                               t-on-keydown="(ev) => this.onColumnFilterKeydown(column, ev)"
+                               t-on-click.stop="() => {}"/>
+                    </div>
                 </th>
-            </tr>
-        </xpath>
-        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
-            <div t-if="hasColumnFilter and columnFilter.menu" class="o_list_cf_menu dropdown-menu show"
-                 t-attf-style="position: fixed; top: {{columnFilter.menu.top}}px; left: {{columnFilter.menu.left}}px;">
-                <t t-set="cfMenuOp" t-value="(columnFilter.filters[columnFilter.menu.column] or {}).op"/>
-                <t t-foreach="columnFilterOperators" t-as="op" t-key="op.id">
-                    <button type="button" class="dropdown-item d-flex align-items-center"
-                            t-att-class="{'active': cfMenuOp === op.id}"
-                            t-on-click.stop="() => this.selectColumnFilterOperator(op.id)">
-                        <span class="o_list_cf_menu_icon" t-esc="op.icon"/>
-                        <span t-esc="op.label"/>
+                <th t-else="" class="o_list_cf_cell"/>
+            </t>
+            <th t-if="props.onOpenFormView" class="o_list_cf_cell"/>
+            <th t-if="displayOptionalFields or activeActions.onDelete" class="o_list_cf_cell o_list_cf_actions position-sticky end-0">
+                <t t-if="columnFilterActive">
+                    <button type="button" class="btn btn-link p-0 o_list_cf_clear"
+                            t-att-title="columnFilterClearTitle"
+                            t-on-click.stop="clearColumnFilters">
+                        <i class="fa fa-filter"/><i class="fa fa-times ms-1"/>
                     </button>
                 </t>
-            </div>
+            </th>
+        </tr>
+    </t>
+
+    <t t-name="vertexmon_tools.ListColumnFilterMenu">
+        <div t-if="hasColumnFilter and columnFilter.menu" class="o_list_cf_menu dropdown-menu show"
+             t-attf-style="position: fixed; top: {{columnFilter.menu.top}}px; left: {{columnFilter.menu.left}}px;">
+            <t t-set="cfMenuColumn" t-value="columnFilterMenuColumn"/>
+            <t t-set="cfMenuOp" t-value="cfMenuColumn ? getColumnFilter(cfMenuColumn).op : false"/>
+            <t t-foreach="cfMenuColumn ? getColumnFilterOperators(cfMenuColumn) : []" t-as="op" t-key="op.id">
+                <button type="button" class="dropdown-item d-flex align-items-center"
+                        t-att-class="{'active': cfMenuOp === op.id}"
+                        t-on-click.stop="() => this.selectColumnFilterOperator(op.id)">
+                    <span class="o_list_cf_menu_icon" t-esc="op.icon"/>
+                    <span t-esc="op.label"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="vertexmon_tools.ListRenderer.ColumnFilter" t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
         </xpath>
     </t>
 

@@ -165,6 +165,7 @@
                             widget="section_and_note_one2many"
                             mode="tree" readonly="state in ('confirm','done')">
                         <tree string="Project Product Lines"
+                                class="o_list_column_filter"
                                 editable="bottom"
                                 decoration-danger="is_duplicate_product"
                                 limit="200">

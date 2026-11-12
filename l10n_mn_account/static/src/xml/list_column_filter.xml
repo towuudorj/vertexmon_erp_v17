@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- vertexmon_tools-ийн баганаар шүүх мөрийг web.ListRenderer-ийн primary хуулбаруудад нэмнэ -->
+    <t t-name="l10n_mn_account.sectionAndNoteListRenderer.ColumnFilter" t-inherit="account.sectionAndNoteListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
+        </xpath>
+    </t>
+    <t t-name="l10n_mn_account.ListRenderer.ColumnFilter" t-inherit="account.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
+        </xpath>
+    </t>
+    <t t-name="l10n_mn_account.PurchaseListView.ColumnFilter" t-inherit="purchase.PurchaseListView" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
+        </xpath>
+    </t>
+</templates>
