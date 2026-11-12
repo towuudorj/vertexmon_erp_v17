@@ -12,10 +12,11 @@
                     <field name="selected" widget="boolean_toggle" readonly="pending_qty == 0"/>
                     <field name="product_id" readonly="1"/>
                     <field name="order_id" readonly="1"/>
+                    <field name="picking_id" readonly="1"/>
                     <field name="partner_id" readonly="1" optional="show"/>
                     <field name="uom_id" readonly="1" optional="show"/>
-                    <field name="ordered_qty" readonly="1" sum="Нийт" optional="show"/>
-                    <field name="received_qty" readonly="1" sum="Нийт" optional="show"/>
+                    <field name="ordered_qty" readonly="1" optional="show"/>
+                    <field name="received_qty" readonly="1" optional="show"/>
                     <field name="pending_qty" readonly="1" sum="Нийт"/>
                     <field name="pending_amount" readonly="1" sum="Нийт" optional="show"/>
                     <field name="qty_to_receive" readonly="pending_qty == 0" sum="Нийт"/>
@@ -32,6 +33,7 @@
                 <search string="Бараа хайх">
                     <field name="product_id"/>
                     <field name="order_id"/>
+                    <field name="picking_id"/>
                     <field name="partner_id"/>
                     <field name="currency_id"/>
                     <filter name="pending" string="Хүлээгдэж буй" domain="[('pending_qty', '&gt;', 0)]"/>
@@ -41,6 +43,7 @@
                     <group expand="0" string="Бүлэглэх">
                         <filter name="group_currency" string="Валют" context="{'group_by': 'currency_id'}"/>
                         <filter name="group_order" string="Захиалга" context="{'group_by': 'order_id'}"/>
+                        <filter name="group_picking" string="Хүлээн авах баримт" context="{'group_by': 'picking_id'}"/>
                         <filter name="group_partner" string="Нийлүүлэгч" context="{'group_by': 'partner_id'}"/>
                         <filter name="group_uom" string="Хэмжих нэгж" context="{'group_by': 'uom_id'}"/>
                     </group>
@@ -79,6 +82,7 @@
                         <tree>
                             <field name="product_id"/>
                             <field name="order_id"/>
+                            <field name="picking_id"/>
                             <field name="uom_id"/>
                             <field name="pending_qty"/>
                             <field name="qty_to_receive" sum="Нийт"/>
@@ -99,13 +103,13 @@
         </record>
 
         <!-- Худалдан авалтын захиалгын жагсаалтаас: Үйлдэл > Бараагаар хүлээн авах.
-             Зөвхөн агуулахад хүлээн авах эрхтэй (Inventory / User) хэрэглэгчид харагдана. -->
+             Зөвхөн "Агуулахад хүлээн авах" группийн хэрэглэгчид харагдана. -->
         <record id="action_server_purchase_product_receipt" model="ir.actions.server">
             <field name="name">Бараагаар хүлээн авах</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="binding_model_id" ref="purchase.model_purchase_order"/>
             <field name="binding_view_types">list,form</field>
-            <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('l10n_mn_stock.group_picking_receive')])]"/>
             <field name="state">code</field>
             <field name="code">action = env['purchase.product.receipt.wizard'].action_open(records)</field>
         </record>
@@ -116,7 +120,7 @@
             <field name="model_id" ref="purchase.model_purchase_order_line"/>
             <field name="binding_model_id" ref="purchase.model_purchase_order_line"/>
             <field name="binding_view_types">list</field>
-            <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('l10n_mn_stock.group_picking_receive')])]"/>
             <field name="state">code</field>
             <field name="code">action = env['purchase.product.receipt.wizard'].action_open(records)</field>
         </record>

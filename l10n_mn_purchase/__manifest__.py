@@ -38,7 +38,6 @@
               "report/purchase_order_templates.xml",
               "report/purchase_quotation_templates.xml",
               "wizard/create_invoice_from_purchase_wizard.xml",
-              "wizard/purchase_product_receipt_wizard_view.xml",
               "views/purchase_order_inherit_view.xml",
               "views/purchase_requisition_inherit_view.xml",
               "views/freight_type_register_view.xml",
@@ -51,11 +50,6 @@
               "views/purchase_order_action_list_view.xml",
               "data/vendors_dashboard_data.xml"
                 ],
-    "assets": {
-        "web.assets_backend": [
-            "l10n_mn_purchase/static/src/receipt_line_list/*",
-        ],
-    },
     "auto_install": False,
     "installable": True,
 }

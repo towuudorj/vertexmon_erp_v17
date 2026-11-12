@@ -62,6 +62,7 @@
                 'wizard/product_aged_report_view.xml',
                 'wizard/product_sales_report_view.xml',
                 'wizard/stock_move_update_wizard.xml',
+                'wizard/purchase_product_receipt_wizard_view.xml',
                 'wizard/stock_warehouse_flow_report.xml',
                 'views/distributor_register_view.xml',
                 'views/product_inherit_view.xml',
@@ -83,7 +84,8 @@
                 ],
     'assets': {
         'web.assets_backend': [
-            'l10n_mn_stock/static/src/css/*.css'
+            'l10n_mn_stock/static/src/css/*.css',
+            'l10n_mn_stock/static/src/receipt_line_list/*',
         ]
     },
     "auto_install": False,

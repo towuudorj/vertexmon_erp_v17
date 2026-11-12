@@ -2,7 +2,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -41,7 +41,13 @@ class PurchaseProductReceiptWizard(models.TransientModel):
     # Нээх: мөрүүдийг сервер дээр урьдчилан үүсгэж, шүүлттэй жагсаалтаар нээнэ
     # ------------------------------------------------------------------
     @api.model
+    def _check_receive_access(self):
+        if not self.env.user.has_group('l10n_mn_stock.group_picking_receive'):
+            raise AccessError(_('Танд "Агуулахад хүлээн авах" эрх байхгүй байна.'))
+
+    @api.model
     def action_open(self, records):
+        self._check_receive_access()
         if records._name == 'purchase.order':
             orders = records
         elif records._name == 'purchase.order.line':
@@ -69,8 +75,8 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             'name': _('Бараагаар хүлээн авах: %s') % ', '.join(self.order_ids.mapped('name')),
             'res_model': 'purchase.product.receipt.wizard.line',
             'view_mode': 'tree',
-            'views': [(self.env.ref('l10n_mn_purchase.purchase_product_receipt_line_tree').id, 'list')],
-            'search_view_id': [self.env.ref('l10n_mn_purchase.purchase_product_receipt_line_search').id],
+            'views': [(self.env.ref('l10n_mn_stock.purchase_product_receipt_line_tree').id, 'list')],
+            'search_view_id': [self.env.ref('l10n_mn_stock.purchase_product_receipt_line_search').id],
             'domain': [('wizard_id', '=', self.id)],
             'context': {'search_default_pending': 1, 'create': False, 'delete': False,
                         'receipt_wizard_id': self.id},
@@ -81,6 +87,7 @@ class PurchaseProductReceiptWizard(models.TransientModel):
     def action_open_receive_dialog(self):
         """ Жагсаалтад сонгосон (Сонгох талбар) мөрүүдээр хүлээн авах огноо сонгох цонхыг нээнэ """
         self.ensure_one()
+        self._check_receive_access()
         self._get_lines_to_process()
         self.date_receive = fields.Datetime.now()
         return {
@@ -89,7 +96,7 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             'res_model': self._name,
             'res_id': self.id,
             'view_mode': 'form',
-            'views': [(self.env.ref('l10n_mn_purchase.purchase_product_receipt_wizard_form').id, 'form')],
+            'views': [(self.env.ref('l10n_mn_stock.purchase_product_receipt_wizard_form').id, 'form')],
             'target': 'new',
             'context': {'dialog_size': 'extra-large'},
         }
@@ -119,36 +126,44 @@ class PurchaseProductReceiptWizard(models.TransientModel):
         vals_list = []
         for (order, product), po_lines in by_product.items():
             uom = product.uom_id
-            ordered = sum(l.product_uom._compute_quantity(l.product_qty, uom) for l in po_lines)
-            received = sum(l.product_uom._compute_quantity(l.qty_received, uom) for l in po_lines)
-            moves = self._pending_moves(po_lines)
-            pending = sum(moves.mapped('product_qty'))
-            # Хүлээгдэж буй дүн — захиалгын валютаар
-            pending_amount = 0.0
-            for line in po_lines:
-                line_moves = moves.filtered(lambda m: m.purchase_line_id == line)
-                if not line_moves or float_is_zero(line.product_qty, precision_rounding=line.product_uom.rounding):
-                    continue
-                line_qty = sum(line_moves.mapped('product_qty'))
-                qty_in_line_uom = uom._compute_quantity(line_qty, line.product_uom)
-                pending_amount += line.price_subtotal / line.product_qty * qty_in_line_uom
-            vals_list.append({
+            base = {
                 'product_id': product.id,
                 'uom_id': uom.id,
                 'currency_id': order.currency_id.id,
                 'order_id': order.id,
                 'partner_id': order.partner_id.id,
-                'ordered_qty': ordered,
-                'received_qty': received,
-                'pending_qty': pending,
-                'qty_to_receive': pending,
-                'pending_amount': pending_amount,
-            })
+                'ordered_qty': sum(l.product_uom._compute_quantity(l.product_qty, uom) for l in po_lines),
+                'received_qty': sum(l.product_uom._compute_quantity(l.qty_received, uom) for l in po_lines),
+            }
+            moves = self._pending_moves(po_lines)
+            if not moves:
+                vals_list.append(dict(base, picking_id=False, pending_qty=0.0, qty_to_receive=0.0, pending_amount=0.0))
+                continue
+            # Нэг бараа хэд хэдэн хүлээн авах баримтад байвал баримт тус бүрээр тусдаа мөр
+            for picking in moves.picking_id:
+                picking_moves = moves.filtered(lambda m: m.picking_id == picking)
+                pending = sum(picking_moves.mapped('product_qty'))
+                vals_list.append(dict(base, picking_id=picking.id, pending_qty=pending, qty_to_receive=pending,
+                                      pending_amount=self._moves_amount(picking_moves)))
         Order = self.env['purchase.order']
         Product = self.env['product.product']
+        Picking = self.env['stock.picking']
         vals_list.sort(key=lambda v: (not v['pending_qty'], Order.browse(v['order_id']).name or '',
-                                      Product.browse(v['product_id']).display_name or ''))
+                                      Product.browse(v['product_id']).display_name or '',
+                                      Picking.browse(v['picking_id']).name or ''))
         return vals_list
+
+    @api.model
+    def _moves_amount(self, moves):
+        """ Хөдөлгөөнүүдийн дүн — захиалгын валютаар (хөрвүүлэхгүй) """
+        amount = 0.0
+        for move in moves:
+            line = move.purchase_line_id
+            if not line or float_is_zero(line.product_qty, precision_rounding=line.product_uom.rounding):
+                continue
+            qty_in_line_uom = move.product_id.uom_id._compute_quantity(move.product_qty, line.product_uom)
+            amount += line.price_subtotal / line.product_qty * qty_in_line_uom
+        return amount
 
     # ------------------------------------------------------------------
     # Actions
@@ -188,12 +203,9 @@ class PurchaseProductReceiptWizard(models.TransientModel):
 
     def _refresh_lines(self):
         """ Жагсаалт руу буцаж ороход тоо хэмжээ шинэчлэгдсэн байхаар мөрүүдийг дахин тооцно """
-        new_vals = {(v['order_id'], v['product_id']): v for v in self._prepare_line_vals(self.order_ids)}
-        for line in self.line_ids:
-            vals = new_vals.get((line.order_id.id, line.product_id.id))
-            if vals:
-                line.write({k: vals[k] for k in ('ordered_qty', 'received_qty', 'pending_qty',
-                                                 'qty_to_receive', 'pending_amount')} | {'selected': False})
+        # Баримтууд өөрчлөгдсөн (салсан/батлагдсан) тул мөрүүдийг бүхэлд нь дахин үүсгэнэ
+        self.line_ids.unlink()
+        self.write({'line_ids': [(0, 0, vals) for vals in self._prepare_line_vals(self.order_ids)]})
 
     @api.model
     def _apply_receive_date(self, pickings, date):
@@ -214,6 +226,7 @@ class PurchaseProductReceiptWizard(models.TransientModel):
     def _split_into_pickings(self):
         """ Сонгосон бараануудын хүлээгдэж буй хөдөлгөөнийг эх баримтаас нь салгаж
         шинэ баримт(ууд)-д шилжүүлнэ. Шинэ баримтуудыг буцаана. """
+        self._check_receive_access()
         lines = self._get_lines_to_process()
 
         # key -> нэг шинэ баримтад орох stock.move-ууд
@@ -223,7 +236,10 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             product = line.product_id
             rounding = line.uom_id.rounding
             po_lines = line.order_id.order_line.filtered(lambda l: l.product_id == product)
-            moves = self._pending_moves(po_lines).sorted(
+            moves = self._pending_moves(po_lines)
+            if line.picking_id:
+                moves = moves.filtered(lambda m: m.picking_id == line.picking_id)
+            moves = moves.sorted(
                 lambda m: (m.date or fields.Datetime.now(), m.id))
             pending = sum(moves.mapped('product_qty'))
             if float_compare(line.qty_to_receive, pending, precision_rounding=rounding) > 0:
@@ -278,12 +294,19 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             )
             new_pickings |= picking
 
-        new_pickings.filtered(lambda p: p.state not in ('done', 'cancel')).action_assign()
+        # Анхаар: хоосон recordset дээр action_assign() дуудвал "Nothing to check the availability for" алдаа өгнө
+        to_assign = new_pickings.filtered(lambda p: p.state not in ('done', 'cancel') and p.move_ids)
+        if to_assign:
+            to_assign.action_assign()
 
         # Бүх хөдөлгөөнөө алдсан эх баримтуудыг устгаж, үлдсэнийг дахин нөөцлөнө (Бэлэн төлөв)
         old_pickings = old_pickings - new_pickings
         empty = old_pickings.filtered(lambda p: not p.move_ids)
-        (old_pickings - empty).filtered(lambda p: p.state not in ('done', 'cancel')).action_assign()
+        to_assign = (old_pickings - empty).filtered(
+            lambda p: p.state not in ('done', 'cancel')
+            and p.move_ids.filtered(lambda m: m.state not in ('draft', 'cancel', 'done')))
+        if to_assign:
+            to_assign.action_assign()
         if empty:
             empty.unlink()
         return new_pickings
@@ -319,6 +342,7 @@ class PurchaseProductReceiptWizardLine(models.TransientModel):
     product_id = fields.Many2one('product.product', 'Бараа', required=True)
     uom_id = fields.Many2one('uom.uom', 'Х.нэгж')
     order_id = fields.Many2one('purchase.order', string='Захиалга')
+    picking_id = fields.Many2one('stock.picking', string='Хүлээн авах баримт')
     partner_id = fields.Many2one('res.partner', string='Нийлүүлэгч')
     ordered_qty = fields.Float('Захиалсан', digits='Product Unit of Measure')
     received_qty = fields.Float('Хүлээн авсан', digits='Product Unit of Measure')

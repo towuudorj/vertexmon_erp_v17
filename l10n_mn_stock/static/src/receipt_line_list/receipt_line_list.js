@@ -12,7 +12,7 @@ import { onWillStart, useState } from "@odoo/owl";
 const LINE_MODEL = "purchase.product.receipt.wizard.line";
 
 export class PurchaseReceiptLineListController extends ListController {
-    static template = "l10n_mn_purchase.PurchaseReceiptLineListView";
+    static template = "l10n_mn_stock.PurchaseReceiptLineListView";
 
     setup() {
         super.setup();
