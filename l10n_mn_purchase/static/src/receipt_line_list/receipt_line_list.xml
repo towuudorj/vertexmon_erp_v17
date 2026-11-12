@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_mn_purchase.PurchaseReceiptLineListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set-slot='control-panel-always-buttons']" position="inside">
+            <div class="o_receipt_summary d-flex align-items-center gap-2 text-nowrap">
+                <button type="button" class="btn btn-primary" t-on-click="onClickReceive"
+                        t-att-disabled="!receiptState.count">
+                    Хүлээн авах
+                </button>
+                <div class="d-flex align-items-center gap-3 px-3 py-1 rounded-1 border bg-light">
+                    <span>Сонгосон: <b t-esc="receiptState.count"/></span>
+                    <span>Хүлээн авах тоо: <b t-esc="receiptState.qty"/></span>
+                    <span>Дүн:
+                        <t t-if="receiptState.amounts.length">
+                            <t t-foreach="receiptState.amounts" t-as="amount" t-key="amount.key">
+                                <b class="fs-6 text-primary ms-1" t-esc="amount.value"/>
+                            </t>
+                        </t>
+                        <b t-else="" class="ms-1">0.00</b>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

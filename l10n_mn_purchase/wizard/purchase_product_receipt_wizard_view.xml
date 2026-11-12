@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Бараануудын жагсаалт (бүтэн дэлгэц): шүүлт, бүлэглэлт, мөр сонгох, тоо засах -->
+        <record id="purchase_product_receipt_line_tree" model="ir.ui.view">
+            <field name="name">purchase.product.receipt.wizard.line.tree</field>
+            <field name="model">purchase.product.receipt.wizard.line</field>
+            <field name="arch" type="xml">
+                <tree string="Бараагаар хүлээн авах" editable="bottom" create="0" delete="0" js_class="purchase_receipt_line_list"
+                      decoration-muted="pending_qty == 0">
+                    <field name="selected" widget="boolean_toggle" readonly="pending_qty == 0"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="order_id" readonly="1"/>
+                    <field name="partner_id" readonly="1" optional="show"/>
+                    <field name="uom_id" readonly="1" optional="show"/>
+                    <field name="ordered_qty" readonly="1" sum="Нийт" optional="show"/>
+                    <field name="received_qty" readonly="1" sum="Нийт" optional="show"/>
+                    <field name="pending_qty" readonly="1" sum="Нийт"/>
+                    <field name="pending_amount" readonly="1" sum="Нийт" optional="show"/>
+                    <field name="qty_to_receive" readonly="pending_qty == 0" sum="Нийт"/>
+                    <field name="amount_to_receive" readonly="1" sum="Нийт" class="fw-bold"/>
+                    <field name="currency_id" readonly="1" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_product_receipt_line_search" model="ir.ui.view">
+            <field name="name">purchase.product.receipt.wizard.line.search</field>
+            <field name="model">purchase.product.receipt.wizard.line</field>
+            <field name="arch" type="xml">
+                <search string="Бараа хайх">
+                    <field name="product_id"/>
+                    <field name="order_id"/>
+                    <field name="partner_id"/>
+                    <field name="currency_id"/>
+                    <filter name="pending" string="Хүлээгдэж буй" domain="[('pending_qty', '&gt;', 0)]"/>
+                    <filter name="received" string="Бүрэн хүлээн авсан" domain="[('pending_qty', '=', 0)]"/>
+                    <separator/>
+                    <filter name="selected" string="Сонгосон" domain="[('selected', '=', True)]"/>
+                    <group expand="0" string="Бүлэглэх">
+                        <filter name="group_currency" string="Валют" context="{'group_by': 'currency_id'}"/>
+                        <filter name="group_order" string="Захиалга" context="{'group_by': 'order_id'}"/>
+                        <filter name="group_partner" string="Нийлүүлэгч" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_uom" string="Хэмжих нэгж" context="{'group_by': 'uom_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Баталгаажуулах цонх: хүлээн авах огноо, сонгосон бараа, нийт дүн -->
+        <record id="purchase_product_receipt_wizard_form" model="ir.ui.view">
+            <field name="name">purchase.product.receipt.wizard.form</field>
+            <field name="model">purchase.product.receipt.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Хүлээн авах">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="multi_currency" invisible="1"/>
+                    <div class="alert alert-info mb-2" role="status">
+                        Сонгосон бараанууд хүлээн авах баримт бүрээсээ тусдаа баримт болж, доорх огноогоор
+                        батлагдана. Үлдсэн бараа нь эх баримтдаа <b>Бэлэн</b> төлөвтэй үлдэнэ.
+                        <b>Зөвхөн салгах</b> нь батлахгүйгээр тусдаа баримт болгож салгана.
+                    </div>
+                    <div class="alert alert-warning mb-2" role="alert" invisible="not multi_currency">
+                        Сонгосон бараанууд өөр өөр валюттай тул нийт дүнг харуулахгүй.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_receive" required="1"/>
+                            <field name="order_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="selected_count"/>
+                            <field name="selected_qty"/>
+                            <field name="selected_amount" class="fw-bold" invisible="multi_currency"/>
+                        </group>
+                    </group>
+                    <field name="selected_line_ids" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="order_id"/>
+                            <field name="uom_id"/>
+                            <field name="pending_qty"/>
+                            <field name="qty_to_receive" sum="Нийт"/>
+                            <field name="amount_to_receive" sum="Нийт"/>
+                            <field name="currency_id"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_receive" type="object" string="Хүлээн авах"
+                                class="btn-primary" data-hotkey="q"
+                                confirm="Сонгосон барааг тусдаа баримт болгож хүлээн авах (батлах) уу?"/>
+                        <button name="action_create_receipts" type="object" string="Зөвхөн салгах"
+                                class="btn-secondary" data-hotkey="w"/>
+                        <button string="Хаах" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Худалдан авалтын захиалгын жагсаалтаас: Үйлдэл > Бараагаар хүлээн авах.
+             Зөвхөн агуулахад хүлээн авах эрхтэй (Inventory / User) хэрэглэгчид харагдана. -->
+        <record id="action_server_purchase_product_receipt" model="ir.actions.server">
+            <field name="name">Бараагаар хүлээн авах</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+            <field name="state">code</field>
+            <field name="code">action = env['purchase.product.receipt.wizard'].action_open(records)</field>
+        </record>
+
+        <!-- Захиалгын мөрийн жагсаалтаас -->
+        <record id="action_server_purchase_line_product_receipt" model="ir.actions.server">
+            <field name="name">Бараагаар хүлээн авах</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order_line"/>
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+            <field name="state">code</field>
+            <field name="code">action = env['purchase.product.receipt.wizard'].action_open(records)</field>
+        </record>
+
+    </data>
+</odoo>

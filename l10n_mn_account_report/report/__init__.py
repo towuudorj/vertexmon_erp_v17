@@ -1,3 +1,4 @@
+from . import general_report_common
 from . import general_book_report
 from . import general_journal_report
 from . import payment_order

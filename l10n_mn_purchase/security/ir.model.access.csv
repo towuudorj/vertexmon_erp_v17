@@ -11,3 +11,5 @@ access_purchase_order_template_report_user,purchase.order.template.report,model_
 access_purchase_order_template_report_manager,purchase.order.template.report,model_purchase_order_template_report,purchase.group_purchase_manager,1,1,1,1
 access_purchase_order_report_user,purchase.order.report,model_purchase_order_report,purchase.group_purchase_user,1,1,1,1
 access_purchase_order_report_manager,purchase.order.report,model_purchase_order_report,purchase.group_purchase_manager,1,1,1,1
+access_purchase_product_receipt_wizard_stock,purchase.product.receipt.wizard,model_purchase_product_receipt_wizard,stock.group_stock_user,1,1,1,1
+access_purchase_product_receipt_wizard_line_stock,purchase.product.receipt.wizard.line,model_purchase_product_receipt_wizard_line,stock.group_stock_user,1,1,1,1
