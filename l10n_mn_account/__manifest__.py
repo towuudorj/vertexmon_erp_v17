@@ -64,6 +64,7 @@
             'views/account_partner_balance_report_view.xml',
             'views/account_move_overdue_view.xml',
             'views/account_analytic_account_lock_view.xml',
+            'views/master_list_column_filter_view.xml',
             'views/menu_view.xml',
 
 

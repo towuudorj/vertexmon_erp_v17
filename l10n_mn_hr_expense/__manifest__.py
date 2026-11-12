@@ -34,10 +34,12 @@
             'views/hr_expense_sheet_inherit_view.xml',
             'views/report_view.xml',
             'views/menu_view.xml',
+            'views/hr_expense_column_filter_view.xml',
     ],
     'assets':
         {
             'web.assets_backend': [
+                'l10n_mn_hr_expense/static/src/xml/list_column_filter.xml',
             ],
         },
     'installable': True,

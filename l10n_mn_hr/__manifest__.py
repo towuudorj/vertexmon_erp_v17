@@ -94,6 +94,7 @@
             'views/kpi_work_plan_view.xml',
             'views/dev_task_view.xml',
             'views/contract_decree_configuration.xml',
+            'views/hr_list_column_filter_view.xml',
             'views/menu_view.xml',
     ],
     'test': [

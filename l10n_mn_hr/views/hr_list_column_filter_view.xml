@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Хүний нөөцийн жагсаалтуудад баганаар шүүх мөр (vertexmon_tools: o_list_column_filter) -->
+
+    <!-- Ажилтан -->
+    <record id="hr_employee_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.employee.column.filter</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Гэрээ -->
+    <record id="hr_contract_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.contract.column.filter</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Чөлөө -->
+    <record id="hr_leave_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.leave.column.filter</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Чөлөөний хуваарилалт -->
+    <record id="hr_leave_allocation_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.column.filter</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Ирц -->
+    <record id="hr_attendance_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.column.filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Цалингийн хуудсууд -->
+    <record id="hr_payslip_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.column.filter</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Цалингийн багцууд -->
+    <record id="hr_payslip_run_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.run.column.filter</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

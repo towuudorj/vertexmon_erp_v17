@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Зардлын жагсаалтуудад баганаар шүүх мөр (vertexmon_tools: o_list_column_filter) -->
+
+    <!-- Зардлууд (Миний зардал мөн адил) -->
+    <record id="hr_expense_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.expense.column.filter</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Зардлын тайлан -->
+    <record id="hr_expense_sheet_tree_column_filter" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.column.filter</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

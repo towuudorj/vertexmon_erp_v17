@@ -14,7 +14,7 @@
             <field name="name">account.asset.move.tree</field>
             <field name="model">account.asset.move</field>
             <field name="arch" type="xml">
-                <tree string="Хөрөнгө шилжүүлэг" decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
+                <tree string="Хөрөнгө шилжүүлэг" class="o_list_column_filter" decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="from_owner_id"/>

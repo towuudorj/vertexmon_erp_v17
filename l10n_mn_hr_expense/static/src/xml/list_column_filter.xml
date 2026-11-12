@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- vertexmon_tools-ийн баганаар шүүх мөрийг зардлын (primary хуулбар) list renderer-уудад нэмнэ -->
+    <t t-name="l10n_mn_hr_expense.ListRenderer.ColumnFilter" t-inherit="hr_expense.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
+        </xpath>
+    </t>
+    <t t-name="l10n_mn_hr_expense.DashboardListRenderer.ColumnFilter" t-inherit="hr_expense.DashboardListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead/tr" position="after">
+            <t t-call="vertexmon_tools.ListColumnFilterRow"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <t t-call="vertexmon_tools.ListColumnFilterMenu"/>
+        </xpath>
+    </t>
+</templates>

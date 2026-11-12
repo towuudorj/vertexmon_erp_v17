@@ -19,6 +19,10 @@
             <field name="model">purchase.requisition</field>            
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree"/>
             <field name="arch" type="xml">
+                <!-- Баганаар шүүх мөр (vertexmon_tools) -->
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class" add="o_list_column_filter" separator=" "/>
+                </xpath>
                 <xpath expr="//field[@name='vendor_id']" position="after">
                     <field name="crm_lead_id"/>
                     <field name="crm_lead_code"/>

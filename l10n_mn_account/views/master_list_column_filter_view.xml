@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Бараа, харилцагчийн жагсаалтуудад баганаар шүүх мөр (vertexmon_tools: o_list_column_filter) -->
+
+    <!-- Бараа -->
+    <record id="product_template_tree_column_filter" model="ir.ui.view">
+        <field name="name">product.template.column.filter</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Барааны хувилбар -->
+    <record id="product_product_tree_column_filter" model="ir.ui.view">
+        <field name="name">product.product.column.filter</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Харилцагчийн жагсаалтад "Ажилбар" баганыг анхдагчаар нууна (⇄ цэснээс харуулж болно) -->
+    <record id="res_partner_tree_hide_activity" model="ir.ui.view">
+        <field name="name">res.partner.tree.hide.activity</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="mail.res_partner_view_tree_inherit_mail"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='activity_ids']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+        om_account_followup-ийн жагсаалтуудад invisible="1" гэж бичсэн баганууд Odoo 17-д
+        хоосон багана болж харагддаг тул column_invisible болгоно. om_account_followup-ийг
+        шууд засвал тэр модулийг шинэчлэхэд (l10n_mn_account-ын "code" талбар хараахан
+        ачаалагдаагүй тул) харилцагчийн жагсаалтын шалгалт алдаа өгдөг — тиймээс энд хийв.
+    -->
+    <!-- Бүх харилцагчийн жагсаалтаас "Follow-up Responsible" баганыг нууна -->
+    <record id="res_partner_tree_hide_followup_responsible" model="ir.ui.view">
+        <field name="name">res.partner.tree.hide.followup.responsible</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="om_account_followup.view_partner_inherit_customer_followup_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_responsible_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Odoo-гийн суурь харилцагчийн жагсаалтад display_name invisible="1" байгаа тул
+         хоосон "Нэр" багана давхар гардаг (жинхэнэ нэр нь complete_name) — баганыг нууна -->
+    <record id="res_partner_tree_hide_display_name" model="ir.ui.view">
+        <field name="name">res.partner.tree.hide.display.name</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Customer Followup жагсаалтын нуух ёстой хоосон баганууд -->
+    <record id="customer_followup_tree_hide_columns" model="ir.ui.view">
+        <field name="name">res.partner.followup.tree.hide.columns</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="om_account_followup.customer_followup_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Journal Items to Reconcile жагсаалтын хоосон "Журнал" багана -->
+    <record id="move_line_reconcile_tree_hide_journal" model="ir.ui.view">
+        <field name="name">account.move.line.reconcile.tree.hide.journal</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="om_account_followup.view_move_line_reconcile_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Харилцагч (Нийлүүлэгч, Захиалагч) -->
+    <record id="res_partner_tree_column_filter" model="ir.ui.view">
+        <field name="name">res.partner.column.filter</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="o_list_column_filter" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

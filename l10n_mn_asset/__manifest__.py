@@ -52,6 +52,7 @@
             'views/asset_location_view.xml',
             'report/asset_move_report.xml',
             'views/account_asset_move_view.xml',
+            'views/asset_list_column_filter_view.xml',
             'absract_report_view.xml',
             'views/report_view.xml',
             'report/asset_owner_card_report.xml',
