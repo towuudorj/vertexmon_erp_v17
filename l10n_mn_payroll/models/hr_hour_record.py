@@ -133,7 +133,7 @@ class HrLeave(models.Model):
                 },
                 'auto_delete': True,
             }
-            self.env['mail.mail'].sudo().create(mail_values).send()
+            self.env['mail.mail'].sudo().create(mail_values)  # дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)
             leave.sudo().write({'maternity_leave_notification_date': today})
 
 class HrLeaveType(models.Model):

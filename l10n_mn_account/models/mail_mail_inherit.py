@@ -28,11 +28,13 @@ class MailMail(models.Model):
             f'{link_label} &rarr;</a></p>'
             '</div>'
         )
+        # Шууд илгээхгүй: дараалалд (outgoing) үлдээж "Mail: Email Queue Manager" cron илгээнэ.
+        # SMTP (Office365) хариу өгөхгүй үед товч (батлах, хүлээн авах г.м.) 60 сек+ гацахаас сэргийлнэ,
+        # мөн гүйлгээ алдаатай буцвал имэйл явахгүй.
         mail = self.create({
             'email_to': email_to,
             'subject': subject,
             'body_html': body_html,
             'auto_delete': auto_delete,
         })
-        mail.send()
         return mail

@@ -39,4 +39,4 @@ class HrContract(models.Model):
         """
         template = self.env.ref('employee_contract_reminder.email_template_employee_contract_reminder')
         for contract in self:
-            template.send_mail(contract.id, force_send=True, email_values={'email_to': contract.employee_id.work_email})
+            template.send_mail(contract.id, email_values={'email_to': contract.employee_id.work_email})  # дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)

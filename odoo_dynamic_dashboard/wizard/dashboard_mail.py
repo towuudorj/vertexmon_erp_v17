@@ -58,7 +58,7 @@ class DashboardMail(models.TransientModel):
             mail_id.write({
                 'attachment_ids': [(4, attachment_id.id)]
             })
-            mail_id.send()
+            # mail_id.send() - дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)
 
         return {
             'type': 'ir.actions.client',

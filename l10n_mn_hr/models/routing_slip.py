@@ -63,9 +63,8 @@ class routing_slip(models.Model):
                                                           'template_id': template and template.id or False,
                                                           'subject': u'Ажлаас гарах үеийн асуумж'})
 
+        # Урилгын имэйл дараалалд үлдэнэ (Mail: Email Queue Manager cron илгээнэ)
         survey_wizard.with_context(default_email_layout_xmlid='mail.mail_notification_light').action_invite()
-        mails = self.env['mail.mail'].sudo().search([('state', '=', 'outgoing'), ('subject', '=', 'Ажлаас гарах үеийн асуумж')])
-        mails.sudo().send()
     
     def action_cancel(self):
         self.state = 'cancel'

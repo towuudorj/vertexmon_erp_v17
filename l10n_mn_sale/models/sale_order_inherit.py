@@ -933,7 +933,7 @@ class SaleOrder(models.Model):
         template = self.env.ref('l10n_mn_sale.email_template_sale_confirmation', raise_if_not_found=False)
         if template:
             for order in self:
-                template.send_mail(order.id, force_send=True)
+                template.send_mail(order.id)  # дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)
         return True
 
     @api.model
@@ -957,7 +957,7 @@ class SaleOrder(models.Model):
                     machine_id=machine_id,
                     status=status,
                     recipient_email=user.email
-                ).send_mail(user.id, force_send=True)
+                ).send_mail(user.id)  # дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)
         return True
 
     @api.onchange('ot_po')

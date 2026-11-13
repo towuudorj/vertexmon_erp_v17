@@ -259,5 +259,5 @@ class DevTask(models.Model):
             # email_formatted биш: l10n_mn_sale нь бүх харилцагчийн email_formatted-ийг имэйл серверийн
             # хаяг (erp@...) болгодог тул хүлээн авагч бүгд тэр хаяг руу очиж байсан
             emails = ','.join(tools.formataddr((u.name or '', u.email)) for u in recipients)
-            template.send_mail(task.id, force_send=True, email_values={'email_to': emails})
+            template.send_mail(task.id, email_values={'email_to': emails})  # дараалалд үлдээнэ (Mail: Email Queue Manager cron илгээнэ)
             task.message_post(body=_('"Шалгана уу" имэйлийг %s руу илгээлээ.') % ', '.join(recipients.mapped('email')))
