@@ -90,6 +90,45 @@ def clean_employee_name(name):
 
     return f'{clean} {tag}'.strip() if tag else clean
 
+def format_employee_initial_name(user_or_emp, user=None):
+    """
+    Хэрэглэгч / ажилтны нэрийг 'С. Мөнхтуяа' загварт оруулах (Овгийн эхний үсэг + цэг + зай + өөрийн нэр)
+    """
+    if not user_or_emp:
+        return ''
+    emp = None
+    u = None
+    if hasattr(user_or_emp, '_name') and user_or_emp._name == 'hr.employee':
+        emp = user_or_emp
+        u = user or emp.user_id
+    elif hasattr(user_or_emp, '_name') and user_or_emp._name == 'res.users':
+        u = user_or_emp
+        emp = u.employee_id if 'employee_id' in u._fields and u.employee_id else None
+        if not emp and 'hr.employee' in u.env:
+            emp = u.env['hr.employee'].search([('user_id', '=', u.id)], limit=1)
+
+    raw_name = (emp.name if emp and emp.name else (u.name if u and u.name else '')) or ''
+    clean_name = clean_employee_name(raw_name).strip()
+
+    initial = ''
+    if emp and 'last_name' in emp._fields and emp.last_name:
+        ln = str(emp.last_name).strip()
+        if ln:
+            initial = ln[0].upper()
+
+    if not initial and raw_name and '.' in raw_name:
+        m_front = re.search(r'^\s*([A-Za-zА-Яа-яЁёӨөҮү]{1,2})\s*\.', raw_name)
+        if m_front:
+            initial = m_front.group(1).upper()
+        else:
+            m_back = re.search(r'\.\s*([A-Za-zА-Яа-яЁёӨөҮү]{1,2})(?:\s*[/(\s]|$)', raw_name)
+            if m_back:
+                initial = m_back.group(1).upper()
+
+    if initial and clean_name:
+        return f"{initial}. {clean_name}"
+    return clean_name or raw_name
+
 
 class HrPayslipRun(models.Model):
     _inherit = "hr.payslip.run"
@@ -110,7 +149,8 @@ class HrPayslipRun(models.Model):
 
     def get_report_data(self):
         data = {
-            'self_id': self.id
+            'self_id': self.id,
+            'user_id': self.env.user.id,
         }
         return data
 
@@ -174,7 +214,8 @@ class HrPayslipRun(models.Model):
         data_left_borderless = workbook.add_format({
             'align': 'left',
             'border': 0,
-            'font_size': 12,
+            'font_name': 'Times New Roman',
+            'font_size': 13,
             'num_format': '#,##0.00'
         })
         data_bold_center = workbook.add_format({
@@ -200,11 +241,14 @@ class HrPayslipRun(models.Model):
         sheet.set_paper(9)
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0)
-        self_obj = self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self
+        self_obj = (self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self).sudo()
         slips = self_obj.slip_ids.sorted(key=lambda s: (
             (s.employee_department_id.name or (s.employee_id.department_id.name or '')) if (s.employee_department_id or (s.employee_id and s.employee_id.department_id)) else 'ZZZZ',
             clean_employee_name(s.employee_id.name or '')
         ))
+        user_id = data.get('user_id') if isinstance(data, dict) else None
+        current_user = self.env['res.users'].browse(user_id) if user_id else self.env.user
+        accountant_name = format_employee_initial_name(current_user) or '............'
 
         if self_obj.payslip_type == 'advance':
             # -------------------------------------------------------------
@@ -218,7 +262,7 @@ class HrPayslipRun(models.Model):
             sheet.set_column(6, 6, 15)
             sheet.set_column(7, 7, None, None, {'hidden': True})
 
-            sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
+            sheet.merge_range(0, 1, 0, 4, self_obj.company_id.name, data_left_borderless)
             sheet.merge_range(1, 0, 1, 6, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Б.ӨЛЗИЙТ-АМГАЛАНЖАРГАЛ', data_left_borderless)
             sheet.merge_range("A3:G3", '%s %s' % (self_obj.name, 'урьдчилгаа цалин'), head)
 
@@ -273,6 +317,10 @@ class HrPayslipRun(models.Model):
                 sheet.write("F%s" % rowx, 0.0, header_txt)
             sheet.write("G%s" % rowx, '', header_txt)
             sheet.write("H%s" % rowx, '', header_txt)
+            rowx += 1
+            sheet.merge_range('A%s:G%s'%(rowx, rowx), ' ХЯНАСАН:    Санхүү, төлөвлөлтийн албаны захирал                              С. Мөнхтуяа', data_left_borderless)
+            rowx += 1
+            sheet.merge_range('A%s:G%s'%(rowx, rowx), ' ЦАЛИН БОДСОН:      Нягтлан бодогч                                                        %s' % accountant_name, data_left_borderless)
 
             workbook.close()
             output.seek(0)
@@ -291,7 +339,7 @@ class HrPayslipRun(models.Model):
         sheet.set_column(0, 0, 5)
         sheet.set_column(1, 27, 18)
         max_ceiling = 7920000.0
-        si_rule = self.env['hr.salary.rule'].search([
+        si_rule = self.env['hr.salary.rule'].sudo().search([
             ('code', '=', 'SI11'),
             '|', ('company_id', '=', self_obj.company_id.id if self_obj else False), ('company_id', '=', False)
         ], limit=1)
@@ -301,7 +349,7 @@ class HrPayslipRun(models.Model):
             if m:
                 max_ceiling = float(m.group(1)) * 10
 
-        sheet.merge_range(0, 0, 0, 3, self_obj.company_id.name, title)
+        sheet.merge_range(0, 1, 0, 4, self_obj.company_id.name, data_left_borderless)
         sheet.merge_range(1, 0, 1, 8, 'БАТЛАВ: ГҮЙЦЭТГЭХ ЗАХИРАЛ .....................................................Б.ӨЛЗИЙТ-АМГАЛАНЖАРГАЛ', data_left_borderless)
         sheet.merge_range("A3:AB3", '%s %s'%(self_obj.name, 'сүүл цалин'), head)
         rowx = 3
@@ -551,6 +599,10 @@ class HrPayslipRun(models.Model):
         sheet.write("AF%s" % rowx, '', header_txt)
         sheet.write("AG%s" % rowx, '', header_txt)
         sheet.write("AH%s" % rowx, '', header_txt)
+        rowx += 1
+        sheet.merge_range('A%s:G%s'%(rowx, rowx), ' ХЯНАСАН:    Санхүү, төлөвлөлтийн албаны захирал                              С. Мөнхтуяа', data_left_borderless)
+        rowx += 1
+        sheet.merge_range('A%s:G%s'%(rowx, rowx), ' ЦАЛИН БОДСОН:      Нягтлан бодогч                                                        %s' % accountant_name, data_left_borderless)
 
         workbook.close()
         output.seek(0)
