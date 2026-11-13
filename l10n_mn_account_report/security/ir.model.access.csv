@@ -15,10 +15,6 @@ access_report_excel_output_user,report.excel.output,model_report_excel_output,ac
 access_report_excel_output_manager,report.excel.output,model_report_excel_output,account.group_account_manager,1,1,1,1
 access_abstract_report_excel_user,abstract.report.excel,model_abstract_report_excel,account.group_account_user,1,0,0,0
 access_abstract_report_excel_manager,abstract.report.excel,model_abstract_report_excel,account.group_account_manager,1,1,1,1
-access_general_book_report_two_user,general.book.report.two,model_general_book_report_two,account.group_account_user,1,1,1,1
-access_general_book_report_two_manager,general.book.report.two,model_general_book_report_two,account.group_account_manager,1,1,1,1
-access_general_journal_report_two_user,general.journal.report.two,model_general_journal_report_two,account.group_account_user,1,1,1,1
-access_general_journal_report_two_manager,general.journal.report.two,model_general_journal_report_two,account.group_account_manager,1,1,1,1
 access_account_balance_type_user,account.balance.type,model_account_balance_type,account.group_account_user,1,0,0,0
 access_account_balance_type_manager,account.balance.type,model_account_balance_type,account.group_account_manager,1,1,1,1
 access_account_income_type_user,account.income.type,model_account_income_type,account.group_account_user,1,0,0,0

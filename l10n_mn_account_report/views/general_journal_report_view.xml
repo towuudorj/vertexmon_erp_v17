@@ -13,6 +13,7 @@
                         	<field name="target_move"/>
                         	<field name="date_from"/>
                         	<field name="date_to"/>
+                        	<field name="with_balance"/>
                         </group>
                         <field name="account_ids"/>
                         <footer>

@@ -7,22 +7,10 @@
 				parent="account.menu_finance_reports" 
 				sequence="50" />
 		<menuitem 
-				id="account_general_book_report_two_menu" 
-				name="General book 2" 
-				parent="account_mn_reports" 
-				action="action_general_book_report_two_view" 
-				sequence="2" />
-		<menuitem 
 				id="account_general_book_report_menu" 
 				name="General book report" 
 				parent="account_mn_reports" 
 				action="action_general_book_report_view" 
-				sequence="2" />
-		<menuitem 
-				id="account_general_journal_report_two_menu" 
-				name="General journal 2" 
-				parent="account_mn_reports" 
-				action="action_general_journal_report_two_view" 
 				sequence="2" />
 		<menuitem 
 				id="account_general_journal_report_menu" 

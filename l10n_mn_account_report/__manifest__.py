@@ -49,8 +49,6 @@
             'views/general_journal_report_view.xml',
             'views/absract_report_view.xml',
             'views/account_move_analysis_view.xml',
-            'views/general_journal_report_two_view.xml',
-            'views/general_book_report_two_view.xml',
             'views/balance_sheet_excel_report_view.xml',
             'views/equity_excel_report_view.xml',
             'views/profit_excel_view.xml',

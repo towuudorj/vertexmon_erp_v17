@@ -22,6 +22,8 @@ class GeneralJournalReport(models.TransientModel):
                                     ], string='State', required=True, default='posted')
     account_ids = fields.Many2many('account.account', 'general_journal_report_rel', 'account_id', 'general_id',
                                    string='Account', required=True)
+    with_balance = fields.Boolean(string='Үлдэгдэл харуулах', default=False,
+                                  help='Гүйлгээ бүрийн дараах өссөн дүнгээр "Үлдэгдэл" багана нэмж харуулна.')
 
     def _write_report(self, workbook, fmt):
-        self._write_journal_report(workbook, fmt, with_balance=False)
+        self._write_journal_report(workbook, fmt, with_balance=self.with_balance)
