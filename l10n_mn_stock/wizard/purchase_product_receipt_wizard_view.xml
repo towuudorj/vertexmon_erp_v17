@@ -22,6 +22,9 @@
                     <field name="qty_to_receive" readonly="pending_qty == 0" sum="Нийт"/>
                     <field name="amount_to_receive" readonly="1" sum="Нийт" class="fw-bold"/>
                     <field name="currency_id" readonly="1" optional="show"/>
+                    <button name="action_split_product" type="object" string="Салгах" icon="fa-random"
+                            class="btn-link" invisible="pending_qty == 0"
+                            title="Барааг өөр бараа(нууд)-аар сольж салгах"/>
                 </tree>
             </field>
         </record>

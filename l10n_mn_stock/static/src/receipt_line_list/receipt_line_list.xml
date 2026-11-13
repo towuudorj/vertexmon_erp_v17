@@ -7,6 +7,15 @@
                         t-att-disabled="!receiptState.count">
                     Хүлээн авах
                 </button>
+                <button type="button" class="btn btn-secondary" t-on-click="() => this.setSelection(true)"
+                        title="Одоогийн шүүлтэд харагдаж буй бүх мөрийг сонгоно">
+                    <i class="fa fa-check-square-o me-1"/>Бүгдийг сонгох
+                </button>
+                <button type="button" class="btn btn-secondary" t-on-click="() => this.setSelection(false)"
+                        t-att-disabled="!receiptState.count"
+                        title="Одоогийн шүүлтэд харагдаж буй мөрүүдийн сонголтыг цуцална">
+                    <i class="fa fa-square-o me-1"/>Сонголтыг цуцлах
+                </button>
                 <div class="d-flex align-items-center gap-3 px-3 py-1 rounded-1 border bg-light">
                     <span>Сонгосон: <b t-esc="receiptState.count"/></span>
                     <span>Хүлээн авах тоо: <b t-esc="receiptState.qty"/></span>

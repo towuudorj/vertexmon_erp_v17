@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_is_zero
@@ -61,6 +63,15 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             raise UserError(_('Дараах захиалгууд батлагдаагүй байна: %s') % ', '.join(not_confirmed.mapped('name')))
         if len(orders.company_id) > 1:
             raise UserError(_('Өөр өөр компанийн захиалгыг хамт сонгох боломжгүй.'))
+
+        # Нээлттэй хүлээн авах баримтад ноорог (draft) хөдөлгөөн байвал (жишээ нь "Салгах"-аар нэмэгдсэн)
+        # жагсаалтад харагдахын тулд батална. Odoo баримтыг батлахдаа үүнийг ямар ч байсан хийдэг.
+        draft_moves = orders.order_line.move_ids.filtered(
+            lambda m: m.state == 'draft' and m.picking_id
+            and m.picking_id.state not in ('done', 'cancel') and m.picking_code == 'incoming')
+        if draft_moves:
+            draft_moves._action_confirm(merge=False)
+            draft_moves.filtered(lambda m: m.state in ('confirmed', 'partially_available'))._action_assign()
 
         wizard = self.create({
             'order_ids': [(6, 0, orders.ids)],
@@ -171,7 +182,9 @@ class PurchaseProductReceiptWizard(models.TransientModel):
     def action_create_receipts(self):
         """ Зөвхөн салгана: сонгосон бараануудаар шинэ хүлээн авах баримт (Бэлэн төлөвтэй) үүсгэнэ """
         self.ensure_one()
+        log_info = self._get_log_info()
         new_pickings = self._split_into_pickings()
+        self._log_operation(log_info, new_pickings, _('Бараагаар хүлээн авах: тусдаа баримт болгож салгав'))
         self._refresh_lines()
         return self._action_view_pickings(new_pickings)
 
@@ -183,6 +196,7 @@ class PurchaseProductReceiptWizard(models.TransientModel):
         if self.date_receive > fields.Datetime.now():
             raise UserError(_('Хүлээн авах огноо ирээдүйд байж болохгүй.'))
         date_receive = self.date_receive
+        log_info = self._get_log_info()
         new_pickings = self._split_into_pickings()
         # zero_stock_effective_date: date_done нь scheduled_date-ээс тооцогдож, бичилтийн огноо болно
         new_pickings.write({'scheduled_date': date_receive})
@@ -198,14 +212,63 @@ class PurchaseProductReceiptWizard(models.TransientModel):
             if isinstance(res, dict) and res.get('type') == 'ir.actions.act_window' and res.get('target') == 'new':
                 return res
         self._apply_receive_date(new_pickings.filtered(lambda p: p.state == 'done'), date_receive)
+        self._log_operation(log_info, new_pickings, _('Бараагаар хүлээн авах: хүлээн авав'), date_receive)
         self._refresh_lines()
         return self._action_view_pickings(new_pickings)
 
-    def _refresh_lines(self):
-        """ Жагсаалт руу буцаж ороход тоо хэмжээ шинэчлэгдсэн байхаар мөрүүдийг дахин тооцно """
-        # Баримтууд өөрчлөгдсөн (салсан/батлагдсан) тул мөрүүдийг бүхэлд нь дахин үүсгэнэ
+    def _refresh_lines(self, keep_selection=False, extra_selected_keys=None):
+        """ Жагсаалт руу буцаж ороход тоо хэмжээ шинэчлэгдсэн байхаар мөрүүдийг дахин тооцно.
+        Баримтууд өөрчлөгдсөн (салсан/батлагдсан) тул мөрүүдийг бүхэлд нь дахин үүсгэнэ. """
+        selected_keys = set()
+        if keep_selection:
+            selected_keys = {(l.order_id.id, l.product_id.id, l.picking_id.id or False)
+                             for l in self.line_ids.filtered('selected')}
+        selected_keys |= set(extra_selected_keys or [])
         self.line_ids.unlink()
-        self.write({'line_ids': [(0, 0, vals) for vals in self._prepare_line_vals(self.order_ids)]})
+        vals_list = self._prepare_line_vals(self.order_ids)
+        for vals in vals_list:
+            vals['selected'] = (vals['order_id'], vals['product_id'], vals['picking_id'] or False) in selected_keys \
+                and bool(vals['pending_qty'])
+        self.write({'line_ids': [(0, 0, vals) for vals in vals_list]})
+
+    # ------------------------------------------------------------------
+    # Лог: захиалга болон хүлээн авах баримтын чаттерт бүртгэнэ
+    # ------------------------------------------------------------------
+    def _get_log_info(self):
+        """ Салгахаас өмнө (эх баримтын нэр өөрчлөгдөхөөс өмнө) юуг хүлээн авч буйг тэмдэглэнэ """
+        return [{
+            'order': line.order_id,
+            'product': line.product_id.display_name,
+            'qty': line.qty_to_receive,
+            'uom': line.uom_id.name,
+            'source': line.picking_id.name or '',
+        } for line in self._get_lines_to_process()]
+
+    def _log_operation(self, log_info, pickings, title, date=False):
+        picking_names = ', '.join(pickings.mapped('name'))
+        header = Markup('<b>%s</b><br/>') % title
+        header += Markup('%s: %s<br/>') % (_('Баримт'), picking_names)
+        if date:
+            header += Markup('%s: %s<br/>') % (_('Хүлээн авсан огноо'), fields.Datetime.to_string(
+                fields.Datetime.context_timestamp(self, date)))
+
+        def _rows(items):
+            body = Markup('<ul>')
+            for item in items:
+                body += Markup('<li>%s: %s %s (%s)</li>') % (
+                    item['product'], item['qty'], item['uom'], item['source'])
+            return body + Markup('</ul>')
+
+        # Захиалга бүрт өөрийнх нь мөрүүдийг бүртгэнэ
+        for order in self.env['purchase.order'].union(*[i['order'] for i in log_info]):
+            order.message_post(body=header + _rows([i for i in log_info if i['order'] == order]),
+                               subtype_xmlid='mail.mt_note')
+        # Хүлээн авах баримт бүрт өөрийнх нь захиалгын мөрүүдийг бүртгэнэ
+        for picking in pickings:
+            orders = picking.move_ids.purchase_line_id.order_id
+            products = set(picking.move_ids.product_id.mapped('display_name'))
+            items = [i for i in log_info if i['order'] in orders and i['product'] in products]
+            picking.message_post(body=Markup('<b>%s</b>') % title + _rows(items), subtype_xmlid='mail.mt_note')
 
     @api.model
     def _apply_receive_date(self, pickings, date):
@@ -372,6 +435,44 @@ class PurchaseProductReceiptWizardLine(models.TransientModel):
                     'message': _('Хүлээн авах тоо хүлээгдэж буй тооноос их байж болохгүй.'),
                 }}
 
+    def action_split_product(self):
+        """ Хүлээн авах баримт дээрх "Салгах"-тай адил: барааг өөр бараа(нууд)-аар сольж/хуваана """
+        self.ensure_one()
+        wizard = self.wizard_id
+        wizard._check_receive_access()
+        po_lines = self.order_id.order_line.filtered(lambda l: l.product_id == self.product_id)
+        moves = wizard._pending_moves(po_lines).filtered(lambda m: m.picking_id == self.picking_id)
+        if not moves:
+            raise UserError(_('Салгах хүлээгдэж буй мөр олдсонгүй. Жагсаалтыг дахин нээнэ үү.'))
+        if len(moves) > 1:
+            raise UserError(_('%(picking)s баримтад %(product)s бараа %(count)s мөрөөр байна. '
+                              'Хүлээн авах баримт дээр нь аль мөрийг салгахаа сонгож салгана уу.') % {
+                'picking': self.picking_id.name, 'product': self.product_id.display_name, 'count': len(moves)})
+        if float_is_zero(moves.quantity, precision_rounding=moves.product_uom.rounding):
+            moves._action_assign()
+        action = moves.update_line()
+        if not action:
+            raise UserError(_('Энэ мөрийг салгах боломжгүй байна.'))
+        action['context'] = {
+            'active_id': moves.id,
+            'active_ids': moves.ids,
+            'active_model': 'stock.move',
+            'from_product_receipt_wizard_id': wizard.id,
+            'dialog_size': 'extra-large',
+        }
+        return action
+
+    @api.model
+    def set_receipt_selection(self, wizard_id, domain, selected):
+        """ Одоогийн шүүлтэд таарах (хүлээгдэж буй) бүх мөрийг сонгох / сонголтыг цуцлах """
+        self.env['purchase.product.receipt.wizard'].browse(wizard_id)._check_receive_access()
+        lines = self.search([('wizard_id', '=', wizard_id)] + (domain or []))
+        if selected:
+            lines = lines.filtered(lambda l: float_compare(
+                l.qty_to_receive, 0.0, precision_rounding=l.uom_id.rounding or 0.01) > 0)
+        lines.write({'selected': bool(selected)})
+        return len(lines)
+
     @api.model
     def get_receipt_summary(self, wizard_id):
         """ Шүүлтээс үл хамааран тухайн жагсаалтын бүх сонгосон мөрийн нийлбэр (JS header-т) """
@@ -384,3 +485,51 @@ class PurchaseProductReceiptWizardLine(models.TransientModel):
             'qty': sum(lines.mapped('qty_to_receive')),
             'amounts': [[currency_id, amount] for currency_id, amount in amounts.items()],
         }
+
+
+class StockMoveUpdate(models.TransientModel):
+    _inherit = 'stock.move.update'
+
+    def update(self):
+        """ Бараагаар хүлээн авах жагсаалтаас салгасан бол захиалгын чаттерт лог үлдээж, жагсаалтыг шинэчилнэ """
+        wizard_id = self.env.context.get('from_product_receipt_wizard_id')
+        move = self.move_id[:1]
+        order = move.purchase_line_id.order_id
+        picking = move.picking_id
+        # Салгаж буй мөр сонгогдсон байсан бол салгаж үүссэн шинэ бараанууд ч сонгогдсон хэвээр гарна
+        receipt_wizard = self.env['purchase.product.receipt.wizard'].browse(wizard_id).exists() \
+            if wizard_id else self.env['purchase.product.receipt.wizard']
+        was_selected = bool(receipt_wizard.line_ids.filtered(
+            lambda l: l.selected and l.order_id == order and l.product_id == move.product_id
+            and l.picking_id == picking))
+        new_products = self.new_line_ids.product_id
+        before = '%s: %s %s' % (move.product_id.display_name, move.quantity, move.product_uom.name)
+        after = [(line.product_id.display_name, line.quantity, line.product_uom.name or line.product_id.uom_id.name)
+                 for line in self.new_line_ids]
+        picking_name = move.picking_id.name
+        res = super().update()
+        if wizard_id and picking and picking.state not in ('done', 'cancel'):
+            # "Салгах" цонх шинэ хөдөлгөөнийг ноорог (draft) төлөвтэй үүсгэдэг тул жагсаалтад
+            # хүлээгдэж буй мөр болж харагдахын тулд батлаад нөөцөлнө (Бэлэн төлөв).
+            draft_moves = picking.move_ids.filtered(lambda m: m.state == 'draft')
+            if draft_moves:
+                draft_moves._action_confirm(merge=False)
+            new_moves = picking.move_ids.filtered(
+                lambda m: m.product_id in new_products and m.state not in ('done', 'cancel'))
+            # Хүлээн авах үйлдэл "picked"-ийг өөрөө тавина; одоо тавигдсан бол жагсаалтаас хасагдахгүйн тулд арилгана
+            new_moves.filtered('picked').write({'picked': False})
+            new_moves.move_line_ids.filtered('picked').write({'picked': False})
+            to_assign = new_moves.filtered(lambda m: m.state in ('confirmed', 'partially_available', 'waiting'))
+            if to_assign:
+                to_assign._action_assign()
+        if wizard_id:
+            if order:
+                body = Markup('<b>%s</b><br/>%s: %s<ul><li>%s</li><li>→</li>') % (
+                    _('Бараагаар хүлээн авах: мөр салгав'), _('Баримт'), picking_name, before)
+                for name, qty, uom in after:
+                    body += Markup('<li>%s: %s %s</li>') % (name, qty, uom)
+                order.message_post(body=body + Markup('</ul>'), subtype_xmlid='mail.mt_note')
+            if receipt_wizard:
+                extra_keys = [(order.id, product.id, picking.id) for product in new_products] if was_selected else []
+                receipt_wizard._refresh_lines(keep_selection=True, extra_selected_keys=extra_keys)
+        return res

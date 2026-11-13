@@ -20,6 +20,13 @@ export class PurchaseReceiptLineListController extends ListController {
         this.actionService = useService("action");
         this.receiptState = useState({ count: 0, qty: "0.00", amounts: [] });
         onWillStart(() => this.refreshReceiptSummary());
+        // Жагсаалт дахин ачаалагдах бүрт (жишээ нь "Салгах" цонх хаагдсаны дараа) нийлбэрийг шинэчилнэ
+        const originalLoad = this.model.load.bind(this.model);
+        this.model.load = async (...args) => {
+            const result = await originalLoad(...args);
+            await this.refreshReceiptSummary();
+            return result;
+        };
     }
 
     get receiptWizardId() {
@@ -42,6 +49,20 @@ export class PurchaseReceiptLineListController extends ListController {
     async onRecordSaved(record) {
         await super.onRecordSaved(...arguments);
         await this.refreshReceiptSummary();
+    }
+
+    async setSelection(selected) {
+        // Засварлаж буй мөр байвал эхлээд хадгална
+        if (this.model.root.editedRecord && !(await this.model.root.editedRecord.save())) {
+            return;
+        }
+        // Одоогийн шүүлтэд (хайлт, шүүлтүүр) таарах бүх мөрийг сонгох / цуцлах
+        await this.orm.call(LINE_MODEL, "set_receipt_selection", [
+            this.receiptWizardId,
+            this.model.root.domain,
+            selected,
+        ]);
+        await this.model.load();
     }
 
     async onClickReceive() {
