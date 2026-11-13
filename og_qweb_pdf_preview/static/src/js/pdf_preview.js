@@ -22,7 +22,10 @@ export class PdfPreviewDialog extends Dialog {
     }
 
     _getSourceDocument() {
-        return "/web/static/lib/pdfjs/web/viewer.html?file="+this.props.srcurl;
+        // Тайлангийн URL-ийг заавал кодлох хэрэгтэй: эс тэгвээс доторх "&context=..." нь
+        // viewer.html-ийн параметр болж алга болох тул wizard-аас дуудсан тайлангууд
+        // (Ерөнхий дэвтэр гэх мэт) "Form content is missing" (400) алдаа өгнө.
+        return "/web/static/lib/pdfjs/web/viewer.html?file=" + encodeURIComponent(this.props.srcurl);
     }
 }
 
