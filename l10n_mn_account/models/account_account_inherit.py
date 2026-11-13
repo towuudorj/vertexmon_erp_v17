@@ -14,6 +14,10 @@ class AccountAccount(models.Model):
     _inherit = "account.account"
 
     cash_move_type_id = fields.Many2one('account.cash.move.type', string='Cash Move Type')
+    partner_not_required = fields.Boolean(
+        string='Харилцагч заавал биш', default=False, tracking=True,
+        help='Сонговол авлага/өглөгийн төрөлтэй энэ данс бүхий журналын мөрийг '
+             'харилцагчгүйгээр батлахыг зөвшөөрнө.')
 
     @api.constrains('code')
     def _check_account_code(self):

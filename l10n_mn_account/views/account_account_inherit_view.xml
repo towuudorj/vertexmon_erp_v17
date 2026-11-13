@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr='//field[@name="currency_id"]' position="after">
                     <field name="cash_move_type_id"/>
+                    <field name="partner_not_required" invisible="account_type not in ('asset_receivable', 'liability_payable')"/>
                 </xpath>
             </field>
         </record>

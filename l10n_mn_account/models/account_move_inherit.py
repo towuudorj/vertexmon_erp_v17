@@ -436,13 +436,16 @@ class AccountMove(models.Model):
         return super(AccountMove, self.with_context(check_missing_product=False)).action_post()
 
     def _check_receivable_payable_partner(self):
-        """Авлага, өглөгийн данстай журналын мөрөнд харилцагч заавал сонгогдсон байх ёстой."""
+        """Авлага, өглөгийн данстай журналын мөрөнд харилцагч заавал сонгогдсон байх ёстой.
+        Дансан дээр "Харилцагч заавал биш" сонгосон бол тухайн дансны мөрийг шалгахгүй."""
         # Харилцагчийн үлдэгдэл шилжүүлэх wizard (ахлах нягтлан) харилцагчгүй мөр рүү төвлөрүүлэхэд л алгасна
         if self._context.get('skip_receivable_payable_partner_check'):
             return
         for move in self:
             lines = move.line_ids.filtered(
-                lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable') and not l.partner_id)
+                lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
+                and not l.account_id.partner_not_required
+                and not l.partner_id)
             if lines:
                 raise UserError(_(
                     "Авлага, өглөгийн данс сонгосон мөрөнд харилцагч заавал сонгоно уу!\n"
