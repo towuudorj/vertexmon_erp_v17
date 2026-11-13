@@ -181,8 +181,6 @@ class Employee(models.Model):
                 _logger.error(u'Ажилтаны мэдээлэл Sharepoint руу илгээхэд алдаа гарлаа. Алдааны мэдээлэл:\n %s', str(e))
 
     def update_hik_central_photo(self):
-        print(fields.datetime.now())
-        print(aaaaa)
         try:
             method, accept, content_type, APP_KEY, APP_SECRET, BASE_URL = get_params(self)
             API_PATH = "/artemis/api/resource/v1/person/face/update"
