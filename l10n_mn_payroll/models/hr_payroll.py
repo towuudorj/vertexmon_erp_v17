@@ -48,6 +48,49 @@ class hr_contract(models.Model):
     trial_end_date = fields.Float(string='Trial End Date')
     insurance_type_id = fields.Many2one('insurance.type', 'Insurance Type')
 
+import re
+
+def clean_employee_name(name):
+    """
+    Ажилтны нэрнээс овогны эхний үсгийг цэгээр тусгаарлагдсан байвал арилгах:
+    Жишээ:
+      'А.Болор-Од' -> 'Болор-Од'
+      'Б.Мягмардорж' -> 'Мягмардорж'
+      'Алтансувд.Б' -> 'Алтансувд'
+      'Баттогтох.А' -> 'Баттогтох'
+      'Алимаа.Ч /Фүүдс/' -> 'Алимаа /Фүүдс/'
+      'Батгэрэл.З /Холдинг/' -> 'Батгэрэл /Холдинг/'
+      'Баяржаргал.Х (DLP)' -> 'Баяржаргал (DLP)'
+      'Б. Бат' -> 'Бат'
+      'Бат . Б' -> 'Бат'
+    """
+    if not name:
+        return ''
+    s = str(name).strip()
+    if '.' not in s:
+        return s
+
+    tag_match = re.search(r'\s*([/(].*)$', s)
+    if tag_match:
+        tag = tag_match.group(1).strip()
+        base = s[:tag_match.start()].strip()
+    else:
+        tag = ''
+        base = s
+
+    clean = base
+    while re.search(r'^\s*[A-Za-zА-Яа-яЁёӨөҮү]{1,2}\s*\.\s*', clean):
+        clean = re.sub(r'^\s*[A-Za-zА-Яа-яЁёӨөҮү]{1,2}\s*\.\s*', '', clean)
+    while re.search(r'\s*\.\s*[A-Za-zА-Яа-яЁёӨөҮү]{1,2}\s*$', clean):
+        clean = re.sub(r'\s*\.\s*[A-Za-zА-Яа-яЁёӨөҮү]{1,2}\s*$', '', clean)
+
+    clean = clean.strip()
+    if not clean:
+        clean = base
+
+    return f'{clean} {tag}'.strip() if tag else clean
+
+
 class HrPayslipRun(models.Model):
     _inherit = "hr.payslip.run"
 
@@ -141,6 +184,12 @@ class HrPayslipRun(models.Model):
             'font_size': 12,
             'num_format': '#,##0.00'
         })
+        data_center_int = workbook.add_format({
+            'align': 'center',
+            'border': 1,
+            'font_size': 12,
+            'num_format': '0'
+        })
         header_txt = workbook.add_format({
                                     'align': 'center',
                                     'bold': True,
@@ -152,6 +201,10 @@ class HrPayslipRun(models.Model):
         sheet.center_horizontally()
         sheet.fit_to_pages(1, 0)
         self_obj = self.env['hr.payslip.run'].browse(data.get('self_id')) if data.get('self_id') else self
+        slips = self_obj.slip_ids.sorted(key=lambda s: (
+            (s.employee_department_id.name or (s.employee_id.department_id.name or '')) if (s.employee_department_id or (s.employee_id and s.employee_id.department_id)) else 'ZZZZ',
+            clean_employee_name(s.employee_id.name or '')
+        ))
 
         if self_obj.payslip_type == 'advance':
             # -------------------------------------------------------------
@@ -175,13 +228,13 @@ class HrPayslipRun(models.Model):
             sheet.merge_range(rowx, 2, rowx+1, 2, u'Нэр', title)
             sheet.merge_range(rowx, 3, rowx+1, 3, u'Хэлтэс тасаг', title)
             sheet.merge_range(rowx, 4, rowx+1, 4, u'Дансны дугаар', title)
-            sheet.merge_range(rowx, 5, rowx+1, 5, u'Урьдчилгаа цалин СС', title)
+            sheet.merge_range(rowx, 5, rowx+1, 5, u'Урьдчилгаа цалин', title)
             sheet.merge_range(rowx, 6, rowx+1, 6, u'Регистр', title)
             sheet.merge_range(rowx, 7, rowx+1, 7, u'ID', title)
             rowx += 2
 
             number = 1
-            for slip in self_obj.slip_ids:
+            for slip in slips:
                 account_number = ''
                 if slip.employee_id.work_contact_id.bank_ids:
                     b = slip.employee_id.work_contact_id.bank_ids[0]
@@ -200,9 +253,9 @@ class HrPayslipRun(models.Model):
 
                 reg_no = slip.employee_id.ssnid or slip.employee_id.identification_id or ''
 
-                sheet.write(rowx, 0, number, data_left)
+                sheet.write(rowx, 0, number, data_center_int)
                 sheet.write(rowx, 1, slip.employee_id.last_name or '', data_left)
-                sheet.write(rowx, 2, slip.employee_id.name or '', data_left)
+                sheet.write(rowx, 2, clean_employee_name(slip.employee_id.name) or '', data_left)
                 sheet.write(rowx, 3, slip.employee_id.department_id.name or '', data_left)
                 sheet.write(rowx, 4, account_number, data_left)
                 sheet.write(rowx, 5, adv_val, data_right)
@@ -324,7 +377,7 @@ class HrPayslipRun(models.Model):
         rowx += 2
 
         number = 1
-        for slip in self_obj.slip_ids:
+        for slip in slips:
             account_number = ''
             if slip.employee_id.work_contact_id.bank_ids:
                 b = slip.employee_id.work_contact_id.bank_ids[0]
@@ -334,15 +387,11 @@ class HrPayslipRun(models.Model):
             elif slip.employee_id.bank_account_id:
                 account_number = slip.employee_id.bank_account_id.acc_number or ''
             colly = 0
-            sheet.write(rowx, colly, number, data_left)
+            sheet.write(rowx, colly, number, data_center_int)
             colly += 1
             sheet.write(rowx, colly, slip.employee_id.last_name or '', data_left)
             colly += 1
-            name = slip.employee_id.name
-            if name and '.' in name:
-                list = name.split(".")
-                name = list[0] if len(list[1]) == 1 else list[1]
-            sheet.write(rowx, colly, name or '', data_left)
+            sheet.write(rowx, colly, clean_employee_name(slip.employee_id.name) or '', data_left)
             colly += 1
             sheet.write(rowx, colly, slip.employee_id.department_id.name or '', data_left)
             colly += 1
@@ -581,6 +630,7 @@ PAYSLIP_HEADER_TO_COLUMN_KEY = [
 
 class HrPayslip(models.Model):
     _inherit = "hr.payslip"
+    _order = "employee_department_id, employee_first_name, id"
 
     dep_id = fields.Many2one('hr.department', string='Department')
     # Буцаалтын хуудас багцгүй хуулагддаг тул related биш, хуулагддаг compute
@@ -599,11 +649,11 @@ class HrPayslip(models.Model):
                                      help='Гэрээний цалин × урьдчилгааны % × ажилласан цаг / ажиллах ёстой цаг. '
                                           'Гараар засаж болно.')
 
-    employee_last_name = fields.Char(string='Овог', compute='_compute_employee_info')
-    employee_first_name = fields.Char(string='Нэр', compute='_compute_employee_info')
-    employee_department_id = fields.Many2one('hr.department', string='Хэлтэс тасаг', compute='_compute_employee_info')
-    employee_bank_account = fields.Char(string='Дансны дугаар', compute='_compute_employee_info')
-    employee_register = fields.Char(string='Регистр №', compute='_compute_employee_info')
+    employee_last_name = fields.Char(string='Овог', compute='_compute_employee_info', store=True)
+    employee_first_name = fields.Char(string='Нэр', compute='_compute_employee_info', store=True)
+    employee_department_id = fields.Many2one('hr.department', string='Хэлтэс тасаг', compute='_compute_employee_info', store=True)
+    employee_bank_account = fields.Char(string='Дансны дугаар', compute='_compute_employee_info', store=True)
+    employee_register = fields.Char(string='Регистр №', compute='_compute_employee_info', store=True)
 
     wage_amount = fields.Float(string='Үндсэн цалин', compute='_compute_payslip_columns', store=True)
     month_work_days = fields.Float(string='Сарын ажлын хоног')
@@ -632,10 +682,16 @@ class HrPayslip(models.Model):
         for slip in self:
             emp = slip.employee_id.sudo()
             slip.employee_last_name = emp['last_name'] if 'last_name' in emp._fields else False
-            slip.employee_first_name = emp.name
+            slip.employee_first_name = clean_employee_name(emp.name)
             slip.employee_department_id = emp.department_id
-            slip.employee_bank_account = emp.bank_account_id.acc_number
-            slip.employee_register = emp['ssnid'] if 'ssnid' in emp._fields else False
+            account_number = ''
+            if emp.work_contact_id.bank_ids:
+                b = emp.work_contact_id.bank_ids[0]
+                account_number = getattr(b, 'acc_number', getattr(b, 'account_number', '')) or ''
+            elif emp.bank_account_id:
+                account_number = emp.bank_account_id.acc_number or ''
+            slip.employee_bank_account = account_number
+            slip.employee_register = emp['ssnid'] if 'ssnid' in emp._fields else (emp.identification_id or False)
 
     @api.depends('line_ids.code', 'line_ids.total')
     def _compute_payslip_columns(self):
@@ -1584,7 +1640,12 @@ class HrPayslipRunImportWizard(models.TransientModel):
                 name_idx = header_map.get('Нэр')
                 if name_idx is not None and name_idx < len(row) and row[name_idx]:
                     emp_name = str(row[name_idx]).strip()
-                    matched_slips = run.slip_ids.filtered(lambda s: s.employee_id.name and s.employee_id.name.strip() == emp_name)
+                    clean_target = clean_employee_name(emp_name)
+                    matched_slips = run.slip_ids.filtered(
+                        lambda s: (s.employee_id.name and s.employee_id.name.strip() == emp_name) or
+                                  (s.employee_first_name and s.employee_first_name.strip() == emp_name) or
+                                  (clean_employee_name(s.employee_id.name) == clean_target)
+                    )
                     if len(matched_slips) > 1:
                         last_name_idx = header_map.get('Овог')
                         if last_name_idx is not None and last_name_idx < len(row) and row[last_name_idx]:

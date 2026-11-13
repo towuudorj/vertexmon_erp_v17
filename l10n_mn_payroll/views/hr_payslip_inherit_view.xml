@@ -55,5 +55,16 @@
                 </field>
             </record>
 
+            <record id="view_hr_payslip_filter_mn_inherit" model="ir.ui.view">
+                <field name="name">hr.payslip.search.mn.inherit</field>
+                <field name="model">hr.payslip</field>
+                <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_filter"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//group" position="inside">
+                        <filter string="Алба нэгж / Хэлтэс" name="group_by_department" context="{'group_by':'employee_department_id'}"/>
+                    </xpath>
+                </field>
+            </record>
+
     </data>
 </odoo>
