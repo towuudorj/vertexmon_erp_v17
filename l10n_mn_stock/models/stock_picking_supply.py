@@ -6,6 +6,8 @@ from odoo import api, fields, models, Command, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
+from .supply_common import supply_lines_sql, SUPPLY_HOLDER_WHERE
+
 _logger = logging.getLogger(__name__)
 
 
@@ -20,8 +22,7 @@ class StockPickingSupply(models.Model):
         string='Хангамжтай холбоотой эсэх', compute='_compute_supply_flags')
     supply_from_partner_id = fields.Many2one(
         'res.partner', string='Өгөх ажилтан', copy=False,
-        domain=[('is_company', '=', False)],
-        help='Хангамж шилжүүлэх баримт дээр хангамжаа өгч буй ажилтан. '
+        help='Хангамж шилжүүлэх баримт дээр хангамжаа өгч буй ажилтан (эсвэл түр хадгалсан компани). '
              'Хүлээн авах ажилтныг "Хүргэлтийн хаяг" талбарт сонгоно.')
 
     exclude_from_supply = fields.Boolean(
@@ -63,39 +64,7 @@ class StockPickingSupply(models.Model):
             params['partner_ids'] = tuple(partner_ids)
         self.env.cr.execute(f"""
             WITH lines AS (
-                SELECT COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id,
-                       mv.product_id,
-                       COALESCE(sp.issue_date, mv.date::date) AS issue_date,
-                       -- Агуулах хоорондын (дотоод -> дотоод) шилжүүлэг ажилтанд хамаарахгүй
-                       CASE WHEN (COALESCE(sl.supply_location, FALSE) AND dest.usage != 'internal')
-                                 OR COALESCE(dest.supply_transfer_location, FALSE)
-                            THEN mv.quantity ELSE 0 END AS issued,
-                       CASE WHEN sl.usage != 'internal'
-                                 AND (COALESCE(dest.supply_location, FALSE)
-                                      OR COALESCE(dest.supply_writeoff_location, FALSE))
-                            THEN mv.quantity ELSE 0 END AS closed
-                FROM stock_move_line mv
-                JOIN stock_move sm ON sm.id = mv.move_id
-                LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
-                JOIN stock_location sl ON sl.id = mv.location_id
-                JOIN stock_location dest ON dest.id = mv.location_dest_id
-                WHERE mv.state = 'done'
-                  AND (sl.supply_location OR dest.supply_location
-                       OR dest.supply_writeoff_location OR dest.supply_transfer_location)
-                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
-
-                UNION ALL
-
-                -- Шилжүүлгээр өгсөн ажилтны талаас хасна
-                SELECT sp.supply_from_partner_id, mv.product_id, mv.date::date, 0, mv.quantity
-                FROM stock_move_line mv
-                JOIN stock_move sm ON sm.id = mv.move_id
-                JOIN stock_picking sp ON sp.id = sm.picking_id
-                JOIN stock_location dest ON dest.id = mv.location_dest_id
-                WHERE mv.state = 'done'
-                  AND dest.supply_transfer_location
-                  AND sp.supply_from_partner_id IS NOT NULL
-                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
+                {supply_lines_sql()}
             )
             SELECT l.partner_id,
                    l.product_id,
@@ -109,7 +78,7 @@ class StockPickingSupply(models.Model):
             JOIN res_partner rp ON rp.id = l.partner_id
             JOIN product_product pp ON pp.id = l.product_id
             JOIN product_template pt ON pt.id = pp.product_tmpl_id
-            WHERE rp.is_company = FALSE
+            WHERE {SUPPLY_HOLDER_WHERE}
               {partner_where}
             GROUP BY l.partner_id, l.product_id
             HAVING SUM(l.issued) - SUM(l.closed) > 0
@@ -257,3 +226,26 @@ class StockPickingSupply(models.Model):
     def button_validate(self):
         self._check_supply_pickings()
         return super().button_validate()
+
+
+class StockReturnPickingSupply(models.TransientModel):
+    _inherit = 'stock.return.picking'
+
+    def _prepare_picking_default_values(self):
+        """Хангамжийн баримтын буцаалт дээр ажилтан (болон өгөх ажилтан)-ыг хадгална."""
+        vals = super()._prepare_picking_default_values()
+        picking = self.picking_id
+        if picking.is_supply_related or picking.location_id.supply_writeoff_location \
+                or picking.location_id.supply_transfer_location:
+            vals['partner_id'] = picking.partner_id.id
+            if picking.supply_from_partner_id:
+                vals['supply_from_partner_id'] = picking.supply_from_partner_id.id
+            vals['exclude_from_supply'] = picking.exclude_from_supply
+        return vals
+
+    def _prepare_move_default_values(self, return_line, new_picking):
+        vals = super()._prepare_move_default_values(return_line, new_picking)
+        if new_picking.is_supply_related or return_line.move_id.location_dest_id.supply_writeoff_location \
+                or return_line.move_id.location_dest_id.supply_transfer_location:
+            vals['partner_id'] = return_line.move_id.partner_id.id or new_picking.partner_id.id
+        return vals

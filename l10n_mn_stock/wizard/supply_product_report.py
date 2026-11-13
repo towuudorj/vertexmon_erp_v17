@@ -7,6 +7,8 @@ import io
 import json
 import xlsxwriter
 
+from ..models.supply_common import supply_lines_sql, SUPPLY_HOLDER_WHERE
+
 
 class SupplyProductReport(models.TransientModel):
     _name = "supply.product.report"
@@ -145,99 +147,69 @@ class SupplyProductReport(models.TransientModel):
 
         group_partner = data.get('group_by_partner', False)
         partner_where = ''
-        giver_partner_where = ''
         if data.get('partner_ids', False):
             partner_ids_str = ','.join(str(int(id)) for id in data.get('partner_ids'))
-            partner_where = 'AND COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) in (%s) ' % partner_ids_str
-            giver_partner_where = 'AND sp.supply_from_partner_id in (%s) ' % partner_ids_str
-
-        # Хангамж шилжүүлэх: өгсөн ажилтны талаас буцаалттай адил (+) хасна. Зөвхөн ажилтнаар бүлэглэхэд.
-        giver_union = f"""
-                UNION ALL
-                SELECT
-                    mv.id AS move_line_id,
-                    mv.move_id,
-                    mv.product_id,
-                    sp.supply_from_partner_id AS partner_id,
-                    mv.date::date AS move_date,
-                    mv.quantity,
-                    NULL::date AS issue_date,
-                    FALSE AS src_supply_location,
-                    TRUE AS dest_supply_location,
-                    FALSE AS dest_writeoff_location,
-                    FALSE AS dest_transfer_location
-                FROM stock_move_line mv
-                JOIN stock_move sm ON sm.id = mv.move_id
-                JOIN stock_picking sp ON sp.id = sm.picking_id
-                JOIN stock_location dest ON dest.id = mv.location_dest_id
-                JOIN res_partner rp ON rp.id = sp.supply_from_partner_id
-                WHERE mv.state = 'done'
-                  AND mv.date::date <= '{date_to}'
-                  AND rp.is_company = False
-                  AND dest.supply_transfer_location = TRUE
-                  AND NOT COALESCE(sp.exclude_from_supply, FALSE)
-                  {giver_partner_where}
-        """ if group_partner else ''
+            partner_where = 'AND %s in (%s) ' % (
+                'l.partner_id' if group_partner else 'COALESCE(mv.partner_id, sm.partner_id, sp.partner_id)',
+                partner_ids_str)
 
         issue_date_filter = fields.Date.to_date(data.get('issue_date_filter')) if data.get('filter_by_issue_date') and data.get('issue_date_filter') else False
 
-        query = f"""
-            WITH moves AS (
+        if group_partner:
+            # Ажилтнаар: олголт/буцаалт/хаалт/шилжүүлэг ба тэдгээрийн буцаалт (supply_common-ийн нэгдсэн дүрэм).
+            # Тэмдэг: хангамжийн агуулах руу (+), ажилтанд (-) - доор ажилтны талд эргүүлж харуулна.
+            moves_cte = f"""
+            signed_moves AS (
+                SELECT l.product_id,
+                       l.partner_id,
+                       l.move_date,
+                       CASE WHEN l.issued > 0 THEN l.issue_date END AS issue_date,
+                       l.closed - l.issued AS signed_qty
+                FROM ({supply_lines_sql(f"AND mv.date::date <= '{date_to}'")}) l
+                JOIN res_partner rp ON rp.id = l.partner_id
+                WHERE {SUPPLY_HOLDER_WHERE}
+                  {partner_where}
+            ),
+            """
+        else:
+            moves_cte = f"""
+            moves AS (
                 SELECT
-                    mv.id AS move_line_id,
-                    mv.move_id,
                     mv.product_id,
-                    {'COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id, ' if group_partner else ''}
                     mv.date::date AS move_date,
                     mv.quantity,
                     sp.issue_date AS issue_date,
-
                     sl.supply_location AS src_supply_location,
-                    dest.supply_location AS dest_supply_location,
-                    COALESCE(dest.supply_writeoff_location, FALSE) AS dest_writeoff_location,
-                    COALESCE(dest.supply_transfer_location, FALSE) AS dest_transfer_location
-            
+                    dest.supply_location AS dest_supply_location
                 FROM stock_move_line mv
                 JOIN stock_move sm ON sm.id = mv.move_id
                 LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
                 JOIN stock_location sl ON sl.id = mv.location_id
                 JOIN stock_location dest ON dest.id = mv.location_dest_id
-                {'LEFT JOIN res_partner rp on rp.id = COALESCE(mv.partner_id, sm.partner_id, sp.partner_id)' if group_partner else ''}
                 WHERE mv.state = 'done'
                   AND mv.date::date <= '{date_to}'
-                  {'AND rp.is_company = False '  if group_partner else ''}
                   {partner_where}
-                  AND (
-                        sl.supply_location = TRUE
-                        OR dest.supply_location = TRUE
-                        {'OR dest.supply_writeoff_location = TRUE OR dest.supply_transfer_location = TRUE' if group_partner else ''}
-                  )
-                  {"AND NOT (sl.usage = 'internal' AND dest.usage = 'internal')" if group_partner else ''}
-                  {"AND NOT COALESCE(sp.exclude_from_supply, FALSE)" if group_partner else ''}
-                {giver_union}
+                  AND (sl.supply_location = TRUE OR dest.supply_location = TRUE)
             ),
-            
+
             signed_moves AS (
                 SELECT
-                    move_line_id,
                     product_id,
-                    {'partner_id, ' if group_partner else ''}
                     move_date,
                     issue_date,
-
                     CASE
                         WHEN src_supply_location = TRUE THEN -quantity
                         WHEN dest_supply_location = TRUE THEN quantity
-                        -- Хангамж хаах/актлах: ажилтны үлдэгдлийг буцаалттай адил хасна
-                        WHEN dest_writeoff_location = TRUE THEN quantity
-                        -- Хангамж шилжүүлэх: хүлээн авсан ажилтанд олголттой адил нэмнэ
-                        WHEN dest_transfer_location = TRUE THEN -quantity
                         ELSE 0
                     END AS signed_qty
-            
                 FROM moves
             ),
-            
+            """
+
+        query = f"""
+            WITH
+            {moves_cte}
+
             report AS (
                 SELECT
                     sm.product_id,

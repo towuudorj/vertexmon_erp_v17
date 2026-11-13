@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools
 
+from .supply_common import supply_lines_sql, SUPPLY_HOLDER_WHERE
+
 
 class SupplyEmployeeBalance(models.Model):
     """Ажилтан дээр байгаа (хаагдаагүй) хангамжийн бараа.
@@ -47,38 +49,7 @@ class SupplyEmployeeBalance(models.Model):
         self.env.cr.execute(f"""
             CREATE OR REPLACE VIEW {self._table} AS (
                 WITH lines AS (
-                    SELECT COALESCE(mv.partner_id, sm.partner_id, sp.partner_id) AS partner_id,
-                           mv.product_id,
-                           COALESCE(sp.issue_date, mv.date::date) AS issue_date,
-                           -- Агуулах хоорондын (дотоод -> дотоод) шилжүүлэг ажилтанд хамаарахгүй
-                           CASE WHEN (COALESCE(sl.supply_location, FALSE) AND dest.usage != 'internal')
-                                     OR COALESCE(dest.supply_transfer_location, FALSE)
-                                THEN mv.quantity ELSE 0 END AS issued,
-                           CASE WHEN sl.usage != 'internal'
-                                     AND (COALESCE(dest.supply_location, FALSE)
-                                          OR COALESCE(dest.supply_writeoff_location, FALSE))
-                                THEN mv.quantity ELSE 0 END AS closed
-                    FROM stock_move_line mv
-                    JOIN stock_move sm ON sm.id = mv.move_id
-                    LEFT JOIN stock_picking sp ON sp.id = sm.picking_id
-                    JOIN stock_location sl ON sl.id = mv.location_id
-                    JOIN stock_location dest ON dest.id = mv.location_dest_id
-                    WHERE mv.state = 'done'
-                      AND (sl.supply_location OR dest.supply_location
-                           OR dest.supply_writeoff_location OR dest.supply_transfer_location)
-                      AND NOT COALESCE(sp.exclude_from_supply, FALSE)
-
-                    UNION ALL
-
-                    SELECT sp.supply_from_partner_id, mv.product_id, mv.date::date, 0, mv.quantity
-                    FROM stock_move_line mv
-                    JOIN stock_move sm ON sm.id = mv.move_id
-                    JOIN stock_picking sp ON sp.id = sm.picking_id
-                    JOIN stock_location dest ON dest.id = mv.location_dest_id
-                    WHERE mv.state = 'done'
-                      AND dest.supply_transfer_location
-                      AND sp.supply_from_partner_id IS NOT NULL
-                      AND NOT COALESCE(sp.exclude_from_supply, FALSE)
+                    {supply_lines_sql()}
                 ),
                 agg AS (
                     SELECT l.partner_id,
@@ -128,6 +99,6 @@ class SupplyEmployeeBalance(models.Model):
                     ORDER BY e.active DESC, e.id
                     LIMIT 1
                 ) emp ON TRUE
-                WHERE rp.is_company = FALSE
+                WHERE {SUPPLY_HOLDER_WHERE}
             )
         """)
