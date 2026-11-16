@@ -1,0 +1,30 @@
+# ==============================================================================
+# Additional Python dependencies for vertexmon_erp_v17
+# Odoo 17-ийн үндсэн requirements.txt файлд байдаггүй, энэ төслийн
+# нэмэлт модулиудад шаардлагатай сангууд (third-party dependencies)
+# ==============================================================================
+
+# Excel 97-2003 (.xls) тайлан бэлтгэх сан
+# Ашиглаж буй модулиуд: l10n_mn_stock, l10n_mn_account, l10n_mn_account_report,
+#                       l10n_mn_payroll, l10n_mn_asset, account_parent
+xlwt>=1.3.0
+
+# Excel (.xlsx) файл унших, боловсруулах сан
+# Ашиглаж буй модулиуд: l10n_mn_payroll
+openpyxl>=3.1.2
+
+# Word (.docx) бичиг баримт үүсгэх, боловсруулах сан
+# Ашиглаж буй модулиуд: l10n_mn_hr
+python-docx>=1.1.0
+
+# ZKTeco цаг бүртгэлийн төхөөрөмжтэй холбогдох сан
+# Ашиглаж буй модулиуд: hr_zk_attendance_pyzk
+pyzk>=0.9
+
+# Redis token store болон кэш хадгалах сан
+# Ашиглаж буй модулиуд: rest_api
+redis>=4.5.0
+
+# Түргэн JSON хөрвүүлэлтийн сан
+# Ашиглаж буй модулиуд: rest_api
+simplejson>=3.18.0
